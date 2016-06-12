@@ -11,18 +11,21 @@
 #mvn deploy:deploy-file  -Dfile=/Users/chenshangan/svn/workspace/luna-service-impl/lib/redisnum-interface.jar -DgroupId=ms.luna  -DartifactId=redisnum-interface -Dversion=1.0 -Dpackaging=jar -DrepositoryId=local-nexus-release -Durl=http://luna-test.visualbusiness.cn/nexus/content/repositories/releases
 
 base_dir=$(dirname $0)
-cd $base_dir/../luna-service-common
+cd $base_dir/../
+cd luna-service-common
 git pull
 mvn clean install -Pdev
 
-cd $base_dir/../luna-service-generator
+cd ..
+cd luna-service-generator
+git pull
+mvn clean install
+cd ..
+cd luna-service-interface
 git pull
 mvn clean install
 
-cd $base_dir/../luna-service-interface
-git pull
-mvn clean install
-
-cd $base_dir/../luna-web
+cd ..
+cd luna-web
 git pull
 mvn clean package
