@@ -54,6 +54,10 @@
                   <i class="icon icon-comp-img"></i><br/>
                   <span>图片</span>
                 </div>
+                <div class="component-btn" id="">
+                  <i class="icon icon-comp-shape"></i><br/>
+                  <span>形状</span>
+                </div>
                 <div class="component-btn" id="panoComponent">
                   <i class="icon icon-comp-vpano"></i><br/>
                   <span>全景</span>
@@ -61,6 +65,14 @@
                 <div class="component-btn" id="navComponent">
                   <i class="icon icon-comp-nav"></i><br/>
                   <span>导航</span>
+                </div>
+                <div class="component-btn" id="">
+                  <i class="icon icon-comp-audio"></i><br/>
+                  <span>音频</span>
+                </div>
+                <div class="component-btn" id="">
+                  <i class="icon icon-comp-more"></i><br/>
+                  <span>更多</span>
                 </div>
               </div>
               <div class="app-set-wrap">

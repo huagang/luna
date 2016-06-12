@@ -92,21 +92,22 @@ html,body{
 }
 .component-btn{
     display: inline-block;
-    width: 40px;
+    width: 42px;
     text-align: center;
     height: 100%;
-    color: #fff;
-    padding-top: 5px;
+    color: #AEB7CE;
+    padding:2px 6px;
     cursor: pointer;
-    margin:0 5px;
+    margin:9px 1px;
+    line-height:12px;
 }
 .component-btn:hover{
     background-color: #2B3C6A;
-    color: #364C86;
+    color: #fff;
     border-radius:3px;
 }
 .component-btn:hover span{
-    color: #364C86;
+    color: #fff;
 }
 .app-set-btn{
     display: inline-block;
