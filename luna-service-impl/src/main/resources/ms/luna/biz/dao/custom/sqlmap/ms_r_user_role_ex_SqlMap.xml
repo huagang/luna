@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_r_user_role">
+
+	<resultMap id="UsersResult2" class="ms.luna.biz.dao.custom.model.UsersResult2">
+		<result column="luna_name" property="luna_name" jdbcType="VARCHAR2" />
+		<result column="role_code" property="role_code" jdbcType="VARCHAR2" />
+		<result column="role_name" property="role_name" jdbcType="VARCHAR2" />
+		<result column="module_code" property="module_code" jdbcType="VARCHAR2" />
+		<result column="module_name" property="module_name" jdbcType="VARCHAR2" />
+		<result column="ds_order" property="ds_order" jdbcType="VARCHAR2" />
+	</resultMap>
+	<select id="selectUsersByModuleCode" resultMap="UsersResult2"
+		parameterClass="ms.luna.biz.dao.custom.model.UsersParameter">
+		
+		SELECT
+			NAME_ROLE.luna_name AS luna_name,
+			NAME_ROLE.ms_role_code AS role_code,
+			ROLE_MODULE.ms_role_name AS role_name,
+			ROLE_MODULE.biz_module_code AS module_code,
+			ROLE_MODULE.biz_module_name AS module_name,
+			ROLE_MODULE.ds_order As ds_order
+		FROM
+		(
+			SELECT
+				ms_user_pw.luna_name,
+				ms_r_user_role.ms_role_code,
+				ms_user_pw.regist_hhmmss
+			FROM
+				ms_user_pw,
+				ms_r_user_role
+			WHERE
+				ms_r_user_role.unique_id = ms_user_pw.unique_id
+		) NAME_ROLE left join
+		(
+			SELECT
+				ms_role.ms_role_code,
+				ms_role.ms_role_name,
+				ms_role.biz_module_code,
+				ms_biz_module.biz_module_name,
+				ms_role.ds_order
+			FROM
+				ms_role,
+				ms_biz_module
+			WHERE
+				ms_role.biz_module_code = ms_biz_module.biz_module_code
+		) ROLE_MODULE ON NAME_ROLE.ms_role_code = ROLE_MODULE.ms_role_code
+		
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="moduleCode">
+				ROLE_MODULE.biz_module_code = #moduleCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="likeFilterNm">
+				NAME_ROLE.luna_name like #likeFilterNm#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY NAME_ROLE.regist_hhmmss DESC
+		<isNotNull property="range">
+    		Limit #min#,#max#
+   		</isNotNull>
+	</select>
+	
+	<select id="selectUsersByRoleAuth" resultMap="UsersResult2"
+		parameterClass="ms.luna.biz.dao.custom.model.UsersParameter">
+		
+		SELECT
+			NAME_ROLE.luna_name AS luna_name,
+			NAME_ROLE.ms_role_code AS role_code,
+			ROLE_MODULE.ms_role_name AS role_name,
+			ROLE_MODULE.biz_module_code AS module_code,
+			ROLE_MODULE.biz_module_name AS module_name,
+			ROLE_MODULE.ds_order As ds_order
+		FROM
+		(
+			SELECT
+				ms_user_pw.luna_name,
+				ms_r_user_role.ms_role_code,
+				ms_user_pw.regist_hhmmss
+			FROM
+				ms_user_pw,
+				ms_r_user_role
+			WHERE
+				ms_r_user_role.unique_id = ms_user_pw.unique_id
+		) NAME_ROLE left join
+		(
+			SELECT
+				ms_role.ms_role_code,
+				ms_role.ms_role_name,
+				ms_role.ms_role_auth,
+				ms_role.biz_module_code,
+				ms_biz_module.biz_module_name,
+				ms_role.ds_order
+			FROM
+				ms_role,
+				ms_biz_module
+			WHERE
+				ms_role.biz_module_code = ms_biz_module.biz_module_code
+		) ROLE_MODULE ON NAME_ROLE.ms_role_code = ROLE_MODULE.ms_role_code
+		
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="roleAuth">
+				ROLE_MODULE.ms_role_auth >= #roleAuth#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="likeFilterNm">
+				NAME_ROLE.luna_name like #likeFilterNm#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY NAME_ROLE.regist_hhmmss DESC
+		<isNotNull property="range">
+    		Limit #min#,#max#
+   		</isNotNull>
+	</select>
+
+
+	<select id="countUsersByModuleCode" resultClass="java.lang.Integer"
+		parameterClass="ms.luna.biz.dao.custom.model.UsersParameter">
+		SELECT
+    		count(1)
+		FROM
+		(
+			SELECT
+				ms_user_pw.luna_name,
+				ms_r_user_role.ms_role_code
+			FROM
+				ms_user_pw,
+				ms_r_user_role
+			WHERE
+				ms_r_user_role.unique_id = ms_user_pw.unique_id
+		) NAME_ROLE left join
+		(
+			SELECT
+				ms_role.ms_role_code,
+				ms_role.ms_role_name,
+				ms_role.biz_module_code,
+				ms_biz_module.biz_module_name
+			FROM
+				ms_role,
+				ms_biz_module
+			WHERE
+				ms_role.biz_module_code = ms_biz_module.biz_module_code
+		) ROLE_MODULE ON NAME_ROLE.ms_role_code = ROLE_MODULE.ms_role_code
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="moduleCode">
+				ROLE_MODULE.biz_module_code = #moduleCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="likeFilterNm">
+				NAME_ROLE.luna_name like #likeFilterNm#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="countUsersByRoleAuth" resultClass="java.lang.Integer"
+		parameterClass="ms.luna.biz.dao.custom.model.UsersParameter">
+		SELECT
+    		count(1)
+		FROM
+		(
+			SELECT
+				ms_user_pw.luna_name,
+				ms_r_user_role.ms_role_code
+			FROM
+				ms_user_pw,
+				ms_r_user_role
+			WHERE
+				ms_r_user_role.unique_id = ms_user_pw.unique_id
+		) NAME_ROLE left join
+		(
+			SELECT
+				ms_role.ms_role_code,
+				ms_role.ms_role_name,
+				ms_role.ms_role_auth,
+				ms_role.biz_module_code,
+				ms_biz_module.biz_module_name
+			FROM
+				ms_role,
+				ms_biz_module
+			WHERE
+				ms_role.biz_module_code = ms_biz_module.biz_module_code
+		) ROLE_MODULE ON NAME_ROLE.ms_role_code = ROLE_MODULE.ms_role_code
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="roleAuth">
+				ROLE_MODULE.ms_role_auth >= #roleAuth#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="likeFilterNm">
+				NAME_ROLE.luna_name like #likeFilterNm#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+</sqlMap>

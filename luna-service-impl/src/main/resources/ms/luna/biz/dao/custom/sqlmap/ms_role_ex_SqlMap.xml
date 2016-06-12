@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_role" >
+<resultMap id="AuthorityResult" class="ms.luna.biz.dao.custom.model.AuthorityResult">
+	<result column="ROLE_CODE" property="role_code" jdbcType="VARCHAR2" />
+	<result column="ROLE_NAME" property="role_name" jdbcType="VARCHAR2" />
+	<result column="MODULE_NAME" property="module_name" jdbcType="VARCHAR2" />
+	<result column="ROLE_TYPE" property="role_type" jdbcType="VARCHAR2" />
+</resultMap>
+
+	<select id="selectAllAuthority" resultMap="AuthorityResult" parameterClass="ms.luna.biz.dao.custom.model.AuthorityParameter">
+	
+		SELECT
+			MS_ROLE.MS_ROLE_CODE AS ROLE_CODE,
+			MS_ROLE.MS_ROLE_NAME AS ROLE_NAME,
+			MS_BIZ_MODULE.BIZ_MODULE_NAME AS MODULE_NAME,
+			MS_ROLE.MS_ROLE_TYPE AS ROLE_TYPE
+		FROM
+			MS_ROLE
+		INNER JOIN
+			MS_BIZ_MODULE
+		ON 
+			MS_ROLE.BIZ_MODULE_CODE = MS_BIZ_MODULE.BIZ_MODULE_CODE
+		ORDER BY
+			MS_ROLE.DS_ORDER
+		<isNotNull property="range">
+			Limit #min#,#max#
+    	</isNotNull>
+	</select>
+	
+	<select id="countAuthority" resultClass="java.lang.Integer" parameterClass="ms.luna.biz.dao.custom.model.AuthorityParameter">
+		SELECT
+			count(1)
+		FROM
+			MS_ROLE
+	</select>
+</sqlMap>

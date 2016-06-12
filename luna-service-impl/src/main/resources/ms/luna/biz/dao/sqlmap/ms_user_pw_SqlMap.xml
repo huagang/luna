@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_user_pw" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsUserPw" >
+    <result column="luna_name" property="lunaName" jdbcType="VARCHAR" />
+    <result column="pw_luna_md5" property="pwLunaMd5" jdbcType="VARCHAR" />
+    <result column="headimgurl" property="headimgurl" jdbcType="VARCHAR" />
+    <result column="unique_id" property="uniqueId" jdbcType="CHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="updated_by_unique_id" property="updatedByUniqueId" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    luna_name, pw_luna_md5, headimgurl, unique_id, email, regist_hhmmss, up_hhmmss, updated_by_unique_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsUserPwCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_user_pw.Base_Column_List" />
+    from ms_user_pw
+    <isParameterPresent >
+      <include refid="ms_user_pw.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    select 
+    <include refid="ms_user_pw.Base_Column_List" />
+    from ms_user_pw
+    where luna_name = #lunaName:VARCHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    delete from ms_user_pw
+    where luna_name = #lunaName:VARCHAR#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsUserPwCriteria" >
+    delete from ms_user_pw
+    <include refid="ms_user_pw.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    insert into ms_user_pw (luna_name, pw_luna_md5, headimgurl, unique_id, 
+      email, regist_hhmmss, up_hhmmss, updated_by_unique_id
+      )
+    values (#lunaName:VARCHAR#, #pwLunaMd5:VARCHAR#, #headimgurl:VARCHAR#, #uniqueId:CHAR#, 
+      #email:VARCHAR#, #registHhmmss:TIMESTAMP#, #upHhmmss:TIMESTAMP#, #updatedByUniqueId:CHAR#
+      )
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    insert into ms_user_pw
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lunaName" >
+        luna_name
+      </isNotNull>
+      <isNotNull prepend="," property="pwLunaMd5" >
+        pw_luna_md5
+      </isNotNull>
+      <isNotNull prepend="," property="headimgurl" >
+        headimgurl
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId" >
+        unique_id
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        email
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        updated_by_unique_id
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="lunaName" >
+        #lunaName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pwLunaMd5" >
+        #pwLunaMd5:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="headimgurl" >
+        #headimgurl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId" >
+        #uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        #updatedByUniqueId:CHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsUserPwCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_user_pw
+    <include refid="ms_user_pw.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_user_pw
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.lunaName" >
+        luna_name = #record.lunaName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.pwLunaMd5" >
+        pw_luna_md5 = #record.pwLunaMd5:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.headimgurl" >
+        headimgurl = #record.headimgurl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.uniqueId" >
+        unique_id = #record.uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.email" >
+        email = #record.email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByUniqueId" >
+        updated_by_unique_id = #record.updatedByUniqueId:CHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_user_pw.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_user_pw
+    set luna_name = #record.lunaName:VARCHAR#,
+      pw_luna_md5 = #record.pwLunaMd5:VARCHAR#,
+      headimgurl = #record.headimgurl:VARCHAR#,
+      unique_id = #record.uniqueId:CHAR#,
+      email = #record.email:VARCHAR#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      updated_by_unique_id = #record.updatedByUniqueId:CHAR#
+    <isParameterPresent >
+      <include refid="ms_user_pw.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    update ms_user_pw
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="pwLunaMd5" >
+        pw_luna_md5 = #pwLunaMd5:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="headimgurl" >
+        headimgurl = #headimgurl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId" >
+        unique_id = #uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="email" >
+        email = #email:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        updated_by_unique_id = #updatedByUniqueId:CHAR#
+      </isNotNull>
+    </dynamic>
+    where luna_name = #lunaName:VARCHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsUserPw" >
+    update ms_user_pw
+    set pw_luna_md5 = #pwLunaMd5:VARCHAR#,
+      headimgurl = #headimgurl:VARCHAR#,
+      unique_id = #uniqueId:CHAR#,
+      email = #email:VARCHAR#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      updated_by_unique_id = #updatedByUniqueId:CHAR#
+    where luna_name = #lunaName:VARCHAR#
+  </update>
+</sqlMap>

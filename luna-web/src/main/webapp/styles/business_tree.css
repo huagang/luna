@@ -1,0 +1,268 @@
+/*
+关系树样式
+author:franco
+time:20160517
+*/
+.luna-tree {
+	width:1200px;
+	height:100%;
+	margin:20px 0px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    min-height:600px;
+}
+.business-title{
+	padding:10px 48px;
+	font-size:16px;
+}
+.luna-tree .item-name{
+    width: 146px;
+    height: 36px;
+    line-height: 36px;
+    position: relative; 
+    border: 1px solid #E5E5E5;
+    padding: 0 0 0 5px;
+    margin: 6px 44px 6px 48px;
+    display: inline-block;
+    vertical-align: top;
+    /*float: left;*/
+}
+.luna-tree .item-type{
+    width: 110px;
+    padding: 0;
+}
+.luna-tree ul{
+    display: inline-block;
+    position: relative;
+    padding:0px;
+    /*float: left;*/
+}
+.luna-tree li{
+    position: relative;
+    list-style-type: none;
+    vertical-align: top;
+    /*width: 246px;*/
+   /* clear: both;*/
+}
+
+.luna-tree ul ul::before{ 
+    content: ''; 
+    position: absolute; 
+    top: 23px; 
+    left: -48px; 
+    border-bottom: 1px solid #E5E5E5; 
+    width: 48px; 
+    height: 0px; 
+} 
+/*We will use ::before and ::after to draw the connectors*/ 
+
+.luna-tree li::before{ 
+    content: ''; 
+    position: absolute;  
+    left: 0px; 
+    top: 6px;
+    border-bottom: 1px solid #E5E5E5; 
+    height: 18px;
+    width: 48px; 
+} 
+.luna-tree li::after{ 
+    content: ''; 
+    position: absolute;  
+    left: 0px; 
+    top: 24px;
+    border-left: 1px solid #E5E5E5; 
+    height: 100%;
+    width: 48px; 
+} 
+.luna-tree>ul>li::before{
+    border:0;
+}
+/*We need to remove left-right connectors from elements without  
+any siblings*/ 
+.luna-tree li:only-child::after { 
+    display: none; 
+} 
+ 
+/*Remove space from the top of single children*/ 
+.luna-tree li:only-child{ padding-top: 0;} 
+
+/*Remove left connector from first child and  
+right connector from last child*/ 
+.luna-tree li:last-child::after{ 
+    border: 0 none; 
+} 
+
+.luna-tree .item-name::before{
+}
+
+.luna-tree .item-name .item-title{
+    width: 103px;
+    display: inline-block;
+    height: 36px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.luna-tree .item-name .item-child-btn{
+    float: right;
+    margin-right: 0px;
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+.luna-tree .item-name .item-child-btn::before{
+    content: ''; 
+    position: absolute;  
+    height: 14px;
+    width: 1px;
+    border-left: 1px solid #E5E5E5;
+    display: inline-block;
+    float: left;
+    top: 11px;
+    left: 0px;
+}
+.luna-tree .item-name .item-child-btn .icon{
+    margin-top:15px;
+    float: left;
+    margin-left: 13px;
+}
+.luna-tree .item-name .item-opt-wrap{
+    width: 100%;
+    height: auto;
+    line-height: 36px;
+    position: absolute; 
+    border: 1px solid #E5E5E5;
+    text-align: left;
+    display: none;
+    top: 34px;
+    left: -1px;
+    z-index: 2;
+    background-color: #fff;
+}
+.luna-tree .item-name.current .item-opt-wrap{
+    display: block;
+}
+.luna-tree .item-name .item-opt-wrap .item-opt{
+    height: 36px;
+    text-indent: 5px;
+    cursor: pointer;
+}
+.luna-tree .item-name .item-opt-wrap .item-opt:hover{
+    background: #445FA8;
+    color: #FFF;
+}
+.luna-tree .item-type .item-type-color{
+    width: 18px;
+    height: 100%;
+    display: inline-block;
+    background-color: #728BCA;
+    float: left;
+}
+.luna-tree .item-type .bg-color1{
+    background-color: #A9D745;
+}
+.luna-tree .item-type .bg-color2{
+    background-color: #B193DB;
+}
+.luna-tree .item-type .bg-color3{
+    background-color: #FCD163;
+}
+.luna-tree .item-type .bg-color4{
+    background-color: #F274B8;
+}
+.luna-tree .item-type .bg-color5{
+    background-color: #F66F60;
+}
+.luna-tree .item-type .bg-color6{
+    background-color: #728BCA;
+}
+.luna-tree .item-type .bg-color7{
+    background-color: #728BCA;
+}
+.luna-tree .item-type .bg-color8{
+    background-color: #728BCA;
+}
+.luna-tree .item-type .bg-color9{
+    background-color: #728BCA;
+}
+.luna-tree .item-type .bg-color0{
+    background-color: #728BCA;
+}
+.luna-tree .item-type .item-type-name{
+    max-width: 65px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    float: left;
+    margin-left: 5px;
+}
+.luna-tree .item-type .item-type-num{
+    float: left;
+}
+.pop-childpoi{
+	width:690px;
+}
+.pop-childpoi select{
+	width:122px;
+}
+.pop-childpoi #keyWord{
+	width:390px;
+	height: 30px;
+}
+.pop-childpoi .item{
+	margin:15px 0px;
+	clear:both;
+}
+.pop-childpoi .item-label{
+	display:inline-block;
+	float:left;
+	margin-right:10px;
+	width:70px;
+	text-align: right;
+	line-height: 30px;
+}
+.tags-wrap .btn-tags{
+	background-color: #fff;
+	border:1px solid #E5E5E5;
+	color:#000;
+	padding:4px 10px;
+}
+.tags-wrap .btn-tags.current,.tags-wrap .btn-tags.selectd{
+	background-color: #4F6499;
+	border:1px solid #4F6499;
+	color:#fff;
+}
+.pop-childpoi .result{
+	clear:both;
+	width:610px;
+	margin:10px 15px;
+	min-height:100px;
+	max-height:300px;
+	overflow-y:auto;
+	border:1px solid #E5E5E5;
+}
+.list-result-poi{
+	
+}
+.list-result-poi label{
+	width:105px;
+	margin:5px;
+	display:inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right:0;
+}
+.list-result-poi label input{
+	display:inline-block;
+	margin-right:3px;
+}
+
+
+
+
+
+

@@ -1,0 +1,186 @@
+/*管理界面公共样式表*/
+/*time:2016/02/18*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,article,aside,details,figcaption,figure,footer,header,menu,nav,section{margin:0;padding:0}
+body,
+html{
+    font-family:"Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif;
+}
+h1{
+    font-size: 24px;
+    font-weight: 700;
+}
+h3{
+    font-size: 20px;
+    font-weight: 500;
+}
+a:link,
+a:visited,
+a:hover,
+a:active{
+    color:#459AE9;
+    text-decoration:none;
+}
+ol li,
+ul li{
+    list-style:none;
+}
+body{
+    width: 100%;
+}
+input,text-area{
+	font-size:14px;
+}
+/*导航条*/
+.container-fluid{
+    padding: 0;
+    margin: 0;
+}
+.inner-wrap{
+	float:none;
+    width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.info-user{
+    padding: 15px;
+}
+.sep{
+    color: #d0d0d0;
+    margin: 0 6px;
+}
+/*主要内容区域*/
+.content .main-content{
+    position: relative;
+    border: 1px solid #cccccc;
+    padding: 0;
+    display: table-cell;
+}
+/*侧边菜单栏*/
+.sidebar{
+    position: relative;
+    background:#F2F2F2;
+    border-right:1px solid #CCCCCC;
+    display:table-cell;
+    width: 160px;
+}
+.sidebar .menu{
+    padding: 15px 0 15px 20px;
+}
+.sidebar .menu-cata{
+    border-bottom: 1px solid #DDDDDD;
+}
+.sidebar .menu-title{
+    color: #000;
+    font-size: 17px;
+    font-weight: 500;
+}
+.sidebar .menu-item{
+    font-size: 15px;
+    margin: 12px 0 12px 18px;
+}
+.sidebar .selected{
+    color: #000;
+}
+a.selected:hover{
+    text-decoration: none;
+}
+/*主题内容*/
+.main{
+    padding: 0 20px;
+    display: table-cell;
+    width: 840px;
+}
+.main-hd h3{
+    font-size: 18px;
+    font-weight: 700;
+}
+.main-bd{
+    margin: 20px 0;
+}
+
+/*页脚*/
+.footer{
+	position: relative;
+    margin-top:50px;
+    bottom: 10px;
+    width: 100%;
+    border-top: 1px solid #DDDDDD;
+    padding: 10px 0 0 0;
+}
+footer .copyright{text-align:center;  font-size: 12px;;}
+/*模态窗口*/
+.pop-overlay{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: #333;
+    opacity: 0.5;
+    z-index: 100;
+}
+/*弹出层*/
+.pop{
+    position: fixed;
+    border: 1px solid #CCCCCC;
+    background: #fff;
+    top: 0;
+    display: none;
+    z-index: 101;
+}
+.pop-title{
+    position: relative;
+    height: 46px;
+    line-height: 46px;
+    background: #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 0 5px;
+}
+.pop-title h3{
+    font-size: 18px;
+    line-height: 44px;
+}
+.btn-close{
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    padding: 1px 7px;
+}
+.pop .pop-cont{
+    padding: 35px 24px;
+}
+.pop .btn-confirm,
+.pop .btn-verify,
+.pop .btn-verify1,
+.pop .btn-cancel{
+    font-size: 14px;
+    padding: 4px 20px;
+    margin: 0 10px 8px 10px;
+}
+.pop  .pop-fun{
+    float: right;
+}
+.pop-cont label{
+    padding-right: 10px;
+}
+#pop-delete{
+    max-width: 330px;
+}
+/*消息提示*/
+.pop-message{
+    min-width: 300px;
+    max-width: 400px;
+    word-break: break-all;
+    word-wrap: break-word;
+    /*text-indent: 28px;*/
+}
+.pop-message .pop-fun{
+    width:100%;
+    float: none;
+    text-align: center;
+}
+.btn-mes{
+	margin-bottom:8px;
+}

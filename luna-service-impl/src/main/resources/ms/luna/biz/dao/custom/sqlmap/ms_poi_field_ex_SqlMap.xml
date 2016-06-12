@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_poi_field" >
+	<resultMap id="MsTagFieldResult" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
+		<result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="field_type" property="fieldType" jdbcType="INTEGER" />
+		<result column="field_size" property="fieldSize" jdbcType="INTEGER" />
+		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="placeholder" property="placeholder" jdbcType="VARCHAR" />
+		<result column="extension_attrs" property="extensionAttrs" jdbcType="VARCHAR" />
+		<result column="field_tips_for_templete" property="fieldTipsForTemplete" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFieldTags" resultMap="MsTagFieldResult" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+		SELECT
+			f.field_name as field_name,
+			r.tag_id as tag_id,
+			f.field_show_name as field_show_name,
+			f.display_order as display_order,
+			f.field_type as field_type,
+			f.field_size as field_size,
+			tag.tag_name as tag_name,
+			f.placeholder as placeholder,
+			f.extension_attrs as extension_attrs,
+			f.field_tips_for_templete as field_tips_for_templete
+		FROM
+			ms_poi_field f, ms_r_tag_field r,
+			ms_poi_tag tag
+		where f.field_name = r.field_name 
+			  and tag.tag_id = r.tag_id
+		<isNotNull property="tagId">
+			<![CDATA[
+				and tag.tag_id <> #tagId#
+			]]>
+		</isNotNull>
+		ORDER BY display_order ASC
+	</select>
+</sqlMap>

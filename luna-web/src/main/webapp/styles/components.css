@@ -1,0 +1,176 @@
+/*画布*/
+#layermain{
+    position:relative;
+    display: block;
+    width: 480px;
+    height: 756px;
+}
+
+/*组件*/
+.componentbox {
+    position: absolute;
+    max-width: 100%;
+/*     left: 50px;
+    top: 50px; */
+    cursor: move;
+    z-index: 1;
+    background-repeat: no-repeat;
+    
+}
+
+/*组件内容*/
+.componentbox .con {
+	position:relative;
+    width: 100%;
+}
+.ui-draggable{
+    display: block;
+}
+/*组件拖拽框左上圆角*/
+.componentbox .ui-resizable-nw {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #008ce5;
+    border-radius: 50%;
+    position: absolute;
+    cursor: se-resize;
+    left: -5px;
+    top: -5px;
+    z-index: 1;
+    background: #fff
+}
+/*组件拖拽框右上圆角*/
+.componentbox .ui-resizable-ne {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #008ce5;
+    border-radius: 50%;
+    position: absolute;
+    cursor: ne-resize;
+    right: -5px;
+    top: -5px;
+    z-index: 1;
+    background: #fff
+}
+/*组件拖拽框右下圆角*/
+.componentbox .ui-resizable-se {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #008ce5;
+    border-radius: 50%;
+    position: absolute;
+    cursor: se-resize;
+    right: -5px;
+    bottom: -5px;
+    z-index: 1;
+    background: #fff
+}
+/*组件拖拽框右下圆角*/
+.componentbox .ui-resizable-sw {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #008ce5;
+    border-radius: 50%;
+    position: absolute;
+    cursor: ne-resize;
+    left: -5px;
+    bottom: -5px;
+    z-index: 1;
+    background: #fff
+}
+/*组件拖拽框上边框*/
+.componentbox .ui-resizable-n {
+    width: 100%;
+    height: 4px;
+    border-top: 1px solid #008ce5;
+    cursor: n-resize;
+    position: absolute;
+    left: 0;
+    top: 0
+}
+/*组件拖拽框右边框*/
+.componentbox .ui-resizable-e {
+    width: 4px;
+    height: 100%;
+    border-right: 1px solid #008ce5;
+    cursor: e-resize;
+    position: absolute;
+    right: 0;
+    top: 0
+}
+/*组件拖拽框下边框*/
+.componentbox .ui-resizable-s {
+    width: 100%;
+    height: 4px;
+    border-bottom: 1px solid #008ce5;
+    cursor: s-resize;
+    position: absolute;
+    left: 0;
+    bottom: 0
+}
+/*组件拖拽框左边框*/
+.componentbox .ui-resizable-w {
+    width: 4px;
+    height: 100%;
+    border-left: 1px solid #008ce5;
+    cursor: w-resize;
+    position: absolute;
+    left: 0;
+    top: 0
+}
+
+/*组件拖拽框旋转控件圆点*/
+.ui-rotatable-handle{
+    position:absolute;left:50%;
+    top:0;
+    z-index:99;
+    height:12px;
+    width:12px;
+    margin-left:-6px;
+    margin-top:-25px;
+    border-radius:100%;
+    background-color:#008ce5;
+    cursor:url(../img/mouserotate.ico) 16 16,default;
+    background-size:100%
+}
+/*组件拖拽框旋转控件直线*/
+.ui-rotatable-handle-line{
+    position:absolute;
+    top:6px;
+    left:5px;
+    width:1px;
+    height:20px;
+    background-color:#008ce5
+}
+
+
+.componentbox .ui-resizable-handle,.componentbox .ui-rotatable-handle{
+	display:none;
+}
+
+/*组件图片*/
+.componentbox .con img{
+    width:100%;
+    z-index: 101;
+}
+
+/*组件文本*/
+.componentbox .con{
+    overflow-y:auto;
+    width:100%;
+}
+.componentbox .con.con_text{
+	height:100%;
+}
+.componentbox .con .text {
+    color:black;
+    word-wrap: break-word;
+    word-break:break-all;
+    z-index: 101;
+}
+/*组件文本倾斜*/
+.componentbox .con .text i {
+    font-style: italic;
+    z-index: 101;
+}
+

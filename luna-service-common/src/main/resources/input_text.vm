@@ -1,0 +1,6 @@
+<div class="item-poi" style="display:none" tag_id="${privateField.field_def.tag_id}">
+    <div class="label-poi"><span class="superscript"></span>${privateField.field_def.field_show_name}</div>
+    <div class="value-poi">
+        <input id="${privateField.field_def.field_name}" ${readonly} value="${privateField.field_val.value}" name="${privateField.field_def.field_name}" class="txt" type="text" placeholder="${privateField.field_def.placeholder}"/>
+    </div>
+</div>

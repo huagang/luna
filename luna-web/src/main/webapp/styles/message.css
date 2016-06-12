@@ -1,0 +1,112 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,article,aside,details,figcaption,figure,footer,header,menu,nav,section{margin:0;padding:0}
+body,
+html{
+    font-family:"Helvetica Neue",Arial,"STHeiti","Microsoft YaHei","Hiragino Sans GB","\9ED1\4F53",sans-serif;
+    font-size: 14px;
+    color: #212121;
+}
+h3{
+    font-size: 24px;
+}
+body{
+    background: #F5F5F5;
+    overflow: hidden;
+}
+button{
+    background: #445FA8;
+    color: #FFFFFF;
+    padding: 4px 18px;
+    border: 1px solid #445FA8;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+button:hover{
+    background: #476AC6;
+    border: 1px solid #476AC6;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    -webkit-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -moz-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -ms-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -o-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.container-fluid{
+    padding: 0;
+    margin: 0;
+}
+/*导航条*/
+.navbar{
+    background-color: #364c86;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    height: 64px;
+    margin-bottom: 30px;
+}
+.navbar-header{
+    width: 1200px;
+    float: none;
+    margin: 0 auto;
+    height: 64px;
+    vertical-align: middle;
+}
+.navbar-brand {
+    display: inline-block;
+    vertical-align: middle;
+    height: 64px;
+    padding: 12px 0;
+}
+.inner-wrap{
+    width: 1200px;
+    height: 700px;
+    margin: auto;
+    background: #FFFFFF;
+    text-align: center;
+    border: 1px solid #C3C3C3;
+    padding: 36px 30px;
+}
+.title-mes{
+    width:100%;
+    text-align: left;
+}
+.title-mes h3{
+    font-weight: normal;
+}
+.message{
+    position: relative;
+    font-size: 18px;
+    top: 40%;
+}
+.img-info{
+    display: inline-block;
+    position: relative;
+    top: 7px;
+    padding-right: 5px;
+}
+.message-con{
+    display: inline-block;
+}
+a:link,
+a:visited,
+a:hover,
+a:active{
+    color:#445FA8;
+    text-decoration:none;
+}
+/*页脚样式*/
+.foot{
+    margin: 30px 0 33px 0;
+    line-height: 21px;
+    text-align: center;
+}
+.copyright{
+    font-size: 12px;
+    color:#707070
+}

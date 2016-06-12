@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_resource_uri" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsResourceUri" >
+    <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="resource_uri" property="resourceUri" jdbcType="VARCHAR" />
+    <result column="level_type" property="levelType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    resource_id, resource_name, parent_id, resource_uri, level_type, status, regist_hhmmss, 
+    up_hhmmss
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsResourceUriCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_resource_uri.Base_Column_List" />
+    from ms_resource_uri
+    <isParameterPresent >
+      <include refid="ms_resource_uri.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    select 
+    <include refid="ms_resource_uri.Base_Column_List" />
+    from ms_resource_uri
+    where resource_id = #resourceId:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    delete from ms_resource_uri
+    where resource_id = #resourceId:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsResourceUriCriteria" >
+    delete from ms_resource_uri
+    <include refid="ms_resource_uri.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    insert into ms_resource_uri (resource_id, resource_name, parent_id, resource_uri, 
+      level_type, status, regist_hhmmss, up_hhmmss
+      )
+    values (#resourceId:INTEGER#, #resourceName:VARCHAR#, #parentId:INTEGER#, #resourceUri:VARCHAR#, 
+      #levelType:INTEGER#, #status:BIT#, #registHhmmss:TIMESTAMP#, #upHhmmss:TIMESTAMP#
+      )
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    insert into ms_resource_uri
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="resourceId" >
+        resource_id
+      </isNotNull>
+      <isNotNull prepend="," property="resourceName" >
+        resource_name
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        parent_id
+      </isNotNull>
+      <isNotNull prepend="," property="resourceUri" >
+        resource_uri
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        level_type
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        status
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="resourceId" >
+        #resourceId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceName" >
+        #resourceName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        #parentId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceUri" >
+        #resourceUri:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        #levelType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsResourceUriCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_resource_uri
+    <include refid="ms_resource_uri.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_resource_uri
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.resourceId" >
+        resource_id = #record.resourceId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.resourceName" >
+        resource_name = #record.resourceName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.parentId" >
+        parent_id = #record.parentId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.resourceUri" >
+        resource_uri = #record.resourceUri:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.levelType" >
+        level_type = #record.levelType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.status" >
+        status = #record.status:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_resource_uri.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_resource_uri
+    set resource_id = #record.resourceId:INTEGER#,
+      resource_name = #record.resourceName:VARCHAR#,
+      parent_id = #record.parentId:INTEGER#,
+      resource_uri = #record.resourceUri:VARCHAR#,
+      level_type = #record.levelType:INTEGER#,
+      status = #record.status:BIT#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#
+    <isParameterPresent >
+      <include refid="ms_resource_uri.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    update ms_resource_uri
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="resourceName" >
+        resource_name = #resourceName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        parent_id = #parentId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="resourceUri" >
+        resource_uri = #resourceUri:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        level_type = #levelType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        status = #status:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    where resource_id = #resourceId:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsResourceUri" >
+    update ms_resource_uri
+    set resource_name = #resourceName:VARCHAR#,
+      parent_id = #parentId:INTEGER#,
+      resource_uri = #resourceUri:VARCHAR#,
+      level_type = #levelType:INTEGER#,
+      status = #status:BIT#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#
+    where resource_id = #resourceId:INTEGER#
+  </update>
+</sqlMap>

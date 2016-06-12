@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-title" content="标题">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+	<!-- 网站内容描述，告诉浏览器页面主要内容-->
+    <meta name='description' content='${app_note}'/>  
+	<title>${page_name}</title>
+	<style>
+        body{
+            margin: 0;
+            width: 100%;
+            overflow-x:hidden;
+        }
+        a,
+		a:link,
+		a:visited ,
+		a:hover,
+		a:active {
+    		text-decoration: none;
+    		color:inherit !important;
+    		font-size:inherit !important;
+    		line-height:inherit !important;
+		}
+        html,
+        body,
+        .inner-wrap{
+        	height:100%;
+        }
+        .inner-wrap{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            text-align: center;font-size:0;
+        }
+        img{
+        	margin:0;
+        	}
+        div{
+        	word-wrap:break-word;
+        	word-break:break-all;
+        }
+    </style>
+	<script type="text/javascript" src="../common/js/jquery.js" charset="UTF-8"></script>
+	<script>
+  		var shareData = {
+    	title: '${share_info_title}',
+    	desc: '${share_info_des}',
+    	link: '${share_info_address}',
+    	imgUrl: '${share_info_pic}'
+  		};
+  	</script>
+	<script type="text/javascript" src="../common/js/share.js" charset="UTF-8"></script>
+	<script>
+  		$(document).ready(function(){
+  		initShare();
+  		});
+	</script>
+</head>
+<body> 
+	<div class="inner-wrap" style="${bgc}">
+	#foreach ($tag in $tag_script)
+ 		$tag
+	#end
+	</div>
+	<script type="text/javascript" src="http://tajs.qq.com/h5?sId=${stat_app_id}" charset="UTF-8"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" charset="UTF-8"></script>
+	<script type="text/javascript">
+        var page = $page;
+    </script>
+</body>
+</html>

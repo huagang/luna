@@ -1,0 +1,134 @@
+/*平台商家入驻
+author:demi
+time:20160325*/
+button{
+    padding: 7px 18px;;
+}
+.superscript{
+    color: #D0021B;
+    padding-right: 4px;
+}
+.main-information{
+    width: 1200px;
+    border: 1px solid #C3C3C3;
+    padding: 36px 30px;
+    background: #FFFFFF;
+    text-align: center;
+}
+.title-main{
+    width: 100%;
+    text-align: left;
+    margin: 0 0 40px 10px;
+}
+h5{
+    font-weight: 600;
+}
+.item{
+    margin: 10px 5px;
+}
+.item-label{
+    display: inline-block;
+    width: 130px;
+    text-align: right;
+    margin-right: 20px;
+    vertical-align: top;
+    padding-top: 5px;
+}
+.item-value{
+    display: inline-block;
+    width: 542px;
+    text-align: left;
+}
+.information{
+    position: relative;
+}
+.title-info{
+    width: 150px;
+    text-align: right;
+    margin:35px 0 35px 206px;
+}
+.information input[type="text"]{
+    height: 35px;
+    width: 542px;
+}
+.information select{
+    height: 35px;
+}
+.warn{
+    padding-left: 5px;
+}
+.information .info{
+    color: #929292;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/*营业执照上传*/
+#license-upload{
+    position: absolute;
+    width: 164px;
+    height: 37px;
+    opacity: 0;
+    z-index: 99;
+}
+#btn-license-upload{
+    position: relative;
+    margin-right: 10px
+}
+input[type=radio][name=license]{
+	margin-right:5px;
+	vertical-align:-1px;
+}
+.license-label{
+	margin-top:6px;
+    margin-right: 80px;
+}
+.remind{
+    color: #D0021B;
+    position: relative;
+}
+.information .label-des{
+    margin-left: -19px;
+}
+#merchant_info{
+    width: 542px;
+}
+#btn-submit{
+    margin-top: 10px;
+}
+.warn-border{
+    border: 1px solid #D0021B !important;
+}
+.address-container{
+	margin-top:10px;
+}
+#address-container div{
+    margin: 0;
+}
+#address-search{
+    display: none;
+    z-index: 99;
+    font-size: 14px;
+}
+.confirm{
+    border: 1px solid #C3c3c3;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin: 10px auto;
+    padding: 10px 60px;
+}
+.confirm div{
+    margin-bottom: 10px;
+}
+.pop-fun{
+    padding-right: 44px;
+}
+.pop-cont{
+    padding:28px 44px 20px 44px;
+}
+.warn{
+    position: relative;
+    color: #D0021B;
+    margin: 3px !important;
+}

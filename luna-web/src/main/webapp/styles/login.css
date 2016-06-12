@@ -1,0 +1,192 @@
+/*登录页面*/
+/*author:Demi*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,article,aside,details,figcaption,figure,footer,header,menu,nav,section{margin:0;padding:0}
+body,
+html{
+    font-family:"Helvetica Neue",Arial,"STHeiti","Hiragino Sans GB","\9ED1\4F53",sans-serif;
+    font-size: 14px;
+    color: #212121;
+}
+body{
+    background: #F5F5F5;
+}
+input[type=text],
+input[type=password]{
+    height: 45px;
+    border: 1px solid #C3C3C3;
+    padding: 5px 15px;
+}
+button{
+    background: #445FA8;
+    color: #FFFFFF;
+    padding: 4px 18px;
+    border: 1px solid #445FA8;
+}
+button:hover{
+    background: #476AC6;
+    border: 1px solid #476AC6;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    -webkit-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -moz-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -ms-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    -o-transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.container-fluid{
+    padding: 0;
+    margin: 0;
+}
+.inner-wrap{
+    width: 1200px;
+    margin: auto;
+}
+h1{
+    font-weight: normal;
+    line-height: 36px;
+}
+/*导航条样式*/
+.navbar{
+    background-color: #364c86;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    height: 64px;
+    margin-bottom: 0;
+}
+.navbar-header{
+    width: 1200px;
+    float: none;
+    margin: 0 auto;
+    height: 64px;
+}
+.navbar-brand{
+    height: 64px;
+    padding: 12px 0;
+}
+/*登录*/
+.content{
+    background: #FFFFFF url("../img/login_bg.jpg") center 0 no-repeat;
+}
+.login-main{
+    position: relative;
+    width: 1200px;
+    height: 550px;
+}
+.login{
+    position: relative;
+    border: 1px solid #dddddd;
+    float: right;
+    margin-top: 96px;
+    width: 348px;
+    height: 372px;
+    padding: 25px 24px 30px 24px;
+    background: #FFFFFF;
+}
+.account{
+    text-align: center;
+}
+.account-title{
+    width: 300px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #C3C3C3;
+    margin-bottom: 24px;
+}
+input[type=text],
+input[type=password]{
+    width: 300px;
+    margin-bottom: 22px;
+}
+input:-webkit-autofill{
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    }
+.signin{
+    text-align: center;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    background: #ecaf4c;
+    width: 84px;
+    color: #FFFFFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+.signin:hover{
+    cursor: pointer;
+}
+a.link-url{
+	color:#ffffff !important;
+}
+a.link-url:hover{
+	color:#ffffff !important;
+	text-decoration:none;
+}
+.register{
+    text-align: right;
+    margin-bottom: 28px;
+}
+.remind{
+    color:#D0021B;
+    padding-left: 5px;
+    margin-bottom: 4px;
+    position: absolute;
+    top: 139px;
+}
+.btn-login{
+    width: 300px;
+    height: 45px;
+}
+.purpose{
+    position: absolute;
+    color: #FFFFFF;
+    font-size: 36px;
+    font-weight: 100;
+}
+.process{
+    padding: 36px 54px;
+}
+.symbol{
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    width: 32px;
+    line-height: 32px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
+    background: #7186BE;
+    color: #FFFFFF;
+    margin-bottom: 15px;
+}
+table>tbody>tr>td{
+    text-align: center;
+    padding: 0 10px;
+    width: 220px;
+}
+.process-title{
+    font-size: 24px;
+    line-height: 38px;
+}
+.process-des{
+    line-height: 28px;
+    color: #838383;
+}
+
+/*页脚样式*/
+.foot{
+    margin: 70px 0 33px 0;
+    line-height: 21px;
+    text-align: center;
+}
+.copyright{
+    font-size: 12px;
+    color:#707070
+}

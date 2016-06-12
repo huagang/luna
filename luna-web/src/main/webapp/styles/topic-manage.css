@@ -1,0 +1,91 @@
+/*用户管理平台样式*/
+/*author:Demi*/
+/*用户搜索*/
+
+.txt{
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #e7e7e7;
+    font-size: 14px;
+    width: 300px;
+}
+.select{
+    margin: 0 5px 10px 5px;
+    height: 32px;
+    border: 1px solid #e7e7e7;
+    font-size: 14px;
+    padding-right: 8px;
+
+}
+.btn-search,
+.btn-add{
+    position: relative;
+    height: 32px;
+}
+.btn-add{
+    float: right;
+    top: -32px;
+}
+.delete,
+.property,
+.modify{
+	padding-right:10px;
+}
+a.delete{
+	color:#ff0600;
+}
+
+/*弹出层，独有，新建微景展*/
+.pop-cont{
+    margin-right: 70px;
+    margin-top: 20px;
+    padding-left:54px!important;
+}
+#cata-name,
+#cata-abbr{
+    margin-left: 5px;
+    width: 280px;
+    font-size: 12px;
+    height: 30px;
+    margin-bottom: 10px;
+}
+#pass1,
+#pass2{
+    color: green;
+    position: absolute;
+    left: 373px;
+}
+#pass1{
+    top: 100px;
+    visibility: hidden;
+}
+#pass2{
+    top: 140px;
+    visibility: hidden;
+}
+.cataName{
+    margin-right:30px;
+}
+.warn{
+    color: #ff0600;
+    position: absolute;
+}
+#warn1,
+#warn2{
+    left: 373px;
+}
+#warn1{
+    top: 105px;
+}
+#warn2{
+    top: 145px;
+}
+#warn{
+    left: 90px;
+    top: 75px;
+}
+/*删除类别*/
+.pop-tips{
+    margin: 40px 100px;
+    font-size: 14px;
+}

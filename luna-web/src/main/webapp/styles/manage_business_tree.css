@@ -1,0 +1,70 @@
+/*
+业务管理样式表
+author：franco
+time：20160527*/
+/*新建按钮*/
+#new-business-tree{
+    float: right;
+    margin-right: 10px;
+    margin-top:15px;
+}
+.main-bd{
+	/* margin-top:74px; */
+}
+/*主内容区域*/
+.edit{
+    padding-right: 10px;
+}
+/*弹出框*/
+.pop-fun{
+	padding-right:39px;
+}
+.select{
+	margin-right:8px;
+	min-width:90px;
+	width:90px;
+}
+.name,
+.short,
+.region,
+.result{
+    margin-bottom: 10px;
+    font-size: 14px;
+    position: relative;
+    display:inline-block;
+}
+.result{
+    padding-bottom: 15px;
+}
+.merchant{
+    padding-bottom: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #DDDDDD;
+}
+.cata-label{
+    margin-left: 28px;
+
+}
+#business-name-edit,
+#business-name,
+#business-name-short-edit,
+#business-name-short{
+    width: 375px;
+}
+#warn-short-edit,
+#warn-short,
+#warn-name-edit,
+#warn-name{
+    position: absolute;
+    left: 355px;
+    width: 70px;
+    top: 5px;
+    visibility: hidden;
+}
+#search{
+    margin-left: 6px;
+}
+.remind{
+	color: #D0021B;
+	position: relative;
+}

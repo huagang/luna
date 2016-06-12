@@ -1,0 +1,19 @@
+<div class="item-poi" style="display:none" tag_id="${privateField.field_def.tag_id}">
+    <div class="label-poi label-ver">${privateField.field_def.field_show_name}</div>
+    <div class="value-poi">
+        <input type="text" readOnly="true" value="${privateField.field_val.value}" id="${privateField.field_def.field_name}" name="${privateField.field_def.field_name}" placeholder="${privateField.field_def.placeholder}" class="img-url"/>
+		#if (${readonly} == "")
+	        <div class="upload-thumbnail">
+	            <input id="${privateField.field_def.field_name}_fileup" name="${privateField.field_def.field_name}_fileup"
+	            	 class="fileup" type="file" file_type=""
+	            	 file_size="${privateField.field_def.field_size}"
+	            	 onchange="asyncUploadFile(this,'${privateField.field_def.field_name}_fileup','${privateField.field_def.field_name}')"
+	            	 />
+	            <button type="button">本地上传</button>
+	            <span class="info">不超过${privateField.field_def.field_size}M</span>
+	        </div>
+	        <a href="javaScript:cleanFileInput('${privateField.field_def.field_name}');" style="margin-left: 8px;">清除</a>
+        #end
+        <div class="warn" id=${privateField.field_def.field_name}_warn>格式不正确</div>
+    </div>
+</div>

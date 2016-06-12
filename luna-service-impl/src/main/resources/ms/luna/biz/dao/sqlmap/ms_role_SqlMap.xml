@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_role" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsRole" >
+    <result column="ms_role_code" property="msRoleCode" jdbcType="VARCHAR" />
+    <result column="ms_role_name" property="msRoleName" jdbcType="VARCHAR" />
+    <result column="short_role_name" property="shortRoleName" jdbcType="VARCHAR" />
+    <result column="ms_role_type" property="msRoleType" jdbcType="VARCHAR" />
+    <result column="ms_role_auth" property="msRoleAuth" jdbcType="VARCHAR" />
+    <result column="biz_module_code" property="bizModuleCode" jdbcType="VARCHAR" />
+    <result column="ds_order" property="dsOrder" jdbcType="INTEGER" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="del_flg" property="delFlg" jdbcType="VARCHAR" />
+    <result column="updated_by_unique_id" property="updatedByUniqueId" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    ms_role_code, ms_role_name, short_role_name, ms_role_type, ms_role_auth, biz_module_code, 
+    ds_order, note, up_hhmmss, regist_hhmmss, del_flg, updated_by_unique_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsRoleCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_role.Base_Column_List" />
+    from ms_role
+    <isParameterPresent >
+      <include refid="ms_role.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    select 
+    <include refid="ms_role.Base_Column_List" />
+    from ms_role
+    where ms_role_code = #msRoleCode:VARCHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    delete from ms_role
+    where ms_role_code = #msRoleCode:VARCHAR#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsRoleCriteria" >
+    delete from ms_role
+    <include refid="ms_role.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    insert into ms_role (ms_role_code, ms_role_name, short_role_name, ms_role_type, 
+      ms_role_auth, biz_module_code, ds_order, note, 
+      up_hhmmss, regist_hhmmss, del_flg, updated_by_unique_id
+      )
+    values (#msRoleCode:VARCHAR#, #msRoleName:VARCHAR#, #shortRoleName:VARCHAR#, #msRoleType:VARCHAR#, 
+      #msRoleAuth:VARCHAR#, #bizModuleCode:VARCHAR#, #dsOrder:INTEGER#, #note:VARCHAR#, 
+      #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #delFlg:VARCHAR#, #updatedByUniqueId:CHAR#
+      )
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    insert into ms_role
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="msRoleCode" >
+        ms_role_code
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleName" >
+        ms_role_name
+      </isNotNull>
+      <isNotNull prepend="," property="shortRoleName" >
+        short_role_name
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleType" >
+        ms_role_type
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleAuth" >
+        ms_role_auth
+      </isNotNull>
+      <isNotNull prepend="," property="bizModuleCode" >
+        biz_module_code
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        ds_order
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        note
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        del_flg
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        updated_by_unique_id
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="msRoleCode" >
+        #msRoleCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleName" >
+        #msRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shortRoleName" >
+        #shortRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleType" >
+        #msRoleType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleAuth" >
+        #msRoleAuth:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bizModuleCode" >
+        #bizModuleCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        #dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        #updatedByUniqueId:CHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsRoleCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_role
+    <include refid="ms_role.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_role
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.msRoleCode" >
+        ms_role_code = #record.msRoleCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.msRoleName" >
+        ms_role_name = #record.msRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.shortRoleName" >
+        short_role_name = #record.shortRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.msRoleType" >
+        ms_role_type = #record.msRoleType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.msRoleAuth" >
+        ms_role_auth = #record.msRoleAuth:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.bizModuleCode" >
+        biz_module_code = #record.bizModuleCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.dsOrder" >
+        ds_order = #record.dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.note" >
+        note = #record.note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.delFlg" >
+        del_flg = #record.delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByUniqueId" >
+        updated_by_unique_id = #record.updatedByUniqueId:CHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_role.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_role
+    set ms_role_code = #record.msRoleCode:VARCHAR#,
+      ms_role_name = #record.msRoleName:VARCHAR#,
+      short_role_name = #record.shortRoleName:VARCHAR#,
+      ms_role_type = #record.msRoleType:VARCHAR#,
+      ms_role_auth = #record.msRoleAuth:VARCHAR#,
+      biz_module_code = #record.bizModuleCode:VARCHAR#,
+      ds_order = #record.dsOrder:INTEGER#,
+      note = #record.note:VARCHAR#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      del_flg = #record.delFlg:VARCHAR#,
+      updated_by_unique_id = #record.updatedByUniqueId:CHAR#
+    <isParameterPresent >
+      <include refid="ms_role.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    update ms_role
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="msRoleName" >
+        ms_role_name = #msRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shortRoleName" >
+        short_role_name = #shortRoleName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleType" >
+        ms_role_type = #msRoleType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="msRoleAuth" >
+        ms_role_auth = #msRoleAuth:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bizModuleCode" >
+        biz_module_code = #bizModuleCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        ds_order = #dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        note = #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        del_flg = #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        updated_by_unique_id = #updatedByUniqueId:CHAR#
+      </isNotNull>
+    </dynamic>
+    where ms_role_code = #msRoleCode:VARCHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsRole" >
+    update ms_role
+    set ms_role_name = #msRoleName:VARCHAR#,
+      short_role_name = #shortRoleName:VARCHAR#,
+      ms_role_type = #msRoleType:VARCHAR#,
+      ms_role_auth = #msRoleAuth:VARCHAR#,
+      biz_module_code = #bizModuleCode:VARCHAR#,
+      ds_order = #dsOrder:INTEGER#,
+      note = #note:VARCHAR#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      del_flg = #delFlg:VARCHAR#,
+      updated_by_unique_id = #updatedByUniqueId:CHAR#
+    where ms_role_code = #msRoleCode:VARCHAR#
+  </update>
+</sqlMap>

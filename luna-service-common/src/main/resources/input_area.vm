@@ -1,0 +1,6 @@
+<div class="item-poi" style="display:none" tag_id="${privateField.field_def.tag_id}">
+    <div class="label-poi label-ver">${privateField.field_def.field_show_name}</div>
+    <div class="value-poi">
+        <textarea id="${privateField.field_def.field_name}" class="poi-des" ${readonly} name="${privateField.field_def.field_name}" placeholder="${privateField.field_def.placeholder}">${privateField.field_val.value}</textarea>
+    </div>
+</div>

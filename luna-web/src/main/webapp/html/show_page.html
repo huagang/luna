@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="Content-Language" content="zh-cn" />
+  <meta http-equiv="X-UA-Compatible" content = "IE=edge,chrome=1" />
+  <meta name="author" content="vb" />
+  <meta name="Copyright" content="visualbusiness" />
+  <meta name="Description" content="皓月平台的宗旨。" />
+  <meta name="Keywords" content="皓月" />
+  <title>皓月管理平台</title>
+  <!-- 样式表文件 -->
+  <link href="../plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="../plugins/minicolors/jquery.minicolors.css">
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/topic.css">
+  <!-- 脚本文件 -->
+  <script src="../plugins/jquery.js"></script>
+  <script src="../plugins/jquery-ui.min.js"></script>
+  <script src="../plugins/jquery.ui.rotatable.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../plugins/contextmenu/bootstrap-contextmenu.js"></script>
+  <script src="../scripts/lunaweb.js" charset="utf-8"></script>
+  <script src="../plugins/hotkey/jquery.hotkeys.js"></script>
+  <script type="text/javascript" src="../plugins/minicolors/jquery.minicolors.js"></script>
+</head>
+<body>
+<div class="container">
+	<!-- 可视化界面导航 -->
+	<div class="topic-header">
+  		<div class="inner-header">
+  			<div class="header">
+  				<nav class="navbar navbar-default">
+  					<a class="navbar-brand" href="#">Brand</a>
+  					<h1>皓月平台</h1>
+  					<div class="component">
+  						<ul class="list-component">
+        					<li><span class="text-model" id="text-model" style="background:url(../img/icon03.png) center 5px no-repeat;">文本</span></li>
+        					<li><span class="image" id="image" style="background:url(../img/icon04.png) center 5px no-repeat;">图片</span></li>
+      					</ul>
+  					</div>
+  					<div class="topic-set">
+  						<span class="save"></span>
+      					<button type="button" class="btn btn-primary" id="btn-save">保存</button>
+      					<button type="button" class="btn btn-primary" id="QR-code">二维码预览</button>
+      					<div id="QR-show">
+      						 <img id="QRimg" src=""/>
+      						 <span id="QR-clc" class="glyphicon glyphicon-remove"></span>
+      					</div>
+      					<button type="button" class="btn btn-primary" id="btn-publish">发布</button>
+      					<button type="button" class="btn btn-primary" id="btn-set">设置</button>
+    				</div>
+    			</nav>
+  			</div>		
+  		</div>
+	</div>
+
+	<!-- 可视化界面导航 -->
+	<!-- 中间区域内容 -->
+	<!-- 页面管理（左） -->
+	<div class="page-manage">   
+      <div class="list-page-wrap">
+        <ol class="list-page  ui-droppable ui-sortable" id="list-page">
+        
+        </ol>
+      </div>
+      <button class="btn btn-primary" id="new-built" type="button">+ 新建页面</button>
+    </div>
+    <!-- 可视化画布 -->
+    <div class="canvas" id="canvas">
+      <div class="inner-canvas" id="inner-canvas">
+        <div id="layermain">
+        </div>
+      </div>
+    </div>
+    <!-- 可视化画布 end -->
+    <!-- 控制面板管理 （右） -->
+    <div class="control-manage">
+    	<div id="bg">
+            <div class="menu-control"><span class="bg-title">背景</span></div>
+            <div class="bg-set">
+                <label for="bg-color" class="bg-color">背景颜色：<br>
+                    <input type="text" class="form-control color-set" id="bg-color" data-control="hue" value="#ffffff">
+                </label>
+            </div>
+            <div class="bg-set">
+                <label class="bg-img">背景图片：<br>
+                	<form id="backgrounadpic_id" name="backgrounadpic_id" method="post" enctype="multipart/form-data">
+	                    <button class="btn btn-local">本地上传</button>
+	                    <span class="or">或</span> <input class="img-url" id="bgimg-url" placeholder="输入图片url地址"/>
+	                    <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="pic"/>
+                    </form>
+                </label>
+                <div class="preview" id='pre-bg'>
+                	<div style="z-index:-1;background:#ddd;text-align:center;vertical-align:middle;color:#333;width:110px;height:100px;padding-top:30px;font-size:14px;">图片最大尺寸<br>640x1136</div>
+                    <a class="img-clc" id="bg-clc"></a>
+                </div>
+                <button class="btn btn-confirm" id="btn-bg">确定</button>
+            </div>
+        </div> 
+        <div id="control-style" style="display: none;">
+            <div class="menu-control"><a class="style on" id="style" href="#">样式</a><a href="#" class="interact" id="interact">交互</a></div>
+            <div id="bg-control">
+                <!-- 模块大小位置 -->
+                <div class="position">
+                    <h2>大小和位置</h2>
+                    <ul class="list-pos">
+                        <li><span>X</span><input type="text" class="txt" id="elementx"/>px</li>
+                        <li><span>Y</span><input type="text" class="txt" id="elementy"/>px</li>
+                        <li><span>宽</span><input type="text" class="txt" id="elementw"/>px</li>
+                        <li><span>高</span><input type="text" class="txt" id="elementh"/>px</li>
+                    </ul>
+                </div>
+                <!-- 模块大小位置-->
+                <div class="bg-set" id="bg-set-img">
+                     <form id="page_pic_id" name="page_pic_id" method="post" enctype="multipart/form-data">
+	                    <button class="btn btn-local">本地上传</button>
+	                    <span class="or">或</span> <input class="img-url" id="model-url" placeholder="输入图片url地址"/>
+	                    <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="pic"/>
+	                    <div class="preview" id="pre-model">
+	                    	<div style="z-index:-1;background:#ddd;text-align:center;vertical-align:middle;color:#333;width:110px;height:100px;padding-top:40px;font-size:14px;">图片示例图</div>
+	                        <a class="img-clc" id="model-clc"></a>
+	                    </div>
+	                 </form>
+	                <button class="btn btn-confirm" id="btn-model">确定</button>
+                </div>
+                <div class="bg-set" id="text-set">
+                    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                        <div class="btn-group">
+                            <a class="btn btn-default dropdown-toggle" id="fontfamilyset" data-toggle="dropdown" title="字体">
+                                <i class="glyphicon glyphicon-font"></i>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" id="font-select">
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default fontsizeset dropdown-toggle" data-toggle="dropdown" title="字体大小">
+                                <i class="glyphicon glyphicon-text-size"></i>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" id="size-select">
+                            </ul>
+                        </div>
+                        <div  class="btn-group">
+                            <a class="btn btn-default" id="bold-select" data-edit="bold" title="加粗"><i class="glyphicon glyphicon-bold"></i> </a>
+                            <a class="btn btn-default" id="italic-select" data-edit="italic" title="倾斜"><i class="glyphicon glyphicon-italic"></i> </a>
+                        </div>
+                        <div class="btn-group">
+                            <input class=" form-control color-set" id="color-select">
+                            <a class="btn btn-default" data-edit="color" title="字体颜色">
+                                <i  class="glyphicon glyphicon-text-color"></i>
+                                <b class="caret"></b>
+                            </a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default" id="left-select" data-edit="justifyleft" title="左对齐"><i class="glyphicon glyphicon-align-left"></i> </a>
+                            <a class="btn btn-default" id="center-select" data-edit="justifycenter" title="居中"><i class="glyphicon glyphicon-align-center"></i> </a>
+                            <a class="btn btn-default" id="right-select" data-edit="justifyright" title="右对齐"><i class="glyphicon glyphicon-align-right"></i> </a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default dropdown-toggle lineheight" data-toggle="dropdown"  data-edit="lineheight" title="行高">
+                                <i class="glyphicon glyphicon-text-height"></i>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" id="lineheight-select">
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="editor" contenteditable="true" placeholder="请输入文字">
+                    </div>
+                </div>
+            </div>
+            <!-- 交互样式 -->
+            <div class="interaction" id="interaction">
+	                <div class="item">
+	                    <label for="addr">
+	                        <input type="radio" name="link" id="link11" class="radio" value="11">网站地址：
+	                        <input type="text" class="txt" id="addr"/>
+	                    </label>
+	                </div>
+	                <div class="item">
+	                    <label><input type="radio" name="link" id="link12"  class="radio" value="12"/>微展页面：
+					        <select class="select"/>
+	                    </label>
+	                </div>
+	                 <div class="item">
+	                    <label><input type="radio" name="link" id="link0"  class="radio" value="0" />无链接
+	                    </label>
+	                </div>
+            </div>
+            <!-- 交互样式 -->
+         </div>
+    </div>
+    <!-- 控制面板管理 end-->
+    <!-- 中间区域内容 -->	
+    <!--右键菜单 start-->
+    <div id="context-menu">
+        <ul class="dropdown-menu" role="menu">
+            <li id="component-del"><a tabindex="-1">删除</a></li>
+        </ul>
+    </div>
+    <!--右键菜单 end-->
+</div>
+<!--模态窗口-->
+<div id="pop-overlay"></div>
+<!-- 添加页面弹出层 -->
+<div class="pop" id="pop-add" id="new-add">
+    <div class="pop-title">
+        <h3>页面设置</h3>
+        <div class="pop-close"><button class="btn btn-close btn-sm btn-clc">关闭</button></div>
+    </div>
+    <div class="pop-cont">
+        <div class="item-wrap">
+            <span class="item-tit">页面名称</span>
+            <input class="txt" id="txt-name" type="text" placeholder="输入页面的中文名称"/>
+            <span id="warn1"></span>
+        </div>
+        <div class="item-wrap">
+            <span class="item-tit">英文名称</span>
+            <input class="txt" id="txt-short" type="text" placeholder="输入页面的英文名称"/>
+            <span id="warn2"></span>
+        </div>
+    </div>
+    <!-- 弹出层底部功能区 -->
+    <div class="pop-fun">
+    	<button type="button" class="btn btn-primary btn-verify" id="setup">确定</button>
+        <button type="button" class="btn btn-primary btn-cancel btn-clc">取消</button>
+    </div>
+    <!-- 弹出层底部功能区 -->
+</div>
+<!-- 添加页面弹出层 -->
+<!--编辑页面弹出层 start-->
+<div class="pop" id="pop-edit">
+    <div class="pop-title">
+        <h3>页面设置</h3>
+        <div class="pop-close"><button class="btn btn-close btn-sm btn-clc">关闭</button></div>
+    </div>
+    <div class="pop-cont">
+    	<input type="hidden" id="modify_page_id" value=""/>
+    	<input type="hidden" id="delete_page_id" value=""/>
+        <div class="item-wrap">
+            <span class="item-tit">页面名称</span>
+            <input class="txt" id="txt-name-modify" type="text" placeholder="输入页面的中文名称"/>
+            <span id="warn3"></span>
+        </div>
+        <div class="item-wrap">
+            <span class="item-tit">英文名称</span>
+            <input class="txt" id="txt-short-modify" type="text" placeholder="输入页面的英文名称"/>
+            <span id="warn4"></span>
+        </div>
+    </div>
+    <!-- 弹出层底部功能区 -->
+    <div class="pop-fun">
+    	<button type="button" class="btn btn-primary btn-verify" id="modify-confirm">确定</button>
+        <button type="button" class="btn btn-primary btn-cancel btn-clc">取消</button>
+    </div>
+    <!-- 弹出层底部功能区 -->
+</div>
+<!--编辑页面弹出层 end-->
+<!-- 微景展设置弹出层 -->
+<div class="pop" id="pop-set">
+    <div class="pop-title">
+        <h3>设置</h3>
+        <div class="pop-close"><button class="btn btn-close btn-sm btn-clc">关闭</button></div>
+    </div>
+    <div class="pop-cont">
+        <div class="topic-set">
+            <div class="item-wrap">
+            	<form id="wj_first_page_pic_id" name="wj_first_page_pic_id" method="post" enctype="multipart/form-data">
+	                <div class="cover-set" id="wj-page-set">
+	                	<div style="z-index:-1;background:#ddd;text-align:center;vertical-align:middle;color:#333;width:110px;height:100px;padding-top:30px;font-size:14px;">设置微景展封面<br>235x175</div>
+	                	<input type="file" class="file" onchange="async_upload_pic('wj_first_page_pic_id','wj-page-set',false,'wj-page-clc',this);" name="pic"/>
+	                	<a class="wj-img-clc" id="wj-page-clc"></a>
+	                </div>
+	                <div class="info-set">
+	                    <input type="text" class="txt" id="wj-page-title" placeholder="请输入微景展名称"/>
+	                    <textarea class="area" id="wj-page-description"></textarea>
+	                </div>
+                </form>
+            </div>
+            <div class="tit-set"><h4>设置分享【分享朋友圈】</h4></div>
+            <div class="item-wrap">
+            	<form id="share_to_friend_pic_id" name="share_to_friend_pic_id" method="post" enctype="multipart/form-data">
+	                <div class="cover-set" id="wj-share-set">
+	                	<div style="z-index:-1;background:#ddd;text-align:center;vertical-align:middle;color:#333;width:110px;height:100px;padding-top:30px;font-size:14px;">分享缩略图<br>120x120</div>
+	                	<%-- <img id="wj-share" class="thumbnail" src="../img/cover2.png" alt="分享缩略图" style="width:103px;height:98px;padding:0;"/> --%>
+	                	<input type="file" class="file" onchange="async_upload_pic('share_to_friend_pic_id','wj-share-set',false,'wj-share-clc',this);" name="pic"/>
+	                	<a class="wj-img-clc" id="wj-share-clc"></a>
+	                </div>
+	                <div class="info-set">
+	                    <input type="text" class="txt" id="wj-share-title" />
+	                    <textarea class="area" id="wj-share-description"></textarea>
+	                </div>
+	            </form>
+            </div>
+        </div>
+    </div>
+    <!-- 弹出层底部功能区 -->
+    <div class="pop-fun">
+    	<button type="button" class="btn btn-verify btn-primary" id="page-property">确定</button>
+        <button type="button" class="btn btn-primary btn-cancel btn-clc">取消</button>
+    </div>
+    <!-- 弹出层底部功能区 -->
+</div>
+<!-- 微景展设置弹出层 -->
+
+<!-- 删除页面弹出层 -->
+<div class="pop" id="pop-delete">
+    <div class="pop-title">
+        <h3>删除</h3>
+        <div class="pop-close"><button class="btn btn-close btn-sm btn-clc">关闭</button></div>
+    </div>
+    <div class="pop-cont">
+        <div class="pop-tips">
+            <p>删除后页面将不可恢复，您确认要进行此操作么？</p>
+        </div>
+    </div>
+    <!-- 弹出层底部功能区 -->
+    <div class="pop-fun">
+        <button type="button" class="btn btn-primary btn-verify" id="btn-verify1">确定</button>
+        <button type="button" class="btn btn-primary btn-cancel btn-clc">取消</button>
+    </div>
+    <!-- 弹出层底部功能区 -->
+</div>
+<script src="../scripts/minicolor.js" charset="utf-8"></script>
+
+<script src="../scripts/interact.js" charset="utf-8"></script>
+<script src="../scripts/layermain.js" charset="utf-8"></script>
+<script src="../scripts/app.js" charset="utf-8"></script>
+<script src="../scripts/module.js" charset="utf-8"></script>
+<script src="../scripts/parser.js" charset="utf-8"></script>
+<script src="../scripts/pages.js" charset="utf-8"></script>
+
+<script>
+
+// var pages = ${pages};
+
+// var components = ${components};
+</script>
+<!-- 删除用户弹出层 -->
+</body>
+</html>

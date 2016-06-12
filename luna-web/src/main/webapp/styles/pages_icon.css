@@ -1,0 +1,95 @@
+@charset "utf-8";
+/**
+ * @description: icon样式
+ * @author: franco
+ * @update:
+ */
+.icon {
+    background: url(../img/pages_common2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 500px;
+}
+.icon-comp-text{
+    width: 30px;
+    height: 30px;
+    background-position: 0px 0px;
+}
+.icon-comp-img{
+    width: 30px;
+    height: 30px;
+    background-position: -30px 0px;
+}
+.icon-comp-vpano{
+    width: 30px;
+    height: 30px;
+    background-position: -60px 0px;
+}
+.icon-comp-nav{
+    width: 30px;
+    height: 30px;
+    background-position: -90px 0px;
+}
+.component-btn:hover .icon-comp-text{
+    width: 30px;
+    height: 30px;
+    background-position: 0px -30px;
+}
+.component-btn:hover .icon-comp-img{
+    width: 30px;
+    height: 30px;
+    background-position: -30px -30px;
+}
+.component-btn:hover .icon-comp-vpano{
+    width: 30px;
+    height: 30px;
+    background-position: -60px -30px;
+}
+.component-btn:hover .icon-comp-nav{
+    width: 30px;
+    height: 30px;
+    background-position: -90px -30px;
+}
+.icon-arrow-down{
+    width: 10px;
+    height: 5px;
+    background-position: 0px -60px;
+    font-size: 0px;
+}
+.current .icon-arrow-down,.icon-arrow-up{
+    width: 10px;
+    height: 5px;
+    background-position: 0px -65px;
+    font-size: 0px;
+}
+.icon-arrow-left{
+    width: 5px;
+    height: 10px;
+    background-position: -10px -60px;
+    font-size: 0px;
+}
+.icon-arrow-right{
+    width: 5px;
+    height: 10px;
+    background-position: -10px -60px;
+    font-size: 0px;
+}
+.icon-edit{
+    width: 16px;
+    height: 16px;
+    background-position: -20px -75px;
+}
+.icon-delete{
+    width: 16px;
+    height: 16px;
+    background-position: 0px -75px;
+}
+
+
+
+
+
+
+
+
+
+

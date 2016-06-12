@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_business">
+	<resultMap id="MsBusinessResult" class="ms.luna.biz.dao.custom.model.MsBusinessResult">
+		<result column="business_id" property="businessId" jdbcType="INTEGER" />
+		<result column="business_name" property="businessName" jdbcType="VARCHAR" />
+		<result column="business_code" property="businessCode" jdbcType="VARCHAR" />
+		<result column="category" property="category" jdbcType="VARCHAR" />
+		<result column="merchant_nm" property="merchantName" jdbcType="VARCHAR" />
+
+		<result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+		<result column="city_id" property="cityId" jdbcType="VARCHAR" />
+		<result column="county_id" property="countyId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectBusinessWithFilter" resultMap="MsBusinessResult"
+		parameterClass="ms.luna.biz.dao.custom.model.MsBusinessParameter">
+		SELECT
+			a.business_id as business_id,
+			a.business_name as business_name,
+			a.business_code as business_code,
+			b.category_id as category,
+			b.merchant_nm as merchant_nm,
+			b.province_id as province_id,
+			b.city_id as city_id,
+			b.county_id as county_id
+
+		FROM
+			ms_business a join ms_merchant_manage b on a.merchant_id = b.merchant_id 
+		<dynamic prepend="where" >
+			<isNotEmpty prepend="and" property="provinceId">
+				province_id = #provinceId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="cityId">
+				city_id = #cityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="countyId">
+				county_id = #countyId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="categoryId">
+				category_id = #categoryId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="keyword">
+				a.business_name like #keyword#
+			</isNotEmpty>
+		</dynamic>
+			order by a.regist_hhmmss desc
+		<isEqual property="range" compareValue="true">
+			Limit #min#, #max#
+		</isEqual>
+		
+	</select>
+</sqlMap>

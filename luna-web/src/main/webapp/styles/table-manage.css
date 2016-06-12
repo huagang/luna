@@ -1,0 +1,49 @@
+.bootstrap-table .table:not(.table-condensed) > tbody > tr > th,
+.bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+    padding:12px 5px;
+    line-height: 26px;
+}
+.fixed-table-container tbody td{
+    border: none;
+}
+
+.bootstrap-table .table > thead > tr > th{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+.fixed-table-container{
+    border: none;
+}
+.bootstrap-table .table > tbody > tr:last-child{
+	border-bottom:1px solid #ddd;
+}
+.table>tbody>tr>td{
+    vertical-align: middle;
+}
+.bootstrap-table .table{
+    border: none;
+}
+.fixed-table-container thead th .th-inner{
+    font-weight: 500;
+    padding: 0 5px 9px 5px;
+}
+.fixed-table-pagination .pagination-detail{
+    display: none;
+}
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover{
+    background: #445FA8;
+}
+.fixed-table-pagination .pagination a{
+    line-height: 26px;
+    padding: 5px 14px;
+    margin: 20px 9px 20px 0;
+}
+.pagination>li:first-child>a,
+.pagination>li:last-child>a{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}

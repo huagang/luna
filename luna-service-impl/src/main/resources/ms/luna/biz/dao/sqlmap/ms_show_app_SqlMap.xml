@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_show_app" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsShowApp" >
+    <result column="app_id" property="appId" jdbcType="INTEGER" />
+    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+    <result column="app_code" property="appCode" jdbcType="VARCHAR" />
+    <result column="business_id" property="businessId" jdbcType="INTEGER" />
+    <result column="share_info_title" property="shareInfoTitle" jdbcType="VARCHAR" />
+    <result column="share_info_des" property="shareInfoDes" jdbcType="VARCHAR" />
+    <result column="share_info_pic" property="shareInfoPic" jdbcType="VARCHAR" />
+    <result column="app_status" property="appStatus" jdbcType="TINYINT" />
+    <result column="app_addr" property="appAddr" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="pic_thumb" property="picThumb" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="del_flg" property="delFlg" jdbcType="VARCHAR" />
+    <result column="UPDATED_BY_WJNM" property="updatedByWjnm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    app_id, app_name, app_code, business_id, share_info_title, share_info_des, share_info_pic, 
+    app_status, app_addr, owner, publish_time, pic_thumb, note, up_hhmmss, regist_hhmmss, 
+    del_flg, UPDATED_BY_WJNM
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsShowAppCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_show_app.Base_Column_List" />
+    from ms_show_app
+    <isParameterPresent >
+      <include refid="ms_show_app.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    select 
+    <include refid="ms_show_app.Base_Column_List" />
+    from ms_show_app
+    where app_id = #appId:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    delete from ms_show_app
+    where app_id = #appId:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsShowAppCriteria" >
+    delete from ms_show_app
+    <include refid="ms_show_app.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    insert into ms_show_app (app_id, app_name, app_code, business_id, 
+      share_info_title, share_info_des, share_info_pic, app_status, 
+      app_addr, owner, publish_time, pic_thumb, 
+      note, up_hhmmss, regist_hhmmss, del_flg, 
+      UPDATED_BY_WJNM)
+    values (#appId:INTEGER#, #appName:VARCHAR#, #appCode:VARCHAR#, #businessId:INTEGER#, 
+      #shareInfoTitle:VARCHAR#, #shareInfoDes:VARCHAR#, #shareInfoPic:VARCHAR#, #appStatus:TINYINT#, 
+      #appAddr:VARCHAR#, #owner:VARCHAR#, #publishTime:TIMESTAMP#, #picThumb:VARCHAR#, 
+      #note:VARCHAR#, #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #delFlg:VARCHAR#, 
+      #updatedByWjnm:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    insert into ms_show_app
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="appId" >
+        app_id
+      </isNotNull>
+      <isNotNull prepend="," property="appName" >
+        app_name
+      </isNotNull>
+      <isNotNull prepend="," property="appCode" >
+        app_code
+      </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        business_id
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoTitle" >
+        share_info_title
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoDes" >
+        share_info_des
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoPic" >
+        share_info_pic
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus" >
+        app_status
+      </isNotNull>
+      <isNotNull prepend="," property="appAddr" >
+        app_addr
+      </isNotNull>
+      <isNotNull prepend="," property="owner" >
+        owner
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime" >
+        publish_time
+      </isNotNull>
+      <isNotNull prepend="," property="picThumb" >
+        pic_thumb
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        note
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        del_flg
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        UPDATED_BY_WJNM
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="appId" >
+        #appId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="appName" >
+        #appName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appCode" >
+        #appCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        #businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoTitle" >
+        #shareInfoTitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoDes" >
+        #shareInfoDes:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoPic" >
+        #shareInfoPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus" >
+        #appStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="appAddr" >
+        #appAddr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="owner" >
+        #owner:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime" >
+        #publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="picThumb" >
+        #picThumb:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        #updatedByWjnm:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsShowAppCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_show_app
+    <include refid="ms_show_app.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_show_app
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.appId" >
+        app_id = #record.appId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appName" >
+        app_name = #record.appName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appCode" >
+        app_code = #record.appCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.businessId" >
+        business_id = #record.businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.shareInfoTitle" >
+        share_info_title = #record.shareInfoTitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.shareInfoDes" >
+        share_info_des = #record.shareInfoDes:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.shareInfoPic" >
+        share_info_pic = #record.shareInfoPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appStatus" >
+        app_status = #record.appStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appAddr" >
+        app_addr = #record.appAddr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.owner" >
+        owner = #record.owner:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.publishTime" >
+        publish_time = #record.publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.picThumb" >
+        pic_thumb = #record.picThumb:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.note" >
+        note = #record.note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.delFlg" >
+        del_flg = #record.delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByWjnm" >
+        UPDATED_BY_WJNM = #record.updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_show_app.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_show_app
+    set app_id = #record.appId:INTEGER#,
+      app_name = #record.appName:VARCHAR#,
+      app_code = #record.appCode:VARCHAR#,
+      business_id = #record.businessId:INTEGER#,
+      share_info_title = #record.shareInfoTitle:VARCHAR#,
+      share_info_des = #record.shareInfoDes:VARCHAR#,
+      share_info_pic = #record.shareInfoPic:VARCHAR#,
+      app_status = #record.appStatus:TINYINT#,
+      app_addr = #record.appAddr:VARCHAR#,
+      owner = #record.owner:VARCHAR#,
+      publish_time = #record.publishTime:TIMESTAMP#,
+      pic_thumb = #record.picThumb:VARCHAR#,
+      note = #record.note:VARCHAR#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      del_flg = #record.delFlg:VARCHAR#,
+      UPDATED_BY_WJNM = #record.updatedByWjnm:VARCHAR#
+    <isParameterPresent >
+      <include refid="ms_show_app.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    update ms_show_app
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="appName" >
+        app_name = #appName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appCode" >
+        app_code = #appCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        business_id = #businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoTitle" >
+        share_info_title = #shareInfoTitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoDes" >
+        share_info_des = #shareInfoDes:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shareInfoPic" >
+        share_info_pic = #shareInfoPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus" >
+        app_status = #appStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="appAddr" >
+        app_addr = #appAddr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="owner" >
+        owner = #owner:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime" >
+        publish_time = #publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="picThumb" >
+        pic_thumb = #picThumb:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="note" >
+        note = #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        del_flg = #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        UPDATED_BY_WJNM = #updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where app_id = #appId:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsShowApp" >
+    update ms_show_app
+    set app_name = #appName:VARCHAR#,
+      app_code = #appCode:VARCHAR#,
+      business_id = #businessId:INTEGER#,
+      share_info_title = #shareInfoTitle:VARCHAR#,
+      share_info_des = #shareInfoDes:VARCHAR#,
+      share_info_pic = #shareInfoPic:VARCHAR#,
+      app_status = #appStatus:TINYINT#,
+      app_addr = #appAddr:VARCHAR#,
+      owner = #owner:VARCHAR#,
+      publish_time = #publishTime:TIMESTAMP#,
+      pic_thumb = #picThumb:VARCHAR#,
+      note = #note:VARCHAR#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      del_flg = #delFlg:VARCHAR#,
+      UPDATED_BY_WJNM = #updatedByWjnm:VARCHAR#
+    where app_id = #appId:INTEGER#
+  </update>
+</sqlMap>

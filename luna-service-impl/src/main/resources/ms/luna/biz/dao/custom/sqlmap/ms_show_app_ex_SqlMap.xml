@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_show_app">
+	<resultMap id="MsShowAppResult" class="ms.luna.biz.dao.custom.model.MsShowAppResult">
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="regist_hhmmss" property="registhhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
+		<result column="up_hhmmss" property="uphhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
+		<result column="owner" property="owner" jdbcType="VARCHAR" />
+		<result column="app_status" property="appStatus" jdbcType="INTEGER" />
+		<result column="business_id" property="businessId" jdbcType="INTEGER" />
+		<result column="business_name" property="businessName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectShowAppWithFilter" resultMap="MsShowAppResult"
+		parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter">
+		select 
+			a.app_id app_id,
+			a.app_name app_name,
+			a.app_code app_code,
+			a.regist_hhmmss regist_hhmmss,
+			a.up_hhmmss up_hhmmss, 
+			a.owner owner,
+			a.app_status app_status, 
+			a.business_id business_id,
+			b.business_name business_name
+		from ms_show_app a left join ms_business b on a.business_id = b.business_id 
+		<isNotEmpty property="keyword">
+			where a.app_name like #keyword#
+		</isNotEmpty>
+		order by a.regist_hhmmss desc
+		<isEqual property="range" compareValue="true">
+			Limit #min#, #max#
+		</isEqual>		
+	</select>
+	
+	<select id="selectIdByName" parameterClass="String" resultClass="Integer">
+		select app_id 
+		from ms_show_app
+		where app_name=#appName#
+	</select> 
+	
+
+</sqlMap>
