@@ -58,18 +58,75 @@
                     <div class="item-poi">
                         <div class="label-poi property-label-poi">类别</div>
                         <div class="value-poi property-poi">
-                         <c:forEach items="${poiModel['poiTags']}" var="varTag" varStatus="varTagStatus">
+                        <%--  <c:forEach items="${poiModel['poiTags']}" var="varTag" varStatus="varTagStatus">
 							 <span>
 		                        <label class="checkbox-inline">
 		                            <form:checkbox path="checkeds" disabled="${poiReadOnly}" value="${varTag['value']}" label="${varTag['label']}"/>
 		                        </label>
 		                        <input type="text" style="display: none;"/>
-		                        <%-- <c:if test="${!poiReadOnly}">
+		                        <c:if test="${!poiReadOnly}">
 			                        <img class="edit-property" src="${basePath}/img/edit.png" onclick="editProperty(this)"/>
 			                        <img class="del-property" src="${basePath}/img/delete.png" onclick="delProperty(this)"/>
-		                        </c:if> --%>
+		                        </c:if>
 		                  		 </span>
-		                   </c:forEach>
+		                   </c:forEach> --%>
+		                   
+		                   <c:if test="${!poiReadOnly}">
+			                    <select class="select" id="topTag" name="topTag">
+					               <option value="0">请选择一级分类</option>
+					               <c:forEach items="${topTags}" var="varTopTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.topTag==varTopTag['value']}">
+					                   			<option value="${varTopTag['value']}" selected>${varTopTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varTopTag['value']}" >${varTopTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+								<select class="select" id="subTag" name="subTag">
+					               <option value="0">请选择二级分类</option>
+					               <c:forEach items="${subTags}" var="varSubTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.subTag==varSubTag['value']}">
+					                   			<option value="${varSubTag['value']}" selected>${varSubTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varSubTag['value']}" >${varSubTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+				          </c:if>
+				           <c:if test="${poiReadOnly}">
+			                    <select class="select" id="topTag" disabled="disabled">
+					               <option value="0">请选择一级分类</option>
+					               <c:forEach items="${topTags}" var="varTopTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.topTag==varTopTag['value']}">
+					                   			<option value="${varTopTag['value']}" selected>${varTopTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varTopTag['value']}" >${varTopTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+								<select class="select" id="subTag" disabled="disabled">
+					               <option value="0">请选择二级分类</option>
+					               <c:forEach items="${subTags}" var="varSubTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.subTag==varSubTag['value']}">
+					                   			<option value="${varSubTag['value']}" selected>${varSubTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varSubTag['value']}" >${varSubTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+				          </c:if>
 		                  <%--  <c:if test="${!poiReadOnly}">
 		                   		<span class="new" id="newPOI" onclick="newProperty(this)">+新增</span>
 		                    </c:if> --%>

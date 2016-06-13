@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -59,30 +61,18 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private MsZoneCacheBL msZoneCacheBL;
 
 	/**
+	 * tag标签的level=1的部分
+	 */
+	private final static int TAG_LEVEL_TOP = 1;
+
+	/**
 	 * 页面初始化<p>
 	 * 1.添加按钮显示用的tag列表<br>
 	 * 2.poi一览页面厨师数据
 	 */
 	@Override
 	public JSONObject getInitInfo(String json) {
-
-		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
-		msPoiTagCriteria.setOrderByClause("tag_id ASC");
-		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
-
-		JSONArray tags = JSONArray.fromObject("[]");
-		if (lstMsPoiTag != null) {
-			for (MsPoiTag msPoiTag : lstMsPoiTag) {
-				JSONObject tag = JSONObject.fromObject("{}");
-				tag.put("tag_id", msPoiTag.getTagId());
-				tag.put("tag_name", msPoiTag.getTagName());
-				tags.add(tag);
-			}
-		}
-
-		JSONObject data = JSONObject.fromObject("{}");
-		data.put("tags", tags);
-
+		JSONObject data = this.getCommonFieldsDef();
 		return JsonUtil.sucess("OK", data);
 	}
 
@@ -116,8 +106,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 2.别名
 			doc.put("short_title", param.getString("short_title"));
 
-			// 3.属性列表
+			// 3.类别一级菜单列表
 			doc.put("tags", this.convert2JsonArray(param, "tags"));
+
+			// 3.类别二级菜单
+			doc.put("sub_tag", param.getInt("subTag"));
 
 			lnglatArray = new ArrayList<Double>();
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
@@ -180,6 +173,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			} else {
 				doc.put("tags", new JSONArray());
 				tag_ids = "[]";
+			}
+			// 3.类别二级菜单
+			if (param.has("subTag")) {
+				doc.put("sub_tag", param.getInt("subTag"));
+			} else {
+				doc.put("sub_tag", 0);
 			}
 
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
@@ -574,22 +573,58 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	 * @return
 	 */
 	private JSONObject getCommonFieldsDef() {
-		JSONObject data = new JSONObject();
+
 		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
+		// 去除公共字段的标签
 		msPoiTagCriteria.createCriteria()
 		.andTagIdNotEqualTo(VbConstant.POI.公共TAGID);
-		msPoiTagCriteria.setOrderByClause("tag_id asc");
-
+		msPoiTagCriteria.setOrderByClause("tag_level asc, parent_tag_id asc, ds_order asc");
 		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
-		JSONArray tags = new JSONArray();
-		if (lstMsPoiTag != null) {
-			for (MsPoiTag msPoiTag: lstMsPoiTag) {
-				JSONObject tag = new JSONObject();
-				tag.put("tag_id", msPoiTag.getTagId());
-				tag.put("tag_name", msPoiTag.getTagName());
-				tags.add(tag);
-			}
+
+		JSONArray tags = JSONArray.fromObject("[]");
+		Map<Integer, List<MsPoiTag>> tagMapList = new LinkedHashMap<Integer, List<MsPoiTag>>();
+		if (lstMsPoiTag == null) {
+			JSONObject data = JSONObject.fromObject("{}");
+			data.put("tags", tags);
+			return JsonUtil.sucess("OK", data);
 		}
+
+		// 以一级tag先进行分组
+		for (MsPoiTag msPoiTag : lstMsPoiTag) {
+			if (TAG_LEVEL_TOP == msPoiTag.getTagLevel()) {
+				List<MsPoiTag> lst = new ArrayList<MsPoiTag>();
+				lst.add(msPoiTag);
+				tagMapList.put(msPoiTag.getTagId(), lst);
+				continue;
+			}
+			List<MsPoiTag> lst = tagMapList.get(msPoiTag.getParentTagId());
+			lst.add(msPoiTag);
+		}
+
+		/*
+		 *  [{tag_id,tag_name,sub_tags[{tag_id,tag_name},...]]
+		 */
+		Set<Entry<Integer, List<MsPoiTag>>> set = tagMapList.entrySet();
+		for (Entry<Integer, List<MsPoiTag>> entry : set) {
+			List<MsPoiTag> lst = entry.getValue();
+			// 一定存在首个
+			MsPoiTag firstLevel = lst.get(0);
+			JSONObject tag = JSONObject.fromObject("{}");
+			tag.put("tag_id", firstLevel.getTagId());
+			tag.put("tag_name", firstLevel.getTagName());
+			JSONArray subTags = new JSONArray();
+			// 跳过首个
+			for (int i = 1; i < lst.size(); i++) {
+				JSONObject subTag = JSONObject.fromObject("{}");
+				subTag.put("tag_id", lst.get(i).getTagId());
+				subTag.put("tag_name", lst.get(i).getTagName());
+				subTags.add(subTag);
+			}
+			tag.put("sub_tags", subTags);
+			tags.add(tag);
+		}
+
+		JSONObject data = JSONObject.fromObject("{}");
 		data.put("tags_def", tags);
 		return data;
 	}
@@ -614,13 +649,22 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String short_title = docPoi.getString("short_title");
 		commonFieldsVal.put("short_title", short_title);
 
-		// 3.标签(类别)值
+		// 3.标签一级类别值
 		JSONArray tags_values = new JSONArray();
 		Object poiTags = docPoi.get("tags");
 		if (poiTags != null) {
 			tags_values = JSONArray.fromObject(poiTags);
+		} else {
+			tags_values.add(0);
 		}
 		commonFieldsVal.put("tags_values", tags_values);
+
+		// 3.标签二级类别值
+		if (docPoi.containsKey("sub_tag")) {
+			commonFieldsVal.put("subTag", docPoi.getInteger("sub_tag"));
+		} else {
+			commonFieldsVal.put("subTag", 0);
+		}
 
 		// 4.经纬度
 		JSONObject lnglat = JSONObject.fromObject(docPoi.get("lnglat"));

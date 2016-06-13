@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +36,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +53,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.biz.util.ZipUtil;
+import ms.luna.common.MsLunaResource;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.common.SimpleModel;
@@ -65,7 +65,7 @@ import net.sf.json.JSONObject;
 @RequestMapping("/manage_poi.do")
 public class ManagePoiCtrl extends BasicCtrl{
 
-	private final static String uploadedFilePath = "/data1/luna/uploadedFile/";
+	private final static String uploadedFilePath = MsLunaResource.getResource("luna").getValue("uploadedFilePath");;
 
 	private Map<String, String> ZONENAME_2_CODE_MAP = new HashMap<String, String>();
 
@@ -77,6 +77,14 @@ public class ManagePoiCtrl extends BasicCtrl{
 	@Resource(name="pulldownCtrl")
 	private PulldownCtrl pulldownCtrl;
 
+	/**
+	 * 二级菜单缓存
+	 */
+	private volatile Map<Integer, JSONObject> subTagsCache = new ConcurrentHashMap<Integer, JSONObject>();
+
+	/**
+	 * 加载模板资源
+	 */
 	public ManagePoiCtrl() {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("poi_templete.xlsx");
 		try {
@@ -105,6 +113,71 @@ public class ManagePoiCtrl extends BasicCtrl{
 	}
 
 	/**
+	 * 缓存中查找二级菜单选项
+	 * @param topTagId
+	 * @return
+	 */
+	@RequestMapping(params = "method=ayncSearchSubTag")
+	public void ayncSearchSubTag(
+			@RequestParam(required = true) Integer subTag,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		JSONObject data = null;
+		if (subTag != null) {
+			data = subTagsCache.get(subTag);
+		}
+		if (data == null) {
+			data = new JSONObject();
+			data.put("sub_tags", "[]");
+		}
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().print(data.toString());
+		response.setStatus(200);
+		return;
+	}
+
+	public JSONObject searchSubTags(Integer topTagId) {
+		return subTagsCache.get(topTagId);
+	}
+
+	/**
+	 * 初始化一级和二级分类列表
+	 * @param request
+	 */
+	public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
+		List<SimpleModel> topTags = new ArrayList<SimpleModel>();
+		JSONArray tags = common_fields_def.getJSONArray("tags_def");
+		
+		List<SimpleModel> lstSubTag = new ArrayList<SimpleModel>();
+		for (int i = 0; i < tags.size(); i++) {
+			JSONObject tag = tags.getJSONObject(i);
+			SimpleModel simpleModel = new SimpleModel();
+			simpleModel.setValue(tag.getString("tag_id"));
+			simpleModel.setLabel(tag.getString("tag_name"));
+			topTags.add(simpleModel);
+
+			JSONArray subTags = tag.getJSONArray("sub_tags");
+			JSONObject data = new JSONObject();
+			data.put("sub_tags", subTags);
+			subTagsCache.put(tag.getInt("tag_id"), data);
+			if (topTag != null && topTag != 0 && tag.getInt("tag_id") == topTag.intValue()) {
+				for (int j = 0; j < subTags.size(); j++) {
+					simpleModel = new SimpleModel();
+					simpleModel.setValue(subTags.getJSONObject(j).getString("tag_id"));
+					simpleModel.setLabel(subTags.getJSONObject(j).getString("tag_name"));
+					lstSubTag.add(simpleModel);
+				}
+			}
+		}
+
+		// 一级菜单
+		session.setAttribute("topTags", topTags);
+		// 二级菜单
+		session.setAttribute("subTags", lstSubTag);
+		
+	}
+
+	/**
 	 * 页面初始化
 	 * @param request
 	 * @param response
@@ -121,28 +194,9 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		PoiModel poiModel = new PoiModel();
 
-		List<SimpleModel> checkBoxTags = poiModel.getPoiTags();
-
-		JSONObject params = JSONObject.fromObject("{}");
-		JSONObject result = managePoiService.getInitInfo(params.toString());
-
-		if ("0".equals(result.getString("code"))) {
-			JSONObject data = result.getJSONObject("data");
-
-			JSONArray tags = data.getJSONArray("tags");
-			for (int i = 0; i < tags.size(); i++) {
-				JSONObject tag = tags.getJSONObject(i);
-				if (VbConstant.POI.公共TAGID.compareTo(tag.getInt("tag_id")) == 0) {
-					continue;
-				}
-				SimpleModel simpleModel = new SimpleModel();
-				simpleModel.setValue(tag.getString("tag_id"));
-				simpleModel.setLabel(tag.getString("tag_name"));
-				checkBoxTags.add(simpleModel);
-			}
-		}
-
-		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
+//		List<SimpleModel> checkBoxTags = poiModel.getPoiTags();
+//
+//		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 		ModelAndView mav = new ModelAndView("/manage_poi.jsp");
 
 		// 国家信息

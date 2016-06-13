@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
@@ -50,10 +49,10 @@ public class EditPoiCtrl extends BasicCtrl{
 	@Resource(name="addPoiCtrl")
 	private AddPoiCtrl addPoiCtrl;
 
-	/**
-	 * 页面上属性列表
-	 */
-	private List<SimpleModel> checkBoxTags;
+//	/**
+//	 * 页面上属性列表
+//	 */
+//	private List<SimpleModel> checkBoxTags;
 
 	/**
 	 * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
@@ -76,42 +75,39 @@ public class EditPoiCtrl extends BasicCtrl{
 			return new ModelAndView("/error.jsp");
 		}
 		session.setAttribute("menu_selected", "manage_poi");
-
+		
+		ModelAndView mav = new ModelAndView();
+		
 		PoiModel poiModel = new PoiModel();
 		try {
-
-			checkBoxTags = poiModel.getPoiTags();
-
 			JSONObject params = new JSONObject();
 			params.put("_id", _id);
 			JSONObject result = managePoiService.initEditPoi(params.toString());
+			MsLogger.debug(result.toString());
 
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
-				JSONObject common_fields_def = data.getJSONObject("common_fields_def");
-				JSONArray tags_def = common_fields_def.getJSONArray("tags_def");
-				for (int i = 0; i < tags_def.size(); i++) {
-					JSONObject tag_def = tags_def.getJSONObject(i);
-					if (VbConstant.POI.公共TAGID == tag_def.getInt("tag_id")) {
-						continue;
-					}
-					SimpleModel simpleModel = new SimpleModel();
-					simpleModel.setValue(tag_def.getString("tag_id"));
-					simpleModel.setLabel(tag_def.getString("tag_name"));
-					checkBoxTags.add(simpleModel);
-				}
-
 				JSONObject common_fields_val = data.getJSONObject("common_fields_val");
 				poiModel.setPoiId(_id);
 				poiModel.setLongName(common_fields_val.getString("long_title"));
 				poiModel.setShortName(common_fields_val.getString("short_title"));
-				
+
+				// 分类一级菜单
 				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
-				List<String> checkeds = new ArrayList<String>();
-				for (int i = 0; i < tags_values.size(); i++) {
-					checkeds.add(tags_values.getString(i));
+				if (tags_values.size() > 0) {
+					poiModel.setTopTag(tags_values.getInt(0));
+				} else {
+					poiModel.setTopTag(0);
 				}
-				poiModel.setCheckeds(checkeds);
+				// 分类二级菜单
+				poiModel.setSubTag(common_fields_val.getInt("subTag"));
+				managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
+
+//				List<String> checkeds = new ArrayList<String>();
+//				for (int i = 0; i < tags_values.size(); i++) {
+//					checkeds.add(tags_values.getString(i));
+//				}
+//				poiModel.setCheckeds(checkeds);
 
 				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_CEILING));
 				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_CEILING));
@@ -131,15 +127,16 @@ public class EditPoiCtrl extends BasicCtrl{
 
 				JSONArray privateFields = data.getJSONArray("private_fields");
 				session.setAttribute("private_fields", privateFields);
+			} else {
+				mav.setViewName("/error.jsp");
+				return mav;
 			}
-			session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			ModelAndView mav = new ModelAndView("/error.jsp");
+			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
 			return mav;
 		}
-		
 
 		// 省份信息
 		List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
@@ -173,8 +170,8 @@ public class EditPoiCtrl extends BasicCtrl{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			ModelAndView mav = new ModelAndView("/error.jsp");
+			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
 			return mav;
 		}
 		session.setAttribute("citys", lstCitys);
@@ -197,13 +194,12 @@ public class EditPoiCtrl extends BasicCtrl{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			ModelAndView mav = new ModelAndView("/error.jsp");
+			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
 			return mav;
 		}
 		session.setAttribute("countys", lstCountys);
-
-		ModelAndView mav = new ModelAndView("/edit_poi.jsp");
+		mav.setViewName("/edit_poi.jsp");
 		mav.addObject("poiReadOnly", Boolean.FALSE);
 		mav.addObject("poiModel", poiModel);
 		return mav;
@@ -230,35 +226,33 @@ public class EditPoiCtrl extends BasicCtrl{
 		try {
 			unSavedPoi = unSavedPoi.replace("\n", "\\n").replace("\r", "\\r");
 			JSONObject.fromObject(unSavedPoi);
-			checkBoxTags = poiModel.getPoiTags();
 
 			JSONObject result = managePoiService.initFixPoi(unSavedPoi);
+			MsLogger.debug(result.toString());
 
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
-				JSONObject common_fields_def = data.getJSONObject("common_fields_def");
-				JSONArray tags_def = common_fields_def.getJSONArray("tags_def");
-				for (int i = 0; i < tags_def.size(); i++) {
-					JSONObject tag_def = tags_def.getJSONObject(i);
-					if (VbConstant.POI.公共TAGID == tag_def.getInt("tag_id")) {
-						continue;
-					}
-					SimpleModel simpleModel = new SimpleModel();
-					simpleModel.setValue(tag_def.getString("tag_id"));
-					simpleModel.setLabel(tag_def.getString("tag_name"));
-					checkBoxTags.add(simpleModel);
-				}
-
 				JSONObject common_fields_val = data.getJSONObject("common_fields_val");
 				poiModel.setLongName(common_fields_val.getString("long_title"));
 				poiModel.setShortName(common_fields_val.getString("short_title"));
 
+				// 分类一级菜单
 				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
-				List<String> checkeds = new ArrayList<String>();
-				for (int i = 0; i < tags_values.size(); i++) {
-					checkeds.add(tags_values.getString(i));
+				if (tags_values.size() > 0) {
+					poiModel.setTopTag(tags_values.getInt(0));
+				} else {
+					poiModel.setTopTag(0);
 				}
-				poiModel.setCheckeds(checkeds);
+				// 分类二级菜单
+				poiModel.setSubTag(common_fields_val.getInt("subTag"));
+				managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
+
+//				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
+//				List<String> checkeds = new ArrayList<String>();
+//				for (int i = 0; i < tags_values.size(); i++) {
+//					checkeds.add(tags_values.getString(i));
+//				}
+//				poiModel.setCheckeds(checkeds);
 
 				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_CEILING));
 				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_CEILING));
@@ -278,11 +272,12 @@ public class EditPoiCtrl extends BasicCtrl{
 
 				JSONArray privateFields = data.getJSONArray("private_fields");
 				session.setAttribute("private_fields", privateFields);
+			} else {
+				return new ModelAndView("/error.jsp");
 			}
-			session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 			ModelAndView mav = new ModelAndView("/error.jsp");
 			return mav;
 		}
@@ -405,12 +400,19 @@ public class EditPoiCtrl extends BasicCtrl{
 			}
 		}
 
-		// 3.类别（tags）
-		values = paramMaps.get("checkeds");
+		// 3.一级类别（topTag）
+		values = paramMaps.get("topTag");
 		if (values == null || values.length == 0) {
 			param.put("tags", "[]");
 		} else {
 			param.put("tags", values);
+		}
+		// 3.二级类别(subTag)
+		values = paramMaps.get("subTag");
+		if (values == null || values.length == 0) {
+			param.put("subTag", 0);
+		} else {
+			param.put("subTag", values[0]);
 		}
 
 		// 4.坐标（lat,lng）

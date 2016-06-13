@@ -195,6 +195,8 @@ $(function(){
     		$("#btn-newproperty-edit").attr("disabled",false);
     	}
     });
+    
+    
     //类别添加，增加页卡项
     $("input:checkbox[name='checkeds']").change(function(){
         var property = $(this).next().text();
@@ -236,6 +238,78 @@ $(function(){
             $('#tabbar>span:first-child').click();
         }
     });
+
+    $("#topTag").change(function(){
+    	 var tagid = $(this).val();
+    	 var property = $("#topTag").find("option:selected").text();
+
+         $.ajax({
+             url:host+"/manage_poi.do?method=ayncSearchSubTag",
+             type:'POST',
+             async:false,
+             cache:false,
+             data:{'subTag':tagid},
+             dataType:'JSON',
+             success:function(returndata){
+                 var $subTag = $("#subTag");
+                 $subTag.empty();
+                 $subTag.append('<option value="0">请选择二级分类</option>');
+                 for (var i = 0; i < returndata.sub_tags.length; i++) {
+ 					var item = returndata.sub_tags[i];
+ 					$subTag.append("<option value = '"+item.tag_id+"'>"+item.tag_name+"</option>");
+ 				 }
+
+                 var len = $("#tabbar").find('span').length;
+                 var $tabbar = $('#tabbar');
+                 $tabbar.empty();
+                 if (!isTagFieldsExist(tagid)) {
+                	 $("#field-show").css("display","none");
+                 	return;
+                 }
+                 $("#field-show").css("display","block");
+                 $tabbar.append("<span class='tabbar-item' tagid='"+tagid+"'>"+property+"</span>");
+                 var field = $("#field-show .item-poi");
+                 fieldshow(tagid, field);
+
+                /* if($(this).is(":checked")){
+                 	if(!len){
+                 		 $("#field-show").css("display","block");
+                         var $content = $("<span class='tabbar-item' tagid='"+tagid+"'>"+property+"</span>");
+                         var field = $("#field-show .item-poi");
+                         
+                     }else{
+                         var $content = $("<span class='tabbar-item selected-item'tagid='"+tagid+"'>"+property+"</span>");
+                     }
+                    
+                 }else{
+                 	if(len==1){
+                 		$("#field-show").css("display","none");
+                 	}
+                     $('#tabbar>span').each(function () {
+                         if($(this).text()==property){
+                             if($(this).hasClass("selected-item")){
+                                 $(this).remove();
+                                 $('#tabbar>span:first-child').addClass("selected-item");
+                                 var tagid=$('#tabbar>span:first-child').attr('tagid');
+                                 var field = $("#field-show .item-poi");
+                                 fieldshow(tagid,field);
+                             }else{
+                                 $(this).remove();
+                             }
+                         }
+                     });
+                     $('#tabbar>span:first-child').click();
+                 }*/
+             
+                 
+                 
+             },
+             error:function(returndata){
+            	 $.alert("请求失败");
+             }
+         });
+    });
+
     //页卡项选中
     $("#tabbar").on('click','span',function(){
         $(this).siblings().addClass("selected-item");
