@@ -621,26 +621,18 @@
 		        <p>使用微景展地址分享</p>
 		        <p><a id="publishURL" class="copyed" href="http://luna.visualbusiness.cn/" target="_blank">http://luna.visualbusiness.cn/</a><button type="button" class="copy" id="btn-copy-url">复制链接</button></p>
 	        </div>
-        </div>        
-<<<<<<<
+        </div>
 		<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
-          
-          
-=======
-      		<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-      		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-      		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
->>>>>>>
-          <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
-		      <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
-          <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+            <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
+        <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
           <!-- 删除用户弹出层 -->
         </body>
 
