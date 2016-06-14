@@ -145,14 +145,14 @@ label{
 .tabbar-item{
     padding: 5px;
 }
-.tabbar-item:hover{
-    cursor: pointer;
-}
 .tabbar-item:not(:last-child){
     border-right: 1px solid #C3C3C3;
 }
 .selected-item{
     color: #445FA8;
+}
+.selected-item:hover{
+    cursor:pointer;
 }
 
 /*属性*/
