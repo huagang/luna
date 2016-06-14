@@ -10,7 +10,7 @@
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" class="ms.luna.biz.dao.model.MsArticleWithBLOBs" extends="ms_article.BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
-    <result column="abstract" property="abstract" jdbcType="LONGVARCHAR" />
+    <result column="abstract_content" property="abstractContent" jdbcType="LONGVARCHAR" />
     <result column="abstract_pic" property="abstractPic" jdbcType="LONGVARCHAR" />
     <result column="audio" property="audio" jdbcType="LONGVARCHAR" />
     <result column="video" property="video" jdbcType="LONGVARCHAR" />
@@ -44,7 +44,7 @@
     id, title, column_id, up_hhmmss, regist_hhmmss
   </sql>
   <sql id="Blob_Column_List" >
-    content, abstract, abstract_pic, audio, video
+    content, abstract_content, abstract_pic, audio, video
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterClass="ms.luna.biz.dao.model.MsArticleCriteria" >
     select
@@ -98,11 +98,11 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article (id, title, column_id, up_hhmmss, 
-      regist_hhmmss, content, abstract, abstract_pic, 
-      audio, video)
+      regist_hhmmss, content, abstract_content, 
+      abstract_pic, audio, video)
     values (#id:INTEGER#, #title:VARCHAR#, #columnId:INTEGER#, #upHhmmss:TIMESTAMP#, 
-      #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, #abstract:LONGVARCHAR#, #abstractPic:LONGVARCHAR#, 
-      #audio:LONGVARCHAR#, #video:LONGVARCHAR#)
+      #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, #abstractContent:LONGVARCHAR#, 
+      #abstractPic:LONGVARCHAR#, #audio:LONGVARCHAR#, #video:LONGVARCHAR#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article
@@ -125,8 +125,8 @@
       <isNotNull prepend="," property="content" >
         content
       </isNotNull>
-      <isNotNull prepend="," property="abstract" >
-        abstract
+      <isNotNull prepend="," property="abstractContent" >
+        abstract_content
       </isNotNull>
       <isNotNull prepend="," property="abstractPic" >
         abstract_pic
@@ -159,8 +159,8 @@
       <isNotNull prepend="," property="content" >
         #content:LONGVARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="abstract" >
-        #abstract:LONGVARCHAR#
+      <isNotNull prepend="," property="abstractContent" >
+        #abstractContent:LONGVARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="abstractPic" >
         #abstractPic:LONGVARCHAR#
@@ -199,8 +199,8 @@
       <isNotNull prepend="," property="record.content" >
         content = #record.content:LONGVARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.abstract" >
-        abstract = #record.abstract:LONGVARCHAR#
+      <isNotNull prepend="," property="record.abstractContent" >
+        abstract_content = #record.abstractContent:LONGVARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="record.abstractPic" >
         abstract_pic = #record.abstractPic:LONGVARCHAR#
@@ -224,7 +224,7 @@
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       content = #record.content:LONGVARCHAR#,
-      abstract = #record.abstract:LONGVARCHAR#,
+      abstract_content = #record.abstractContent:LONGVARCHAR#,
       abstract_pic = #record.abstractPic:LONGVARCHAR#,
       audio = #record.audio:LONGVARCHAR#,
       video = #record.video:LONGVARCHAR#
@@ -261,8 +261,8 @@
       <isNotNull prepend="," property="content" >
         content = #content:LONGVARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="abstract" >
-        abstract = #abstract:LONGVARCHAR#
+      <isNotNull prepend="," property="abstractContent" >
+        abstract_content = #abstractContent:LONGVARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="abstractPic" >
         abstract_pic = #abstractPic:LONGVARCHAR#
@@ -283,7 +283,7 @@
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       content = #content:LONGVARCHAR#,
-      abstract = #abstract:LONGVARCHAR#,
+      abstract_content = #abstractContent:LONGVARCHAR#,
       abstract_pic = #abstractPic:LONGVARCHAR#,
       audio = #audio:LONGVARCHAR#,
       video = #video:LONGVARCHAR#

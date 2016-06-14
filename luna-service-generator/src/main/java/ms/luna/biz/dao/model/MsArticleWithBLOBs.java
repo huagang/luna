@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class MsArticleWithBLOBs extends MsArticle implements Serializable {
     private String content;
 
-    private String abstract;
+    private String abstractContent;
 
     private String abstractPic;
 
@@ -23,12 +23,12 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
-    public String getAbstract() {
-        return abstract;
+    public String getAbstractContent() {
+        return abstractContent;
     }
 
-    public void setAbstract(String abstract) {
-        this.abstract = abstract == null ? null : abstract.trim();
+    public void setAbstractContent(String abstractContent) {
+        this.abstractContent = abstractContent == null ? null : abstractContent.trim();
     }
 
     public String getAbstractPic() {
@@ -73,7 +73,7 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
-            && (this.getAbstract() == null ? other.getAbstract() == null : this.getAbstract().equals(other.getAbstract()))
+            && (this.getAbstractContent() == null ? other.getAbstractContent() == null : this.getAbstractContent().equals(other.getAbstractContent()))
             && (this.getAbstractPic() == null ? other.getAbstractPic() == null : this.getAbstractPic().equals(other.getAbstractPic()))
             && (this.getAudio() == null ? other.getAudio() == null : this.getAudio().equals(other.getAudio()))
             && (this.getVideo() == null ? other.getVideo() == null : this.getVideo().equals(other.getVideo()));
@@ -89,7 +89,7 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
-        result = prime * result + ((getAbstract() == null) ? 0 : getAbstract().hashCode());
+        result = prime * result + ((getAbstractContent() == null) ? 0 : getAbstractContent().hashCode());
         result = prime * result + ((getAbstractPic() == null) ? 0 : getAbstractPic().hashCode());
         result = prime * result + ((getAudio() == null) ? 0 : getAudio().hashCode());
         result = prime * result + ((getVideo() == null) ? 0 : getVideo().hashCode());
