@@ -339,9 +339,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					break;
 				case VbConstant.POI_FIELD_TYPE.视频:
 					if (needSave(tag_ids, field_tag_ids)) {
-//						if (!VbUtility.checkCOSVideoIsOK(field_name_val)) {
-//							throw new RuntimeException("视频地址不正确或者不是已上传的地址");
-//						}
+						if (!force) {
+							if (!VbUtility.checkCOSVideoIsOK((String)field_name_val)) {
+								throw new RuntimeException("视频地址不正确或者不是已上传的地址");
+							}
+						}
 						//-----------------------------------------------------------------------
 						// 视频需要通过转码得到url，上传后返回值为id。因此不进行视频地址的检测。
 						//-----------------------------------------------------------------------
