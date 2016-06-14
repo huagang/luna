@@ -51,6 +51,7 @@ import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.JsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.biz.util.ZipUtil;
@@ -164,7 +165,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				lstProvinces.add(simpleModel);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 //		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
@@ -258,7 +259,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		
 		response.getWriter().print(JsonUtil.error("-1", "异常").toString());
@@ -280,7 +281,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
@@ -392,7 +393,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 			response.getWriter().print(JsonUtil.error("-3", "failed"));
 			response.setStatus(200);
 			return;
@@ -428,12 +429,12 @@ public class ManagePoiCtrl extends BasicCtrl{
 					response.getOutputStream().close();
 					wb.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					MsLogger.debug(e);
 				} 
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
@@ -606,7 +607,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 								}
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							MsLogger.debug(e);
 							uploadError = true;
 						}
 						if (uploadError) {
@@ -1064,7 +1065,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 							String fileName = "/" + VbMD5.generateToken() + ext;
 							JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-									COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+									COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
 							if ("0".equals(uploadResult.getString("code"))) {
 								JSONObject uploadedData = uploadResult.getJSONObject("data");
 								value = uploadedData.getString("access_url");
@@ -1073,7 +1074,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						MsLogger.debug(e);
 						uploadError = true;
 					}
 				}
@@ -1101,7 +1102,39 @@ public class ManagePoiCtrl extends BasicCtrl{
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						MsLogger.debug(e);
+						uploadError = true;
+					}
+				}
+				if (uploadError) {
+					throw new IllegalArgumentException("文件上传有错误发生");
+				}
+				return value;
+			case VbConstant.POI_FIELD_TYPE.视频:
+				if (unzipedDir == null) {
+					if(value == null || value.trim().isEmpty()){
+						return "";
+					} else {
+						return "没有上传压缩文件";
+					}
+				}
+				if (!CharactorUtil.isEmpyty(value)) {
+					try {
+						String ext = VbUtility.getExtensionOfVideoFileName(value);
+						if (ext != null) {
+							String fileName = VbMD5.generateToken() + ext;// 生成文件名
+							String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+							JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
+									unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+							if ("0".equals(uploadResult.getString("code"))) {
+								JSONObject uploadedData = uploadResult.getJSONObject("data");
+								value = uploadedData.getString("fileId");
+							} else {
+								uploadError = true;
+							}
+						}
+					} catch (Exception e) {
+						MsLogger.debug(e);
 						uploadError = true;
 					}
 				}
