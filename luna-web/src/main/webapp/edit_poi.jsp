@@ -64,10 +64,10 @@
 		                            <form:checkbox path="checkeds" disabled="${poiReadOnly}" value="${varTag['value']}" label="${varTag['label']}"/>
 		                        </label>
 		                        <input type="text" style="display: none;"/>
-		                      
+		                      	<c:if test="${!poiReadOnly}">
 			                        <img class="edit-property" src="${basePath}/img/edit.png" onclick="editProperty(this)"/>
 			                        <img class="del-property" src="${basePath}/img/delete.png" onclick="delProperty(this)"/>
-		                        </c:if> --%>
+		                        </c:if>
 		                  		 </span>
 		                   </c:forEach> --%>
 		                   
