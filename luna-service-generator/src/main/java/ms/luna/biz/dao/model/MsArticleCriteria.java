@@ -309,6 +309,252 @@ public class MsArticleCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andAbstractPicIsNull() {
+            addCriterion("abstract_pic is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicIsNotNull() {
+            addCriterion("abstract_pic is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic =", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic <>", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic >", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic >=", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic <", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic <=", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic like", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("abstract_pic not like", value, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("abstract_pic in", values, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("abstract_pic not in", values, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("abstract_pic between", value1, value2, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAbstractPicNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("abstract_pic not between", value1, value2, "abstractPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioIsNull() {
+            addCriterion("audio is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioIsNotNull() {
+            addCriterion("audio is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio =", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio <>", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio >", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio >=", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio <", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio <=", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio like", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("audio not like", value, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("audio in", values, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("audio not in", values, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("audio between", value1, value2, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andAudioNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("audio not between", value1, value2, "audio");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoIsNull() {
+            addCriterion("video is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoIsNotNull() {
+            addCriterion("video is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video =", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video <>", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video >", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video >=", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video <", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video <=", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video like", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("video not like", value, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("video in", values, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("video not in", values, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("video between", value1, value2, "video");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("video not between", value1, value2, "video");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnIdIsNull() {
             addCriterion("column_id is null");
             return (Criteria) this;
@@ -594,6 +840,24 @@ public class MsArticleCriteria {
         public Criteria andTitleLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(title) like", value.toUpperCase(), "title");
+            return this;
+        }
+
+        public Criteria andAbstractPicLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(abstract_pic) like", value.toUpperCase(), "abstractPic");
+            return this;
+        }
+
+        public Criteria andAudioLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(audio) like", value.toUpperCase(), "audio");
+            return this;
+        }
+
+        public Criteria andVideoLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(video) like", value.toUpperCase(), "video");
             return this;
         }
 

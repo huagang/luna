@@ -8,6 +8,12 @@ public class MsArticle implements Serializable {
 
     private String title;
 
+    private String abstractPic;
+
+    private String audio;
+
+    private String video;
+
     private Integer columnId;
 
     private Date upHhmmss;
@@ -30,6 +36,30 @@ public class MsArticle implements Serializable {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+
+    public String getAbstractPic() {
+        return abstractPic;
+    }
+
+    public void setAbstractPic(String abstractPic) {
+        this.abstractPic = abstractPic == null ? null : abstractPic.trim();
+    }
+
+    public String getAudio() {
+        return audio;
+    }
+
+    public void setAudio(String audio) {
+        this.audio = audio == null ? null : audio.trim();
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video == null ? null : video.trim();
     }
 
     public Integer getColumnId() {
@@ -70,6 +100,9 @@ public class MsArticle implements Serializable {
         MsArticle other = (MsArticle) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
+            && (this.getAbstractPic() == null ? other.getAbstractPic() == null : this.getAbstractPic().equals(other.getAbstractPic()))
+            && (this.getAudio() == null ? other.getAudio() == null : this.getAudio().equals(other.getAudio()))
+            && (this.getVideo() == null ? other.getVideo() == null : this.getVideo().equals(other.getVideo()))
             && (this.getColumnId() == null ? other.getColumnId() == null : this.getColumnId().equals(other.getColumnId()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()));
@@ -81,6 +114,9 @@ public class MsArticle implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
+        result = prime * result + ((getAbstractPic() == null) ? 0 : getAbstractPic().hashCode());
+        result = prime * result + ((getAudio() == null) ? 0 : getAudio().hashCode());
+        result = prime * result + ((getVideo() == null) ? 0 : getVideo().hashCode());
         result = prime * result + ((getColumnId() == null) ? 0 : getColumnId().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
@@ -89,6 +125,6 @@ public class MsArticle implements Serializable {
 
     @Override
     public String toString() {
-        return "MsArticle [id=" + id + ",title=" + title + ",columnId=" + columnId + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + "]";
+        return "MsArticle [id=" + id + ",title=" + title + ",abstractPic=" + abstractPic + ",audio=" + audio + ",video=" + video + ",columnId=" + columnId + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + "]";
     }
 }
