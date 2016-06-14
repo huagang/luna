@@ -341,6 +341,9 @@ public class AddPoiCtrl extends BasicCtrl{
 
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
+			if (!field.containsKey("field_def")) {
+				continue;
+			}
 			JSONObject field_def = field.getJSONObject("field_def");
 			fieldDefMap.put(field_def.getString("field_name"), field_def);
 		}

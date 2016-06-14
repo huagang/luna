@@ -757,6 +757,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Map<String, StringBuffer> tagIdMaps = new HashMap<String, StringBuffer>();
 
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
+			
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
+				continue;
+			}
+
 			StringBuffer tagIds = tagIdMaps.get(msTagFieldResult.getFieldName());
 			if (tagIds == null) {
 				tagIds = new StringBuffer();
@@ -770,6 +776,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Set<String> fieldSet = new HashSet<String>();
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
 			if (fieldSet.contains(msTagFieldResult.getFieldName())) {
+				continue;
+			}
+			
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
 				continue;
 			}
 			fieldSet.add(msTagFieldResult.getFieldName());
@@ -823,6 +834,17 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
 
 			JSONObject field_def = JSONObject.fromObject("{}");
+
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
+				field_def.put("tag_id", msTagFieldResult.getTagId());
+				field_def.put("tag_name", msTagFieldResult.getTagName());
+				JSONObject field = JSONObject.fromObject("{}");
+				field.put("tag_without_field", field_def);
+				privateFields.add(field);
+				continue;
+			}
+
 			field_def.put("field_name", msTagFieldResult.getFieldName());
 			field_def.put("tag_id", msTagFieldResult.getTagId());
 			field_def.put("tag_name", msTagFieldResult.getTagName());
