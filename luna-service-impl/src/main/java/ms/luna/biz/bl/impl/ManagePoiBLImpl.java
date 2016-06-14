@@ -66,9 +66,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private final static int TAG_LEVEL_TOP = 1;
 
 	/**
-	 * 页面初始化<p>
-	 * 1.添加按钮显示用的tag列表<br>
-	 * 2.poi一览页面厨师数据
+	 * 获取分类信息<br>
 	 */
 	@Override
 	public JSONObject getInitInfo(String json) {
@@ -845,6 +843,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 		return privateFields;
 	}
+
 	@Override
 	public JSONObject downloadPoiTemplete(String json) {
 		JSONArray privateFieldsDef = this.getPrivateFieldsForTemplete();

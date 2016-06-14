@@ -70,6 +70,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 	private Map<String, String> ZONENAME_2_CODE_MAP = new HashMap<String, String>();
 
 	public static final Integer 介绍最大长度 = 1024*20;
+	
+	public static final Integer 公有字段个数 = 11;
 
 	@Autowired
 	private ManagePoiService managePoiService;
@@ -89,7 +91,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("poi_templete.xlsx");
 		try {
 			Workbook wb = WorkbookFactory.create(is);
-			Sheet sheet = wb.getSheet("Templete_(地域_备注)");
+			Sheet sheet = wb.getSheet("Templete_(备注)");
 			int rowStart = Math.max(1, sheet.getFirstRowNum());
 			int rowEnd = Math.max(1, sheet.getLastRowNum());
 			for (int i = rowStart; i <= rowEnd; i++) {
@@ -497,6 +499,28 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 	private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
 			throws EncryptedDocumentException, InvalidFormatException, IOException {
+
+		JSONObject tagsDef = managePoiService.getInitInfo("{}");
+		if (!"0".equals(tagsDef.getString("code"))) {
+			return JsonUtil.error("-1", "没能正确获得分类定义信息");
+		}
+		tagsDef = tagsDef.getJSONObject("data");
+
+		JSONArray array = tagsDef.getJSONArray("tags_def");
+
+		// 子分类名称到ID的转换Map
+		Map<String, Integer> 分类名称加子分类名称To子分类编号Map = new LinkedHashMap<String, Integer>();
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject json = array.getJSONObject(i);
+			String topTagName = json.getString("tag_name");
+			JSONArray subTags = json.getJSONArray("sub_tags");
+			for (int j = 0; j < subTags.size(); j++) {
+				JSONObject subTag = subTags.getJSONObject(j);
+				分类名称加子分类名称To子分类编号Map.put(topTagName+"#"+subTag.getString("tag_name"),
+						subTag.getInt("tag_id"));
+			}
+			
+		}
 		
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
@@ -553,7 +577,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			for (int j = rowStart; j <= rowEnd; j++) {
 				Row row = sheet.getRow(j);
 				Boolean allBlank = true;
-				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + 10; z++) {
+				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 					if (!CharactorUtil.isEmpyty(getCellValueAsString(row.getCell(0)).trim())) {
 						allBlank = false;
 					}
@@ -562,24 +586,44 @@ public class ManagePoiCtrl extends BasicCtrl{
 					continue;
 				}
 				// 公共字段
+				// POI名称
 				String long_title = getCellValueAsString(row.getCell(0)).trim();
+				// POI别名
 				String short_title = getCellValueAsString(row.getCell(1)).trim();
-//				if (CharactorUtil.isEmpyty(short_title)) {
-//					short_title = long_title;
-//				}
+
+				// 纬度
 				String lat = getCellValueAsString(row.getCell(2)).trim();
+				// 经度
 				String lng = getCellValueAsString(row.getCell(3)).trim();
+				// 地域名称
 				String mergerName = getCellValueAsString(row.getCell(4)).trim().replace("，", ",");
 				String zone_id = ZONENAME_2_CODE_MAP.get(mergerName);
+
+				// 详细地址
 				String detail_address = getCellValueAsString(row.getCell(5)).trim();
-				String brief_introduction = getCellValueAsString(row.getCell(6)).trim();
-				String thumbnail = getCellValueAsString(row.getCell(7)).trim();
+
+				// 二级分类名称
+				String subTagName = getCellValueAsString(row.getCell(6)).trim();
+				Integer subTag = 0;
+
+				// 详细介绍
+				String brief_introduction = getCellValueAsString(row.getCell(7)).trim();
+				// 缩略图
+				String thumbnail = getCellValueAsString(row.getCell(8)).trim();
 				// 8.全景数据ID
-				String panorama = getCellValueAsString(row.getCell(8)).trim();
+				String panorama = getCellValueAsString(row.getCell(9)).trim();
 				// 9.联系电话
-				String contact_phone = getCellValueAsString(row.getCell(9)).trim();
+				String contact_phone = getCellValueAsString(row.getCell(10)).trim();
 
 				Boolean isError = (zone_id == null ? Boolean.TRUE : Boolean.FALSE);
+
+				// 检查二级分类是否合法
+				if (!CharactorUtil.isEmpyty(subTagName)) {
+					subTag = 分类名称加子分类名称To子分类编号Map.get(tag_name + "#" + subTagName);
+				}
+				if (subTag == null) {
+					isError = true;
+				}
 				isError = isError || CharactorUtil.isEmpyty(long_title);
 				isError = isError || CharactorUtil.checkPoiDefaultStr(long_title, 64);
 				isError = isError || CharactorUtil.checkPoiDefaultStr(short_title, 64);
@@ -598,7 +642,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 				isError = isError || CharactorUtil.fileFieldIsError(thumbnail, unzipedDir);
 				// 检查私有字段
-				for (int z = 10; !isError && z < fieldsJsonByTag.size() + 10; z++) {
+				for (int z = 公有字段个数; !isError && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 					String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 					String value = getCellValueAsString(row.getCell(z)).trim();
 					isError = isError || CharactorUtil.isPoiDataHasError(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
@@ -627,7 +671,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("contact_phone", contact_phone);
 
 					// 记录其他私有字段，页面编辑用
-					for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+					for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 						String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 						String value = getCellValueAsString(row.getCell(z)).trim();
 						JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -685,7 +729,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("contact_phone", contact_phone);
 
 							// 记录其他私有字段，页面编辑用
-							for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+							for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 								String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 								String value = getCellValueAsString(row.getCell(z)).trim();
 								JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -719,6 +763,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					noCheckErrorPoi.put("thumbnail_16_9", "");
 					noCheckErrorPoi.put("merger_name", "中国," + mergerName);
 					noCheckErrorPoi.put("tags", tagname_2_tags.get(tag_name));
+					noCheckErrorPoi.put("subTag", subTag);
 
 					// 8.全景数据ID
 					noCheckErrorPoi.put("panorama", panorama);
@@ -726,7 +771,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 					try {
 						// 记录其他私有字段，页面编辑用
-						for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -758,7 +803,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 						// 9.联系电话
 						checkErrorPoi.put("contact_phone", contact_phone);
 						// 记录其他私有字段，页面编辑用
-						for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -828,19 +873,6 @@ public class ManagePoiCtrl extends BasicCtrl{
 		titleStyle.setFont(titleFont);
 		titleStyle.setWrapText(true);
 
-		//		titleStyle.setBorderBottom(CellStyle.BORDER_THIN);
-		//		titleStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderLeft(CellStyle.BORDER_THIN);
-		//		titleStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderRight(CellStyle.BORDER_THIN);
-		//		titleStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderTop(CellStyle.BORDER_MEDIUM_DASHED);
-		//		titleStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		//
-		//		titleStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-		//		titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-
 		XSSFFont tipsFont = (XSSFFont)wb.createFont();
 		tipsFont.setColor(IndexedColors.RED.index);
 		tipsFont.setFontHeightInPoints((short)10);
@@ -849,16 +881,6 @@ public class ManagePoiCtrl extends BasicCtrl{
 		tipsStyle.setFont(tipsFont);
 		tipsStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);// 垂直
 
-		//		tipsStyle.setBorderBottom(CellStyle.BORDER_THIN);
-		//		tipsStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderLeft(CellStyle.BORDER_THIN);
-		//		tipsStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderRight(CellStyle.BORDER_THIN);
-		//		tipsStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderTop(CellStyle.BORDER_THIN);
-		//		tipsStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		//		tipsStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		tipsStyle.setWrapText(true);
 
 		for (Entry<String, List<JSONObject>> entry : entrySet) {
@@ -867,7 +889,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			this.createCommonField(wb, tag_name, titleStyle, tipsStyle);
 			this.createPrivateField(wb, tag_name, privateFields, titleStyle, tipsStyle);
 		}
-		wb.setActiveSheet(1);
+		wb.setActiveSheet(0);
 		return wb;
 	}
 
@@ -881,16 +903,17 @@ public class ManagePoiCtrl extends BasicCtrl{
 			CellStyle tipsStyle) {
 
 		Sheet sheet = wb.createSheet(sheetName);
+		sheet.setZoom(80);   // 80 percent magnification
 
 		// title1
 		Row row = sheet.createRow(0);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(titleStyle);
 		}
 		// title2
 		row = sheet.createRow(1);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			if (j > 3 && j < 6) {
@@ -899,7 +922,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 		// tips
 		row = sheet.createRow(2);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(tipsStyle);
 		}
@@ -914,14 +937,16 @@ public class ManagePoiCtrl extends BasicCtrl{
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 3, 3));
 		// 地址
 		sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 5));
-		// 简介
+		// 二级分类
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));
-		// 缩略图
+		// 简介
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));
-		// 8.全景数据ID
+		// 缩略图
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));
-		// 9.联系电话
+		// 8.全景数据ID
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));
+		// 9.联系电话
+		sheet.addMergedRegion(new CellRangeAddress(1, 2, 10, 10));
 
 		// title1设值
 		Row row0 = sheet.getRow(0);
@@ -930,13 +955,14 @@ public class ManagePoiCtrl extends BasicCtrl{
 		row0.getCell(2).setCellValue("纬度");
 		row0.getCell(3).setCellValue("经度");
 		row0.getCell(4).setCellValue("地址");
-		row0.getCell(6).setCellValue("详细介绍");
-		row0.getCell(7).setCellValue("缩略图");
+		row0.getCell(6).setCellValue("二级分类");
+		row0.getCell(7).setCellValue("详细介绍");
+		row0.getCell(8).setCellValue("缩略图");
 
 		// 8.全景数据ID
-		row0.getCell(8).setCellValue("全景数据ID");
+		row0.getCell(9).setCellValue("全景数据ID");
 		// 9.联系电话
-		row0.getCell(9).setCellValue("联系电话");
+		row0.getCell(10).setCellValue("联系电话");
 
 		row0.getCell(0).setCellStyle(titleStyle);
 		row0.getCell(1).setCellStyle(titleStyle);
@@ -945,44 +971,53 @@ public class ManagePoiCtrl extends BasicCtrl{
 		row0.getCell(4).setCellStyle(titleStyle);
 		row0.getCell(6).setCellStyle(titleStyle);
 		row0.getCell(7).setCellStyle(titleStyle);
+		row0.getCell(8).setCellStyle(titleStyle);
 
 		// 8.全景数据ID
-		row0.getCell(8).setCellStyle(titleStyle);
-		// 9.联系电话
 		row0.getCell(9).setCellStyle(titleStyle);
+		// 9.联系电话
+		row0.getCell(10).setCellStyle(titleStyle);
 
-		// title2设值
 		Row row1 = sheet.getRow(1);
-		row1.getCell(4).setCellValue("省,市,区/县");
-		row1.getCell(5).setCellValue("详细地址");
-		row1.getCell(4).setCellStyle(titleStyle);
-		row1.getCell(5).setCellStyle(titleStyle);
-
 		// tips设值
+		// POI名称
 		row1.getCell(0).setCellValue("POI点全称，必填");
-		row1.getCell(1).setCellValue("可为空（POI其它叫法）");
 		row1.getCell(0).setCellStyle(tipsStyle);
+
+		// POI别名
+		row1.getCell(1).setCellValue("可为空（POI其它叫法）");
 		row1.getCell(1).setCellStyle(tipsStyle);
 
-		// 8.全景数据ID
-		// 9.联系电话
-		row1.getCell(8).setCellValue("panoID或者页卡集标识");
-		row1.getCell(9).setCellValue("可为空\r\n：格式：(国家区号)-省市区号-具体号码");
-
-		row1.getCell(8).setCellStyle(tipsStyle);
-		row1.getCell(9).setCellStyle(tipsStyle);
-
 		Row row2 = sheet.getRow(2);
+		// title2设值
+		row1.getCell(4).setCellValue("省,市,区/县");
+		row1.getCell(4).setCellStyle(titleStyle);
 		row2.getCell(4).setCellValue("XX省,XX市,XX区/县（值取自地域表格中）");
 
-		// 简介
-		row1.getCell(6).setCellValue("POI点的详细介绍");
-		// 缩略图
-		row1.getCell(7).setCellValue("输入缩略图名称，不能包含中文");
+		row1.getCell(5).setCellValue("详细地址");
+		row1.getCell(5).setCellStyle(titleStyle);
+
+		// 二级菜单分类
+		row1.getCell(6).setCellValue("二级分类名称");
 		row1.getCell(6).setCellStyle(tipsStyle);
+
+		// 详细介绍
+		row1.getCell(7).setCellValue("POI点的详细介绍");
 		row1.getCell(7).setCellStyle(tipsStyle);
-		
-		for (int i = 0; i < 10; i++) {
+
+		// 缩略图
+		row1.getCell(8).setCellValue("输入缩略图名称，不能包含中文");
+		row1.getCell(8).setCellStyle(tipsStyle);
+
+		// 全景数据ID
+		row1.getCell(9).setCellValue("panoID或者页卡集标识");
+		row1.getCell(9).setCellStyle(tipsStyle);
+
+		// 联系电话
+		row1.getCell(10).setCellValue("可为空\r\n：格式：(国家区号)-省市区号-具体号码");
+		row1.getCell(10).setCellStyle(tipsStyle);
+
+		for (int i = 0; i < 公有字段个数; i++) {
 			row2.getCell(i).setCellStyle(tipsStyle);
 		}
 	}
@@ -1166,6 +1201,5 @@ public class ManagePoiCtrl extends BasicCtrl{
 			default:
 				return value;
 		}
-		
 	}
 }
