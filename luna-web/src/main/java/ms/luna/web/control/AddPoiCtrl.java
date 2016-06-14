@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
@@ -59,10 +58,10 @@ public class AddPoiCtrl extends BasicCtrl{
 	@Resource(name="managePoiCtrl")
 	private ManagePoiCtrl managePoiCtrl;
 
-	/**
-	 * 页面上属性列表
-	 */
-	private List<SimpleModel> checkBoxTags;
+//	/**
+//	 * 页面上属性列表
+//	 */
+//	private List<SimpleModel> checkBoxTags;
 
 	/**
 	 * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
@@ -85,30 +84,18 @@ public class AddPoiCtrl extends BasicCtrl{
 		session.setAttribute("menu_selected", "manage_poi");
 		PoiModel poiModel = new PoiModel();
 
-		checkBoxTags = poiModel.getPoiTags();
-
 		JSONObject params = new JSONObject();
 		JSONObject result = managePoiService.initAddPoi(params.toString());
+		MsLogger.debug(result.toString());
 
 		if ("0".equals(result.getString("code"))) {
 			JSONObject data = result.getJSONObject("data");
-			JSONObject common_fields_def = data.getJSONObject("common_fields_def");
-
-			JSONArray tags = common_fields_def.getJSONArray("tags_def");
-			for (int i = 0; i < tags.size(); i++) {
-				JSONObject tag = tags.getJSONObject(i);
-				if (VbConstant.POI.公共TAGID.compareTo(tag.getInt("tag_id")) == 0) {
-					continue;
-				}
-				SimpleModel simpleModel = new SimpleModel();
-				simpleModel.setValue(tag.getString("tag_id"));
-				simpleModel.setLabel(tag.getString("tag_name"));
-				checkBoxTags.add(simpleModel);
-			}
 			JSONArray private_fields_def = data.getJSONArray("private_fields_def");
+			managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), null);
 			session.setAttribute("private_fields", private_fields_def);
+		} else {
+			return new ModelAndView("/error.jsp");
 		}
-		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 
 		// 区域信息的下拉列表
 		// 国家信息
@@ -213,12 +200,19 @@ public class AddPoiCtrl extends BasicCtrl{
 		
 		param.put("short_title", short_title);
 
-		// 3.类别（tags）
-		values = paramMaps.get("checkeds");
+		// 3.一级类别（topTag）
+		values = paramMaps.get("topTag");
 		if (values == null || values.length == 0) {
 			param.put("tags", "[]");
 		} else {
 			param.put("tags", values);
+		}
+		// 3.二级类别(subTag)
+		values = paramMaps.get("subTag");
+		if (values == null || values.length == 0) {
+			param.put("subTag", 0);
+		} else {
+			param.put("subTag", values[0]);
 		}
 
 		// 4.坐标（lat,lng）
@@ -284,7 +278,7 @@ public class AddPoiCtrl extends BasicCtrl{
 			throw new IllegalArgumentException("缩略图地址不正确，或者是没有上传的图片");
 		}
 		param.put("thumbnail", thumbnail);
-		
+
 		param.put("thumbnail_1_1", "");
 		param.put("thumbnail_16_9", "");
 
@@ -300,8 +294,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (CharactorUtil.hasChineseChar(panorama)) {
 			throw new IllegalArgumentException("全景数据ID不能含有中文字符！");
 		}
-		if (CharactorUtil.checkPoiDefaultStr(panorama, 32)) {
-			throw new IllegalArgumentException("全景数据ID长度不能超过" + 32 +"字节");
+		if (CharactorUtil.checkPoiDefaultStr(panorama)) {
+			throw new IllegalArgumentException("全景数据过长");
 		}
 
 		// 9.联系电话

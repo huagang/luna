@@ -60,6 +60,16 @@ public class PoiModel implements Serializable {
 	private List<String> checkeds = null;
 
 	/**
+	 * 一级标签
+	 */
+	private Integer topTag;
+
+	/**
+	 * 二级标签
+	 */
+	private Integer subTag;
+
+	/**
 	 * 类别(POI TAG)
 	 */
 	private List<SimpleModel> poiTags = new ArrayList<SimpleModel>();
@@ -420,6 +430,34 @@ public class PoiModel implements Serializable {
 	 */
 	public void setContact_phone(String contact_phone) {
 		this.contact_phone = contact_phone;
+	}
+
+	/**
+	 * @return the topTag
+	 */
+	public Integer getTopTag() {
+		return topTag;
+	}
+
+	/**
+	 * @param topTag the topTag to set
+	 */
+	public void setTopTag(Integer topTag) {
+		this.topTag = topTag;
+	}
+
+	/**
+	 * @return the subTag
+	 */
+	public Integer getSubTag() {
+		return subTag;
+	}
+
+	/**
+	 * @param subTag the subTag to set
+	 */
+	public void setSubTag(Integer subTag) {
+		this.subTag = subTag;
 	}
 
 }

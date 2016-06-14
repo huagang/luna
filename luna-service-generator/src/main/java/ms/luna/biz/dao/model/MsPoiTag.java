@@ -8,6 +8,12 @@ public class MsPoiTag implements Serializable {
 
     private String tagName;
 
+    private Integer dsOrder;
+
+    private Integer tagLevel;
+
+    private Integer parentTagId;
+
     private String editableFlag;
 
     private Date registHhmmss;
@@ -32,6 +38,30 @@ public class MsPoiTag implements Serializable {
 
     public void setTagName(String tagName) {
         this.tagName = tagName == null ? null : tagName.trim();
+    }
+
+    public Integer getDsOrder() {
+        return dsOrder;
+    }
+
+    public void setDsOrder(Integer dsOrder) {
+        this.dsOrder = dsOrder;
+    }
+
+    public Integer getTagLevel() {
+        return tagLevel;
+    }
+
+    public void setTagLevel(Integer tagLevel) {
+        this.tagLevel = tagLevel;
+    }
+
+    public Integer getParentTagId() {
+        return parentTagId;
+    }
+
+    public void setParentTagId(Integer parentTagId) {
+        this.parentTagId = parentTagId;
     }
 
     public String getEditableFlag() {
@@ -80,6 +110,9 @@ public class MsPoiTag implements Serializable {
         MsPoiTag other = (MsPoiTag) that;
         return (this.getTagId() == null ? other.getTagId() == null : this.getTagId().equals(other.getTagId()))
             && (this.getTagName() == null ? other.getTagName() == null : this.getTagName().equals(other.getTagName()))
+            && (this.getDsOrder() == null ? other.getDsOrder() == null : this.getDsOrder().equals(other.getDsOrder()))
+            && (this.getTagLevel() == null ? other.getTagLevel() == null : this.getTagLevel().equals(other.getTagLevel()))
+            && (this.getParentTagId() == null ? other.getParentTagId() == null : this.getParentTagId().equals(other.getParentTagId()))
             && (this.getEditableFlag() == null ? other.getEditableFlag() == null : this.getEditableFlag().equals(other.getEditableFlag()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
@@ -92,6 +125,9 @@ public class MsPoiTag implements Serializable {
         int result = 1;
         result = prime * result + ((getTagId() == null) ? 0 : getTagId().hashCode());
         result = prime * result + ((getTagName() == null) ? 0 : getTagName().hashCode());
+        result = prime * result + ((getDsOrder() == null) ? 0 : getDsOrder().hashCode());
+        result = prime * result + ((getTagLevel() == null) ? 0 : getTagLevel().hashCode());
+        result = prime * result + ((getParentTagId() == null) ? 0 : getParentTagId().hashCode());
         result = prime * result + ((getEditableFlag() == null) ? 0 : getEditableFlag().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
@@ -101,6 +137,6 @@ public class MsPoiTag implements Serializable {
 
     @Override
     public String toString() {
-        return "MsPoiTag [tagId=" + tagId + ",tagName=" + tagName + ",editableFlag=" + editableFlag + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + "]";
+        return "MsPoiTag [tagId=" + tagId + ",tagName=" + tagName + ",dsOrder=" + dsOrder + ",tagLevel=" + tagLevel + ",parentTagId=" + parentTagId + ",editableFlag=" + editableFlag + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + "]";
     }
 }

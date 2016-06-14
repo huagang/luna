@@ -5,10 +5,10 @@
 $(function(){
 	$("input[type=file][file_type=image]").change(function(){
 		asyncUploadThumb(this);
-	})
+	});
 	$("input[type=file][file_type=audio]").change(function(){
 		asyncUploadAudio(this);
-	})
+	});
 	$("input[type=file][file_type=video]").change(function(){
 		asyncUploadVideo(this);
 	});
@@ -121,7 +121,7 @@ $(function(){
             	      },2000);
             }
         });
-	})
+	});
 });
 
 function reloadpoi() {
