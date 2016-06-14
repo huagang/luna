@@ -109,8 +109,8 @@ public class EditPoiCtrl extends BasicCtrl{
 //				}
 //				poiModel.setCheckeds(checkeds);
 
-				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_CEILING));
-				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_CEILING));
+				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_HALF_UP));
+				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_HALF_UP));
 
 				poiModel.setProvinceId(common_fields_val.getString("province_id"));
 				poiModel.setCityId(common_fields_val.getString("city_id"));
@@ -254,8 +254,8 @@ public class EditPoiCtrl extends BasicCtrl{
 //				}
 //				poiModel.setCheckeds(checkeds);
 
-				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_CEILING));
-				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_CEILING));
+				poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_HALF_UP));
+				poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_HALF_UP));
 
 				poiModel.setProvinceId(common_fields_val.getString("province_id"));
 				poiModel.setCityId(common_fields_val.getString("city_id"));

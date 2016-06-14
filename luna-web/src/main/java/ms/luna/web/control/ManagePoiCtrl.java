@@ -498,6 +498,16 @@ public class ManagePoiCtrl extends BasicCtrl{
 		response.setStatus(200);
 	}
 
+	/**
+	 * 真正的保存Excel逻辑（含POI数据检查）
+	 * @param savedExcel
+	 * @param unzipedDir
+	 * @param msUser
+	 * @return
+	 * @throws EncryptedDocumentException
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 */
 	private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
 			throws EncryptedDocumentException, InvalidFormatException, IOException {
 
@@ -520,9 +530,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 				分类名称加子分类名称To子分类编号Map.put(topTagName+"#"+subTag.getString("tag_name"),
 						subTag.getInt("tag_id"));
 			}
-			
 		}
-		
+
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
 			return JsonUtil.error("-1", result.getString("msg"));
@@ -535,19 +544,34 @@ public class ManagePoiCtrl extends BasicCtrl{
 		Map<String, String> tagname_2_tags = new HashMap<String, String>();
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
-			JSONObject field_def = field.getJSONObject("field_def");
+			JSONObject field_def = null;
+			// 有私有字段的场合
+			if (field.containsKey("field_def")) {
+				field_def = field.getJSONObject("field_def");
+				// 没有私有字段 的场合
+			} else {
+				field_def = field.getJSONObject("tag_without_field");
+			}
+
 			String tag_name = field_def.getString("tag_name");
 			String tags = "[" + field_def.getString("tag_id") + "]";
 			tagname_2_tags.put(tag_name, tags);
-			String field_show_name = field_def.getString("field_show_name");
 
-			Map<String, JSONObject> fieldJSONObject = new LinkedHashMap<String, JSONObject>();
-			fieldJSONObject.put(field_show_name, field_def);
+			if (field.containsKey("field_def")) {
+				String field_show_name = field_def.getString("field_show_name");
 
-			fieldJSONObject = fieldsGroupByTagName.put(tag_name, fieldJSONObject);
-			if (fieldJSONObject != null) {
+				Map<String, JSONObject> fieldJSONObject = new LinkedHashMap<String, JSONObject>();
 				fieldJSONObject.put(field_show_name, field_def);
-				fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+
+				fieldJSONObject = fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+				if (fieldJSONObject != null) {
+					fieldJSONObject.put(field_show_name, field_def);
+					fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+				}
+			} else {
+
+				// 没有私有字段，只有公有字段
+				fieldsGroupByTagName.put(tag_name, new LinkedHashMap<String, JSONObject>());
 			}
 		}
 
@@ -560,7 +584,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		int sheetNum = wb.getNumberOfSheets();
 		for (int i = 0; i < sheetNum; i++) {
 			Sheet sheet = wb.getSheetAt(i);
-			if ("Templete_(地域_备注)".equals(sheet.getSheetName())) {
+			if ("Templete_(备注)".equals(sheet.getSheetName())) {
 				continue;
 			}
 			String tag_name = sheet.getSheetName();
@@ -568,7 +592,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			Map<String, JSONObject> fieldsJsonByTag = fieldsGroupByTagName.get(tag_name); 
 
 			if (fieldsJsonByTag == null) {
-				// TODO:
+				MsLogger.debug("工作簿中的工作表名称不是合法的一级分类名称["+ tag_name + "]");
 				continue;
 			}
 
@@ -850,14 +874,24 @@ public class ManagePoiCtrl extends BasicCtrl{
 		Map<String, List<JSONObject>> fieldsGroupByTagName = new LinkedHashMap<String, List<JSONObject>>();
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
-			JSONObject field_def = field.getJSONObject("field_def");
-			String tag_name = field_def.getString("tag_name");
-			List<JSONObject> lstJSONObject = new ArrayList<JSONObject>();
-			lstJSONObject.add(field_def);
-			lstJSONObject = fieldsGroupByTagName.put(tag_name, lstJSONObject);
-			if (lstJSONObject != null) {
+			JSONObject field_def = null;
+			// 有私有字段的场合
+			if (field.containsKey("field_def")) {
+				field_def = field.getJSONObject("field_def");
+				String tag_name = field_def.getString("tag_name");
+				List<JSONObject> lstJSONObject = new ArrayList<JSONObject>();
 				lstJSONObject.add(field_def);
-				fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				lstJSONObject = fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				if (lstJSONObject != null) {
+					lstJSONObject.add(field_def);
+					fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				}
+
+				// 没有私有字段 的场合
+			} else {
+				field_def = field.getJSONObject("tag_without_field");
+				String tag_name = field_def.getString("tag_name");
+				fieldsGroupByTagName.put(tag_name, new ArrayList<JSONObject>());
 			}
 		}
 
@@ -888,7 +922,10 @@ public class ManagePoiCtrl extends BasicCtrl{
 			String tag_name = entry.getKey();
 			List<JSONObject> privateFields = entry.getValue();
 			this.createCommonField(wb, tag_name, titleStyle, tipsStyle);
-			this.createPrivateField(wb, tag_name, privateFields, titleStyle, tipsStyle);
+			// 存在私有字段的场合再生成私有字段内容
+			if (!privateFields.isEmpty()) {
+				this.createPrivateField(wb, tag_name, privateFields, titleStyle, tipsStyle);
+			}
 		}
 		wb.setActiveSheet(0);
 		return wb;
