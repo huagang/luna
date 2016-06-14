@@ -262,8 +262,9 @@ public final class VbUtility {
 		if (value == null || value.isEmpty()) {
 			return true;
 		}
-		Pattern pattern1 = Pattern.compile("http://view.luna.visualbusiness.cn/.+" + VIDEOS, Pattern.CASE_INSENSITIVE);
-
+//		Pattern pattern1 = Pattern.compile("http://view.luna.visualbusiness.cn/.+" + VIDEOS, Pattern.CASE_INSENSITIVE);
+		Pattern pattern1 = Pattern.compile("\\d+");// 只匹配数字
+		
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
 			System.out.println("[" + value + "]视频格式不正确或者是没有上传的图片地址 ");
