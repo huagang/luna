@@ -168,7 +168,7 @@
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript"></span>全景数据</div>
                         <div class="value-poi">
-                            <form:input id="panorama" cssClass="txt" path="panorama" maxlength="32" placeholder="输入全景数据ID"/>
+                            <form:input id="panorama" cssClass="txt" path="panorama" maxlength="255" placeholder="输入全景数据ID"/>
                             <div class="warn" id="panorama_warn">不能为空</div>
                         </div>
                     </div>

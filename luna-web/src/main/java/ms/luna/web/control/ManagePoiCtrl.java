@@ -635,7 +635,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 				// 8.全景数据ID
 				isError = isError || CharactorUtil.hasChineseChar(panorama);
-				isError = isError || CharactorUtil.checkPoiDefaultStr(panorama, 32);
+				isError = isError || CharactorUtil.checkPoiDefaultStr(panorama);
 
 				// 9.联系电话
 				isError = isError || CharactorUtil.hasChineseChar(contact_phone);

@@ -294,8 +294,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (CharactorUtil.hasChineseChar(panorama)) {
 			throw new IllegalArgumentException("全景数据ID不能含有中文字符！");
 		}
-		if (CharactorUtil.checkPoiDefaultStr(panorama, 32)) {
-			throw new IllegalArgumentException("全景数据ID长度不能超过" + 32 +"字节");
+		if (CharactorUtil.checkPoiDefaultStr(panorama)) {
+			throw new IllegalArgumentException("全景数据过长");
 		}
 
 		// 9.联系电话
