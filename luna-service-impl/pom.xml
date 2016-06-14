@@ -235,7 +235,7 @@
 			<id>dev</id>
 			<properties>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-				<jdbc.url>jdbc:mysql://115.159.67.120:3306/hydb2</jdbc.url>
+				<jdbc.url>jdbc:mysql://115.159.67.120:3306/luna_dev</jdbc.url>
 				<jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>
 				<jdbc.user>vbdev</jdbc.user>
 				<jdbc.password>vb2015</jdbc.password>
