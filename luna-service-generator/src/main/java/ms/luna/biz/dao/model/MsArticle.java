@@ -2,7 +2,7 @@ package ms.luna.biz.dao.model;
 
 import java.io.Serializable;
 import java.util.Date;
-
+ 
 public class MsArticle implements Serializable {
     private Integer id;
 
