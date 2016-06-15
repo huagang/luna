@@ -801,7 +801,25 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 			JSONObject field_val = JSONObject.fromObject("{}");
 			if (docPoi != null) {
-				field_val.put("value", docPoi.get(msTagFieldResult.getFieldName()));
+				// 新增加的私有字段但是DB中还没有值
+				if (docPoi.get(msTagFieldResult.getFieldName()) == null) {
+					switch(msTagFieldResult.getFieldType()) {
+						case VbConstant.POI_FIELD_TYPE.文本框:
+						case VbConstant.POI_FIELD_TYPE.文本域:
+						case VbConstant.POI_FIELD_TYPE.图片:
+						case VbConstant.POI_FIELD_TYPE.视频:
+						case VbConstant.POI_FIELD_TYPE.音频:
+							field_val.put("value", "");
+							break;
+						case VbConstant.POI_FIELD_TYPE.复选框列表:
+							field_val.put("value", new int[]{});
+							break;
+						default:
+							break;
+					}
+				} else{
+					field_val.put("value", docPoi.get(msTagFieldResult.getFieldName()));
+				}
 			} else {
 				switch(msTagFieldResult.getFieldType()) {
 					case VbConstant.POI_FIELD_TYPE.文本框:
@@ -968,5 +986,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private String getCountyId(String zoneId) {
 		String countyId = msZoneCacheBL.getCountyId(zoneId);
 		return "ALL".equals(countyId) || countyId == null?"": countyId;
+	}
+
+	@Override
+	public JSONObject getTagsDef(String json) {
+		return JsonUtil.sucess("OK", this.getCommonFieldsDef());
 	}
 }

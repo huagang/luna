@@ -2,6 +2,7 @@ package ms.luna.web.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessTreeService;
+import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -36,6 +38,9 @@ import ms.luna.web.model.common.SimpleModel;
 public class BusinessTreeCtrl {
 	@Autowired
 	private ManageBusinessTreeService manageBusinessTreeService;
+
+	@Autowired
+	private ManagePoiService managePoiService;
 
 	@Resource(name="pulldownCtrl")
 	private PulldownCtrl pulldownCtrl;
@@ -75,10 +80,26 @@ public class BusinessTreeCtrl {
 			view.addObject("provinceId", provinceId);
 			view.addObject("cityId", cityId);
 			view.addObject("countyId", countyId);
-
-			view.addObject("businessId", businessId);
-			view.setViewName("/business_tree.jsp");
-			return view;
+			net.sf.json.JSONObject result = managePoiService.getTagsDef("{}");
+			if ("0".equals(result.getString("code"))) {
+				net.sf.json.JSONObject data = result.getJSONObject("data");
+				net.sf.json.JSONArray tags = data.getJSONArray("tags_def");
+				List<SimpleModel> lstTopTags = new ArrayList<SimpleModel>();
+				for (int i = 0; i < tags.size(); i++) {
+					net.sf.json.JSONObject tag = tags.getJSONObject(i);
+					SimpleModel simpleModel = new SimpleModel();
+					simpleModel.setValue(tag.getString("tag_id"));
+					simpleModel.setLabel(tag.getString("tag_name"));
+					lstTopTags.add(simpleModel);
+				}
+				view.addObject("topTags", lstTopTags);
+				view.addObject("businessId", businessId);
+				view.setViewName("/business_tree.jsp");
+				return view;
+			} else {
+				view.setViewName("/error.jsp");
+				return view;
+			}
 		} catch (Exception e) {
 			MsLogger.error(e);
 		}

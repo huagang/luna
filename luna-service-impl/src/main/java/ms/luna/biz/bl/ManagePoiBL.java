@@ -76,4 +76,11 @@ public interface ManagePoiBL {
 	 * @return
 	 */
 	JSONObject savePois(String json);
+
+	/**
+	 * 获取一级和二级分类列表
+	 * @param json
+	 * @return
+	 */
+	JSONObject getTagsDef(String json);
 }

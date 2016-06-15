@@ -30,4 +30,6 @@ public interface ManagePoiService {
 
 	JSONObject savePois(String json, MsUser msUser);
 
+	JSONObject getTagsDef(String json);
+
 }

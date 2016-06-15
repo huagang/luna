@@ -115,5 +115,15 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		}
 		return result;
 	}
+	@Override
+	public JSONObject getTagsDef(String json) {
+		JSONObject result = null;
+		try {
+			result = managePoiBL.getTagsDef(json);
+		} catch (RuntimeException e) {
+			return JsonUtil.error("-1", e);
+		}
+		return result;
+	}
 
 }
