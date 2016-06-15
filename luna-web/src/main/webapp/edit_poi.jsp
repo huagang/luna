@@ -35,7 +35,7 @@
         <!--通用导航栏 end-->
         <div id="add-poi" class="add-poi">
             <div class="title-poi">
-                <h3>POI数基本信息</h3>
+                <h3>POI数据基本信息</h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
             <form:form commandName="poiModel" method="post" action="${basePath}/edit_poi.do?method=updatePoi" enctype="multipart/form-data">

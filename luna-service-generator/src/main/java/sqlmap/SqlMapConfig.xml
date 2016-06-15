@@ -50,4 +50,8 @@
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_video_upload_ex_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_zone_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_zone_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_column_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_column_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_article_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_article_ex_SqlMap.xml" />
 </sqlMapConfig>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_article" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsArticle" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="abstract_pic" property="abstractPic" jdbcType="VARCHAR" />
+    <result column="audio" property="audio" jdbcType="VARCHAR" />
+    <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="column_id" property="columnId" jdbcType="INTEGER" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" class="ms.luna.biz.dao.model.MsArticleWithBLOBs" extends="ms_article.BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="abstract_content" property="abstractContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, title, abstract_pic, audio, video, column_id, up_hhmmss, regist_hhmmss
+  </sql>
+  <sql id="Blob_Column_List" >
+    content, abstract_content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterClass="ms.luna.biz.dao.model.MsArticleCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_article.Base_Column_List" />
+    ,
+    <include refid="ms_article.Blob_Column_List" />
+    from ms_article
+    <isParameterPresent >
+      <include refid="ms_article.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsArticleCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_article.Base_Column_List" />
+    from ms_article
+    <isParameterPresent >
+      <include refid="ms_article.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterClass="ms.luna.biz.dao.model.MsArticle" >
+    select 
+    <include refid="ms_article.Base_Column_List" />
+    ,
+    <include refid="ms_article.Blob_Column_List" />
+    from ms_article
+    where id = #id:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsArticle" >
+    delete from ms_article
+    where id = #id:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsArticleCriteria" >
+    delete from ms_article
+    <include refid="ms_article.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
+    insert into ms_article (id, title, abstract_pic, audio, video, 
+      column_id, up_hhmmss, regist_hhmmss, content, 
+      abstract_content)
+    values (#id:INTEGER#, #title:VARCHAR#, #abstractPic:VARCHAR#, #audio:VARCHAR#, #video:VARCHAR#, 
+      #columnId:INTEGER#, #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, 
+      #abstractContent:LONGVARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
+    insert into ms_article
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        id
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        title
+      </isNotNull>
+      <isNotNull prepend="," property="abstractPic" >
+        abstract_pic
+      </isNotNull>
+      <isNotNull prepend="," property="audio" >
+        audio
+      </isNotNull>
+      <isNotNull prepend="," property="video" >
+        video
+      </isNotNull>
+      <isNotNull prepend="," property="columnId" >
+        column_id
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        content
+      </isNotNull>
+      <isNotNull prepend="," property="abstractContent" >
+        abstract_content
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="title" >
+        #title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="abstractPic" >
+        #abstractPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="audio" >
+        #audio:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="video" >
+        #video:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="columnId" >
+        #columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        #content:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="abstractContent" >
+        #abstractContent:LONGVARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsArticleCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_article
+    <include refid="ms_article.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_article
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.id" >
+        id = #record.id:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.title" >
+        title = #record.title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.abstractPic" >
+        abstract_pic = #record.abstractPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.audio" >
+        audio = #record.audio:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.video" >
+        video = #record.video:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.columnId" >
+        column_id = #record.columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.content" >
+        content = #record.content:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.abstractContent" >
+        abstract_content = #record.abstractContent:LONGVARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_article.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExampleWithBLOBs" >
+    update ms_article
+    set id = #record.id:INTEGER#,
+      title = #record.title:VARCHAR#,
+      abstract_pic = #record.abstractPic:VARCHAR#,
+      audio = #record.audio:VARCHAR#,
+      video = #record.video:VARCHAR#,
+      column_id = #record.columnId:INTEGER#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      content = #record.content:LONGVARCHAR#,
+      abstract_content = #record.abstractContent:LONGVARCHAR#
+    <isParameterPresent >
+      <include refid="ms_article.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_article
+    set id = #record.id:INTEGER#,
+      title = #record.title:VARCHAR#,
+      abstract_pic = #record.abstractPic:VARCHAR#,
+      audio = #record.audio:VARCHAR#,
+      video = #record.video:VARCHAR#,
+      column_id = #record.columnId:INTEGER#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+    <isParameterPresent >
+      <include refid="ms_article.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
+    update ms_article
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="title" >
+        title = #title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="abstractPic" >
+        abstract_pic = #abstractPic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="audio" >
+        audio = #audio:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="video" >
+        video = #video:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="columnId" >
+        column_id = #columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        content = #content:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="abstractContent" >
+        abstract_content = #abstractContent:LONGVARCHAR#
+      </isNotNull>
+    </dynamic>
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
+    update ms_article
+    set title = #title:VARCHAR#,
+      abstract_pic = #abstractPic:VARCHAR#,
+      audio = #audio:VARCHAR#,
+      video = #video:VARCHAR#,
+      column_id = #columnId:INTEGER#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      content = #content:LONGVARCHAR#,
+      abstract_content = #abstractContent:LONGVARCHAR#
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsArticle" >
+    update ms_article
+    set title = #title:VARCHAR#,
+      abstract_pic = #abstractPic:VARCHAR#,
+      audio = #audio:VARCHAR#,
+      video = #video:VARCHAR#,
+      column_id = #columnId:INTEGER#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#
+    where id = #id:INTEGER#
+  </update>
+</sqlMap>
