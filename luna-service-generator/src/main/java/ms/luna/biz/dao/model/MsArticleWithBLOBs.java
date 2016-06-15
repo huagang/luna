@@ -42,7 +42,11 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
             && (this.getAbstractPic() == null ? other.getAbstractPic() == null : this.getAbstractPic().equals(other.getAbstractPic()))
             && (this.getAudio() == null ? other.getAudio() == null : this.getAudio().equals(other.getAudio()))
             && (this.getVideo() == null ? other.getVideo() == null : this.getVideo().equals(other.getVideo()))
+            && (this.getBusinessId() == null ? other.getBusinessId() == null : this.getBusinessId().equals(other.getBusinessId()))
             && (this.getColumnId() == null ? other.getColumnId() == null : this.getColumnId().equals(other.getColumnId()))
+            && (this.getAuthor() == null ? other.getAuthor() == null : this.getAuthor().equals(other.getAuthor()))
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getRefId() == null ? other.getRefId() == null : this.getRefId().equals(other.getRefId()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
@@ -58,7 +62,11 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
         result = prime * result + ((getAbstractPic() == null) ? 0 : getAbstractPic().hashCode());
         result = prime * result + ((getAudio() == null) ? 0 : getAudio().hashCode());
         result = prime * result + ((getVideo() == null) ? 0 : getVideo().hashCode());
+        result = prime * result + ((getBusinessId() == null) ? 0 : getBusinessId().hashCode());
         result = prime * result + ((getColumnId() == null) ? 0 : getColumnId().hashCode());
+        result = prime * result + ((getAuthor() == null) ? 0 : getAuthor().hashCode());
+        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getRefId() == null) ? 0 : getRefId().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());

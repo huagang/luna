@@ -555,6 +555,76 @@ public class MsArticleCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andBusinessIdIsNull() {
+            addCriterion("business_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdIsNotNull() {
+            addCriterion("business_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id =", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <>", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id >", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id >=", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <=", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("business_id in", values, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("business_id not in", values, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("business_id between", value1, value2, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("business_id not between", value1, value2, "businessId");
+            return (Criteria) this;
+        }
+
         public Criteria andColumnIdIsNull() {
             addCriterion("column_id is null");
             return (Criteria) this;
@@ -622,6 +692,228 @@ public class MsArticleCriteria {
         public Criteria andColumnIdNotBetween(Integer value1, Integer value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("column_id not between", value1, value2, "columnId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorIsNull() {
+            addCriterion("author is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorIsNotNull() {
+            addCriterion("author is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author =", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author <>", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author >", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author >=", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author <", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author <=", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author like", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("author not like", value, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("author in", values, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("author not in", values, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("author between", value1, value2, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("author not between", value1, value2, "author");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Boolean value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Boolean> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Boolean> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Boolean value1, Boolean value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Boolean value1, Boolean value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdIsNull() {
+            addCriterion("ref_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdIsNotNull() {
+            addCriterion("ref_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id =", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id <>", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id >", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id >=", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id <", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ref_id <=", value, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("ref_id in", values, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("ref_id not in", values, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("ref_id between", value1, value2, "refId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefIdNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("ref_id not between", value1, value2, "refId");
             return (Criteria) this;
         }
 
@@ -858,6 +1150,12 @@ public class MsArticleCriteria {
         public Criteria andVideoLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(video) like", value.toUpperCase(), "video");
+            return this;
+        }
+
+        public Criteria andAuthorLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(author) like", value.toUpperCase(), "author");
             return this;
         }
 

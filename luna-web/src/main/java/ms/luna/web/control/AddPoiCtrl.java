@@ -203,7 +203,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		// 3.一级类别（topTag）
 		values = paramMaps.get("topTag");
 		if (values == null || values.length == 0) {
-			param.put("tags", "[]");
+			param.put("tags", "[0]");
 		} else {
 			param.put("tags", values);
 		}

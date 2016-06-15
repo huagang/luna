@@ -2,7 +2,7 @@ package ms.luna.biz.dao.model;
 
 import java.io.Serializable;
 import java.util.Date;
-  
+
 public class MsArticle implements Serializable {
     private Integer id;
 
@@ -14,7 +14,15 @@ public class MsArticle implements Serializable {
 
     private String video;
 
+    private Integer businessId;
+
     private Integer columnId;
+
+    private String author;
+
+    private Boolean type;
+
+    private Integer refId;
 
     private Date upHhmmss;
 
@@ -62,12 +70,44 @@ public class MsArticle implements Serializable {
         this.video = video == null ? null : video.trim();
     }
 
+    public Integer getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
+    }
+
     public Integer getColumnId() {
         return columnId;
     }
 
     public void setColumnId(Integer columnId) {
         this.columnId = columnId;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author == null ? null : author.trim();
+    }
+
+    public Boolean getType() {
+        return type;
+    }
+
+    public void setType(Boolean type) {
+        this.type = type;
+    }
+
+    public Integer getRefId() {
+        return refId;
+    }
+
+    public void setRefId(Integer refId) {
+        this.refId = refId;
     }
 
     public Date getUpHhmmss() {
@@ -103,7 +143,11 @@ public class MsArticle implements Serializable {
             && (this.getAbstractPic() == null ? other.getAbstractPic() == null : this.getAbstractPic().equals(other.getAbstractPic()))
             && (this.getAudio() == null ? other.getAudio() == null : this.getAudio().equals(other.getAudio()))
             && (this.getVideo() == null ? other.getVideo() == null : this.getVideo().equals(other.getVideo()))
+            && (this.getBusinessId() == null ? other.getBusinessId() == null : this.getBusinessId().equals(other.getBusinessId()))
             && (this.getColumnId() == null ? other.getColumnId() == null : this.getColumnId().equals(other.getColumnId()))
+            && (this.getAuthor() == null ? other.getAuthor() == null : this.getAuthor().equals(other.getAuthor()))
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getRefId() == null ? other.getRefId() == null : this.getRefId().equals(other.getRefId()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()));
     }
@@ -117,7 +161,11 @@ public class MsArticle implements Serializable {
         result = prime * result + ((getAbstractPic() == null) ? 0 : getAbstractPic().hashCode());
         result = prime * result + ((getAudio() == null) ? 0 : getAudio().hashCode());
         result = prime * result + ((getVideo() == null) ? 0 : getVideo().hashCode());
+        result = prime * result + ((getBusinessId() == null) ? 0 : getBusinessId().hashCode());
         result = prime * result + ((getColumnId() == null) ? 0 : getColumnId().hashCode());
+        result = prime * result + ((getAuthor() == null) ? 0 : getAuthor().hashCode());
+        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getRefId() == null) ? 0 : getRefId().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         return result;
@@ -125,6 +173,6 @@ public class MsArticle implements Serializable {
 
     @Override
     public String toString() {
-        return "MsArticle [id=" + id + ",title=" + title + ",abstractPic=" + abstractPic + ",audio=" + audio + ",video=" + video + ",columnId=" + columnId + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + "]";
+        return "MsArticle [id=" + id + ",title=" + title + ",abstractPic=" + abstractPic + ",audio=" + audio + ",video=" + video + ",businessId=" + businessId + ",columnId=" + columnId + ",author=" + author + ",type=" + type + ",refId=" + refId + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + "]";
     }
 }

@@ -7,7 +7,11 @@
     <result column="abstract_pic" property="abstractPic" jdbcType="VARCHAR" />
     <result column="audio" property="audio" jdbcType="VARCHAR" />
     <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="business_id" property="businessId" jdbcType="INTEGER" />
     <result column="column_id" property="columnId" jdbcType="INTEGER" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="BIT" />
+    <result column="ref_id" property="refId" jdbcType="INTEGER" />
     <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
     <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -41,7 +45,8 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List" >
-    id, title, abstract_pic, audio, video, column_id, up_hhmmss, regist_hhmmss
+    id, title, abstract_pic, audio, video, business_id, column_id, author, type, ref_id, 
+    up_hhmmss, regist_hhmmss
   </sql>
   <sql id="Blob_Column_List" >
     content, abstract_content
@@ -98,11 +103,13 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article (id, title, abstract_pic, audio, video, 
-      column_id, up_hhmmss, regist_hhmmss, content, 
-      abstract_content)
+      business_id, column_id, author, type, ref_id, 
+      up_hhmmss, regist_hhmmss, content, abstract_content
+      )
     values (#id:INTEGER#, #title:VARCHAR#, #abstractPic:VARCHAR#, #audio:VARCHAR#, #video:VARCHAR#, 
-      #columnId:INTEGER#, #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, 
-      #abstractContent:LONGVARCHAR#)
+      #businessId:INTEGER#, #columnId:INTEGER#, #author:VARCHAR#, #type:BIT#, #refId:INTEGER#, 
+      #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, #abstractContent:LONGVARCHAR#
+      )
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article
@@ -122,8 +129,20 @@
       <isNotNull prepend="," property="video" >
         video
       </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        business_id
+      </isNotNull>
       <isNotNull prepend="," property="columnId" >
         column_id
+      </isNotNull>
+      <isNotNull prepend="," property="author" >
+        author
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        type
+      </isNotNull>
+      <isNotNull prepend="," property="refId" >
+        ref_id
       </isNotNull>
       <isNotNull prepend="," property="upHhmmss" >
         up_hhmmss
@@ -156,8 +175,20 @@
       <isNotNull prepend="," property="video" >
         #video:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        #businessId:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="columnId" >
         #columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="author" >
+        #author:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        #type:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="refId" >
+        #refId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="upHhmmss" >
         #upHhmmss:TIMESTAMP#
@@ -196,8 +227,20 @@
       <isNotNull prepend="," property="record.video" >
         video = #record.video:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.businessId" >
+        business_id = #record.businessId:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="record.columnId" >
         column_id = #record.columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.author" >
+        author = #record.author:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.type" >
+        type = #record.type:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.refId" >
+        ref_id = #record.refId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="record.upHhmmss" >
         up_hhmmss = #record.upHhmmss:TIMESTAMP#
@@ -223,7 +266,11 @@
       abstract_pic = #record.abstractPic:VARCHAR#,
       audio = #record.audio:VARCHAR#,
       video = #record.video:VARCHAR#,
+      business_id = #record.businessId:INTEGER#,
       column_id = #record.columnId:INTEGER#,
+      author = #record.author:VARCHAR#,
+      type = #record.type:BIT#,
+      ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       content = #record.content:LONGVARCHAR#,
@@ -239,7 +286,11 @@
       abstract_pic = #record.abstractPic:VARCHAR#,
       audio = #record.audio:VARCHAR#,
       video = #record.video:VARCHAR#,
+      business_id = #record.businessId:INTEGER#,
       column_id = #record.columnId:INTEGER#,
+      author = #record.author:VARCHAR#,
+      type = #record.type:BIT#,
+      ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#
     <isParameterPresent >
@@ -261,8 +312,20 @@
       <isNotNull prepend="," property="video" >
         video = #video:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="businessId" >
+        business_id = #businessId:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="columnId" >
         column_id = #columnId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="author" >
+        author = #author:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        type = #type:BIT#
+      </isNotNull>
+      <isNotNull prepend="," property="refId" >
+        ref_id = #refId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="upHhmmss" >
         up_hhmmss = #upHhmmss:TIMESTAMP#
@@ -285,7 +348,11 @@
       abstract_pic = #abstractPic:VARCHAR#,
       audio = #audio:VARCHAR#,
       video = #video:VARCHAR#,
+      business_id = #businessId:INTEGER#,
       column_id = #columnId:INTEGER#,
+      author = #author:VARCHAR#,
+      type = #type:BIT#,
+      ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       content = #content:LONGVARCHAR#,
@@ -298,7 +365,11 @@
       abstract_pic = #abstractPic:VARCHAR#,
       audio = #audio:VARCHAR#,
       video = #video:VARCHAR#,
+      business_id = #businessId:INTEGER#,
       column_id = #columnId:INTEGER#,
+      author = #author:VARCHAR#,
+      type = #type:BIT#,
+      ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#
     where id = #id:INTEGER#
