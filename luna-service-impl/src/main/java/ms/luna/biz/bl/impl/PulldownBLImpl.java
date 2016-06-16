@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.bl.PulldownBL;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.dao.custom.MsCategoryDAO;
@@ -29,11 +30,23 @@ public class PulldownBLImpl implements PulldownBL {
 
 	@Autowired
 	private MsCategoryDAO msCategoryDAO;
+	@Autowired
+	private MsZoneCacheBL msZoneCacheBL;
 	
 	static private Map<String, JSONArray> cacheCountrysData = new HashMap<String, JSONArray>() ;
 	static private Map<String, JSONArray> cacheProvincesData = new HashMap<String, JSONArray>() ;
 	static private Map<String, JSONArray> cacheCityData = new HashMap<String, JSONArray>() ;
 	static private Map<String, JSONArray> cacheCountyData = new HashMap<String, JSONArray>();
+
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	@Override
+	public JSONObject findZoneIdsWithQQZoneName(String json) {
+		return msZoneCacheBL.findZoneIdsWithQQZoneName(json);
+	}
 
 	@Override
 	public JSONObject loadCoutrys() {
@@ -184,28 +197,6 @@ public class PulldownBLImpl implements PulldownBL {
 		return FastJsonUtil.sucess("检索成功", data);
 	}
 
-//	@Override
-//	public JSONObject loadCategorys() {
-//		VbCategoryCriteria categoryCriteria = new VbCategoryCriteria();
-//		categoryCriteria.createCriteria()
-//		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
-//		categoryCriteria.setOrderByClause("NM_ZH DESC");
-//		List<VbCategory> list = vbCategoryDAO.selectByCriteria(categoryCriteria);
-//		JSONObject data = JSONObject.parseObject("{}");
-//		JSONArray categorys = JSONArray.parseArray("[]");
-//		if (list != null) {
-//			for (VbCategory category : list) {
-//				JSONObject categorydata = JSONObject.parseObject("{}");
-//				categorydata.put("category_id", category.getCategoryId());
-//				categorydata.put("nm_zh", category.getNmZh());
-//				categorydata.put("nm_en", category.getNmEn());
-//				categorys.add(categorydata);
-//			}
-//		}
-//		data.put("categorys", categorys);
-//		return FastJsonUtil.sucess("检索成功", data);
-//	}
-
 	@Override
 	public JSONObject loadCategorys() {
 		MsCategoryCriteria categoryCriteria = new MsCategoryCriteria();
@@ -228,60 +219,4 @@ public class PulldownBLImpl implements PulldownBL {
 		return FastJsonUtil.sucess("检索成功", data);
 	}
 
-//	/**
-//	 * 查找业务区域(三台山、石梅湾....等)
-//	 * @param json(city_id,category_id)
-//	 * @return -1:无数据 , 0:[{category_id, nm_zh, nm_en}]
-//	 */
-//	@Override
-//	public JSONObject loadRegions(String json) {
-//		JSONObject param = JSONObject.parseObject(json);
-//		String cityId = param.getString("city_id");
-//		String categoryId = param.getString("category_id");
-//		VbRegionCriteria vbRegionCriteria = new VbRegionCriteria();
-//		vbRegionCriteria.createCriteria()
-//		.andCategoryIdEqualTo(categoryId)
-//		.andCityIdEqualTo(cityId)
-//		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
-//		List<VbRegion> list = vbRegionDAO.selectByCriteria(vbRegionCriteria);
-//		JSONObject data = JSONObject.parseObject("{}");
-//		JSONArray vbRegions = JSONArray.parseArray("[]");
-//		if (list != null) {
-//			for (VbRegion vbRegion : list) {
-//				JSONObject vbRegiondata = JSONObject.parseObject("{}");
-//				vbRegiondata.put("region_id", vbRegion.getRegionId());
-//				vbRegiondata.put("category_id", vbRegion.getCategoryId());
-//				vbRegiondata.put("nm_zh", vbRegion.getNmZh());
-//				vbRegiondata.put("nm_en", vbRegion.getNmEn());
-//				vbRegions.add(vbRegiondata);
-//			}
-//		}
-//		data.put("regions", vbRegions);
-//		return FastJsonUtil.sucess("检索成功", data);
-//	}
-//
-//	@Override
-//	public JSONObject loadRoles(String json) {
-////		JSONObject param = JSONObject.parseObject(json);
-////		String login_wjnm = param.getString("login_wjnm");
-//		// TODO:获取小于等于自己权限的角色列表
-//		MsRoleCriteria msRoleCriteria = new MsRoleCriteria();
-//		msRoleCriteria.createCriteria()
-//		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
-//		msRoleCriteria.setOrderByClause("ROLE_AUTH DESC");
-//		List<MsRole> list = msRoleDAO.selectByCriteria(msRoleCriteria);
-//		JSONObject data = JSONObject.parseObject("{}");
-//		JSONArray msRoles = JSONArray.parseArray("[]");
-//		if (list != null) {
-//			for (MsRole msRole : list) {
-//				JSONObject vbRoledata = JSONObject.parseObject("{}");
-//				vbRoledata.put("role_auth", msRole.getRoleAuth());
-//				vbRoledata.put("role_id", msRole.getRoleId());
-//				vbRoledata.put("role_nm", msRole.getRoleNm());
-//				msRoles.add(vbRoledata);
-//			}
-//		}
-//		data.put("roles", msRoles);
-//		return FastJsonUtil.sucess("检索成功", data);
-//	}
 }

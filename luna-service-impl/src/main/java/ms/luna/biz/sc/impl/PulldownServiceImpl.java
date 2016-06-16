@@ -67,29 +67,21 @@ public class PulldownServiceImpl implements PulldownService {
 		return result;
 	}
 
-//	@Override
-//	public JSONObject loadRegions(String json) {
-//		JSONObject result = null;
-//		try {
-//			result = pulldownBL.loadRegions(json);
-//		} catch (RuntimeException e) {
-//			MsLogger.logger(e);
-//			return FastJsonUtil.error("-1", e);
-//		}
-//		return result;
-//	}
-
-//	@Override
-//	public JSONObject loadRoles(String json) {
-//		JSONObject result = null;
-//		try {
-//			result = pulldownBL.loadRoles(json);
-//		} catch (RuntimeException e) {
-//			MsLogger.logger(e);
-//			return FastJsonUtil.error("-1", e);
-//		}
-//		return result;
-//	}
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	public JSONObject findZoneIdsWithQQZoneName(String json) {
+		JSONObject result = null;
+		try {
+			result = pulldownBL.findZoneIdsWithQQZoneName(json);
+		} catch (RuntimeException e) {
+			
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
 
 	@Override
 	public JSONObject loadCounties(String cityId) {

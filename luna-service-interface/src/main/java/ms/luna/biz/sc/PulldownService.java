@@ -36,19 +36,12 @@ public interface PulldownService {
 	 */
 	JSONObject loadCategorys();
 
-//	/**
-//	 * 获取区域信息
-//	 * @param json
-//	 * @return {code, msg, data{}}
-//	 */
-//	JSONObject loadRegions(String json);
-//
-//	/**
-//	 * 获取权限列表
-//	 * @param json
-//	 * @return {code, msg, data{}}
-//	 */
-//	JSONObject loadRoles(String json);
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	public JSONObject findZoneIdsWithQQZoneName(String json);
 	
 	/**
 	 * 获取区/县列表

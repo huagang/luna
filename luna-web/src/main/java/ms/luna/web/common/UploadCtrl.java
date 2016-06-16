@@ -56,7 +56,6 @@ public class UploadCtrl {
 
 		if (file == null || file.isEmpty()) {
 			response.getWriter().print(FastJsonUtil.error("-1", "file can not be empty"));
->>>>>>> b38412ec091729c0e6e443b80ff1e0ba6028152a
 			response.setStatus(200);
 			return;
 		}

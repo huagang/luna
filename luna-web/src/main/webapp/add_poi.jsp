@@ -22,7 +22,10 @@
     <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/styles/common.css">
     <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
-
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
     <script src="${basePath}/scripts/lunaweb.js"></script>
     <script src="${basePath}/scripts/ajaxfileupload.js"></script>
     <script src="${basePath}/scripts/fileupload.js"></script>

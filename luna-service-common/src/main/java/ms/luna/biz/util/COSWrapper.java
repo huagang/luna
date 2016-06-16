@@ -142,16 +142,7 @@ public class COSWrapper {
 		return FastJsonUtil.sucess("上传成功", data);
 	}
 
-	
-	/**
-	 * 
-	 * @param appid
-	 * @param srcFile
-	 * @param dst_folder
-	 * @param fileName
-	 * @return
-	 * @throws Exception 
-	 */
+
 	public JSONObject upload2Cloud(MultipartFile file, String bucket, String dst_folder) throws Exception {
 		JSONObject data = JSONObject.parseObject("{}");
 		long size = file.getSize();
@@ -225,15 +216,6 @@ public class COSWrapper {
 		return FastJsonUtil.sucess("上传成功", data);
 	}
 
-	/**
-	 * 
-	 * @param appid
-	 * @param srcFile
-	 * @param dst_folder
-	 * @param fileName
-	 * @return
-	 * @throws Exception 
-	 */
 	public JSONObject upload2Cloud(String localpath, String bucket, String dst_folder, String fileName) throws Exception {
 		JSONObject data = JSONObject.parseObject("{}");
 		String fileState = "";
@@ -452,7 +434,7 @@ public class COSWrapper {
 		}
 		JSONObject ret = JSONObject.parseObject(retStr) ;
 
-		if(ret.getInt("code") != 0) {
+		if(ret.getInteger("code") != 0) {
 			return;
 		}
 
