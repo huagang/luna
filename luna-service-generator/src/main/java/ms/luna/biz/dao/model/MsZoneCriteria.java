@@ -814,6 +814,88 @@ public class MsZoneCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andQqFormatMergerNameIsNull() {
+            addCriterion("QQ__FORMAT_MERGER_NAME is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameIsNotNull() {
+            addCriterion("QQ__FORMAT_MERGER_NAME is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME =", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME <>", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME >", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME >=", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME <", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME <=", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME like", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME not like", value, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME in", values, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME not in", values, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME between", value1, value2, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqFormatMergerNameNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("QQ__FORMAT_MERGER_NAME not between", value1, value2, "qqFormatMergerName");
+            return (Criteria) this;
+        }
+
         public Criteria andLatIsNull() {
             addCriterion("LAT is null");
             return (Criteria) this;
@@ -1457,6 +1539,12 @@ public class MsZoneCriteria {
         public Criteria andMergerNameLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(MERGER_NAME) like", value.toUpperCase(), "mergerName");
+            return this;
+        }
+
+        public Criteria andQqFormatMergerNameLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(QQ__FORMAT_MERGER_NAME) like", value.toUpperCase(), "qqFormatMergerName");
             return this;
         }
 
