@@ -24,13 +24,13 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageUserService;
 import ms.luna.biz.sc.PulldownService;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.SinglePulldownModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Component
 @Controller
@@ -112,7 +112,7 @@ public class ManageUserCtrl {
 	// false) Integer pageSize,
 	// HttpServletRequest request, HttpServletResponse response) {
 	// try {
-	// JSONObject param = JSONObject.fromObject("{}");
+	// JSONObject param = JSONObject.parseObject("{}");
 	// if (CharactorUtil.checkAlphaAndNumber(like_filter_nm, new char[] { '_'
 	// })) {
 	// like_filter_nm = like_filter_nm.toLowerCase();
@@ -162,7 +162,7 @@ public class ManageUserCtrl {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 //			if (CharactorUtil.checkAlphaAndNumber(like_filter_nm, new char[] { '_' })) {
 			if (like_filter_nm != null && !like_filter_nm.trim().isEmpty()) {
 				like_filter_nm = URLDecoder.decode((like_filter_nm.trim()), "UTF-8");
@@ -188,16 +188,16 @@ public class ManageUserCtrl {
 
 			// manageUserService
 			JSONObject result = manageUserService.loadUsers(param.toString());
-			JSONObject resJSON = JSONObject.fromObject("{}");
+			JSONObject resJSON = JSONObject.parseObject("{}");
 			String luna_name = msUser.getNickName();
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				JSONArray arrays = data.getJSONArray("users");
-				// Integer total = data.getInt("total");
+				// Integer total = data.getInteger("total");
 				// resJSON.put("total", total);
-				JSONArray rows = JSONArray.fromObject("[]");
+				JSONArray rows = JSONArray.parseArray("[]");
 				for (int i = 0; i < arrays.size(); i++) {
-					JSONObject row = JSONObject.fromObject("{}");
+					JSONObject row = JSONObject.parseObject("{}");
 					JSONObject userJson = arrays.getJSONObject(i);
 					row.put("luna_name", userJson.getString("luna_name"));
 					row.put("module_code", userJson.getString("module_code"));
@@ -217,7 +217,7 @@ public class ManageUserCtrl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONObject resJSON = JSONObject.fromObject("{}");
+		JSONObject resJSON = JSONObject.parseObject("{}");
 		resJSON.put("total", 0);
 		response.getWriter().print(resJSON.toString());
 		response.setStatus(200);
@@ -238,7 +238,7 @@ public class ManageUserCtrl {
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 
 			String role_code = msUser.getMsRoleCode();
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("role_code", role_code);
 
 			JSONObject result = manageUserService.getModuleByRoleCode(param.toString());
@@ -250,7 +250,7 @@ public class ManageUserCtrl {
 			}
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -276,7 +276,7 @@ public class ManageUserCtrl {
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 
 			String module_code = request.getParameter("module_code");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("module_code", module_code);
 
 			JSONObject result = manageUserService.loadRolesByModulecode(param.toString(), msUser);
@@ -285,7 +285,7 @@ public class ManageUserCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -322,7 +322,7 @@ public class ManageUserCtrl {
 			String[] mailAddrs = emails.split(";");
 			for (int i = 0; i < mailAddrs.length; i++) {
 				if (!CharactorUtil.checkEmail(mailAddrs[i])) {
-					response.getWriter().print(JsonUtil.error("1", "邮箱格式不正确"));
+					response.getWriter().print(FastJsonUtil.error("1", "邮箱格式不正确"));
 					response.setStatus(200);
 					return;
 				}
@@ -331,13 +331,13 @@ public class ManageUserCtrl {
 			// 输入权限和业务模块的一致性检测（如何非法，说明已绕过前端页面向后台发送数据，认为其是攻击性行为）
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(JsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
 				response.setStatus(200);
 				return;
 			}
 
 			// 用户邀请
-			JSONObject params = JSONObject.fromObject("{}");
+			JSONObject params = JSONObject.parseObject("{}");
 			params.put("emails", emails);
 			params.put("module_code", module_code);
 			params.put("role_code", role_code);
@@ -347,9 +347,9 @@ public class ManageUserCtrl {
 			// {"code":"4","msg":"邮箱已注册","data":"[1259431236@qq.com,
 			// chinagrowing@yeah.net]"}
 			String code = results.getString("code");
-			JSONObject result = JSONObject.fromObject("{}");
+			JSONObject result = JSONObject.parseObject("{}");
 			if ("0".equals(code)) {
-				response.getWriter().print(JsonUtil.sucess("成功"));
+				response.getWriter().print(FastJsonUtil.sucess("成功"));
 			} else if ("1".equals(code)) {
 				result.put("code", "4");
 				result.put("msg", "邮箱已注册");
@@ -358,13 +358,13 @@ public class ManageUserCtrl {
 				result.put("data", data);
 				response.getWriter().print(result);//
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", "异常"));
+				response.getWriter().print(FastJsonUtil.error("-1", "异常"));
 			}
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -396,30 +396,30 @@ public class ManageUserCtrl {
 			// 输入权限和业务模块的一致性检测（如何非法，说明已绕过前端页面向后台发送数据，认为其是攻击性行为）
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(JsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
 				response.setStatus(200);
 				return;
 			}
 
-			JSONObject json = JSONObject.fromObject("{}");
+			JSONObject json = JSONObject.parseObject("{}");
 			json.put("luna_name", luna_name);
 			json.put("module_code", module_code);
 			json.put("role_code", role_code);
 
 			JSONObject result = manageUserService.updateUser(json.toString(), msUser);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			String code = result.getString("code");
 			if ("0".equals(code)) {
-				resJson = JsonUtil.sucess("更新成功");
+				resJson = FastJsonUtil.sucess("更新成功");
 			} else {
-				resJson = JsonUtil.error("1", "更新失败!");
+				resJson = FastJsonUtil.error("1", "更新失败!");
 			}
 			response.getWriter().print(resJson.toString());
 			response.setStatus(200);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSONObject resJSON = JSONObject.fromObject("{}");
+			JSONObject resJSON = JSONObject.parseObject("{}");
 			resJSON.put("code", "-1");
 			resJSON.put("msg", e.getMessage());
 			response.getWriter().print(resJSON.toString());
@@ -444,30 +444,30 @@ public class ManageUserCtrl {
 			// 利用“邀请用户”和“编辑用户”的检测模块。原理一致，同样需要检测被删除用户与当前用户权限的一致性
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(JsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
 				response.setStatus(200);
 				return;
 			}
 			
-			JSONObject json = JSONObject.fromObject("{}");
+			JSONObject json = JSONObject.parseObject("{}");
 			json.put("luna_name", luna_name);
 			// json.put("module_code", module_code);
 			// json.put("role_code", role_code);
 
 			JSONObject result = manageUserService.delUser(json.toString(), msUser);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			String code = result.getString("code");
 			if ("0".equals(code)) {
-				resJson = JsonUtil.sucess("删除成功");
+				resJson = FastJsonUtil.sucess("删除成功");
 			} else {
-				resJson = JsonUtil.error("1", "删除失败!");
+				resJson = FastJsonUtil.error("1", "删除失败!");
 			}
 			response.getWriter().print(resJson.toString());
 			response.setStatus(200);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			JSONObject resJSON = JSONObject.fromObject("{}");
+			JSONObject resJSON = JSONObject.parseObject("{}");
 			resJSON.put("code", "-1");
 			resJSON.put("msg", e.getMessage());
 			response.getWriter().print(resJSON.toString());
@@ -505,7 +505,7 @@ public class ManageUserCtrl {
 		}
 
 		// 3、被邀请人的业务模块和权限匹配
-		JSONObject param = JSONObject.fromObject("{}");
+		JSONObject param = JSONObject.parseObject("{}");
 		param.put("module_code", module_code_invitee);
 		param.put("role_code", role_code_invitee);
 		JSONObject result = manageUserService.getAuthByRoleCodeAndModuleCode(param.toString());
@@ -535,7 +535,7 @@ public class ManageUserCtrl {
 			return true;
 		}
 
-		param = JSONObject.fromObject("{}");
+		param = JSONObject.parseObject("{}");
 		param.put("role_code", role_code_inviter);
 		result = manageUserService.getAuthByRoleCode(param.toString());
 		if (!result.getString("code").equals("0")) {

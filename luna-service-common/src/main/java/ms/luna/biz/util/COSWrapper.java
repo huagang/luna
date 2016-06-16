@@ -16,9 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.qcloud.cosapi.api.CosCloud;
 import com.qcloud.cosapi.api.CosCloud.FolderPattern;
 
-import ms.luna.biz.util.JsonUtil;
 import ms.luna.biz.util.VbMD5;
-import net.sf.json.JSONObject;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 public class COSWrapper {
 
@@ -49,27 +50,27 @@ public class COSWrapper {
 	public JSONObject upload2CloudDirect(byte[] bytes, String bucket, String destPath, String fileName) throws Exception {
 		
 		JSONObject result = null;
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		
 		if(bytes.length > COSUtil.图片上传大小分界线1M) {
-			return JsonUtil.error(-1, "文件大小超过1M");
+			return FastJsonUtil.error(-1, "文件大小超过1M");
 		}
 		if(createFolder(bucket, destPath)) {
 			String fileFullPath = destPath + "/" + fileName;
 			String fileState = COS.getFileStat(bucket, fileFullPath);
-			result = JSONObject.fromObject(fileState);
+			result = JSONObject.parseObject(fileState);
 			if(result.getString("code").equals("0")) {
 				fileState = COS.deleteFile(bucket, fileFullPath);
-				result = JSONObject.fromObject(fileState);
+				result = JSONObject.parseObject(fileState);
 				// 成功删除
 				if (! "0".equals(result.getString("code"))) {
-					return JsonUtil.error(-1, "文件已存在且删除失败");
+					return FastJsonUtil.error(-1, "文件已存在且删除失败");
 				}
 			}
 			// 开始上传
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 			fileState = COS.uploadFile(bucket, fileFullPath, byteArrayInputStream);
-			result = JSONObject.fromObject(fileState);
+			result = JSONObject.parseObject(fileState);
 			// 上传成功
 			if ("0".equals(result.getString("code"))) {
 				// 成功
@@ -79,9 +80,9 @@ public class COSWrapper {
 			}
 		}
 		if (data.isEmpty()) {
-			return JsonUtil.error("-1", result == null ? "上传失败" : result.getString("message"));
+			return FastJsonUtil.error("-1", result == null ? "上传失败" : result.getString("message"));
 		}
-		return JsonUtil.sucess("上传成功", data);
+		return FastJsonUtil.sucess("上传成功", data);
 		
 	}
 	
@@ -97,12 +98,12 @@ public class COSWrapper {
 	 * @throws Exception
 	 */
 	public JSONObject upload2CloudDirect(MultipartFile file, String bucket, String dst_folder) throws FileNotFoundException, IOException, Exception {
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		long size = file.getSize();
 		String fileState = "";
 		JSONObject result = null;
 		if(size > COSUtil.图片上传大小分界线1M) {
-			return JsonUtil.error(-1, "文件大小超过1M");
+			return FastJsonUtil.error(-1, "文件大小超过1M");
 		}
 		// 智能创建需要的文件夹
 		if (createFolder(bucket, dst_folder)) {
@@ -112,19 +113,19 @@ public class COSWrapper {
 			if (point != -1 && point != name.length() - 1) {
 				String pathAndName = dst_folder + randomfileName + name.substring(point).toLowerCase();
 				fileState = COS.getFileStat(bucket, pathAndName);
-				result = JSONObject.fromObject(fileState);
+				result = JSONObject.parseObject(fileState);
 				// 文件存在，需要先删除后再传
 				if ("0".equals(result.getString("code"))) {
 					fileState = COS.deleteFile(bucket, pathAndName);
-					result = JSONObject.fromObject(fileState);
+					result = JSONObject.parseObject(fileState);
 					// 成功删除
 					if (! "0".equals(result.getString("code"))) {
-						return JsonUtil.error(-1, "文件已存在且删除失败");
+						return FastJsonUtil.error(-1, "文件已存在且删除失败");
 					}				
 				}
 				// 开始上传
 				fileState = COS.uploadFile(bucket, pathAndName, file.getInputStream());
-				result = JSONObject.fromObject(fileState);
+				result = JSONObject.parseObject(fileState);
 				// 上传成功
 				if ("0".equals(result.getString("code"))) {
 					// 成功
@@ -136,9 +137,9 @@ public class COSWrapper {
 		}
 
 		if (data.isEmpty()) {
-			return JsonUtil.error("-1", result == null ? "文件上传失败" : result.getString("message"));
+			return FastJsonUtil.error("-1", result == null ? "文件上传失败" : result.getString("message"));
 		}
-		return JsonUtil.sucess("上传成功", data);
+		return FastJsonUtil.sucess("上传成功", data);
 	}
 
 	
@@ -152,7 +153,7 @@ public class COSWrapper {
 	 * @throws Exception 
 	 */
 	public JSONObject upload2Cloud(MultipartFile file, String bucket, String dst_folder) throws Exception {
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		long size = file.getSize();
 		String fileState = "";
 		JSONObject result = null;
@@ -178,21 +179,21 @@ public class COSWrapper {
 							dos.flush();
 							dos.close();
 //						} else {
-//							return JsonUtil.error("-1", "local文件创建失败");
+//							return FastJsonUtil.error("-1", "local文件创建失败");
 //						}
 					}
 
 					fileState = COS.getFileStat(bucket, pathAndName);
-					result = JSONObject.fromObject(fileState);
+					result = JSONObject.parseObject(fileState);
 					// 文件存在，需要先删除后再传
 					if ("0".equals(result.getString("code"))) {
 						fileState = COS.deleteFile(bucket, pathAndName);
-						result = JSONObject.fromObject(fileState);
+						result = JSONObject.parseObject(fileState);
 						// 成功删除
 						if ("0".equals(result.getString("code"))) {
 							// 开始上传
 							fileState = COS.sliceUploadFile(bucket, pathAndName, localFile);
-							result = JSONObject.fromObject(fileState);
+							result = JSONObject.parseObject(fileState);
 							// 上传成功
 							if ("0".equals(result.getString("code"))) {
 								// 成功
@@ -206,7 +207,7 @@ public class COSWrapper {
 					} else {
 						// 上传
 						fileState = COS.sliceUploadFile(bucket, pathAndName, localFile);
-						result = JSONObject.fromObject(fileState);
+						result = JSONObject.parseObject(fileState);
 						// 上传成功
 						if ("0".equals(result.getString("code"))) {
 							// 成功
@@ -219,9 +220,9 @@ public class COSWrapper {
 			}
 		}
 		if (data.isEmpty()) {
-			return JsonUtil.error("-1", result == null ? "文件不能超过1M" : result.getString("message"));
+			return FastJsonUtil.error("-1", result == null ? "文件不能超过1M" : result.getString("message"));
 		}
-		return JsonUtil.sucess("上传成功", data);
+		return FastJsonUtil.sucess("上传成功", data);
 	}
 
 	/**
@@ -234,24 +235,24 @@ public class COSWrapper {
 	 * @throws Exception 
 	 */
 	public JSONObject upload2Cloud(String localpath, String bucket, String dst_folder, String fileName) throws Exception {
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		String fileState = "";
 		JSONObject result = null;
 		// 智能创建需要的文件夹
 		if (createFolder(bucket, dst_folder)) {
 			String pathAndName = dst_folder + fileName;
 			fileState = COS.getFileStat(bucket, pathAndName);
-			result = JSONObject.fromObject(fileState);
+			result = JSONObject.parseObject(fileState);
 			// 文件存在，需要先删除后再传
 			if ("0".equals(result.getString("code"))) {
 				fileState = COS.deleteFile(bucket, pathAndName);
-				result = JSONObject.fromObject(fileState);
+				result = JSONObject.parseObject(fileState);
 				// 成功删除
 				if ("0".equals(result.getString("code"))) {
 					// 开始上传
 					fileState = COS.sliceUploadFile(bucket, pathAndName, localpath);
 					
-					result = JSONObject.fromObject(fileState);
+					result = JSONObject.parseObject(fileState);
 					// 上传成功
 					if ("0".equals(result.getString("code"))) {
 						// 成功
@@ -264,7 +265,7 @@ public class COSWrapper {
 			} else {
 				// 上传
 				fileState = COS.sliceUploadFile(bucket, pathAndName, localpath);
-				result = JSONObject.fromObject(fileState);
+				result = JSONObject.parseObject(fileState);
 				// 上传成功
 				if ("0".equals(result.getString("code"))) {
 					// 成功
@@ -275,9 +276,9 @@ public class COSWrapper {
 			}
 		}
 		if (data.isEmpty()) {
-			return JsonUtil.error("-1", "上传失败");
+			return FastJsonUtil.error("-1", "上传失败");
 		}
-		return JsonUtil.sucess("上传成功", data);
+		return FastJsonUtil.sucess("上传成功", data);
 	}
 
 	/**
@@ -298,11 +299,11 @@ public class COSWrapper {
 				continue;
 			}
 			String json = COS.getFolderStat(bucket, path.toString());
-			JSONObject result = JSONObject.fromObject(json);
+			JSONObject result = JSONObject.parseObject(json);
 			String code = result.getString("code");
 			if (!"0".equals(code)) {
 				json = COS.createFolder(bucket, path.toString());
-				result = JSONObject.fromObject(json);
+				result = JSONObject.parseObject(json);
 				code = result.getString("code");
 				if (!"0".equals(code)) {
 					return false;
@@ -333,7 +334,7 @@ public class COSWrapper {
 		String json = null;
 		try {
 			json = COS.sliceUploadFile(bucket, remotePath, localPath);
-			JSONObject result = JSONObject.fromObject(json);
+			JSONObject result = JSONObject.parseObject(json);
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				return data.getString("access_url")
@@ -366,13 +367,13 @@ public class COSWrapper {
 					//若目录存在，则删除已存在目录，再进行添加操作
 					System.out.println("dir: "+tempRemotePath+"/") ;
 					String retStr = COS.getFolderStat(bucket, tempRemotePath+"/") ;
-					JSONObject ret = JSONObject.fromObject(retStr) ;
-					System.out.println("code:" + ret.getInt("code")+" message:"+ret.getString("message")) ;
-					if(ret.getInt("code") == 0 ){
+					JSONObject ret = JSONObject.parseObject(retStr) ;
+					System.out.println("code:" + ret.getInteger("code")+" message:"+ret.getString("message")) ;
+					if(ret.getInteger("code") == 0 ){
 						//已存在目录，需要删除	
 						deletedir(bucket, tempRemotePath);
 					}
-					System.out.println("code:"+Integer.toString(ret.getInt("code"))+ tempRemotePath) ;
+					System.out.println("code:"+Integer.toString(ret.getInteger("code"))+ tempRemotePath) ;
 					ans = createFolder(bucket, tempRemotePath) ; //创建空目录
 					if(ans == false) return false ;
 //					System.out.println("tempFile:"+tempFile.getName() + " len:"+tempFile.length()) ;
@@ -394,9 +395,9 @@ public class COSWrapper {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					JSONObject ret = JSONObject.fromObject(retStr) ;
-					System.out.println("code:" + ret.getInt("code")+"message:"+ret.getString("message")) ;
-					if(ret.getInt("code") == 0){
+					JSONObject ret = JSONObject.parseObject(retStr) ;
+					System.out.println("code:" + ret.getInteger("code")+"message:"+ret.getString("message")) ;
+					if(ret.getInteger("code") == 0){
 						//已存在文件，需要删除
 						System.out.println("存在:"+ tempRemotePath) ;
 						try {
@@ -449,14 +450,14 @@ public class COSWrapper {
 			// TODO Auto-generated catch block
 			logger.error("getFolderList failed", e);
 		}
-		JSONObject ret = JSONObject.fromObject(retStr) ;
+		JSONObject ret = JSONObject.parseObject(retStr) ;
 
 		if(ret.getInt("code") != 0) {
 			return;
 		}
 
 		//进入了空目录
-		if(ret.getJSONObject("data").getInt("dircount")==0 && ret.getJSONObject("data").getInt("filecount")==0){
+		if(ret.getJSONObject("data").getInteger("dircount")==0 && ret.getJSONObject("data").getInteger("filecount")==0){
 			try {
 				COS.deleteFolder(bucket, folder) ;
 			} catch (Exception e) {
@@ -471,13 +472,13 @@ public class COSWrapper {
 			//删除目录
 				//空目录直接删除
 				//非空目录递归删除
-			net.sf.json.JSONArray names = ret.getJSONObject("data").getJSONArray("infos") ;
+			JSONArray names = ret.getJSONObject("data").getJSONArray("infos") ;
 			
-			for(Object object : names){
-				JSONObject o = JSONObject.fromObject(object);
+			for(int i = 0; i < names.size(); i++){
+				JSONObject o = names.getJSONObject(i);
 				String name = o.getString("name") ;
 //				System.out.println("I got a file") ;
-				if(o.has("filesize")){
+				if(o.containsKey("filesize")){
 					//为文件时
 					logger.trace("delFile: " + folder + fileSeparator + name); ;
 					try {
@@ -505,7 +506,7 @@ public class COSWrapper {
 				// TODO Auto-generated catch block
 				logger.error("Delete folder failed", e);
 			}
-			ret = JSONObject.fromObject(retStr) ;
+			ret = JSONObject.parseObject(retStr) ;
 			
 		}
 	
@@ -531,18 +532,18 @@ public class COSWrapper {
 				localPath = this.uploadFile2LocalServer(bytes, localServerTempPath, tempName, Boolean.TRUE);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return JsonUtil.error("-1", VbUtility.printStackTrace(e));
+				return FastJsonUtil.error("-1", VbUtility.printStackTrace(e));
 			}
 			JSONObject result;
 			try {
 				result = this.uploadLocalFile2Cloud(bucket, localPath, remotePath);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return JsonUtil.error("-1", VbUtility.printStackTrace(e));
+				return FastJsonUtil.error("-1", VbUtility.printStackTrace(e));
 			}
 			return result;
 		}
-		return JsonUtil.error("-1", "remotePath format is not correct["+ remotePath + "]");
+		return FastJsonUtil.error("-1", "remotePath format is not correct["+ remotePath + "]");
 	}
 	
 	public String uploadFile2LocalServer(byte[] bytes, String localFolder, String fileName, Boolean replace) throws Exception {

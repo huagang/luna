@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.bl.ManageShowAppBL;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 
 /**
  * 

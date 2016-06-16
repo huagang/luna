@@ -415,7 +415,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			if(page.getPageOrder() == 1) {
 				fileName = indexFileName;
 			}			
-			net.sf.json.JSONObject result = null;
+			com.alibaba.fastjson.JSONObject result = null;
 			try {
 				result = COSUtil.getInstance().upload2CloudDirect(sw.toString().getBytes(), appDir, fileName);
 			} catch (Exception e) {
@@ -484,7 +484,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		if(bytes == null) {
 			return null;
 		}
-		net.sf.json.JSONObject result;
+		com.alibaba.fastjson.JSONObject result;
 		try {
 			result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, "QRCode.jpg");
 			if("0".equals(result.getString("code"))) {

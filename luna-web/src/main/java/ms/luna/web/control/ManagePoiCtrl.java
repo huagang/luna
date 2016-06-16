@@ -48,7 +48,7 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
@@ -59,8 +59,8 @@ import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("managePoiCtrl")
 @Controller
 @RequestMapping("/manage_poi.do")
@@ -162,8 +162,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 			JSONArray subTags = tag.getJSONArray("sub_tags");
 			JSONObject data = new JSONObject();
 			data.put("sub_tags", subTags);
-			subTagsCache.put(tag.getInt("tag_id"), data);
-			if (topTag != null && topTag != 0 && tag.getInt("tag_id") == topTag.intValue()) {
+			subTagsCache.put(tag.getInteger("tag_id"), data);
+			if (topTag != null && topTag != 0 && tag.getInteger("tag_id") == topTag.intValue()) {
 				for (int j = 0; j < subTags.size(); j++) {
 					simpleModel = new SimpleModel();
 					simpleModel.setValue(subTags.getJSONObject(j).getString("tag_id"));
@@ -258,11 +258,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 			@RequestParam(required = false) String filterName,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		JSONObject resJSON = JSONObject.fromObject("{}");
+		JSONObject resJSON = JSONObject.parseObject("{}");
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			
 			if (offset != null) {
 				param.put("offset", offset);
@@ -285,11 +285,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 					offset = 0;
 				}
 				JSONArray arrays = data.getJSONArray("pois");
-				JSONArray rows = JSONArray.fromObject("[]");
+				JSONArray rows = JSONArray.parseArray("[]");
 				for (int i = 0; i < arrays.size(); i++) {
 					JSONObject poiJson = arrays.getJSONObject(i);
 					
-					JSONObject row = JSONObject.fromObject("{}");
+					JSONObject row = JSONObject.parseObject("{}");
 					row.put("number", (i+1)+offset);
 					String short_title = poiJson.getString("short_title");
 					String long_title = poiJson.getString("long_title");
@@ -306,7 +306,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					rows.add(row);
 				}
 				resJSON.put("rows", rows);
-				resJSON.put("total", data.getInt("total"));
+				resJSON.put("total", data.getInteger("total"));
 			} else {
 				resJSON.put("total", 0);
 			}
@@ -318,7 +318,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			MsLogger.debug(e);
 		}
 		
-		response.getWriter().print(JsonUtil.error("-1", "异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "异常").toString());
 		response.setStatus(200);
 		return;
 	}
@@ -330,7 +330,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("_id", _id);
 			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
 			response.getWriter().print(poisResult.toString());
@@ -339,7 +339,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		} catch (Exception e) {
 			MsLogger.debug(e);
 		}
-		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
 		return;
 	}
@@ -358,7 +358,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -381,7 +381,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -426,7 +426,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 			// zip文件大于100M
 			if (zip_fileup.getSize() > 100*1024*1024) {
-				response.getWriter().print(JsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!"));
+				response.getWriter().print(FastJsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!"));
 				response.setStatus(200);
 				return;
 			}
@@ -434,7 +434,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			savedZip = VbUtility.saveFile(pathOfDate, zip_fileup, ".zip", "poi_excel.zip");
 			JSONObject jsonResult = ZipUtil.decompressZip(savedZip, pathOfDate + "unziped/");
 			if (!"0".equals(jsonResult.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("-2", jsonResult.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-2", jsonResult.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
@@ -450,7 +450,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			return;
 		} catch (Exception e) {
 			MsLogger.debug(e);
-			response.getWriter().print(JsonUtil.error("-3", "failed"));
+			response.getWriter().print(FastJsonUtil.error("-3", "failed"));
 			response.setStatus(200);
 			return;
 		}
@@ -494,7 +494,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
-		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
 	}
 
@@ -513,7 +513,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		JSONObject tagsDef = managePoiService.getInitInfo("{}");
 		if (!"0".equals(tagsDef.getString("code"))) {
-			return JsonUtil.error("-1", "没能正确获得分类定义信息");
+			return FastJsonUtil.error("-1", "没能正确获得分类定义信息");
 		}
 		tagsDef = tagsDef.getJSONObject("data");
 
@@ -528,13 +528,13 @@ public class ManagePoiCtrl extends BasicCtrl{
 			for (int j = 0; j < subTags.size(); j++) {
 				JSONObject subTag = subTags.getJSONObject(j);
 				分类名称加子分类名称To子分类编号Map.put(topTagName+"#"+subTag.getString("tag_name"),
-						subTag.getInt("tag_id"));
+						subTag.getInteger("tag_id"));
 			}
 		}
 
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
@@ -853,7 +853,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		param.put("no_check_errors", noCheckErrorPois);
 		JSONObject addedResult = managePoiService.savePois(param.toString(), msUser);
 		if (!"0".equals(addedResult.getString("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject dataOfAddedResult = addedResult.getJSONObject("data");
 		saveErrors = dataOfAddedResult.getJSONArray("saveErrors");
@@ -861,7 +861,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		JSONObject returnResult = new JSONObject();
 		returnResult.put("checkErrors", checkErrors);
 		returnResult.put("saveErrors", saveErrors);
-		return JsonUtil.sucess("OK", returnResult);
+		return FastJsonUtil.sucess("OK", returnResult);
 	}
 
 	private Workbook generatePoiTemplete(JSONArray privateFieldsDef)
@@ -1157,7 +1157,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		return names[1];
 	}
 	private String getValueFromFieldDef(JSONObject fieldDef, String unzipedDir, String value) {
-		int field_type = fieldDef.getInt("field_type");
+		int field_type = fieldDef.getInteger("field_type");
 		boolean uploadError = false;
 		switch (field_type) {
 			case VbConstant.POI_FIELD_TYPE.复选框列表:

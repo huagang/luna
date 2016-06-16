@@ -10,8 +10,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 public final class MongoUtility {
 
@@ -52,7 +52,7 @@ public final class MongoUtility {
 		// 存在二级分类的话，则作为检索条件,如果不存在的话，认为已经匹配
 		// $or:[{sub_tag:54},{sub_tag:{$exists:false}}]}
 		BasicBSONList subTags = new BasicBSONList();
-		Integer subTag = param.getInt("subTag");
+		Integer subTag = param.getInteger("subTag");
 		subTags.add(new BasicBSONObject("sub_tag",
 				new BasicBSONObject("$exists", false)));
 		subTags.add(new BasicBSONObject("sub_tag", subTag));

@@ -23,15 +23,15 @@ import org.springframework.web.servlet.ModelAndView;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component
 @Controller
 @RequestMapping("/edit_poi.do")
@@ -95,12 +95,12 @@ public class EditPoiCtrl extends BasicCtrl{
 				// 分类一级菜单
 				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
 				if (tags_values.size() > 0) {
-					poiModel.setTopTag(tags_values.getInt(0));
+					poiModel.setTopTag(tags_values.getInteger(0));
 				} else {
 					poiModel.setTopTag(0);
 				}
 				// 分类二级菜单
-				poiModel.setSubTag(common_fields_val.getInt("subTag"));
+				poiModel.setSubTag(common_fields_val.getInteger("subTag"));
 				managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
 
 //				List<String> checkeds = new ArrayList<String>();
@@ -225,7 +225,7 @@ public class EditPoiCtrl extends BasicCtrl{
 		PoiModel poiModel = new PoiModel();
 		try {
 			unSavedPoi = unSavedPoi.replace("\n", "\\n").replace("\r", "\\r");
-			JSONObject.fromObject(unSavedPoi);
+			JSONObject.parseObject(unSavedPoi);
 
 			JSONObject result = managePoiService.initFixPoi(unSavedPoi);
 			MsLogger.debug(result.toString());
@@ -239,12 +239,12 @@ public class EditPoiCtrl extends BasicCtrl{
 				// 分类一级菜单
 				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
 				if (tags_values.size() > 0) {
-					poiModel.setTopTag(tags_values.getInt(0));
+					poiModel.setTopTag(tags_values.getInteger(0));
 				} else {
 					poiModel.setTopTag(0);
 				}
 				// 分类二级菜单
-				poiModel.setSubTag(common_fields_val.getInt("subTag"));
+				poiModel.setSubTag(common_fields_val.getInteger("subTag"));
 				managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
 
 //				JSONArray tags_values = common_fields_val.getJSONArray("tags_values");
@@ -511,7 +511,7 @@ public class EditPoiCtrl extends BasicCtrl{
 
 		for (Entry<String, String[]> entry : set) {
 			MsLogger.debug(entry.getKey() + "\t");
-			if (param.has(entry.getKey())) {
+			if (param.containsKey(entry.getKey())) {
 				continue;
 			}
 			if (entry.getValue().length > 1) {
@@ -548,17 +548,17 @@ public class EditPoiCtrl extends BasicCtrl{
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			JSONObject result = managePoiService.updatePoi(param.toString(), msUser);
 			if ("0".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.sucess("0"));
+				response.getWriter().print(FastJsonUtil.sucess("0"));
 				response.setStatus(200);
 				return;
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-2", e.getMessage()));
+			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
 		}
@@ -636,11 +636,11 @@ public class EditPoiCtrl extends BasicCtrl{
 //			@RequestParam(required = false) String filterName,
 //			HttpServletRequest request, HttpServletResponse response) throws IOException {
 //
-//		JSONObject resJSON = JSONObject.fromObject("{}");
+//		JSONObject resJSON = JSONObject.parseObject("{}");
 //		try {
 //			response.setHeader("Access-Control-Allow-Origin", "*");
 //			response.setContentType("text/html; charset=UTF-8");
-//			JSONObject param = JSONObject.fromObject("{}");
+//			JSONObject param = JSONObject.parseObject("{}");
 //			
 //			if (offset != null) {
 //				param.put("offset", offset);
@@ -660,11 +660,11 @@ public class EditPoiCtrl extends BasicCtrl{
 //				JSONObject data = poisResult.getJSONObject("data");
 //
 //				JSONArray arrays = data.getJSONArray("pois");
-//				JSONArray rows = JSONArray.fromObject("[]");
+//				JSONArray rows = JSONArray.parseArray("[]");
 //				for (int i = 0; i < arrays.size(); i++) {
 //					JSONObject poiJson = arrays.getJSONObject(i);
 //					
-//					JSONObject row = JSONObject.fromObject("{}");
+//					JSONObject row = JSONObject.parseObject("{}");
 //					row.put("number", (i+1));
 //					String short_title = poiJson.getString("short_title");
 //					String long_title = poiJson.getString("long_title");
@@ -681,7 +681,7 @@ public class EditPoiCtrl extends BasicCtrl{
 //					rows.add(row);
 //				}
 //				resJSON.put("rows", rows);
-//				resJSON.put("total", data.getInt("total"));
+//				resJSON.put("total", data.getInteger("total"));
 //			} else {
 //				resJSON.put("total", 0);
 //			}
@@ -693,7 +693,7 @@ public class EditPoiCtrl extends BasicCtrl{
 //			e.printStackTrace();
 //		}
 //		
-//		response.getWriter().print(JsonUtil.error("-1", "异常").toString());
+//		response.getWriter().print(FastJsonUtil.error("-1", "异常").toString());
 //		response.setStatus(200);
 //		return;
 //	}
@@ -705,7 +705,7 @@ public class EditPoiCtrl extends BasicCtrl{
 //		try {
 //			response.setHeader("Access-Control-Allow-Origin", "*");
 //			response.setContentType("text/html; charset=UTF-8");
-//			JSONObject param = JSONObject.fromObject("{}");
+//			JSONObject param = JSONObject.parseObject("{}");
 //			param.put("_id", _id);
 //			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
 //			response.getWriter().print(poisResult.toString());
@@ -714,7 +714,7 @@ public class EditPoiCtrl extends BasicCtrl{
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-//		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
+//		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 //		response.setStatus(200);
 //		return;
 //	}
@@ -723,11 +723,11 @@ public class EditPoiCtrl extends BasicCtrl{
 //	public void asyncSearchPoiById(@RequestParam(required = true) String _id,
 //			HttpServletRequest request, HttpServletResponse response) throws IOException {
 //
-//		JSONObject resJSON = JSONObject.fromObject("{}");
+//		JSONObject resJSON = JSONObject.parseObject("{}");
 //		try {
 //			response.setHeader("Access-Control-Allow-Origin", "*");
 //			response.setContentType("text/html; charset=UTF-8");
-//			JSONObject param = JSONObject.fromObject("{}");
+//			JSONObject param = JSONObject.parseObject("{}");
 //			param.put("_id", _id);
 //			resJSON = managePoiService.getPoi(param.toString());
 //			HttpSession session = request.getSession(false);
@@ -736,7 +736,7 @@ public class EditPoiCtrl extends BasicCtrl{
 //			if ("0".equals(resJSON.getString("code"))) {
 //				JSONObject data = resJSON.getJSONObject("data");
 //				data.put("poi_tags_length", poi_tags_length);
-//				resJSON = JsonUtil.sucess("success", data);
+//				resJSON = FastJsonUtil.sucess("success", data);
 //			}
 //			response.getWriter().print(resJSON.toString());
 //			response.setStatus(200);

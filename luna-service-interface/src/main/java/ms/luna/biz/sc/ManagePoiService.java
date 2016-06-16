@@ -1,7 +1,7 @@
 package ms.luna.biz.sc;
 
 import ms.luna.biz.model.MsUser;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -29,5 +29,7 @@ public interface ManagePoiService {
 	JSONObject downloadPoiTemplete(String json);
 
 	JSONObject savePois(String json, MsUser msUser);
+
+	JSONObject getTagsDef(String json);
 
 }

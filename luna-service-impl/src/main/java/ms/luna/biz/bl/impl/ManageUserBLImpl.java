@@ -36,11 +36,11 @@ import ms.luna.biz.dao.model.MsUserPw;
 import ms.luna.biz.dao.model.MsUserPwCriteria;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CreateHtmlUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MailSender;
 import ms.luna.biz.util.VbMD5;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Transactional(rollbackFor = Exception.class)
 @Service("manageUserBL")
@@ -66,14 +66,14 @@ public class ManageUserBLImpl implements ManageUserBL {
 
 	@Override
 	public JSONObject loadUsers(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		Integer max = null;
 		Integer min = null;
-		if (param.has("max")) {
-			max = param.getInt("max");
+		if (param.containsKey("max")) {
+			max = param.getInteger("max");
 		}
-		if (param.has("min")) {
-			min = param.getInt("min");
+		if (param.containsKey("min")) {
+			min = param.getInteger("min");
 		}
 		UsersParameter usersParameter = new UsersParameter();
 		if (max != null || min != null) {
@@ -93,7 +93,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 			usersParameter.setCategoryId(categoryId);
 		}
 
-		if (param.has("like_filter_nm")) {
+		if (param.containsKey("like_filter_nm")) {
 			String likeFilterNm = param.getString("like_filter_nm");
 
 //			if (CharactorUtil.checkAlphaAndNumber(likeFilterNm, new char[] { '_' })) {
@@ -127,11 +127,11 @@ public class ManageUserBLImpl implements ManageUserBL {
 			total = msRUserRoleDAO.countUsersByModuleCode(usersParameter);
 			list = msRUserRoleDAO.selectUsersByModuleCode(usersParameter);
 		}
-		JSONObject data = JSONObject.fromObject("{}");
-		JSONArray lstUsersResult = JSONArray.fromObject("[]");
+		JSONObject data = JSONObject.parseObject("{}");
+		JSONArray lstUsersResult = JSONArray.parseArray("[]");
 		if (list != null) {
 			for (UsersResult2 usersResult : list) {
-				JSONObject usersResultData = JSONObject.fromObject("{}");
+				JSONObject usersResultData = JSONObject.parseObject("{}");
 				usersResultData.put("luna_name", usersResult.getLuna_name());
 				usersResultData.put("module_code", usersResult.getModule_code());
 				usersResultData.put("module_name", usersResult.getModule_name());
@@ -142,17 +142,17 @@ public class ManageUserBLImpl implements ManageUserBL {
 		}
 		data.put("total", total);
 		data.put("users", lstUsersResult);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 
 	// @Override
 	// public JSONObject updateUserRole(String json) {
 	// String msg = this.checkAuth(json);
 	// if (msg != null) {
-	// return JsonUtil.error("-1", msg);
+	// return FastJsonUtil.error("-1", msg);
 	// }
 	//
-	// JSONObject param = JSONObject.fromObject(json);
+	// JSONObject param = JSONObject.parseObject(json);
 	// // 执行操作的用户
 	// String login_wjnm = param.getString("login_wjnm");
 	//
@@ -209,7 +209,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 	// throw new RuntimeException("您操作的数据不存在！");
 	// }
 	//
-	// return JsonUtil.sucess("权限操作成功！");
+	// return FastJsonUtil.sucess("权限操作成功！");
 	// }
 	//
 	// /**
@@ -219,12 +219,12 @@ public class ManageUserBLImpl implements ManageUserBL {
 	// * @return
 	// */
 	// private String checkAuth(String json) {
-	// JSONObject param = JSONObject.fromObject(json);
-	// if (!param.has("login_wjnm") || !param.has("country_id") ||
-	// !param.has("province_id") || !param.has("city_id")
-	// || !param.has("category_id") || !param.has("region_id") ||
-	// !param.has("to_role_id")
-	// || !param.has("wjnm")) {
+	// JSONObject param = JSONObject.parseObject(json);
+	// if (!param.containsKey("login_wjnm") || !param.containsKey("country_id") ||
+	// !param.containsKey("province_id") || !param.containsKey("city_id")
+	// || !param.containsKey("category_id") || !param.containsKey("region_id") ||
+	// !param.containsKey("to_role_id")
+	// || !param.containsKey("wjnm")) {
 	// return "数据不正确,缺少参数！";
 	// }
 	// String login_wjnm = param.getString("login_wjnm");
@@ -306,7 +306,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 
 	public JSONObject loadRolesByModulecode(String json) {
 		// 根据module_code得到对应的role_code和role_name
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String module_code = param.getString("module_code");
 
 		MsUser msUser = (MsUser) AuthenticatedUserHolder.get();
@@ -338,17 +338,17 @@ public class ManageUserBLImpl implements ManageUserBL {
             }
         });
 		
-		JSONObject result = JSONObject.fromObject("{}");
-		JSONArray roles = JSONArray.fromObject("[]");
+		JSONObject result = JSONObject.parseObject("{}");
+		JSONArray roles = JSONArray.parseArray("[]");
 		for (int i = 0; i < list.size(); i++) {
 			MsRole msRole2 = list.get(i);
-			JSONObject role = JSONObject.fromObject("{}");
+			JSONObject role = JSONObject.parseObject("{}");
 			role.put("role_code", msRole2.getMsRoleCode());
 			role.put("short_role_name", msRole2.getShortRoleName());
 			roles.add(role);
 		}
 		result.put("roles", roles);
-		return JsonUtil.sucess("0", result);
+		return FastJsonUtil.sucess("0", result);
 
 	}
 
@@ -360,7 +360,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 		MsUser msUser = (MsUser) AuthenticatedUserHolder.get();
 		String luna_nm = msUser.getNickName();
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String[] emails = param.getString("emails").split(";");
 		String module_code = param.getString("module_code");
 		String role_code = param.getString("role_code");
@@ -383,7 +383,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 			valEmaillst.add(email);
 		}
 
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
 		// 邮箱检测
 		if (!invalEmaillst.isEmpty()) {
 			result.put("code", "1");
@@ -429,12 +429,12 @@ public class ManageUserBLImpl implements ManageUserBL {
 		}
 		executorService.shutdown();
 
-		return JsonUtil.sucess("发送成功");
+		return FastJsonUtil.sucess("发送成功");
 	}
 
 	@Override
 	public JSONObject updateUser(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String luna_name = param.getString("luna_name");
 		// String module_code = param.getString("module_code");
 		String role_code = param.getString("role_code");
@@ -456,7 +456,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 			// 根据unique_id更新role_code
 			Integer rows = msRUserRoleDAO.updateByCriteriaSelective(msRUserRole, msRUserRoleCriteria);
 			if (rows == 1) {// 正常情况下unique_id唯一
-				return JsonUtil.sucess("更新成功！");
+				return FastJsonUtil.sucess("更新成功！");
 			} else {
 				throw new RuntimeException("数据库异常！");
 			}
@@ -467,7 +467,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 
 	@Override
 	public JSONObject delUser(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String luna_name = param.getString("luna_name");
 		// String module_code = param.getString("module_code");
 		// String role_code = param.getString("role_codes");
@@ -505,7 +505,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 				msRegEmailDAO.deleteByCriteria(msRegEmailCriteria);
 			}
 			
-			return JsonUtil.sucess("删除成功!");
+			return FastJsonUtil.sucess("删除成功!");
 		} else {
 			throw new RuntimeException("删除用户--数据读取异常");
 		}
@@ -556,7 +556,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 
 	@Override
 	public JSONObject getModuleByRoleCode(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String role_code = param.getString("role_code");
 		// 根据role_code找到module_code;
 		MsRole msRole = msRoleDAO.selectByPrimaryKey(role_code);
@@ -565,10 +565,10 @@ public class ManageUserBLImpl implements ManageUserBL {
 		MsBizModule msBizModule = msBizModuleDAO.selectByPrimaryKey(module_code);
 		String module_nm = msBizModule.getBizModuleName();
 
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
 		result.put("module_code", module_code);
 		result.put("module_nm", module_nm);
-		return JsonUtil.sucess("业务模块信息获取成功！", result);
+		return FastJsonUtil.sucess("业务模块信息获取成功！", result);
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 	 */
 	@Override
 	public JSONObject getAuthByRoleCodeAndModuleCode(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String role_code = param.getString("role_code");
 		String module_code = param.getString("module_code");
 		MsRoleCriteria msRoleCriteria = new MsRoleCriteria();
@@ -585,25 +585,25 @@ public class ManageUserBLImpl implements ManageUserBL {
 		List<MsRole> lst = null;
 		lst = msRoleDAO.selectByCriteria(msRoleCriteria);
 		if (lst.size() != 1) {
-			return JsonUtil.error("1", "没有对应的auth");
+			return FastJsonUtil.error("1", "没有对应的auth");
 		}
 		
 		MsRole msRole = lst.get(0);
 		String role_auth = msRole.getMsRoleAuth();
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("role_auth", role_auth);
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	@Override
 	public JSONObject getAuthByRoleCode(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String role_code = param.getString("role_code");
 		MsRole msRole = msRoleDAO.selectByPrimaryKey(role_code);
 		String role_auth = msRole.getMsRoleAuth();
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("role_auth", role_auth);
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	class MailRunnable implements Runnable {

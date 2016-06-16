@@ -21,6 +21,8 @@ public class MsZone implements Serializable {
 
     private String mergerName;
 
+    private String qqFormatMergerName;
+
     private BigDecimal lat;
 
     private BigDecimal lng;
@@ -101,6 +103,14 @@ public class MsZone implements Serializable {
         this.mergerName = mergerName == null ? null : mergerName.trim();
     }
 
+    public String getQqFormatMergerName() {
+        return qqFormatMergerName;
+    }
+
+    public void setQqFormatMergerName(String qqFormatMergerName) {
+        this.qqFormatMergerName = qqFormatMergerName == null ? null : qqFormatMergerName.trim();
+    }
+
     public BigDecimal getLat() {
         return lat;
     }
@@ -177,6 +187,7 @@ public class MsZone implements Serializable {
             && (this.getCityCode() == null ? other.getCityCode() == null : this.getCityCode().equals(other.getCityCode()))
             && (this.getZipCode() == null ? other.getZipCode() == null : this.getZipCode().equals(other.getZipCode()))
             && (this.getMergerName() == null ? other.getMergerName() == null : this.getMergerName().equals(other.getMergerName()))
+            && (this.getQqFormatMergerName() == null ? other.getQqFormatMergerName() == null : this.getQqFormatMergerName().equals(other.getQqFormatMergerName()))
             && (this.getLat() == null ? other.getLat() == null : this.getLat().equals(other.getLat()))
             && (this.getLng() == null ? other.getLng() == null : this.getLng().equals(other.getLng()))
             && (this.getPinyin() == null ? other.getPinyin() == null : this.getPinyin().equals(other.getPinyin()))
@@ -198,6 +209,7 @@ public class MsZone implements Serializable {
         result = prime * result + ((getCityCode() == null) ? 0 : getCityCode().hashCode());
         result = prime * result + ((getZipCode() == null) ? 0 : getZipCode().hashCode());
         result = prime * result + ((getMergerName() == null) ? 0 : getMergerName().hashCode());
+        result = prime * result + ((getQqFormatMergerName() == null) ? 0 : getQqFormatMergerName().hashCode());
         result = prime * result + ((getLat() == null) ? 0 : getLat().hashCode());
         result = prime * result + ((getLng() == null) ? 0 : getLng().hashCode());
         result = prime * result + ((getPinyin() == null) ? 0 : getPinyin().hashCode());
@@ -210,6 +222,6 @@ public class MsZone implements Serializable {
 
     @Override
     public String toString() {
-        return "MsZone [id=" + id + ",name=" + name + ",parentId=" + parentId + ",shortNm=" + shortNm + ",levelType=" + levelType + ",cityCode=" + cityCode + ",zipCode=" + zipCode + ",mergerName=" + mergerName + ",lat=" + lat + ",lng=" + lng + ",pinyin=" + pinyin + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByWjnm=" + updatedByWjnm + "]";
+        return "MsZone [id=" + id + ",name=" + name + ",parentId=" + parentId + ",shortNm=" + shortNm + ",levelType=" + levelType + ",cityCode=" + cityCode + ",zipCode=" + zipCode + ",mergerName=" + mergerName + ",qqFormatMergerName=" + qqFormatMergerName + ",lat=" + lat + ",lng=" + lng + ",pinyin=" + pinyin + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByWjnm=" + updatedByWjnm + "]";
     }
 }

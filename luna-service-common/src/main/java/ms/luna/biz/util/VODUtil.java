@@ -15,8 +15,8 @@ import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
 import com.qcloud.vod.Module.ModifiedVod;
 import com.qcloud.vod.Utilities.SHA1;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 视频点播
@@ -80,15 +80,15 @@ public class VODUtil {
 	 */
 	public JSONObject getVodPlayUrls(String fileId) {
 		JSONObject result = describeVodPlayUrls(fileId);
-		if (result.getInt("code") != 0) {
-			return JsonUtil.error(result.getInt("code") + "", result.getString("message"));
+		if (result.getInteger("code") != 0) {
+			return FastJsonUtil.error(result.getInteger("code") + "", result.getString("message"));
 		}
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		if (result.containsKey("palySet")) {// 若转码未完成消息形式为{"code":0,"message":""}
 			data.put("playSet", result.getJSONArray("playSet"));
-			return JsonUtil.sucess("success", data);
+			return FastJsonUtil.sucess("success", data);
 		}
-		return JsonUtil.error("1", "转码未完成");
+		return FastJsonUtil.error("1", "转码未完成");
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class VODUtil {
 		}
 		String path2 = bu.toString().substring(1); // path2 = "a/b/c/d"
 		JSONObject result = describeAllClass(); // 分类信息（目录信息）
-		if (result == null || result.getInt("code") != 0) { // 未获得目录信息，无法创建文件夹
+		if (result == null || result.getInteger("code") != 0) { // 未获得目录信息，无法创建文件夹
 			return Integer.MIN_VALUE;
 		}
 
@@ -140,10 +140,10 @@ public class VODUtil {
 		if (lastIndex == -1) {
 			String newFolder = path;
 			JSONObject json = createClass(newFolder, -1);
-			if (json.getInt("code") != 0) {
+			if (json.getInteger("code") != 0) {
 				return Integer.MIN_VALUE;
 			}
-			int newClassId = json.getInt("newClassId");// 获得创建文件夹的id
+			int newClassId = json.getInteger("newClassId");// 获得创建文件夹的id
 			return newClassId;
 		}
 
@@ -156,10 +156,10 @@ public class VODUtil {
 
 		String newFolder = path.substring(lastIndex + 1);
 		JSONObject json2 = createClass(newFolder, classId);
-		if (json2.getInt("code") != 0) {
+		if (json2.getInteger("code") != 0) {
 			return Integer.MIN_VALUE;
 		}
-		int newClassId = json2.getInt("newClassId");// 获得创建文件夹的id
+		int newClassId = json2.getInteger("newClassId");// 获得创建文件夹的id
 		return newClassId;
 	}
 
@@ -172,10 +172,10 @@ public class VODUtil {
 	 */
 	public int getClassIdByPath(String path) {
 		JSONObject result = describeAllClass();
-		if (result.getInt("code") != 0) {
+		if (result.getInteger("code") != 0) {
 			return Integer.MIN_VALUE;
 		}
-		JSONArray subclass = JSONArray.fromObject("[]");
+		JSONArray subclass = JSONArray.parseArray("[]");
 		String[] dirs = path.split("/"); // 目录名
 		subclass = result.getJSONArray("data");// 子文件夹
 		int classId = Integer.MIN_VALUE;// 分类id(目录对应的id)
@@ -189,7 +189,7 @@ public class VODUtil {
 				if (!name.equals(dirs[m])) {
 					continue;
 				}
-				classId = info.getInt("id");
+				classId = info.getInteger("id");
 				subclass = json.getJSONArray("subclass");
 				flag = true;
 				break;
@@ -214,14 +214,14 @@ public class VODUtil {
 		if (path == null || classInfo == null) {// 路径错误/未返回信息
 			return Integer.MIN_VALUE;
 		}
-		if (classInfo.getInt("code") != 0) {
+		if (classInfo.getInteger("code") != 0) {
 			return Integer.MIN_VALUE; // 未返回正确目录信息
 		}
 		if (path.length() == 0) {
 			return -1;// 根目录
 		}
 
-		JSONArray subclass = JSONArray.fromObject("[]");
+		JSONArray subclass = JSONArray.parseArray("[]");
 		String[] dirs = path.split("/"); // 目录名
 		subclass = classInfo.getJSONArray("data");// 子文件夹
 		int classId = Integer.MIN_VALUE;// 分类id(目录对应的id)
@@ -235,7 +235,7 @@ public class VODUtil {
 				if (!name.equals(dirs[m])) {
 					continue;
 				}
-				classId = info.getInt("id");
+				classId = info.getInteger("id");
 				subclass = json.getJSONArray("subclass");
 				flag = true;
 				break;
@@ -269,7 +269,7 @@ public class VODUtil {
 		// 生成转码回调地址
 		byte[] bytes = file.getBytes();
 		if (bytes.length > MAX_VIDEO_SIZE) {
-			return JsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
+			return FastJsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
 		}
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -280,7 +280,7 @@ public class VODUtil {
 
 		int classId = createFolder(path);
 		if (classId == Integer.MIN_VALUE) {
-			return JsonUtil.error("1", "文件夹创建失败");
+			return FastJsonUtil.error("1", "文件夹创建失败");
 		}
 
 		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, notifyUrl, null, 1, 1, 0);
@@ -304,12 +304,12 @@ public class VODUtil {
 	public JSONObject upload2Cloud(String file, String path, String fileName) throws IOException {
 		long fileSize = new File(file).length();
 		if (fileSize > MAX_VIDEO_SIZE) {
-			return JsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
+			return FastJsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
 		}
 
 		int classId = createFolder(path);// 文件夹id
 		if (classId == Integer.MIN_VALUE) {
-			return JsonUtil.error("1", "文件夹创建失败");
+			return FastJsonUtil.error("1", "文件夹创建失败");
 		}
 
 		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, null, null, 1, 1, 0);
@@ -338,11 +338,11 @@ public class VODUtil {
 
 			String result = getVod().call("CreateClass", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -360,11 +360,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeAllClass", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -382,11 +382,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeClass", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -410,11 +410,11 @@ public class VODUtil {
 
 			String result = getVod().call("ModifyClass", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -437,11 +437,11 @@ public class VODUtil {
 			params.put("classId", classId);
 			String result = getVod().call("ModifyVodClass", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -490,11 +490,11 @@ public class VODUtil {
 			String fileId; // 上传后获得的文件Id
 			String result = null; // 上传结果
 			int count = 0; // 重试上传的次数。设定为超过3次，则停止上传
-			JSONObject data = JSONObject.fromObject("{}");
+			JSONObject data = JSONObject.parseObject("{}");
 
 			if (remainderSize <= 0) {
 				MsLogger.debug("wrong file path...");
-				return JsonUtil.error("-2", "文件长度出错");
+				return FastJsonUtil.error("-2", "文件长度出错");
 			}
 			while (remainderSize > 0) {
 				// 上传参数设置
@@ -521,8 +521,8 @@ public class VODUtil {
 				result = getVod().call("MultipartUploadVodFile", params, file);
 				MsLogger.debug(result.toString());
 
-				JSONObject json_result = JSONObject.fromObject(result);
-				code = json_result.getInt("code");
+				JSONObject json_result = JSONObject.parseObject(result);
+				code = json_result.getInteger("code");
 				if (code == -3002) { // 服务器异常返回，需要重试上传(offset=0,dataSize=10K,满足大多数视频的上传)
 					tmpDataSize = firstDataSize;
 					tmpOffset = 0;
@@ -537,11 +537,11 @@ public class VODUtil {
 				} else if (code != 0) { // 上传失败。具体code查看API
 					return json_result;
 				}
-				flag = json_result.getInt("flag");
+				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
 					data.put("fileId", fileId);
-					return JsonUtil.sucess("成功", data);
+					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));
 				}
@@ -552,10 +552,10 @@ public class VODUtil {
 					tmpDataSize = (int) remainderSize;
 				}
 			}
-			return JsonUtil.error("-3", "未知错误");
+			return FastJsonUtil.error("-3", "未知错误");
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -604,11 +604,11 @@ public class VODUtil {
 			String fileId; // 上传后获得的文件Id
 			String result = null; // 上传结果
 			int count = 0; // 重试上传的次数。设定为超过3次，则停止上传
-			JSONObject data = JSONObject.fromObject("{}");
+			JSONObject data = JSONObject.parseObject("{}");
 
 			if (remainderSize <= 0) {
 				MsLogger.debug("wrong file path...");
-				return JsonUtil.error("-2", "文件长度出错");
+				return FastJsonUtil.error("-2", "文件长度出错");
 			}
 			while (remainderSize > 0) {
 				// 上传参数设置
@@ -636,8 +636,8 @@ public class VODUtil {
 				result = getVod().call("MultipartUploadVodFile2", params);
 				MsLogger.debug(result.toString());
 
-				JSONObject json_result = JSONObject.fromObject(result);
-				code = json_result.getInt("code");
+				JSONObject json_result = JSONObject.parseObject(result);
+				code = json_result.getInteger("code");
 				if (code == -3002) { // 服务器异常返回，需要重试上传(offset=0,dataSize=10K,满足大多数视频的上传)
 					tmpDataSize = firstDataSize;
 					tmpOffset = 0;
@@ -652,11 +652,11 @@ public class VODUtil {
 				} else if (code != 0) { // 上传失败。具体code查看API
 					return json_result;
 				}
-				flag = json_result.getInt("flag");
+				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
 					data.put("fileId", fileId);
-					return JsonUtil.sucess("成功", data);
+					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));
 				}
@@ -667,10 +667,10 @@ public class VODUtil {
 					tmpDataSize = (int) remainderSize;
 				}
 			}
-			return JsonUtil.error("-3", "未知错误");
+			return FastJsonUtil.error("-3", "未知错误");
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -812,12 +812,12 @@ public class VODUtil {
 
 			String result = getVod().call("MultiPullVodFile", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
 			params.clear();
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -878,11 +878,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeVodInfo", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -914,11 +914,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeVodPlayInfo", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -939,11 +939,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeVodPlayUrls", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -984,11 +984,11 @@ public class VODUtil {
 
 			String result = getVod().call("ModifyVodInfo", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1012,11 +1012,11 @@ public class VODUtil {
 
 			String result = getVod().call("SetVodPlayStatus", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1058,11 +1058,11 @@ public class VODUtil {
 
 			String result = getVod().call("MultiSetVodPlayStatus", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1089,11 +1089,11 @@ public class VODUtil {
 
 			String result = getVod().call("CreateScreenShot", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1121,11 +1121,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeScreenShot", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1156,11 +1156,11 @@ public class VODUtil {
 			}
 			String result = getVod().call("DescribeVodCover", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1192,11 +1192,11 @@ public class VODUtil {
 
 			String result = getVod().call("ConvertVodFile", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1217,11 +1217,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeAutoScreenShot", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1250,11 +1250,11 @@ public class VODUtil {
 
 			String result = getVod().call("CreateVodTags", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1283,11 +1283,11 @@ public class VODUtil {
 
 			String result = getVod().call("DeleteVodTags", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1311,11 +1311,11 @@ public class VODUtil {
 
 			String result = getVod().call("DeleteVodFile", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1342,11 +1342,11 @@ public class VODUtil {
 
 			String result = getVod().call("DescribeRecordPlayInfo", params);
 			MsLogger.debug(result.toString());
-			JSONObject json_result = JSONObject.fromObject(result);
+			JSONObject json_result = JSONObject.parseObject(result);
 			return json_result;
 		} catch (Exception e) {
 			MsLogger.error(e);
-			JSONObject resJson = JSONObject.fromObject("{}");
+			JSONObject resJson = JSONObject.parseObject("{}");
 			resJson.put("code", -1);
 			resJson.put("message", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
 			return resJson;
@@ -1364,8 +1364,8 @@ public class VODUtil {
 	 * (classId != Integer.MIN_VALUE) { return classId; } // 不存在，回退到路径上一个结点。 int
 	 * lastIndex = path2.lastIndexOf("/"); // 上一个结点为根结点，在根结点下创建文件夹( folder: a )
 	 * if (lastIndex == -1) { JSONObject json = vodWrapper.createClass(path2,
-	 * -1); if (json.getInt("code") != 0) { return Integer.MIN_VALUE; } int
-	 * newClassId = json.getInt("newClassId");// 获得创建文件夹的id return newClassId; }
+	 * -1); if (json.getInteger("code") != 0) { return Integer.MIN_VALUE; } int
+	 * newClassId = json.getInteger("newClassId");// 获得创建文件夹的id return newClassId; }
 	 * 
 	 * // 上一个结点为非根结点，则获得上一个结点的classId，并在此基础上创建文件夹 String path3 =
 	 * path2.substring(0, lastIndex); // path = "a/b/c" classId =
@@ -1373,9 +1373,9 @@ public class VODUtil {
 	 * Integer.MIN_VALUE; }
 	 * 
 	 * String newFolder = path2.substring(lastIndex + 1); JSONObject json2 =
-	 * vodWrapper.createClass(newFolder, classId); if (json2.getInt("code") !=
+	 * vodWrapper.createClass(newFolder, classId); if (json2.getInteger("code") !=
 	 * 0) { return Integer.MIN_VALUE; } int newClassId =
-	 * json2.getInt("newClassId");// 获得创建文件夹的id return newClassId; }
+	 * json2.getInteger("newClassId");// 获得创建文件夹的id return newClassId; }
 	 * 
 	 * public static void main(String[] args) { String path = "/a";//
 	 * luna/dev/poi/a // int classId =

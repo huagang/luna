@@ -16,7 +16,7 @@ import ms.biz.common.MongoConnector;
 import ms.biz.common.MongoUtility;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.util.COSUtil;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class TestManageBusinessTreeBL {
 	

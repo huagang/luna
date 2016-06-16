@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
@@ -29,8 +29,8 @@ import ms.luna.biz.util.VbUtility;
 import ms.luna.common.MsLunaResource;
 import ms.luna.web.filter.LoginFilter;
 import ms.luna.web.util.WebHelper;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Component("loginCtrl")
 @Controller
@@ -73,7 +73,7 @@ public class LoginCtrl {
 		MsLogger.debug("user["+ luna_name +"] was attempt to login!");
 		// check luna_name
 		JSONObject jsonNickNm = CharactorUtil.checkNickNm(luna_name);
-		String nickCode = JsonUtil.getString(jsonNickNm,"code");
+		String nickCode = FastJsonUtil.getString(jsonNickNm,"code");
 		if (!"0".equals(nickCode)) {
 			MsLogger.debug("user["+luna_name +"] format is not correct!");
 			return errorJsonResult("-1", "用户名或者密码错误！");
@@ -81,7 +81,7 @@ public class LoginCtrl {
 
 		// check密码
 		JSONObject jsonPw = CharactorUtil.checkPw(password);
-		String pwCode = JsonUtil.getString(jsonPw, "code");
+		String pwCode = FastJsonUtil.getString(jsonPw, "code");
 		if (!"0".equals(pwCode)) {
 			MsLogger.debug("user' pw ["+password +"] format is not correct!");
 			return errorJsonResult("-1", "用户名或者密码错误！");
@@ -92,7 +92,7 @@ public class LoginCtrl {
 		 * @param json
 		 * @return {code, msg, data{luna_name, wjid, regist_time}}
 		 */
-		JSONObject param = JSONObject.fromObject("{}");
+		JSONObject param = JSONObject.parseObject("{}");
 		param.put("luna_name", luna_name);
 		param.put("pw", password);
 		param.put("ipaddress", VbUtility.getRemortIP(request));
@@ -114,10 +114,10 @@ public class LoginCtrl {
 			String uniqueId = data.getString("unique_id");
 			JSONArray uri_arrays = data.getJSONArray("access_uris");
 
-			Integer mode = data.getInt("mode");
+			Integer mode = data.getInteger("mode");
 
 			// 检查是否有头像
-			if (data.has("head_img_url")) {
+			if (data.containsKey("head_img_url")) {
 				String headImgUrl = data.getString("head_img_url");
 				msUser.setHeadImgUrl(headImgUrl);
 			}

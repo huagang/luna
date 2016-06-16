@@ -7,10 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ms.luna.biz.bl.VodPlayBL;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.MsVideoUpload;
-import ms.luna.biz.dao.model.MsVideoUploadCriteria;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /** 
  * @author  Greek 
@@ -30,19 +28,19 @@ public class VodPlayBLImpl implements VodPlayBL{
 	 */
 	@Override
 	public JSONObject createVodFile(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String vod_file_id = param.getString("vod_file_id");
 		
 		// 能否保证腾讯云每次上传文件的id都不同？为安全起见，检测vod_file_id是否已存在。
 		MsVideoUpload msVideo = msVideoUploadDAO.selectByPrimaryKey(vod_file_id);
 		if(msVideo != null){
-			return JsonUtil.error("2", "Id已存在");
+			return FastJsonUtil.error("2", "Id已存在");
 		}
 		
 		MsVideoUpload msVideoUpload = new MsVideoUpload();
 		msVideoUpload.setVodFileId(vod_file_id);
 		msVideoUploadDAO.insertSelective(msVideoUpload);
-		return JsonUtil.sucess("success");
+		return FastJsonUtil.sucess("success");
 	}
 
 	/* 
@@ -51,19 +49,19 @@ public class VodPlayBLImpl implements VodPlayBL{
 	 */
 	@Override
 	public JSONObject updateVodFileById(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String vod_file_id = param.getString("vod_file_id");
 		MsVideoUpload msVideoUpload = new MsVideoUpload();
 		
-		if(param.has("vod_original_file_url")){
+		if(param.containsKey("vod_original_file_url")){
 			String vod_original_file_url = param.getString("vod_original_file_url");// 原始
 			msVideoUpload.setVodOriginalFileUrl(vod_original_file_url);
 		}
-		if(param.has("vod_normal_mp4_url")){
+		if(param.containsKey("vod_normal_mp4_url")){
 			String vod_normal_mp4_url = param.getString("vod_normal_mp4_url");		// 标清，MP4
 			msVideoUpload.setVodNormalMp4Url(vod_normal_mp4_url);
 		}
-		if(param.has("vod_phone_hls_url")){
+		if(param.containsKey("vod_phone_hls_url")){
 			String vod_phone_hls_url = param.getString("vod_phone_hls_url");		// 手机，HLS
 			msVideoUpload.setVodPhoneHlsUrl(vod_phone_hls_url);
 		}
@@ -72,9 +70,9 @@ public class VodPlayBLImpl implements VodPlayBL{
 		
 		int count = msVideoUploadDAO.updateByPrimaryKeySelective(msVideoUpload);
 		if(count != 1){
-			return JsonUtil.error("2", "更新失败");
+			return FastJsonUtil.error("2", "更新失败");
 		}
-		return JsonUtil.sucess("success");
+		return FastJsonUtil.sucess("success");
 	}
 
 	@Override

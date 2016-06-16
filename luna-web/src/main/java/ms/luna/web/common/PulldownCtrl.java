@@ -19,11 +19,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ms.luna.biz.sc.PulldownService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("pulldownCtrl")
 @Controller
 @RequestMapping("/pulldown.do")
@@ -173,7 +173,7 @@ public class PulldownCtrl {
 //		}
 //		synchronized (PulldownCtrl.class) {
 //			if (lstRoles.isEmpty()) {
-//				JSONObject param = JSONObject.fromObject("{}");
+//				JSONObject param = JSONObject.parseObject("{}");
 //				param.put("login_wjnm", "dummy");
 //				JSONObject result = pulldownService.loadRoles(param.toString());
 //				JSONObject data = result.getJSONObject("data");
@@ -235,7 +235,7 @@ public class PulldownCtrl {
 
 		if (provinceId == null || provinceId.isEmpty()) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "参数不正确！"));
+				response.getWriter().print(FastJsonUtil.error("-1", "参数不正确！"));
 				response.setStatus(200);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -244,7 +244,7 @@ public class PulldownCtrl {
 		}
 		JSONObject citys = loadCities(provinceId);
 		if (citys == null) {
-			citys = JsonUtil.error("-1", "城市信息检索失败");
+			citys = FastJsonUtil.error("-1", "城市信息检索失败");
 		}
 		response.getWriter().print(citys.toString());
 		response.setStatus(200);
@@ -257,7 +257,7 @@ public class PulldownCtrl {
 		String cityId = request.getParameter("city_id");
 		JSONObject counties = loadCounties(cityId);
 		if(counties == null) {
-			counties = JsonUtil.error("-1", "区县信息检索失败");
+			counties = FastJsonUtil.error("-1", "区县信息检索失败");
 		}
 		response.setStatus(200);
 		response.getWriter().print(counties.toString());
@@ -274,7 +274,7 @@ public class PulldownCtrl {
 			categorys = pulldownService.loadCategorys();
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}

@@ -146,7 +146,7 @@ function deleteBusinessTree(business_id) {
 //编辑按钮弹窗
 function editBusinessTree(business_id, province_id, city_id, county_id){
 	//$("#business-id-edit").val(business_id);
-	var form='<form target="_blank" action="'+host+'/business_tree.do?method=init" method="post">'
+	var form='<form  action="'+host+'/business_tree.do?method=init" method="post">'
 		+'<input type="text" name="business_id" value="'+ business_id+'" />'
 		+'<input type="text" name="province_id" value="'+ province_id+'" />'
 		+'<input type="text" name="city_id" value="'+ city_id+'" />'

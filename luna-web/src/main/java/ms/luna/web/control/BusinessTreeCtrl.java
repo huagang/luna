@@ -2,6 +2,7 @@ package ms.luna.web.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessTreeService;
+import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -36,6 +38,9 @@ import ms.luna.web.model.common.SimpleModel;
 public class BusinessTreeCtrl {
 	@Autowired
 	private ManageBusinessTreeService manageBusinessTreeService;
+
+	@Autowired
+	private ManagePoiService managePoiService;
 
 	@Resource(name="pulldownCtrl")
 	private PulldownCtrl pulldownCtrl;
@@ -75,10 +80,26 @@ public class BusinessTreeCtrl {
 			view.addObject("provinceId", provinceId);
 			view.addObject("cityId", cityId);
 			view.addObject("countyId", countyId);
-
-			view.addObject("businessId", businessId);
-			view.setViewName("/business_tree.jsp");
-			return view;
+			com.alibaba.fastjson.JSONObject result = managePoiService.getTagsDef("{}");
+			if ("0".equals(result.getString("code"))) {
+				com.alibaba.fastjson.JSONObject data = result.getJSONObject("data");
+				com.alibaba.fastjson.JSONArray tags = data.getJSONArray("tags_def");
+				List<SimpleModel> lstTopTags = new ArrayList<SimpleModel>();
+				for (int i = 0; i < tags.size(); i++) {
+					com.alibaba.fastjson.JSONObject tag = tags.getJSONObject(i);
+					SimpleModel simpleModel = new SimpleModel();
+					simpleModel.setValue(tag.getString("tag_id"));
+					simpleModel.setLabel(tag.getString("tag_name"));
+					lstTopTags.add(simpleModel);
+				}
+				view.addObject("topTags", lstTopTags);
+				view.addObject("businessId", businessId);
+				view.setViewName("/business_tree.jsp");
+				return view;
+			} else {
+				view.setViewName("/error.jsp");
+				return view;
+			}
 		} catch (Exception e) {
 			MsLogger.error(e);
 		}
@@ -283,13 +304,13 @@ public class BusinessTreeCtrl {
 ////			JSONObject result = manageBusinessService.createBusinessTree(param.toString());
 ////			
 ////			if (!"0".equals(result.getString("code"))) {
-////				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+////				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 ////			} else {
 ////				response.getWriter().print(result.toString());
 ////			}
 ////			response.setStatus(200);
 ////		} catch (Exception e) {
-////			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+////			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 ////			MsLogger.error("Failed to create business", e);
 ////			response.setStatus(200);
 ////		}
@@ -312,13 +333,13 @@ public class BusinessTreeCtrl {
 ////			JSONObject result = manageBusinessService.searchMerchant(jsonObject.toString());
 ////		
 ////			if (!"0".equals(result.getString("code"))) {
-////				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+////				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 ////			} else {
 ////				response.getWriter().print(result.toString());
 ////			}
 ////			response.setStatus(200);
 ////		} catch (Exception e) {
-////			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+////			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 ////			MsLogger.error("Failed to search merchant", e);
 ////			response.setStatus(200);
 ////		}
@@ -330,9 +351,9 @@ public class BusinessTreeCtrl {
 ////		response.setHeader("Access-Control-Allow-Origin", "*");
 ////		response.setContentType("text/html; charset=UTF-8");
 ////		response.setStatus(200);
-////		int businessId = RequestHelper.getInt(request, "business_id");
+////		int businessId = RequestHelper.getInteger(request, "business_id");
 ////		if(businessId < 0) {
-////			response.getWriter().print(JsonUtil.error("-1", "非法业务Id"));
+////			response.getWriter().print(FastJsonUtil.error("-1", "非法业务Id"));
 ////			return;
 ////		}
 ////		
@@ -358,7 +379,7 @@ public class BusinessTreeCtrl {
 ////			JSONObject result = manageBusinessService.updateBusinessById(param.toString());
 ////			response.getWriter().print(result.toString());
 ////		} catch(Exception e) {
-////			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+////			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 ////			MsLogger.error("Failed to update business", e);
 ////		}
 ////		

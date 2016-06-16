@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import ms.luna.biz.bl.RegistBL;
 import ms.luna.biz.sc.RegistService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /** 
  * @author  Greek 
@@ -27,7 +27,7 @@ public class RegistServiceImpl implements RegistService{
 			jSONObject = registBL.registPwUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("102", "注册失败:异常");//直接copy LoginBL代码，“102”是否有特殊含义暂不清楚
+			return FastJsonUtil.error("102", "注册失败:异常");//直接copy LoginBL代码，“102”是否有特殊含义暂不清楚
 		}
 		return jSONObject;
 	}
@@ -40,7 +40,7 @@ public class RegistServiceImpl implements RegistService{
 			jSONObject = registBL.isTokenValid(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1",e.getMessage());//直接copy LoginBL代码，“102”是否有特殊含义暂不清楚
+			return FastJsonUtil.error("-1",e.getMessage());//直接copy LoginBL代码，“102”是否有特殊含义暂不清楚
 		}
 		return jSONObject;
 	}

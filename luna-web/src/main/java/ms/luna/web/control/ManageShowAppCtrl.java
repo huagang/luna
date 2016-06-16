@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
@@ -90,7 +90,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		String appName = RequestHelper.getString(request, "app_name");
-		int businessId = RequestHelper.getInt(request, "business_id");
+		int businessId = RequestHelper.getInteger(request, "business_id");
 		if(businessId < 0) {
 			response.getWriter().print("业务id不合法");
 			return;
@@ -119,11 +119,11 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		
-		int appId = RequestHelper.getInt(request, "app_id");
+		int appId = RequestHelper.getInteger(request, "app_id");
 		String appName = RequestHelper.getString(request, "app_name");
-		int businessId = RequestHelper.getInt(request, "business_id");
+		int businessId = RequestHelper.getInteger(request, "business_id");
 		if(businessId < 0) {
-			response.getWriter().print(JsonUtil.error(-1, "业务Id不合法"));
+			response.getWriter().print(FastJsonUtil.error(-1, "业务Id不合法"));
 			return;
 		}
 		if(! isValidName(appName)) {
@@ -150,7 +150,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		
-		int appId = RequestHelper.getInt(request, "app_id");
+		int appId = RequestHelper.getInteger(request, "app_id");
 		JSONObject jsonObject = JSONObject.parseObject("{}");
 		jsonObject.put("app_id", appId);
 		JSONObject result = manageShowAppService.deleteApp(jsonObject.toString());
