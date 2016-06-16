@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.qcloud.cosapi.api.CosCloud;
@@ -21,11 +22,12 @@ import net.sf.json.JSONObject;
 
 public class COSWrapper {
 
+	private final static Logger logger  = Logger.getLogger(COSWrapper.class);
 	private static String PERMITTED_FILE_TYPES = "(\\.png|\\.bmp|\\.jpg|\\.tiff|\\.gif|\\.pcx|\\.tga|\\.exif|\\.fpx|\\.svg|\\.psd|\\.cdr|\\.pcd|\\.dxf|\\.ufo|\\.eps|\\.ai|\\.raw"
 			+ "|\\.mp3|\\.wav|\\.wma|\\.ogg|\\.ape|\\.acc"
 			+ "|\\.rm|\\.rmvb|\\.avi|\\.mp4|\\.3gp)";
 	
-	
+
 	private static String LOCAL_BUCKET = "/data1/luna/";
 
 	private static COSWrapper cosWrapper = null;
@@ -442,19 +444,24 @@ public class COSWrapper {
 		String retStr = null;
 		try {
 			retStr = COS.getFolderList(bucket, folder, 50, context, 0, FolderPattern.Both);
-		} catch (Exception e1) {
+			logger.debug("cos get folderList ret: " + retStr);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("getFolderList failed", e);
 		}
 		JSONObject ret = JSONObject.fromObject(retStr) ;
-		
+
+		if(ret.getInt("code") != 0) {
+			return;
+		}
+
 		//进入了空目录
 		if(ret.getJSONObject("data").getInt("dircount")==0 && ret.getJSONObject("data").getInt("filecount")==0){
 			try {
 				COS.deleteFolder(bucket, folder) ;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("delete Folder failed", e);
 			}
 			return ;
 		} 	
@@ -472,12 +479,12 @@ public class COSWrapper {
 //				System.out.println("I got a file") ;
 				if(o.has("filesize")){
 					//为文件时
-					System.out.println("delFile: " +folder+fileSeparator+name) ;
+					logger.trace("delFile: " + folder + fileSeparator + name); ;
 					try {
 						COS.deleteFile(bucket, folder+fileSeparator+name) ;
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error("Delete file failed", e);
 					}
 				} else {
 					//为目录时
@@ -496,7 +503,7 @@ public class COSWrapper {
 				retStr = COS.getFolderList(bucket, folder, 50, context, 0, FolderPattern.Both) ;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Delete folder failed", e);
 			}
 			ret = JSONObject.fromObject(retStr) ;
 			
@@ -508,10 +515,8 @@ public class COSWrapper {
 			COS.deleteFolder(bucket, folder) ;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Delete folder failed", e);
 		}
-		
-		
 		
 		return  ;
 	}

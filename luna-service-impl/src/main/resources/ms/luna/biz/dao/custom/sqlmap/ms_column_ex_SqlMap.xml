@@ -1,3 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
-<sqlMap namespace="ms_column" />
+<sqlMap namespace="ms_column">
+    <resultMap id="MsColumnResult" class="ms.luna.biz.dao.custom.model.MsColumnResult">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+        <result column="regist_hhmmss" property="registhhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="up_hhmmss" property="uphhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="selectColumnWithFilter" resultMap="MsColumnResult"
+            parameterClass="ms.luna.biz.dao.custom.model.MsColumnParameter">
+        SELECT
+        a.id id,
+        a.name name,
+        a.code code,
+        b.nm_zh categoryName,
+        a.regist_hhmmss regist_hhmmss,
+        a.up_hhmmss up_hhmmss
+        FROM
+        ms_column a left join ms_category b on a.category_id = b.category_id
+        <dynamic prepend="where">
+            <isNotEmpty prepend="and" property="keyword">
+                a.name like #keyword#
+            </isNotEmpty>
+        </dynamic>
+        order by a.regist_hhmmss desc
+        <isEqual property="range" compareValue="true">
+            Limit #min#, #max#
+        </isEqual>
+
+    </select>
+</sqlMap>

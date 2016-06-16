@@ -3,7 +3,7 @@
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
       <html>
-        
+
         <head>
           <meta charset="utf-8" />
           <meta name="renderer" content="webkit" />
@@ -38,7 +38,7 @@
 	        var host="<%=request.getContextPath()%>";
       	  </script>
         </head>
-        
+
         <body ng-app="showPage">
 
           <!-- 可视化界面顶部导航 -->
@@ -54,7 +54,7 @@
                   <i class="icon icon-comp-img"></i><br/>
                   <span>图片</span>
                 </div>
-                <div class="component-btn" id="">
+                <div class="component-btn" id="shapeComponentGroup">
                   <i class="icon icon-comp-shape"></i><br/>
                   <span>形状</span>
                 </div>
@@ -66,11 +66,11 @@
                   <i class="icon icon-comp-nav"></i><br/>
                   <span>导航</span>
                 </div>
-                <div class="component-btn" id="">
+                <div class="component-btn" id="audioComponent">
                   <i class="icon icon-comp-audio"></i><br/>
                   <span>音频</span>
                 </div>
-                <div class="component-btn" id="">
+                <div class="component-btn" id="moreComponents">
                   <i class="icon icon-comp-more"></i><br/>
                   <span>更多</span>
                 </div>
@@ -140,7 +140,7 @@
                           	<span class="or hide">或</span>
                           	<input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()"/>
                           	<input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="pic" />
-                        	
+
                         	<button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景</button>
                         </form>
                       </label>
@@ -237,44 +237,52 @@
                         </div>
                       </div>
                       <div id="editor" contenteditable="true" placeholder="请输入文字">
-                        
+
                       </div>
                       <!-- <textarea id="editor" ng-model="text.currentComponent.content" ng-change="text.changeContent()"></textarea> -->
                     </div>
                   </div>
                   <!-- 交互样式 -->
-                  <div id="interaction" class="interaction" ng-show="text.tabs.interact.content">
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="none" ng-click="text.clearHref()"/>无链接</label>
-                    </div>
-                    <div class="item">
-                      <label for="addr">
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                        <input type="text" class="txt" id="addr" ng-model="text.action.href.outerValue" ng-change="text.changeOuterHref()" ng-disabled="text.currentComponent.action.href.type != 'outer'"/>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="inner" ng-click="text.loadPages()"/>微展页面：
-                        </label><br/>
-                        <select class="select" ng-model="text.action.href.innerValue" ng-change="text.changeInnerHref()" ng-disabled="text.currentComponent.action.href.type != 'inner'">
-                          <option ng-repeat="option in text.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
-                        </select>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
-                        <input type="text" class="txt" ng-model="text.action.href.email" ng-change="text.changeEmail()" ng-disabled="text.currentComponent.action.href.type != 'email'"/>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
-                        <input type="text" class="txt" ng-model="text.action.href.phone" ng-change="text.changePhone()" ng-disabled="text.currentComponent.action.href.type != 'phone'"/>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
-                    </div>
+                  <div class="interaction" ng-show="text.tabs.interact.content">
+                    <form name="textInteractForm">
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="none" ng-click="text.clearHref()"/>无链接</label>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                          <input type="url" class="txt" name="outerValue" ng-model="text.action.href.outerValue" ng-change="text.changeOuterHref()" ng-disabled="text.currentComponent.action.href.type != 'outer'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="textInteractForm.outerValue.$error.url">url格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="inner" ng-click="text.loadPages()"/>微展页面：
+                          </label><br/>
+                          <select class="select" ng-model="text.action.href.innerValue" ng-change="text.changeInnerHref()" ng-disabled="text.currentComponent.action.href.type != 'inner'">
+                            <option ng-repeat="option in text.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
+                          </select>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                          <input type="email" class="txt" name="email" ng-model="text.action.href.email" ng-change="text.changeEmail()" ng-disabled="text.currentComponent.action.href.type != 'email'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="textInteractForm.email.$error.email">email格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                          <input type="text" class="txt" ng-model="text.action.href.phone" ng-change="text.changePhone()" ng-disabled="text.currentComponent.action.href.type != 'phone'"/>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                      </div>
+                    </form>
                   </div>
                   <!-- 交互样式 -->
                 </div>
@@ -283,13 +291,13 @@
                 <div id="imgDiv" ng-controller="imgController as img">
                   <button id="initImg" ng-click="img.init()" class="ng-hide">Init</button>
                   <button id="updateImg" ng-click="img.update()" class="ng-hide">Update</button>
-                  <div id="control-style">
+                  <div>
                     <div class="menu-control menu-control-wrap">
-                      <a href="#" class="style" ng-class="img.tabs.style.tab" id="style" ng-click="img.changeTab('style')">样式</a>
-                      <a href="#" class="interact" ng-class="img.tabs.interact.tab" id="interact" ng-click="img.changeTab('interact')">交互</a>
+                      <a href="#" class="style" ng-class="img.tabs.style.tab" ng-click="img.changeTab('style')">样式</a>
+                      <a href="#" class="interact" ng-class="img.tabs.interact.tab" ng-click="img.changeTab('interact')">交互</a>
                     </div>
                   </div>
-                  <div id="bg-control" ng-show="img.tabs.style.content">
+                  <div ng-show="img.tabs.style.content">
                     <!-- 模块大小位置 -->
                     <div class="position">
                       <h2>大小和位置</h2>
@@ -308,7 +316,7 @@
                           <input ttype="number" ng-model="img.currentComponent.height" ng-blur="img.changeHeight()" />px</li></ul>
                     </div>
                     <!-- 模块大小位置-->
-                    <div class="bg-set" id="bg-set-img">
+                    <div class="bg-set">
                      <h2>图片数据填充：</h2>
                       <form id="page_pic_id" name="page_pic_id" method="post" enctype="multipart/form-data">
                         <button class="btn btn-local">本地上传</button>
@@ -326,40 +334,62 @@
                     </div>
                   </div>
                   <!-- 交互样式 -->
-                  <div id="interaction" class="interaction" ng-show="img.tabs.interact.content">
-                    <div class="item">
-                      <label for="addr">
-                        <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                        <input type="text" class="txt" id="addr" ng-model="img.action.href.outerValue" ng-blur="img.changeOuterHref()" ng-disabled="img.currentComponent.action.href.type != 'outer'"/></div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="inner" ng-click="img.loadPages()"/>微展页面：
+                  <div class="interaction" ng-show="img.tabs.interact.content">
+                    <form name="imgInteractForm">
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="none" ng-click="img.clearHref()"/>无链接</label>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                        <input type="url" class="txt" name="outerValue" ng-model="img.action.href.outerValue" ng-change="img.changeOuterHref()" ng-disabled="img.currentComponent.action.href.type != 'outer'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="imgInteractForm.outerValue.$error.url">url格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="inner" ng-click="img.loadPages()"/>微展页面：
                         </label><br/>
                         <select class="select" ng-model="img.action.href.innerValue" ng-change="img.changeInnerHref()" ng-disabled="img.currentComponent.action.href.type != 'inner'">
                           <option ng-repeat="option in img.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
                         </select>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="none" ng-click="img.clearHref()"/>无链接</label>
-                    </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                        <input type="email" class="txt" name="email" ng-model="img.action.href.email" ng-change="img.changeEmail()" ng-disabled="img.currentComponent.action.href.type != 'email'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="imgInteractForm.email.$error.email">email格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                        <input type="text" class="txt" ng-model="img.action.href.phone" ng-change="img.changePhone()" ng-disabled="img.currentComponent.action.href.type != 'phone'"/>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                      </div>
+                    </form>
                   </div>
                   <!-- 交互样式 -->
                 </div>
                 <!-- img controller end -->
 
-
                 <!-- nav controller begin -->
                 <div id="navDiv" ng-controller="navController as nav">
                   <button id="initNav" ng-click="nav.init()" class="ng-hide">Init</button>
                   <button id="updateNav" ng-click="nav.update()" class="ng-hide">Update</button>
-                  <div id="control-style">
+                  <div>
                     <div class="menu-control menu-control-wrap">
                       <a href="#" class="style" ng-class="nav.tabs.style.tab" id="style" ng-click="nav.changeTab('style')">样式</a>
                       <a href="#" class="interact" ng-class="nav.tabs.interact.tab" id="interact" ng-click="nav.changeTab('interact')">交互</a>
                     </div>
                   </div>
-                  <div id="bg-control" ng-show="nav.tabs.style.content">
+                  <div ng-show="nav.tabs.style.content">
                     <!-- 模块大小位置 -->
                     <div class="position">
                       <h2>大小和位置</h2>
@@ -381,7 +411,7 @@
                     <div class="bg-set" id="bg-set-img">
                      <h2>位置图标：(文件格式：jpg，png，gif)</h2>
                       <form id="nav_icon" name="nav_icon" method="post" enctype="multipart/form-data">
-                        <button class="btn btn-local">上传</button>      
+                        <button class="btn btn-local">上传</button>
                         <input class="img-url hide" id="nav_icon_img" placeholder="输入图片url地址" ng-model="nav.content.icon" ng-blur="nav.changeIcon()" />
                         <input type="file" onchange="async_upload_pic('nav_icon','',true,'',this,'nav_icon_img');" class="file file-local" id="upload-model" name="pic" />
                       </form>
@@ -398,119 +428,234 @@
                           线路起点名称：<input type="text" name="startName" placeholder="输入线路起点中文名称" ng-model="nav.content.startName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeStartName()">
                           <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.required">起点名称长度不合法（请输入2-10个字符）</span>
                           <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.minlength">起点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-10个字符）</span>                       
+                          <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-10个字符）</span>
                         </div>
                         <div class="ng-hide" ng-show="nav.currentComponent.navType">
                           线路起点坐标：<input type="text" name="startPosition" placeholder="34.000000,180.890000" ng-model="nav.content.startPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeStartPosition()">
                           <span ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.required">起点坐标不能为空</span>
-                          <span ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.pattern">起点坐标格式不合法</span> 
+                          <span ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.pattern">起点坐标格式不合法</span>
                         </div>
                         <div>
                           线路终点名称：<input type="text" name="endName" placeholder="输入线路终点中文名称" ng-model="nav.content.endName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeEndName()">
                           <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.required">终点名称长度不合法（请输入2-10个字符）</span>
                           <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.minlength">终点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-10个字符）</span>    
+                          <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-10个字符）</span>
                         </div>
                         <div>
                           线路终点坐标：<input type="text" name="endPosition" placeholder="34.000000,180.890000" ng-model="nav.content.endPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeEndPosition()">
                           <span ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.required">终点坐标不能为空</span>
-                          <span ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.pattern">终点坐标格式不合法</span> 
+                          <span ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.pattern">终点坐标格式不合法</span>
                         </div>
                       </form>
                     </div>
                   </div>
                   <!-- 交互样式 -->
-                  <div id="interaction" class="interaction" ng-show="nav.tabs.interact.content">
-                    <div class="item">
-                      <label for="addr">
-                        <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                        <input type="text" class="txt" id="addr" ng-model="nav.action.href.outerValue" ng-blur="nav.changeOuterHref()" ng-disabled="nav.currentComponent.action.href.type != 'outer'"/></div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="inner" ng-click="nav.loadPages()"/>微展页面：
+                  <div class="interaction" ng-show="nav.tabs.interact.content">
+                    <form name="navInteractForm">
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="none" ng-click="nav.clearHref()"/>无链接</label>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                        <input type="url" class="txt" name="outerValue" ng-model="nav.action.href.outerValue" ng-change="nav.changeOuterHref()" ng-disabled="nav.currentComponent.action.href.type != 'outer'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="navInteractForm.outerValue.$error.url">url格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="inner" ng-click="nav.loadPages()"/>微展页面：
                         </label><br/>
                         <select class="select" ng-model="nav.action.href.innerValue" ng-change="nav.changeInnerHref()" ng-disabled="nav.currentComponent.action.href.type != 'inner'">
                           <option ng-repeat="option in nav.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
                         </select>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="none" ng-click="nav.clearHref()"/>无链接</label>
-                    </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                        <input type="email" class="txt" name="email" ng-model="nav.action.href.email" ng-change="nav.changeEmail()" ng-disabled="nav.currentComponent.action.href.type != 'email'"/>
+                        <div role="alert">
+                          <span class="error" ng-show="navInteractForm.email.$error.email">email格式不合法</span>
+                        </div>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                        <input type="text" class="txt" ng-model="nav.action.href.phone" ng-change="nav.changePhone()" ng-disabled="nav.currentComponent.action.href.type != 'phone'"/>
+                      </div>
+                      <div class="item">
+                        <label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                      </div>
+                    </form>
                   </div>
                   <!-- 交互样式 -->
                 </div>
                 <!-- nav controller end -->
 
                 <!-- pano controller begin -->
-                <div id="panoDiv" ng-controller="panoController as pano">
-                  <button id="initPano" ng-click="pano.init()" class="ng-hide">Init</button>
-                  <button id="updatePano" ng-click="pano.update()" class="ng-hide">Update</button>
-                  <div id="control-style">
-                    <div class="menu-control menu-control-wrap">
-                      <a href="#" class="style" ng-class="pano.tabs.style.tab" id="style" ng-click="pano.changeTab('style')">样式</a>
-                      <a href="#" class="interact" ng-class="pano.tabs.interact.tab" id="interact" ng-click="pano.changeTab('interact')">交互</a>
-                    </div>
+                  <div id="panoDiv" ng-controller="panoController as pano">
+                      <button id="initPano" ng-click="pano.init()" class="ng-hide">Init</button>
+                      <button id="updatePano" ng-click="pano.update()" class="ng-hide">Update</button>
+                      <div>
+                          <div class="menu-control menu-control-wrap">
+                              <a href="#" class="style" ng-class="pano.tabs.style.tab" id="style" ng-click="pano.changeTab('style')">样式</a>
+                              <a href="#" class="interact" ng-class="pano.tabs.interact.tab" id="interact" ng-click="pano.changeTab('interact')">交互</a>
+                          </div>
+                      </div>
+                      <div ng-show="pano.tabs.style.content">
+                          <!-- 模块大小位置 -->
+                          <div class="position">
+                              <h2>大小和位置</h2>
+                              <ul class="list-pos">
+                                  <li>
+                                      <span>X</span>
+                                      <input type="number" ng-model="pano.currentComponent.x" ng-blur="pano.changeX()" />px</li>
+                                  <li>
+                                      <span>Y</span>
+                                      <input type="number" ng-model="pano.currentComponent.y" ng-blur="pano.changeY()" />px</li>
+                                  <li>
+                                      <span>宽</span>
+                                      <input type="number" ng-model="pano.currentComponent.width" ng-blur="pano.changeWidth()" />px</li>
+                                  <li>
+                                      <span>高</span>
+                                      <input ttype="number" ng-model="pano.currentComponent.height" ng-blur="pano.changeHeight()" />px</li></ul>
+                          </div>
+                          <!-- 模块大小位置-->
+                          <div class="bg-set">
+                              <h2>全景图片：(文件格式：jpg，png，gif)</h2>
+                              <form id="pano_icon" name="pano_icon" method="post" enctype="multipart/form-data">
+                                  <button class="btn btn-local">上传</button>
+                                  <input class="img-url hide" id="pano_icon_img" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />
+                                  <input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />
+                              </form>
+                          </div>
+                          <div class="bg-set">
+                              <h2>全景数据</h2>
+                              <form name="panoInfoForm">
+                                  <div>
+                                      全景ID：<input type="text" name="panoId" placeholder="输入全景Id" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()">
+                                      <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required">全景Id不能为空</span>
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                      <!-- 交互样式 -->
+                      <div class="interaction" ng-show="pano.tabs.interact.content">
+                          <form name="panoInteractForm">
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="none" ng-click="pano.clearHref()"/>无链接</label>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                  <input type="url" class="txt" name="outerValue" ng-model="pano.action.href.outerValue" ng-change="pano.changeOuterHref()" ng-disabled="pano.currentComponent.action.href.type != 'outer'"/>
+                                  <div role="alert">
+                                      <span class="error" ng-show="panoInteractForm.outerValue.$error.url">url格式不合法</span>
+                                  </div>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="inner" ng-click="pano.loadPages()"/>微展页面：
+                                  </label><br/>
+                                  <select class="select" ng-model="pano.action.href.innerValue" ng-change="pano.changeInnerHref()" ng-disabled="pano.currentComponent.action.href.type != 'inner'">
+                                      <option ng-repeat="option in pano.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
+                                  </select>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                  <input type="email" class="txt" name="email" ng-model="pano.action.href.email" ng-change="pano.changeEmail()" ng-disabled="pano.currentComponent.action.href.type != 'email'"/>
+                                  <div role="alert">
+                                      <span class="error" ng-show="panoInteractForm.email.$error.email">email格式不合法</span>
+                                  </div>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                  <input type="text" class="txt" ng-model="pano.action.href.phone" ng-change="pano.changePhone()" ng-disabled="pano.currentComponent.action.href.type != 'phone'"/>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                              </div>
+                          </form>
+                      </div>
+                      <!-- 交互样式 -->
                   </div>
-                  <div id="bg-control" ng-show="pano.tabs.style.content">
-                    <!-- 模块大小位置 -->
-                    <div class="position">
-                      <h2>大小和位置</h2>
-                      <ul class="list-pos">
-                        <li>
-                          <span>X</span>
-                          <input type="number" ng-model="pano.currentComponent.x" ng-blur="pano.changeX()" />px</li>
-                        <li>
-                          <span>Y</span>
-                          <input type="number" ng-model="pano.currentComponent.y" ng-blur="pano.changeY()" />px</li>
-                        <li>
-                          <span>宽</span>
-                          <input type="number" ng-model="pano.currentComponent.width" ng-blur="pano.changeWidth()" />px</li>
-                        <li>
-                          <span>高</span>
-                          <input ttype="number" ng-model="pano.currentComponent.height" ng-blur="pano.changeHeight()" />px</li></ul>
-                    </div>
-                    <!-- 模块大小位置-->
-                    <div class="bg-set" id="bg-set-img">
-                     <h2>全景图片：(文件格式：jpg，png，gif)</h2>
-                      <form id="pano_icon" name="pano_icon" method="post" enctype="multipart/form-data">
-                        <button class="btn btn-local">上传</button>      
-                        <input class="img-url hide" id="pano_icon_img" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />
-                        <input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />
-                      </form>
-                    </div>
-                    <div class="bg-set">
-                      <h2>全景数据</h2>
-                      <form name="panoInfoForm">
-                        <div>
-                            全景ID：<input type="text" name="panoId" placeholder="输入全景Id" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()">
-                            <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required">全景Id不能为空</span>  
-                        </div>
-                      </form>
-                    </div>           
+                  <!-- pano controller end -->
+
+                  <!-- audio controller begin -->
+                  <div id="audioDiv" ng-controller="audioController as audio">
+                      <button id="initAudio" ng-click="audio.init()" class="ng-hide">Init</button>
+                      <button id="updateAudio" ng-click="audio.update()" class="ng-hide">Update</button>
+                      <div>
+                          <div class="menu-control menu-control-wrap">
+                              <a href="#" class="style" ng-class="audio.tabs.style.tab" ng-click="audio.changeTab('style')">样式</a>
+                              <a href="#" class="interact" ng-class="audio.tabs.interact.tab" ng-click="audio.changeTab('interact')">交互</a>
+                          </div>
+                      </div>
+                      <div ng-show="audio.tabs.style.content">
+                          <!-- 模块大小位置 -->
+                          <div class="position">
+                              <h2>大小和位置</h2>
+                              <ul class="list-pos">
+                                  <li>
+                                      <span>X</span>
+                                      <input type="number" ng-model="audio.currentComponent.x" ng-blur="audio.changeX()" />px</li>
+                                  <li>
+                                      <span>Y</span>
+                                      <input type="number" ng-model="audio.currentComponent.y" ng-blur="audio.changeY()" />px</li>
+                                  <li>
+                                      <span>宽</span>
+                                      <input type="number" ng-model="audio.currentComponent.width" ng-blur="audio.changeWidth()" />px</li>
+                                  <li>
+                                      <span>高</span>
+                                      <input ttype="number" ng-model="audio.currentComponent.height" ng-blur="audio.changeHeight()" />px</li></ul>
+                          </div>
+                          <!-- 模块大小位置-->
+                          <div class="bg-set">
+                              <h2>音频设置</h2>
+                              <%--<form id="audioFileForm" name="audioFileForm" method="post" enctype="multipart/form-data">--%>
+                                  <%--<button class="btn btn-local">上传</button>--%>
+                                  <%--<input class="img-url hide" id="audioFile" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />--%>
+                                  <%--<input type="file" onchange="async_upload_audioVideo('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />--%>
+                              <%--</form>--%>
+
+                              <%--<form id="audioPlayIconForm" name="audioPlayIconForm" method="post" enctype="multipart/form-data">--%>
+                                  <%--<button class="btn btn-local">上传</button>--%>
+                                  <%--<input class="img-url hide" id="audioPlayIcon" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />--%>
+                                  <%--<input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />--%>
+                              <%--</form>--%>
+
+                              <%--<form id="audioPauseIconForm" name="audioPauseIconForm" method="post" enctype="multipart/form-data">--%>
+                                  <%--<button class="btn btn-local">上传</button>--%>
+                                  <%--<input class="img-url hide" id="audioPauseIcon" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />--%>
+                                  <%--<input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />--%>
+                              <%--</form>--%>
+
+                          </div>
+                          <div class="bg-set">
+                              <span>音频是否自动播放：
+                                  <input type="radio" name="autoPlay" class="radio" value="0" />是
+                                  <input type="radio" name="autoPlay" class="radio" value="1" />否
+                              </span>
+                              <span>音频是否循环播放：
+                                  <input type="radio" name="loopPlay" class="radio" value="0" />是
+                                  <input type="radio" name="loopPlay" class="radio" value="1" />否
+                              </span>
+                          </div>
+                      </div>
+                      <!-- 交互样式 -->
+                      <div class="interaction" ng-show="audio.tabs.interact.content">
+
+                      </div>
+                      <!-- 交互样式 -->
                   </div>
-                  <!-- 交互样式 -->
-                  <div id="interaction" class="interaction" ng-show="pano.tabs.interact.content">
-                    <div class="item">
-                      <label for="addr">
-                        <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                        <input type="text" class="txt" id="addr" ng-model="pano.action.href.outerValue" ng-blur="pano.changeOuterHref()" ng-disabled="pano.currentComponent.action.href.type != 'outer'"/></div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="inner" ng-click="pano.loadPages()"/>微展页面：
-                        </label><br/>
-                        <select class="select" ng-model="pano.action.href.innerValue" ng-change="pano.changeInnerHref()" ng-disabled="pano.currentComponent.action.href.type != 'inner'">
-                          <option ng-repeat="option in pano.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
-                        </select>
-                    </div>
-                    <div class="item">
-                      <label>
-                        <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="none" ng-click="pano.clearHref()"/>无链接</label>
-                    </div>
-                  </div>
-                  <!-- 交互样式 -->
-                </div>
-                <!-- pano controller end -->
+                  <!-- audio controller end -->
                 </div>
               </div>
             <!-- 控制面板管理 end-->
@@ -599,7 +744,7 @@
           <!-- 删除页面弹出层 -->
           <div class="pop" id="pop-delete">
             <div class="pop-title">
-              <h4>删除</h4>             
+              <h4>删除</h4>
               <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
             </div>
             <div class="pop-cont">
@@ -628,7 +773,7 @@
 		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
-            <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
+          <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
         <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>

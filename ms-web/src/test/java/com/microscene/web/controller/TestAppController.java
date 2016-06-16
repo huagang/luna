@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
  *
- * @Author: chenshangan@microscene.com
+ * @Author: shawn@visualbusiness.com
  * @Date: 2016-05-24
  */
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ms.luna.biz.table.MsBusinessTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,7 @@ public class MsBusinessDAOImpl extends MsBusinessDAOBaseImpl implements MsBusine
 		// TODO Auto-generated method stub
 		int count = 0;
 		try{
-			String selectSql = String.format("select count(*) from %s", TABLE_NAME);
+			String selectSql = String.format("select count(*) from %s", MsBusinessTable.TABLE_NAME);
 			Connection connection = getDataSource().getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(selectSql);

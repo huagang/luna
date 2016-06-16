@@ -1,4 +1,4 @@
-package ms.biz.common;
+package ms.luna.biz.cons;
 
 public class ErrorCode {
 	

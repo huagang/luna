@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import ms.luna.biz.table.MsBusinessTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -19,7 +20,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import ms.biz.common.CommonQueryParam;
-import ms.biz.common.ErrorCode;
+import ms.luna.biz.cons.ErrorCode;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageShowAppBL;
 import ms.luna.biz.cons.VbConstant.MsShowAppConfig;
@@ -100,7 +101,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 					row.put(MsShowAppDAO.FIELD_OWNER, result.getOwner());
 					row.put(MsShowAppDAO.FIELD_APP_STATUS, result.getAppStatus());
 					row.put(MsShowAppDAO.FIELD_BUSINESS_ID, result.getBusinessId());
-					row.put(MsBusinessDAO.FIELD_BUSINESS_NAME, result.getBusinessName() == null ? "" : result.getBusinessName());
+					row.put(MsBusinessTable.FIELD_BUSINESS_NAME, result.getBusinessName() == null ? "" : result.getBusinessName());
 					rows.add(row);
 				}
 				data.put("rows", rows);
@@ -201,7 +202,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	}
 	
 	/**
-	 * 需要考虑是否真删除，真删除还需要删除相关的微景资源,目前是非真删除
+	 * 需要考虑是否真删除，真删除还需要删除相关的微景资源，目前使用真删除
 	 * @param json
 	 * @return
 	 */
@@ -216,6 +217,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		try {
 			msShowAppDAO.deleteByPrimaryKey(appId);
 			msShowPageDAO.deletePagesByAppId(appId);
+			deleteCosResource(appId);
 		} catch (Exception e) {
 			logger.error("Failed to delete app: " + json, e);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除微景展失败");
@@ -307,13 +309,12 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		}
 		return FastJsonUtil.sucess("", false);
 	}
-	
+
 	/**
 	 * 发布步骤：
-	 * 发布微景展静态内容
 	 * 变更数据表中业务当前使用的微景展
-	 * copy当前微景展内容到应用对应的目录下 ？？（需要保持访问路径不变，软连跳转不太友好，拷贝操作又有些重）
-	 * 
+	 * 生成二维码
+	 *
 	 */
 	public JSONObject publishApp(String json) {
 		
@@ -395,6 +396,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	private void generateHtml2Cos(int appId) {
 		
 		MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+		if(msShowApp == null) {
+			return;
+		}
 		List<MsShowPage> msShowPages = msShowPageDAO.readAllPageDetailByAppId(appId);
 		String appCode = msShowApp.getAppCode();
 		String indexFileName = "index.html";
@@ -425,6 +429,17 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		}
 	}
 
+	private String getAppCosDir(int appId) {
+		String appDir = String.format("/%s/app/%d", COSUtil.getLunaH5RootPath(), appId);
+		return appDir;
+	}
+
+	private String getAppImgCosDir(int appId) {
+		String imgDir = COSUtil.getLunaImgRootPath() + "/" + appId;
+		return imgDir;
+	}
+
+
 	@Override
 	public JSONObject generateShowApp(int appId) {
 		// TODO Auto-generated method stub
@@ -443,7 +458,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
-		String appDir = String.format("/%s/app/%s", COSUtil.getLunaH5RootPath(), msShowApp.getAppCode());
+		String appDir = getAppCosDir(appId);
 		String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
 		
 		if(StringUtils.isBlank(qrImgUrl)) {
@@ -454,10 +469,13 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		return FastJsonUtil.sucess("", data);
 	}
 	
-	private void deleteCosResource(String appCode) {
-		String appDir = String.format("/%s/app/%s", COSUtil.getLunaH5RootPath(), appCode);
-//		COSUtil.getInstance().deleteRecursive();
-		
+	private void deleteCosResource(int appId) {
+
+		// 删除cos上的文件夹，路径结尾需要分割符，否则不报错，但是不会删除
+		String appDir = getAppCosDir(appId) + "/";
+		COSUtil.getInstance().deleteDirRecursive(appDir);
+		String imgDir = getAppImgCosDir(appId) + "/";
+		COSUtil.getInstance().deleteDirRecursive(imgDir);
 	}
 	
 	private String generateQR(String url, String cosDir, String cosFileName) {
@@ -508,7 +526,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		
-		int appId = FastJsonUtil.getInteger(jsonObject, MsBusinessDAO.FIELD_APP_ID, -1);
+		int appId = FastJsonUtil.getInteger(jsonObject, MsBusinessTable.FIELD_APP_ID, -1);
 		if(appId < 0) {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}

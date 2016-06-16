@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,11 @@ public class UploadCtrl {
 	private Set<String> validFileExtention;
 	
 	public UploadCtrl() {
-		// TODO Auto-generated constructor stub
+
+	}
+
+	@PostConstruct
+	public void init() {
 		validFileExtention = new HashSet<>();
 		validFileExtention.add("jpg");
 		validFileExtention.add("jpeg");
@@ -50,13 +55,13 @@ public class UploadCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 
 		if (file == null || file.isEmpty()) {
-			response.getWriter().print(JsonUtil.error("-1", "file can not be empty"));
+			response.getWriter().print(JsonUtil.error("-1", "文件不能为空"));
 			response.setStatus(200);
 			return;
 		}
 		// 文件太大超过预定的10M
 		if (file.getSize() > COSUtil.图片上传大小分界线1M) {
-			response.getWriter().print(JsonUtil.error("-1", "file is too large( size > 1M)"));
+			response.getWriter().print(JsonUtil.error("-1", "文件大小不能超过1M"));
 			response.setStatus(200);
 			return;
 		}
@@ -64,14 +69,14 @@ public class UploadCtrl {
 		String fileName = file.getOriginalFilename();
 		int point = fileName.lastIndexOf(".");
 		if (point == -1 || point == fileName.length()-1) {
-			response.getWriter().print(JsonUtil.error("-1", "extension name is not correct"));
+			response.getWriter().print(JsonUtil.error("-1", "文件类型不正确"));
 			response.setStatus(200);
 			return;
 		}
 		String extName = fileName.substring(point+1);
 		extName = extName.toLowerCase();
 		if (extName.length() == 0 || (! validFileExtention.contains(extName))) {
-			response.getWriter().print(JsonUtil.error("-1", "extension must be jpg or png"));
+			response.getWriter().print(JsonUtil.error("-1", "文件类型必须是" + validFileExtention.toString()));
 			response.setStatus(200);
 			return;
 		}

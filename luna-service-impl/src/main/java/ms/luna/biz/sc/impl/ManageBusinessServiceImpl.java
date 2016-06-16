@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ms.biz.common.ErrorCode;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.util.FastJsonUtil;

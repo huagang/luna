@@ -26,7 +26,7 @@
 	           	<c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','luna_admin','luna_operator','merchant_admin')}">
 	           		<ms:a cssClass="${sessionScope.menu_selected=='manage_business'}" href="${basePath}/manage/business.do?method=init" value="业务管理"></ms:a>
 	            </c:if>
-	          </dl>
+			  </dl>
           </c:if>
           <c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','luna_admin','luna_operator','merchant_operator','merchant_admin')}">
           	<dl class="menu-box">
@@ -39,6 +39,13 @@
 	            <c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','luna_admin','luna_operator','merchant_admin')}">
 	           		<ms:a cssClass="${sessionScope.menu_selected=='crm'}" href="${basePath}/manage_merchant.do?method=init" value="CRM管理"></ms:a>
 	            </c:if>
+				<c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','luna_admin','luna_operator','merchant_admin')}">
+					<ms:a cssClass="${sessionScope.menu_selected=='manage_column'}" href="${basePath}/manage/column.do?method=init" value="栏目管理"></ms:a>
+				</c:if>
+				<c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','luna_admin','luna_operator','merchant_admin')}">
+					<ms:a cssClass="${sessionScope.menu_selected=='manage_article'}" href="${basePath}/manage/article.do?method=init" value="内容管理"></ms:a>
+				</c:if>
+
 	          </dl>
           </c:if>
           <c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','merchant_admin','luna_admin','luna_operator','poi_admin','poi_operator')}">
@@ -55,5 +62,6 @@
 	             	</c:if>
 	          </dl>
           </c:if>
+
        </div>
        <!--侧边菜单 end-->

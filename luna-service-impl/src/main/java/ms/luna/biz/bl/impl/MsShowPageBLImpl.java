@@ -21,7 +21,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 
 import ms.biz.common.AuthenticatedUserHolder;
-import ms.biz.common.ErrorCode;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.MsShowPageBL;
 import ms.luna.biz.dao.custom.MsShowPageDAO;
 import ms.luna.biz.dao.custom.model.MsShowPage;
@@ -55,7 +55,7 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 	
 	@Override
 	public JSONObject getAllPageSummary(int appId) {
-		// TODO Auto-generated method stub
+		// TODO: should check if the app exist
 		List<MsShowPage> msShowPages = msShowPageDAO.readAllPageSummaryByAppId(appId, summaryFields);
 		if(msShowPages != null) {
 			Map<String, MsShowPage> pageId2Page = new LinkedHashMap<>(msShowPages.size());

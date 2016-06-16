@@ -31,5 +31,7 @@
 	<dubbo:service interface="ms.luna.biz.sc.ShowPageComponentService" ref="showPageComponentService" />
 	<dubbo:service interface="ms.luna.biz.sc.VodPlayService" ref="vodPlayService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageBusinessTreeService" ref="manageBusinessTreeService" />
+	<dubbo:service interface="ms.luna.biz.sc.ManageColumnService" ref="manageColumnService" />
+	<dubbo:service interface="ms.luna.biz.sc.ManageArticleService" ref="manageArticleService" />
 
 </beans>

@@ -5,7 +5,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
  *
- * @Author: chenshangan@microscene.com
+ * @Author: shawn@visualbusiness.com
  * @Date: 2016-05-24
  */
 public class BaseController {
