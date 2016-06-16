@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ms.luna.biz.sc.LoginService;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 @Component
 @Controller
@@ -41,25 +41,25 @@ public class LoginCtrl {
 
 			String params = IOUtils.toString(in, "UTF-8");
 
-			JSONObject jsonParam = JSONObject.fromObject(params);
+			JSONObject jsonParam = JSONObject.parseObject(params);
 
 			String username = jsonParam.getString("username");
 			String password = jsonParam.getString("password");
 
 			// check luna_name
 			JSONObject jsonNickNm = CharactorUtil.checkNickNm(username);
-			String nickCode = JsonUtil.getString(jsonNickNm, "code");
+			String nickCode = FastJsonUtil.getString(jsonNickNm, "code");
 			if (!"0".equals(nickCode)) {
-				response.getWriter().print(JsonUtil.error("-1", "user or passsword is invalid"));
+				response.getWriter().print(FastJsonUtil.error("-1", "user or passsword is invalid"));
 				response.setStatus(200);
 				return;
 			}
 
 			// check密码
 			JSONObject jsonPw = CharactorUtil.checkPw(password);
-			String pwCode = JsonUtil.getString(jsonPw, "code");
+			String pwCode = FastJsonUtil.getString(jsonPw, "code");
 			if (!"0".equals(pwCode)) {
-				response.getWriter().print(JsonUtil.error("-1", "user or passsword is invalid"));
+				response.getWriter().print(FastJsonUtil.error("-1", "user or passsword is invalid"));
 				response.setStatus(200);
 				return;
 			}
@@ -69,7 +69,7 @@ public class LoginCtrl {
 			 * @param json
 			 * @return {code, msg, data{luna_name, wjid, regist_time}}
 			 */
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("luna_name", username);
 			param.put("pw", password);
 			param.put("ipaddress", VbUtility.getRemortIP(request));

@@ -1,11 +1,8 @@
 package ms.luna.biz.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.springframework.web.multipart.MultipartFile;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class COSUtil {
 	public static final long 图片上传大小分界线1M = 1024*1024;

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import ms.luna.biz.bl.PulldownBL;
 import ms.luna.biz.sc.PulldownService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Mark
@@ -26,7 +26,7 @@ public class PulldownServiceImpl implements PulldownService {
 			result = pulldownBL.loadCoutrys();
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -38,7 +38,7 @@ public class PulldownServiceImpl implements PulldownService {
 			result = pulldownBL.loadProvinces(countryId);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -50,7 +50,7 @@ public class PulldownServiceImpl implements PulldownService {
 			result = pulldownBL.loadCitys(provinceId);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -62,7 +62,7 @@ public class PulldownServiceImpl implements PulldownService {
 			result = pulldownBL.loadCategorys();
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -74,7 +74,7 @@ public class PulldownServiceImpl implements PulldownService {
 //			result = pulldownBL.loadRegions(json);
 //		} catch (RuntimeException e) {
 //			MsLogger.logger(e);
-//			return JsonUtil.error("-1", e);
+//			return FastJsonUtil.error("-1", e);
 //		}
 //		return result;
 //	}
@@ -86,7 +86,7 @@ public class PulldownServiceImpl implements PulldownService {
 //			result = pulldownBL.loadRoles(json);
 //		} catch (RuntimeException e) {
 //			MsLogger.logger(e);
-//			return JsonUtil.error("-1", e);
+//			return FastJsonUtil.error("-1", e);
 //		}
 //		return result;
 //	}
@@ -99,7 +99,7 @@ public class PulldownServiceImpl implements PulldownService {
 			result = pulldownBL.loadCounties(cityId);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}

@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ms.luna.biz.sc.LoginService;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 @Component
 @Controller

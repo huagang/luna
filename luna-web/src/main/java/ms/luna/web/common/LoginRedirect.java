@@ -5,9 +5,9 @@ import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletResponse;
 
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class LoginRedirect {
  
@@ -16,7 +16,7 @@ public class LoginRedirect {
 		String status = loggingResult.getString("code");
 
 		JSONObject data = null;
-		if (loggingResult.has("data")) {
+		if (loggingResult.containsKey("data")) {
 			data = loggingResult.getJSONObject("data");
 		}
 		StringBuilder sb = new StringBuilder(redirecturi);
@@ -49,7 +49,7 @@ public class LoginRedirect {
 		String redirecturi = "http://luna-test.visualbusiness.cn/luna/user-manage.html";
 		String redirecturi2 = "http://luna-test.visualbusiness.cn/luna/login.html";
 		JSONObject data = null;
-		if (loggingResult.has("data")) {
+		if (loggingResult.containsKey("data")) {
 			data = loggingResult.getJSONObject("data");
 		}
 		StringBuilder sb = new StringBuilder();
@@ -57,7 +57,7 @@ public class LoginRedirect {
 		response.setStatus(200);
 		// 用户名或者密码错误
 		if ("-199".equals(code)) {
-			JSONObject result = JsonUtil.error("-199", "用户名或者密码不正确");
+			JSONObject result = FastJsonUtil.error("-199", "用户名或者密码不正确");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 
@@ -85,7 +85,7 @@ public class LoginRedirect {
 
 			// code:200未注册
 		} else if ("200".equals(code)) {
-			JSONObject result = JsonUtil.error("200", "用户没有注册");
+			JSONObject result = FastJsonUtil.error("200", "用户没有注册");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 		}
@@ -98,29 +98,29 @@ public class LoginRedirect {
 		response.setStatus(200);
 		// 用户名或者密码错误
 		if ("-199".equals(status)) {
-			JSONObject result = JsonUtil.error("-199", "用户名或者密码不正确");
+			JSONObject result = FastJsonUtil.error("-199", "用户名或者密码不正确");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 
 			// code:201注册,无权限
 		} else if ("201".equals(status)) {
-			JSONObject result = JsonUtil.error("201", "注册,无权限");
+			JSONObject result = FastJsonUtil.error("201", "注册,无权限");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 
 			// code:211注册,且有权限
 		} else if ("211".equals(status)) {
-			JSONObject result = JsonUtil.error("211", "注册,且有权限");
+			JSONObject result = FastJsonUtil.error("211", "注册,且有权限");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 
 			// code:200未注册
 		} else if ("200".equals(status)) {
-			JSONObject result = JsonUtil.error("200", "用户没有注册");
+			JSONObject result = FastJsonUtil.error("200", "用户没有注册");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 		} else {
-			JSONObject result = JsonUtil.error("-198", "其他错误");
+			JSONObject result = FastJsonUtil.error("-198", "其他错误");
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result.toString());
 		}

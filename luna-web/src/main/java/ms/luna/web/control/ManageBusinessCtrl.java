@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.BasicCtrl;
@@ -142,13 +142,13 @@ public class ManageBusinessCtrl extends BasicCtrl {
 			JSONObject result = manageBusinessService.createBusiness(param.toString());
 			
 			if (!"0".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 			} else {
 				response.getWriter().print(result.toString());
 			}
 			response.setStatus(200);
 		} catch (Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 			logger.error("Failed to create business", e);
 			response.setStatus(200);
 		}
@@ -171,13 +171,13 @@ public class ManageBusinessCtrl extends BasicCtrl {
 			JSONObject result = manageBusinessService.searchMerchant(jsonObject.toString());
 		
 			if (!"0".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 			} else {
 				response.getWriter().print(result.toString());
 			}
 			response.setStatus(200);
 		} catch (Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 			logger.error("Failed to search merchant", e);
 			response.setStatus(200);
 		}
@@ -189,9 +189,9 @@ public class ManageBusinessCtrl extends BasicCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		response.setStatus(200);
-		int businessId = RequestHelper.getInt(request, "business_id");
+		int businessId = RequestHelper.getInteger(request, "business_id");
 		if(businessId < 0) {
-			response.getWriter().print(JsonUtil.error("-1", "非法业务Id"));
+			response.getWriter().print(FastJsonUtil.error("-1", "非法业务Id"));
 			return;
 		}
 		
@@ -217,7 +217,7 @@ public class ManageBusinessCtrl extends BasicCtrl {
 			JSONObject result = manageBusinessService.updateBusinessById(param.toString());
 			response.getWriter().print(result.toString());
 		} catch(Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 			logger.error("Failed to update business", e);
 		}
 		
@@ -229,12 +229,12 @@ public class ManageBusinessCtrl extends BasicCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		try {
-			int businessId = RequestHelper.getInt(request, "business_id");
+			int businessId = RequestHelper.getInteger(request, "business_id");
 			JSONObject jsonObject = manageBusinessService.deleteBusinessById(businessId);
 			logger.debug(jsonObject.toString());
 			response.getWriter().print(jsonObject.toString());
 		} catch(Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", "处理异常"));
+			response.getWriter().print(FastJsonUtil.error("-1", "处理异常"));
 			logger.error("Failed to delete business", e);
 		}
 		response.setStatus(200);

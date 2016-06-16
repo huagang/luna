@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.MsLogger;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class VbDistrSessionUtil extends Thread {
 
@@ -54,13 +54,13 @@ public class VbDistrSessionUtil extends Thread {
 	}
 
 	public void put(String key, String value) {
-		JSONObject jsonV = JSONObject.fromObject("{}");
+		JSONObject jsonV = JSONObject.parseObject("{}");
 		jsonV.put("regist_time", System.currentTimeMillis());
 		jsonV.put("value", value);
 		redisSession.put(key, jsonV);
 	}
 	public void put(String key) {
-		JSONObject jsonV = JSONObject.fromObject("{}");
+		JSONObject jsonV = JSONObject.parseObject("{}");
 		jsonV.put("regist_time", System.currentTimeMillis());
 		jsonV.put("value", key);
 		redisSession.put(key, jsonV);

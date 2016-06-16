@@ -8,8 +8,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.util.CreateHtmlUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /***
  * POI生成标签控件
@@ -43,7 +43,7 @@ public class MsPoi extends TagSupport {
 			for (int i = 0; i < privateFields.size(); i++) {
 				JSONObject privateField = privateFields.getJSONObject(i);
 				JSONObject field_def = privateField.getJSONObject("field_def");
-				int fieldtype = field_def.getInt("field_type");
+				int fieldtype = field_def.getInteger("field_type");
 				switch (fieldtype) {
 					case VbConstant.POI_FIELD_TYPE.文本框:
 						this.generateInputTag(privateField);
@@ -84,13 +84,13 @@ public class MsPoi extends TagSupport {
 	private void generateInputTag(JSONObject privateTag) throws IOException {
 			JspWriter out = pageContext.getOut();
 			JSONObject field_def = privateTag.getJSONObject("field_def");
-			if (!field_def.has("tag_id")) {
+			if (!field_def.containsKey("tag_id")) {
 				throw new RuntimeException("tag_id is mandatory!");
 			}
-			if (!field_def.has("field_show_name")) {
+			if (!field_def.containsKey("field_show_name")) {
 				throw new RuntimeException("field_show_name is mandatory!");
 			}
-			if (!field_def.has("field_name")) {
+			if (!field_def.containsKey("field_name")) {
 				throw new RuntimeException("field_name is mandatory!");
 			}
 			String poiInputText = CreateHtmlUtil.getInstance().convert2InputText(privateTag, readonly);
@@ -100,13 +100,13 @@ public class MsPoi extends TagSupport {
 	private void generateInputTextAreaTag(JSONObject privateTag) throws IOException {
 		JspWriter out = pageContext.getOut();
 		JSONObject field_def = privateTag.getJSONObject("field_def");
-		if (!field_def.has("tag_id")) {
+		if (!field_def.containsKey("tag_id")) {
 			throw new RuntimeException("tag_id is mandatory!");
 		}
-		if (!field_def.has("field_show_name")) {
+		if (!field_def.containsKey("field_show_name")) {
 			throw new RuntimeException("field_show_name is mandatory!");
 		}
-		if (!field_def.has("field_name")) {
+		if (!field_def.containsKey("field_name")) {
 			throw new RuntimeException("field_name is mandatory!");
 		}
 		String poiInputArea = CreateHtmlUtil.getInstance().convert2InputTextArea(privateTag, readonly);
@@ -116,13 +116,13 @@ public class MsPoi extends TagSupport {
 	private void generateCheckBoxsTag(JSONObject privateTag) throws IOException {
 		JspWriter out = pageContext.getOut();
 		JSONObject field_def = privateTag.getJSONObject("field_def");
-		if (!field_def.has("tag_id")) {
+		if (!field_def.containsKey("tag_id")) {
 			throw new RuntimeException("tag_id is mandatory!");
 		}
-		if (!field_def.has("field_show_name")) {
+		if (!field_def.containsKey("field_show_name")) {
 			throw new RuntimeException("field_show_name is mandatory!");
 		}
-		if (!field_def.has("field_name")) {
+		if (!field_def.containsKey("field_name")) {
 			throw new RuntimeException("field_name is mandatory!");
 		}
 		String poiCheckBoxs = CreateHtmlUtil.getInstance().convert2CheckBoxs(privateTag, readonly);
@@ -132,13 +132,13 @@ public class MsPoi extends TagSupport {
 	private void generatePicTag(JSONObject privateTag) throws IOException {
 		JspWriter out = pageContext.getOut();
 		JSONObject field_def = privateTag.getJSONObject("field_def");
-		if (!field_def.has("tag_id")) {
+		if (!field_def.containsKey("tag_id")) {
 			throw new RuntimeException("tag_id is mandatory!");
 		}
-		if (!field_def.has("field_show_name")) {
+		if (!field_def.containsKey("field_show_name")) {
 			throw new RuntimeException("field_show_name is mandatory!");
 		}
-		if (!field_def.has("field_name")) {
+		if (!field_def.containsKey("field_name")) {
 			throw new RuntimeException("field_name is mandatory!");
 		}
 		String poiInputText = CreateHtmlUtil.getInstance().convert2FileUpload(privateTag, readonly);

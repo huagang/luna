@@ -21,13 +21,13 @@ import org.springframework.web.servlet.ModelAndView;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek
@@ -99,7 +99,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			// 输入校验通过
 //			String inputInfo = "";
 			if (inputInfo.equals("")) {
-				JSONObject param = JSONObject.fromObject("{}");
+				JSONObject param = JSONObject.parseObject("{}");
 
 				param.put("contact_nm", contact_nm);
 				param.put("contact_phonenum", contact_phonenum);
@@ -123,19 +123,19 @@ public class MerchantRegistCtrl extends BasicCtrl {
 				JSONObject result = manageMerchantService.createMerchant(param.toString());
 				String code = result.getString("code");
 				if ("0".equals(code)) {
-					response.getWriter().print(JsonUtil.sucess("编辑成功！"));
+					response.getWriter().print(FastJsonUtil.sucess("编辑成功！"));
 				} else if ("1".equals(code)) {
-					response.getWriter().print(JsonUtil.error("3", "用户重名！"));
+					response.getWriter().print(FastJsonUtil.error("3", "用户重名！"));
 				} else if ("2".equals(code)) {
-					response.getWriter().print(JsonUtil.error("4", "业务员不存在！"));
+					response.getWriter().print(FastJsonUtil.error("4", "业务员不存在！"));
 				} else {
-					response.getWriter().print(JsonUtil.error("-1", "编辑失败！"));
+					response.getWriter().print(FastJsonUtil.error("-1", "编辑失败！"));
 				}
 			} else {
-				response.getWriter().print(JsonUtil.error("1", "校验错误！"));
+				response.getWriter().print(FastJsonUtil.error("1", "校验错误！"));
 			}
 		} catch (Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", "创建失败！"));
+			response.getWriter().print(FastJsonUtil.error("-1", "创建失败！"));
 		}
 		response.setStatus(200);
 		return;
@@ -155,7 +155,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 		try {
 			String merchant_nm = request.getParameter("merchant_nm");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("merchant_nm", merchant_nm);
 			JSONObject result = manageMerchantService.isAddedMerchantNmEist(param.toString());
 			if (result.getString("code").equals("1")) {
@@ -168,7 +168,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -218,7 +218,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -461,7 +461,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 //		String lat = "39.95826";// 经纬度
 //		String lng = "116.35741";
 //		
-//		JSONObject param = JSONObject.fromObject("{}");
+//		JSONObject param = JSONObject.parseObject("{}");
 //		param.put("contact_nm", contact_nm);
 //		param.put("contact_phonenum", contact_phonenum);
 //		param.put("contact_mail", contact_mail);

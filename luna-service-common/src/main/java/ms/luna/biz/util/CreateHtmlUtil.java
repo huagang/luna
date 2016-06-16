@@ -15,8 +15,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 public class CreateHtmlUtil {
 	private static CreateHtmlUtil createHtmlUtil = new CreateHtmlUtil();
 
@@ -117,14 +117,13 @@ public class CreateHtmlUtil {
 		return sw.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String convert2CheckBoxs(JSONObject privateField, Boolean readonly) {
 		VelocityContext context = new VelocityContext();
 		context.put("privateField", privateField);
 
 		Set<String> fieldVals = new HashSet<String>();
 		JSONObject value = privateField.getJSONObject("field_val");
-		if (value.has("value")) {
+		if (value.containsKey("value")) {
 			JSONArray field_val = value.getJSONArray("value");
 			for (int i = 0; i < field_val.size(); i++) {
 				fieldVals.add(field_val.getString(i));
@@ -138,7 +137,7 @@ public class CreateHtmlUtil {
 		for (int i = 0; i < extension_attrs.size(); i++) {
 			id++;
 			JSONObject checkbox = extension_attrs.getJSONObject(i);
-			Iterator<String> itr = checkbox.keys();
+			Iterator<String> itr = checkbox.keySet().iterator();
 			if (itr.hasNext()) {
 				String key = itr.next();
 				String label = checkbox.getString(key);
@@ -268,7 +267,7 @@ public class CreateHtmlUtil {
 		tagMap.put("style", sb.toString());
 		String link_start = "";
 		String link_end = "";
-		if (tag.has("link_addr")) {
+		if (tag.containsKey("link_addr")) {
 			String link_addr = tag.getString("link_addr");
 			if (!link_addr.isEmpty()) {
 				link_start = "<a href=\"" + tag.getString("link_addr") + "\">";
@@ -316,7 +315,7 @@ public class CreateHtmlUtil {
 
 		String link_start = "";
 		String link_end = "";
-		if (tag.has("link_addr")) {
+		if (tag.containsKey("link_addr")) {
 			String link_addr = tag.getString("link_addr");
 			if (!link_addr.isEmpty()) {
 				link_start = "<a href=\"" + tag.getString("link_addr") + "\">";
@@ -406,7 +405,7 @@ public class CreateHtmlUtil {
 		String stat_app_id = srcPage.getString("stat_app_id");
 		// 页面的背景颜色
 		String bgc = null;
-		if (srcPage.has("bgc")) {
+		if (srcPage.containsKey("bgc")) {
 			bgc = srcPage.getString("bgc");
 		}
 		String share_info_title = srcPage.getString("share_info_title");
@@ -419,7 +418,7 @@ public class CreateHtmlUtil {
 		List<JSONObject> imgJsons = new ArrayList<JSONObject>();
 
 		// 背景图，只有一张
-		JSONObject bgi = JSONObject.fromObject("{}");
+		JSONObject bgi = JSONObject.parseObject("{}");
 		
 		JSONArray tags = srcPage.getJSONArray("tags");
 		for (int i = 0; i < tags.size(); i++) {

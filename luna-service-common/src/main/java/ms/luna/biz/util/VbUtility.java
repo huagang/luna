@@ -101,7 +101,7 @@ public final class VbUtility {
 			try {
 				response.setHeader("Access-Control-Allow-Origin", "*");
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().print(JsonUtil.error("-101", "处理已经超时，请重新尝试"));
+				response.getWriter().print(FastJsonUtil.error("-101", "处理已经超时，请重新尝试"));
 				response.setStatus(200);
 				return null;
 			} catch (IOException e) {

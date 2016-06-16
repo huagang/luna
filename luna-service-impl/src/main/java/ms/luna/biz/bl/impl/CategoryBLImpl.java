@@ -10,14 +10,14 @@ import com.visualbusiness.gennum.service.GenNumService;
 
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.DateUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.dao.custom.MsCategoryDAO;
 import ms.luna.biz.dao.model.MsCategory;
 import ms.luna.biz.dao.model.MsCategoryCriteria;
 import ms.luna.biz.bl.CategoryBL;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Transactional(rollbackFor=Exception.class)
 @Service("categoryBL")
@@ -34,13 +34,13 @@ public class CategoryBLImpl implements CategoryBL {
 		.andDelFlgEqualTo("0");
 		msCategoryCriteria.setOrderByClause("REGIST_HHMMSS DESC");
 		List<MsCategory> list = msCategoryDAO.selectByCriteria(msCategoryCriteria);
-		JSONObject result = JSONObject.fromObject("{}");
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		result.put("code", "0");
-		JSONArray categorys = JSONArray.fromObject("[]");
+		JSONArray categorys = JSONArray.parseArray("[]");
 		if (list != null && !list.isEmpty()) {
 			for (MsCategory vbCategory : list) {
-				JSONObject record = JSONObject.fromObject("{}");
+				JSONObject record = JSONObject.parseObject("{}");
 				record.put("category_id", vbCategory.getCategoryId());
 				record.put("nm_zh", vbCategory.getNmZh());
 				record.put("nm_en", vbCategory.getNmEn());
@@ -56,10 +56,10 @@ public class CategoryBLImpl implements CategoryBL {
 
 	@Override
 	public JSONObject deleteCategory(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String categoryId = param.getString("category_id");
 		int count = msCategoryDAO.deleteByPrimaryKey(categoryId);
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
 		if (count == 1) {
 			result.put("code", "0");
 			result.put("msg", "正常删除："+categoryId);
@@ -72,7 +72,7 @@ public class CategoryBLImpl implements CategoryBL {
 
 	@Override
 	public JSONObject addCategory(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String category_nm_zh = param.getString("category_nm_zh");
 		String category_nm_en = param.getString("category_nm_en");
 		MsCategoryCriteria msCategoryCriteria = new MsCategoryCriteria();
@@ -80,8 +80,8 @@ public class CategoryBLImpl implements CategoryBL {
 		.andNmZhEqualTo(category_nm_zh);
 		int count = msCategoryDAO.countByCriteria(msCategoryCriteria);
 		if (count > 0) {
-//			return JsonUtil.error("-1", "重名,不可用："+category_nm_zh);
-			return JsonUtil.error("1", "category_nm_zh重名");
+//			return FastJsonUtil.error("-1", "重名,不可用："+category_nm_zh);
+			return FastJsonUtil.error("1", "category_nm_zh重名");
 		}
 
 		msCategoryCriteria = new MsCategoryCriteria();
@@ -89,8 +89,8 @@ public class CategoryBLImpl implements CategoryBL {
 		.andNmEnEqualTo(category_nm_en);
 		count = msCategoryDAO.countByCriteria(msCategoryCriteria);
 		if (count > 0) {
-//			return JsonUtil.error("-2", "重名,不可用："+category_nm_en);
-			return JsonUtil.error("2", "category_nm_en重名");
+//			return FastJsonUtil.error("-2", "重名,不可用："+category_nm_en);
+			return FastJsonUtil.error("2", "category_nm_en重名");
 		}
 
 		String num = genNumService.generateNum("CATE", 1L, 16);
@@ -120,14 +120,14 @@ public class CategoryBLImpl implements CategoryBL {
 			MsLogger.debug("重名,不可用(下手慢了)："+category_nm_en);
 			throw new RuntimeException("重名,不可用(您下手慢了)："+category_nm_en);
 		}
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("category_id", num);
-		return JsonUtil.sucess("创建成功！",data);
+		return FastJsonUtil.sucess("创建成功！",data);
 	}
 
 	@Override
 	public JSONObject updateCategory(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String categoryId = param.getString("category_id");
 		String category_nm_zh = param.getString("category_nm_zh");
 		String category_nm_en = param.getString("category_nm_en");
@@ -137,14 +137,14 @@ public class CategoryBLImpl implements CategoryBL {
 		msCategoryCriteria.createCriteria().andNmZhEqualTo(category_nm_zh).andCategoryIdNotEqualTo(categoryId);
 		int count = msCategoryDAO.countByCriteria(msCategoryCriteria);
 		if (count > 0) {
-			return JsonUtil.error("1", "category_nm_zh重名");
+			return FastJsonUtil.error("1", "category_nm_zh重名");
 		}
 		// 检查修改后的category_nm_en是否存在
 		msCategoryCriteria = new MsCategoryCriteria();
 		msCategoryCriteria.createCriteria().andNmEnEqualTo(category_nm_en).andCategoryIdNotEqualTo(categoryId);
 		count = msCategoryDAO.countByCriteria(msCategoryCriteria);
 		if (count > 0) {
-			return JsonUtil.error("2", "category_nm_en重名");
+			return FastJsonUtil.error("2", "category_nm_en重名");
 		}
 		
 		MsCategory vbCategory = new MsCategory();
@@ -154,9 +154,9 @@ public class CategoryBLImpl implements CategoryBL {
 		count = msCategoryDAO.updateByPrimaryKeySelective(vbCategory);
 
 		if (count != 1) {
-			return JsonUtil.sucess("不存在："+category_nm_zh);
+			return FastJsonUtil.sucess("不存在："+category_nm_zh);
 		}
-		return JsonUtil.sucess("更新成功！");
+		return FastJsonUtil.sucess("更新成功！");
 	}
 
 }

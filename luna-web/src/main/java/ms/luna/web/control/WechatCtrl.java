@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.util.DateUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsHttpRequest;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.sc.LoginService;
@@ -28,7 +28,7 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.distr.session.VbDistrSessionUtil;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 @Component
 @Controller
 @RequestMapping("wechat/login.do")
@@ -98,7 +98,7 @@ public class WechatCtrl {
 			 * code:211注册,且有权限
 			 * code:200未注册，无权限
 			 */
-			JSONObject loggingwx = JSONObject.fromObject("{}");
+			JSONObject loggingwx = JSONObject.parseObject("{}");
 			loggingwx.put("openid", openidInfo.getString("openid"));
 			loggingwx.put("wxappid", openidInfo.getString("wxappid"));
 			loggingwx.put("unionid", openidInfo.getString("unionid"));
@@ -110,7 +110,7 @@ public class WechatCtrl {
 			if ("0".equals(status)) {
 				JSONObject data = loggingResult.getJSONObject("data");
 
-				int auth = data.getInt("role_auth");
+				int auth = data.getInteger("role_auth");
 				if (auth == VbConstant.AUTH_YOU_KE) {
 					return new ModelAndView("forward:/login_201.jsp", map);
 				}
@@ -153,13 +153,13 @@ public class WechatCtrl {
 
 			String token = VbMD5.generateToken();
 			if (callback_uri == null || callback_uri.length() == 0) {
-				response.getWriter().print(JsonUtil.error("-1", "没有回调的uri").toString());
+				response.getWriter().print(FastJsonUtil.error("-1", "没有回调的uri").toString());
 				response.setStatus(200);
 				return;
 			}
 			VbDistrSessionUtil.getInstance().put(token, URLDecoder.decode(callback_uri, "UTF-8"));
-			JSONObject json = JSONObject.fromObject("{}");
-			JSONObject data = JSONObject.fromObject("{}");
+			JSONObject json = JSONObject.parseObject("{}");
+			JSONObject data = JSONObject.parseObject("{}");
 			data.put("appid", "wx81bab6b59781b95f");
 			// 微信回调的url(登录验证的地址)
 			data.put("redirect_uri", URLEncoder.encode(微信回调的RUI, "UTF-8"));
@@ -178,21 +178,21 @@ public class WechatCtrl {
 	}
 
 	private JSONObject getWxOpenIdInfo(String code, HttpServletRequest request) throws Exception {
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
 		String getAccessToken = accesstoken + code;
 
 		// user-agent
 		String userAgent = request.getHeader("user-agent");
 		// 获取openid
 		URLConnection connection = MsHttpRequest.sendPost(getAccessToken, userAgent);
-		JSONObject jsonObject = JSONObject.fromObject(MsHttpRequest.conver2JsonString(connection.getInputStream()));
+		JSONObject jsonObject = JSONObject.parseObject(MsHttpRequest.conver2JsonString(connection.getInputStream()));
 		MsLogger.debug(jsonObject.toString());
 		String access_token = jsonObject.getString("access_token");
 		//String refresh_token = jsonObject.getString("refresh_token");
 		String openid = jsonObject.getString("openid");
 
 		String unionid = "";
-		if (jsonObject.has("unionid")) {
+		if (jsonObject.containsKey("unionid")) {
 			unionid = jsonObject.getString("unionid");
 		}
 		String user_info = userinfo + access_token
@@ -200,7 +200,7 @@ public class WechatCtrl {
 				+ openid;
 		connection = MsHttpRequest.sendPost(user_info, userAgent);
 
-		JSONObject userInfoObject = JSONObject.fromObject(MsHttpRequest.conver2JsonString(connection.getInputStream()));
+		JSONObject userInfoObject = JSONObject.parseObject(MsHttpRequest.conver2JsonString(connection.getInputStream()));
 		MsLogger.debug(userInfoObject.toString());
 		String nickname = userInfoObject.getString("nickname");
 		// openid, wxappid, unionid, nickname, sex, province, city, country, headimgurl, wjnm, pw,
@@ -209,11 +209,11 @@ public class WechatCtrl {
 		result.put("wxappid", wxappid);
 		result.put("unionid", unionid);
 		result.put("nickname", nickname);
-		result.put("sex", JsonUtil.getString(userInfoObject, "sex"));
-		result.put("province", JsonUtil.getString(userInfoObject, "province"));
-		result.put("city", JsonUtil.getString(userInfoObject, "city"));
-		result.put("country", JsonUtil.getString(userInfoObject, "country"));
-		result.put("headimgurl", JsonUtil.getString(userInfoObject, "headimgurl"));
+		result.put("sex", FastJsonUtil.getString(userInfoObject, "sex"));
+		result.put("province", FastJsonUtil.getString(userInfoObject, "province"));
+		result.put("city", FastJsonUtil.getString(userInfoObject, "city"));
+		result.put("country", FastJsonUtil.getString(userInfoObject, "country"));
+		result.put("headimgurl", FastJsonUtil.getString(userInfoObject, "headimgurl"));
 		result.put("ipaddress", VbUtility.getRemortIP(request));
 
 		return result;

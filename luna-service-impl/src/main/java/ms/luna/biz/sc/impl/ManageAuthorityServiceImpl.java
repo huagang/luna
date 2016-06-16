@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import ms.luna.biz.bl.ManageAuthorityBL;
 import ms.luna.biz.sc.ManageAuthorityService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /** 
  * @author  Greek 
@@ -26,7 +26,7 @@ public class ManageAuthorityServiceImpl implements ManageAuthorityService{
 			result = manageAuthorityBL.loadAuthority(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1",	e.getMessage());
+			return FastJsonUtil.error("-1",	e.getMessage());
 		}
 		return result;
 	}

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ms.luna.biz.bl.ManagePoiBL;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 @Service("managePoiService")
 public class ManagePoiServiceImpl implements ManagePoiService {
@@ -21,7 +21,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.getInitInfo(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -31,7 +31,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.addPoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -41,7 +41,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.getPois(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -51,7 +51,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.initEditPoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -61,7 +61,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.updatePoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -71,7 +71,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.asyncDeletePoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -81,7 +81,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.initAddPoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -91,7 +91,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.downloadPoiTemplete(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -101,7 +101,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.savePois(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -111,7 +111,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.initFixPoi(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -121,7 +121,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		try {
 			result = managePoiBL.getTagsDef(json);
 		} catch (RuntimeException e) {
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}

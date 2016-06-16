@@ -28,7 +28,7 @@ import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
@@ -39,8 +39,8 @@ import ms.luna.web.control.api.VodPlayCtrl;
 import ms.luna.web.control.api.VodPlayCtrl.REFRESHMODE;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("addPoiCtrl")
 @Controller
 @RequestMapping("/add_poi.do")
@@ -332,7 +332,7 @@ public class AddPoiCtrl extends BasicCtrl{
 
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
@@ -377,7 +377,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		}
 		for (Entry<String, String[]> entry : set) {
 			MsLogger.debug(entry.getKey() + "\t");
-			if (param.has(entry.getKey())) {
+			if (param.containsKey(entry.getKey())) {
 				continue;
 			}
 			if (entry.getValue().length > 1) {
@@ -406,18 +406,18 @@ public class AddPoiCtrl extends BasicCtrl{
 			JSONObject result = managePoiService.addPoi(param.toString(), msUser);
 
 			if ("0".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.sucess("成功上传"));
+				response.getWriter().print(FastJsonUtil.sucess("成功上传"));
 				response.setStatus(200);
 				return;
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
 
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-2", e.getMessage()));
+			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
 		}
@@ -438,11 +438,11 @@ public class AddPoiCtrl extends BasicCtrl{
 			this.param2Json(request);
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-2", e.getMessage()));
+			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
 		}
-		response.getWriter().print(JsonUtil.sucess("0"));
+		response.getWriter().print(FastJsonUtil.sucess("0"));
 		response.setStatus(200);
 		return;
 	}
@@ -461,7 +461,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -484,7 +484,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -510,7 +510,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		try {
 			String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
 			if (ext == null) {
-				response.getWriter().print(JsonUtil.error("4", "文件扩展名有错误"));
+				response.getWriter().print(FastJsonUtil.error("4", "文件扩展名有错误"));
 				response.setStatus(200);
 				return;
 			}
@@ -526,27 +526,27 @@ public class AddPoiCtrl extends BasicCtrl{
 				String vod_file_id = data.getString("fileId");
 
 				// 记录写入数据库
-				JSONObject param = JSONObject.fromObject("{}");
+				JSONObject param = JSONObject.parseObject("{}");
 				param.put("vod_file_id", vod_file_id);
 				JSONObject resJson = vodPlayService.createVodFile(param.toString());
 				
 				if (resJson.getString("code").equals("0")) {// 成功
 					// 存入缓存
 					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
-					response.getWriter().print(JsonUtil.sucess("成功", param));// 注：result中文件id的表示为fileId，非file_id
+					response.getWriter().print(FastJsonUtil.sucess("成功", param));// 注：result中文件id的表示为fileId，非file_id
 				} else {
-					response.getWriter().print(JsonUtil.error("3", "写入数据库失败"));
+					response.getWriter().print(FastJsonUtil.error("3", "写入数据库失败"));
 				}
 			} else if (result.getString("code").equals("2")) {
-				response.getWriter().print(JsonUtil.error("2", "文件大小超过5M"));
+				response.getWriter().print(FastJsonUtil.error("2", "文件大小超过5M"));
 			} else {
-				response.getWriter().print(JsonUtil.error("4", "文件传输失败"));
+				response.getWriter().print(FastJsonUtil.error("4", "文件传输失败"));
 			}
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();

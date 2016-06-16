@@ -21,13 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.VodPlayService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 视频上传
@@ -87,9 +87,9 @@ public class VodPlayCtrl {
 				return;
 			}
 			MsLogger.debug("出现转码回调信息:"+result);//
-			JSONObject params = JSONObject.fromObject(result);
+			JSONObject params = JSONObject.parseObject(result);
 
-			int status = params.getInt("status");// 返回状态
+			int status = params.getInteger("status");// 返回状态
 			if (status != 0) {
 				// 转码失败
 				refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
@@ -103,7 +103,7 @@ public class VodPlayCtrl {
 			// 第一次回调
 			if (task.equals("file_upload")) {
 				JSONObject json1 = params.getJSONObject("data");
-				int ret = json1.getInt("ret");
+				int ret = json1.getInteger("ret");
 				if (ret != -303) {
 					// 转码失败
 					refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
@@ -121,7 +121,7 @@ public class VodPlayCtrl {
 			// 第二次回调
 			if (task.equals("transcode")) {
 				JSONObject json2 = params.getJSONObject("data");
-				int ret = json2.getInt("ret");
+				int ret = json2.getInteger("ret");
 				String vod_file_id = json2.getString("file_id");// 腾讯云有时用file_id有时fileId
 
 				if (ret != 0) {
@@ -138,14 +138,14 @@ public class VodPlayCtrl {
 				JSONObject result2 = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
 				MsLogger.debug("转码信息返回成功，token:"+token+"fileId:"+vod_file_id);
 				
-				JSONObject params2 = JSONObject.fromObject("{}");
+				JSONObject params2 = JSONObject.parseObject("{}");
 				String code = result2.getString("code");
 				if ("0".equals(code)) {
 					JSONObject data = result2.getJSONObject("data");
 					JSONArray playSet = data.getJSONArray("playSet");
 					for (int i = 0; i < playSet.size(); i++) {
 						JSONObject play = (JSONObject) playSet.get(i);
-						String definition = "definition" + play.getInt("definition"); // 获得格式对应的编号
+						String definition = "definition" + play.getInteger("definition"); // 获得格式对应的编号
 						String definition_nm = VbConstant.VOD_DEFINITION.ConvertName(definition); // 获得格式在数据库中的对应名称
 						String url = play.getString("url");
 						params2.put(definition_nm, url);

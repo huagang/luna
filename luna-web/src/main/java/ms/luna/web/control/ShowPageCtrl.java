@@ -494,7 +494,7 @@ public class ShowPageCtrl extends BasicCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		
-		int forceFlag = RequestHelper.getInt(request, "force");
+		int forceFlag = RequestHelper.getInteger(request, "force");
 		JSONObject param = new JSONObject();
 		param.put("app_id", appId);
 		if(forceFlag == 1) {

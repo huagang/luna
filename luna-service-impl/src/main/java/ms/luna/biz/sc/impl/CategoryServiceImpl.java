@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ms.luna.biz.bl.CategoryBL;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.CategoryService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 @Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {
@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
 			result = categoryBL.getCategorys(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 			result = categoryBL.deleteCategory(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
 			result = categoryBL.addCategory(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 			result = categoryBL.updateCategory(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}

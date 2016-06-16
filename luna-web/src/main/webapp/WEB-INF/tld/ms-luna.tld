@@ -42,7 +42,7 @@
 			<name>privateFields</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>net.sf.json.JSONArray</type>
+			<type>com.alibaba.fastjson.JSONArray</type>
 		</attribute>
 		<attribute>
 			<description>readonly</description>
@@ -65,7 +65,7 @@
 			<name>items</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>net.sf.json.JSONArray</type>
+			<type>com.alibaba.fastjson.JSONArray</type>
 		</attribute>
 		<attribute>
 			<name>cssClass</name>

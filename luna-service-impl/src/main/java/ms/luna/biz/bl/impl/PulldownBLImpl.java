@@ -16,9 +16,9 @@ import ms.luna.biz.dao.model.MsCategory;
 import ms.luna.biz.dao.model.MsCategoryCriteria;
 import ms.luna.biz.dao.model.MsZone;
 import ms.luna.biz.dao.model.MsZoneCriteria;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Transactional(rollbackFor=Exception.class)
 @Service("pulldownBL")
@@ -38,7 +38,7 @@ public class PulldownBLImpl implements PulldownBL {
 	@Override
 	public JSONObject loadCoutrys() {
 
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		JSONArray countrys = null;
 		
 		//TODO
@@ -46,7 +46,7 @@ public class PulldownBLImpl implements PulldownBL {
 			countrys = cacheCountrysData.get("100000") ;
 		}
 		if(countrys == null) {
-			countrys = JSONArray.fromObject("[]");
+			countrys = JSONArray.parseArray("[]");
 			//如果没有缓存数据，则从数据库查询
 			MsZoneCriteria msZoneCriteria = new MsZoneCriteria();
 			msZoneCriteria.createCriteria()
@@ -57,7 +57,7 @@ public class PulldownBLImpl implements PulldownBL {
 			//解析查询结果
 			if (list != null) {
 				for (MsZone msZone : list) {
-					JSONObject countrydata = JSONObject.fromObject("{}");
+					JSONObject countrydata = JSONObject.parseObject("{}");
 					countrydata.put("country_id", msZone.getId());
 					countrydata.put("nm_zh", msZone.getName());
 					countrys.add(countrydata);
@@ -69,19 +69,19 @@ public class PulldownBLImpl implements PulldownBL {
 		}
 
 		data.put("countrys", countrys);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 
 	@Override
 	public JSONObject loadProvinces(String countryId) {
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		JSONArray provinces = null ;
 		
 		//TODO
 		synchronized (PulldownBLImpl.class) {
 			provinces = cacheProvincesData.get(countryId) ;
 			if(provinces == null) {
-				provinces = JSONArray.fromObject("[]");
+				provinces = JSONArray.parseArray("[]");
 				//如果没有缓存数据，则从数据库查询
 				MsZoneCriteria msZoneCriteria = new MsZoneCriteria();
 				msZoneCriteria.createCriteria()
@@ -93,7 +93,7 @@ public class PulldownBLImpl implements PulldownBL {
 				//解析查询结果
 				if (list != null) {
 					for (MsZone msZone : list) {
-						JSONObject provincedata = JSONObject.fromObject("{}");
+						JSONObject provincedata = JSONObject.parseObject("{}");
 						provincedata.put("province_id", msZone.getId());
 						provincedata.put("nm_zh", msZone.getName());
 						provincedata.put("country_id", countryId);
@@ -105,12 +105,12 @@ public class PulldownBLImpl implements PulldownBL {
 		}
 		
 		data.put("provinces", provinces);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 
 	@Override
 	public JSONObject loadCitys(String provinceId) {
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		JSONArray citys = null ;
 		
 		//TODO
@@ -118,7 +118,7 @@ public class PulldownBLImpl implements PulldownBL {
 			citys = cacheCityData.get(provinceId) ;
 		}
 		if(citys == null) {
-			citys = JSONArray.fromObject("[]");
+			citys = JSONArray.parseArray("[]");
 			//如果没有缓存数据，则从数据库查询
 			MsZoneCriteria msZoneCriteria = new MsZoneCriteria();
 			msZoneCriteria.createCriteria()
@@ -130,7 +130,7 @@ public class PulldownBLImpl implements PulldownBL {
 			//解析查询结果
 			if (list != null) {
 				for (MsZone msZone : list) {
-					JSONObject citydata = JSONObject.fromObject("{}");
+					JSONObject citydata = JSONObject.parseObject("{}");
 					citydata.put("city_id", msZone.getId());
 					citydata.put("nm_zh", msZone.getName());
 					citydata.put("province_id", provinceId);
@@ -144,20 +144,20 @@ public class PulldownBLImpl implements PulldownBL {
 		
 
 		data.put("citys", citys);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 	
 	@Override
 	public JSONObject loadCounties(String cityId) {
 		
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		JSONArray counties = null ;
 		counties = cacheCountyData.get(cityId) ;
 		if(counties == null) {
 			synchronized (PulldownBLImpl.class) {
 				counties = cacheCountyData.get(cityId) ;
 				if(counties == null) {
-					counties = JSONArray.fromObject("[]");
+					counties = JSONArray.parseArray("[]");
 					//如果没有缓存数据，则从数据库查询
 					MsZoneCriteria msZoneCriteria = new MsZoneCriteria();
 					msZoneCriteria.createCriteria()
@@ -169,7 +169,7 @@ public class PulldownBLImpl implements PulldownBL {
 					//解析查询结果
 					if (list != null) {
 						for (MsZone msZone : list) {
-							JSONObject countydata = JSONObject.fromObject("{}");
+							JSONObject countydata = JSONObject.parseObject("{}");
 							countydata.put("county_id", msZone.getId());
 							countydata.put("nm_zh", msZone.getName());
 							counties.add(countydata);
@@ -181,7 +181,7 @@ public class PulldownBLImpl implements PulldownBL {
 		}
 
 		data.put("counties", counties);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 
 //	@Override
@@ -191,11 +191,11 @@ public class PulldownBLImpl implements PulldownBL {
 //		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
 //		categoryCriteria.setOrderByClause("NM_ZH DESC");
 //		List<VbCategory> list = vbCategoryDAO.selectByCriteria(categoryCriteria);
-//		JSONObject data = JSONObject.fromObject("{}");
-//		JSONArray categorys = JSONArray.fromObject("[]");
+//		JSONObject data = JSONObject.parseObject("{}");
+//		JSONArray categorys = JSONArray.parseArray("[]");
 //		if (list != null) {
 //			for (VbCategory category : list) {
-//				JSONObject categorydata = JSONObject.fromObject("{}");
+//				JSONObject categorydata = JSONObject.parseObject("{}");
 //				categorydata.put("category_id", category.getCategoryId());
 //				categorydata.put("nm_zh", category.getNmZh());
 //				categorydata.put("nm_en", category.getNmEn());
@@ -203,7 +203,7 @@ public class PulldownBLImpl implements PulldownBL {
 //			}
 //		}
 //		data.put("categorys", categorys);
-//		return JsonUtil.sucess("检索成功", data);
+//		return FastJsonUtil.sucess("检索成功", data);
 //	}
 
 	@Override
@@ -213,11 +213,11 @@ public class PulldownBLImpl implements PulldownBL {
 		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
 		categoryCriteria.setOrderByClause("NM_ZH DESC");
 		List<MsCategory> list = msCategoryDAO.selectByCriteria(categoryCriteria);
-		JSONObject data = JSONObject.fromObject("{}");
-		JSONArray categorys = JSONArray.fromObject("[]");
+		JSONObject data = JSONObject.parseObject("{}");
+		JSONArray categorys = JSONArray.parseArray("[]");
 		if (list != null) {
 			for (MsCategory category : list) {
-				JSONObject categorydata = JSONObject.fromObject("{}");
+				JSONObject categorydata = JSONObject.parseObject("{}");
 				categorydata.put("category_id", category.getCategoryId());
 				categorydata.put("nm_zh", category.getNmZh());
 				categorydata.put("nm_en", category.getNmEn());
@@ -225,7 +225,7 @@ public class PulldownBLImpl implements PulldownBL {
 			}
 		}
 		data.put("categorys", categorys);
-		return JsonUtil.sucess("检索成功", data);
+		return FastJsonUtil.sucess("检索成功", data);
 	}
 
 //	/**
@@ -235,7 +235,7 @@ public class PulldownBLImpl implements PulldownBL {
 //	 */
 //	@Override
 //	public JSONObject loadRegions(String json) {
-//		JSONObject param = JSONObject.fromObject(json);
+//		JSONObject param = JSONObject.parseObject(json);
 //		String cityId = param.getString("city_id");
 //		String categoryId = param.getString("category_id");
 //		VbRegionCriteria vbRegionCriteria = new VbRegionCriteria();
@@ -244,11 +244,11 @@ public class PulldownBLImpl implements PulldownBL {
 //		.andCityIdEqualTo(cityId)
 //		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
 //		List<VbRegion> list = vbRegionDAO.selectByCriteria(vbRegionCriteria);
-//		JSONObject data = JSONObject.fromObject("{}");
-//		JSONArray vbRegions = JSONArray.fromObject("[]");
+//		JSONObject data = JSONObject.parseObject("{}");
+//		JSONArray vbRegions = JSONArray.parseArray("[]");
 //		if (list != null) {
 //			for (VbRegion vbRegion : list) {
-//				JSONObject vbRegiondata = JSONObject.fromObject("{}");
+//				JSONObject vbRegiondata = JSONObject.parseObject("{}");
 //				vbRegiondata.put("region_id", vbRegion.getRegionId());
 //				vbRegiondata.put("category_id", vbRegion.getCategoryId());
 //				vbRegiondata.put("nm_zh", vbRegion.getNmZh());
@@ -257,12 +257,12 @@ public class PulldownBLImpl implements PulldownBL {
 //			}
 //		}
 //		data.put("regions", vbRegions);
-//		return JsonUtil.sucess("检索成功", data);
+//		return FastJsonUtil.sucess("检索成功", data);
 //	}
 //
 //	@Override
 //	public JSONObject loadRoles(String json) {
-////		JSONObject param = JSONObject.fromObject(json);
+////		JSONObject param = JSONObject.parseObject(json);
 ////		String login_wjnm = param.getString("login_wjnm");
 //		// TODO:获取小于等于自己权限的角色列表
 //		MsRoleCriteria msRoleCriteria = new MsRoleCriteria();
@@ -270,11 +270,11 @@ public class PulldownBLImpl implements PulldownBL {
 //		.andDelFlgEqualTo(VbConstant.DEL_FLG.未删除);
 //		msRoleCriteria.setOrderByClause("ROLE_AUTH DESC");
 //		List<MsRole> list = msRoleDAO.selectByCriteria(msRoleCriteria);
-//		JSONObject data = JSONObject.fromObject("{}");
-//		JSONArray msRoles = JSONArray.fromObject("[]");
+//		JSONObject data = JSONObject.parseObject("{}");
+//		JSONArray msRoles = JSONArray.parseArray("[]");
 //		if (list != null) {
 //			for (MsRole msRole : list) {
-//				JSONObject vbRoledata = JSONObject.fromObject("{}");
+//				JSONObject vbRoledata = JSONObject.parseObject("{}");
 //				vbRoledata.put("role_auth", msRole.getRoleAuth());
 //				vbRoledata.put("role_id", msRole.getRoleId());
 //				vbRoledata.put("role_nm", msRole.getRoleNm());
@@ -282,6 +282,6 @@ public class PulldownBLImpl implements PulldownBL {
 //			}
 //		}
 //		data.put("roles", msRoles);
-//		return JsonUtil.sucess("检索成功", data);
+//		return FastJsonUtil.sucess("检索成功", data);
 //	}
 }

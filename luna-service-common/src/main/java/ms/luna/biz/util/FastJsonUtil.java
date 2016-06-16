@@ -2,6 +2,7 @@ package ms.luna.biz.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 
 
 public final class FastJsonUtil {
@@ -228,5 +229,15 @@ public final class FastJsonUtil {
 		result.put("msg", msg);
 		result.put("data", data);
 		return result;
+	}
+	public static JSONObject parse2Json(Object o) {
+		JSONObject temp = new JSONObject();
+		temp.put("temp", o);
+		return temp.getJSONObject("temp");
+	}
+	public static JSONArray parse2Array(Object o) {
+		JSONObject temp = new JSONObject();
+		temp.put("temp", o);
+		return temp.getJSONArray("temp");
 	}
 }

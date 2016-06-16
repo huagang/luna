@@ -17,9 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 import ms.luna.biz.util.COSUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public abstract class BasicCtrl {
 
@@ -66,13 +66,13 @@ public abstract class BasicCtrl {
 				return;
 
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}

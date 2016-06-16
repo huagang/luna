@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.biz.util.COSUtil;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 @Component("uploadCtrl")
 @Controller
 @RequestMapping("/uploadCtrl.do")
@@ -50,13 +50,13 @@ public class UploadCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 
 		if (file == null || file.isEmpty()) {
-			response.getWriter().print(JsonUtil.error("-1", "file can not be empty"));
+			response.getWriter().print(FastJsonUtil.error("-1", "file can not be empty"));
 			response.setStatus(200);
 			return;
 		}
 		// 文件太大超过预定的10M
 		if (file.getSize() > COSUtil.图片上传大小分界线1M) {
-			response.getWriter().print(JsonUtil.error("-1", "file is too large( size > 1M)"));
+			response.getWriter().print(FastJsonUtil.error("-1", "file is too large( size > 1M)"));
 			response.setStatus(200);
 			return;
 		}
@@ -64,14 +64,14 @@ public class UploadCtrl {
 		String fileName = file.getOriginalFilename();
 		int point = fileName.lastIndexOf(".");
 		if (point == -1 || point == fileName.length()-1) {
-			response.getWriter().print(JsonUtil.error("-1", "extension name is not correct"));
+			response.getWriter().print(FastJsonUtil.error("-1", "extension name is not correct"));
 			response.setStatus(200);
 			return;
 		}
 		String extName = fileName.substring(point+1);
 		extName = extName.toLowerCase();
 		if (extName.length() == 0 || (! validFileExtention.contains(extName))) {
-			response.getWriter().print(JsonUtil.error("-1", "extension must be jpg or png"));
+			response.getWriter().print(FastJsonUtil.error("-1", "extension must be jpg or png"));
 			response.setStatus(200);
 			return;
 		}
@@ -90,7 +90,7 @@ public class UploadCtrl {
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			response.getWriter().print(JsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}

@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,12 +17,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.AuthoritySetService;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.web.model.authorityset.AuthoritySetFunctionModel;
 import ms.luna.web.model.authorityset.AuthoritySetModel;
 import ms.luna.web.model.authorityset.AuthoritySetModuleModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component
 @Controller
 @RequestMapping("/authority_set.do")
@@ -45,7 +45,7 @@ public class AuthoritySetCtrl {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			// 查询业务模块和权限选项
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("ms_role_code", ms_role_code);
 
 			HttpSession session = request.getSession(false);
@@ -173,14 +173,14 @@ public class AuthoritySetCtrl {
 				}
 			}
 
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			List<String> lstChecked = new ArrayList<String>();
 			for (AuthoritySetFunctionModel authoritySetFunctionModel : editFunctions) {
 				if (authoritySetFunctionModel.getChecked()) {
 					lstChecked.add(authoritySetFunctionModel.getValue());
 				}
 			}
-			JSONArray array = JSONArray.fromObject(lstChecked);
+			JSONArray array = FastJsonUtil.parse2Array(lstChecked);
 			param.put("checkeds", array);
 			param.put("ms_role_code", ms_role_code);
 

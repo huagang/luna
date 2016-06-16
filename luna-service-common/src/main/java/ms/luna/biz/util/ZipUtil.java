@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class ZipUtil {
 
@@ -134,7 +134,7 @@ public class ZipUtil {
 				}
 			}
 		}
-		return JsonUtil.sucess("OK");
+		return FastJsonUtil.sucess("OK");
 	}
 
 //	private static boolean skip(String filename) {

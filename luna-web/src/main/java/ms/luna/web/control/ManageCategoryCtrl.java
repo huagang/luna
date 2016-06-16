@@ -19,12 +19,12 @@ import org.springframework.web.servlet.ModelAndView;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.CategoryService;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.PulldownCtrl;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component
 @Controller
 @RequestMapping("/manage/category.do")
@@ -94,12 +94,12 @@ public class ManageCategoryCtrl {
 			response.setContentType("text/html; charset=UTF-8");
 			String category_id = request.getParameter("category_id");
 			if (category_id == null || category_id.isEmpty()) {
-				response.getWriter().print(JsonUtil.error("-1", "分类ID不能为空"));
+				response.getWriter().print(FastJsonUtil.error("-1", "分类ID不能为空"));
 				response.setStatus(200);
 				return;
 			}
 
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("category_id", category_id);
 
 			HttpSession session = request.getSession(false);
@@ -110,17 +110,17 @@ public class ManageCategoryCtrl {
 
 			if ("0".equals(result.getString("code"))) {
 				pulldownCtrl.refreshCategorysCache(category_id, "", PulldownCtrl.REFRESHMODE.DELETE);//更新缓存
-				response.getWriter().print(JsonUtil.sucess("成功删除"));
+				response.getWriter().print(FastJsonUtil.sucess("成功删除"));
 				response.setStatus(200);
 				return;
 			}
 
-			response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+			response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}
@@ -168,12 +168,12 @@ public class ManageCategoryCtrl {
 			String category_nm_en = request.getParameter("category_nm_en");
 			String msg = checkCategoryNm(category_nm_zh, category_nm_en);
 			if (msg != null) {
-				response.getWriter().print(JsonUtil.error("-1", msg));
+				response.getWriter().print(FastJsonUtil.error("-1", msg));
 				response.setStatus(200);
 				return;
 			}
 
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("category_nm_zh", category_nm_zh);
 			param.put("category_nm_en", category_nm_en);
 			HttpSession session = request.getSession(false);
@@ -181,31 +181,31 @@ public class ManageCategoryCtrl {
 			// categoryService
 			JSONObject result = categoryService.addCategory(param.toString(), msUser);
 //			if (!"0".equals(result.getString("code"))) {
-//				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+//				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {
 //				JSONObject data = (JSONObject) result.get("data");
 //				String category_id = data.getString("category_id");
 //				pulldownCtrl.refreshCategorysCache(category_id,category_nm_zh,PulldownCtrl.REFRESHMODE.ADD);//更新缓存
-//				response.getWriter().print(JsonUtil.sucess("成功创建分类名称："+ category_nm_zh + ", 分类简称:"+category_nm_en));
+//				response.getWriter().print(FastJsonUtil.sucess("成功创建分类名称："+ category_nm_zh + ", 分类简称:"+category_nm_en));
 //			}
 			if ("1".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("1", "category_nm_zh重名"));
+				response.getWriter().print(FastJsonUtil.error("1", "category_nm_zh重名"));
 			} else if("2".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("2", "category_nm_en重名"));
+				response.getWriter().print(FastJsonUtil.error("2", "category_nm_en重名"));
 			} else if("0".equals(result.getString("code"))) {
 				JSONObject data = (JSONObject) result.get("data");
 				String category_id = data.getString("category_id");
 				pulldownCtrl.refreshCategorysCache(category_id,category_nm_zh,PulldownCtrl.REFRESHMODE.ADD);//更新缓存
-				response.getWriter().print(JsonUtil.sucess("创建成功"));
+				response.getWriter().print(FastJsonUtil.sucess("创建成功"));
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 			}
 			
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:"+VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:"+VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -229,7 +229,7 @@ public class ManageCategoryCtrl {
 
 			String category_id = request.getParameter("category_id");
 			if (category_id == null || category_id.isEmpty()) {
-				response.getWriter().print(JsonUtil.error("-1", "分类ID不能为空"));
+				response.getWriter().print(FastJsonUtil.error("-1", "分类ID不能为空"));
 				response.setStatus(200);
 				return;
 			}
@@ -239,7 +239,7 @@ public class ManageCategoryCtrl {
 			String msg = checkCategoryNm(category_nm_zh, category_nm_en);
 			if (msg != null) {
 				response.setContentType("application/Json; charset=UTF-8");
-				response.getWriter().print(JsonUtil.error("-1", msg));
+				response.getWriter().print(FastJsonUtil.error("-1", msg));
 				response.setStatus(200);
 				return;
 			}
@@ -258,12 +258,12 @@ public class ManageCategoryCtrl {
 			}
 
 			if (old_nm_zh.equals(category_nm_zh) && old_nm_en.equals(category_nm_en)) {
-				response.getWriter().print(JsonUtil.error("3", "分类名称没有变化"));
+				response.getWriter().print(FastJsonUtil.error("3", "分类名称没有变化"));
 				response.setStatus(200);
 				return;
 			}
 
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 
 			param.put("category_id", category_id);
 			param.put("category_nm_zh", category_nm_zh);
@@ -272,27 +272,27 @@ public class ManageCategoryCtrl {
 			// categoryService
 			JSONObject result = categoryService.updateCategory(param.toString(), msUser);
 //			if (!"0".equals(result.getString("code"))) {
-//				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+//				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {
 //				pulldownCtrl.refreshCategorysCache(category_id, category_nm_zh, PulldownCtrl.REFRESHMODE.UPDATE);//更新缓存
-//				response.getWriter().print(JsonUtil.sucess("修改成功"));
+//				response.getWriter().print(FastJsonUtil.sucess("修改成功"));
 //			}
 			if ("1".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("1", "category_nm_zh重名"));
+				response.getWriter().print(FastJsonUtil.error("1", "category_nm_zh重名"));
 			} else if("2".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("2", "category_nm_en重名"));
+				response.getWriter().print(FastJsonUtil.error("2", "category_nm_en重名"));
 			} else if("0".equals(result.getString("code"))) {
 				pulldownCtrl.refreshCategorysCache(category_id, category_nm_zh, PulldownCtrl.REFRESHMODE.UPDATE);//更新缓存
-				response.getWriter().print(JsonUtil.sucess("修改成功"));
+				response.getWriter().print(FastJsonUtil.sucess("修改成功"));
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 			}
 			
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:"+VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:"+VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();

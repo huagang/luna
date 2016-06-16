@@ -37,10 +37,10 @@ import ms.luna.biz.dao.model.MsResourceUriCriteria;
 import ms.luna.biz.dao.model.MsRole;
 import ms.luna.biz.dao.model.MsUserLuna;
 import ms.luna.biz.dao.model.MsUserPw;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Mark
@@ -79,13 +79,13 @@ public class LoginBLImpl implements LoginBL {
 	 */
 	@Override
 	public JSONObject isLunaUserExsit(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String luna_name = param.getString("luna_name");
 		MsUserPw msUserPw = msUserPwDAO.selectByPrimaryKey(luna_name);
 		if (msUserPw == null) {
-			return JsonUtil.error("-1", "皓月用户不存在");
+			return FastJsonUtil.error("-1", "皓月用户不存在");
 		}
-		return JsonUtil.sucess("皓月用户存在");
+		return FastJsonUtil.sucess("皓月用户存在");
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class LoginBLImpl implements LoginBL {
 	 */
 	@Override
 	public JSONObject logonPwUser(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String lunaName = param.getString("luna_name");
 		String pw = param.getString("pw");
 		final String ipAddress = param.getString("ipaddress");
@@ -103,20 +103,20 @@ public class LoginBLImpl implements LoginBL {
 		MsUserPw msUserPw = msUserPwDAO.selectByPrimaryKey(lunaName);
 		// 用户名不存在
 		if (msUserPw == null) {
-			return JsonUtil.error("-199", "用户名或者密码错误");
+			return FastJsonUtil.error("-199", "用户名或者密码错误");
 		}
 
 		final String uniqueId = msUserPw.getUniqueId();
 		// 密码错误
 		String md5Pw = VbMD5.convertFixMD5Code(pw);
 		if (!msUserPw.getPwLunaMd5().equals(md5Pw)) {
-			return JsonUtil.error("-199", "用户名或者密码错误");
+			return FastJsonUtil.error("-199", "用户名或者密码错误");
 		}
 
 		// 检查用户状态是否正常（是否被列入黑名单）
 		MsUserLuna msUserLuna = msUserLunaDAO.selectByPrimaryKey(msUserPw.getUniqueId());
 		if (!VbConstant.USER_STATUS.正常.equals(msUserLuna.getStatus())) {
-			return JsonUtil.error("-198", "用户状态不正确[" + msUserLuna.getStatus() + "]");
+			return FastJsonUtil.error("-198", "用户状态不正确[" + msUserLuna.getStatus() + "]");
 		}
 //		String msRoleCode = data.getString("ms_role_code");
 //		String msRoleName = data.getString("ms_role_name");
@@ -131,7 +131,7 @@ public class LoginBLImpl implements LoginBL {
 
 		if (lstMsRUserRole == null
 				|| lstMsRUserRole.size() > 1) {
-			return JsonUtil.error("-197", "用户担当角色有兼职");
+			return FastJsonUtil.error("-197", "用户担当角色有兼职");
 		}
 
 		MsRRoleFunctionCriteria msRRoleFunctionCriteria = new MsRRoleFunctionCriteria();
@@ -139,7 +139,7 @@ public class LoginBLImpl implements LoginBL {
 		.andMsRoleCodeEqualTo(lstMsRUserRole.get(0).getMsRoleCode());
 		List<MsRRoleFunction> lstMsRRoleFunction = msRRoleFunctionDAO.selectByCriteria(msRRoleFunctionCriteria);
 		if (lstMsRRoleFunction == null || lstMsRRoleFunction.isEmpty()) {
-			return JsonUtil.error("-196", "没有任何担当的功能");
+			return FastJsonUtil.error("-196", "没有任何担当的功能");
 		}
 //		MsRFunctionResourceUriDAO
 		List<String> hasFunctions = new ArrayList<String>();
@@ -154,7 +154,7 @@ public class LoginBLImpl implements LoginBL {
 				msRFunctionResourceUriCriteria);
 		
 		if (lstMsRFunctionResourceUri == null || lstMsRFunctionResourceUri.isEmpty()) {
-			return JsonUtil.error("-195", "没有任何资源可访问");
+			return FastJsonUtil.error("-195", "没有任何资源可访问");
 		}
 
 		Set<String> accessUris = new HashSet<String>();
@@ -164,7 +164,7 @@ public class LoginBLImpl implements LoginBL {
 
 		// 由于有外键关联，角色一定有值，且不为空值
 		MsRole msRole = msRoleDAO.selectByPrimaryKey(lstMsRUserRole.get(0).getMsRoleCode());
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("ms_role_code", lstMsRUserRole.get(0).getMsRoleCode());
 		data.put("ms_role_name", msRole.getMsRoleName());
 		data.put("nick_name", msUserPw.getLunaName());
@@ -188,7 +188,7 @@ public class LoginBLImpl implements LoginBL {
 				msLogonLogDAO.insertSelective(msLogonLog);
 			}
 		});
-		return JsonUtil.sucess("OK", data);
+		return FastJsonUtil.sucess("OK", data);
 	}
 
 	/**

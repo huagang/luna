@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import ms.luna.biz.bl.VodPlayBL;
 import ms.luna.biz.sc.VodPlayService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /** 
  * @author  Greek 
@@ -26,7 +26,7 @@ public class VodPlayServiceImpl implements VodPlayService {
 			result = vodPlayBL.createVodFile(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -38,7 +38,7 @@ public class VodPlayServiceImpl implements VodPlayService {
 			result = vodPlayBL.updateVodFileById(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -50,7 +50,7 @@ public class VodPlayServiceImpl implements VodPlayService {
 			result = vodPlayBL.deleteVodFileById(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -62,7 +62,7 @@ public class VodPlayServiceImpl implements VodPlayService {
 			result = vodPlayBL.uploadVodFiles(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}

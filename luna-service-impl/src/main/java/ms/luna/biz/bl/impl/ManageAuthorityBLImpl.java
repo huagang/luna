@@ -7,13 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ms.luna.biz.bl.ManageAuthorityBL;
-import ms.luna.biz.bl.ManageMerchantBL;
 import ms.luna.biz.dao.custom.MsRoleDAO;
 import ms.luna.biz.dao.custom.model.AuthorityParameter;
 import ms.luna.biz.dao.custom.model.AuthorityResult;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek
@@ -33,12 +32,12 @@ public class ManageAuthorityBLImpl implements ManageAuthorityBL {
 		AuthorityParameter authorityParameter = new AuthorityParameter();
 		Integer max = null;
 		Integer min = null;
-		JSONObject param = JSONObject.fromObject(json);
-		if (param.has("max")) {
-			max = param.getInt("max");
+		JSONObject param = JSONObject.parseObject(json);
+		if (param.containsKey("max")) {
+			max = param.getInteger("max");
 		}
-		if (param.has("min")) {
-			min = param.getInt("min");
+		if (param.containsKey("min")) {
+			min = param.getInteger("min");
 		}
 		if (max != null || min != null) {
 			authorityParameter.setRange("true");
@@ -57,15 +56,15 @@ public class ManageAuthorityBLImpl implements ManageAuthorityBL {
 		
 		total = msRoleDAO.countAuthority(authorityParameter);
 		if (total == 0){
-			return JsonUtil.error("-1", "暂时没有数据");
+			return FastJsonUtil.error("-1", "暂时没有数据");
 		}
 		list = msRoleDAO.selectAuthority(authorityParameter);
 		
-		JSONObject data = JSONObject.fromObject("{}");
-		JSONArray results = JSONArray.fromObject("[]");
+		JSONObject data = JSONObject.parseObject("{}");
+		JSONArray results = JSONArray.parseArray("[]");
 		
 		for(int i = 0;i<list.size();i++){
-			JSONObject result = JSONObject.fromObject("{}");
+			JSONObject result = JSONObject.parseObject("{}");
 			result.put("role_code", list.get(i).getRole_code());
 			result.put("role_name", list.get(i).getRole_name());
 			result.put("module_name", list.get(i).getModule_name());
@@ -76,7 +75,7 @@ public class ManageAuthorityBLImpl implements ManageAuthorityBL {
 		data.put("total", total);
 		data.put("results", results);
 		
-		return JsonUtil.sucess("数据加载成功！", data); 
+		return FastJsonUtil.sucess("数据加载成功！", data); 
 	}
 
 }
