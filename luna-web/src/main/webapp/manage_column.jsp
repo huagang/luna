@@ -1,4 +1,3 @@
-<!--业务管理页面  author:Demi-->
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -25,6 +24,7 @@
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
 <body ng-app="manageColumn" ng-controller="columnController as column">
 <div class="container-fluid">
@@ -41,11 +41,11 @@
                  <!--主题内容 start-->
                  <div class="main">
                      <div class="main-hd"><h3>栏目管理</h3></div>
-                     <button type="button" ng-click="column.newColumnDialog()">+新建文章</button>
+                     <button type="button" ng-click="column.newColumnDialog()">+新建栏目</button>
                      <div class="main-bd">
                             <!--业务列表 start-->
                             <div class="business-list">
-                            <table id="table_business" class="table"
+                            <table id="table_column" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
 										 data-url="${basePath}/manage/column.do?method=async_search_column"
@@ -62,7 +62,7 @@
 						                <th data-field="id" data-visible="false"></th>
                                     	<th data-field="name" data-align="left">栏目名称</th>
                                     	<th data-field="code" data-align="left">简称</th>
-                                    	<th data-field="categoryName" data-align="left">所属类别</th>
+                                    	<th data-field="category_name" data-align="left">所属类别</th>
                                         <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
 						            </tr>
@@ -101,14 +101,14 @@
         	</div>
         	<div class="short">
             	<label>栏目简称</label>
-            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="checkCode()"/>
+            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
         	</div>
             <div>
                 <label>所属类别</label>
                 <select class="select" ng-model="column.currentCategoryId">
-                    <option ng-repeat="option in column.categoryOptions" value="{{option.id}}">{{option.name}}</option>
+                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
                 </select>
             </div>
     	</form>
@@ -123,7 +123,7 @@
 <!--新建业务 end-->
 
 
-<div class="pop" class="ng-hide" ng-show="column.updateColumnShow">
+<div class="pop ng-hide" id="updateColumnDialog" ng-show="column.updateColumnShow">
     <div class="pop-title">
         <h4>更新栏目</h4>
         <a href="#" class="btn-close" ng-click="column.hideUpdateColumnDialog()"><img src="${basePath}/img/close.png" /></a>
@@ -138,14 +138,14 @@
             </div>
             <div class="short">
                 <label>栏目简称</label>
-                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="checkCode()"/>
+                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
                 <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
                 <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
             </div>
             <div>
                 <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategory">
-                    <option ng-repeat="option in column.categoryOptions" value="{{option.id}}">{{option.name}}</option>
+                <select class="select" ng-model="column.currentCategoryId">
+                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
                 </select>
             </div>
         </form>
@@ -174,6 +174,9 @@
 
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
+<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 <script type="text/javascript">
  	$(function() {
 		var id = 0, getRows = function() {
@@ -202,10 +205,10 @@
         var id = row.id;
         var name = row.name;
         var code = row.code;
-        var categoryName = row.categoryName;
-        var editOp = '<a class="edit" href="#" ng-click="column.showUpdateColumnDialog({0},\'{1}\',\'{2}\',\'{3}\')">编辑</a>'.format(id,
+        var categoryName = row.category_name;
+        var editOp = '<a class="edit" href="#" onclick="showUpdateColumnDialog({0},\'{1}\',\'{2}\',\'{3}\')">编辑</a>'.format(id,
                 name, code, categoryName);
-        var deleteOp = '<a class="delete" href="#" onclick="column.showDeleteColumnDialog({0})">删除</a>'.format(id);
+        var deleteOp = '<a class="delete" href="#" onclick="showDeleteColumnDialog({0}, \'{1}\')">删除</a>'.format(id, name);
 
         return editOp + deleteOp;
     }

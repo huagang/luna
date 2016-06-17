@@ -9,7 +9,10 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsArticleDAO;
 import ms.luna.biz.dao.custom.model.MsArticleParameter;
 import ms.luna.biz.dao.custom.model.MsArticleResult;
+import ms.luna.biz.dao.custom.model.MsColumnResult;
+import ms.luna.biz.dao.model.MsArticleCriteria;
 import ms.luna.biz.dao.model.MsArticleWithBLOBs;
+import ms.luna.biz.dao.model.MsColumnCriteria;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.log4j.Logger;
@@ -150,12 +153,20 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             parameter.setMax(max);
             parameter.setMin(min);
         }
+
+        JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
-            return FastJsonUtil.sucess("", JSON.toJSON(msArticleResults));
+            int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
+            if(msArticleResults != null) {
+                data.put("rows", JSON.toJSON(msArticleResults));
+                data.put("total", total);
+            }
         } catch (Exception ex) {
             logger.error("Failed to load articles", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
         }
+
+        return FastJsonUtil.sucess("", data);
     }
 }

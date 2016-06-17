@@ -43,6 +43,9 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @RequestMapping(params = INIT)
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.setAttribute("menu_selected", "manage_article");
@@ -67,6 +70,10 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @RequestMapping(params = DELETE_ARTICLE)
     public void deleteArticle(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
         try {
             JSONObject ret = manageArticleService.deleteArticle(id);
             response.getWriter().print(ret);

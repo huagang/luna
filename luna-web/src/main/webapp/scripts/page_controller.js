@@ -150,7 +150,7 @@ function MenuController($scope, $rootScope, $http) {
                     
                 },
                 function() {
-                    $.alert(response.data.msg);
+                    //$.alert(response.data.msg);
                 });
             } else {
                 $.alert("发布失败，请重新尝试");
