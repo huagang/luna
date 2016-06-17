@@ -149,7 +149,7 @@
 <!--删除 start-->
 <div class="pop" id="pop-delete">
     <div class="pop-title">
-        <h3>删除类别</h3>
+        <h4>删除类别</h4>
         <a href="#" class="btn-close" onclick="clcWindow_cate(this)"><img src="${basePath}/img/close.png" /></a>
     </div>
     <div class="pop-cnt">
