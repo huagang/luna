@@ -40,9 +40,11 @@ jQuery.extend({
 			oldElement = fileElement;
 		
 		var newElement = jQuery(oldElement).clone();
-		jQuery(oldElement).attr('id', fileId);
-		jQuery(oldElement).before(newElement);
-		jQuery(oldElement).appendTo(form);
+		jQuery(newElement).attr('id', fileId);
+		jQuery(newElement).attr('onchange', null);
+		jQuery(newElement)[0].files = jQuery(oldElement)[0].files;
+		jQuery(newElement).after(newElement);
+		jQuery(newElement).appendTo(form);
 		
 		//set attributes
 		jQuery(form).css('position', 'absolute');
@@ -197,7 +199,7 @@ jQuery.extend({
             jQuery.globalEval( data );
         // Get the JavaScript object, if JSON is used.
         if ( type == "json" )
-            eval( "data = " + data );
+            data = JSON.parse(r.responseText);
         // evaluate scripts within html
         if ( type == "html" )
             jQuery("<div>").html(data).evalScripts();

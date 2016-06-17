@@ -1,7 +1,7 @@
 /**
  * 用于文件上传，依据上传类型绑定change事件(input[type=file][file_type=..])
  * 给input自定义一个属性，用于存储上传文件类型，自定义属性file_type,图片：type_file="image";音频:type_file="audio";视频：type_file="video"
- * 使用该脚本需要注意：1、展示url的input为id；2、上传按钮的id为id_fileup;3、提示的id为id_warn;
+ * 使用该脚本需要注意：1、展示url的input为id；2、上传图片等媒体的input的id为id_fileup;3、提示的id为id_warn;
  * 目前仅涉及到这三种文件上传，以后有需要在扩展
  */
 
@@ -19,6 +19,7 @@ $(function(){
 
 //上传图片
 function asyncUploadThumb(obj,fileElementId){
+	var host = '/luna-web';
 	var $thumb = $(obj); //当前触发事件的元素
 	var thumbId = $thumb.attr("id"),
 		globalId = thumbId.indexOf("_");

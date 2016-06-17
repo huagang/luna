@@ -43,8 +43,10 @@ public class LoginFilter implements Filter {
 	
 	static {	
 		skipUriAfterLogin.addAll(Arrays.asList(
-				webRoot + "/uploadCtrl.do"
-				,webRoot + "/menu.do"));
+				webRoot + "/uploadCtrl.do",
+				webRoot + "/add_article.do",
+				webRoot + "/show_article.do",
+				webRoot + "/menu.do"));
 
 		skipUris.addAll(Arrays.asList(
 				webRoot + "/wechat/login.do",
