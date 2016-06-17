@@ -1,5 +1,7 @@
 package ms.luna.biz.bl.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ms.luna.biz.bl.VodPlayBL;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.MsVideoUpload;
+import ms.luna.biz.dao.model.MsVideoUploadCriteria;
 import ms.luna.biz.util.FastJsonUtil;
 import com.alibaba.fastjson.JSONObject;
 
@@ -27,7 +30,7 @@ public class VodPlayBLImpl implements VodPlayBL{
 	 * code: 2 -- Id已存在
 	 */
 	@Override
-	public JSONObject createVodFile(String json) {
+	public JSONObject createVodRecord(String json) {
 		JSONObject param = JSONObject.parseObject(json);
 		String vod_file_id = param.getString("vod_file_id");
 		
@@ -48,7 +51,7 @@ public class VodPlayBLImpl implements VodPlayBL{
 	 * code:2 -- 更新失败
 	 */
 	@Override
-	public JSONObject updateVodFileById(String json) {
+	public JSONObject updateVodRecordById(String json) {
 		JSONObject param = JSONObject.parseObject(json);
 		String vod_file_id = param.getString("vod_file_id");
 		MsVideoUpload msVideoUpload = new MsVideoUpload();
@@ -76,15 +79,47 @@ public class VodPlayBLImpl implements VodPlayBL{
 	}
 
 	@Override
-	public JSONObject deleteVodFileById(String json) {
+	public JSONObject deleteVodRecordById(String json) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JSONObject uploadVodFiles(String json) {
+	public JSONObject getVodRecords(String json) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public JSONObject getVodRecordById(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String vod_file_id = param.getString("vod_file_id");
+		// 获取已经转码成功的视频信息
+		MsVideoUploadCriteria msVideoUploadCriteria = new MsVideoUploadCriteria();
+		MsVideoUploadCriteria.Criteria criteria = msVideoUploadCriteria.createCriteria();
+		criteria.andVodFileIdEqualTo(vod_file_id).andStatusEqualTo("1");
+		List<MsVideoUpload> records = msVideoUploadDAO.selectByCriteria(msVideoUploadCriteria);
+		
+		JSONObject data = JSONObject.parseObject("{}");
+		if(!records.isEmpty()){
+			MsVideoUpload record = records.get(0);
+			String vod_original_file_url = record.getVodOriginalFileUrl();
+			String vod_normal_mp4_url = record.getVodNormalMp4Url();
+			String vod_phone_hls_url = record.getVodPhoneHlsUrl();
+			if(vod_original_file_url != null){
+				data.put("vod_original_file_url", vod_original_file_url);
+			}
+			if(vod_normal_mp4_url != null){
+				data.put("vod_normal_mp4_url", vod_normal_mp4_url);
+			}
+			if(vod_phone_hls_url != null){
+				data.put("vod_phone_hls_url", vod_phone_hls_url);
+			}
+			return FastJsonUtil.sucess("视频url信息获取成功",data);
+		} else {
+			return FastJsonUtil.error("1", "该视频url信息不存在");
+		}
+		
 	}
 
 }

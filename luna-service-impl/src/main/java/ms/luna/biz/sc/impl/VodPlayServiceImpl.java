@@ -20,10 +20,10 @@ public class VodPlayServiceImpl implements VodPlayService {
 	private VodPlayBL vodPlayBL;
 	
 	@Override
-	public JSONObject createVodFile(String json) {
+	public JSONObject createVodRecord(String json) {
 		JSONObject result = null;
 		try {
-			result = vodPlayBL.createVodFile(json);
+			result = vodPlayBL.createVodRecord(json);
 		} catch (RuntimeException e) {
 			
 			return FastJsonUtil.error("-1", e);
@@ -32,10 +32,10 @@ public class VodPlayServiceImpl implements VodPlayService {
 	}
 
 	@Override
-	public JSONObject updateVodFileById(String json) {
+	public JSONObject updateVodRecordById(String json) {
 		JSONObject result = null;
 		try {
-			result = vodPlayBL.updateVodFileById(json);
+			result = vodPlayBL.updateVodRecordById(json);
 		} catch (RuntimeException e) {
 			
 			return FastJsonUtil.error("-1", e);
@@ -44,10 +44,10 @@ public class VodPlayServiceImpl implements VodPlayService {
 	}
 
 	@Override
-	public JSONObject deleteVodFileById(String json) {
+	public JSONObject deleteVodRecordById(String json) {
 		JSONObject result = null;
 		try {
-			result = vodPlayBL.deleteVodFileById(json);
+			result = vodPlayBL.deleteVodRecordById(json);
 		} catch (RuntimeException e) {
 			
 			return FastJsonUtil.error("-1", e);
@@ -56,10 +56,10 @@ public class VodPlayServiceImpl implements VodPlayService {
 	}
 
 	@Override
-	public JSONObject uploadVodFiles(String json) {
+	public JSONObject getVodRecords(String json) {
 		JSONObject result = null;
 		try {
-			result = vodPlayBL.uploadVodFiles(json);
+			result = vodPlayBL.getVodRecords(json);
 		} catch (RuntimeException e) {
 			
 			return FastJsonUtil.error("-1", e);
@@ -67,4 +67,15 @@ public class VodPlayServiceImpl implements VodPlayService {
 		return result;
 	}
 	
+	@Override
+	public JSONObject getVodRecordById(String json) {
+		JSONObject result = null;
+		try {
+			result = vodPlayBL.getVodRecordById(json);
+		} catch (RuntimeException e) {
+			
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
 }
