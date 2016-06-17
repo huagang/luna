@@ -159,15 +159,19 @@
             <div style="display:none">
             	<input type="text" id="business-id-edit" />
             </div>
-            <div class="name">
-                <label for="business-name-edit">业务名称</label>
-                <input type="text" id="business-name-edit" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name-edit', 'btn-edit')"/>
-                <span id="warn-name-edit" class="warn">格式不正确</span>
+            <div class="name form-group clearfix">
+                <label class="form-input-title" for="business-name-edit">业务名称</label>
+                <div class="form-input-group">
+                    <input type="text" id="business-name-edit" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name-edit', 'btn-edit')"/>
+                    <span id="warn-name-edit" class="warn hide">格式不正确,请重新输入</span>
+                </div>
             </div>
-            <div class="short">
-                <label for="business-name-short-edit">业务简称</label>
-                <input type="text" id="business-name-short-edit" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short-edit', 'btn-edit')"/>
-                <span id="warn-short-edit" class="warn">格式不正确</span>
+            <div class="short form-group clearfix">
+                <label class="form-input-title" for="business-name-short-edit">业务简称</label>
+                <div class="form-input-group">
+                    <input type="text" id="business-name-short-edit" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short-edit', 'btn-edit')"/>
+                    <span id="warn-short-edit" class="warn hide">格式不正确,请重新输入</span>
+                </div>
             </div>
         </form>   
     </div>

@@ -76,19 +76,19 @@ function checkBusinessName(obj, warnId, btnId) {
         re = /^[a-zA-Z0-9\u4e00-\u9fa5.!#$%&'*+\/=?^_`{|}~-]{1,32}$/;
 
     if (business_name.length == 0) {
-        $('#warn-name').removeClass('hide').text('业务名称不能为空');
+        $('#' + warnId).removeClass('hide').text('业务名称不能为空');
         flag1 = false;
         return false;
     }
 
     if (re.test(business_name)) {
-        if (!$('#warn-name').hasClass('hide')) {
-            $('#warn-name').addClass('hide');
+        if (!$('#' + warnId).hasClass('hide')) {
+            $('#' + warnId).addClass('hide');
         }
         flag1 = true;
         return true;
     } else {
-        $('#warn-name').removeClass('hide').text('格式不正确,请重新输入');
+        $('#' + warnId).removeClass('hide').text('格式不正确,请重新输入');
         flag1 = false;
         return false;
     }
@@ -98,18 +98,18 @@ function checkBusinessShortName(obj, warnId, btnId) {
     var short_name = $(obj).val();
     var re = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]{1,16}$/;
     if (short_name.length == 0) {
-        $('#warn-short').removeClass('hide').text('业务简称不能为空');
+        $('#' + warnId).removeClass('hide').text('业务简称不能为空');
         flag2 = false;
         return false
     }
     if (re.test(short_name)) {
-        if (!$('#warn-short').hasClass('hide')) {
-            $('#warn-short').addClass('hide');
+        if (!$('#' + warnId).hasClass('hide')) {
+            $('#' + warnId).addClass('hide');
         }
         flag2 = true;
         return true;
     } else {
-        $('#warn-short').removeClass('hide').text('格式不正确,请重新输入');
+        $('#' + warnId).removeClass('hide').text('格式不正确,请重新输入');
         flag2 = false;
         return false
     }
@@ -138,8 +138,8 @@ function addBusiness() {
 //添加用户弹窗确定按钮
 function submit_business() {
     var chkResult = checkResult(),
-        chkBusinessName = checkBusinessName(document.getElementById('business-name')),
-        chkBusinessShortName = checkBusinessShortName(document.getElementById('business-name-short'));
+        chkBusinessName = checkBusinessName(document.getElementById('business-name'), 'warn-name'),
+        chkBusinessShortName = checkBusinessShortName(document.getElementById('business-name-short'), 'warn-short');
     if (!chkResult || !chkBusinessName || !chkBusinessShortName) {
         return false;
     }
@@ -223,6 +223,12 @@ function editBusiness(business_id, business_name, business_code, merchant_name) 
 }
 
 function update_business() {
+    var chkBusinessName = checkBusinessName(document.getElementById('business-name-edit'), 'warn-name-edit'),
+        chkBusinessShortName = checkBusinessShortName(document.getElementById('business-name-short-edit'), 'warn-short-edit');
+    if (!chkBusinessName || !chkBusinessShortName) {
+        return false;
+    }
+
     var business_id = $("#business-id-edit").val();
     var business_name = $("#business-name-edit").val();
     var business_code = $("#business-name-short-edit").val();
