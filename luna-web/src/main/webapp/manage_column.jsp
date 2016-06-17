@@ -84,28 +84,30 @@
 </div>
 <!--弹出层 start-->
 <!--模态窗口 -->
-<div id="pop-overlay" ng-show="column.dialogBaseShow"></div>
+<div id="pop-overlay" class="ng-hide" ng-show="column.dialogBaseShow"></div>
 <!--新建业务 start-->
-<div class="pop" ng-show="column.newColumnShow">
+<div class="pop ng-hide" id="newColumnDialog" ng-show="column.newColumnShow">
     <div class="pop-title">
         <h4>新建栏目</h4>
         <a href="#" class="btn-close" ng-click="column.hideNewColumnDialog()"><img src="${basePath}/img/close.png" /></a>
     </div>
     <div class="pop-cont">
-    	<form>
+    	<form name="newColumnForm">
         	<div class="name">
             	<label>栏目名称</label>
-            	<input type="text" placeholder="名称不超过20个字符" ng-model="column.currentName" onblur="column.checkName()" />
-            	<span class="warn">格式不正确</span>
+            	<input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
+            	<span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
+                <span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
         	</div>
         	<div class="short">
             	<label>栏目简称</label>
-            	<input type="text" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" onblur="checkCode()"/>
-            	<span class="warn">格式不正确</span>
+            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="checkCode()"/>
+                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
+                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
         	</div>
             <div>
                 <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategory">
+                <select class="select" ng-model="column.currentCategoryId">
                     <option ng-repeat="option in column.categoryOptions" value="{{option.id}}">{{option.name}}</option>
                 </select>
             </div>
@@ -113,7 +115,7 @@
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" disabled="disabled" ng-click="column.submitNewColumn()">确定</button>
+        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitNewColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideNewColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -121,23 +123,24 @@
 <!--新建业务 end-->
 
 
-<div class="pop" ng-show="column.updateColumnShow">
+<div class="pop" class="ng-hide" ng-show="column.updateColumnShow">
     <div class="pop-title">
         <h4>更新栏目</h4>
         <a href="#" class="btn-close" ng-click="column.hideUpdateColumnDialog()"><img src="${basePath}/img/close.png" /></a>
     </div>
     <div class="pop-cont">
-        <form>
-
+        <form name="updateColumnForm">
             <div class="name">
                 <label>栏目名称</label>
-                <input type="text" placeholder="名称不超过20个字符" ng-model="column.currentName" onblur="column.checkName()" />
-                <span class="warn">格式不正确</span>
+                <input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
+                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
+                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
             </div>
             <div class="short">
                 <label>栏目简称</label>
-                <input type="text" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" onblur="checkCode()"/>
-                <span class="warn">格式不正确</span>
+                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="checkCode()"/>
+                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
+                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
             </div>
             <div>
                 <label>所属类别</label>
@@ -149,31 +152,28 @@
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" disabled="disabled" ng-click="column.submitUpdateColumn()">确定</button>
+        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitUpdateColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideUpdateColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
 </div>
 <!--删除提示窗口-->
-<div class="pop" id="pop-delete" style="max-width:370px;" ng-show="column.deleteColumnShow">
+<div class="pop" id="pop-delete" class="ng-hide" style="max-width:370px;" ng-show="column.deleteColumnShow">
     <div class="pop-title">
         <h4>删除</h4>
         <a href="#" class="btn-close" ng-click="column.hideDeleteDialog()"><img src="${basePath}/img/close.png" /></a>
     </div>
-    <div class="pop-cont">
-        	删除业务，业务下的所有数据将会被清空且不可恢复，确定进行此操作么？
-    </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" ng-click="column.submitDelete()">确定</button>
+        <button type="button" ng-click="column.submitDeleteColumn()">确定</button>
         <button class="button-close" ng-click="column.hideDeleteDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
 </div>
 <!--弹出层 end-->
 
-<script src="<%=request.getContextPath() %>/scripts/business_manage.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
 <script type="text/javascript">
  	$(function() {
 		var id = 0, getRows = function() {

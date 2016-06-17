@@ -137,7 +137,7 @@ function MenuController($scope, $rootScope, $http) {
                     };
 
                     $http(request).then(function success(response) {
-                       data = response.data;
+                       var data = response.data;
                        if('0' == data.code) {
                             $scope.menu.publishDialog(data.data);
                        } else {

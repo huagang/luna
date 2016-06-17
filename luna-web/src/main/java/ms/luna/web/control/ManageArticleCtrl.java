@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -42,9 +43,12 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @RequestMapping(params = INIT)
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView modelAndView = buildModelAndView("manage_article");
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute("menu_selected", "manage_article");
+        }
 
-        return modelAndView;
+        return buildModelAndView("manage_article");
     }
 
     @RequestMapping(params = CREATE_ARTICLE)

@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ import com.alibaba.fastjson.JSONObject;
 @Transactional(rollbackFor=Exception.class)
 @Service("loginBL")
 public class LoginBLImpl implements LoginBL {
+
+	private final static Logger logger = Logger.getLogger(LoginBLImpl.class);
 
 	@Autowired
 	private MsUserPwDAO msUserPwDAO;
@@ -219,6 +222,7 @@ public class LoginBLImpl implements LoginBL {
 		}
 		for (MsResourceUri tempMsResourceUri : lstMsResourceUri) {
 			if (tempMsResourceUri.getResourceUri() != null && !tempMsResourceUri.getResourceUri().trim().isEmpty()) {
+				logger.debug("auth uri: " + tempMsResourceUri.getResourceUri());
 				accessUris.add(tempMsResourceUri.getResourceUri());
 			} else {
 				this.loadUris(accessUris, tempMsResourceUri.getResourceId());
