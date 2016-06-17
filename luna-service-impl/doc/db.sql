@@ -14,7 +14,9 @@ create table ms_business(
 	unique(business_name),
 	unique(business_code),
 	key(merchant_id),
-	key(app_id)
+	key(app_id),
+  key(regist_hhmmss),
+  key(up_hhmmss)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '微景业务表';
 
@@ -37,32 +39,47 @@ create table ms_show_app (
   `del_flg` varchar(1) not null default '0',
   `UPDATED_BY_WJNM` varchar(64) DEFAULT 'system',
   primary key(app_id),
-  unique(app_name)，
-  key(business_id)
+  unique(app_name),
+  key(business_id),
+  key(up_hhmmss),
+  key(regist_hhmmss)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '微景展表';
 
-create table ms_show_page(
-  `page_id` bigint NOT NULL AUTO_INCREMENT,
-  `page_code` varchar(32) NOT NULL,
-  `page_name` varchar(64) NOT NULL,
-  `page_addr` varchar(256) DEFAULT NULL,
-  `page_status` tinyint(4) DEFAULT NULL,
-  `app_id` int(11) NOT NULL,
-  `template_id` int(11) NOT NULL,
-  `main_flag` tinyint(1) DEFAULT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `share_info_title` varchar(64) DEFAULT NULL,
-  `share_info_des` varchar(256) DEFAULT NULL,
-  `share_info_pic` varchar(256) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  `update_time` timestamp NULL DEFAULT NULL,
-  `online_time` timestamp NULL DEFAULT NULL,
-  `note` varchar(512) DEFAULT NULL,
+
+
+CREATE TABLE ms_column(
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '栏目id',
+  `name` VARCHAR(20) NOT NULL COMMENT '栏目名称',
+  `code` VARCHAR(30) NOT NULL COMMENT '栏目简称',
+  `category_id` VARCHAR(32) NOT NULL COMMENT '类别Id',
   `up_hhmmss` timestamp NULL DEFAULT NULL,
   `regist_hhmmss` timestamp NULL DEFAULT NULL,
-  `del_flg` varchar(1) NOT NULL DEFAULT '0',
-  `UPDATED_BY_WJNM` varchar(64) DEFAULT 'system',
-  PRIMARY KEY (`page_id`),
-  unique(app_id, page_name),
-  unique(app_id, page_code)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '微景展页面表';
+  PRIMARY KEY (`id`),
+  UNIQUE (`name`),
+  UNIQUE (`code`),
+  key(up_hhmmss),
+  key(regist_hhmmss)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '内容栏目表';
+
+CREATE TABLE ms_article(
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '文章id',
+  `title` VARCHAR(50) NOT NULL COMMENT '文章标题',
+  `content` TEXT NOT NULL COMMENT '文章正文',
+  `abstract_content` TEXT NOT NULL COMMENT '摘要',
+  `abstract_pic` VARCHAR(255) COMMENT '文章头图',
+  `audio` VARCHAR(255) COMMENT '音频文件地址',
+  `video` VARCHAR(255) COMMENT '视频文件地址',
+  `business_id` INT(11) COMMENT '业务id',
+  `column_id` INT(11) NOT NULL DEFAULT 0 COMMENT '所属栏目',
+  `author` VARCHAR(20) NOT NULL COMMENT '作者',
+  `type` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '类型,0:中文,1:英文',
+  `ref_id` INT(11) NOT NULL DEFAULT 0 COMMENT '对应的中/英文文章id',
+  `up_hhmmss` timestamp NULL DEFAULT NULL,
+  `regist_hhmmss` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY (business_id),
+  KEY (column_id),
+  key(up_hhmmss),
+  key(regist_hhmmss)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '文章内容表';

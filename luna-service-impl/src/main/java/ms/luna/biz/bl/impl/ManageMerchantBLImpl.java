@@ -20,10 +20,10 @@ import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.dao.model.MsMerchantManageCriteria;
 import ms.luna.biz.dao.model.MsUserPw;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek
@@ -46,7 +46,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	@Override
 	public JSONObject createMerchant(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 
 		String merchant_nm = param.getString("merchant_nm"); // 商户名字
 		String merchant_phonenum = param.getString("merchant_phonenum"); // 商户电话
@@ -62,33 +62,33 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		String resource_content = null;
 		String lat = null;
 		String lng = null;
-		if(param.has("lat")){
+		if(param.containsKey("lat")){
 			lat = param.getString("lat"); // 纬度
 		}
-		if(param.has("lng")){
+		if(param.containsKey("lng")){
 			lng = param.getString("lng"); // 经度
 		}
-		if(param.has("county_id")){
+		if(param.containsKey("county_id")){
 			county_id = param.getString("county_id"); // 区/县id
 		}
-		if(param.has("resource_content")){
+		if(param.containsKey("resource_content")){
 			resource_content = param.getString("resource_content");
 		}
 
 		String salesman_id = ""; // 业务员名字
 		String salesman_nm = ""; // 业务员id
 		String status_id = VbConstant.MERCHANT_STATUS.CODE.待处理 + ""; // 处理状态
-		if (param.has("salesman_nm")) {
+		if (param.containsKey("salesman_nm")) {
 			salesman_nm = param.getString("salesman_nm"); // 业务员名字
 			// 检测业务员是否存在
 			boolean flag = isLunaNmExit(salesman_nm);
 			if (flag == false) {
-				return JsonUtil.error("2", "无此业务员！");
+				return FastJsonUtil.error("2", "无此业务员！");
 			}
 			//根据业务员名字得到业务员id
 			salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
 		}
-		if (param.has("status_id")) {
+		if (param.containsKey("status_id")) {
 			status_id = param.getString("status_id"); // 商户状态
 		}
 		
@@ -101,7 +101,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 检测商户是否重名
 		boolean flag = isMerchantNmExit(merchant_nm);
 		if (flag == true) {
-			return JsonUtil.error("1", "商户重名(下手慢了)！");
+			return FastJsonUtil.error("1", "商户重名(下手慢了)！");
 		}
 
 		Date date = new Date();
@@ -138,21 +138,21 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 
 		msMerchantManageDAO.insertSelective(msMerchantManage);
-		return JsonUtil.sucess("新商户创建成功！");
+		return FastJsonUtil.sucess("新商户创建成功！");
 	}
 
 	@Override
 	public JSONObject loadMerchants(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		MerchantsParameter merchantsParameter = new MerchantsParameter();
 		Integer max = null;
 		Integer min = null;
-		if (param.has("max")) {
-			max = param.getInt("max");
+		if (param.containsKey("max")) {
+			max = param.getInteger("max");
 		}
-		if (param.has("min")) {
-			min = param.getInt("min");
+		if (param.containsKey("min")) {
+			min = param.getInteger("min");
 		}
 		if (max != null || min != null) {
 			merchantsParameter.setRange("true");
@@ -166,7 +166,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		merchantsParameter.setMin(min);
 		merchantsParameter.setMax(max);
 
-		if (param.has("like_filter_nm")) {
+		if (param.containsKey("like_filter_nm")) {
 			String likeFilterNm = param.getString("like_filter_nm");
 			likeFilterNm = "%" + likeFilterNm.toLowerCase() + "%";
 			merchantsParameter.setLikeFilterNm(likeFilterNm);
@@ -177,10 +177,10 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if (total > 0) {
 			list = msMerchantManageDAO.selectMerchants(merchantsParameter);
 		}
-		JSONArray merchants = JSONArray.fromObject("[]");
+		JSONArray merchants = JSONArray.parseArray("[]");
 		if (list != null) {
 			for (MerchantsResult merchantsResult : list) {
-				JSONObject merchant = JSONObject.fromObject("{}");
+				JSONObject merchant = JSONObject.parseObject("{}");
 				merchant.put("merchant_id", merchantsResult.getMerchant_id());
 				merchant.put("merchant_nm", merchantsResult.getMerchant_nm());
 				merchant.put("category_id", merchantsResult.getCategory_id());
@@ -207,33 +207,33 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		JSONObject data = new JSONObject();
 		data.put("total", total);
 		data.put("merchants", merchants);
-		return JsonUtil.sucess("检索成功！", data);
+		return FastJsonUtil.sucess("检索成功！", data);
 		//注：新加入province_id，city_id和county_id，作用：编辑商户时的地理位置加载
 	}
 
 	@Override
 	public JSONObject deleteMerchantById(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String merchant_id = param.getString("merchant_id");
 		String salesman_id = param.getString("salesman_id");
 
 		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
 		if(msMerchantManage == null){
-			return JsonUtil.error("2", "商户id不存在");
+			return FastJsonUtil.error("2", "商户id不存在");
 		}
 
 		// 只有业务员和登录账户相同时才可删除
 		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
 			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
-			return JsonUtil.sucess("成功删除商户信息！");
+			return FastJsonUtil.sucess("成功删除商户信息！");
 		}
-		return JsonUtil.error("1", "非本商户业务员无权删除！");
+		return FastJsonUtil.error("1", "非本商户业务员无权删除！");
 	}
 
 	@Override
 	public JSONObject loadMerchantById(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String merchant_id = param.getString("merchant_id");
 
 		MsMerchantManageCriteria msMerchantManageCriteria = new MsMerchantManageCriteria();
@@ -241,7 +241,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		criteria.andMerchantIdLike(merchant_id);
 
 		List<MsMerchantManage> list = null;
-		JSONObject merchant = JSONObject.fromObject("{}");
+		JSONObject merchant = JSONObject.parseObject("{}");
 		MsMerchantManage msMerchantManage = null;
 
 		list = msMerchantManageDAO.selectByCriteria(msMerchantManageCriteria);
@@ -275,12 +275,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				merchant.put("resource_content", msMerchantManage.getResourceContent());
 			}
 		}
-		return JsonUtil.sucess("用户信息检索成功！", merchant);
+		return FastJsonUtil.sucess("用户信息检索成功！", merchant);
 	}
 	
 	@Override
 	public JSONObject updateMerchant(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 
 		String merchant_id = param.getString("merchant_id");
 		String merchant_nm = param.getString("merchant_nm"); // 商户名字
@@ -289,12 +289,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 检测商户是否重名
 		boolean flag = isMerchantNmExit(merchant_id,merchant_nm);
 		if (flag == true) {
-			return JsonUtil.error("1", "重名，下手慢了！");
+			return FastJsonUtil.error("1", "重名，下手慢了！");
 		}
 		// 检测业务员是否存在
 		boolean flag2 = isLunaNmExit(salesman_nm);
 		if (flag2 == false) {
-			return JsonUtil.error("2", "无此业务员！");
+			return FastJsonUtil.error("2", "无此业务员！");
 		}
 		//根据业务员名字得到业务员id
 		String salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
@@ -312,16 +312,16 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		String resource_content = null;// 图片地址
 		String lat = null;
 		String lng = null;
-		if(param.has("lat")){
+		if(param.containsKey("lat")){
 			lat = param.getString("lat");  // 纬度
 		}
-		if(param.has("lng")){
+		if(param.containsKey("lng")){
 			lng = param.getString("lng");// 经度
 		}
-		if(param.has("county_id")){
+		if(param.containsKey("county_id")){
 			county_id = param.getString("county_id"); // 区/县id
 		}
-		if(param.has("resource_content")){
+		if(param.containsKey("resource_content")){
 			resource_content = param.getString("resource_content");
 		}
 		
@@ -375,17 +375,17 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManageDAO.updateByCriteria(msMerchantManage2, msMerchantManageCriteria);
 		
 //		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage2,msMerchantManageCriteria);
-		return JsonUtil.sucess("更新成功！");
+		return FastJsonUtil.sucess("更新成功！");
 	}
 	
 	@Override
 	public JSONObject closeMerchantById(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String merchant_id = param.getString("merchant_id");
 
 		MsMerchantManage msMerchant = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
 		if(msMerchant == null){
-			return JsonUtil.error("1", "商户id不存在");
+			return FastJsonUtil.error("1", "商户id不存在");
 		}
 		
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
@@ -393,12 +393,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManage.setDelFlg("1");// 非物理删除
 		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
 		
-		return JsonUtil.sucess("成功关闭商户！");
+		return FastJsonUtil.sucess("成功关闭商户！");
 	}
 
 	@Override
 	public JSONObject openMerchantById(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String merchant_id = param.getString("merchant_id");
 
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
@@ -407,7 +407,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		int count = msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
 
 		if (count == 1) {
-			return JsonUtil.sucess("成功开启商户！");
+			return FastJsonUtil.sucess("成功开启商户！");
 		} else {
 			throw new RuntimeException("无法根据ID关闭商户，数据库异常");
 		}
@@ -476,32 +476,32 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	
 	@Override
 	public JSONObject isSalesmanNmExit(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String salesman_nm = param.getString("salesman_nm");
 		MsUserPw msUserPw = null;
 		msUserPw = msUserPwDAO.selectByPrimaryKey(salesman_nm);
 		if(msUserPw == null){
-			return JsonUtil.error("1","业务员不存在");
+			return FastJsonUtil.error("1","业务员不存在");
 		}
-		return JsonUtil.sucess("业务员存在");
+		return FastJsonUtil.sucess("业务员存在");
 	}
 
 	@Override
 	public JSONObject isAddedMerchantNmEist(String json){
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String merchant_nm = param.getString("merchant_nm");
 		MsMerchantManageCriteria msMerchantManageCriteria = new MsMerchantManageCriteria();
 		MsMerchantManageCriteria.Criteria criteria = msMerchantManageCriteria.createCriteria();
 		criteria.andMerchantNmEqualTo(merchant_nm);
 		int count = msMerchantManageDAO.countByCriteria(msMerchantManageCriteria);
 		if (count == 0)
-			return JsonUtil.error("1","商户名称不存在");
-		return JsonUtil.sucess("商户名称存在");
+			return FastJsonUtil.error("1","商户名称不存在");
+		return FastJsonUtil.sucess("商户名称存在");
 	}
 	
 	@Override
 	public JSONObject isEditedMerchantNmEist(String json){
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		JSONObject result = isAddedMerchantNmEist(json);
 		if(result.getString("code").equals("0")){//该用户名存在，则检测是否是当前merchant_id对应的name(即没有改动)
 			String merchant_id = param.getString("merchant_id");
@@ -511,9 +511,9 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			criteria.andMerchantNmEqualTo(merchant_nm).andMerchantIdEqualTo(merchant_id);
 			int count = msMerchantManageDAO.countByCriteria(msMerchantManageCriteria);
 			if (count == 0)//不是merchant_id对应的name
-				return JsonUtil.sucess("商户名称存在");
+				return FastJsonUtil.sucess("商户名称存在");
 		}
-		return JsonUtil.error("1","商户名称不存在");
+		return FastJsonUtil.error("1","商户名称不存在");
 	}
 
 }

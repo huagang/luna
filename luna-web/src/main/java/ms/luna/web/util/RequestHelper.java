@@ -17,7 +17,7 @@ public class RequestHelper {
 		return request.getParameter(name);
 	}
 	
-	public static int getInt(HttpServletRequest request, String name) {
+	public static int getInteger(HttpServletRequest request, String name) {
 		String value = request.getParameter(name);
 		if(StringUtils.isNumeric(value)) {
 			return Integer.parseInt(value);

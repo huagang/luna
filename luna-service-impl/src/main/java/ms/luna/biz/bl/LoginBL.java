@@ -1,6 +1,6 @@
 package ms.luna.biz.bl;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public interface LoginBL {
 

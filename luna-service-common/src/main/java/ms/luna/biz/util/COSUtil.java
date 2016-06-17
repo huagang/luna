@@ -1,11 +1,8 @@
 package ms.luna.biz.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.springframework.web.multipart.MultipartFile;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public class COSUtil {
 	public static final long 图片上传大小分界线1M = 1024*1024;
@@ -145,7 +142,15 @@ public class COSUtil {
 	public JSONObject upload2CloudDirect(MultipartFile file, String dst_folder) throws Exception {
 		return cosWrapper.upload2CloudDirect(file, LUNA_BUCKET, dst_folder);
 	}
-	
+
+
+	public boolean deleteDirRecursive(String folder) {
+		cosWrapper.deletedir(LUNA_BUCKET, folder);
+		/**
+		 * TODO: should return status according to deleteDir result
+		 */
+		return true;
+	}
 
 	/**
 	 * 
@@ -184,5 +189,9 @@ public class COSUtil {
 
 	public JSONObject uploadLocalFile2Cloud(String bucket, byte[] bytes, String localServerTempPath, String remotePath) {
 		return cosWrapper.uploadFile2Cloud(bytes, localServerTempPath, bucket, remotePath);
+	}
+
+	public static void main(String[] args) {
+		COSUtil.getInstance().deleteDirRecursive("/dev/h5/app/test/");
 	}
 }

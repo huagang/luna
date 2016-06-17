@@ -38,6 +38,7 @@ $(function(){
             function(){
                 var lonlat = $("#latitude").val();
                 lonlatPaste(lonlat,target);
+                asistZone();
             }
             ,5);
     });
@@ -70,11 +71,15 @@ $(function(){
     });
     //编辑POI数据，坐标(纬度)
     $("#latitude").blur(function(){
-    	checkLnglatitude('latitude');
+    	if (!checkLnglatitude('latitude')) {
+    		asistZone();
+    	}
     });
     //编辑POI数据，坐标(经度)
     $("#longitude").blur(function(){
-    	checkLnglatitude('longitude');
+    	if (!checkLnglatitude('longitude')) {
+    		asistZone();
+    	}
     });
     //简介
     $("#description").blur(function(){
@@ -195,6 +200,8 @@ $(function(){
     		$("#btn-newproperty-edit").attr("disabled",false);
     	}
     });
+    
+    
     //类别添加，增加页卡项
     $("input:checkbox[name='checkeds']").change(function(){
         var property = $(this).next().text();
@@ -236,6 +243,36 @@ $(function(){
             $('#tabbar>span:first-child').click();
         }
     });
+
+    $("#topTag").change(function(){
+
+   	 var tagid = $("#topTag").find("option:selected").val();
+
+       $.ajax({
+           url:host+"/manage_poi.do?method=ayncSearchSubTag",
+           type:'POST',
+           async:false,
+           cache:false,
+           data:{'subTag':tagid},
+           dataType:'JSON',
+           success:function(returndata){
+               var $subTag = $("#subTag");
+               $subTag.empty();
+               $subTag.append('<option value="0">请选择二级分类</option>');
+               for (var i = 0; i < returndata.sub_tags.length; i++) {
+   				var item = returndata.sub_tags[i];
+   				$subTag.append("<option value = '"+item.tag_id+"'>"+item.tag_name+"</option>");
+   			 }
+
+             // 显示私有字段域
+             displayPrivateField();
+           },
+           error:function(returndata){
+          	 $.alert("请求失败");
+           }
+       });
+    });
+
     //页卡项选中
     $("#tabbar").on('click','span',function(){
         $(this).siblings().addClass("selected-item");
@@ -246,6 +283,10 @@ $(function(){
     });
 
     $("#btn-POI-save").click(function(){
+//    	var lat = $("#latitude").val();
+//    	var lng = $("#longitude").val();
+//    	findZoneIdsWithQQZoneName(lat, lng);
+
 		var hasError = false;
 		hasError = checkTitleLong() || hasError;
 		hasError = checkTitleShort() || hasError;
@@ -343,6 +384,7 @@ $(function(){
 	          },3000);
 		}
 	});
+    displayPrivateField();
 });
 //“新增”按钮，新建POI数据属性
 function newProperty(obj){
@@ -424,6 +466,7 @@ function checkTitleLong(){
 			hasError=false;
 		}
 	}
+	return hasError;
 }
 //别名检查
 function checkTitleShort(){
@@ -557,4 +600,97 @@ function tagIdMatchedInTagIds(tag_id, tag_ids) {
 function cleanFileInput(_elementId) {
 	$("#"+_elementId).val("");
 }
+// 显示私有字段域
+function displayPrivateField() {
+	 var tagid = $("#topTag").find("option:selected").val();
+	 var property = $("#topTag").find("option:selected").text();
+	 var len = $("#tabbar").find('span').length;
+     var $tabbar = $('#tabbar');
+     $tabbar.empty();
+     if (!isTagFieldsExist(tagid)) {
+    	 $("#field-show").css("display","none");
+     	return;
+     }
+     $("#field-show").css("display","block");
+     $tabbar.append("<span class='tabbar-item' tagid='"+tagid+"'>"+property+"</span>");
+     var field = $("#field-show .item-poi");
+     fieldshow(tagid, field);
+};
+function asistZone() {
+	var lat = $("#latitude").val();
+	var lng = $("#longitude").val();
+	if (lat == "" || lng == "") {
+		return;
+	}
+	if (!checkLnglatitude('latitude')
+			&& !checkLnglatitude('longitude')) {
+		findZoneIdsWithQQZoneName(lat, lng);
+	}
+}
+/**
+ * 仅限中国区域内
+ * 调用腾讯的地图API：通过经纬度查询地址
+ * @param lat
+ * @param lng
+ */
+var geocoder = new qq.maps.Geocoder({
+    // 设置服务请求成功的回调函数
+    complete: function(result) {
+    	var addressComponents = result.detail.addressComponents;
+    	var province = addressComponents.province;
+    	var city = addressComponents.city;
+    	var district = addressComponents.district;
 
+    	var street = addressComponents.street;
+    	var streetNumber = addressComponents.streetNumber;
+    	//var town = addressComponents.town;
+    	//var village = addressComponents.village;
+
+    	var params ={
+			"province":province,
+			"city":city,
+			"district":district,
+    	}
+    	$.ajax({
+    		type: 'post',
+    		url: host +'/pulldown.do?method=findZoneIdsWithQQZoneName',
+    		cache: false,
+    		async: false,
+    		data: params,
+    		dataType: 'json',
+    		success: function (returndata) {
+    			if (returndata.code == '0') {
+    				var provinceId = returndata.data.provinceId;
+    				$("#province option[value='"+provinceId+"']").attr("selected","true");
+    				change_province();
+    				var cityId = returndata.data.cityId;
+    				$("#city option[value='"+cityId+"']").attr("selected","true");
+    				change_city();
+    				var countyId = returndata.data.countyId;
+    				$("#county option[value='"+countyId+"']").attr("selected","true");
+    				
+    				var complete_address_detail = $("#complete-address-detail").val();
+    				if (complete_address_detail=="") {
+    					$("#complete-address-detail").val(street + streetNumber);
+    				}
+    			}
+    		},
+    		error: function(){
+    			alert("counties请求失败");
+    			return;
+    		}
+    	});
+
+    },
+    // 若服务请求失败，则运行以下函数
+    error: function() {
+        $.alert("请输入正确的经纬度！！！");
+    }
+});
+function findZoneIdsWithQQZoneName(lat, lng) {
+	    var lat = parseFloat(lat);
+	    var lng = parseFloat(lng);
+	    var latLng = new qq.maps.LatLng(lat, lng);
+	    //调用获取位置方法
+	    geocoder.getAddress(latLng);
+}

@@ -21,13 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.VodPlayService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 视频上传
@@ -38,7 +38,7 @@ import net.sf.json.JSONObject;
  */
 @Component
 @Controller
-@RequestMapping("/api/vodPlay.do")
+@RequestMapping("/api_vodPlay.do")
 public class VodPlayCtrl {
 
 	private static final String GET_VIDEO_URLS = "method=getVideoUrls";
@@ -61,6 +61,9 @@ public class VodPlayCtrl {
 	@RequestMapping(params = GET_VIDEO_URLS)
 	public void getVideoUrls(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("text/html; charset=UTF-8");
+			
 			String token = request.getParameter("token");
 
 //			// 测试-------
@@ -70,19 +73,29 @@ public class VodPlayCtrl {
 			// 检测token是否在缓存中
 			boolean flag = vodFileTokenCache.contains(token);
 			if (flag == false) {
+				MsLogger.debug("url的token不在缓存中");
+				response.getWriter().print("url的token不在缓存中");
+				response.setStatus(200);
 				return;
 			}
 			// request 是否含有内容
 			String result = getRequestContent(request);
 			if (result.length() == 0) {
+				MsLogger.debug("request中没有信息内容");
+				response.getWriter().print("request中没有信息内容");
+				response.setStatus(200);
 				return;
 			}
-			JSONObject params = JSONObject.fromObject(result);
+			MsLogger.debug("出现转码回调信息:"+result);//
+			JSONObject params = JSONObject.parseObject(result);
 
-			int status = params.getInt("status");// 返回状态
+			int status = params.getInteger("status");// 返回状态
 			if (status != 0) {
 				// 转码失败
 				refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
+				MsLogger.debug("返回状态不为0。token:"+token);
+				response.getWriter().print("返回状态不为0，token:"+token);
+				response.setStatus(200);
 				return;
 			}
 			String task = params.getString("task");
@@ -90,36 +103,49 @@ public class VodPlayCtrl {
 			// 第一次回调
 			if (task.equals("file_upload")) {
 				JSONObject json1 = params.getJSONObject("data");
-				int ret = json1.getInt("ret");
+				int ret = json1.getInteger("ret");
 				if (ret != -303) {
 					// 转码失败
 					refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
+					MsLogger.debug("第一次转码回调，ret!=-303。token:"+token);
+					response.getWriter().print("第一次转码回调，ret!=-303，token:"+token);
+				} else {
+					// 正在转码
+					MsLogger.debug("第一次转码回调，ret=-303。token:"+token);
+					response.getWriter().print("第一次转码回调，ret=-303，token:"+token);
 				}
+				response.setStatus(200);
 				return;
 			}
 
 			// 第二次回调
 			if (task.equals("transcode")) {
 				JSONObject json2 = params.getJSONObject("data");
-				int ret = json2.getInt("ret");
+				int ret = json2.getInteger("ret");
 				String vod_file_id = json2.getString("file_id");// 腾讯云有时用file_id有时fileId
 
 				if (ret != 0) {
 					// 转码失败
 					refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
+					MsLogger.debug("第二次转码回调，ret!=0。token:"+token);
+					response.getWriter().print("第二次转码回调，ret!=0，token:"+token);
+					response.setStatus(200);
 					return;
 				}
 				// 转码成功
 				// 通过fileId查询转码信息(单纯从回调信息能获取url但是无法获知是哪一个视频格式对应的url)
+				
 				JSONObject result2 = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
-
-				JSONObject params2 = JSONObject.fromObject("{}");
-				if (result2.getString("code").equals("0")) {
+				MsLogger.debug("转码信息返回成功，token:"+token+"fileId:"+vod_file_id);
+				
+				JSONObject params2 = JSONObject.parseObject("{}");
+				String code = result2.getString("code");
+				if ("0".equals(code)) {
 					JSONObject data = result2.getJSONObject("data");
 					JSONArray playSet = data.getJSONArray("playSet");
 					for (int i = 0; i < playSet.size(); i++) {
 						JSONObject play = (JSONObject) playSet.get(i);
-						String definition = "definition" + play.getInt("definition"); // 获得格式对应的编号
+						String definition = "definition" + play.getInteger("definition"); // 获得格式对应的编号
 						String definition_nm = VbConstant.VOD_DEFINITION.ConvertName(definition); // 获得格式在数据库中的对应名称
 						String url = play.getString("url");
 						params2.put(definition_nm, url);
@@ -129,13 +155,27 @@ public class VodPlayCtrl {
 					// 写入数据库(更新记录)
 					JSONObject resJson = vodPlayService.updateVodFileById(params2.toString());
 					refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
-					if (resJson.getString("code").equals("0")) {
-						MsLogger.debug("转码成功");
+					code = resJson.getString("code");
+					if ("0".equals(code)) {
+						MsLogger.debug("转码地址写入数据库成功,fileId:"+vod_file_id);
+						response.getWriter().print("转码地址写入数据库成功，fileId:"+vod_file_id);
+						response.setStatus(200);
+						return;
+					} else {
+						MsLogger.debug("转码地址写入数据库失败，"+resJson.toString()+" fileId:"+vod_file_id);
+						response.getWriter().print("转码地址写入数据库失败，"+resJson.toString()+" fileId:"+vod_file_id);
+						response.setStatus(200);
+						return;
 					}
+				} else {
+					MsLogger.debug("获取视频转码地址失败，"+params2.toString()+" fileId:"+vod_file_id);
+					response.getWriter().print("获取视频转码地址失败，"+params2.toString()+" fileId:"+vod_file_id);
+					response.setStatus(200);
+					return;
 				}
-			}
+			} 
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 	}
 
@@ -164,7 +204,7 @@ public class VodPlayCtrl {
 			in.close();
 			in = null;
 		} catch (IOException e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		return sb.toString();
 	}
@@ -200,5 +240,4 @@ public class VodPlayCtrl {
 		public static final String ADD = "add";
 		public static final String DELETE = "delete";
 	}
-
 }

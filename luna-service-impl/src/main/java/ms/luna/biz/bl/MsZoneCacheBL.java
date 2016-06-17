@@ -3,6 +3,8 @@ package ms.luna.biz.bl;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.dao.model.MsZone;
 
 public interface MsZoneCacheBL {
@@ -17,4 +19,5 @@ public interface MsZoneCacheBL {
 	String getCityId(String zoneId);
 	String getCountyId(String zoneId);
 	List<String> getSubZoneIds(String zoneId);
+	JSONObject findZoneIdsWithQQZoneName(String qqZoneName);
 }

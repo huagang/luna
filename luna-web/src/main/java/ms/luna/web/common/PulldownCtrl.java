@@ -17,13 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ms.luna.biz.sc.PulldownService;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("pulldownCtrl")
 @Controller
 @RequestMapping("/pulldown.do")
@@ -173,7 +175,7 @@ public class PulldownCtrl {
 //		}
 //		synchronized (PulldownCtrl.class) {
 //			if (lstRoles.isEmpty()) {
-//				JSONObject param = JSONObject.fromObject("{}");
+//				JSONObject param = JSONObject.parseObject("{}");
 //				param.put("login_wjnm", "dummy");
 //				JSONObject result = pulldownService.loadRoles(param.toString());
 //				JSONObject data = result.getJSONObject("data");
@@ -235,7 +237,7 @@ public class PulldownCtrl {
 
 		if (provinceId == null || provinceId.isEmpty()) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "参数不正确！"));
+				response.getWriter().print(FastJsonUtil.error("-1", "参数不正确！"));
 				response.setStatus(200);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -244,7 +246,7 @@ public class PulldownCtrl {
 		}
 		JSONObject citys = loadCities(provinceId);
 		if (citys == null) {
-			citys = JsonUtil.error("-1", "城市信息检索失败");
+			citys = FastJsonUtil.error("-1", "城市信息检索失败");
 		}
 		response.getWriter().print(citys.toString());
 		response.setStatus(200);
@@ -257,7 +259,7 @@ public class PulldownCtrl {
 		String cityId = request.getParameter("city_id");
 		JSONObject counties = loadCounties(cityId);
 		if(counties == null) {
-			counties = JsonUtil.error("-1", "区县信息检索失败");
+			counties = FastJsonUtil.error("-1", "区县信息检索失败");
 		}
 		response.setStatus(200);
 		response.getWriter().print(counties.toString());
@@ -274,7 +276,7 @@ public class PulldownCtrl {
 			categorys = pulldownService.loadCategorys();
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}
@@ -324,7 +326,7 @@ public class PulldownCtrl {
 			}
 		}
 	}
-	
+
 	/**
 	 * 缓存更新模式——更新，删除，添加
 	 */
@@ -333,4 +335,41 @@ public class PulldownCtrl {
 		public static final String UPDATE = "update";
 		public static final String DELETE = "delete";
 	}
+
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping(params = "method=findZoneIdsWithQQZoneName")
+	public void findZoneIdsWithQQZoneName(
+			@RequestParam(required=true, value="province")
+			String province,
+			@RequestParam(required=true, value="city")
+			String city,
+			@RequestParam(required=true, value="district")
+			String county,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+
+		JSONObject result = null;
+		try{
+			JSONObject param = new JSONObject();
+			param.put("province", province);
+			param.put("city", city);
+			param.put("county", county);
+			result = pulldownService.findZoneIdsWithQQZoneName(param.toJSONString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
+		}
+		MsLogger.debug(result.toJSONString());
+		response.getWriter().print(result.toJSONString());
+		response.setStatus(200);
+	}
+
 }

@@ -309,6 +309,216 @@ public class MsPoiTagCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andDsOrderIsNull() {
+            addCriterion("ds_order is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderIsNotNull() {
+            addCriterion("ds_order is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order =", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order <>", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order >", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order >=", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order <", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("ds_order <=", value, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("ds_order in", values, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("ds_order not in", values, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("ds_order between", value1, value2, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andDsOrderNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("ds_order not between", value1, value2, "dsOrder");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelIsNull() {
+            addCriterion("tag_level is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelIsNotNull() {
+            addCriterion("tag_level is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level =", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level <>", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level >", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level >=", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level <", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_level <=", value, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("tag_level in", values, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("tag_level not in", values, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("tag_level between", value1, value2, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLevelNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("tag_level not between", value1, value2, "tagLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdIsNull() {
+            addCriterion("parent_tag_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdIsNotNull() {
+            addCriterion("parent_tag_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id =", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id <>", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id >", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id >=", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id <", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("parent_tag_id <=", value, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("parent_tag_id in", values, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("parent_tag_id not in", values, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("parent_tag_id between", value1, value2, "parentTagId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTagIdNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("parent_tag_id not between", value1, value2, "parentTagId");
+            return (Criteria) this;
+        }
+
         public Criteria andEditableFlagIsNull() {
             addCriterion("editable_flag is null");
             return (Criteria) this;

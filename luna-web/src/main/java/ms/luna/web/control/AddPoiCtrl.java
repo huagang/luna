@@ -23,13 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
@@ -40,8 +39,8 @@ import ms.luna.web.control.api.VodPlayCtrl;
 import ms.luna.web.control.api.VodPlayCtrl.REFRESHMODE;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("addPoiCtrl")
 @Controller
 @RequestMapping("/add_poi.do")
@@ -59,10 +58,10 @@ public class AddPoiCtrl extends BasicCtrl{
 	@Resource(name="managePoiCtrl")
 	private ManagePoiCtrl managePoiCtrl;
 
-	/**
-	 * 页面上属性列表
-	 */
-	private List<SimpleModel> checkBoxTags;
+//	/**
+//	 * 页面上属性列表
+//	 */
+//	private List<SimpleModel> checkBoxTags;
 
 	/**
 	 * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
@@ -85,30 +84,18 @@ public class AddPoiCtrl extends BasicCtrl{
 		session.setAttribute("menu_selected", "manage_poi");
 		PoiModel poiModel = new PoiModel();
 
-		checkBoxTags = poiModel.getPoiTags();
-
 		JSONObject params = new JSONObject();
 		JSONObject result = managePoiService.initAddPoi(params.toString());
+		MsLogger.debug(result.toString());
 
 		if ("0".equals(result.getString("code"))) {
 			JSONObject data = result.getJSONObject("data");
-			JSONObject common_fields_def = data.getJSONObject("common_fields_def");
-
-			JSONArray tags = common_fields_def.getJSONArray("tags_def");
-			for (int i = 0; i < tags.size(); i++) {
-				JSONObject tag = tags.getJSONObject(i);
-				if (VbConstant.POI.公共TAGID.compareTo(tag.getInt("tag_id")) == 0) {
-					continue;
-				}
-				SimpleModel simpleModel = new SimpleModel();
-				simpleModel.setValue(tag.getString("tag_id"));
-				simpleModel.setLabel(tag.getString("tag_name"));
-				checkBoxTags.add(simpleModel);
-			}
 			JSONArray private_fields_def = data.getJSONArray("private_fields_def");
+			managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), null);
 			session.setAttribute("private_fields", private_fields_def);
+		} else {
+			return new ModelAndView("/error.jsp");
 		}
-		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 
 		// 区域信息的下拉列表
 		// 国家信息
@@ -213,12 +200,19 @@ public class AddPoiCtrl extends BasicCtrl{
 		
 		param.put("short_title", short_title);
 
-		// 3.类别（tags）
-		values = paramMaps.get("checkeds");
+		// 3.一级类别（topTag）
+		values = paramMaps.get("topTag");
 		if (values == null || values.length == 0) {
-			param.put("tags", "[]");
+			param.put("tags", "[0]");
 		} else {
 			param.put("tags", values);
+		}
+		// 3.二级类别(subTag)
+		values = paramMaps.get("subTag");
+		if (values == null || values.length == 0) {
+			param.put("subTag", 0);
+		} else {
+			param.put("subTag", values[0]);
 		}
 
 		// 4.坐标（lat,lng）
@@ -284,7 +278,7 @@ public class AddPoiCtrl extends BasicCtrl{
 			throw new IllegalArgumentException("缩略图地址不正确，或者是没有上传的图片");
 		}
 		param.put("thumbnail", thumbnail);
-		
+
 		param.put("thumbnail_1_1", "");
 		param.put("thumbnail_16_9", "");
 
@@ -300,8 +294,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (CharactorUtil.hasChineseChar(panorama)) {
 			throw new IllegalArgumentException("全景数据ID不能含有中文字符！");
 		}
-		if (CharactorUtil.checkPoiDefaultStr(panorama, 32)) {
-			throw new IllegalArgumentException("全景数据ID长度不能超过" + 32 +"字节");
+		if (CharactorUtil.checkPoiDefaultStr(panorama)) {
+			throw new IllegalArgumentException("全景数据过长");
 		}
 
 		// 9.联系电话
@@ -338,7 +332,7 @@ public class AddPoiCtrl extends BasicCtrl{
 
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
@@ -347,6 +341,9 @@ public class AddPoiCtrl extends BasicCtrl{
 
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
+			if (!field.containsKey("field_def")) {
+				continue;
+			}
 			JSONObject field_def = field.getJSONObject("field_def");
 			fieldDefMap.put(field_def.getString("field_name"), field_def);
 		}
@@ -380,7 +377,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		}
 		for (Entry<String, String[]> entry : set) {
 			MsLogger.debug(entry.getKey() + "\t");
-			if (param.has(entry.getKey())) {
+			if (param.containsKey(entry.getKey())) {
 				continue;
 			}
 			if (entry.getValue().length > 1) {
@@ -409,18 +406,18 @@ public class AddPoiCtrl extends BasicCtrl{
 			JSONObject result = managePoiService.addPoi(param.toString(), msUser);
 
 			if ("0".equals(result.getString("code"))) {
-				response.getWriter().print(JsonUtil.sucess("成功上传"));
+				response.getWriter().print(FastJsonUtil.sucess("成功上传"));
 				response.setStatus(200);
 				return;
 			} else {
-				response.getWriter().print(JsonUtil.error("-1", result.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
 
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-2", e.getMessage()));
+			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
 		}
@@ -441,11 +438,11 @@ public class AddPoiCtrl extends BasicCtrl{
 			this.param2Json(request);
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-2", e.getMessage()));
+			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
 		}
-		response.getWriter().print(JsonUtil.sucess("0"));
+		response.getWriter().print(FastJsonUtil.sucess("0"));
 		response.setStatus(200);
 		return;
 	}
@@ -464,7 +461,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -487,7 +484,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -513,7 +510,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		try {
 			String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
 			if (ext == null) {
-				response.getWriter().print(JsonUtil.error("4", "文件扩展名有错误"));
+				response.getWriter().print(FastJsonUtil.error("4", "文件扩展名有错误"));
 				response.setStatus(200);
 				return;
 			}
@@ -529,27 +526,27 @@ public class AddPoiCtrl extends BasicCtrl{
 				String vod_file_id = data.getString("fileId");
 
 				// 记录写入数据库
-				JSONObject param = JSONObject.fromObject("{}");
+				JSONObject param = JSONObject.parseObject("{}");
 				param.put("vod_file_id", vod_file_id);
 				JSONObject resJson = vodPlayService.createVodFile(param.toString());
 				
 				if (resJson.getString("code").equals("0")) {// 成功
 					// 存入缓存
 					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
-					response.getWriter().print(JsonUtil.sucess("成功", param));// 注：result中文件id的表示为fileId，非file_id
+					response.getWriter().print(FastJsonUtil.sucess("成功", param));// 注：result中文件id的表示为fileId，非file_id
 				} else {
-					response.getWriter().print(JsonUtil.error("3", "写入数据库失败"));
+					response.getWriter().print(FastJsonUtil.error("3", "写入数据库失败"));
 				}
 			} else if (result.getString("code").equals("2")) {
-				response.getWriter().print(JsonUtil.error("2", "文件大小超过5M"));
+				response.getWriter().print(FastJsonUtil.error("2", "文件大小超过5M"));
 			} else {
-				response.getWriter().print(JsonUtil.error("4", "文件传输失败"));
+				response.getWriter().print(FastJsonUtil.error("4", "文件传输失败"));
 			}
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(JsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
 				e1.printStackTrace();

@@ -1,6 +1,6 @@
 package ms.luna.biz.sc;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek

@@ -11,8 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ms.luna.biz.cons.VbConstant;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Mark
@@ -85,7 +85,8 @@ public class CharactorUtil {
 	}
 
 	public static JSONObject checkPw(String pw) {
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
+		
 		// 密码长度检查
 		if (!CharactorUtil.checkLength(pw, 6, 20)) {
 			result.put("code", "201");
@@ -131,7 +132,7 @@ public class CharactorUtil {
 	}
 
 	public static JSONObject checkNickNm(String wjnm) {
-		JSONObject result = JSONObject.fromObject("{}");
+		JSONObject result = JSONObject.parseObject("{}");
 		// 用户名长度检查
 		if (!CharactorUtil.checkLength(wjnm, 4, 20)) {
 			result.put("code", "201");
@@ -280,8 +281,8 @@ public class CharactorUtil {
 		if (fieldDef == null) {
 			return true;
 		}
-		int field_type = fieldDef.getInt("field_type");
-		int field_size = fieldDef.getInt("field_size");
+		int field_type = fieldDef.getInteger("field_type");
+		int field_size = fieldDef.getInteger("field_size");
 		switch (field_type) {
 			case VbConstant.POI_FIELD_TYPE.文本框:
 				// 整数数字

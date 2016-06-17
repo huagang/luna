@@ -53,7 +53,8 @@ public class LoginFilter implements Filter {
 				webRoot + "/login.do",
 				webRoot + "/userRegist.do",
 				webRoot + "/merchantRegist.do",
-				webRoot + "/pulldown.do"
+				webRoot + "/pulldown.do",
+				webRoot + "/api_vodPlay.do"
 				));
 	}
 	

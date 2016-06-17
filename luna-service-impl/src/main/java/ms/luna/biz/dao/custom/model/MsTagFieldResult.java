@@ -28,7 +28,12 @@ public class MsTagFieldResult implements Serializable {
 	 * 页面上的表示顺序
 	 */
 	private Integer displayOrder;
-	
+
+	/**
+	 * 分类顺序
+	 */
+	private Integer tagOrder;
+
 	/**
 	 * 字段类型
 	 */
@@ -197,6 +202,20 @@ public class MsTagFieldResult implements Serializable {
 	 */
 	public void setFieldTipsForTemplete(String fieldTipsForTemplete) {
 		this.fieldTipsForTemplete = fieldTipsForTemplete;
+	}
+
+	/**
+	 * @return the tagOrder
+	 */
+	public Integer getTagOrder() {
+		return tagOrder;
+	}
+
+	/**
+	 * @param tagOrder the tagOrder to set
+	 */
+	public void setTagOrder(Integer tagOrder) {
+		this.tagOrder = tagOrder;
 	}
 	
 }

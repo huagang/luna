@@ -21,9 +21,9 @@ import ms.luna.biz.dao.model.MsRegEmailCriteria;
 import ms.luna.biz.dao.model.MsUserLuna;
 import ms.luna.biz.dao.model.MsUserLunaCriteria;
 import ms.luna.biz.dao.model.MsUserPw;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.VbMD5;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 /** 
  * @author  Greek 
@@ -54,7 +54,7 @@ public class RegistBLImpl implements RegistBL{
 	@Override
 	public JSONObject registPwUser(String json) {
 		
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String nickname = param.getString("nickname");
 		String password = param.getString("password");
 		String token = param.getString("token");
@@ -66,7 +66,7 @@ public class RegistBLImpl implements RegistBL{
 		List<MsRegEmail> lstMsRegEmail = null;
 		lstMsRegEmail = msRegEmailDAO.selectByCriteria(msRegEmailCriteria);
 		if(lstMsRegEmail == null){
-			return JsonUtil.error("1", "该账户已被注册");
+			return FastJsonUtil.error("1", "该账户已被注册");
 		}
 		
 		// 乐观锁——status
@@ -74,7 +74,7 @@ public class RegistBLImpl implements RegistBL{
 		msRegEmail.setStatus("1");
 		Integer rows = msRegEmailDAO.updateByCriteriaSelective(msRegEmail, msRegEmailCriteria);
 		if(rows != 1){
-			return JsonUtil.error("1", "该账户已被注册");
+			return FastJsonUtil.error("1", "该账户已被注册");
 		}
 		
 		msRegEmail = lstMsRegEmail.get(0);
@@ -123,19 +123,19 @@ public class RegistBLImpl implements RegistBL{
 		msRUserRole.setUniqueId(unique_id);
 		msRUserRoleDAO.insertSelective(msRUserRole);
 		
-		return JsonUtil.sucess("账户创建成功！");
+		return FastJsonUtil.sucess("账户创建成功！");
 	}
 
 	@Override
 	public JSONObject isTokenValid(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String token = param.getString("token");
 		MsRegEmailCriteria msRegEmailCriteria = new MsRegEmailCriteria();
 		MsRegEmailCriteria.Criteria criteria = msRegEmailCriteria.createCriteria();
 		criteria.andTokenEqualTo(token).andStatusEqualTo("0");
 		Integer count = msRegEmailDAO.countByCriteria(msRegEmailCriteria);
 		if(count == 0){
-			return JsonUtil.error("-2", "无有效链接！");//可能没有,也可能已注册
+			return FastJsonUtil.error("-2", "无有效链接！");//可能没有,也可能已注册
 		}
 		
 		List<MsRegEmail> lstMsRegEmail = msRegEmailDAO.selectByCriteria(msRegEmailCriteria);
@@ -145,9 +145,9 @@ public class RegistBLImpl implements RegistBL{
 		// 链接过期检测
 		if(currentTime.getTime() - registTime.getTime()> VALIDINTERVAL){
 			msRegEmailDAO.deleteByCriteria(msRegEmailCriteria);//链接过期直接删除
-			return JsonUtil.error("-3", "链接过期！");
+			return FastJsonUtil.error("-3", "链接过期！");
 		}
-		return JsonUtil.sucess("存在有效链接！");
+		return FastJsonUtil.sucess("存在有效链接！");
 	}
 
 }

@@ -126,13 +126,17 @@
       <div class="item-label">标签</div>
       <div class="item-value f-sort tags-wrap">
       <button type="button" class="btn-tags current" tag_id="">全部</button>
-      <button type="button" class="btn-tags" tag_id="2">景点</button>
+<!--       <button type="button" class="btn-tags" tag_id="2">景点</button>
       <button type="button" class="btn-tags" tag_id="3">住宿</button>
       <button type="button" class="btn-tags" tag_id="4">餐饮</button>
       <button type="button" class="btn-tags" tag_id="5">娱乐</button>
       <button type="button" class="btn-tags" tag_id="6">购物</button>
       <button type="button" class="btn-tags" tag_id="7">洗手间</button>
       <button type="button" class="btn-tags" tag_id="8">出入口</button>
+ -->     
+      <c:forEach items="${topTags}" var="varTopTag" varStatus="status"> 
+        <button type="button" class="btn-tags" tag_id="${varTopTag['value']}">${varTopTag['label']}</button>
+      </c:forEach>
       </div>
     </div>
     <div class="item">

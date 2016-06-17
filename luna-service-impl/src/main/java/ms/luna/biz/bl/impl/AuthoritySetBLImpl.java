@@ -22,9 +22,9 @@ import ms.luna.biz.dao.model.MsRRoleFunction;
 import ms.luna.biz.dao.model.MsRRoleFunctionCriteria;
 import ms.luna.biz.dao.model.MsRole;
 import ms.luna.biz.model.MsUser;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class AuthoritySetBLImpl implements AuthoritySetBL {
 
 		String logonRoleCode = msUser.getMsRoleCode();
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String ms_role_code = param.getString("ms_role_code");
 
 		// 登录人员具有的权限
@@ -103,13 +103,13 @@ public class AuthoritySetBLImpl implements AuthoritySetBL {
 			}
 		}
 
-		JSONArray modules = JSONArray.fromObject("[]");
+		JSONArray modules = JSONArray.parseArray("[]");
 		for (MsBizModule msBizModule : lstMsBizModule) {
-			JSONObject module = JSONObject.fromObject("{}");
-			JSONArray functions = JSONArray.fromObject("[]");
+			JSONObject module = JSONObject.parseObject("{}");
+			JSONArray functions = JSONArray.parseArray("[]");
 			for (MsFunction msFunction : lstMsFunction) {
 				if (msBizModule.getBizModuleCode().equals(msFunction.getBizModuleCode())) {
-					JSONObject function = JSONObject.fromObject("{}");
+					JSONObject function = JSONObject.parseObject("{}");
 					function.put("function_code", msFunction.getMsFunctionCode());
 					function.put("function_name", msFunction.getMsFunctionName());
 					if (functionCodeSet.contains(msFunction.getMsFunctionCode())) {
@@ -137,24 +137,24 @@ public class AuthoritySetBLImpl implements AuthoritySetBL {
 			modules.add(module);
 		}
 		MsRole msRole = msRoleDAO.selectByPrimaryKey(ms_role_code);
-		JSONObject data =  JSONObject.fromObject("{}");
+		JSONObject data =  JSONObject.parseObject("{}");
 		data.put("modules", modules);
 		data.put("ms_role_name", msRole.getMsRoleName());
 
-		return JsonUtil.sucess("OK", data);
+		return FastJsonUtil.sucess("OK", data);
 	}
 
 	@Override
 	public JSONObject saveModulesAndAuthsForSetting(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String ms_role_code = param.getString("ms_role_code");
 		JSONArray checkeds = param.getJSONArray("checkeds");
 
 		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
 		String logonRoleCode = msUser.getMsRoleCode();
 		if (logonRoleCode.equals(ms_role_code)) {
-			return JsonUtil.error("-1", "您不能对自己的角色更改权限[" + logonRoleCode + "]");
+			return FastJsonUtil.error("-1", "您不能对自己的角色更改权限[" + logonRoleCode + "]");
 		}
 		/*
 		 * 获取登录人具有的权限列表
@@ -180,12 +180,12 @@ public class AuthoritySetBLImpl implements AuthoritySetBL {
 		if (lstMsRRoleFunction != null) {
 			for (MsRRoleFunction msRRoleFunction : lstMsRRoleFunction) {
 				if (!funcsOfoperator.contains(msRRoleFunction.getMsFunctionCode())) {
-					return JsonUtil.error("-1", "您没有权限操作 [" + msRRoleFunction.getMsFunctionCode() + "]");
+					return FastJsonUtil.error("-1", "您没有权限操作 [" + msRRoleFunction.getMsFunctionCode() + "]");
 				}
 			}
 		}
 		if (funcsOfoperator.isEmpty()) {
-			return JsonUtil.error("-1", "您没有权限操作");
+			return FastJsonUtil.error("-1", "您没有权限操作");
 		}
 
 		// 清除已有权限
@@ -198,7 +198,7 @@ public class AuthoritySetBLImpl implements AuthoritySetBL {
 			msRRoleFunction.setMsFunctionCode(checkeds.getString(i));
 			msRRoleFunctionDAO.insertSelective(msRRoleFunction);
 		}
-		return JsonUtil.sucess("OK");
+		return FastJsonUtil.sucess("OK");
 	}
 
 }

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ms.luna.biz.bl.ManageUserBL;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageUserService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 @Service("manageUserService")
 public class ManageUserServiceImpl implements ManageUserService {
@@ -21,7 +21,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.loadUsers(json);
 		} catch (RuntimeException e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -33,7 +33,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.loadRolesByModulecode(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -45,7 +45,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.inviteUsers(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -56,7 +56,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.updateUser(json);
 		} catch (Exception e) {
 		
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -68,7 +68,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.delUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -80,7 +80,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.getModuleByRoleCode(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -92,7 +92,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.getAuthByRoleCodeAndModuleCode(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
@@ -104,7 +104,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 			result = manageUserBL.getAuthByRoleCode(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}

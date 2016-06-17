@@ -22,6 +22,10 @@
     <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/styles/common.css">
     <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
+	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 
     <script src="${basePath}/scripts/lunaweb.js"></script>
     <script src="${basePath}/scripts/ajaxfileupload.js"></script>
@@ -35,7 +39,7 @@
         <!--通用导航栏 end-->
         <div id="add-poi" class="add-poi">
             <div class="title-poi">
-                <h3>POI数基本信息</h3>
+                <h3>POI数据基本信息</h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
             <form:form commandName="poiModel" method="post" action="${basePath}/edit_poi.do?method=updatePoi" enctype="multipart/form-data">
@@ -58,18 +62,75 @@
                     <div class="item-poi">
                         <div class="label-poi property-label-poi">类别</div>
                         <div class="value-poi property-poi">
-                         <c:forEach items="${poiModel['poiTags']}" var="varTag" varStatus="varTagStatus">
+                        <%--  <c:forEach items="${poiModel['poiTags']}" var="varTag" varStatus="varTagStatus">
 							 <span>
 		                        <label class="checkbox-inline">
 		                            <form:checkbox path="checkeds" disabled="${poiReadOnly}" value="${varTag['value']}" label="${varTag['label']}"/>
 		                        </label>
 		                        <input type="text" style="display: none;"/>
-		                        <%-- <c:if test="${!poiReadOnly}">
+		                      	<c:if test="${!poiReadOnly}">
 			                        <img class="edit-property" src="${basePath}/img/edit.png" onclick="editProperty(this)"/>
 			                        <img class="del-property" src="${basePath}/img/delete.png" onclick="delProperty(this)"/>
-		                        </c:if> --%>
+		                        </c:if>
 		                  		 </span>
-		                   </c:forEach>
+		                   </c:forEach> --%>
+		                   
+		                   <c:if test="${!poiReadOnly}">
+			                    <select class="select" id="topTag" name="topTag">
+					               <option value="0">请选择一级分类</option>
+					               <c:forEach items="${topTags}" var="varTopTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.topTag==varTopTag['value']}">
+					                   			<option value="${varTopTag['value']}" selected>${varTopTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varTopTag['value']}" >${varTopTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+								<select class="select" id="subTag" name="subTag">
+					               <option value="0">请选择二级分类</option>
+					               <c:forEach items="${subTags}" var="varSubTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.subTag==varSubTag['value']}">
+					                   			<option value="${varSubTag['value']}" selected>${varSubTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varSubTag['value']}" >${varSubTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+				          </c:if>
+				           <c:if test="${poiReadOnly}">
+			                    <select class="select" id="topTag" disabled="disabled">
+					               <option value="0">请选择一级分类</option>
+					               <c:forEach items="${topTags}" var="varTopTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.topTag==varTopTag['value']}">
+					                   			<option value="${varTopTag['value']}" selected>${varTopTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varTopTag['value']}" >${varTopTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+								<select class="select" id="subTag" disabled="disabled">
+					               <option value="0">请选择二级分类</option>
+					               <c:forEach items="${subTags}" var="varSubTag" varStatus="status"> 
+					                   	 <c:choose>
+					                   		<c:when test="${poiModel.subTag==varSubTag['value']}">
+					                   			<option value="${varSubTag['value']}" selected>${varSubTag['label']}</option>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<option value="${varSubTag['value']}" >${varSubTag['label']}</option>
+					                   		</c:otherwise>
+					                   </c:choose>
+								  </c:forEach>
+					           	</select>
+				          </c:if>
 		                  <%--  <c:if test="${!poiReadOnly}">
 		                   		<span class="new" id="newPOI" onclick="newProperty(this)">+新增</span>
 		                    </c:if> --%>
@@ -147,10 +208,10 @@
 		             	</div>
 		            </div>	
                      <div class="item-poi">
-                        <div class="label-poi"><span class="superscript"></span>全景数据</div>
+                        <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi">
-                            <form:input id="panorama" readonly="${poiReadOnly}" cssClass="txt" path="panorama" maxlength="32" placeholder="输入全景数据ID"/>
-                            <div class="warn" id="panorama_warn">不能为空</div>
+                            <form:input id="panorama" readonly="${poiReadOnly}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
+							<a href="#" style="margin-left: 8px;">全景编辑</a>                            <div class="warn" id="panorama_warn">不能为空</div>
                         </div>
                     </div>
                     <div class="item-poi">

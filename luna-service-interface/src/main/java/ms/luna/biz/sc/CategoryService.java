@@ -1,7 +1,7 @@
 package ms.luna.biz.sc;
 
 import ms.luna.biz.model.MsUser;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 public interface CategoryService {
 	JSONObject getCategorys(String json);

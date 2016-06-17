@@ -45,6 +45,7 @@ showPage.controller('textController', ['$scope', '$rootScope', TextController]);
 showPage.controller('imgController', ['$scope', '$rootScope', ImgController]);
 showPage.controller('navController', ['$scope', '$rootScope', NavController]);
 showPage.controller('panoController', ['$scope', '$rootScope', PanoController]);
+showPage.controller('audioController', ['$scope', '$rootScope', AudioController]);
 
 function MenuController($scope, $rootScope, $http) {
     
@@ -136,7 +137,7 @@ function MenuController($scope, $rootScope, $http) {
                     };
 
                     $http(request).then(function success(response) {
-                       data = response.data;
+                       var data = response.data;
                        if('0' == data.code) {
                             $scope.menu.publishDialog(data.data);
                        } else {
@@ -256,6 +257,24 @@ function InteractComponentController() {
         } else {
             if(this.currentComponent.action['href'].type == 'inner') {
                 this.loadPages();
+            }
+
+            var actionValue = this.currentComponent.action.href.value;
+            with(this.action.href) {
+                switch (this.currentComponent.action['href'].type) {
+                    case "inner":
+                        innerValue = actionValue;
+                        break;
+                    case "outer":
+                        outerValue = actionValue;
+                        break;
+                    case "email":
+                        email = actionValue;
+                        break;
+                    case "phone":
+                        phone = actionValue;
+                        break;
+                }
             }
         }
     };
@@ -472,8 +491,8 @@ function PanoController($scope, $rootScope) {
 
 PanoController.prototype = new InteractComponentController();
 
-function BackgroundAudioController($scope, $rootScope) {
+function AudioController($scope, $rootScope) {
 
 }
 
-BackgroundAudioController.prototype = new BaseComponentController();
+AudioController.prototype = new InteractComponentController();

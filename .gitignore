@@ -4,3 +4,7 @@ logs
 target
 .DS_Store
 lib
+RemoteSystemsTempFiles
+Servers
+.metadata
+.recommenders

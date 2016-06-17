@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import ms.luna.biz.bl.LoginBL;
 import ms.luna.biz.sc.LoginService;
-import ms.luna.biz.util.JsonUtil;
-import net.sf.json.JSONObject;
+import ms.luna.biz.util.FastJsonUtil;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Mark
@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
 			jSONObject = loginBL.registThirdUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("102", "注册失败：重名");
+			return FastJsonUtil.error("102", "注册失败：重名");
 		}
 		return jSONObject;
 	}
@@ -47,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
 			jSONObject = loginBL.logonThirdUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return jSONObject;
 	}
@@ -67,7 +67,7 @@ public class LoginServiceImpl implements LoginService {
 			jSONObject = loginBL.logonPwUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return jSONObject;
 	}
@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
 			jSONObject = loginBL.registPwUser(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return jSONObject;
 	}
@@ -102,7 +102,7 @@ public class LoginServiceImpl implements LoginService {
 			jSONObject = loginBL.isLunaUserExsit(json);
 		} catch (Exception e) {
 			
-			return JsonUtil.error("-1", e);
+			return FastJsonUtil.error("-1", e);
 		}
 		return jSONObject;
 	}

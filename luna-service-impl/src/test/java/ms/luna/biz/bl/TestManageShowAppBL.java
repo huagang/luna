@@ -33,7 +33,7 @@ public class TestManageShowAppBL {
 			COSUtil.cosBaseDir = ServiceConfig.getString(ServiceConfig.COS_BASE_DIR);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			logger.error("Failed to load config");;
+			logger.error("Failed to load config");
 		}
 		
 		msShowAppDAO = (MsShowAppDAO) context.getBean("msShowAppDAO");

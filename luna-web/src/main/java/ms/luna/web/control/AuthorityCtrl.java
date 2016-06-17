@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.sc.ManageAuthorityService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek
@@ -67,7 +67,7 @@ public class AuthorityCtrl {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			if (offset != null) {
 				param.put("min", offset);
 			}
@@ -77,18 +77,18 @@ public class AuthorityCtrl {
 			param.put("min", offset);
 			param.put("max", limit);
 
-			JSONObject resJSON = JSONObject.fromObject("{}");
+			JSONObject resJSON = JSONObject.parseObject("{}");
 
 			JSONObject result = manageAuthorityService.loadAuthority(param.toString());
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				JSONArray arrays = data.getJSONArray("results");
 
-				Integer total = data.getInt("total");
-				JSONArray rows = JSONArray.fromObject("[]");
+				Integer total = data.getInteger("total");
+				JSONArray rows = JSONArray.parseArray("[]");
 
 				for (int i = 0; i < arrays.size(); i++) {
-					JSONObject row = JSONObject.fromObject("{}");
+					JSONObject row = JSONObject.parseObject("{}");
 					row.put("role_code", arrays.getJSONObject(i).getString("role_code"));
 					row.put("role_name", arrays.getJSONObject(i).getString("role_name"));
 					row.put("module_name", arrays.getJSONObject(i).getString("module_name"));
@@ -107,7 +107,7 @@ public class AuthorityCtrl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONObject resJSON = JSONObject.fromObject("{}");
+		JSONObject resJSON = JSONObject.parseObject("{}");
 		resJSON.put("total", 0);
 		response.getWriter().print(resJSON.toString());
 		response.setStatus(200);

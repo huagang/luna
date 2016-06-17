@@ -1,28 +1,15 @@
 package ms.luna.biz.bl.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.CommonQueryParam;
-import ms.biz.common.ErrorCode;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.MsCategoryDAO;
 import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.MsShowAppDAO;
-import ms.luna.biz.dao.custom.MsShowPageDAO;
 import ms.luna.biz.dao.custom.model.MerchantsParameter;
 import ms.luna.biz.dao.custom.model.MerchantsResult;
 import ms.luna.biz.dao.custom.model.MsBusinessParameter;
@@ -31,9 +18,18 @@ import ms.luna.biz.dao.model.MsBusiness;
 import ms.luna.biz.dao.model.MsBusinessCriteria;
 import ms.luna.biz.dao.model.MsCategory;
 import ms.luna.biz.dao.model.MsCategoryCriteria;
-import ms.luna.biz.dao.model.MsMerchantManageCriteria;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MtaWrapper;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Transactional(rollbackFor = Exception.class)
 @Service("manageBusinessBL")
@@ -208,7 +204,7 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 			JSONArray rows = new JSONArray();
 			for(MsBusinessResult result : results) {
 				JSONObject row = JSONObject.parseObject("{}");
-				row.put("business_id",result.getBusinessId());
+				row.put("business_id", result.getBusinessId());
 				row.put("business_code", result.getBusinessCode());
 				row.put("business_name", result.getBusinessName());
 				row.put("business_category", categoryId2Name.get(result.getCategory()));
@@ -255,11 +251,11 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	private JSONObject toJson(MsBusiness business) {
 		
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(MsBusinessDAO.FIELD_BUSINESS_ID, business.getBusinessId());
-		jsonObject.put(MsBusinessDAO.FIELD_BUSINESS_NAME, business.getBusinessName());
-		jsonObject.put(MsBusinessDAO.FIELD_BUSINESS_CODE, business.getBusinessCode());
-		jsonObject.put(MsBusinessDAO.FIELD_APP_ID, business.getAppId());
-		jsonObject.put(MsBusinessDAO.FIELD_STAT_ID, business.getStatId());
+		jsonObject.put(MsBusinessTable.FIELD_BUSINESS_ID, business.getBusinessId());
+		jsonObject.put(MsBusinessTable.FIELD_BUSINESS_NAME, business.getBusinessName());
+		jsonObject.put(MsBusinessTable.FIELD_BUSINESS_CODE, business.getBusinessCode());
+		jsonObject.put(MsBusinessTable.FIELD_APP_ID, business.getAppId());
+		jsonObject.put(MsBusinessTable.FIELD_STAT_ID, business.getStatId());
 		
 		return jsonObject;
 		

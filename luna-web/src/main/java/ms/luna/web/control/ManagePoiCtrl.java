@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +36,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,27 +48,31 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.biz.util.ZipUtil;
+import ms.luna.common.MsLunaResource;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 @Component("managePoiCtrl")
 @Controller
 @RequestMapping("/manage_poi.do")
 public class ManagePoiCtrl extends BasicCtrl{
 
-	private final static String uploadedFilePath = "/data1/luna/uploadedFile/";
+	private final static String uploadedFilePath = MsLunaResource.getResource("luna").getValue("uploadedFilePath");;
 
 	private Map<String, String> ZONENAME_2_CODE_MAP = new HashMap<String, String>();
 
 	public static final Integer 介绍最大长度 = 1024*20;
+	
+	public static final Integer 公有字段个数 = 11;
 
 	@Autowired
 	private ManagePoiService managePoiService;
@@ -77,11 +80,19 @@ public class ManagePoiCtrl extends BasicCtrl{
 	@Resource(name="pulldownCtrl")
 	private PulldownCtrl pulldownCtrl;
 
+	/**
+	 * 二级菜单缓存
+	 */
+	private volatile Map<Integer, JSONObject> subTagsCache = new ConcurrentHashMap<Integer, JSONObject>();
+
+	/**
+	 * 加载模板资源
+	 */
 	public ManagePoiCtrl() {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("poi_templete.xlsx");
 		try {
 			Workbook wb = WorkbookFactory.create(is);
-			Sheet sheet = wb.getSheet("Templete_(地域_备注)");
+			Sheet sheet = wb.getSheet("Templete_(备注)");
 			int rowStart = Math.max(1, sheet.getFirstRowNum());
 			int rowEnd = Math.max(1, sheet.getLastRowNum());
 			for (int i = rowStart; i <= rowEnd; i++) {
@@ -105,6 +116,71 @@ public class ManagePoiCtrl extends BasicCtrl{
 	}
 
 	/**
+	 * 缓存中查找二级菜单选项
+	 * @param topTagId
+	 * @return
+	 */
+	@RequestMapping(params = "method=ayncSearchSubTag")
+	public void ayncSearchSubTag(
+			@RequestParam(required = true) Integer subTag,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		JSONObject data = null;
+		if (subTag != null) {
+			data = subTagsCache.get(subTag);
+		}
+		if (data == null) {
+			data = new JSONObject();
+			data.put("sub_tags", "[]");
+		}
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().print(data.toString());
+		response.setStatus(200);
+		return;
+	}
+
+	public JSONObject searchSubTags(Integer topTagId) {
+		return subTagsCache.get(topTagId);
+	}
+
+	/**
+	 * 初始化一级和二级分类列表
+	 * @param request
+	 */
+	public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
+		List<SimpleModel> topTags = new ArrayList<SimpleModel>();
+		JSONArray tags = common_fields_def.getJSONArray("tags_def");
+		
+		List<SimpleModel> lstSubTag = new ArrayList<SimpleModel>();
+		for (int i = 0; i < tags.size(); i++) {
+			JSONObject tag = tags.getJSONObject(i);
+			SimpleModel simpleModel = new SimpleModel();
+			simpleModel.setValue(tag.getString("tag_id"));
+			simpleModel.setLabel(tag.getString("tag_name"));
+			topTags.add(simpleModel);
+
+			JSONArray subTags = tag.getJSONArray("sub_tags");
+			JSONObject data = new JSONObject();
+			data.put("sub_tags", subTags);
+			subTagsCache.put(tag.getInteger("tag_id"), data);
+			if (topTag != null && topTag != 0 && tag.getInteger("tag_id") == topTag.intValue()) {
+				for (int j = 0; j < subTags.size(); j++) {
+					simpleModel = new SimpleModel();
+					simpleModel.setValue(subTags.getJSONObject(j).getString("tag_id"));
+					simpleModel.setLabel(subTags.getJSONObject(j).getString("tag_name"));
+					lstSubTag.add(simpleModel);
+				}
+			}
+		}
+
+		// 一级菜单
+		session.setAttribute("topTags", topTags);
+		// 二级菜单
+		session.setAttribute("subTags", lstSubTag);
+		
+	}
+
+	/**
 	 * 页面初始化
 	 * @param request
 	 * @param response
@@ -121,28 +197,9 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		PoiModel poiModel = new PoiModel();
 
-		List<SimpleModel> checkBoxTags = poiModel.getPoiTags();
-
-		JSONObject params = JSONObject.fromObject("{}");
-		JSONObject result = managePoiService.getInitInfo(params.toString());
-
-		if ("0".equals(result.getString("code"))) {
-			JSONObject data = result.getJSONObject("data");
-
-			JSONArray tags = data.getJSONArray("tags");
-			for (int i = 0; i < tags.size(); i++) {
-				JSONObject tag = tags.getJSONObject(i);
-				if (VbConstant.POI.公共TAGID.compareTo(tag.getInt("tag_id")) == 0) {
-					continue;
-				}
-				SimpleModel simpleModel = new SimpleModel();
-				simpleModel.setValue(tag.getString("tag_id"));
-				simpleModel.setLabel(tag.getString("tag_name"));
-				checkBoxTags.add(simpleModel);
-			}
-		}
-
-		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
+//		List<SimpleModel> checkBoxTags = poiModel.getPoiTags();
+//
+//		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
 		ModelAndView mav = new ModelAndView("/manage_poi.jsp");
 
 		// 国家信息
@@ -164,7 +221,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				lstProvinces.add(simpleModel);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 //		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
@@ -201,11 +258,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 			@RequestParam(required = false) String filterName,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		JSONObject resJSON = JSONObject.fromObject("{}");
+		JSONObject resJSON = JSONObject.parseObject("{}");
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			
 			if (offset != null) {
 				param.put("offset", offset);
@@ -228,11 +285,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 					offset = 0;
 				}
 				JSONArray arrays = data.getJSONArray("pois");
-				JSONArray rows = JSONArray.fromObject("[]");
+				JSONArray rows = JSONArray.parseArray("[]");
 				for (int i = 0; i < arrays.size(); i++) {
 					JSONObject poiJson = arrays.getJSONObject(i);
 					
-					JSONObject row = JSONObject.fromObject("{}");
+					JSONObject row = JSONObject.parseObject("{}");
 					row.put("number", (i+1)+offset);
 					String short_title = poiJson.getString("short_title");
 					String long_title = poiJson.getString("long_title");
@@ -249,7 +306,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					rows.add(row);
 				}
 				resJSON.put("rows", rows);
-				resJSON.put("total", data.getInt("total"));
+				resJSON.put("total", data.getInteger("total"));
 			} else {
 				resJSON.put("total", 0);
 			}
@@ -258,10 +315,10 @@ public class ManagePoiCtrl extends BasicCtrl{
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		
-		response.getWriter().print(JsonUtil.error("-1", "异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "异常").toString());
 		response.setStatus(200);
 		return;
 	}
@@ -273,16 +330,16 @@ public class ManagePoiCtrl extends BasicCtrl{
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.fromObject("{}");
+			JSONObject param = JSONObject.parseObject("{}");
 			param.put("_id", _id);
 			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
 			response.getWriter().print(poisResult.toString());
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
-		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
 		return;
 	}
@@ -301,7 +358,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -324,7 +381,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		if (ext == null) {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(JsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
 		}
@@ -369,7 +426,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 			// zip文件大于100M
 			if (zip_fileup.getSize() > 100*1024*1024) {
-				response.getWriter().print(JsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!"));
+				response.getWriter().print(FastJsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!"));
 				response.setStatus(200);
 				return;
 			}
@@ -377,7 +434,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			savedZip = VbUtility.saveFile(pathOfDate, zip_fileup, ".zip", "poi_excel.zip");
 			JSONObject jsonResult = ZipUtil.decompressZip(savedZip, pathOfDate + "unziped/");
 			if (!"0".equals(jsonResult.getString("code"))) {
-				response.getWriter().print(JsonUtil.error("-2", jsonResult.getString("msg")));
+				response.getWriter().print(FastJsonUtil.error("-2", jsonResult.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
@@ -392,8 +449,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			e.printStackTrace();
-			response.getWriter().print(JsonUtil.error("-3", "failed"));
+			MsLogger.debug(e);
+			response.getWriter().print(FastJsonUtil.error("-3", "failed"));
 			response.setStatus(200);
 			return;
 		}
@@ -428,25 +485,56 @@ public class ManagePoiCtrl extends BasicCtrl{
 					response.getOutputStream().close();
 					wb.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					MsLogger.debug(e);
 				} 
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.debug(e);
 		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
-		response.getWriter().print(JsonUtil.error("-1", "发生异常").toString());
+		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
 	}
 
+	/**
+	 * 真正的保存Excel逻辑（含POI数据检查）
+	 * @param savedExcel
+	 * @param unzipedDir
+	 * @param msUser
+	 * @return
+	 * @throws EncryptedDocumentException
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 */
 	private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
 			throws EncryptedDocumentException, InvalidFormatException, IOException {
-		
+
+		JSONObject tagsDef = managePoiService.getInitInfo("{}");
+		if (!"0".equals(tagsDef.getString("code"))) {
+			return FastJsonUtil.error("-1", "没能正确获得分类定义信息");
+		}
+		tagsDef = tagsDef.getJSONObject("data");
+
+		JSONArray array = tagsDef.getJSONArray("tags_def");
+
+		// 子分类名称到ID的转换Map
+		Map<String, Integer> 分类名称加子分类名称To子分类编号Map = new LinkedHashMap<String, Integer>();
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject json = array.getJSONObject(i);
+			String topTagName = json.getString("tag_name");
+			JSONArray subTags = json.getJSONArray("sub_tags");
+			for (int j = 0; j < subTags.size(); j++) {
+				JSONObject subTag = subTags.getJSONObject(j);
+				分类名称加子分类名称To子分类编号Map.put(topTagName+"#"+subTag.getString("tag_name"),
+						subTag.getInteger("tag_id"));
+			}
+		}
+
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
@@ -456,19 +544,34 @@ public class ManagePoiCtrl extends BasicCtrl{
 		Map<String, String> tagname_2_tags = new HashMap<String, String>();
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
-			JSONObject field_def = field.getJSONObject("field_def");
+			JSONObject field_def = null;
+			// 有私有字段的场合
+			if (field.containsKey("field_def")) {
+				field_def = field.getJSONObject("field_def");
+				// 没有私有字段 的场合
+			} else {
+				field_def = field.getJSONObject("tag_without_field");
+			}
+
 			String tag_name = field_def.getString("tag_name");
 			String tags = "[" + field_def.getString("tag_id") + "]";
 			tagname_2_tags.put(tag_name, tags);
-			String field_show_name = field_def.getString("field_show_name");
 
-			Map<String, JSONObject> fieldJSONObject = new LinkedHashMap<String, JSONObject>();
-			fieldJSONObject.put(field_show_name, field_def);
+			if (field.containsKey("field_def")) {
+				String field_show_name = field_def.getString("field_show_name");
 
-			fieldJSONObject = fieldsGroupByTagName.put(tag_name, fieldJSONObject);
-			if (fieldJSONObject != null) {
+				Map<String, JSONObject> fieldJSONObject = new LinkedHashMap<String, JSONObject>();
 				fieldJSONObject.put(field_show_name, field_def);
-				fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+
+				fieldJSONObject = fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+				if (fieldJSONObject != null) {
+					fieldJSONObject.put(field_show_name, field_def);
+					fieldsGroupByTagName.put(tag_name, fieldJSONObject);
+				}
+			} else {
+
+				// 没有私有字段，只有公有字段
+				fieldsGroupByTagName.put(tag_name, new LinkedHashMap<String, JSONObject>());
 			}
 		}
 
@@ -481,7 +584,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		int sheetNum = wb.getNumberOfSheets();
 		for (int i = 0; i < sheetNum; i++) {
 			Sheet sheet = wb.getSheetAt(i);
-			if ("Templete_(地域_备注)".equals(sheet.getSheetName())) {
+			if ("Templete_(备注)".equals(sheet.getSheetName())) {
 				continue;
 			}
 			String tag_name = sheet.getSheetName();
@@ -489,7 +592,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			Map<String, JSONObject> fieldsJsonByTag = fieldsGroupByTagName.get(tag_name); 
 
 			if (fieldsJsonByTag == null) {
-				// TODO:
+				MsLogger.debug("工作簿中的工作表名称不是合法的一级分类名称["+ tag_name + "]");
 				continue;
 			}
 
@@ -499,7 +602,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			for (int j = rowStart; j <= rowEnd; j++) {
 				Row row = sheet.getRow(j);
 				Boolean allBlank = true;
-				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + 10; z++) {
+				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 					if (!CharactorUtil.isEmpyty(getCellValueAsString(row.getCell(0)).trim())) {
 						allBlank = false;
 					}
@@ -508,24 +611,44 @@ public class ManagePoiCtrl extends BasicCtrl{
 					continue;
 				}
 				// 公共字段
+				// POI名称
 				String long_title = getCellValueAsString(row.getCell(0)).trim();
+				// POI别名
 				String short_title = getCellValueAsString(row.getCell(1)).trim();
-//				if (CharactorUtil.isEmpyty(short_title)) {
-//					short_title = long_title;
-//				}
+
+				// 纬度
 				String lat = getCellValueAsString(row.getCell(2)).trim();
+				// 经度
 				String lng = getCellValueAsString(row.getCell(3)).trim();
+				// 地域名称
 				String mergerName = getCellValueAsString(row.getCell(4)).trim().replace("，", ",");
 				String zone_id = ZONENAME_2_CODE_MAP.get(mergerName);
+
+				// 详细地址
 				String detail_address = getCellValueAsString(row.getCell(5)).trim();
-				String brief_introduction = getCellValueAsString(row.getCell(6)).trim();
-				String thumbnail = getCellValueAsString(row.getCell(7)).trim();
+
+				// 二级分类名称
+				String subTagName = getCellValueAsString(row.getCell(6)).trim();
+				Integer subTag = 0;
+
+				// 详细介绍
+				String brief_introduction = getCellValueAsString(row.getCell(7)).trim();
+				// 缩略图
+				String thumbnail = getCellValueAsString(row.getCell(8)).trim();
 				// 8.全景数据ID
-				String panorama = getCellValueAsString(row.getCell(8)).trim();
+				String panorama = getCellValueAsString(row.getCell(9)).trim();
 				// 9.联系电话
-				String contact_phone = getCellValueAsString(row.getCell(9)).trim();
+				String contact_phone = getCellValueAsString(row.getCell(10)).trim();
 
 				Boolean isError = (zone_id == null ? Boolean.TRUE : Boolean.FALSE);
+
+				// 检查二级分类是否合法
+				if (!CharactorUtil.isEmpyty(subTagName)) {
+					subTag = 分类名称加子分类名称To子分类编号Map.get(tag_name + "#" + subTagName);
+				}
+				if (subTag == null) {
+					isError = true;
+				}
 				isError = isError || CharactorUtil.isEmpyty(long_title);
 				isError = isError || CharactorUtil.checkPoiDefaultStr(long_title, 64);
 				isError = isError || CharactorUtil.checkPoiDefaultStr(short_title, 64);
@@ -537,14 +660,14 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 				// 8.全景数据ID
 				isError = isError || CharactorUtil.hasChineseChar(panorama);
-				isError = isError || CharactorUtil.checkPoiDefaultStr(panorama, 32);
+				isError = isError || CharactorUtil.checkPoiDefaultStr(panorama);
 
 				// 9.联系电话
 				isError = isError || CharactorUtil.hasChineseChar(contact_phone);
 
 				isError = isError || CharactorUtil.fileFieldIsError(thumbnail, unzipedDir);
 				// 检查私有字段
-				for (int z = 10; !isError && z < fieldsJsonByTag.size() + 10; z++) {
+				for (int z = 公有字段个数; !isError && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 					String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 					String value = getCellValueAsString(row.getCell(z)).trim();
 					isError = isError || CharactorUtil.isPoiDataHasError(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
@@ -573,7 +696,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("contact_phone", contact_phone);
 
 					// 记录其他私有字段，页面编辑用
-					for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+					for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 						String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 						String value = getCellValueAsString(row.getCell(z)).trim();
 						JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -606,7 +729,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 								}
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							MsLogger.debug(e);
 							uploadError = true;
 						}
 						if (uploadError) {
@@ -631,7 +754,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("contact_phone", contact_phone);
 
 							// 记录其他私有字段，页面编辑用
-							for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+							for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 								String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 								String value = getCellValueAsString(row.getCell(z)).trim();
 								JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -665,6 +788,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					noCheckErrorPoi.put("thumbnail_16_9", "");
 					noCheckErrorPoi.put("merger_name", "中国," + mergerName);
 					noCheckErrorPoi.put("tags", tagname_2_tags.get(tag_name));
+					noCheckErrorPoi.put("subTag", subTag);
 
 					// 8.全景数据ID
 					noCheckErrorPoi.put("panorama", panorama);
@@ -672,7 +796,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 					try {
 						// 记录其他私有字段，页面编辑用
-						for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -704,7 +828,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 						// 9.联系电话
 						checkErrorPoi.put("contact_phone", contact_phone);
 						// 记录其他私有字段，页面编辑用
-						for (int z = 10; z < fieldsJsonByTag.size() + 10; z++) {
+						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -729,7 +853,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		param.put("no_check_errors", noCheckErrorPois);
 		JSONObject addedResult = managePoiService.savePois(param.toString(), msUser);
 		if (!"0".equals(addedResult.getString("code"))) {
-			return JsonUtil.error("-1", result.getString("msg"));
+			return FastJsonUtil.error("-1", result.getString("msg"));
 		}
 		JSONObject dataOfAddedResult = addedResult.getJSONObject("data");
 		saveErrors = dataOfAddedResult.getJSONArray("saveErrors");
@@ -737,7 +861,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		JSONObject returnResult = new JSONObject();
 		returnResult.put("checkErrors", checkErrors);
 		returnResult.put("saveErrors", saveErrors);
-		return JsonUtil.sucess("OK", returnResult);
+		return FastJsonUtil.sucess("OK", returnResult);
 	}
 
 	private Workbook generatePoiTemplete(JSONArray privateFieldsDef)
@@ -750,14 +874,24 @@ public class ManagePoiCtrl extends BasicCtrl{
 		Map<String, List<JSONObject>> fieldsGroupByTagName = new LinkedHashMap<String, List<JSONObject>>();
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
-			JSONObject field_def = field.getJSONObject("field_def");
-			String tag_name = field_def.getString("tag_name");
-			List<JSONObject> lstJSONObject = new ArrayList<JSONObject>();
-			lstJSONObject.add(field_def);
-			lstJSONObject = fieldsGroupByTagName.put(tag_name, lstJSONObject);
-			if (lstJSONObject != null) {
+			JSONObject field_def = null;
+			// 有私有字段的场合
+			if (field.containsKey("field_def")) {
+				field_def = field.getJSONObject("field_def");
+				String tag_name = field_def.getString("tag_name");
+				List<JSONObject> lstJSONObject = new ArrayList<JSONObject>();
 				lstJSONObject.add(field_def);
-				fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				lstJSONObject = fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				if (lstJSONObject != null) {
+					lstJSONObject.add(field_def);
+					fieldsGroupByTagName.put(tag_name, lstJSONObject);
+				}
+
+				// 没有私有字段 的场合
+			} else {
+				field_def = field.getJSONObject("tag_without_field");
+				String tag_name = field_def.getString("tag_name");
+				fieldsGroupByTagName.put(tag_name, new ArrayList<JSONObject>());
 			}
 		}
 
@@ -774,19 +908,6 @@ public class ManagePoiCtrl extends BasicCtrl{
 		titleStyle.setFont(titleFont);
 		titleStyle.setWrapText(true);
 
-		//		titleStyle.setBorderBottom(CellStyle.BORDER_THIN);
-		//		titleStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderLeft(CellStyle.BORDER_THIN);
-		//		titleStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderRight(CellStyle.BORDER_THIN);
-		//		titleStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		//		titleStyle.setBorderTop(CellStyle.BORDER_MEDIUM_DASHED);
-		//		titleStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		//
-		//		titleStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-		//		titleStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-
 		XSSFFont tipsFont = (XSSFFont)wb.createFont();
 		tipsFont.setColor(IndexedColors.RED.index);
 		tipsFont.setFontHeightInPoints((short)10);
@@ -795,25 +916,18 @@ public class ManagePoiCtrl extends BasicCtrl{
 		tipsStyle.setFont(tipsFont);
 		tipsStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);// 垂直
 
-		//		tipsStyle.setBorderBottom(CellStyle.BORDER_THIN);
-		//		tipsStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderLeft(CellStyle.BORDER_THIN);
-		//		tipsStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderRight(CellStyle.BORDER_THIN);
-		//		tipsStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setBorderTop(CellStyle.BORDER_THIN);
-		//		tipsStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		//		tipsStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		//		tipsStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		tipsStyle.setWrapText(true);
 
 		for (Entry<String, List<JSONObject>> entry : entrySet) {
 			String tag_name = entry.getKey();
 			List<JSONObject> privateFields = entry.getValue();
 			this.createCommonField(wb, tag_name, titleStyle, tipsStyle);
-			this.createPrivateField(wb, tag_name, privateFields, titleStyle, tipsStyle);
+			// 存在私有字段的场合再生成私有字段内容
+			if (!privateFields.isEmpty()) {
+				this.createPrivateField(wb, tag_name, privateFields, titleStyle, tipsStyle);
+			}
 		}
-		wb.setActiveSheet(1);
+		wb.setActiveSheet(0);
 		return wb;
 	}
 
@@ -827,16 +941,17 @@ public class ManagePoiCtrl extends BasicCtrl{
 			CellStyle tipsStyle) {
 
 		Sheet sheet = wb.createSheet(sheetName);
+		sheet.setZoom(80);   // 80 percent magnification
 
 		// title1
 		Row row = sheet.createRow(0);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(titleStyle);
 		}
 		// title2
 		row = sheet.createRow(1);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			if (j > 3 && j < 6) {
@@ -845,7 +960,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 		// tips
 		row = sheet.createRow(2);
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(tipsStyle);
 		}
@@ -860,14 +975,16 @@ public class ManagePoiCtrl extends BasicCtrl{
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 3, 3));
 		// 地址
 		sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 5));
-		// 简介
+		// 二级分类
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 6, 6));
-		// 缩略图
+		// 简介
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 7, 7));
-		// 8.全景数据ID
+		// 缩略图
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 8, 8));
-		// 9.联系电话
+		// 8.全景数据ID
 		sheet.addMergedRegion(new CellRangeAddress(1, 2, 9, 9));
+		// 9.联系电话
+		sheet.addMergedRegion(new CellRangeAddress(1, 2, 10, 10));
 
 		// title1设值
 		Row row0 = sheet.getRow(0);
@@ -876,13 +993,14 @@ public class ManagePoiCtrl extends BasicCtrl{
 		row0.getCell(2).setCellValue("纬度");
 		row0.getCell(3).setCellValue("经度");
 		row0.getCell(4).setCellValue("地址");
-		row0.getCell(6).setCellValue("详细介绍");
-		row0.getCell(7).setCellValue("缩略图");
+		row0.getCell(6).setCellValue("二级分类");
+		row0.getCell(7).setCellValue("详细介绍");
+		row0.getCell(8).setCellValue("缩略图");
 
 		// 8.全景数据ID
-		row0.getCell(8).setCellValue("全景数据ID");
+		row0.getCell(9).setCellValue("全景数据ID");
 		// 9.联系电话
-		row0.getCell(9).setCellValue("联系电话");
+		row0.getCell(10).setCellValue("联系电话");
 
 		row0.getCell(0).setCellStyle(titleStyle);
 		row0.getCell(1).setCellStyle(titleStyle);
@@ -891,44 +1009,53 @@ public class ManagePoiCtrl extends BasicCtrl{
 		row0.getCell(4).setCellStyle(titleStyle);
 		row0.getCell(6).setCellStyle(titleStyle);
 		row0.getCell(7).setCellStyle(titleStyle);
+		row0.getCell(8).setCellStyle(titleStyle);
 
 		// 8.全景数据ID
-		row0.getCell(8).setCellStyle(titleStyle);
-		// 9.联系电话
 		row0.getCell(9).setCellStyle(titleStyle);
+		// 9.联系电话
+		row0.getCell(10).setCellStyle(titleStyle);
 
-		// title2设值
 		Row row1 = sheet.getRow(1);
-		row1.getCell(4).setCellValue("省,市,区/县");
-		row1.getCell(5).setCellValue("详细地址");
-		row1.getCell(4).setCellStyle(titleStyle);
-		row1.getCell(5).setCellStyle(titleStyle);
-
 		// tips设值
+		// POI名称
 		row1.getCell(0).setCellValue("POI点全称，必填");
-		row1.getCell(1).setCellValue("可为空（POI其它叫法）");
 		row1.getCell(0).setCellStyle(tipsStyle);
+
+		// POI别名
+		row1.getCell(1).setCellValue("可为空（POI其它叫法）");
 		row1.getCell(1).setCellStyle(tipsStyle);
 
-		// 8.全景数据ID
-		// 9.联系电话
-		row1.getCell(8).setCellValue("panoID或者页卡集标识");
-		row1.getCell(9).setCellValue("可为空\r\n：格式：(国家区号)-省市区号-具体号码");
-
-		row1.getCell(8).setCellStyle(tipsStyle);
-		row1.getCell(9).setCellStyle(tipsStyle);
-
 		Row row2 = sheet.getRow(2);
+		// title2设值
+		row1.getCell(4).setCellValue("省,市,区/县");
+		row1.getCell(4).setCellStyle(titleStyle);
 		row2.getCell(4).setCellValue("XX省,XX市,XX区/县（值取自地域表格中）");
 
-		// 简介
-		row1.getCell(6).setCellValue("POI点的详细介绍");
-		// 缩略图
-		row1.getCell(7).setCellValue("输入缩略图名称，不能包含中文");
+		row1.getCell(5).setCellValue("详细地址");
+		row1.getCell(5).setCellStyle(titleStyle);
+
+		// 二级菜单分类
+		row1.getCell(6).setCellValue("二级分类名称");
 		row1.getCell(6).setCellStyle(tipsStyle);
+
+		// 详细介绍
+		row1.getCell(7).setCellValue("POI点的详细介绍");
 		row1.getCell(7).setCellStyle(tipsStyle);
-		
-		for (int i = 0; i < 10; i++) {
+
+		// 缩略图
+		row1.getCell(8).setCellValue("输入缩略图名称，不能包含中文");
+		row1.getCell(8).setCellStyle(tipsStyle);
+
+		// 全景数据ID
+		row1.getCell(9).setCellValue("panoID或者页卡集标识");
+		row1.getCell(9).setCellStyle(tipsStyle);
+
+		// 联系电话
+		row1.getCell(10).setCellValue("可为空\r\n：格式：(国家区号)-省市区号-具体号码");
+		row1.getCell(10).setCellStyle(tipsStyle);
+
+		for (int i = 0; i < 公有字段个数; i++) {
 			row2.getCell(i).setCellStyle(tipsStyle);
 		}
 	}
@@ -1030,7 +1157,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		return names[1];
 	}
 	private String getValueFromFieldDef(JSONObject fieldDef, String unzipedDir, String value) {
-		int field_type = fieldDef.getInt("field_type");
+		int field_type = fieldDef.getInteger("field_type");
 		boolean uploadError = false;
 		switch (field_type) {
 			case VbConstant.POI_FIELD_TYPE.复选框列表:
@@ -1064,7 +1191,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 							String fileName = "/" + VbMD5.generateToken() + ext;
 							JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-									COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+									COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
 							if ("0".equals(uploadResult.getString("code"))) {
 								JSONObject uploadedData = uploadResult.getJSONObject("data");
 								value = uploadedData.getString("access_url");
@@ -1073,7 +1200,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						MsLogger.debug(e);
 						uploadError = true;
 					}
 				}
@@ -1101,7 +1228,39 @@ public class ManagePoiCtrl extends BasicCtrl{
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						MsLogger.debug(e);
+						uploadError = true;
+					}
+				}
+				if (uploadError) {
+					throw new IllegalArgumentException("文件上传有错误发生");
+				}
+				return value;
+			case VbConstant.POI_FIELD_TYPE.视频:
+				if (unzipedDir == null) {
+					if(value == null || value.trim().isEmpty()){
+						return "";
+					} else {
+						return "没有上传压缩文件";
+					}
+				}
+				if (!CharactorUtil.isEmpyty(value)) {
+					try {
+						String ext = VbUtility.getExtensionOfVideoFileName(value);
+						if (ext != null) {
+							String fileName = VbMD5.generateToken() + ext;// 生成文件名
+							String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+							JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
+									unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+							if ("0".equals(uploadResult.getString("code"))) {
+								JSONObject uploadedData = uploadResult.getJSONObject("data");
+								value = uploadedData.getString("fileId");
+							} else {
+								uploadError = true;
+							}
+						}
+					} catch (Exception e) {
+						MsLogger.debug(e);
 						uploadError = true;
 					}
 				}
@@ -1112,6 +1271,5 @@ public class ManagePoiCtrl extends BasicCtrl{
 			default:
 				return value;
 		}
-		
 	}
 }

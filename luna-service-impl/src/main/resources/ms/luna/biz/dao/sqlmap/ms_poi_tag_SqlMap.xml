@@ -4,6 +4,9 @@
   <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsPoiTag" >
     <result column="tag_id" property="tagId" jdbcType="INTEGER" />
     <result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+    <result column="ds_order" property="dsOrder" jdbcType="INTEGER" />
+    <result column="tag_level" property="tagLevel" jdbcType="INTEGER" />
+    <result column="parent_tag_id" property="parentTagId" jdbcType="INTEGER" />
     <result column="editable_flag" property="editableFlag" jdbcType="CHAR" />
     <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
     <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
@@ -35,7 +38,8 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List" >
-    tag_id, tag_name, editable_flag, regist_hhmmss, up_hhmmss, updated_by_unique_id
+    tag_id, tag_name, ds_order, tag_level, parent_tag_id, editable_flag, regist_hhmmss, 
+    up_hhmmss, updated_by_unique_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsPoiTagCriteria" >
     select
@@ -68,10 +72,12 @@
     <include refid="ms_poi_tag.Example_Where_Clause" />
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsPoiTag" >
-    insert into ms_poi_tag (tag_id, tag_name, editable_flag, regist_hhmmss, 
-      up_hhmmss, updated_by_unique_id)
-    values (#tagId:INTEGER#, #tagName:VARCHAR#, #editableFlag:CHAR#, #registHhmmss:TIMESTAMP#, 
-      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#)
+    insert into ms_poi_tag (tag_id, tag_name, ds_order, tag_level, 
+      parent_tag_id, editable_flag, regist_hhmmss, up_hhmmss, 
+      updated_by_unique_id)
+    values (#tagId:INTEGER#, #tagName:VARCHAR#, #dsOrder:INTEGER#, #tagLevel:INTEGER#, 
+      #parentTagId:INTEGER#, #editableFlag:CHAR#, #registHhmmss:TIMESTAMP#, #upHhmmss:TIMESTAMP#, 
+      #updatedByUniqueId:VARCHAR#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsPoiTag" >
     insert into ms_poi_tag
@@ -81,6 +87,15 @@
       </isNotNull>
       <isNotNull prepend="," property="tagName" >
         tag_name
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        ds_order
+      </isNotNull>
+      <isNotNull prepend="," property="tagLevel" >
+        tag_level
+      </isNotNull>
+      <isNotNull prepend="," property="parentTagId" >
+        parent_tag_id
       </isNotNull>
       <isNotNull prepend="," property="editableFlag" >
         editable_flag
@@ -103,6 +118,15 @@
       </isNotNull>
       <isNotNull prepend="," property="tagName" >
         #tagName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        #dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="tagLevel" >
+        #tagLevel:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="parentTagId" >
+        #parentTagId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="editableFlag" >
         #editableFlag:CHAR#
@@ -132,6 +156,15 @@
       <isNotNull prepend="," property="record.tagName" >
         tag_name = #record.tagName:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.dsOrder" >
+        ds_order = #record.dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.tagLevel" >
+        tag_level = #record.tagLevel:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.parentTagId" >
+        parent_tag_id = #record.parentTagId:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="record.editableFlag" >
         editable_flag = #record.editableFlag:CHAR#
       </isNotNull>
@@ -153,6 +186,9 @@
     update ms_poi_tag
     set tag_id = #record.tagId:INTEGER#,
       tag_name = #record.tagName:VARCHAR#,
+      ds_order = #record.dsOrder:INTEGER#,
+      tag_level = #record.tagLevel:INTEGER#,
+      parent_tag_id = #record.parentTagId:INTEGER#,
       editable_flag = #record.editableFlag:CHAR#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
@@ -166,6 +202,15 @@
     <dynamic prepend="set" >
       <isNotNull prepend="," property="tagName" >
         tag_name = #tagName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dsOrder" >
+        ds_order = #dsOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="tagLevel" >
+        tag_level = #tagLevel:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="parentTagId" >
+        parent_tag_id = #parentTagId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="editableFlag" >
         editable_flag = #editableFlag:CHAR#
@@ -185,6 +230,9 @@
   <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsPoiTag" >
     update ms_poi_tag
     set tag_name = #tagName:VARCHAR#,
+      ds_order = #dsOrder:INTEGER#,
+      tag_level = #tagLevel:INTEGER#,
+      parent_tag_id = #parentTagId:INTEGER#,
       editable_flag = #editableFlag:CHAR#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -36,11 +38,11 @@ import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.JsonUtil;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Transactional(rollbackFor=Exception.class)
 @Service("managePoiBL")
@@ -59,31 +61,17 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private MsZoneCacheBL msZoneCacheBL;
 
 	/**
-	 * 页面初始化<p>
-	 * 1.添加按钮显示用的tag列表<br>
-	 * 2.poi一览页面厨师数据
+	 * tag标签的level=1的部分
+	 */
+	private final static int TAG_LEVEL_TOP = 1;
+
+	/**
+	 * 获取分类信息<br>
 	 */
 	@Override
 	public JSONObject getInitInfo(String json) {
-
-		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
-		msPoiTagCriteria.setOrderByClause("tag_id ASC");
-		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
-
-		JSONArray tags = JSONArray.fromObject("[]");
-		if (lstMsPoiTag != null) {
-			for (MsPoiTag msPoiTag : lstMsPoiTag) {
-				JSONObject tag = JSONObject.fromObject("{}");
-				tag.put("tag_id", msPoiTag.getTagId());
-				tag.put("tag_name", msPoiTag.getTagName());
-				tags.add(tag);
-			}
-		}
-
-		JSONObject data = JSONObject.fromObject("{}");
-		data.put("tags", tags);
-
-		return JsonUtil.sucess("OK", data);
+		JSONObject data = this.getCommonFieldsDef();
+		return FastJsonUtil.sucess("OK", data);
 	}
 
 	private boolean needSave(String tagsOfPage, String tagsOfField) {
@@ -116,8 +104,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 2.别名
 			doc.put("short_title", param.getString("short_title"));
 
-			// 3.属性列表
+			// 3.类别一级菜单列表
 			doc.put("tags", this.convert2JsonArray(param, "tags"));
+
+			// 3.类别二级菜单
+			doc.put("sub_tag", param.getInteger("subTag"));
 
 			lnglatArray = new ArrayList<Double>();
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
@@ -160,26 +151,32 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		} else {
 //			// 1.名称
-			if (param.has("long_title")) {
+			if (param.containsKey("long_title")) {
 				doc.put("long_title", param.getString("long_title"));
 			} else {
 				doc.put("long_title", "");
 			}
 			
 			// 2.别名
-			if (param.has("short_title")) {
+			if (param.containsKey("short_title")) {
 				doc.put("short_title", param.getString("short_title"));
 			} else {
 				doc.put("short_title", "");
 			}
 
 			// 3.属性列表
-			if (param.has("tags")) {
+			if (param.containsKey("tags")) {
 				doc.put("tags", this.convert2JsonArray(param, "tags"));
 				tag_ids = param.getString("tags");
 			} else {
 				doc.put("tags", new JSONArray());
 				tag_ids = "[]";
+			}
+			// 3.类别二级菜单
+			if (param.containsKey("subTag")) {
+				doc.put("sub_tag", param.getInteger("subTag"));
+			} else {
+				doc.put("sub_tag", 0);
 			}
 
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
@@ -202,7 +199,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			doc.put("lnglat", lnglat);
 
 			// 5.地址
-			if (param.has("zone_id")) {
+			if (param.containsKey("zone_id")) {
 				zoneId = param.getString("zone_id");
 			} else {
 				zoneId = "110000";
@@ -218,21 +215,21 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 合并后的国，省，市，区、县名称
 			doc.put("merger_name", CharactorUtil.nullToBlank(mergerName));
 			// 详细地址
-			if (param.has("detail_address")) {
+			if (param.containsKey("detail_address")) {
 				doc.put("detail_address", param.getString("detail_address"));
 			} else {
 				doc.put("detail_address", "");
 			}
 
 			// 6.简介
-			if (param.has("detail_address")) {
+			if (param.containsKey("detail_address")) {
 				doc.put("brief_introduction", param.getString("brief_introduction"));
 			} else {
 				doc.put("brief_introduction", "");
 			}
 
 			// 7.缩略图
-			if (param.has("thumbnail")) {
+			if (param.containsKey("thumbnail")) {
 				doc.put("thumbnail", param.getString("thumbnail"));
 			} else {
 				doc.put("thumbnail", "");
@@ -255,8 +252,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			JSONObject field_def = privateField.getJSONObject("field_def");
 
 			String field_name_def = field_def.getString("field_name");
-			int field_type = field_def.getInt("field_type");
-			int field_size = field_def.getInt("field_size");
+			int field_type = field_def.getInteger("field_type");
+			int field_size = field_def.getInteger("field_size");
 			String field_tag_ids = field_def.getString("tag_id");
 			Object field_name_val = null;
 			
@@ -269,7 +266,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				case VbConstant.POI_FIELD_TYPE.图片:
 				case VbConstant.POI_FIELD_TYPE.音频:
 				case VbConstant.POI_FIELD_TYPE.视频:
-					if (!param.has(field_name_def)) {
+					if (!param.containsKey(field_name_def)) {
 						field_name_val = "";
 					} else {
 						field_name_val = param.getString(field_name_def);
@@ -339,9 +336,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					break;
 				case VbConstant.POI_FIELD_TYPE.视频:
 					if (needSave(tag_ids, field_tag_ids)) {
-//						if (!VbUtility.checkCOSVideoIsOK(field_name_val)) {
-//							throw new RuntimeException("视频地址不正确或者不是已上传的地址");
-//						}
+						if (!force) {
+							if (!VbUtility.checkCOSVideoIsOK((String)field_name_val)) {
+								throw new RuntimeException("视频地址不正确或者不是已上传的地址");
+							}
+						}
 						//-----------------------------------------------------------------------
 						// 视频需要通过转码得到url，上传后返回值为id。因此不进行视频地址的检测。
 						//-----------------------------------------------------------------------
@@ -387,7 +386,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject addPoi(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		Document doc = json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.FALSE);
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
 
@@ -406,24 +405,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 		if (document != null) {
 			if (inserted) {
-				return JsonUtil.sucess("新建插入成功");
+				return FastJsonUtil.sucess("新建插入成功");
 			}
-			return JsonUtil.error("-1", "已经存在");
+			return FastJsonUtil.error("-1", "已经存在");
 		} else {
-			return JsonUtil.error("-2", "插入失败");
+			return FastJsonUtil.error("-2", "插入失败");
 		}
 	}
 
 	@Override
 	public JSONObject getPois(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		Integer offset = null;
-		if (param.has("offset")) {
-			offset = param.getInt("offset");
+		if (param.containsKey("offset")) {
+			offset = param.getInteger("offset");
 		}
 		Integer limit = null;
-		if (param.has("limit")) {
-			limit = param.getInt("limit");
+		if (param.containsKey("limit")) {
+			limit = param.getInteger("limit");
 		}
 
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
@@ -439,7 +438,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		BasicDBObject condition = new BasicDBObject();
 		String filterName = null;
-		if (param.has("filterName")) {
+		if (param.containsKey("filterName")) {
 			filterName = param.getString("filterName");
 		}
 		if (filterName != null && !filterName.isEmpty()) {
@@ -447,7 +446,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			condition.append("long_title", pattern);
 		}
 		String zoneId = null;
-		if (param.has("zoneId")) {
+		if (param.containsKey("zoneId")) {
 			zoneId = param.getString("zoneId");
 			List<String> subZoneIds = msZoneCacheBL.getSubZoneIds(zoneId);
 			BasicDBList filterSubZoneIds = new BasicDBList();
@@ -487,7 +486,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 名称
 			String long_title = docPoi.getString("long_title");
 			// 经纬度
-			JSONObject lnglat = JSONObject.fromObject(docPoi.get("lnglat"));
+			JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat"));
 			JSONArray coordinates = lnglat.getJSONArray("coordinates");
 			// 经度
 			Double lng = coordinates.getDouble(0);
@@ -498,7 +497,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 标签(类别)
 			Object poiTags = docPoi.get("tags");
 			if (poiTags != null) {
-				tags = JSONArray.fromObject(poiTags);
+				tags = FastJsonUtil.parse2Array(poiTags);
 			}
 
 			// 地域Id
@@ -527,16 +526,16 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			poi.put("_id", _id);
 			pois.add(poi);
 		}
-		JSONObject data = JSONObject.fromObject("{}");
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("pois", pois);
 		data.put("total", total);
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	@Override
 	public JSONObject updatePoi(String json) {
 
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		Document doc = json2BsonForInsertOrUpdate(param, Boolean.FALSE, Boolean.FALSE);
 
 		String _id = param.getString("_id");
@@ -549,24 +548,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 
 		if (updateResult.getModifiedCount() > 0) {
-			return JsonUtil.sucess("success");
+			return FastJsonUtil.sucess("success");
 		}
-		return JsonUtil.error("-1", "fature");
+		return FastJsonUtil.error("-1", "fature");
 	}
 
 	@Override
 	public JSONObject asyncDeletePoi(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String _id = param.getString("_id");
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
 		DeleteResult deleteResult = poi_collection.deleteOne(keyId);
 		if (deleteResult.getDeletedCount() > 0) {
-			return JsonUtil.sucess("success");
+			return FastJsonUtil.sucess("success");
 		}
 
-		return JsonUtil.error("-1", "not existing");
+		return FastJsonUtil.error("-1", "not existing");
 	}
 
 	/**
@@ -574,22 +573,58 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	 * @return
 	 */
 	private JSONObject getCommonFieldsDef() {
-		JSONObject data = new JSONObject();
+
 		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
+		// 去除公共字段的标签
 		msPoiTagCriteria.createCriteria()
 		.andTagIdNotEqualTo(VbConstant.POI.公共TAGID);
-		msPoiTagCriteria.setOrderByClause("tag_id asc");
-
+		msPoiTagCriteria.setOrderByClause("tag_level asc, parent_tag_id asc, ds_order asc");
 		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
-		JSONArray tags = new JSONArray();
-		if (lstMsPoiTag != null) {
-			for (MsPoiTag msPoiTag: lstMsPoiTag) {
-				JSONObject tag = new JSONObject();
-				tag.put("tag_id", msPoiTag.getTagId());
-				tag.put("tag_name", msPoiTag.getTagName());
-				tags.add(tag);
-			}
+
+		JSONArray tags = JSONArray.parseArray("[]");
+		Map<Integer, List<MsPoiTag>> tagMapList = new LinkedHashMap<Integer, List<MsPoiTag>>();
+		if (lstMsPoiTag == null) {
+			JSONObject data = JSONObject.parseObject("{}");
+			data.put("tags", tags);
+			return FastJsonUtil.sucess("OK", data);
 		}
+
+		// 以一级tag先进行分组
+		for (MsPoiTag msPoiTag : lstMsPoiTag) {
+			if (TAG_LEVEL_TOP == msPoiTag.getTagLevel()) {
+				List<MsPoiTag> lst = new ArrayList<MsPoiTag>();
+				lst.add(msPoiTag);
+				tagMapList.put(msPoiTag.getTagId(), lst);
+				continue;
+			}
+			List<MsPoiTag> lst = tagMapList.get(msPoiTag.getParentTagId());
+			lst.add(msPoiTag);
+		}
+
+		/*
+		 *  [{tag_id,tag_name,sub_tags[{tag_id,tag_name},...]]
+		 */
+		Set<Entry<Integer, List<MsPoiTag>>> set = tagMapList.entrySet();
+		for (Entry<Integer, List<MsPoiTag>> entry : set) {
+			List<MsPoiTag> lst = entry.getValue();
+			// 一定存在首个
+			MsPoiTag firstLevel = lst.get(0);
+			JSONObject tag = JSONObject.parseObject("{}");
+			tag.put("tag_id", firstLevel.getTagId());
+			tag.put("tag_name", firstLevel.getTagName());
+			JSONArray subTags = new JSONArray();
+			// 跳过首个
+			for (int i = 1; i < lst.size(); i++) {
+				JSONObject subTag = JSONObject.parseObject("{}");
+				subTag.put("tag_id", lst.get(i).getTagId());
+				subTag.put("tag_name", lst.get(i).getTagName());
+				subTags.add(subTag);
+			}
+			tag.put("sub_tags", subTags);
+			tags.add(tag);
+		}
+
+		JSONObject data = JSONObject.parseObject("{}");
 		data.put("tags_def", tags);
 		return data;
 	}
@@ -614,16 +649,25 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String short_title = docPoi.getString("short_title");
 		commonFieldsVal.put("short_title", short_title);
 
-		// 3.标签(类别)值
+		// 3.标签一级类别值
 		JSONArray tags_values = new JSONArray();
 		Object poiTags = docPoi.get("tags");
 		if (poiTags != null) {
-			tags_values = JSONArray.fromObject(poiTags);
+			tags_values = FastJsonUtil.parse2Array(poiTags);
+		} else {
+			tags_values.add(0);
 		}
 		commonFieldsVal.put("tags_values", tags_values);
 
+		// 3.标签二级类别值
+		if (docPoi.containsKey("sub_tag")) {
+			commonFieldsVal.put("subTag", docPoi.getInteger("sub_tag"));
+		} else {
+			commonFieldsVal.put("subTag", 0);
+		}
+
 		// 4.经纬度
-		JSONObject lnglat = JSONObject.fromObject(docPoi.get("lnglat"));
+		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
 		JSONArray coordinates = lnglat.getJSONArray("coordinates");
 		// 经度
 		Double lng = coordinates.getDouble(0);
@@ -682,17 +726,17 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		JSONObject data = new JSONObject();
 		data.put("common_fields_def", this.getCommonFieldsDef());
 		data.put("private_fields_def", this.getPrivateFields(null));
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	@Override
 	public JSONObject initEditPoi(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		String _id = param.getString("_id");
 		Document docPoi = this.getPoiById(_id);
 		if (docPoi == null) {
 			MsLogger.debug("poi ["+_id+"] is not found!");
-			return JsonUtil.error("-1", "poi ["+_id+"] is not found!");
+			return FastJsonUtil.error("-1", "poi ["+_id+"] is not found!");
 		}
 
 		JSONObject data = new JSONObject();
@@ -700,7 +744,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	private JSONArray getPrivateFields(Document docPoi) {
@@ -708,11 +752,17 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MsTagFieldParameter msTagFieldParameter = new MsTagFieldParameter();
 		msTagFieldParameter.setTagId(VbConstant.POI.公共TAGID);
 		List<MsTagFieldResult> lstMsTagFieldResult = msPoiFieldDAO.selectFieldTags(msTagFieldParameter);
-		JSONArray privateFields = JSONArray.fromObject("[]");
+		JSONArray privateFields = JSONArray.parseArray("[]");
 
 		Map<String, StringBuffer> tagIdMaps = new HashMap<String, StringBuffer>();
 
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
+			
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
+				continue;
+			}
+
 			StringBuffer tagIds = tagIdMaps.get(msTagFieldResult.getFieldName());
 			if (tagIds == null) {
 				tagIds = new StringBuffer();
@@ -728,9 +778,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			if (fieldSet.contains(msTagFieldResult.getFieldName())) {
 				continue;
 			}
+			
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
+				continue;
+			}
 			fieldSet.add(msTagFieldResult.getFieldName());
 
-			JSONObject field_def = JSONObject.fromObject("{}");
+			JSONObject field_def = JSONObject.parseObject("{}");
 			field_def.put("field_name", msTagFieldResult.getFieldName());
 			field_def.put("tag_id", tagIdMaps.get(msTagFieldResult.getFieldName()).toString());
 			field_def.put("tag_name", msTagFieldResult.getTagName());
@@ -740,13 +795,31 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("field_size", msTagFieldResult.getFieldSize());
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.fromObject(msTagFieldResult.getExtensionAttrs()));
+				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
-			JSONObject field_val = JSONObject.fromObject("{}");
+			JSONObject field_val = JSONObject.parseObject("{}");
 			if (docPoi != null) {
-				field_val.put("value", docPoi.get(msTagFieldResult.getFieldName()));
+				// 新增加的私有字段但是DB中还没有值
+				if (docPoi.get(msTagFieldResult.getFieldName()) == null) {
+					switch(msTagFieldResult.getFieldType()) {
+						case VbConstant.POI_FIELD_TYPE.文本框:
+						case VbConstant.POI_FIELD_TYPE.文本域:
+						case VbConstant.POI_FIELD_TYPE.图片:
+						case VbConstant.POI_FIELD_TYPE.视频:
+						case VbConstant.POI_FIELD_TYPE.音频:
+							field_val.put("value", "");
+							break;
+						case VbConstant.POI_FIELD_TYPE.复选框列表:
+							field_val.put("value", new int[]{});
+							break;
+						default:
+							break;
+					}
+				} else{
+					field_val.put("value", docPoi.get(msTagFieldResult.getFieldName()));
+				}
 			} else {
 				switch(msTagFieldResult.getFieldType()) {
 					case VbConstant.POI_FIELD_TYPE.文本框:
@@ -761,7 +834,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				}
 			}
 
-			JSONObject field = JSONObject.fromObject("{}");
+			JSONObject field = JSONObject.parseObject("{}");
 
 			field.put("field_def", field_def);
 			field.put("field_val", field_val);
@@ -775,10 +848,21 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MsTagFieldParameter msTagFieldParameter = new MsTagFieldParameter();
 		msTagFieldParameter.setTagId(VbConstant.POI.公共TAGID);
 		List<MsTagFieldResult> lstMsTagFieldResult = msPoiFieldDAO.selectFieldTags(msTagFieldParameter);
-		JSONArray privateFields = JSONArray.fromObject("[]");
+		JSONArray privateFields = JSONArray.parseArray("[]");
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
 
-			JSONObject field_def = JSONObject.fromObject("{}");
+			JSONObject field_def = JSONObject.parseObject("{}");
+
+			// 没有私有字段的一级分类
+			if (msTagFieldResult.getFieldName() == null) {
+				field_def.put("tag_id", msTagFieldResult.getTagId());
+				field_def.put("tag_name", msTagFieldResult.getTagName());
+				JSONObject field = JSONObject.parseObject("{}");
+				field.put("tag_without_field", field_def);
+				privateFields.add(field);
+				continue;
+			}
+
 			field_def.put("field_name", msTagFieldResult.getFieldName());
 			field_def.put("tag_id", msTagFieldResult.getTagId());
 			field_def.put("tag_name", msTagFieldResult.getTagName());
@@ -789,29 +873,30 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			field_def.put("field_tips_for_templete", CharactorUtil.nullToBlank(msTagFieldResult.getFieldTipsForTemplete()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.fromObject(msTagFieldResult.getExtensionAttrs()));
+				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
 
-			JSONObject field = JSONObject.fromObject("{}");
+			JSONObject field = JSONObject.parseObject("{}");
 
 			field.put("field_def", field_def);
 			privateFields.add(field);
 		}
 		return privateFields;
 	}
+
 	@Override
 	public JSONObject downloadPoiTemplete(String json) {
 		JSONArray privateFieldsDef = this.getPrivateFieldsForTemplete();
 		JSONObject data = new JSONObject();
 		data.put("privateFieldsDef", privateFieldsDef);
-		return JsonUtil.sucess("OK", data);
+		return FastJsonUtil.sucess("OK", data);
 	}
 
 	@Override
 	public JSONObject savePois(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 		JSONArray saveErrors = new JSONArray();
 		JSONArray no_check_errors = param.getJSONArray("no_check_errors");
 		for (int i = 0; i < no_check_errors.size(); i++) {
@@ -851,12 +936,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 		JSONObject data = new JSONObject();
 		data.put("saveErrors", saveErrors);
-		return JsonUtil.sucess("OK", data);
+		return FastJsonUtil.sucess("OK", data);
 	}
 
 	@Override
 	public JSONObject initFixPoi(String json) {
-		JSONObject param = JSONObject.fromObject(json);
+		JSONObject param = JSONObject.parseObject(json);
 
 		Document docPoi = json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
@@ -865,7 +950,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		return JsonUtil.sucess("success", data);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	@Override
@@ -875,7 +960,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONArray convert2JsonArray(JSONObject param, String key) {
 		String val = null;
-		if (param.has(key)) {
+		if (param.containsKey(key)) {
 			val = param.getString(key);
 		}
 		return convert2JsonArray(val);
@@ -886,9 +971,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			return new JSONArray();
 		}
 		if (val.startsWith("[")) {
-			return JSONArray.fromObject(val);
+			return JSONArray.parseArray(val);
 		}
-		return JSONArray.fromObject("["+val+"]");
+		return JSONArray.parseArray("["+val+"]");
 	}
 	private String getProvinceId(String zoneId) {
 		String provinceId = msZoneCacheBL.getProvinceId(zoneId);
@@ -901,5 +986,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private String getCountyId(String zoneId) {
 		String countyId = msZoneCacheBL.getCountyId(zoneId);
 		return "ALL".equals(countyId) || countyId == null?"": countyId;
+	}
+
+	@Override
+	public JSONObject getTagsDef(String json) {
+		return FastJsonUtil.sucess("OK", this.getCommonFieldsDef());
 	}
 }
