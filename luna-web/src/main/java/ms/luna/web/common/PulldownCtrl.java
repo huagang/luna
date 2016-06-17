@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ms.luna.biz.sc.PulldownService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 @Component("pulldownCtrl")
@@ -324,7 +326,7 @@ public class PulldownCtrl {
 			}
 		}
 	}
-	
+
 	/**
 	 * 缓存更新模式——更新，删除，添加
 	 */
@@ -333,4 +335,41 @@ public class PulldownCtrl {
 		public static final String UPDATE = "update";
 		public static final String DELETE = "delete";
 	}
+
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping(params = "method=findZoneIdsWithQQZoneName")
+	public void findZoneIdsWithQQZoneName(
+			@RequestParam(required=true, value="province")
+			String province,
+			@RequestParam(required=true, value="city")
+			String city,
+			@RequestParam(required=true, value="district")
+			String county,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+
+		JSONObject result = null;
+		try{
+			JSONObject param = new JSONObject();
+			param.put("province", province);
+			param.put("city", city);
+			param.put("county", county);
+			result = pulldownService.findZoneIdsWithQQZoneName(param.toJSONString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
+		}
+		MsLogger.debug(result.toJSONString());
+		response.getWriter().print(result.toJSONString());
+		response.setStatus(200);
+	}
+
 }

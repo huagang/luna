@@ -1,7 +1,6 @@
 package ms.luna.biz.bl.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +10,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.dao.custom.MsZoneDAO;
 import ms.luna.biz.dao.model.MsZone;
 import ms.luna.biz.dao.model.MsZoneCriteria;
+import ms.luna.biz.util.FastJsonUtil;
 
 @Service("msZoneCacheBL")
 public class MsZoneCacheBLImpl implements MsZoneCacheBL {
@@ -25,10 +27,31 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 
 	private static Map<String, List<String>> subZoneIdsMap = new LinkedHashMap<String, List<String>>();
 
+	private static Map<String, MsZone> name2MsZone = new LinkedHashMap<String, MsZone>();
+
+	private static String getZoneName2MsZoneId(String zoneName, int level) {
+		MsZone msZone = name2MsZone.get(zoneName + "#" + level);
+		return msZone == null ? "ALL" : msZone.getId();
+	}
+
 	/**
 	 * 地域缓存
 	 */
-	private static Map<String, MsZone> msZoneCache = new HashMap<String, MsZone>();
+	private static Map<String, MsZone> msZoneCache = new LinkedHashMap<String, MsZone>();
+
+	@Override
+	public JSONObject findZoneIdsWithQQZoneName(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String province = param.getString("province");
+		String city = param.getString("city");
+		String county = param.getString("county");
+
+		JSONObject data = new JSONObject();
+		data.put("provinceId", getZoneName2MsZoneId(province, 1));
+		data.put("cityId", getZoneName2MsZoneId(city, 2));
+		data.put("countyId", getZoneName2MsZoneId(county, 3));
+		return FastJsonUtil.sucess("OK", data);
+	}
 
 	@Autowired
 	private MsZoneDAO msZoneDAO;
@@ -44,6 +67,16 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 		if (lstMsZone != null) {
 			for (MsZone msZone : lstMsZone) {
 				msZoneCache.put(msZone.getId(), msZone);
+				name2MsZone.put(msZone.getName()+"#"+ msZone.getLevelType(), msZone);
+				if ("北京".equals(msZone.getName())) {
+					name2MsZone.put("北京市"+"#"+ msZone.getLevelType(), msZone);
+				} else if ("上海".equals(msZone.getName())) {
+					name2MsZone.put("上海市"+"#"+ msZone.getLevelType(), msZone);
+				} else if ("重庆".equals(msZone.getName())) {
+					name2MsZone.put("重庆市"+"#"+ msZone.getLevelType(), msZone);
+				} else if ("天津".equals(msZone.getName())) {
+					name2MsZone.put("天津市"+"#"+ msZone.getLevelType(), msZone);
+				}
 			}
 		}
 	}

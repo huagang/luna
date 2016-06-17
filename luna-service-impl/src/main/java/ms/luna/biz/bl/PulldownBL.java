@@ -39,17 +39,10 @@ public interface PulldownBL {
 	 */
 	JSONObject loadCategorys();
 
-//	/**
-//	 * 获取区域Cach信息
-//	 * @param json
-//	 * @return {code, msg, data{}}
-//	 */
-//	JSONObject loadRegions(String json);
-//	
-//	/**
-//	 * 获取角色信息列表
-//	 * @param json
-//	 * @return {code, msg, data{}}
-//	 */
-//	JSONObject loadRoles(String json);
+	/**
+	 * 查找QQ地域名称对应的省、市、县ID
+	 * @param json
+	 * @return
+	 */
+	public JSONObject findZoneIdsWithQQZoneName(String json);
 }
