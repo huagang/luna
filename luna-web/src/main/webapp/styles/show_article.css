@@ -1,0 +1,113 @@
+@media screen and (max-width: 768px){
+	
+}
+@media screen and (min-width: 992px){
+	div.video-dialog{
+		width: 40%;
+		margin-left: 30%;
+		position:absolute;
+		top:10%;
+	}
+}
+html,body{
+	height: 100%;
+}
+.wrapper{
+	display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.wrapper > div{
+	flex-shrink: 0;
+}
+.wrapper div.content-wrapper{
+	flex-grow: 1;
+	flex-shrink: 1;
+    overflow: scroll;
+}
+.banner{
+	max-height: 200px;
+    overflow: hidden;
+    transition: max-height 0.8s ease-in-out;
+}	
+.banner.sm{
+	max-height: 100px;
+}
+.banner img{
+	width:100%;
+}
+.toolbar{
+	height: 56px;
+    background-color: white;
+}
+.toolbar .title{
+	color: #4d5b6c;
+	font-size: 24px;
+	height: 56px;
+	line-height: 56px;
+	padding-left: 20px;
+}
+.toolbar .btn-wrap{
+	float: right;
+    margin-right: 10px;
+    margin-top: 11px;
+    height: 33px;
+    width: auto;
+}
+.toolbar .icon{
+	background: url(../img/icons-2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 504px;
+    cursor: pointer;
+}
+.toolbar .icon-audio{
+	width: 33px;
+    height: 33px;
+    background-position: -132px -100px;
+}
+.toolbar .icon-audio.playing{
+    background-position: -132px -133px;
+}
+.toolbar .icon-video{
+	width: 33px;
+    height: 33px;
+    background-position: -99px -100px;
+}
+
+.video-dialog{
+	position: absolute;
+	top: 26%;
+	width: 80%;
+	margin-left: 10%;
+	background-color:white;
+	border-radius: 4px;
+}
+
+.video-title{
+	height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+.video-title span{
+    padding: 8px 22%;
+    border-bottom: 4px #d40909 solid;
+}
+
+.video-tip{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #707070;	
+}
+.mask{
+	position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.video{
+	height: auto;
+    width: 100%;
+}
