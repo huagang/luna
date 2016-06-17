@@ -116,24 +116,29 @@
         	</div>
         	<div class="result">
                 <label>搜索结果</label>
-                <select class="select" id="result">
+                <select class="select" id="result" onchange ="checkResult()">
                 </select>
+                <span id="warn-result" class="warn">必填项，请选择</span>
             </div>
-        	<div class="name">
-            	<label for="business-name">业务名称</label>
-            	<input type="text" id="business-name" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name', 'btn-add')" />
-            	<span id="warn-name" class="warn">格式不正确</span>
+        	<div class="name clearfix form-group">
+            	<label for="business-name" class="form-input-title">业务名称</label>
+                <div class="form-input-group">
+            	   <input type="text" id="business-name" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name', 'btn-add')" required />
+            	   <span id="warn-name" class="warn hide">格式不正确,请重新输入</span>
+                </div>
         	</div>
-        	<div class="short">
-            	<label for="business-name-short">业务简称</label>
-            	<input type="text" id="business-name-short" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short', 'btn-add')"/>
-            	<span id="warn-short" class="warn">格式不正确</span>
+        	<div class="short clearfix form-group">
+            	<label for="business-name-short"  class="form-input-title">业务简称</label>
+                <div class="form-input-group">
+                	<input type="text" id="business-name-short" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short', 'btn-add')" required/>
+                	<span id="warn-short" class="warn hide">格式不正确,请重新输入</span>
+                </div>
         	</div>
     	</form>
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" id="btn-add" disabled="disabled" onclick="submit_business()">确定</button>
+        <button type="button" id="btn-add" onclick="submit_business()">确定</button>
         <button type="reset" class="button-close"  onclick="clcWindow(this)">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -154,15 +159,19 @@
             <div style="display:none">
             	<input type="text" id="business-id-edit" />
             </div>
-            <div class="name">
-                <label for="business-name-edit">业务名称</label>
-                <input type="text" id="business-name-edit" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name-edit', 'btn-edit')"/>
-                <span id="warn-name-edit" class="warn">格式不正确</span>
+            <div class="name form-group clearfix">
+                <label class="form-input-title" for="business-name-edit">业务名称</label>
+                <div class="form-input-group">
+                    <input type="text" id="business-name-edit" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name-edit', 'btn-edit')"/>
+                    <span id="warn-name-edit" class="warn hide">格式不正确,请重新输入</span>
+                </div>
             </div>
-            <div class="short">
-                <label for="business-name-short-edit">业务简称</label>
-                <input type="text" id="business-name-short-edit" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short-edit', 'btn-edit')"/>
-                <span id="warn-short-edit" class="warn">格式不正确</span>
+            <div class="short form-group clearfix">
+                <label class="form-input-title" for="business-name-short-edit">业务简称</label>
+                <div class="form-input-group">
+                    <input type="text" id="business-name-short-edit" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short-edit', 'btn-edit')"/>
+                    <span id="warn-short-edit" class="warn hide">格式不正确,请重新输入</span>
+                </div>
             </div>
         </form>   
     </div>
