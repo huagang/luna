@@ -528,7 +528,7 @@ public class AddPoiCtrl extends BasicCtrl{
 				// 记录写入数据库
 				JSONObject param = JSONObject.parseObject("{}");
 				param.put("vod_file_id", vod_file_id);
-				JSONObject resJson = vodPlayService.createVodFile(param.toString());
+				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
 				
 				if (resJson.getString("code").equals("0")) {// 成功
 					// 存入缓存
