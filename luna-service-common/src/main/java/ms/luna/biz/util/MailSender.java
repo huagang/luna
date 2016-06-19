@@ -1,4 +1,5 @@
 package ms.luna.biz.util;
+
 import java.util.Date;
 import java.util.Properties;
 
@@ -104,6 +105,9 @@ public class MailSender {
 			p.put("mail.smtp.host", this.mailServerHost);
 			p.put("mail.smtp.port", this.mailServerPort);
 			p.put("mail.smtp.auth", validate ? "true" : "false");
+			p.put("mail.smtp.localhost", "127.0.0.1");// 在项目里面使用javamail在window环境正常,放在服务器上面的时候抛出异常
+													  // javax.mail.MessagingException:
+													  // 501 Syntax: HELO hostname,原因是在linux无法解析邮件服务器名称为ip地址
 			return p;
 		}
 
@@ -187,6 +191,7 @@ public class MailSender {
 			this.content = textContent;
 		}
 	}
+
 	public class Authentication extends Authenticator {
 		String username = null;
 		String password = null;
