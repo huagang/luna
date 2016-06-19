@@ -83,7 +83,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			// 检测业务员是否存在
 			boolean flag = isLunaNmExit(salesman_nm);
 			if (flag == false) {
-				return FastJsonUtil.error("2", "无此业务员！");
+				return FastJsonUtil.error("2", "无此业务员！salesman_nm:" + salesman_nm);
 			}
 			//根据业务员名字得到业务员id
 			salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
@@ -101,7 +101,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 检测商户是否重名
 		boolean flag = isMerchantNmExit(merchant_nm);
 		if (flag == true) {
-			return FastJsonUtil.error("1", "商户重名(下手慢了)！");
+			return FastJsonUtil.error("1", "商户重名(下手慢了)！merchant_nm:" + merchant_nm);
 		}
 
 		Date date = new Date();
@@ -219,15 +219,15 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
 		if(msMerchantManage == null){
-			return FastJsonUtil.error("2", "商户id不存在");
+			return FastJsonUtil.error("2", "商户id不存在,merchant_id:" + merchant_id);
 		}
 
 		// 只有业务员和登录账户相同时才可删除
 		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
 			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
-			return FastJsonUtil.sucess("成功删除商户信息！");
+			return FastJsonUtil.sucess("成功删除商户信息！merchant_id:" + merchant_id);
 		}
-		return FastJsonUtil.error("1", "非本商户业务员无权删除！");
+		return FastJsonUtil.error("1", "非本商户业务员无权删除！salesman_id:" + salesman_id + ", merchant_id:" + merchant_id);
 	}
 
 	@Override
@@ -289,12 +289,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 检测商户是否重名
 		boolean flag = isMerchantNmExit(merchant_id,merchant_nm);
 		if (flag == true) {
-			return FastJsonUtil.error("1", "重名，下手慢了！");
+			return FastJsonUtil.error("1", "重名，下手慢了！merchant_nm:" + merchant_nm);
 		}
 		// 检测业务员是否存在
 		boolean flag2 = isLunaNmExit(salesman_nm);
 		if (flag2 == false) {
-			return FastJsonUtil.error("2", "无此业务员！");
+			return FastJsonUtil.error("2", "无此业务员！salesman_nm:" + salesman_nm);
 		}
 		//根据业务员名字得到业务员id
 		String salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
@@ -385,7 +385,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 		MsMerchantManage msMerchant = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
 		if(msMerchant == null){
-			return FastJsonUtil.error("1", "商户id不存在");
+			return FastJsonUtil.error("1", "商户id不存在,merchant_id:" + merchant_id);
 		}
 		
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
@@ -393,7 +393,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManage.setDelFlg("1");// 非物理删除
 		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
 		
-		return FastJsonUtil.sucess("成功关闭商户！");
+		return FastJsonUtil.sucess("成功关闭商户！merchant_id:" + merchant_id);
 	}
 
 	@Override
@@ -409,7 +409,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if (count == 1) {
 			return FastJsonUtil.sucess("成功开启商户！");
 		} else {
-			throw new RuntimeException("无法根据ID关闭商户，数据库异常");
+			throw new RuntimeException("异常, merchant_id：" + merchant_id + "存在" + count + "个");
 		}
 	}
 	

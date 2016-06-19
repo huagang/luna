@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.sc.ManageAuthorityService;
+import ms.luna.biz.util.MsLogger;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -47,7 +49,7 @@ public class AuthorityCtrl {
 			}
 			return new ModelAndView("/authority.jsp");
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 		}
 		return new ModelAndView("/error.jsp");
 	}
@@ -63,9 +65,11 @@ public class AuthorityCtrl {
 	public void asyncSearchGroups(@RequestParam(required = false) Integer offset,
 			@RequestParam(required = false) Integer limit, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		JSONObject resJSON = JSONObject.parseObject("{}");
+		resJSON.put("total", 0);
 		try {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
 
 			JSONObject param = JSONObject.parseObject("{}");
 			if (offset != null) {
@@ -77,9 +81,9 @@ public class AuthorityCtrl {
 			param.put("min", offset);
 			param.put("max", limit);
 
-			JSONObject resJSON = JSONObject.parseObject("{}");
-
 			JSONObject result = manageAuthorityService.loadAuthority(param.toString());
+			MsLogger.debug("result from service: "+result.toString());
+			
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				JSONArray arrays = data.getJSONArray("results");
@@ -97,18 +101,10 @@ public class AuthorityCtrl {
 				}
 				resJSON.put("total", total);
 				resJSON.put("rows", rows);
-
-			} else {
-				resJSON.put("total", 0);
 			}
-			response.getWriter().print(resJSON.toString());
-			response.setStatus(200);
-			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 		}
-		JSONObject resJSON = JSONObject.parseObject("{}");
-		resJSON.put("total", 0);
 		response.getWriter().print(resJSON.toString());
 		response.setStatus(200);
 		return;

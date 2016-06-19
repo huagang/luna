@@ -22,6 +22,7 @@ import ms.luna.biz.dao.model.MsUserLuna;
 import ms.luna.biz.dao.model.MsUserLunaCriteria;
 import ms.luna.biz.dao.model.MsUserPw;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
 import com.alibaba.fastjson.JSONObject;
 
@@ -66,7 +67,7 @@ public class RegistBLImpl implements RegistBL{
 		List<MsRegEmail> lstMsRegEmail = null;
 		lstMsRegEmail = msRegEmailDAO.selectByCriteria(msRegEmailCriteria);
 		if(lstMsRegEmail == null){
-			return FastJsonUtil.error("1", "该账户已被注册");
+			return FastJsonUtil.error("1", "该账户已被注册,nickname:" + nickname);
 		}
 		
 		// 乐观锁——status
@@ -74,7 +75,7 @@ public class RegistBLImpl implements RegistBL{
 		msRegEmail.setStatus("1");
 		Integer rows = msRegEmailDAO.updateByCriteriaSelective(msRegEmail, msRegEmailCriteria);
 		if(rows != 1){
-			return FastJsonUtil.error("1", "该账户已被注册");
+			return FastJsonUtil.error("1", "该账户已被注册,nickname:" + nickname);
 		}
 		
 		msRegEmail = lstMsRegEmail.get(0);
@@ -99,7 +100,7 @@ public class RegistBLImpl implements RegistBL{
 		
 		// unique_id检测(不需要进行id是否重复的检测，generateNum在生成时已经保证id不可能重复)
 		if(unique_id == null){
-			throw new RuntimeException("id生成失败");
+			throw new RuntimeException("用户注册，id生成失败");
 		}
 		
 		// ms_user_luna
@@ -107,6 +108,7 @@ public class RegistBLImpl implements RegistBL{
 		msUserLuna.setUniqueId(unique_id);
 		msUserLuna.setStatus("0");
 		msUserLunaDAO.insertSelective(msUserLuna);
+		MsLogger.debug("用户注册，ms_user_luna表插入成功");
 		
 		// ms_user_pw
 		String md5Pw = VbMD5.convertFixMD5Code(password);
@@ -116,12 +118,14 @@ public class RegistBLImpl implements RegistBL{
 		msUserPw.setPwLunaMd5(md5Pw);
 		msUserPw.setEmail(email);
 		msUserPwDAO.insertSelective(msUserPw);
+		MsLogger.debug("用户注册，ms_user_pw表插入成功");
 
 		// ms_r_user_role
 		MsRUserRole msRUserRole = new MsRUserRole();
 		msRUserRole.setMsRoleCode(role_code);
 		msRUserRole.setUniqueId(unique_id);
 		msRUserRoleDAO.insertSelective(msRUserRole);
+		MsLogger.debug("用户注册，ms_r_user_role表插入成功");
 		
 		return FastJsonUtil.sucess("账户创建成功！");
 	}

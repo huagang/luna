@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.graphbuilder.curve.LagrangeCurve;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
@@ -38,8 +38,6 @@ import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @Component
 @Controller
@@ -204,13 +202,15 @@ public class ManageMerchantCtrl extends BasicCtrl {
 	 * @param response
 	 */
 	@RequestMapping(params = "method=async_search_merchants")
-	public void asyncSearchMerchants(String like_filter_nm, @RequestParam(required = false) Integer offset,
-			@RequestParam(required = false) Integer limit, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void asyncSearchMerchants(String like_filter_nm, 
+			@RequestParam(required = false) Integer offset,
+			@RequestParam(required = false) Integer limit, 
+			HttpServletRequest request, HttpServletResponse response)throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		JSONObject resJSON = JSONObject.parseObject("{}");
+		resJSON.put("total", 0);
 		try {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
-
 			JSONObject param = JSONObject.parseObject("{}");
 			if (like_filter_nm != null && !like_filter_nm.isEmpty()) {
 				like_filter_nm = URLDecoder.decode(like_filter_nm, "UTF-8");
@@ -229,8 +229,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 
 			// manageMerchantService
 			JSONObject result = manageMerchantService.loadMerchants(param.toString());
+			MsLogger.debug("method:loadMerchants, result from service: "+result.toString());
 
-			JSONObject resJSON = JSONObject.parseObject("{}");
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				JSONArray arrays = data.getJSONArray("merchants");
@@ -263,18 +263,10 @@ public class ManageMerchantCtrl extends BasicCtrl {
 					rows.add(row);
 				}
 				resJSON.put("rows", rows);
-			} else {
-				resJSON.put("total", 0);
 			}
-
-			response.getWriter().print(resJSON.toString());
-			response.setStatus(200);
-			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error("Failed to search merchants: "+ e);
 		}
-		JSONObject resJSON = JSONObject.parseObject("{}");
-		resJSON.put("total", 0);
 		response.getWriter().print(resJSON.toString());
 		response.setStatus(200);
 		return;
@@ -318,7 +310,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			// 如果邮箱输入不为空，则检测邮箱
 			if (!contact_mail.isEmpty()) {
 				if (!CharactorUtil.checkEmail(contact_mail)) {
-					inputInfo = inputInfo + "邮件输入有误！";
+					inputInfo = inputInfo + "邮件输入有误, email:"+contact_mail;
 				}
 			}
 
@@ -355,16 +347,16 @@ public class ManageMerchantCtrl extends BasicCtrl {
 				JSONObject result = manageMerchantService.createMerchant(param.toString());
 				String code = result.getString("code");
 				if ("0".equals(code)) {
-					response.getWriter().print(FastJsonUtil.sucess("编辑成功！"));
+					response.getWriter().print(FastJsonUtil.sucess("编辑成功！merchant_nm:"+merchant_nm));
 				} else if ("1".equals(code)) {
-					response.getWriter().print(FastJsonUtil.error("3", "用户重名(下手慢了)！"));
+					response.getWriter().print(FastJsonUtil.error("3", "用户重名(下手慢了),merchant_nm:"+merchant_nm));
 				} else if ("2".equals(code)) {
-					response.getWriter().print(FastJsonUtil.error("4", "业务员不存在！"));
+					response.getWriter().print(FastJsonUtil.error("4", "业务员不存在！salesman_nm:"+salesman_nm));
 				} else {
 					response.getWriter().print(FastJsonUtil.error("-1", "编辑失败！"));
 				}
 			} else {
-				response.getWriter().print(FastJsonUtil.error("1", "校验错误！"));
+				response.getWriter().print(FastJsonUtil.error("1", "校验错误！inputInfo:" + inputInfo));
 			}
 		} catch (Exception e) {
 			response.getWriter().print(FastJsonUtil.error("-1", "创建失败！"));
@@ -403,6 +395,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			param.put("merchant_id", merchant_id);
 
 			JSONObject result = manageMerchantService.deleteMerchantById(param.toString());
+			MsLogger.debug("method:deleteMerchantById, result from service: "+result.toString());
+			
 			if ("0".equals(result.getString("code"))) {
 				response.getWriter().print(result.toString());
 			} else if ("1".equals(result.getString("code"))) {
@@ -415,7 +409,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to del merchant: " + VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}
@@ -443,6 +437,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			param.put("merchant_id", merchant_id);
 
 			JSONObject result = manageMerchantService.closeMerchantById(param.toString());
+			MsLogger.debug("method:closeMerchantById, result from service: "+result.toString());
+			
 			if ("0".equals(result.getString("code"))) {
 				response.getWriter().print(result.toString());
 			} else if ("1".equals(result.getString("code"))) {
@@ -453,7 +449,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to close merchant:" + VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}
@@ -481,6 +477,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			param.put("merchant_id", merchant_id);
 
 			JSONObject result = manageMerchantService.openMerchantById(param.toString());
+			MsLogger.debug("method:openMerchantById, result from service: "+result.toString());
+			
 			if ("0".equals(result.getString("code"))) {
 				response.getWriter().print(result.toString());
 			} else if ("1".equals(result.getString("code"))) {
@@ -491,7 +489,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to open merchant:" + VbUtility.printStackTrace(e)));
 			response.setStatus(200);
 			return;
 		}
@@ -511,7 +509,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			response.setContentType("text/html; charset=UTF-8");
 			String merchant_id = request.getParameter("merchant_id");
 			if (merchant_id == null || merchant_id.isEmpty()) {
-				response.getWriter().print(FastJsonUtil.error("-1", "参数错误").toString());
+				response.getWriter().print(FastJsonUtil.error("-1", "merchant_id is null or empty").toString());
 				response.setStatus(200);
 				return;
 			}
@@ -519,8 +517,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			param.put("merchant_id", merchant_id);
 
 			JSONObject results = manageMerchantService.loadMerchantById(param.toString());
-			JSONObject resJson = JSONObject.parseObject("{}");
-
+			MsLogger.debug("method:loadMerchantById, result from service: "+results.toString());
+			
 			if ("0".equals(results.getString("code"))) {
 				JSONObject result = results.getJSONObject("data");
 				JSONObject merchant = JSONObject.parseObject("{}");
@@ -565,7 +563,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			}
 
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to load merchant:" + VbUtility.printStackTrace(e)));
 		}
 		response.setStatus(200);
 		return;
@@ -636,13 +634,15 @@ public class ManageMerchantCtrl extends BasicCtrl {
 					param.put("resource_content", resource_content);
 				}
 				JSONObject result = manageMerchantService.updateMerchantById(param.toString());
+				MsLogger.debug("method:updateMerchantById, result from service: "+result.toString());
+				
 				String code = result.getString("code");
 				if ("0".equals(code)) {
 					response.getWriter().print(FastJsonUtil.sucess("编辑成功！"));
 				} else if ("1".equals(code)) {
-					response.getWriter().print(FastJsonUtil.error("3", "用户重名（下手慢了）"));
+					response.getWriter().print(FastJsonUtil.error("3", "用户重名（下手慢了）,merchant_nm:"+merchant_nm));
 				} else if ("2".equals(code)) {
-					response.getWriter().print(FastJsonUtil.error("4", "业务员不存在！"));
+					response.getWriter().print(FastJsonUtil.error("4", "业务员不存在！salesman_nm:"+salesman_nm));
 				} else {
 					response.getWriter().print(FastJsonUtil.error("-1", "编辑失败！"));
 				}
@@ -650,7 +650,7 @@ public class ManageMerchantCtrl extends BasicCtrl {
 				response.getWriter().print(FastJsonUtil.error("1", "校验错误！"));
 			}
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "编辑失败！"));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to edit merchant, "+ e));
 		}
 		response.setStatus(200);
 		return;
@@ -678,15 +678,17 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			byte[] bytes = file.getBytes();// 获得文件内容
 			JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
 					localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
+			MsLogger.debug("method:uploadLocalFile2Cloud, result from service: "+result.toString());
+			
 			response.getWriter().print(result);
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -716,15 +718,17 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			byte[] bytes = file.getBytes();// 获得文件内容
 			JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
 					localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
+			MsLogger.debug("method:uploadLocalFile2Cloud, result from service: "+result.toString());
+			
 			response.getWriter().print(result);
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload thumbnail (edit): " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -748,6 +752,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("merchant_nm", merchant_nm);
 			JSONObject result = manageMerchantService.isAddedMerchantNmEist(param.toString());
+			MsLogger.debug("method:isAddedMerchantNmEist, result from service: "+result.toString());
+			
 			if (result.getString("code").equals("1")) {
 				result.put("code", "0");
 			} else if (result.getString("code").equals("0")) {
@@ -758,10 +764,10 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to check merchant name (add): " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -785,6 +791,8 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			param.put("merchant_id", merchant_id);
 			param.put("merchant_nm", merchant_nm);
 			JSONObject result = manageMerchantService.isEditedMerchantNmEist(param.toString());
+			MsLogger.debug("method:isEditedMerchantNmEist, result from service: "+result.toString());
+			
 			if (result.getString("code").equals("1")) {
 				result.put("code", "0");
 			} else if (result.getString("code").equals("0")) {
@@ -795,10 +803,10 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to check merchant name (edit): " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -1072,71 +1080,4 @@ public class ManageMerchantCtrl extends BasicCtrl {
 		return "";
 	}
 	
-	public void loadMerchant(HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws IOException {
-		try {
-			String merchant_id = request.getParameter("merchant_id");
-			if (merchant_id == null || merchant_id.isEmpty()) {
-				response.getWriter().print(FastJsonUtil.error("-1", "参数错误").toString());
-				response.setStatus(200);
-				return;
-			}
-			JSONObject param = JSONObject.parseObject("{}");
-			param.put("merchant_id", merchant_id);
-
-			JSONObject results = manageMerchantService.loadMerchantById(param.toString());
-			JSONObject resJson = JSONObject.parseObject("{}");
-
-			if ("0".equals(results.getString("code"))) {
-				JSONObject result = results.getJSONObject("data");
-				model.addObject("merchant_id", result.getString("merchant_id"));
-				model.addObject("merchant_nm", result.getString("merchant_nm"));
-				model.addObject("merchant_phonenum", result.getString("merchant_phonenum"));
-				model.addObject("category_id", result.getString("category_id"));
-				model.addObject("province_id", result.getString("province_id"));
-				model.addObject("city_id", result.getString("city_id"));
-				model.addObject("merchant_addr", result.getString("merchant_addr"));
-				model.addObject("merchant_info", result.getString("merchant_info"));
-				model.addObject("contact_nm", result.getString("contact_nm"));
-				model.addObject("contact_phonenum", result.getString("contact_phonenum"));
-				model.addObject("contact_mail", result.getString("contact_mail"));
-				model.addObject("salesman_id", result.getString("salesman_id"));
-				model.addObject("salesman_nm", result.getString("salesman_nm"));
-				model.addObject("status_id", result.getString("status_id"));
-				if(result.containsKey("lat")){
-					model.addObject("lat", result.getString("lat"));
-				}else{
-					model.addObject("lat", "");
-				}
-				if(result.containsKey("lng")){
-					model.addObject("lng", result.getString("lng"));
-				}else{
-					model.addObject("lng", "");
-				}
-				if (result.containsKey("county_id")) {
-					model.addObject("county_id", result.getString("county_id"));
-				} else {
-					model.addObject("county_id", "ALL");
-				}
-				if (result.containsKey("resource_content")) {
-					model.addObject("resource_content", result.getString("resource_content"));
-				} else {
-					model.addObject("resource_content", "");
-				}
-
-			} else {
-				response.getWriter().print(FastJsonUtil.error("1", "加载失败！"));
-			}
-
-		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
-		}
-		response.setStatus(200);
-		return;
-		// 注：有些信息，如联系人电话，联系人名字，商户名字等，都已经在列表中，可以不用加载。此处可改进。
-	}
-	
-//	public static void main(String[] args) {
-//	System.out.println(checkLatAndLng("90.","1.1"));
-//}
-
 }

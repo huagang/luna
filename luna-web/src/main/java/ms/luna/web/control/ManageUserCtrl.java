@@ -94,9 +94,10 @@ public class ManageUserCtrl {
 
 			return new ModelAndView("/manage_user.jsp", model);
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error("Failed to init UsersManager page: ", e);
+			return new ModelAndView("/error.jsp");
 		}
-		return new ModelAndView("/error.jsp");
+		
 	}
 
 	// /**
@@ -157,13 +158,19 @@ public class ManageUserCtrl {
 	 */
 	@RequestMapping(params = "method=async_search_users")
 	public void asyncSearchUsers(String like_filter_nm, String selectedValue,
-			@RequestParam(required = false) Integer offset, @RequestParam(required = false) Integer limit,
+			@RequestParam(required = false) Integer offset, 
+			@RequestParam(required = false) Integer limit,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		JSONObject resJSON = JSONObject.parseObject("{}");
+		resJSON.put("total", 0);
+		
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 			JSONObject param = JSONObject.parseObject("{}");
-//			if (CharactorUtil.checkAlphaAndNumber(like_filter_nm, new char[] { '_' })) {
 			if (like_filter_nm != null && !like_filter_nm.trim().isEmpty()) {
 				like_filter_nm = URLDecoder.decode((like_filter_nm.trim()), "UTF-8");
 				like_filter_nm = like_filter_nm.toLowerCase();
@@ -182,19 +189,20 @@ public class ManageUserCtrl {
 			}
 
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 			String role_code = msUser.getMsRoleCode();
+			
 			param.put("role_code", role_code);
 
-			// manageUserService
 			JSONObject result = manageUserService.loadUsers(param.toString());
-			JSONObject resJSON = JSONObject.parseObject("{}");
-			String luna_name = msUser.getNickName();
+			MsLogger.debug("result from service: "+result.toString());
+
 			if ("0".equals(result.getString("code"))) {
 				JSONObject data = result.getJSONObject("data");
 				JSONArray arrays = data.getJSONArray("users");
-				// Integer total = data.getInteger("total");
-				// resJSON.put("total", total);
 				JSONArray rows = JSONArray.parseArray("[]");
 				for (int i = 0; i < arrays.size(); i++) {
 					JSONObject row = JSONObject.parseObject("{}");
@@ -208,17 +216,10 @@ public class ManageUserCtrl {
 				}
 				resJSON.put("rows", rows);
 				resJSON.put("total", data.getLong("total"));
-			} else {
-				resJSON.put("total", 0);
 			}
-			response.getWriter().print(resJSON.toString());
-			response.setStatus(200);
-			return;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error("Failed to search users: ",e);
 		}
-		JSONObject resJSON = JSONObject.parseObject("{}");
-		resJSON.put("total", 0);
 		response.getWriter().print(resJSON.toString());
 		response.setStatus(200);
 		return;
@@ -235,13 +236,17 @@ public class ManageUserCtrl {
 	public String getModuleByRoleCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
-
 			String role_code = msUser.getMsRoleCode();
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("role_code", role_code);
 
 			JSONObject result = manageUserService.getModuleByRoleCode(param.toString());
+			MsLogger.debug("result from service: "+result.toString());
+			
 			if ("0".equals(result.getString("code"))) {
 				JSONObject json = result.getJSONObject("data");
 				String module_code = json.getString("module_code");
@@ -250,10 +255,10 @@ public class ManageUserCtrl {
 			}
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to get module by role_code: " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 		}
 		return ";";
@@ -273,6 +278,9 @@ public class ManageUserCtrl {
 			response.setContentType("text/html; charset=UTF-8");
 
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 
 			String module_code = request.getParameter("module_code");
@@ -280,15 +288,16 @@ public class ManageUserCtrl {
 			param.put("module_code", module_code);
 
 			JSONObject result = manageUserService.loadRolesByModulecode(param.toString(), msUser);
+			MsLogger.debug("result from service: "+result.toString());
 			response.getWriter().print(result.toString());
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to load roles by module_code: " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -308,8 +317,11 @@ public class ManageUserCtrl {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
-
+			
 			// 得到域名。如http://www.baidu.com/luna-web/regist.do?,则得到http://www.baidu.com/luna-web
 			String[] temp = request.getRequestURL().toString().split("/");
 			String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
@@ -322,7 +334,7 @@ public class ManageUserCtrl {
 			String[] mailAddrs = emails.split(";");
 			for (int i = 0; i < mailAddrs.length; i++) {
 				if (!CharactorUtil.checkEmail(mailAddrs[i])) {
-					response.getWriter().print(FastJsonUtil.error("1", "邮箱格式不正确"));
+					response.getWriter().print(FastJsonUtil.error("1", "邮箱格式不正确,email:"+mailAddrs[i]));
 					response.setStatus(200);
 					return;
 				}
@@ -331,7 +343,7 @@ public class ManageUserCtrl {
 			// 输入权限和业务模块的一致性检测（如何非法，说明已绕过前端页面向后台发送数据，认为其是攻击性行为）
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误,module_code:"+module_code+",role_code:"+role_code));
 				response.setStatus(200);
 				return;
 			}
@@ -344,8 +356,9 @@ public class ManageUserCtrl {
 			params.put("webAddr", webAddr);
 
 			JSONObject results = manageUserService.inviteUsers(params.toString(), msUser);
-			// {"code":"4","msg":"邮箱已注册","data":"[1259431236@qq.com,
-			// chinagrowing@yeah.net]"}
+			MsLogger.debug("result from service: "+results.toString());
+			
+			// {"code":"4","msg":"邮箱已注册","data":"[1259431236@qq.com,chinagrowing@yeah.net]"}
 			String code = results.getString("code");
 			JSONObject result = JSONObject.parseObject("{}");
 			if ("0".equals(code)) {
@@ -364,10 +377,10 @@ public class ManageUserCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to invite users: " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -387,6 +400,9 @@ public class ManageUserCtrl {
 			response.setContentType("text/html; charset=UTF-8");
 
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 
 			String luna_name = request.getParameter("luna_name");
@@ -396,7 +412,7 @@ public class ManageUserCtrl {
 			// 输入权限和业务模块的一致性检测（如何非法，说明已绕过前端页面向后台发送数据，认为其是攻击性行为）
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误,module_code:"+module_code+",role_code:"+role_code));
 				response.setStatus(200);
 				return;
 			}
@@ -407,6 +423,8 @@ public class ManageUserCtrl {
 			json.put("role_code", role_code);
 
 			JSONObject result = manageUserService.updateUser(json.toString(), msUser);
+			MsLogger.debug("result from service: "+result.toString());
+			
 			JSONObject resJson = JSONObject.parseObject("{}");
 			String code = result.getString("code");
 			if ("0".equals(code)) {
@@ -418,11 +436,7 @@ public class ManageUserCtrl {
 			response.setStatus(200);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			JSONObject resJSON = JSONObject.parseObject("{}");
-			resJSON.put("code", "-1");
-			resJSON.put("msg", e.getMessage());
-			response.getWriter().print(resJSON.toString());
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to edit user: "+e));
 			response.setStatus(200);
 		}
 		return;
@@ -435,6 +449,9 @@ public class ManageUserCtrl {
 			response.setContentType("text/html; charset=UTF-8");
 
 			HttpSession session = request.getSession(false);
+			if(session == null){
+				throw new RuntimeException("session is null");
+			}
 			MsUser msUser = (MsUser) session.getAttribute("msUser");
 
 			String luna_name = request.getParameter("luna_name");
@@ -444,7 +461,7 @@ public class ManageUserCtrl {
 			// 利用“邀请用户”和“编辑用户”的检测模块。原理一致，同样需要检测被删除用户与当前用户权限的一致性
 			boolean checkFlag = checkModuleAndRole(module_code, role_code, msUser.getMsRoleCode());
 			if (checkFlag == false) {
-				response.getWriter().print(FastJsonUtil.error("5", "输入有误"));
+				response.getWriter().print(FastJsonUtil.error("5", "输入有误,module_code:"+module_code+",role_code:"+role_code));
 				response.setStatus(200);
 				return;
 			}
@@ -455,22 +472,20 @@ public class ManageUserCtrl {
 			// json.put("role_code", role_code);
 
 			JSONObject result = manageUserService.delUser(json.toString(), msUser);
+			MsLogger.debug("result from service: "+result.toString());
+			
 			JSONObject resJson = JSONObject.parseObject("{}");
 			String code = result.getString("code");
 			if ("0".equals(code)) {
-				resJson = FastJsonUtil.sucess("删除成功");
+				resJson = FastJsonUtil.sucess("删除成功,luna_name:"+luna_name);
 			} else {
-				resJson = FastJsonUtil.error("1", "删除失败!");
+				resJson = FastJsonUtil.error("1", "删除失败,luna_name:"+luna_name);
 			}
 			response.getWriter().print(resJson.toString());
 			response.setStatus(200);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			JSONObject resJSON = JSONObject.parseObject("{}");
-			resJSON.put("code", "-1");
-			resJSON.put("msg", e.getMessage());
-			response.getWriter().print(resJSON.toString());
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to del user: "+e));
 			response.setStatus(200);
 		}
 		return;
@@ -509,6 +524,8 @@ public class ManageUserCtrl {
 		param.put("module_code", module_code_invitee);
 		param.put("role_code", role_code_invitee);
 		JSONObject result = manageUserService.getAuthByRoleCodeAndModuleCode(param.toString());
+		MsLogger.debug("result from service: "+result.toString());
+		
 		if (!result.getString("code").equals("0")) {
 			return false;
 		}
@@ -538,6 +555,8 @@ public class ManageUserCtrl {
 		param = JSONObject.parseObject("{}");
 		param.put("role_code", role_code_inviter);
 		result = manageUserService.getAuthByRoleCode(param.toString());
+		MsLogger.debug("result from service: "+result.toString());
+
 		if (!result.getString("code").equals("0")) {
 			throw new RuntimeException(result.getString("msg"));
 		}

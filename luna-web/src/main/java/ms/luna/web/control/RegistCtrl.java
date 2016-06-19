@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.slf4j.Logger;
@@ -15,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.sc.LoginService;
 import ms.luna.biz.sc.RegistService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
-import com.alibaba.fastjson.JSONObject;
 @Component
 @Controller
 @RequestMapping("/userRegist.do")
@@ -48,6 +49,8 @@ public class RegistCtrl {
 			}
 			
 			JSONObject result = registService.isTokenValid(json.toString());
+			MsLogger.debug("method:isTokenValid, result from service: "+result.toString());
+			
 			if("0".equals(result.get("code"))){
 				ModelAndView model = new ModelAndView("/register.jsp");
 				model.addObject("token", token);
@@ -72,29 +75,29 @@ public class RegistCtrl {
 			
 			// 检测token
 			if(token.isEmpty() || token.length() != TOKEN_LENGTH){//token长度不正确
-				response.getWriter().print(FastJsonUtil.error("4","token不正确！").toString());
+				response.getWriter().print(FastJsonUtil.error("4","token不正确,token:"+token).toString());
 				response.setStatus(200);
 				return;
 			}
 			//检查账户名
 			JSONObject result = check_wjnm(nickname);
 			if("1".equals(result.get("code"))){
-				response.getWriter().print(FastJsonUtil.error("1","账户格式不正确！").toString());
+				response.getWriter().print(FastJsonUtil.error("1","账户格式不正确,nickname:"+nickname).toString());
 				response.setStatus(200);
 				return;
 			}else if("2".equals(result.get("code"))){
-				response.getWriter().print(FastJsonUtil.error("2","账户名称存在！").toString());
+				response.getWriter().print(FastJsonUtil.error("2","账户名称存在,nickname:"+nickname).toString());
 				response.setStatus(200);
 				return;
 			}else if("3".equals(result.get("code"))){
-				response.getWriter().print(FastJsonUtil.error("3","账户已被注册！").toString());
+				response.getWriter().print(FastJsonUtil.error("3","账户已被注册,nickname:"+nickname).toString());
 				response.setStatus(200);
 				return;
 			}
 			//检查账户密码
 			result = check_pw(password);
 			if(!"0".equals(result.get("code"))){
-				response.getWriter().print(FastJsonUtil.error("1","密码格式不正确！").toString());
+				response.getWriter().print(FastJsonUtil.error("1","密码格式不正确,password:"+password).toString());
 				response.setStatus(200);
 				return;
 			}
@@ -104,20 +107,21 @@ public class RegistCtrl {
 			json.put("password", password);
 			json.put("token", token);
 			result = registService.registPwUser(json.toString());
+			MsLogger.debug("method:registPwUser, result from service: "+result.toString());
 			
 			if("1".equals(result.get("code"))){
-				result = FastJsonUtil.error("3", "账户已被注册");
+				result = FastJsonUtil.error("3", "账户已被注册,nickname:"+nickname);
 			}
 			response.getWriter().print(result.toString());
 			response.setStatus(200);
 			
 		} catch (Exception e) {
-			String jsonResult = FastJsonUtil.error("-101", "系统出现异常,请稍后重试:"+ VbUtility.printStackTrace(e)).toString();
+			String jsonResult = FastJsonUtil.error("-101", "Failed to regist user: "+ VbUtility.printStackTrace(e)).toString();
 			try {
 				response.getWriter().print(jsonResult);
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 		}
 	}/**/
@@ -130,19 +134,19 @@ public class RegistCtrl {
 	private JSONObject check_wjnm(String nickname) {
 		//检查长度
 		if (nickname == null || nickname.length() == 0 || nickname.getBytes().length > 32) {
-			return FastJsonUtil.error("1", "账户格式（长度）不正确!");//以后需要更加详细的信息时可设定不同code值
+			return FastJsonUtil.error("1", "账户格式（长度）不正确,nickname:"+nickname);//以后需要更加详细的信息时可设定不同code值
 		}
 		//检查格式
 		JSONObject jsonNickNm = CharactorUtil.checkNickNm(nickname);
 		if(!"0".equals(jsonNickNm.get("code"))){
-			return FastJsonUtil.error("1", "账户格式（字符）不正确！"); 
+			return FastJsonUtil.error("1", "账户格式（字符）不正确,nickname:"+nickname); 
 		}
 		//检查重名
 		JSONObject json = JSONObject.parseObject("{}");
 		json.put("luna_name", nickname);
 		JSONObject result = loginService.isLunaUserExsit(json.toString());
 		if("0".equals(result.get("code"))){
-			return FastJsonUtil.error("3", "账户已被注册！");
+			return FastJsonUtil.error("3", "账户已被注册,nickname:"+nickname);
 		}
 		return FastJsonUtil.sucess("账户格式正确!");
 	}
@@ -155,9 +159,9 @@ public class RegistCtrl {
 	private JSONObject check_pw(String password) {
 		JSONObject jsonPw = CharactorUtil.checkPw(password);
 		if(!"0".equals(jsonPw.getString("code"))){
-			return FastJsonUtil.error("1", "密码格式不正确");
+			return FastJsonUtil.error("1", "密码格式不正确,password:"+password);
 		}
-		return FastJsonUtil.sucess("密码格式正确！");
+		return FastJsonUtil.sucess("密码格式正确,password:"+password);
 	}
 
 //	/**
