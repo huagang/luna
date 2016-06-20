@@ -280,7 +280,7 @@ public final class FastJsonUtil {
 	}
 
 	public static JSONArray createDefaultIntegerJsonArray() {
-		JSONArray temp = createDefaultIntegerJsonArray();
+		JSONArray temp = createBlankIntegerJsonArray();
 		temp.add(0);
 		return temp;
 	}
