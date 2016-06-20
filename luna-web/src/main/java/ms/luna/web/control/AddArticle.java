@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * 
  * Copyright (C) 2015 - 2016 Microscene Inc., All Rights Reserved.
@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/add_article.do")
 public class AddArticle extends BasicCtrl{
 	
-	@RequestMapping(params = "method=init")
+	@RequestMapping(params = "method=init", method={RequestMethod.GET})
 	public ModelAndView init(HttpServletRequest request, HttpServletResponse response){
 		ModelAndView view = new ModelAndView();
 		try{			

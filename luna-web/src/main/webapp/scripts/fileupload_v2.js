@@ -1,5 +1,6 @@
 /* 由于fileupload并不能支持 "文件上传中" 的效果，因而模仿fileupload.js重新写了一个。
- * 功能：该文件暂时只提供单个文件上传功能以及上传成功或失败回调功能。
+ * 功能说明：该文件暂时只提供单个文件上传功能以及上传成功或失败回调功能。由于暂时服务器没有进行资源的整合
+ * 			 以及提供上传接口，因而暂时上传到poi文件夹中
  * 文件依赖：jquery
  * 文件限制：文件限制与fileupload一样
  * 				限制如下：
@@ -8,13 +9,17 @@
  * 				视频：RM,RMVB,AVI,MP4,3GP  	size < 5M
  * 
  * 
+ * 
  * @author wumengqiang  小伍
  * @email dean@visualbusiness.com
  * 该文件若有bug随时找我	:) 
  */
 
+// 以下划线开头的属性或者方法表示其为私有的，不对外开放
 var FileUploader = {
 	_host : '/luna-web',
+	
+	//上传文件的限制配置
 	_fileLimit : {
 		thumbnail: {
 			format: ['PNG', 'JPG'],
@@ -29,6 +34,12 @@ var FileUploader = {
 			size: 5000000  //(5M)
 		}
 	},
+	
+	/* 检查上传文件是否合乎要求
+	 * @param type {string} 上传文件的类型,可选值为'thumbnail','audio','video'
+	 * @param file {file}   上传的文件
+	 */
+	
 	_checkValidation: function(type, file){
 		var fileExt = file.name.substr(file.name.lastIndexOf('.')+1).toUpperCase();
 		var limitFormat = this._fileLimit[type].format;
