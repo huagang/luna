@@ -222,13 +222,29 @@ function postData(type, successCallback, errorCallback){
 
 
 function getEditor(){
+	
+	/*重置上传附件请求的地址*/
+	UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+	UE.Editor.prototype.getActionUrl = function(action) {
+	    if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+	        return 'http://localhost:8080/luna-web/add_poi.do?method=upload_thumbnail';
+	    } else if (action == 'uploadvideo') {
+	        return 'http://localhost:8080/luna-web/add_poi.do?method=upload_video';
+	    } else {
+	        return this._bkGetActionUrl.call(this, action);
+	    }
+	}
+	
 	/*获取编辑器实例*/
 	var ue = UE.getEditor('editor', {
+        elementPathEnabled:false,
         toolbars: [
             ['fontfamily', '|','fontsize', '|', 'bold', 'italic', 'underline', 'forecolor',  '|','justifyleft',
                 'justifyright',
                 'justifycenter', 
                 'justifyjustify',  '|',
+                'simpleupload',
+                'insertvideo',
             ]
         ],
     });
