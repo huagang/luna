@@ -49,14 +49,14 @@ $(function(){
         var value = $("input[type=radio][name=license-edit]:checked").val();
         if(value=="是"){
             $("#license-area-edit").css('display','block');
-            $("#resource_content").attr('data_upload','true');
+            $("#license-upload-edit").attr('data_upload','true');
             var picExist = $("#thumbnail").attr("picExist");
 			if(picExist == "true"){
 				$("#div-img").css("display","inline-block");
 			}
         }else{
             $("#license-area-edit").css('display','none');
-            $("#resource_content").attr('data_upload','false');
+            $("#license-upload-edit").attr('data_upload','false');
 			$("#div-img").css("display","none");
         }
     });
@@ -658,19 +658,21 @@ function licenseUploadEdit(){
     var $license = $("#license-upload-edit"),
     	$lic_url = $("#license-url-edit"),
     	$warn = $("#license-upload-warn");
-    var url = $license.val(),
+    var url = $lic_url.val(),
         flag = $license.attr('data_upload');
-    if($lic_url.val()!='无'){
-        if(url.length){
-        	hasError = licenseVerifyEdit($license,url,$warn,$lic_url);
-        }else{
-            hasError = false;
-        }
-    }else{
-        $("#license-upload-edit-warn").css('display','none');
-        hasError = false;
-    }
-    return hasError;
+	if (flag == 'true') {
+		if (url.length && url != "无") {
+			hasError = false;
+			$("#license-upload-edit-warn").css('display', 'none');
+		} else {
+			$("#license-upload-edit-warn").html('请上传营业执照').css('display', 'block');
+			hasError = true;
+		}
+	} else {
+		$("#license-upload-edit-warn").css('display', 'none');
+		hasError = false;
+	}
+	return hasError;
 }
 
 //检查地址是否为空
