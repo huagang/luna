@@ -5,7 +5,7 @@ window.onload = function() {
     
 	window.articleStore = getArticleStore();
 	
-	(function getCachedData(){
+	(function getSavedData(){
 		//用于获取保存过的文章内容
 		var result = location.search.match(/articleid=[0-9a-zA-Z]+/);
 		if(result){
@@ -26,30 +26,30 @@ window.onload = function() {
 	})();
 	
 	
-	// 事件绑定 
+	// 事件绑定  保存按钮点击事件
 	document.querySelector('.save').addEventListener('click', postData.bind(this,'save',function(){
 		
 	},function(){
 		
 	}));
 	
+	// 事件绑定 预览按钮点击事件
 	document.querySelector('.preview').addEventListener('click', postData.bind(this,'preview',function(){
 		
 	},function(){
 		
 	}));
 	
+	// 事件绑定 发布按钮点击事件
 	document.querySelector('.publish').addEventListener('click', postData.bind(this,'publish', function(){
 	
 	}, function(){
 		
 	}));
-	
-	
 
 }
 function getArticleStore(){
-	//文章内容更新监听器
+	// 文章内容更新监听器
 	  /* articleStore 用于存储文章信息,含有以下属性 
 	   * 	title 文章标题
 	   * 	content 正文
@@ -79,6 +79,10 @@ function getArticleStore(){
 		get category(){return this._category;},
 		set category(value){this._category = value},
 		checkEmpty: function(){
+			/* 用于检查是否有必填项没有填
+			 * @return {object} error - 返回的是以{"error": string}格式的错误信息，
+			 * 							如果没有错误返回的是{"error": null}。 
+			 */
 			var error = '';
 			var checkList = [
 			    {id: '_title', name:'标题'},
@@ -98,40 +102,45 @@ function getArticleStore(){
 	
 	
 	
-	//绑定基本输入框
+	// 事件绑定  文章标题输入框onChange事件 
+	// 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
 	document.querySelector('#title').addEventListener('change', function(){
 		articleStore.title = event.target.value;    			
-		console.log('article title updated,value:', event.target.value);
 	});
 	
+	
 	var editor = window.UE.getEditor('editor');
+	// 事件绑定 文章正文富文本编辑器contentChange事件
 	editor.addListener('contentChange', function(){
 		var content = editor.getContent();
 		articleStore.content = content;
-		console.log('article content updated,value:', content);
 	});
 	
+	// 事件绑定  文章摘要输入框onChange事件
 	document.querySelector('#summary').addEventListener('change', function(){
 		articleStore.summary = event.target.value;    	
-		console.log('article summary updated,value:', event.target.value);
 	});
 	
+	// 事件绑定  文章栏目选择框onChange事件
 	document.querySelector('#category').addEventListener('change', function(){
 		articleStore.category = event.target.value;   
-		
-		console.log('article category updated,value:', event.target.value);
 	});
 	
+	// 事件绑定  音频url输入框onChange事件
 	document.querySelector('#audio').addEventListener('change', function(){
 		articleStore.audio = event.target.value;    	
 		clearWarn('#audio_warn');
 	});
 	
+	// 事件绑定  视频url输入框onChange事件
 	document.querySelector('#video').addEventListener('change', function(){
-		articleStore.video = event.target.value;    			
+		articleStore.video = event.target.value;  
 		clearWarn('#video_warn');
 	});
+	
+	// 事件绑定  文章头图文件onChange事件 
 	document.querySelector('#pic_fileup').addEventListener('change', function(){
+		// 进行文件的上传以及显示文件上传效果
 		var preview = document.querySelector('#thumbnail_show');
 		preview.src = '';
 		showLoadingTip('.pic_tip');
@@ -144,7 +153,10 @@ function getArticleStore(){
 			hideLoadingTip('.pic_tip');
 		});
 	});
+	
+	// 事件绑定  视频文件onChange事件 
 	document.querySelector('#video_fileup').addEventListener('change', function(){
+		// 进行文件的上传以及显示文件上传效果
 		showLoadingTip('.video_tip');
 		FileUploader.uploadFile('video_fileup', 'video', event.target.files[0], function(data){
 			document.querySelector('#video').value = articleStore.video = data.data.vod_file_id;			
@@ -155,7 +167,10 @@ function getArticleStore(){
 			hideLoadingTip('.video_tip');
 		});
 	});
+
+	// 事件绑定  音频文件onChange事件 
 	document.querySelector('#audio_fileup').addEventListener('change', function(){
+		// 进行文件的上传以及显示文件上传效果
 		showLoadingTip('.audio_tip');
 		FileUploader.uploadFile('audio_fileup', 'audio', event.target.files[0], function(data){
 			document.querySelector('#audio').value = articleStore.audio = data.data.access_url;			
@@ -168,6 +183,10 @@ function getArticleStore(){
 	});
 	return articleStore;
 }
+
+/* 清除错误警告提示
+ * @param {string} selector - 错误提示标签的选择器，例如  "#video_warn"
+ */
 function clearWarn(selector){
 	var warn = document.querySelector(selector);
 	if(warn.html){
@@ -175,16 +194,23 @@ function clearWarn(selector){
 	}
 }
 
+/* 显示文件上传提示
+ * @param {string} selector - 文件上传提示标签的选择器，例如  ".audio_tip"
+ */
 function showLoadingTip(selector){
 	var tip = document.querySelector(selector);
 	tip.classList.remove('hidden');
 }
 
+/* 关闭文件上传提示
+ * @param {string} selector - 文件上传提示标签的选择器，例如  ".audio_tip"
+ */
 function hideLoadingTip(selector){
 	var tip = document.querySelector(selector);
 	tip.classList.add('hidden');
 }
 
+// 发送文章数据给后台 未完成状态
 function postData(type, successCallback, errorCallback){
 	var error = window.articleStore.checkEmpty().error;
 	if(error){
@@ -200,7 +226,6 @@ function postData(type, successCallback, errorCallback){
 		video: articleStore.video,
 		category: articleStore.category
 	};
-	console.log(data);
 	$.ajax({
 		url:'xxx?method='+type,
 		type: 'POST',
