@@ -532,7 +532,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 	 * @param set
 	 * @param jsoncList
 	 */
-	public void readPoiId2Set(Set<String> set, JSONObject jsoncList) {
+	private void readPoiId2Set(Set<String> set, JSONObject jsoncList) {
 		Set<Entry<String, Object>> entrySet = jsoncList.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
 			// _id

@@ -31,6 +31,7 @@ import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.MsPoiUtil;
 
 /**
  * @author greek
@@ -222,8 +223,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			JSONObject JsonBizTree = JSONObject.parseObject(tree.toJson());
 			JSONObject jsoncList = (JSONObject)JsonBizTree.get("c_list");
 			Set<String> poiIds = new HashSet<>();
-			ManageBusinessTreeBLImpl manageBusinessTreeBLImpl = new ManageBusinessTreeBLImpl();
-			manageBusinessTreeBLImpl.readPoiId2Set(poiIds,jsoncList);
+			MsPoiUtil.readPoiId2Set(poiIds,jsoncList);
 			
 			// 根据标签和字段返回满足要求的poi
 			JSONObject data = JSONObject.parseObject("{}");

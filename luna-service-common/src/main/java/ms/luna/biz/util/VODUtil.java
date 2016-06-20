@@ -549,7 +549,7 @@ public class VODUtil {
 				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
-					data.put("fileId", fileId);
+					data.put("vod_file_id", fileId);
 					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));
@@ -664,7 +664,7 @@ public class VODUtil {
 				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
-					data.put("fileId", fileId);
+					data.put("vod_file_id", fileId);
 					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));
