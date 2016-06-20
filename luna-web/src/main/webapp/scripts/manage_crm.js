@@ -238,6 +238,11 @@ $(function () {
     	hasError = agent()||hasError;   
     	hasError = merchantNameExist() || hasError; 
     	
+    	var value = $("input[type=radio][name=license]:checked").val();
+    	if (value != "是") {
+			$("#license-url").val("");
+		}
+    	
         if(!hasError){
 	    	var options = {
 				dataType: "json",
@@ -770,7 +775,7 @@ function thumbnailDisplay(ImgD,height_s,width_s){
 	}else{
 		$("#thumbnail").attr("width",""+width_s);
 	}
-	$("#div-img").css("display","inline-block");
+	$("#thumbnail").attr("picExist","true");
 	var value = $("input[type=radio][name=license]:checked").val();
 	if(value == "是"){
 		$("#div-img").css("display","inline-block");

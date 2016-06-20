@@ -10,6 +10,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 
+import ms.luna.biz.util.FastJsonUtil;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -46,6 +48,7 @@ public final class MongoUtility {
 		// 一级分类、须完全匹配
 		// tags: {$all: [7]},
 		JSONArray tags = param.getJSONArray("tags");
+		tags = FastJsonUtil.castStrNumArray2IntNumArray(tags);
 		condition.append("tags", new BasicBSONObject("$all", tags));
 
 		// 存在二级分类的话，则作为检索条件,如果不存在的话，认为已经匹配

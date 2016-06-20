@@ -258,11 +258,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 			@RequestParam(required = false) String filterName,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		JSONObject resJSON = JSONObject.parseObject("{}");
+		JSONObject resJSON = new JSONObject();
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			
 			if (offset != null) {
 				param.put("offset", offset);
@@ -285,11 +285,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 					offset = 0;
 				}
 				JSONArray arrays = data.getJSONArray("pois");
-				JSONArray rows = JSONArray.parseArray("[]");
+				JSONArray rows = new JSONArray();
 				for (int i = 0; i < arrays.size(); i++) {
 					JSONObject poiJson = arrays.getJSONObject(i);
 					
-					JSONObject row = JSONObject.parseObject("{}");
+					JSONObject row = new JSONObject();
 					row.put("number", (i+1)+offset);
 					String short_title = poiJson.getString("short_title");
 					String long_title = poiJson.getString("long_title");
@@ -330,7 +330,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("_id", _id);
 			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
 			response.getWriter().print(poisResult.toString());
