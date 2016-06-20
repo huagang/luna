@@ -117,7 +117,7 @@ public class AddPoiCtrl extends BasicCtrl{
 				lstProvinces.add(simpleModel);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 		}
 //		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
@@ -138,7 +138,7 @@ public class AddPoiCtrl extends BasicCtrl{
 				lstCitys.add(simpleModel);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 		}
 		session.setAttribute("citys", lstCitys);
 
@@ -416,7 +416,7 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 
 		} catch(IllegalArgumentException e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
@@ -437,7 +437,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		try {
 			this.param2Json(request);
 		} catch(IllegalArgumentException e) {
-			e.printStackTrace();
+			MsLogger.error(e);
 			response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
 			response.setStatus(200);
 			return;
@@ -526,7 +526,7 @@ public class AddPoiCtrl extends BasicCtrl{
 				String vod_file_id = data.getString("fileId");
 
 				// 记录写入数据库
-				JSONObject param = JSONObject.parseObject("{}");
+				JSONObject param = new JSONObject();
 				param.put("vod_file_id", vod_file_id);
 				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
 				
@@ -549,7 +549,7 @@ public class AddPoiCtrl extends BasicCtrl{
 				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}

@@ -77,7 +77,7 @@ $(document).ready(function(){
     function showSearchPois(tag){
     	$(".list-result-poi").html("");
 		for(var key in searchPoisForBizTree) {
-			if(tag && tag!="" && $.inArray(tag, searchPoisForBizTree[key].tags)<0){
+			if(tag && tag!="" && $.inArray(parseInt(tag), searchPoisForBizTree[key].tags)<0){
 				continue;
 			}
 			$(".list-result-poi").append('<label for="resultpoi'+searchPoisForBizTree[key]._id+'"><input type="checkbox" class="checkbox" id="resultpoi'+searchPoisForBizTree[key]._id+'" poi_id="'+searchPoisForBizTree[key]._id+'" poi_tags="'+searchPoisForBizTree[key].tags+'"/>'+searchPoisForBizTree[key].name+'</label>');
