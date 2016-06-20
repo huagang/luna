@@ -68,7 +68,7 @@
 <div class="pop pop-childpoi" id="childPoi">
   <div class="pop-title">
     <h4>添加POI子节点</h4>
- <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+ <a href="#" class="btn-close" onclick="clcContent(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
   </div>
   <div class="pop-cont">
     <div class="item">
@@ -141,6 +141,9 @@
     </div>
     <div class="item">
       <div class="item-label">搜索结果</div>
+      <div class="item-label">
+      	<label><input type="checkbox" id="chkbox-selcet-all">全选</label>
+      </div>
       <br/>
       <div class="result">
         <div class="list-result-poi">
@@ -152,7 +155,7 @@
   <!-- 底部功能区 -->
   <div class="pop-fun">
       <button type="button" id="btn-add-poi" >确定</button>
-      <button type="reset" class="button-close"  onclick="clcWindow(this)">取消</button>
+      <button type="reset" class="button-close"  onclick="clcContent(this)">取消</button>
   </div>
   <!-- 底部功能区 -->
 </div>
