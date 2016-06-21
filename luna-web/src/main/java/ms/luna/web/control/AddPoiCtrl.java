@@ -55,15 +55,9 @@ public class AddPoiCtrl extends BasicCtrl{
 	@Resource(name="managePoiCtrl")
 	private ManagePoiCtrl managePoiCtrl;
 
-//	/**
-//	 * 页面上属性列表
-//	 */
-//	private List<SimpleModel> checkBoxTags;
-
 	/**
 	 * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
 	 */
-//	private Map<String, List<TagFieldModel>> tagFieldListMap = new LinkedHashMap<String, List<TagFieldModel>>();
 
 	/**
 	 * 页面初始化
@@ -74,9 +68,11 @@ public class AddPoiCtrl extends BasicCtrl{
 	public ModelAndView init(
 			HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		ModelAndView mav = new ModelAndView();
 		if (session == null) {
 			MsLogger.error("session is null");
-			return new ModelAndView("/error.jsp");
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 		session.setAttribute("menu_selected", "manage_poi");
 		PoiModel poiModel = new PoiModel();
@@ -91,7 +87,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), null);
 			session.setAttribute("private_fields", private_fields_def);
 		} else {
-			return new ModelAndView("/error.jsp");
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 
 		// 区域信息的下拉列表
@@ -115,6 +112,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 		} catch (Exception e) {
 			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 //		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
@@ -136,6 +135,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 		} catch (Exception e) {
 			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 		session.setAttribute("citys", lstCitys);
 
@@ -148,8 +149,8 @@ public class AddPoiCtrl extends BasicCtrl{
 //		mav.addObject("countys", lstCountys);
 		session.setAttribute("countys", lstCountys);
 
-		ModelAndView mav = new ModelAndView("/add_poi.jsp");
 		mav.addObject("poiModel", poiModel);
+		mav.setViewName("/add_poi.jsp.jsp");
 		return mav;
 	}
 

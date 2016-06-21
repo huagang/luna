@@ -20,9 +20,13 @@ import ms.luna.biz.util.VbUtility;
 
 public class PoiCommon {
 
+	public static final class Excel {
+		public static final Integer 公有字段个数 = 11;
+		public static final String 模板文件名称 = "poi_templete.xlsx";
+		public static final String 模板Sheet名称 = "Templete_(备注)";
+	}
 	public static final class POI {
 		public static final Integer 公共TAGID = 1;
-
 		/*
 		 *公共部分 
 		 */
