@@ -19,12 +19,105 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 
 public class PoiCommon {
-
+	
 	public static final class Excel {
+
+		/**
+		 * Excel打开时的默认Zoom值
+		 */
+		public static final Integer INIT_ZOOM = 80;
+
+		/**
+		 * FIXME:(1/3)创建新的共有字段时--->>>需要修改
+		 */
 		public static final Integer 公有字段个数 = 11;
+
+		/**
+		 * FIXME:(2/3)创建新的共有字段时--->>>需要修改<p>
+		 * 名称为空的场合以""存在，不允许出现跳过，否则会错乱
+		 */
+		public static final String[] NM_COL_BASES = new String[] {
+				"二级分类",
+				"详细介绍",
+				"缩略图",
+				"全景数据ID",
+				"联系电话"
+		};
+		/**
+		 * FIXME:(3/3)创建新的共有字段时--->>>需要修改<p>
+		 * 说明为空的场合以""存在，不允许出现跳过，否则会错乱
+		 */
+		public static final String[] DESC_COL_BASES = new String[] {
+				"二级分类名称",
+				"POI点的详细介绍",
+				"输入缩略图名称，不能包含中文",
+				"panoID或者页卡集标识",
+				"可为空\r\n：格式：(国家区号)-省市区号-具体号码"
+		};
+		/**
+		 * 模板文件名
+		 */
 		public static final String 模板文件名称 = "poi_templete.xlsx";
+		/**
+		 * 模板中的备注内容
+		 */
 		public static final String 模板Sheet名称 = "Templete_(备注)";
+
+		/**
+		 * A列
+		 */
+		public static final Integer INDEX_COL_A = 0;
+		/**
+		 * A列名称
+		 */
+		public static final String NM_COL_A = "名称";
+		/**
+		 * B列
+		 */
+		public static final Integer INDEX_COL_B = 1;
+		/**
+		 * B列名称
+		 */
+		public static final String NM_COL_B = "别名";
+		/**
+		 * C列
+		 */
+		public static final Integer INDEX_COL_C = 2;
+		/**
+		 * C列名称
+		 */
+		public static final String NM_COL_C = "纬度";
+		/**
+		 * D列
+		 */
+		public static final Integer INDEX_COL_D = 3;
+		/**
+		 * D列名称
+		 */
+		public static final String NM_COL_D = "经度";
+		/**
+		 * E列或EF两列
+		 */
+		public static final Integer INDEX_COL_E = 4;// index:4-5
+		/**
+		 * EF列名称
+		 */
+		public static final String NM_COL_E_F = "地址";
+		/**
+		 * F列
+		 */
+		public static final Integer INDEX_COL_F = 5;// index:5
+		/**
+		 * F列名称
+		 */
+		public static final String NM_COL_F = "";
+
+		/**
+		 * 基准列(强烈建议不动，如果需要增加新字段请参看 FIXME)
+		 */
+		public static final Integer INDEX_COL_BASE = 6;
 	}
+
 	public static final class POI {
 		public static final Integer 公共TAGID = 1;
 		/*
