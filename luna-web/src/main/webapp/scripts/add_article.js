@@ -233,13 +233,18 @@ function postData(type, successCallback, errorCallback){
 		contentType: 'application/json',
 		processData: false,
 		success: function(data){
-			if(window.toString.call(successCallback) === "[object Function]"){
-				successCallback(data);
+			if( data.code === "0"){
+				if(window.toString.call(successCallback) === "[object Function]"){
+					successCallback(data);
+				}			
 			}
+			else if(window.toString.call(errorCallback) === "[object Function]"){
+				errorCallback({error: 'upload', msg: '发送请求失败', data:data});
+			}	
 		},
 		error:function(data){
 			if(window.toString.call(errorCallback) === "[object Function]"){
-				errorCallback({error: 'upload', msg: '文件上传失败', data:data});
+				errorCallback({error: 'upload', msg: '发送请求失败', data:data});
 			}				
 		}
 	});

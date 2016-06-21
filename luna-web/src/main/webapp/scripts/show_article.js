@@ -1,4 +1,5 @@
 window.onload = function(){
+	var host = '/luna-web';
 	var content = "濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型代表，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型，濯水古镇街巷格局保留较为完整典型，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。";
 		
 	// 文章fake数据
@@ -7,12 +8,10 @@ window.onload = function(){
 		content: content.repeat(5),
 		thumbnail: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160616/0P2I3c3d2Q2b2H1Q3y2s0V2A0x0L3w1k.jpg',
 		audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160617/2N1H2q0a1Y0B1O3V1I263L123c20102D.mp3',
-		video:'http://200011112.vod.myqcloud.com/200011112_d4698cba1be011e68f7bc5fa95bc6c07.f0.mp4',
+		video:'14651978969259528073',
 		category:''
 	};
-	
 	updateData(data);
-	
 	function updateData(data){
 		/* 根据获取的文章数据进行更新文章内容 */
 		
@@ -42,26 +41,53 @@ window.onload = function(){
 			
 		}
 		
-		// 更新文章视频信息，视频信息可以为空
-		var btnWraper;
+		// 更新文章视频信息，视频信息可以为空		
 		if(data.video){
-			btnWraper = document.querySelector('.video-btn-wrap');
-			btnWraper.classList.remove('hidden');
+
+			var btnWraper = document.querySelector('.video-btn-wrap');
 			btnWraper.addEventListener('click', function(){
 				showVideoModal();
 				if(window.audio){
 					window.audio.pause();
 				}
 			});	
-			document.querySelector('.video').src = data.video;
-			
 			document.querySelector('.video-modal .mask').addEventListener('click', hideVideoModal);
+			//data.video 可能是video id,也可能是video url，所以需要进行判断
+			if(! /^\d+$/.test(data.video)){
+				document.querySelector('.video').src = data.video;
+				btnWraper.classList.remove('hidden');
+			}
+			else{
+				$.ajax({
+					url: host + "/api_vodPlay.do",
+					type: "GET",
+					data:{method:"getVideoUrls",fileId:data.video},
+					dataType:"json",
+					success:function(data){
+						if(data.code === '0'){
+							var videoTypes = ["vod_original_file_url", "vod_normal_mp4_url","vod_phone_hls_url"];
+							var src = "";
+							videoTypes.forEach(function(type){
+								if(!src && data.data[type]){
+									src = data.data[type];
+								}
+							});
+							if(src){
+								btnWraper.classList.remove('hidden');
+								document.querySelector('.video').src = src;
+							}
+						}
+					}
+				});		
+			}
+			
+			
 		}
 		
 		// 更新文章音频信息，音频信息可以为空
 		if(data.audio){
-			btnWraper = document.querySelector('.audio-btn-wrap');
-			btnWraper.addEventListener('click', handleAudioControlClick);
+			var audioBtnWraper = document.querySelector('.audio-btn-wrap');
+			audioBtnWraper.addEventListener('click', handleAudioControlClick);
 			window.audio = getAudio('.audio');
 			audio.src = data.audio;
 		}
