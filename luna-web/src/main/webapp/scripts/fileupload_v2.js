@@ -76,8 +76,13 @@ var FileUploader = {
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
 			processData:false,
 			success:function(returndata){          //服务器响应成功时的处理函数
-				if(window.toString.call(successCallback) === "[object Function]"){
-					successCallback(returndata);
+				if(returndata.code === "0"){
+					if(window.toString.call(successCallback) === "[object Function]"){
+						successCallback(returndata);
+					}					
+				}
+				else if(window.toString.call(successCallback) === "[object Function]"){
+					errorCallback({error: 'upload', msg: '文件上传失败', data:returndata});
 				}
 			},
 			error:function(returndata){ //服务器响应失败时的处理函数

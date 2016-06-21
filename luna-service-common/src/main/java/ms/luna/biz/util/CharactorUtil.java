@@ -33,13 +33,13 @@ public class CharactorUtil {
 	}
 
 	public static String nullToALL(String src) {
-		return src == null || src.isEmpty() ? VbConstant.ALL: src;
+		return src == null || src.isEmpty() ? VbConstant.ZonePulldown.ALL: src;
 	}
 
 	public static String blankRegionNmToNoneBlank(String roleAuth, String regionNm) {
 		int auth = Integer.parseInt(roleAuth);
 		if (auth == VbConstant.AUTH_GAO_JI_GUAN_LI_YUAN) {
-			return VbConstant.ALL_REGION_NM;
+			return VbConstant.ZonePulldown.ALL_REGION_NM;
 		} else if (auth == VbConstant.AUTH_YOU_KE) {
 			return VbConstant.REGION_NM_YOU_KE;
 		}

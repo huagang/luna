@@ -153,10 +153,6 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">地址</div>
                         <div class="value-poi">
-                            <%-- <form:select cssClass="select"
-					 id="country"
-					 path="countryId" disabled="disabled"
-					 items="${countrys}" itemLabel="label" itemValue="value"/> --%>
 
 				<form:select cssClass="select"
 					 id="province"

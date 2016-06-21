@@ -55,6 +55,7 @@ import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.biz.util.ZipUtil;
 import ms.luna.common.MsLunaResource;
+import ms.luna.common.PoiCommon;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.model.common.SimpleModel;
@@ -69,10 +70,6 @@ public class ManagePoiCtrl extends BasicCtrl{
 	private final static String uploadedFilePath = MsLunaResource.getResource("luna").getValue("uploadedFilePath");;
 
 	private Map<String, String> ZONENAME_2_CODE_MAP = new HashMap<String, String>();
-
-	public static final Integer 介绍最大长度 = 1024*20;
-	
-	public static final Integer 公有字段个数 = 11;
 
 	@Autowired
 	private ManagePoiService managePoiService;
@@ -89,10 +86,10 @@ public class ManagePoiCtrl extends BasicCtrl{
 	 * 加载模板资源
 	 */
 	public ManagePoiCtrl() {
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("poi_templete.xlsx");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(PoiCommon.Excel.模板文件名称);
 		try {
 			Workbook wb = WorkbookFactory.create(is);
-			Sheet sheet = wb.getSheet("Templete_(备注)");
+			Sheet sheet = wb.getSheet(PoiCommon.Excel.模板Sheet名称);
 			int rowStart = Math.max(1, sheet.getFirstRowNum());
 			int rowEnd = Math.max(1, sheet.getLastRowNum());
 			for (int i = rowStart; i <= rowEnd; i++) {
@@ -130,10 +127,11 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 		if (data == null) {
 			data = new JSONObject();
-			data.put("sub_tags", "[]");
+			data.put("sub_tags", FastJsonUtil.createBlankIntegerJsonArray());
 		}
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 		response.getWriter().print(data.toString());
 		response.setStatus(200);
 		return;
@@ -150,7 +148,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 	public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
 		List<SimpleModel> topTags = new ArrayList<SimpleModel>();
 		JSONArray tags = common_fields_def.getJSONArray("tags_def");
-		
+
 		List<SimpleModel> lstSubTag = new ArrayList<SimpleModel>();
 		for (int i = 0; i < tags.size(); i++) {
 			JSONObject tag = tags.getJSONObject(i);
@@ -173,11 +171,10 @@ public class ManagePoiCtrl extends BasicCtrl{
 			}
 		}
 
-		// 一级菜单
+		// 一级下拉列表
 		session.setAttribute("topTags", topTags);
-		// 二级菜单
+		// 二级下拉列表
 		session.setAttribute("subTags", lstSubTag);
-		
 	}
 
 	/**
@@ -189,30 +186,19 @@ public class ManagePoiCtrl extends BasicCtrl{
 	public ModelAndView init(
 			HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		ModelAndView mav = new ModelAndView();
 		if (session == null) {
 			MsLogger.error("session is null");
-			return new ModelAndView("/error.jsp");
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 		session.setAttribute("menu_selected", "manage_poi");
 
 		PoiModel poiModel = new PoiModel();
 
-//		List<SimpleModel> checkBoxTags = poiModel.getPoiTags();
-//
-//		session.setAttribute("sessionCheckBoxTags", checkBoxTags);
-		ModelAndView mav = new ModelAndView("/manage_poi.jsp");
-
-		// 国家信息
-		List<SimpleModel> lstCountrys = new ArrayList<SimpleModel>();
-		SimpleModel simpleModel = new SimpleModel();
-		simpleModel.setValue("100000");
-		simpleModel.setLabel("中国");
-		lstCountrys.add(simpleModel);
-//		mav.addObject("countrys", lstCountrys);
-		session.setAttribute("countrys", lstCountrys);
-
 		// 省份信息
 		List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
+		SimpleModel simpleModel = null;
 		try {
 			for (Map<String, String> map : pulldownCtrl.loadProvinces()) {
 				simpleModel = new SimpleModel();
@@ -221,34 +207,33 @@ public class ManagePoiCtrl extends BasicCtrl{
 				lstProvinces.add(simpleModel);
 			}
 		} catch (Exception e) {
-			MsLogger.debug(e);
+			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
-//		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
 
 		// 城市信息
 		List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
 		simpleModel = new SimpleModel();
-		simpleModel.setValue("");
-		simpleModel.setLabel("请选择市");
+		simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+		simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
 		lstCitys.add(simpleModel);
-//		mav.addObject("citys", lstCitys);
 		session.setAttribute("citys", lstCitys);
 
 		// 区/县信息
 		List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
 		simpleModel = new SimpleModel();
-		simpleModel.setValue("");
-		simpleModel.setLabel("请选择区/县");
+		simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+		simpleModel.setLabel(VbConstant.ZonePulldown.ALL_COUNTY_NM);
 		lstCountys.add(simpleModel);
-//		mav.addObject("countys", lstCountys);
 		session.setAttribute("countys", lstCountys);
 
 		mav.addObject("addPoiModel", poiModel);
 		mav.addObject("editPoiModel", new PoiModel());
 		
 		session.setAttribute("poi_tags_length", poiModel.getPoiTags().size());
-		
+		mav.setViewName("/manage_poi.jsp");
 		return mav;
 	}
 
@@ -260,8 +245,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		JSONObject resJSON = new JSONObject();
 		try {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 			JSONObject param = new JSONObject();
 			
 			if (offset != null) {
@@ -278,6 +263,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			}
 
 			JSONObject poisResult = managePoiService.getPois(param.toString());
+			MsLogger.info(poisResult.toJSONString());
 			if ("0".equals(poisResult.getString("code"))) {
 				JSONObject data = poisResult.getJSONObject("data");
 
@@ -310,17 +296,15 @@ public class ManagePoiCtrl extends BasicCtrl{
 			} else {
 				resJSON.put("total", 0);
 			}
-
 			response.getWriter().print(resJSON.toString());
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			MsLogger.debug(e);
+			MsLogger.error(e);
+			response.getWriter().print(FastJsonUtil.error("-1", "异常").toString());
+			response.setStatus(200);
+			return;
 		}
-		
-		response.getWriter().print(FastJsonUtil.error("-1", "异常").toString());
-		response.setStatus(200);
-		return;
 	}
 
 	@RequestMapping(params = "method=asyncDeletePoi")
@@ -328,80 +312,21 @@ public class ManagePoiCtrl extends BasicCtrl{
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		try {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 			JSONObject param = new JSONObject();
 			param.put("_id", _id);
 			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
-			response.getWriter().print(poisResult.toString());
+			MsLogger.info(poisResult.toJSONString());
+			response.getWriter().print(poisResult.toJSONString());
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
 			MsLogger.debug(e);
-		}
-		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
-		response.setStatus(200);
-		return;
-	}
-
-	/**
-	 * 异步上传图片
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	@RequestMapping(params = "method=upload_thumbnail")
-	public void uploadThumbnail(
-			@RequestParam(required = true, value = "thumbnail") MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
-		if (ext == null) {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
+			response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 			response.setStatus(200);
 			return;
 		}
-		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		String fileNameInCloud = date + "_" + VbMD5.generateToken() + ext;
-		super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath(), fileNameInCloud);
-	}
-
-	/**
-	 * 异步上传音频
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	@RequestMapping(params = "method=upload_audio")
-	public void uploadAudio(
-			@RequestParam(required = true, value = "audio") MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
-		if (ext == null) {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
-			response.setStatus(200);
-			return;
-		}
-
-		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		String fileNameInCloud = date + "_" + VbMD5.generateToken() + ext;
-		super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath(), fileNameInCloud);
-	}
-
-	/**
-	 * 异步上传音频
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	@RequestMapping(params = "method=upload_video")
-	public void uploadVideo(
-			@RequestParam(required = true, value = "video") MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-//			super.uploadLocalFile2Cloud(request, response, file, COSUtil.picAddress);
 	}
 
 	@RequestMapping(params = "method=asyncUploadPoisByExcel")
@@ -412,8 +337,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 			MultipartFile zip_fileup,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 
 		String date = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 
@@ -445,11 +370,12 @@ public class ManagePoiCtrl extends BasicCtrl{
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			JSONObject result = this.savePois(savedExcel, unZipped, msUser);
-			response.getWriter().print(result.toString());
+			MsLogger.info(result.toJSONString());
+			response.getWriter().print(result.toJSONString());
 			response.setStatus(200);
 			return;
 		} catch (Exception e) {
-			MsLogger.debug(e);
+			MsLogger.error(e);
 			response.getWriter().print(FastJsonUtil.error("-3", "failed"));
 			response.setStatus(200);
 			return;
@@ -485,15 +411,15 @@ public class ManagePoiCtrl extends BasicCtrl{
 					response.getOutputStream().close();
 					wb.close();
 				} catch (IOException e) {
-					MsLogger.debug(e);
+					MsLogger.error(e);
 				} 
 				return;
 			}
 		} catch (Exception e) {
-			MsLogger.debug(e);
+			MsLogger.error(e);
 		}
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 		response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
 		response.setStatus(200);
 	}
@@ -602,7 +528,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 			for (int j = rowStart; j <= rowEnd; j++) {
 				Row row = sheet.getRow(j);
 				Boolean allBlank = true;
-				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 					if (!CharactorUtil.isEmpyty(getCellValueAsString(row.getCell(0)).trim())) {
 						allBlank = false;
 					}
@@ -655,7 +581,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				isError = isError || CharactorUtil.checkPoiLat(lat);
 				isError = isError || CharactorUtil.checkPoiLng(lng);
 				isError = isError || CharactorUtil.checkPoiDefaultStr(detail_address);
-				isError = isError || CharactorUtil.checkPoiDefaultStr(brief_introduction, ManagePoiCtrl.介绍最大长度);
+				isError = isError || CharactorUtil.checkPoiDefaultStr(brief_introduction, PoiCommon.POI.详细介绍最大长度);
 //				isError = isError || CharactorUtil.isEmpyty(thumbnail);
 
 				// 8.全景数据ID
@@ -667,7 +593,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 				isError = isError || CharactorUtil.fileFieldIsError(thumbnail, unzipedDir);
 				// 检查私有字段
-				for (int z = 公有字段个数; !isError && z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+				for (int z = PoiCommon.Excel.公有字段个数; !isError && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 					String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 					String value = getCellValueAsString(row.getCell(z)).trim();
 					isError = isError || CharactorUtil.isPoiDataHasError(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
@@ -696,7 +622,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("contact_phone", contact_phone);
 
 					// 记录其他私有字段，页面编辑用
-					for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+					for (int z = PoiCommon.Excel.公有字段个数; z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 						String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 						String value = getCellValueAsString(row.getCell(z)).trim();
 						JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -754,7 +680,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("contact_phone", contact_phone);
 
 							// 记录其他私有字段，页面编辑用
-							for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+							for (int z = PoiCommon.Excel.公有字段个数; z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 								String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 								String value = getCellValueAsString(row.getCell(z)).trim();
 								JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -796,7 +722,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 					try {
 						// 记录其他私有字段，页面编辑用
-						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+						for (int z = PoiCommon.Excel.公有字段个数; z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -828,7 +754,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 						// 9.联系电话
 						checkErrorPoi.put("contact_phone", contact_phone);
 						// 记录其他私有字段，页面编辑用
-						for (int z = 公有字段个数; z < fieldsJsonByTag.size() + 公有字段个数; z++) {
+						for (int z = PoiCommon.Excel.公有字段个数; z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 							String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 							String value = getCellValueAsString(row.getCell(z)).trim();
 							JSONObject fieldDef = fieldsJsonByTag.get(field_show_name);
@@ -945,13 +871,13 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		// title1
 		Row row = sheet.createRow(0);
-		for (int j = 0; j < 公有字段个数; j++) {
+		for (int j = 0; j < PoiCommon.Excel.公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(titleStyle);
 		}
 		// title2
 		row = sheet.createRow(1);
-		for (int j = 0; j < 公有字段个数; j++) {
+		for (int j = 0; j < PoiCommon.Excel.公有字段个数; j++) {
 
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			if (j > 3 && j < 6) {
@@ -960,7 +886,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 		// tips
 		row = sheet.createRow(2);
-		for (int j = 0; j < 公有字段个数; j++) {
+		for (int j = 0; j < PoiCommon.Excel.公有字段个数; j++) {
 			Cell cell = row.createCell(j, Cell.CELL_TYPE_STRING);
 			cell.setCellStyle(tipsStyle);
 		}
@@ -1055,7 +981,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 		row1.getCell(10).setCellValue("可为空\r\n：格式：(国家区号)-省市区号-具体号码");
 		row1.getCell(10).setCellStyle(tipsStyle);
 
-		for (int i = 0; i < 公有字段个数; i++) {
+		for (int i = 0; i < PoiCommon.Excel.公有字段个数; i++) {
 			row2.getCell(i).setCellStyle(tipsStyle);
 		}
 	}

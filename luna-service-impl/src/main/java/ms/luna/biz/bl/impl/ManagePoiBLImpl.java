@@ -949,7 +949,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	public JSONObject initFixPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
 
-		Document docPoi = json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
+		Document docPoi = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
 		JSONObject data = new JSONObject();
 		data.put("common_fields_def", this.getCommonFieldsDef());

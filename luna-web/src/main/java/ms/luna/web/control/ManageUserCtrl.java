@@ -56,7 +56,7 @@ public class ManageUserCtrl {
 		if ("0".equals(result.getString("code"))) {
 			JSONObject data = result.getJSONObject("data");
 			JSONArray arrays = data.getJSONArray("categorys");
-			categoryMap.put(VbConstant.ALL, "全部");
+			categoryMap.put(VbConstant.ZonePulldown.ALL, "全部");
 			for (int i = 0; i < arrays.size(); i++) {
 				JSONObject categoryJson = arrays.getJSONObject(i);
 				categoryMap.put(categoryJson.getString("category_id"), categoryJson.getString("nm_zh"));
@@ -178,7 +178,7 @@ public class ManageUserCtrl {
 			}
 
 			if (selectedValue == null) {
-				selectedValue = VbConstant.ALL;
+				selectedValue = VbConstant.ZonePulldown.ALL;
 			}
 			param.put("category_id", selectedValue);
 			if (offset != null) {
