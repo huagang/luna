@@ -65,6 +65,7 @@ window.onload = function(){
 					dataType:"json",
 					success:function(data){
 						if(data.code === '0'){
+							// 按照视频类型优先级来获取视频url，例如vod_original_file_url是最高优先级
 							var videoTypes = ["vod_original_file_url", "vod_normal_mp4_url","vod_phone_hls_url"];
 							var src = "";
 							videoTypes.forEach(function(type){
