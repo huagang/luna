@@ -18,9 +18,9 @@
 
 	<dubbo:consumer check="false" timeout="300000" retries="0" />
 	<!-- <dubbo:registry protocol="zookeeper" address="115.159.87.160:2181"/> -->
-	<dubbo:registry protocol="zookeeper" address="localhost:2181" />
+	<dubbo:registry protocol="zookeeper" address="localhost:2181" group="luna"/>
 
 	<dubbo:reference id="loginService" interface="ms.luna.biz.sc.LoginService" />
-
+	<dubbo:reference id="poiApiService" interface="ms.luna.biz.sc.PoiApiService" />
 	
 </beans>

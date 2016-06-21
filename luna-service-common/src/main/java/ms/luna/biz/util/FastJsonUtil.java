@@ -1,16 +1,16 @@
 package ms.luna.biz.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
-
 public final class FastJsonUtil {
-	
+
 	public static JSONObject checkParamsAnd(String json, String[] params) {
-		
+
 		JSONObject jsonObject = null;
-		
+
 		try {
 			jsonObject = JSON.parseObject(json);
 		} catch (Exception e) {
@@ -46,7 +46,7 @@ public final class FastJsonUtil {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 返回json对象的字符串，可指定默认值
 	 * @param json
@@ -56,14 +56,14 @@ public final class FastJsonUtil {
 	 */
 	public static String getString(JSONObject json, String key, String defaultValue) {
 		String result = defaultValue;
-		
+
 		if (json.containsKey(key)) {
 			result = json.getString(key);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 获取json对象的整型数值
 	 * @param json
@@ -78,10 +78,10 @@ public final class FastJsonUtil {
 			} catch(Exception e) {
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 获取json对象的整型数值
 	 * @param json
@@ -96,10 +96,10 @@ public final class FastJsonUtil {
 			} catch(Exception e) {
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 获取json对象的浮点型数值
 	 * @param json
@@ -114,10 +114,10 @@ public final class FastJsonUtil {
 			} catch(Exception e) {
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 获取json对象的short型数值
 	 * @param json
@@ -132,10 +132,10 @@ public final class FastJsonUtil {
 			} catch(Exception e) {
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 设置值
 	 * @param json
@@ -145,23 +145,23 @@ public final class FastJsonUtil {
 	public static void setValue(JSONObject json, String key, Integer value) {
 		json.put(key, String.valueOf(value));
 	}
-	
+
 
 	public static void setValue(JSONObject json, String key, String value) {
-		
+
 		json.put(key, value);
 	}
-	
+
 	public static void setValue(JSONObject json, String key, short value) {
-		
+
 		json.put(key, String.valueOf(value));
 	}
-	
+
 	public static void setValue(JSONObject json, String key, float value) {
-		
+
 		json.put(key, String.valueOf(value));
 	}
-	
+
 	public static JSONObject error(String code, String msg) {
 		MsLogger.error(msg, 1);
 		JSONObject result = JSON.parseObject("{}");
@@ -188,7 +188,7 @@ public final class FastJsonUtil {
 		result.put("data", "{}");
 		return result;
 	}
-	
+
 	public static JSONObject error(int code, String msg) {
 		MsLogger.error(msg, 2);
 		JSONObject result = JSON.parseObject("{}");
@@ -205,7 +205,7 @@ public final class FastJsonUtil {
 		result.put("data", "{}");
 		return result;
 	}
-	
+
 	public static JSONObject sucess(String msg, Object data) {
 		MsLogger.info(msg, 1);
 		JSONObject result = JSON.parseObject("{}");
@@ -239,5 +239,52 @@ public final class FastJsonUtil {
 		JSONObject temp = new JSONObject();
 		temp.put("temp", o);
 		return temp.getJSONArray("temp");
+	}
+
+	/**
+	 * 
+	 * @param o
+	 * @return
+	 */
+	public static JSONArray parse2Array(String o) {
+		try {
+			return JSON.parseObject(o, new TypeReference<JSONArray>(){});
+		} catch (Throwable e) {
+			MsLogger.error("不能转成JSONArray)", e);
+			throw e;
+		}
+	}
+
+	public static JSONArray parse2IntArray(String o) {
+		try {
+			Integer[] lst = JSON.parseObject(o, new TypeReference<Integer[]>(){});
+			return parse2Array(lst);
+		} catch (Throwable e) {
+			MsLogger.error("不能转成JSONArray<Integer>)", e);
+			throw e;
+		}
+	}
+
+	public static JSONArray castStrNumArray2IntNumArray(Object o) {
+		try {
+			if (o == null) {
+				return parse2Array(new Integer[]{});
+			}
+			Integer[] lst = JSON.parseObject(JSON.toJSONString(o),
+					new TypeReference<Integer[]>(){});
+			return parse2Array(lst);
+		} catch (Throwable e) {
+			MsLogger.error("不能转成JSONArray<Intege>)", e);
+			throw e;
+		}
+	}
+
+	public static JSONArray createDefaultIntegerJsonArray() {
+		JSONArray temp = createBlankIntegerJsonArray();
+		temp.add(0);
+		return temp;
+	}
+	public static JSONArray createBlankIntegerJsonArray() {
+		return castStrNumArray2IntNumArray(null);
 	}
 }

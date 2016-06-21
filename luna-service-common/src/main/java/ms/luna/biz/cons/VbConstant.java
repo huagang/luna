@@ -1,5 +1,6 @@
 package ms.luna.biz.cons;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -37,24 +38,7 @@ public final class VbConstant {
 		public static final Integer 页面布局 = 1;
 		public static final Integer 容器布局 = 2;
 	}
-	public static final class CHARACTOR  {
-		public static final class GUEST_VISITOR {
-			public static final String CODE = "ROLE_001";
-			public static final String 名称 = "游客";
-		}
-		public static final class SENIOR_ADMIN {
-			public static final String CODE = "ROLE_002";
-			public static final String 名称 = "高级管理员";
-		}
-		public static final class BIZ_ADMIN {
-			public static final String CODE = "ROLE_003";
-			public static final String 名称 = "业务管理员";
-		}
-	}
 
-	public static final class POI {
-		public static final Integer 公共TAGID = 1;
-	}
 	/**
 	 * 业务模块
 	 * @author Mark

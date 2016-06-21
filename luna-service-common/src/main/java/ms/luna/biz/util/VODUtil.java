@@ -15,6 +15,8 @@ import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
 import com.qcloud.vod.Module.ModifiedVod;
 import com.qcloud.vod.Utilities.SHA1;
 
+import ms.luna.biz.cons.VbConstant;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -29,7 +31,7 @@ public class VODUtil {
 	private static final String SECRETKEY_VIDEO = "Sf21i2X8xup47BruSG1zq9xJ7C3phC3K";
 	private static final String METHOD = "POST"; // 请求方法
 	private static final String REGION = "bj"; // 区域参数
-	private static final String URL = "/api/vodPlayApi.do?method=getVideoUrls&token="; // 转码回调地址
+	private static final String URL = "/api/vodPlayApi.do?method=getVideoUrlsFromCallbackInfo&token="; // 转码回调地址
 	private static final int DATASIZE = 1024 * 1024 * 5;// 视屏上传切片大小，默认5M
 	private static final long MAX_VIDEO_SIZE = 1024 * 1024 * 5;// 最大上传大小，设置5M
 
@@ -84,9 +86,16 @@ public class VODUtil {
 			return FastJsonUtil.error(result.getInteger("code") + "", result.getString("message"));
 		}
 		JSONObject data = JSONObject.parseObject("{}");
-		if (result.containsKey("palySet")) {// 若转码未完成消息形式为{"code":0,"message":""}
-			data.put("playSet", result.getJSONArray("playSet"));
-			return FastJsonUtil.sucess("success", data);
+		if (result.containsKey("playSet")) {// 若转码未完成消息形式为{"code":0,"message":""}
+			JSONArray playSet = result.getJSONArray("playSet");
+			for(int i = 0;i<playSet.size();i++){
+				JSONObject play = playSet.getJSONObject(i);
+				String definition = "definition" + play.getInteger("definition"); // 获得格式对应的编号
+				String definition_nm = VbConstant.VOD_DEFINITION.ConvertName(definition); // 获得格式在数据库中的对应名称
+				String url = play.getString("url");
+				data.put(definition_nm, url);
+			}
+			return FastJsonUtil.sucess("视频url信息获取成功", data);
 		}
 		return FastJsonUtil.error("1", "转码未完成");
 	}
@@ -540,7 +549,7 @@ public class VODUtil {
 				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
-					data.put("fileId", fileId);
+					data.put("vod_file_id", fileId);
 					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));
@@ -655,7 +664,7 @@ public class VODUtil {
 				flag = json_result.getInteger("flag");
 				if (flag == 1) { // 上传结束
 					fileId = json_result.getString("fileId");
-					data.put("fileId", fileId);
+					data.put("vod_file_id", fileId);
 					return FastJsonUtil.sucess("成功", data);
 				} else { // 切片上传成功，但未结束。从返回结果中获得当前偏移量
 					tmpOffset = Integer.parseInt(json_result.getString("offset"));

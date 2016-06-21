@@ -46,6 +46,8 @@ public class LoginFilter implements Filter {
 				webRoot + "/uploadCtrl.do",
 				webRoot + "/add_article.do",
 				webRoot + "/show_article.do",
+				webRoot + "/api_vodPlay.do",
+				webRoot + "/fileUpload.do",
 				webRoot + "/menu.do"));
 
 		skipUris.addAll(Arrays.asList(
@@ -53,8 +55,7 @@ public class LoginFilter implements Filter {
 				webRoot + "/login.do",
 				webRoot + "/userRegist.do",
 				webRoot + "/merchantRegist.do",
-				webRoot + "/pulldown.do",
-				webRoot + "/api_vodPlay.do"
+				webRoot + "/pulldown.do"
 				));
 	}
 	

@@ -77,11 +77,17 @@ $(document).ready(function(){
     function showSearchPois(tag){
     	$(".list-result-poi").html("");
 		for(var key in searchPoisForBizTree) {
-			if(tag && tag!="" && $.inArray(tag, searchPoisForBizTree[key].tags)<0){
+			if(tag && tag!="" && $.inArray(parseInt(tag), searchPoisForBizTree[key].tags)<0){
 				continue;
 			}
 			$(".list-result-poi").append('<label for="resultpoi'+searchPoisForBizTree[key]._id+'"><input type="checkbox" class="checkbox" id="resultpoi'+searchPoisForBizTree[key]._id+'" poi_id="'+searchPoisForBizTree[key]._id+'" poi_tags="'+searchPoisForBizTree[key].tags+'"/>'+searchPoisForBizTree[key].name+'</label>');
         }
+		if($(".list-result-poi").html() == ""){
+//			$(".list-result-poi").append('<span >未找到匹配的POI数据，<a href="#" onclick="">马上添加</a></span>');
+			var url = host+"/add_poi.do?method=init";
+			$(".list-result-poi").append('<div class="text" style=" text-align: center; height: 1px;line-height:'
+					+$(".result")[0].offsetHeight+'px;">未找到匹配的POI数据，<a href="'+url+'" target="_blank" >马上添加</a></div>');
+		}
     }
     
     $(".tags-wrap").on("click",".btn-tags",function(){
@@ -350,4 +356,25 @@ $(document).ready(function(){
 		  $(".luna-tree .item-name").removeClass("current");
 	  }
 	});
+    
+    $("#chkbox-selcet-all").on('click',function(){
+    	var flag = document.getElementById("chkbox-selcet-all").checked;
+    	var checkboxes = $("input[type=checkbox]");
+    	if(flag == true){
+    		for(var i = 0;i<checkboxes.length;i++){
+    			checkboxes[i].checked = true;
+    		}
+    	} else{
+    		for(var i = 0;i<checkboxes.length;i++){
+    			checkboxes[i].checked = false;
+    		}
+    	}
+    });
+    
 });
+
+// 清空弹层数据--添加清空“全选”输入
+function clcContent(obj){
+	$("#chkbox-selcet-all").attr("checked",false);
+	clcWindow(obj);
+}

@@ -38,6 +38,7 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CreateHtmlUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MailSender;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -329,7 +330,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 		list = msRoleDAO.selectByCriteria(msRoleCriteria);
 
 		if(list == null){
-			throw new RuntimeException("不存在该module_code");
+			throw new RuntimeException("不存在该module_code,module_code:" + module_code);
 		}
 		
         Collections.sort(list, new Comparator<MsRole>() {
@@ -389,6 +390,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 			result.put("code", "1");
 			result.put("msg", "邮箱已注册");
 			result.put("data", invalEmaillst.toString());
+			MsLogger.debug("邮箱已注册，email:"+valEmaillst.toString());
 			return result;
 		}
 		// 插入DB(ms_reg_email)
@@ -426,6 +428,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 		for (int i = 0; i < valEmaillst.size(); i++) {
 			executorService.execute(new MailRunnable(valEmaillst.get(i), tokenlst.get(i), module_nm, currentDate,
 					luna_nm, role_nm, webAddr));
+			MsLogger.debug("邮件发送成功！mail:"+valEmaillst.get(i));
 		}
 		executorService.shutdown();
 
@@ -458,10 +461,10 @@ public class ManageUserBLImpl implements ManageUserBL {
 			if (rows == 1) {// 正常情况下unique_id唯一
 				return FastJsonUtil.sucess("更新成功！");
 			} else {
-				throw new RuntimeException("数据库异常！");
+				throw new RuntimeException("数据库异常！unique_id不唯一，unique_id："+ unique_id);
 			}
 		} else {
-			throw new RuntimeException("数据库异常！");
+			throw new RuntimeException("数据库异常！luna_name 不唯一，luna_name:"+ luna_name);
 		}
 	}
 
@@ -490,12 +493,14 @@ public class ManageUserBLImpl implements ManageUserBL {
 			MsRUserRoleCriteria.Criteria userRoleCriteria = msRUserRoleCriteria.createCriteria();
 			userRoleCriteria.andUniqueIdEqualTo(unique_id);
 			msRUserRoleDAO.deleteByCriteria(msRUserRoleCriteria);
-
+			MsLogger.debug("删除ms_r_user_role表数据，unique_id："+unique_id);
+			
 			// 删除ms_user_luna表数据
 			MsUserLunaCriteria msUserLunaCriteria = new MsUserLunaCriteria();
 			MsUserLunaCriteria.Criteria userLunaCriteria = msUserLunaCriteria.createCriteria();
 			userLunaCriteria.andUniqueIdEqualTo(unique_id);
 			msUserLunaDAO.deleteByCriteria(msUserLunaCriteria);
+			MsLogger.debug("删除ms_user_luna表数据，unique_id："+unique_id);
 			
 			// 删除ms_reg_eamil表数据
 			if(email != null){
@@ -503,11 +508,12 @@ public class ManageUserBLImpl implements ManageUserBL {
 				MsRegEmailCriteria.Criteria msRegCriteria = msRegEmailCriteria.createCriteria();
 				msRegCriteria.andEmailEqualTo(email);
 				msRegEmailDAO.deleteByCriteria(msRegEmailCriteria);
+				MsLogger.debug("删除ms_reg_eamil表数据，email："+email);
 			}
 			
 			return FastJsonUtil.sucess("删除成功!");
 		} else {
-			throw new RuntimeException("删除用户--数据读取异常");
+			throw new RuntimeException("用户不存在，luna_name:"+luna_name);
 		}
 		
 	}
@@ -585,7 +591,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 		List<MsRole> lst = null;
 		lst = msRoleDAO.selectByCriteria(msRoleCriteria);
 		if (lst.size() != 1) {
-			return FastJsonUtil.error("1", "没有对应的auth");
+			return FastJsonUtil.error("1", "没有对应的auth,role_code:" + role_code + ", module_code:" + module_code);
 		}
 		
 		MsRole msRole = lst.get(0);
@@ -637,23 +643,27 @@ public class ManageUserBLImpl implements ManageUserBL {
 
 		@Override
 		public void run() {
-			MailSender.MailProperty mail = new MailSender().new MailProperty();
-
-			mail.setMailServerHost(HOST);
-			mail.setMailServerPort(PORT);
-			mail.setValidate(VALIDATE);
-			mail.setUserName(USERNAME);
-			mail.setPassword(PASSWORD);
-			mail.setFromAddress(FROMADDRESS);
-			mail.setSubject(SUBJECT);
-			mail.setToAddress(toAddress);
-			String content = CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
-					luna_nm, role_nm, webAddr);
-			mail.setContent(content);
-
-			MailSender send = new MailSender();
-			send.sendHtmlMail(mail);
+			try{
+				MailSender.MailProperty mail = new MailSender().new MailProperty();
+	
+				mail.setMailServerHost(HOST);
+				mail.setMailServerPort(PORT);
+				mail.setValidate(VALIDATE);
+				mail.setUserName(USERNAME);
+				mail.setPassword(PASSWORD);
+				mail.setFromAddress(FROMADDRESS);
+				mail.setSubject(SUBJECT);
+				mail.setToAddress(toAddress);
+				String content = CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
+						luna_nm, role_nm, webAddr);
+				mail.setContent(content);
+	
+				MailSender send = new MailSender();
+				send.sendHtmlMail(mail);
+			} catch (Exception e){
+				MsLogger.error("邮件发送出现异常，email:" + toAddress + e);
+			}
 		}
 	}
-
+// ps:在Java中，线程方法的异常（无论是checked还是unchecked exception），都应该在线程代码边界之内（run方法内）进行try catch并处理掉.
 }

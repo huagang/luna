@@ -376,7 +376,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		List<MsBusinessResult> lstMsBusinessResult = this.findBusiness(param);
 		BasicDBObject condition = new BasicDBObject();
 		if (lstMsBusinessResult == null || lstMsBusinessResult.isEmpty()) {
-			JSONObject data = JSONObject.parseObject("{}");
+			JSONObject data = new JSONObject();
 			data.put("bizTrees", bizTrees);
 			data.put("total", total);
 			return FastJsonUtil.sucess("success", data);
@@ -421,7 +421,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 			bizTrees.add(bizTree);
 		}
-		JSONObject data = JSONObject.parseObject("{}");
+		JSONObject data = new JSONObject();
 		data.put("rows", bizTrees);
 		data.put("total", total);
 		return FastJsonUtil.sucess("success", data);

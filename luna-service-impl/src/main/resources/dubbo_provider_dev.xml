@@ -33,5 +33,6 @@
 	<dubbo:service interface="ms.luna.biz.sc.ManageBusinessTreeService" ref="manageBusinessTreeService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageColumnService" ref="manageColumnService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageArticleService" ref="manageArticleService" />
+	<dubbo:service interface="ms.luna.biz.sc.PoiApiService" ref="poiApiService" />
 
 </beans>

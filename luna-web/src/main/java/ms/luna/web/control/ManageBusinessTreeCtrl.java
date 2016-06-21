@@ -67,13 +67,13 @@ public class ManageBusinessTreeCtrl {
 			HttpServletResponse response) throws IOException {
 
 		MsLogger.info("asyncSearchBusinessTrees start....");
-		JSONObject resJSON = JSONObject.parseObject("{}");
+		JSONObject resJSON = new JSONObject();
 		resJSON.put("total", 0);
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("offset", offset);
 			param.put("limit", limit);
 			param.put("provinceId", provinceId);
@@ -111,7 +111,7 @@ public class ManageBusinessTreeCtrl {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("provinceId", provinceId);
 			param.put("cityId", cityId);
 			param.put("countyId", countId);
@@ -143,7 +143,7 @@ public class ManageBusinessTreeCtrl {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
 
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("businessId", businessId);
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
@@ -188,7 +188,7 @@ public class ManageBusinessTreeCtrl {
 //			}
 //			
 //			String createUser = msUser.getUniqueId();
-//			JSONObject param = JSONObject.parseObject("{}");
+//			JSONObject param = new JSONObject();
 //			param.put("business_name", businessName);
 //			param.put("business_code", businessCode);
 //			param.put("merchant_id", merchantId);
@@ -261,7 +261,7 @@ public class ManageBusinessTreeCtrl {
 //			return;
 //		}
 //		
-//		JSONObject param = JSONObject.parseObject("{}");
+//		JSONObject param = new JSONObject();
 //		param.put("business_id", businessId);
 //		param.put("business_name", businessName);
 //		param.put("business_code", businessCode);

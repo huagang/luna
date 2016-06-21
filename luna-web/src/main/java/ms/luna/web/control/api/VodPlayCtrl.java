@@ -26,6 +26,9 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
+
+import com.alibaba.dubbo.remoting.exchange.Request;
+import com.alibaba.dubbo.rpc.Result;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -57,9 +60,10 @@ public class VodPlayCtrl {
 	 * 
 	 * @param request
 	 * @param response
+	 * @throws IOException 
 	 */
-	@RequestMapping(params = GET_VIDEO_URLS)
-	public void getVideoUrls(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(params = "method=getVideoUrlsFromCallbackInfo")
+	public void getVideoUrlsFromCallbackInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("text/html; charset=UTF-8");
@@ -135,9 +139,9 @@ public class VodPlayCtrl {
 				// 转码成功
 				// 通过fileId查询转码信息(单纯从回调信息能获取url但是无法获知是哪一个视频格式对应的url)
 				
-				JSONObject result2 = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
 				MsLogger.debug("转码信息返回成功，token:"+token+"fileId:"+vod_file_id);
 				
+				JSONObject result2 = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
 				JSONObject params2 = JSONObject.parseObject("{}");
 				String code = result2.getString("code");
 				if ("0".equals(code)) {
@@ -153,7 +157,7 @@ public class VodPlayCtrl {
 					params2.put("vod_file_id", vod_file_id);
 
 					// 写入数据库(更新记录)
-					JSONObject resJson = vodPlayService.updateVodFileById(params2.toString());
+					JSONObject resJson = vodPlayService.updateVodRecordById(params2.toString());
 					refreshVodFileTokenCache(token, REFRESHMODE.DELETE);
 					code = resJson.getString("code");
 					if ("0".equals(code)) {
@@ -175,7 +179,9 @@ public class VodPlayCtrl {
 				}
 			} 
 		} catch (Exception e) {
-			MsLogger.debug(e);
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
 		}
 	}
 
@@ -209,6 +215,35 @@ public class VodPlayCtrl {
 		return sb.toString();
 	}
 
+	@RequestMapping(params = GET_VIDEO_URLS)
+	public void getVideoUrls(@RequestParam(required = true, value = "fileId") String fileId,
+			HttpServletRequest request, HttpServletResponse response) throws IOException{
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		try{
+			JSONObject param = JSONObject.parseObject("{}");
+			param.put("vod_file_id", fileId);
+			
+			JSONObject result1 = vodPlayService.getVodRecordById(param.toString());
+			MsLogger.debug(result1.toString());
+			if(!"1".equals(result1.getString("code"))){
+				response.getWriter().print(result1);
+				response.setStatus(200);
+				return;
+			}
+			// code="1"表明未得到视频url信息，则继续访问腾讯云
+			JSONObject result = VODUtil.getInstance().getVodPlayUrls(fileId);
+			MsLogger.debug(result.toString());
+			response.getWriter().print(result.toString());
+			response.setStatus(200);
+			return;
+		} catch (Exception e){
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
+		}
+	}
+	
 	/**
 	 * 缓存更新
 	 * 

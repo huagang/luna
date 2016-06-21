@@ -15,7 +15,7 @@ public interface VodPlayService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject createVodFile(String json);
+	JSONObject createVodRecord(String json);
 
 	/**
 	 * 将转码的urls等信息写入数据库
@@ -23,7 +23,7 @@ public interface VodPlayService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject updateVodFileById(String json);
+	JSONObject updateVodRecordById(String json);
 
 	/**
 	 * 删除上传记录
@@ -31,7 +31,7 @@ public interface VodPlayService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject deleteVodFileById(String json);
+	JSONObject deleteVodRecordById(String json);
 	
 	/**
 	 * 获得上传记录列表
@@ -39,5 +39,13 @@ public interface VodPlayService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject uploadVodFiles(String json);
+	JSONObject getVodRecords(String json);
+	
+	/**
+	 * 获得单条上传记录
+	 * 
+	 * @param json
+	 * @return
+	 */
+	JSONObject getVodRecordById(String json);
 }

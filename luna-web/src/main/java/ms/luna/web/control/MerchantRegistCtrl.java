@@ -3,7 +3,6 @@ package ms.luna.web.control;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -18,16 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.VODUtil;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author Greek
@@ -121,6 +121,8 @@ public class MerchantRegistCtrl extends BasicCtrl {
 				}
 				
 				JSONObject result = manageMerchantService.createMerchant(param.toString());
+				MsLogger.debug("method:createMerchant, result from service: "+result.toString());
+				
 				String code = result.getString("code");
 				if ("0".equals(code)) {
 					response.getWriter().print(FastJsonUtil.sucess("编辑成功！"));
@@ -135,7 +137,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 				response.getWriter().print(FastJsonUtil.error("1", "校验错误！"));
 			}
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", "创建失败！"));
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to regist merchant: " + e));
 		}
 		response.setStatus(200);
 		return;
@@ -158,6 +160,7 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("merchant_nm", merchant_nm);
 			JSONObject result = manageMerchantService.isAddedMerchantNmEist(param.toString());
+			MsLogger.debug("method:isAddedMerchantNmEist, result from service: "+result.toString());
 			if (result.getString("code").equals("1")) {
 				result.put("code", "0");
 			} else if (result.getString("code").equals("0")) {
@@ -168,10 +171,10 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to check merchant name:" + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
@@ -218,10 +221,10 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			return;
 		} catch (Exception e) {
 			try {
-				response.getWriter().print(FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e)));
+				response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload thumbnail: " + VbUtility.printStackTrace(e)));
 				response.setStatus(200);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				MsLogger.error(e1);
 			}
 			return;
 		}
