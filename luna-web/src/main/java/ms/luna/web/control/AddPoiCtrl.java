@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +24,12 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.COSUtil;
-import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
+import ms.luna.common.PoiCommon;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.control.api.VodPlayCtrl;
@@ -163,173 +160,6 @@ public class AddPoiCtrl extends BasicCtrl{
 	 * @return
 	 */
 	private JSONObject param2Json(HttpServletRequest request) {
-
-		Map<String, String[]> paramMaps = request.getParameterMap();
-		Set<Entry<String, String[]>> set = paramMaps.entrySet();
-		JSONObject param = new JSONObject();
-
-		String long_title = null;
-		String short_title = null;
-		String lat = null;
-		String lng = null;
-		String zone_id = null;
-		String detail_address = null;
-		String brief_introduction = null;
-		String thumbnail = null;
-		// 8.全景数据ID
-		String panorama = null;
-		// 9.联系电话
-		String contact_phone = null;
-
-		// 1.名称
-		String[] values = paramMaps.get("longName");
-		if (values == null || values.length == 0) {
-			throw new IllegalArgumentException("名称不能为空！");
-		}
-		long_title = values[0];
-		param.put("long_title", long_title);
-
-		// 2.别名
-		values = paramMaps.get("shortName");
-		if (values == null || values.length == 0) {
-//			throw new IllegalArgumentException("别名不能为空！");
-			short_title = "";
-		} else {
-			short_title = values[0];
-		}
-		
-		param.put("short_title", short_title);
-
-		// 3.一级类别（topTag）
-		values = paramMaps.get("topTag");
-		if (values == null || values.length == 0) {
-			param.put("tags", "[0]");
-		} else {
-			param.put("tags", values);
-		}
-		// 3.二级类别(subTag)
-		values = paramMaps.get("subTag");
-		if (values == null || values.length == 0) {
-			param.put("subTag", 0);
-		} else {
-			param.put("subTag", values[0]);
-		}
-
-		// 4.坐标（lat,lng）
-		values = paramMaps.get("lat");
-		if (values == null || values.length == 0) {
-			throw new IllegalArgumentException("纬度不能为空！");
-		}
-		lat = values[0];
-		param.put("lat", lat);
-
-		// 4.坐标（lat,lng）
-		values = paramMaps.get("lng");
-		if (values == null || values.length == 0) {
-			throw new IllegalArgumentException("经度不能为空！");
-		}
-		lng = values[0];
-		param.put("lng", lng);
-
-		// 5.区域地址
-		// 省
-		values = paramMaps.get("provinceId");
-		if (values == null || values.length == 0 && !"ALL".equals(values[0]) && !"".equals(values[0])) {
-			throw new IllegalArgumentException("省份不能为空！");
-		}
-		zone_id = values[0];
-		// 市
-		values = paramMaps.get("cityId");
-		if (values != null && values.length != 0 && !"ALL".equals(values[0]) && !"".equals(values[0])) {
-			zone_id = values[0];
-		}
-		// 区/县
-		values = paramMaps.get("countyId");
-		if (values != null && values.length != 0 && !"ALL".equals(values[0]) && !"".equals(values[0])) {
-			zone_id = values[0];
-		}
-		param.put("zone_id", zone_id);
-		// 详细地址
-		values = paramMaps.get("detailAddress");
-		if (values == null || values.length == 0) {
-			detail_address = "";
-		} else {
-			detail_address = values[0];
-		}
-		param.put("detail_address", detail_address);
-
-		// 6.简介
-		values = paramMaps.get("briefIntroduction");
-		if (values == null || values.length == 0) {
-			brief_introduction = "";
-		} else {
-			brief_introduction = values[0];
-		}
-		param.put("brief_introduction", brief_introduction);
-
-		// 7.缩略图
-		values = paramMaps.get("thumbnail");
-		if (values == null || values.length == 0) {
-			thumbnail = "";
-		} else {
-			thumbnail = values[0];
-		}
-		if (!VbUtility.checkCOSPicIsOK(thumbnail)) {
-			throw new IllegalArgumentException("缩略图地址不正确，或者是没有上传的图片");
-		}
-		param.put("thumbnail", thumbnail);
-
-		param.put("thumbnail_1_1", "");
-		param.put("thumbnail_16_9", "");
-
-		// 8.全景数据ID
-		values = paramMaps.get("panorama");
-		if (values == null || values.length == 0) {
-			panorama = "";
-		} else {
-			panorama = values[0];
-		}
-		param.put("panorama", panorama);
-
-		if (CharactorUtil.hasChineseChar(panorama)) {
-			throw new IllegalArgumentException("全景数据ID不能含有中文字符！");
-		}
-		if (CharactorUtil.checkPoiDefaultStr(panorama)) {
-			throw new IllegalArgumentException("全景数据过长");
-		}
-
-		// 9.联系电话
-		values = paramMaps.get("contact_phone");
-		if (values == null || values.length == 0) {
-			contact_phone = "";
-		} else {
-			contact_phone = values[0];
-		}
-		param.put("contact_phone", contact_phone);
-		if (CharactorUtil.hasChineseChar(contact_phone)) {
-			throw new IllegalArgumentException("联系电话中不能含有中文字符！");
-		}
-
-		// Common field Check
-		if (CharactorUtil.checkPoiDefaultStr(long_title, 64)) {
-			throw new IllegalArgumentException("名称长度不能超过" + 64 +"字节");
-		}
-		if (CharactorUtil.checkPoiDefaultStr(short_title, 64)) {
-			throw new IllegalArgumentException("别名长度不能超过" + 64 +"字节");
-		}
-		if (CharactorUtil.checkPoiLat(lat)) {
-			throw new IllegalArgumentException("纬度范围错误或者非数字");
-		}
-		if (CharactorUtil.checkPoiLng(lng)) {
-			throw new IllegalArgumentException("经度范围错误或者非数字");
-		}
-		if (CharactorUtil.checkPoiDefaultStr(detail_address)) {
-			throw new IllegalArgumentException("详细地址过长");
-		}
-		if (CharactorUtil.checkPoiDefaultStr(brief_introduction, ManagePoiCtrl.介绍最大长度)) {
-			throw new IllegalArgumentException("简介内容过长");
-		}
-
 		JSONObject result = managePoiService.downloadPoiTemplete("{}");
 		if (!"0".equals(result.get("code"))) {
 			return FastJsonUtil.error("-1", result.getString("msg"));
@@ -337,56 +167,58 @@ public class AddPoiCtrl extends BasicCtrl{
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
 
-		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
-
-		for (int i = 0; i < privateFieldsDef.size(); i++) {
-			JSONObject field = privateFieldsDef.getJSONObject(i);
-			if (!field.containsKey("field_def")) {
-				continue;
-			}
-			JSONObject field_def = field.getJSONObject("field_def");
-			fieldDefMap.put(field_def.getString("field_name"), field_def);
-		}
-
-		for (Entry<String, String[]> entry : set) {
-			if (!fieldDefMap.containsKey(entry.getKey())) {
-				continue;
-			}
-
-			String value = null;
-			if (entry.getValue().length > 1) {
-				StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < entry.getValue().length; i++) {
-					if (i != 0) {
-						sb.append(",");
-					}
-					sb.append(entry.getValue()[i]);
-				}
-				value = sb.toString();
-			} else {
-				value = entry.getValue()[0];
-			}
-			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-			if (CharactorUtil.isPoiDataHasError(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
-				String field_show_name = "";
-				if (privateJson != null) {
-					field_show_name = privateJson.getString("field_show_name");
-				}
-				throw new IllegalArgumentException("[" + field_show_name + "] 数据错误，请认真确认数据！");
-			}
-		}
-		for (Entry<String, String[]> entry : set) {
-			MsLogger.debug(entry.getKey() + "\t");
-			if (param.containsKey(entry.getKey())) {
-				continue;
-			}
-			if (entry.getValue().length > 1) {
-				param.put(entry.getKey(), entry.getValue());
-			} else {
-				param.put(entry.getKey(), entry.getValue()[0]);
-			}
-		}
-		return param;
+		return PoiCommon.getInstance().param2Json(request, privateFieldsDef, Boolean.FALSE);
+//
+//		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
+//
+//		for (int i = 0; i < privateFieldsDef.size(); i++) {
+//			JSONObject field = privateFieldsDef.getJSONObject(i);
+//			if (!field.containsKey("field_def")) {
+//				continue;
+//			}
+//			JSONObject field_def = field.getJSONObject("field_def");
+//			fieldDefMap.put(field_def.getString("field_name"), field_def);
+//		}
+//
+//		for (Entry<String, String[]> entry : set) {
+//			if (!fieldDefMap.containsKey(entry.getKey())) {
+//				continue;
+//			}
+//
+//			String value = null;
+//			if (entry.getValue().length > 1) {
+//				StringBuilder sb = new StringBuilder();
+//				for (int i = 0; i < entry.getValue().length; i++) {
+//					if (i != 0) {
+//						sb.append(",");
+//					}
+//					sb.append(entry.getValue()[i]);
+//				}
+//				value = sb.toString();
+//			} else {
+//				value = entry.getValue()[0];
+//			}
+//			JSONObject privateJson = fieldDefMap.get(entry.getKey());
+//			if (CharactorUtil.isPoiDataHasError(value, privateJson, Boolean.FALSE)) {
+//				String field_show_name = "";
+//				if (privateJson != null) {
+//					field_show_name = privateJson.getString("field_show_name");
+//				}
+//				throw new IllegalArgumentException("[" + field_show_name + "] 数据错误，请认真确认数据！");
+//			}
+//		}
+//		for (Entry<String, String[]> entry : set) {
+//			MsLogger.debug(entry.getKey() + "\t");
+//			if (param.containsKey(entry.getKey())) {
+//				continue;
+//			}
+//			if (entry.getValue().length > 1) {
+//				param.put(entry.getKey(), entry.getValue());
+//			} else {
+//				param.put(entry.getKey(), entry.getValue()[0]);
+//			}
+//		}
+//		return param;
 	}
 
 	/**

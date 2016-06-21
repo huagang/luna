@@ -41,6 +41,8 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+import ms.luna.common.PoiCommon;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -580,7 +582,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
 		// 去除公共字段的标签
 		msPoiTagCriteria.createCriteria()
-		.andTagIdNotEqualTo(VbConstant.POI.公共TAGID);
+		.andTagIdNotEqualTo(PoiCommon.POI.公共TAGID);
 		msPoiTagCriteria.setOrderByClause("tag_level asc, parent_tag_id asc, ds_order asc");
 		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
 
@@ -754,7 +756,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private JSONArray getPrivateFields(Document docPoi) {
 		// 查找私有字段属性
 		MsTagFieldParameter msTagFieldParameter = new MsTagFieldParameter();
-		msTagFieldParameter.setTagId(VbConstant.POI.公共TAGID);
+		msTagFieldParameter.setTagId(PoiCommon.POI.公共TAGID);
 		List<MsTagFieldResult> lstMsTagFieldResult = msPoiFieldDAO.selectFieldTags(msTagFieldParameter);
 		JSONArray privateFields = new JSONArray();
 
@@ -850,7 +852,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private JSONArray getPrivateFieldsForTemplete() {
 		// 查找私有字段属性
 		MsTagFieldParameter msTagFieldParameter = new MsTagFieldParameter();
-		msTagFieldParameter.setTagId(VbConstant.POI.公共TAGID);
+		msTagFieldParameter.setTagId(PoiCommon.POI.公共TAGID);
 		List<MsTagFieldResult> lstMsTagFieldResult = msPoiFieldDAO.selectFieldTags(msTagFieldParameter);
 		JSONArray privateFields = new JSONArray();
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {

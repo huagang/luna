@@ -14,6 +14,9 @@ import ms.luna.biz.util.MsLogger;
  */
 public final class MsLunaResource {
 	private static final String RESOURCE_NAME_TARGET = "app_resources";
+	
+	public static final String MESSAGES_RESOURCE = "messages";
+	
 	private static Map<String, MsLunaResource> resources;
 
 	private ResourceBundle resourceBundle;
