@@ -327,7 +327,7 @@ public class AddPoiCtrl extends BasicCtrl{
 	}
 
 	/**
-	 * 异步上传音频
+	 * 异步上传视频
 	 * @param request
 	 * @param response
 	 * @throws IOException 
