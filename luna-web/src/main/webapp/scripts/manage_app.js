@@ -1,5 +1,6 @@
 var newAppDialog = $("#pop-addapp").clone();
 var editAppDialog = $("#pop-editapp").clone();
+var reuseAppDialog = $('#pop-reuseapp').clone();
 
 $(document).ready(function(){
     //新建微景展
@@ -22,6 +23,7 @@ $(document).ready(function(){
     }); 
   
 });
+
 
 
 
@@ -112,7 +114,6 @@ function searchBusinessEdit(){
 }
 
 function do_search_business(request_data, update_select) {
-	
 	$.ajax({
         url: host+'/manage/app.do?method=search_business',
         type: 'POST',
@@ -147,6 +148,52 @@ function do_search_business(request_data, update_select) {
     })
 }
 
+function createReusedApp(app_id, app_name, business_id, business_name){
+	// undone 未完成 等待接口对接
+	
+	/* 函数功能：将要复用的微景展id以及新的微景展名称和业务id发送给后台，
+	 * 从而新建一个微景展，这个微景展的页面与复用的微景展的页面一模一样。
+	 */
+	var app_name =$("#app-name-reuse").val();
+    var business_id = $("#business-reuse option:selected").val();
+    var app_id = $("#app-id-reuse").val();
+    $.ajax({
+        url: host+'/manage/app.do?method=reuse_app',
+        type: 'POST',
+        async: true,
+        data: {
+        		"app_id": app_id,
+        		"app_name": app_name,
+        		"business_id":business_id
+        		},
+        dataType:"json",
+        success: function (returndata) {
+            switch (returndata.code) {
+                case "0":
+                    $("#pop-overlay").css("display","none");
+                    $("#pop-reuseapp").css("display","none");
+                    $('#table_apps').bootstrapTable("refresh");
+                    break;
+                default :
+                    alert(returndata.msg);
+                    break;
+            }
+        },
+        error: function (returndata) {
+            alert("请求失败");
+        }
+    });
+}
+
+function reuseApp(app_id, app_name, business_id, business_name){
+	$popwindow = $("#pop-reuseapp");
+    $popwindow.html(reuseAppDialog.html());
+    popWindow($popwindow);
+    $("#app-name-reuse").val(app_name);
+    $("#app-id-reuse").val(app_id);
+    $("#business-reuse").empty();
+    $("#business-reuse").append("<option value='{0}'>{1}</option>".format(business_id, business_name));
+}
 
 function editApp(app_id, app_name, business_id, business_name) {
 	$popwindow = $("#pop-editapp");

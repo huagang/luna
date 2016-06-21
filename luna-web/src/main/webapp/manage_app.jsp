@@ -144,6 +144,59 @@
 </div>
 <!--新建微景展 end-->
 <!--属性编辑 start-->
+<div class="pop" id="pop-reuseapp">
+    <div class="pop-title">
+        <h4>复用微景展</h4>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+    </div>
+    <div class="pop-cont">
+        <form>
+            <div style="display:none">
+                <input type="text" id="app-id-reuse" />
+            </div>
+            <div>
+                <label for="app-name">名称</label>
+                <input type="text" id="app-name-reuse" placeholder="输入微景展名称，不超过32个字符" onblur="verifyName(this, 'warn-appname-edit', 'btn-addapp-edit')"/>
+                <div id="warn-appname-edit">微景展名称超过32个字符</div>
+            </div>
+            <div>
+                <label class="pop-label">区域</label>
+                <select class="select" id="country-reuse" disabled>
+                    <option>中国</option>
+                </select>
+                <select class="select" id="province-reuse"  onchange="change_province('edit')">
+                    <option value="ALL">请选择省份</option>
+	               	<c:forEach items="${provinces}" var="varProvince" varStatus="status">
+	                    	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
+					</c:forEach>
+                </select>
+                <select class="select" id="city-reuse"  onchange="change_city('edit')">
+                    <option value="ALL">请选择市</option>
+                </select>
+                <select class="select" id="county-reuse">
+                    <option value="ALL">请选择区县</option>
+                </select>
+                <select class="select" id="cate-reuse">
+                </select>
+                <button type="button" id="btn-searchbusiness-reuse" onclick="searchBusinessEdit()">搜索</button>
+            </div>
+            <div>
+                <label class="pop-label">业务</label>
+                <select class="select" id="business-reuse">
+                	<option>无</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <!-- 底部功能区 -->
+    <div class="pop-fun">
+        <button type="button" id="btn-addapp-reuse" onclick="createReusedApp()">确定</button>
+        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
+    </div>
+    <!-- 底部功能区 -->
+</div>
+<!--属性编辑 end-->
+<!--属性编辑 start-->
 <div class="pop" id="pop-editapp">
     <div class="pop-title">
         <h4>更新微景展</h4>
@@ -252,9 +305,9 @@
 			+ 'onclick="editApp(\'{0}\',\'{1}\',\'{2}\', \'{3}\')">属性</a>'.format(row.app_id, row.app_name, row.business_id, row.business_name);
 		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}">编辑</a>'
 				.format('${basePath}', row.app_id);
+		var reuseApp = '<a class="reuse" href="javascript:void(0)" onclick="reuseApp(\'{0}\',\'{1}\',\'{2}\', \'{3}\')">复用</a>'.format(row.app_id, row.app_name, row.business_id, row.business_name);
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-		
-		return editOp + modifyOp + delApp;
+		return editOp + modifyOp + reuseApp + delApp;
 	}
 
 	function queryParams(params) {
