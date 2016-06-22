@@ -39,7 +39,10 @@
         <!--通用导航栏 end-->
         <div id="add-poi" class="add-poi">
             <div class="title-poi">
-                <h3>POI数据基本信息</h3>
+                <h3>POI数据基本信息
+                	<label class="langTag hide">（英文版）</label>
+					<a href="" id="changeLang" class="lang-poi">英文版</a>
+                </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
             <form:form commandName="poiModel" method="post" action="${basePath}/edit_poi.do?method=updatePoi" enctype="multipart/form-data">
@@ -153,10 +156,6 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">地址</div>
                         <div class="value-poi">
-                            <%-- <form:select cssClass="select"
-					 id="country"
-					 path="countryId" disabled="disabled"
-					 items="${countrys}" itemLabel="label" itemValue="value"/> --%>
 
 				<form:select cssClass="select"
 					 id="province"

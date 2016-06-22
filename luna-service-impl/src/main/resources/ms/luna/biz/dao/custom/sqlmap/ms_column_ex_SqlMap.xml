@@ -15,7 +15,7 @@
         a.id id,
         a.name name,
         a.code code,
-        b.nm_zh categoryName,
+        b.nm_zh category_name,
         a.regist_hhmmss regist_hhmmss,
         a.up_hhmmss up_hhmmss
         FROM

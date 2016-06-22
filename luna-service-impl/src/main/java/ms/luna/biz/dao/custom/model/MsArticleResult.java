@@ -13,6 +13,8 @@ import java.util.Date;
  */
 public class MsArticleResult {
 
+    @JSONField(name="id")
+    private int id;
     @JSONField(name="title")
     private String title;
     @JSONField(name="author")
@@ -26,6 +28,13 @@ public class MsArticleResult {
     @JSONField(name="up_hhmmss", format="yyyy-MM-dd HH:mm:ss")
     private Date uphhmmss;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

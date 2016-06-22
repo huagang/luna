@@ -48,20 +48,23 @@ public class ManageColumnCtrl extends BasicCtrl {
     public static final String EXIST_COLUMN_CODE = "method=exist_code";
 
     @RequestMapping(params = INIT)
-    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.setAttribute("menu_selected", "manage_column");
         }
-        ModelAndView modelAndView = buildModelAndView("manage_column");
+        ModelAndView modelAndView = buildModelAndView("/manage_column");
 
         return modelAndView;
     }
 
     @RequestMapping(params = SEARCH_COLUMN)
     public void loadColumn(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int min = RequestHelper.getInteger(request, "min");
-        int max = RequestHelper.getInteger(request, "max");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
+        int min = RequestHelper.getInteger(request, "offset");
+        int max = RequestHelper.getInteger(request, "limit");
         JSONObject jsonQuery = new JSONObject();
         if(min > 0 && max > 0) {
             jsonQuery.put("min", min);
@@ -69,32 +72,38 @@ public class ManageColumnCtrl extends BasicCtrl {
         }
         try {
             JSONObject ret = manageColumnService.loadColumn(jsonQuery.toJSONString());
-            response.getWriter().print(ret);
+            logger.debug(ret);
+            if ("0".equals(ret.getString("code"))) {
+                response.getWriter().print(ret.getJSONObject("data"));
+                return;
+            }
         } catch (Exception ex) {
             logger.error("Failed to load column", ex);
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败"));
         }
+        response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败"));
 
     }
 
     @RequestMapping(params = CREATE_COLUMN)
     public void createColumn(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
         String name = RequestHelper.getString(request, MsColumnTable.FIELD_NAME);
         if(StringUtils.isBlank(name) || name.length() > 20) {
-            response.getWriter().print("栏目名称不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目名称不合法"));
             return;
         }
 
         String code = RequestHelper.getString(request, MsColumnTable.FIELD_CODE);
         if(StringUtils.isBlank(code) || code.length() > 30) {
-            response.getWriter().print("栏目简称不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目简称不合法"));
             return;
         }
 
         String categoryId = RequestHelper.getString(request, MsColumnTable.FIELD_CATEGORY_ID);
         if(StringUtils.isBlank(categoryId)) {
-            response.getWriter().print("所属类别不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "所属类别不合法"));
             return;
         }
 
@@ -114,6 +123,8 @@ public class ManageColumnCtrl extends BasicCtrl {
 
     @RequestMapping(params = READ_COLUMN)
     public void readColumn(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
         try {
             JSONObject jsonObject = manageColumnService.getColumnById(id);
             response.getWriter().print(jsonObject);
@@ -126,21 +137,24 @@ public class ManageColumnCtrl extends BasicCtrl {
     @RequestMapping(params = UPDATE_COLUMN)
     public void updateColumn(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
         String name = RequestHelper.getString(request, MsColumnTable.FIELD_NAME);
         if(StringUtils.isBlank(name) || name.length() > 20) {
-            response.getWriter().print("栏目名称不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目名称不合法"));
             return;
         }
 
         String code = RequestHelper.getString(request, MsColumnTable.FIELD_CODE);
         if(StringUtils.isBlank(code) || code.length() > 30) {
-            response.getWriter().print("栏目简称不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目简称不合法"));
             return;
         }
 
         String categoryId = RequestHelper.getString(request, MsColumnTable.FIELD_CATEGORY_ID);
         if(StringUtils.isBlank(categoryId)) {
-            response.getWriter().print("所属类别不合法");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "所属类别不合法"));
             return;
         }
 
@@ -161,6 +175,9 @@ public class ManageColumnCtrl extends BasicCtrl {
 
     @RequestMapping(params = DELETE_COLUMN)
     public void deleteColumn(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
         try {
             JSONObject ret = manageColumnService.deleteColumn(id);
             response.getWriter().print(ret);

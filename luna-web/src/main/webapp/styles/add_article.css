@@ -126,10 +126,10 @@ input[type='text'] {
     text-align: center;
 }
 
-button {
+/*button {
     height: 36px;
     width: 104px;
-}
+}*/
 
 .btn {
     display: inline-block;

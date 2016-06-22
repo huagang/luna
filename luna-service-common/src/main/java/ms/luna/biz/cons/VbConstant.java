@@ -1,6 +1,5 @@
 package ms.luna.biz.cons;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,10 +9,7 @@ public final class VbConstant {
 	 */
 	public final static int DEFAULT_MAX_LIMT = 1000;
 
-	/**
-	 * 高级管理员可以针对全部的区域操作
-	 */
-	public static final String ALL = "ALL";
+	
 	/**
 	 * 游客不能对任何区域操作
 	 */
@@ -26,11 +22,20 @@ public final class VbConstant {
 	
 	public static final String REGION_NM_YOU_KE = "-";
 	
-	public static final String ALL_CITY_NM = "市";
-	public static final String ALL_PROVINCE_NM = "省";
-	public static final String ALL_COUNTRY_NM = "中国";
-	public static final String ALL_CATEGORY_NM = "全部";
-	public static final String ALL_REGION_NM = "全业务";
+	public static final class ZonePulldown {
+		public static final String ALL_COUNTY_NM = "请选择区/县";
+		public static final String ALL_CITY_NM = "请选择市";
+		public static final String ALL_PROVINCE_NM = "请选择省";
+		public static final String ALL_COUNTRY_NM = "中国";
+		public static final String ALL_CATEGORY_NM = "全部";
+		public static final String ALL_REGION_NM = "全业务";
+		
+		/**
+		 * 高级管理员可以针对全部的区域操作
+		 */
+		public static final String ALL = "ALL";
+	}
+	
 
 	public static final int AUTH_YOU_KE = 0;
 
@@ -39,6 +44,15 @@ public final class VbConstant {
 		public static final Integer 容器布局 = 2;
 	}
 
+	/**
+	 * Access-Control-Allow-Origin
+	 */
+	public static final String ACCESS_CONTROL_ALLOW_ORIGIN_KEY = "Access-Control-Allow-Origin";
+	public static final String NORMAL_CONTENT_TYPE = "text/html; charset=UTF-8";
+	/**
+	 * 目前值为“*”
+	 */
+	public static final String ACCESS_CONTROL_ALLOW_ORIGIN_VALUE = "*";
 	/**
 	 * 业务模块
 	 * @author Mark

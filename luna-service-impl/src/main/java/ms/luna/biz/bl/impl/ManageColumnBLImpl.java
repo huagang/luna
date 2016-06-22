@@ -1,14 +1,18 @@
 package ms.luna.biz.bl.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import ms.biz.common.CommonQueryParam;
 import ms.luna.biz.bl.ManageColumnBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsColumnDAO;
+import ms.luna.biz.dao.custom.model.MsBusinessResult;
 import ms.luna.biz.dao.custom.model.MsColumnParameter;
 import ms.luna.biz.dao.custom.model.MsColumnResult;
 import ms.luna.biz.dao.model.MsColumn;
+import ms.luna.biz.dao.model.MsColumnCriteria;
 import ms.luna.biz.table.MsColumnTable;
 import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -134,12 +138,20 @@ public class ManageColumnBLImpl implements ManageColumnBL {
             parameter.setMax(max);
             parameter.setMin(min);
         }
+
+        JSONObject data = new JSONObject();
         try {
             List<MsColumnResult> msColumnResults = msColumnDAO.selectColumnWithFilter(parameter);
-            return FastJsonUtil.sucess("", JSON.toJSON(msColumnResults));
+            int total = msColumnDAO.countByCriteria(new MsColumnCriteria());
+            if(msColumnResults != null) {
+                data.put("rows", JSON.parse(JSON.toJSONString(msColumnResults, SerializerFeature.WriteDateUseDateFormat)));
+                data.put("total", total);
+            }
         } catch (Exception ex) {
             logger.error("Failed to load columns", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败");
         }
+
+        return FastJsonUtil.sucess("", data);
     }
 }

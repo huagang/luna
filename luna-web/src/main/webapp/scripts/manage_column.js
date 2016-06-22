@@ -27,16 +27,17 @@ function ColumnController($scope, $rootScope, $http) {
         this.resetData();
         this.categoryOptions = {};
         this.loadCategory();
+
     };
 
     this.resetData = function() {
-        this.id = 0;
+        this.currentId = 0;
         this.currentName = "";
         this.currentCode = "";
         this.currentCategoryId = "";
         this.nameValid = false;
         this.codeValid = false;
-    }
+    };
 
     this.loadCategory = function() {
         if(! $.isEmptyObject(this.categoryOptions)) {
@@ -49,7 +50,7 @@ function ColumnController($scope, $rootScope, $http) {
                 var categories = data.data.categorys;
                 categories.forEach(function(categoryItem){
                     this.categoryOptions[categoryItem.category_id] = categoryItem.nm_zh;
-                }, this)
+                }, $scope.column);
 
             }
         },
@@ -69,11 +70,27 @@ function ColumnController($scope, $rootScope, $http) {
         }
         return -1;
     };
+
+    this.showDialog = function($popwindow) {
+        var h = $popwindow.height();
+        var w = $popwindow.width();
+        var $height = $(window).height();
+        var $width = $(window).width();
+        if($height < h){
+            h = $height;
+        }
+        $popwindow.css({
+            "display":"block",
+            "top":($height-h)/2,
+            "left":($width-w)/2
+        });
+    };
+
     this.newColumnDialog = function() {
         this.resetData();
         this.dialogBaseShow = true;
         this.newColumnShow = true;
-        popWindow($("#newColumnDialog"));
+        this.showDialog($("#newColumnDialog"));
     };
 
     this.hideNewColumnDialog = function() {
@@ -83,14 +100,14 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.checkName = function() {
 
-        if(this.currentName != "" && this.currentName.length > 0 && this.currentName.length < 20) {
+        if(this.currentName && this.currentName.length > 0 && this.currentName.length < 20) {
             // TODO:check if name exist
             this.nameValid = true;
         }
     };
 
     this.checkCode = function() {
-        if(this.currentCode != "" && this.currentCode.length > 0 && this.currentCode.length < 30) {
+        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30) {
             // TODO: check if code exist
             this.codeValid = true;
         }
@@ -98,7 +115,7 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.isEnable = function() {
         return this.nameValid && this.codeValid;
-    }
+    };
 
     this.submitNewColumn = function() {
 
@@ -116,12 +133,30 @@ function ColumnController($scope, $rootScope, $http) {
             if(data.code != '0') {
                 $.alert(data.msg);
             } else {
-                this.hideNewColumnDialog();
+                $scope.column.hideNewColumnDialog();
+                $('#table_column').bootstrapTable("refresh");
             }
         }, function error(response){
             $.alert(response.data.msg);
         });
+    };
 
+    this.showUpdateColumnDialog = function(id, name, code, categoryName) {
+        this.resetData();
+        this.dialogBaseShow = true;
+        this.updateColumnShow = true;
+        this.currentId = id;
+        this.currentName = name;
+        this.currentCode = code;
+        this.currentCategoryId = this.findCategoryIdByName(categoryName);
+        this.nameValid = true;
+        this.codeValid = true;
+        this.showDialog($("#updateColumnDialog"));
+    };
+
+    this.hideUpdateColumnDialog = function() {
+       this.dialogBaseShow = false;
+       this.updateColumnShow = false;
     };
 
     this.submitUpdateColumn = function() {
@@ -140,7 +175,8 @@ function ColumnController($scope, $rootScope, $http) {
             if(data.code != '0') {
                 $.alert(data.msg);
             } else {
-                this.hideUpdateColumnDialog();
+                $scope.column.hideUpdateColumnDialog();
+                $('#table_column').bootstrapTable("refresh");
             }
         }, function error(response){
             $.alert(response.data.msg);
@@ -148,16 +184,10 @@ function ColumnController($scope, $rootScope, $http) {
 
     };
 
-    this.showUpdateColumnDialog = function(id, name, code, categoryName) {
-        this.resetData();
-        this.currentId = id;
-        this.currentName = name;
-        this.currentCode = code;
-        this.currentCategoryId = this.findCategoryIdByName(categoryName);
-    };
-    this.hideUpdateColumnDialog = function() {
-       this.dialogBaseShow = false;
-       this.updateColumnShow = false;
+    this.showDeleteColumnDialog = function(id, name) {
+        $.confirm("确定要删除栏目: {0}?".format(name), function() {
+            $scope.column.submitDeleteColumn(id);
+        });
     };
 
     this.hideDeleteDialog = function() {
@@ -165,12 +195,12 @@ function ColumnController($scope, $rootScope, $http) {
         this.deleteColumnShow = false;
     };
 
-    this.submitDeleteColumn = function(){
+    this.submitDeleteColumn = function(id){
         var request = {
             method: 'POST',
             url: host + '/manage/column.do?method=delete_column',
             data: {
-                'id': this.currentId
+                'id': id
             }
         };
         $http(request).then(function success(response) {
@@ -178,7 +208,8 @@ function ColumnController($scope, $rootScope, $http) {
             if(data.code != '0') {
                 $.alert(data.msg);
             } else {
-                this.hideDeleteDialog();
+                $scope.column.hideDeleteDialog();
+                $('#table_column').bootstrapTable("refresh");
             }
         }, function error(response){
             $.alert(response.data.msg);
@@ -188,5 +219,15 @@ function ColumnController($scope, $rootScope, $http) {
 
     // init controller
     this.init();
+}
 
+function showUpdateColumnDialog(id, name, code, categoryName) {
+    $scope = angular.element("body").scope();
+    $scope.column.showUpdateColumnDialog(id, name, code, categoryName);
+    $scope.$apply();
+}
+
+function showDeleteColumnDialog(id, name) {
+    $scope = angular.element("body").scope();
+    $scope.column.showDeleteColumnDialog(id, name);
 }

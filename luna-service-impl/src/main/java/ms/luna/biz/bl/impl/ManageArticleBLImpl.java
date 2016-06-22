@@ -1,17 +1,22 @@
 package ms.luna.biz.bl.impl;
 
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CommonQueryParam;
 import ms.luna.biz.bl.ManageArticleBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsArticleDAO;
+import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.model.MsArticleParameter;
 import ms.luna.biz.dao.custom.model.MsArticleResult;
+import ms.luna.biz.dao.custom.model.MsBusinessParameter;
+import ms.luna.biz.dao.custom.model.MsBusinessResult;
+import ms.luna.biz.dao.model.MsArticleCriteria;
 import ms.luna.biz.dao.model.MsArticleWithBLOBs;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +39,8 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
     @Autowired
     private MsArticleDAO msArticleDAO;
+    @Autowired
+    private MsBusinessDAO msBusinessDAO;
 
     private MsArticleWithBLOBs toJavaObject(JSONObject articleObj) {
 
@@ -150,12 +157,64 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             parameter.setMax(max);
             parameter.setMin(min);
         }
+
+        JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
-            return FastJsonUtil.sucess("", JSON.toJSON(msArticleResults));
+            int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
+            if(msArticleResults != null) {
+                data.put("rows", JSON.toJSON(msArticleResults));
+                data.put("total", total);
+            }
         } catch (Exception ex) {
             logger.error("Failed to load articles", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
         }
+
+        return FastJsonUtil.sucess("", data);
+    }
+
+    @Override
+    public JSONObject searchBusiness(String json) {
+        // TODO Auto-generated method stub
+
+        JSONObject jsonObject = JSONObject.parseObject(json);
+
+        //暂时不会使用国家，目前只有中国
+        String countryId = FastJsonUtil.getString(jsonObject, "country_id");
+        String provinceId = FastJsonUtil.getString(jsonObject, "province_id");
+        String cityId = FastJsonUtil.getString(jsonObject, "city_id");
+        String countyId = FastJsonUtil.getString(jsonObject, "county_id");
+        String keyword = FastJsonUtil.getString(jsonObject, "keyword");
+        MsBusinessParameter parameter = new MsBusinessParameter();
+
+        if(StringUtils.isNotEmpty(provinceId)) {
+            parameter.setProvinceId(provinceId.trim());
+        }
+        if(StringUtils.isNotEmpty(cityId)) {
+            parameter.setCityId(cityId.trim());
+        }
+        if(StringUtils.isNotEmpty(countyId)) {
+            parameter.setCountyId(countyId.trim());
+        }
+        if(StringUtils.isNotEmpty(keyword)) {
+            parameter.setKeyword("%" + keyword + "%");
+        }
+
+        List<MsBusinessResult> results = msBusinessDAO.selectBusinessWithFilter(parameter);
+        JSONObject data = new JSONObject();
+        if(results != null) {
+            JSONArray rows = new JSONArray();
+            for(MsBusinessResult result : results) {
+                JSONObject row = JSONObject.parseObject("{}");
+                int businessId = result.getBusinessId();
+                String businessName = result.getBusinessName();
+                row.put("business_id", businessId);
+                row.put("business_name", businessName);
+                rows.add(row);
+            }
+            data.put("rows", rows);
+        }
+        return FastJsonUtil.sucess("检索成功", data);
     }
 }

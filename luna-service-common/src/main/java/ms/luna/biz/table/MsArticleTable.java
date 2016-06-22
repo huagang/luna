@@ -17,7 +17,11 @@ public class MsArticleTable {
     public static final String FIELD_ABSTRACT_PIC = "abstract_pic";
     public static final String FIELD_AUDIO = "audio";
     public static final String FIELD_VIDEO = "video";
+    public static final String FIELD_BUSINESS_ID = "business_id";
     public static final String FIELD_COLUMN_ID = "column_id";
+    public static final String FIELD_AUTHOR = "author";
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_REF_ID = "ref_id";
     public static final String CREATE_TIME = "regist_hhmmss";
     public static final String UPDATE_TIME = "up_hhmmss";
 }

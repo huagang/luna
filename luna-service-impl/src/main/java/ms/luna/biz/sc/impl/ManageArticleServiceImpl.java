@@ -75,4 +75,14 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
         }
     }
+
+    @Override
+    public JSONObject searchBusiness(String json) {
+        try{
+            return manageArticleBL.searchBusiness(json);
+        } catch (Exception ex) {
+            logger.error("Failed to search business", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "搜索业务失败");
+        }
+    }
 }
