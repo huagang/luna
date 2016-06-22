@@ -35,4 +35,28 @@
 		 where tag.tag_level=1
 		 ORDER BY ds_order, display_order asc
 	</select>
+	
+	<resultMap id="MsPoiTagInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
+		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectPoiTags" resultMap="MsPoiTagInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+		SELECT
+			ms_poi_tag.tag_id as tag_id,
+			ms_poi_tag.tag_name as tag_name
+		FROM
+			ms_poi_tag
+	</select>
+	
+	<resultMap id="MsTagFieldInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+		<result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFieldNames" resultMap="MsTagFieldInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+		SELECT
+			ms_poi_field.field_name as field_name,
+			ms_poi_field.field_show_name as field_show_name
+		FROM
+			ms_poi_field
+	</select>
 </sqlMap>
