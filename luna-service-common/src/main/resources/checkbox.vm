@@ -1,4 +1,10 @@
 <label class="checkbox-inline cate-poi">
     <input id="${field_id}" name="${field_name}" ${checked} ${disabled} type="checkbox" value="${value}"/>
     <label for="${field_id}">${label}</label>
+    #if (${disabled} != "")
+    	<div style="display:none">
+		    <input id="${field_id}" name="${field_name}" ${checked} type="checkbox" value="${value}"/>
+		    <label for="${field_id}">${label}</label>
+	    </div>
+    #end
 </label>

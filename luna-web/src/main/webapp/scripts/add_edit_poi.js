@@ -283,9 +283,6 @@ $(function(){
     });
 
     $("#btn-POI-save").click(function(){
-//    	var lat = $("#latitude").val();
-//    	var lng = $("#longitude").val();
-//    	findZoneIdsWithQQZoneName(lat, lng);
 
 		var hasError = false;
 		hasError = checkTitleLong() || hasError;

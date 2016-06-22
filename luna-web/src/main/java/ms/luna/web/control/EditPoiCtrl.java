@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
@@ -52,7 +53,10 @@ public class EditPoiCtrl extends BasicCtrl{
 	private AddPoiCtrl addPoiCtrl;
 
 	/**
-	 * 页面初始化(附带初始值，属于编辑更新POI)
+	 * 页面初始化(附带初始值，属于编辑更新POI)<p>
+	 * 中文或者英文输入页面
+	 * @param _id mongodb中POI的ID
+	 * @param lang 语言种类:null或者zh为中文，en为英文
 	 * @param request
 	 * @param response
 	 * @throws IOException 
@@ -61,8 +65,14 @@ public class EditPoiCtrl extends BasicCtrl{
 	public ModelAndView init(
 			@RequestParam(required = true, value = "_id")
 			String _id,
+			@RequestParam(required = false, value = "lang", defaultValue="zh")
+			String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return this.initCommPart(null, _id, request, response);
+		
+		ModelAndView mav = this.initCommPart(null, _id, lang, request, response);
+		mav.addObject("lang", lang);
+		mav.addObject("_id", _id);
+		return mav;
 	}
 
 	/**
@@ -74,8 +84,10 @@ public class EditPoiCtrl extends BasicCtrl{
 	@RequestMapping(params = "method=initOfPopupFixPoi")
 	public ModelAndView initOfPopupFixPoi(
 			@RequestParam(required = true, value="dataPoi") String unSavedPoi,
+			@RequestParam(required = false, value = "lang", defaultValue="zh")
+			String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return this.initCommPart(unSavedPoi, null, request, response);
+		return this.initCommPart(unSavedPoi, null, lang, request, response);
 	}
 
 	/**
@@ -86,9 +98,12 @@ public class EditPoiCtrl extends BasicCtrl{
 	 */
 	@RequestMapping(params = "method=newBlankPoiReadOnly")
 	public ModelAndView newBlankPoiReadOnly(
-			@RequestParam(required = true) String _id,
+			@RequestParam(required = true)
+			String _id,
+			@RequestParam(required = false, value = "lang", defaultValue="zh")
+			String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ModelAndView mav = this.init(_id, request, response);
+		ModelAndView mav = this.init(_id, lang, request, response);
 		mav.addObject("poiReadOnly", Boolean.TRUE);
 		return mav;
 	}
@@ -120,6 +135,8 @@ public class EditPoiCtrl extends BasicCtrl{
 	public void updatePoi(
 			@RequestParam(required = true, value = "poiId")
 			String _id,
+			@RequestParam(required = false, value = "lang")
+			String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// Excel上传后数据检查有错误的POI，点击保存后以新建添加的方式增加POI(处理逻辑同新建添加)
@@ -132,6 +149,7 @@ public class EditPoiCtrl extends BasicCtrl{
 
 			JSONObject param = this.param2Json(request);
 			param.put("_id", _id);
+			param.put("lang", lang);
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			JSONObject result = managePoiService.updatePoi(param.toString(), msUser);
@@ -154,7 +172,10 @@ public class EditPoiCtrl extends BasicCtrl{
 	}
 
 	/**
-	 * 页面初始化(带值的页面初始化：新建和更新两种模式)
+	 * 页面初始化(带值的页面初始化：新建和更新两种模式)<p>
+	 * 更新的场合：unSavedPoi为空值，_id不为空<br/>
+	 * 新建的场合:unSavedPoi为不为空值，_id为空<br/>
+	 * 
 	 * @param unSavedPoi
 	 * @param _id
 	 * @param request
@@ -165,6 +186,7 @@ public class EditPoiCtrl extends BasicCtrl{
 	private ModelAndView initCommPart(
 			String unSavedPoi,
 			String _id,
+			String lang,
 			HttpServletRequest request, HttpServletResponse response)
 					throws IOException {
 		HttpSession session = request.getSession(false);
@@ -188,6 +210,8 @@ public class EditPoiCtrl extends BasicCtrl{
 			} else {
 				JSONObject params = new JSONObject();
 				params.put("_id", _id);
+				// 语言种类
+				params.put("lang", lang);
 				result = managePoiService.initEditPoi(params.toString());
 			}
 			MsLogger.debug(result.toString());
@@ -262,8 +286,8 @@ public class EditPoiCtrl extends BasicCtrl{
 		// 城市信息
 		List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
 		SimpleModel simpleModel = new SimpleModel();
-		simpleModel.setValue("ALL");
-		simpleModel.setLabel("请选择市");
+		simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+		simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
 		lstCitys.add(simpleModel);
 		try {
 			if (!"ALL".equals(poiModel.getProvinceId())

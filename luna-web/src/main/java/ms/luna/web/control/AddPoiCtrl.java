@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
@@ -93,13 +94,7 @@ public class AddPoiCtrl extends BasicCtrl{
 
 		// 区域信息的下拉列表
 		// 国家信息
-		List<SimpleModel> lstCountrys = new ArrayList<SimpleModel>();
-		SimpleModel simpleModel = new SimpleModel();
-		simpleModel.setValue("100000");
-		simpleModel.setLabel("中国");
-		lstCountrys.add(simpleModel);
-//		mav.addObject("countrys", lstCountrys);
-		session.setAttribute("countrys", lstCountrys);
+		SimpleModel simpleModel = null;
 
 		// 省份信息
 		List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
@@ -115,16 +110,14 @@ public class AddPoiCtrl extends BasicCtrl{
 			mav.setViewName("/error.jsp");
 			return mav;
 		}
-//		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
 
 		// 城市信息
 		List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
 		simpleModel = new SimpleModel();
-		simpleModel.setValue("");
-		simpleModel.setLabel("请选择市");
+		simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+		simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
 		lstCitys.add(simpleModel);
-//		mav.addObject("citys", lstCitys);
 		try {
 			// 北京城市信息（需要初始化）
 			for (Map<String, String> map : pulldownCtrl.loadCitys("110000")) {
@@ -143,10 +136,9 @@ public class AddPoiCtrl extends BasicCtrl{
 		// 区/县信息
 		List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
 		simpleModel = new SimpleModel();
-		simpleModel.setValue("");
-		simpleModel.setLabel("请选择区/县");
+		simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+		simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
 		lstCountys.add(simpleModel);
-//		mav.addObject("countys", lstCountys);
 		session.setAttribute("countys", lstCountys);
 
 		mav.addObject("poiModel", poiModel);
@@ -179,8 +171,8 @@ public class AddPoiCtrl extends BasicCtrl{
 	 */
 	@RequestMapping(params = "method=addPoi")
 	public void addPoi(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 		try {
 			HttpSession session = request.getSession(false);
 			JSONObject param = this.param2Json(request);
@@ -214,8 +206,8 @@ public class AddPoiCtrl extends BasicCtrl{
 	@RequestMapping(params = "method=addPoiAsyncCheck")
 	public void addPoiAsyncCheck(
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 		try {
 			this.param2Json(request);
 		} catch(IllegalArgumentException e) {
@@ -241,8 +233,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
 		if (ext == null) {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
@@ -264,8 +256,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
 		if (ext == null) {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("text/html; charset=UTF-8");
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 			response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
 			response.setStatus(200);
 			return;
@@ -287,8 +279,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			@RequestParam(required = true, value = "video_fileup") MultipartFile file,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// super.uploadLocalFile2Cloud(request, response, file, pic_address);
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
 		try {
 			String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
 			if (ext == null) {

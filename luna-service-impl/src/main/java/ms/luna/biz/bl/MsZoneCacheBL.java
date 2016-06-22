@@ -20,4 +20,5 @@ public interface MsZoneCacheBL {
 	String getCountyId(String zoneId);
 	List<String> getSubZoneIds(String zoneId);
 	JSONObject findZoneIdsWithQQZoneName(String qqZoneName);
+	String getMergerNameEn(String zoneId);
 }
