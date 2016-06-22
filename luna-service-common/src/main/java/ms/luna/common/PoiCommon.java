@@ -611,10 +611,10 @@ public class PoiCommon {
 	}
 	/**
 	 * 转化请求参数中的私有字段到JSON中
-	 * @param request
-	 * @param privateFieldsDef
-	 * @param valueIsLabel
-	 * @return
+	 * @param request 前段传送过来的Request(含有私有以及共有字段键值对序列，只处理私有字段)
+	 * @param privateFieldsDef 私有字段的定义
+	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
+	 * @return JSONObject
 	 */
 	private JSONObject convertPrivateField2Json(HttpServletRequest request,
 			JSONArray privateFieldsDef, Boolean valueIsLabel) {
