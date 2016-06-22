@@ -47,7 +47,7 @@ $(function(){
         if(e.type!='paste'){
             var input = $("#longitude").val();
             var len_input = input.length;
-            if(len_input>=10){
+            if(len_input>10){
                 if (e.keyCode != 8) {
                     return false;
                 }else{
@@ -60,7 +60,7 @@ $(function(){
         if(e.type!='paste'){
             var input = $("#latitude").val();
             var len_input = input.length;
-            if(len_input>=10){
+            if(len_input>10){
                 if (e.keyCode != 8) {
                     return false;
                 }else{
