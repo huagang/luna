@@ -47,7 +47,7 @@
                             <img class="search-icon" src="${basePath}/img/ic_search.png"/>
                             <button type="button" id="search_apps" class="btn-search" >搜 索</button>
                         </div>
-                        <button type="button" id="new-built">+新建微景展</button>
+                        <button type="button" id="new-built" class="newApp" >+新建微景展</button>
                         <!--微景展搜索 end-->
                         <!--微景展列表 start-->
                         <div class="app-list">
@@ -89,166 +89,75 @@
 <!--弹出层 start-->
 <!--模态窗口 -->
 <div id="pop-overlay"></div>
-<!--新建微景展 start-->
-<div class="pop" id="pop-addapp">
-    <div class="pop-title">
-        <h4>新建微景展</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
-    </div>
-    <div class="pop-cont">
-        <form>
-            <div>
-                <label for="app-name">名称</label>
-                <input type="text" id="app-name" placeholder="输入微景展名称，不超过32个字符" onblur="verifyName(this, 'warn-appname', 'btn-addapp')"/>
-                <div class="warn" id="warn-appname">微景展名称超过32个字符</div>
-            </div>
-            <div>
-                <label class="pop-label">区域</label>
-                <select class="select" id="country" name="country_id" disabled>
-                    <option value="100000" selected="selected">中国</option>
-                </select>
-                <select class="select" id="province" onchange="change_province()">
-               	<option value="ALL">请选择省份</option>
-               	<c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-                    	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
+
+<!-- 业务配置  start-->
+<div class="pop set_business">
+	<div class="pop-title">
+		<h4>业务配置</h4> 
+        <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+	</div>
+	<div class="pop-cont">
+		<div>
+		    <label class="pop-label block">选择业务</label>
+		    <select class="select" id="country" name="country_id" disabled>
+		        <option value="100000" selected="selected">中国</option>
+		    </select>
+		    <select class="select" id="province" onchange="change_province()">
+		   		<option value="ALL">请选择省份</option>
+		   		<c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
+		        	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
 				</c:forEach>
-	           	</select>
-	           	<select class="select" id="city" onchange="change_city()">
-	               	<option value="ALL">请选择市</option>
-	           	</select>
-	           	<select class="select" id="county">
-	               	<option value="ALL">请选择区县</option>
-	           	</select>
-	            <select class="select" id="cate">
-	            	<option value="ALL">类别</option>
-	            	<c:forEach items="${businessCategories}" var="category">
-	            		<option value="${category.key}">${category.value}</option>
-	            	</c:forEach>
-	            </select>
-                <button type="button" id="btn-searchbusiness" onclick="searchBusiness()">搜索</button>
-            </div>
-            <div>
-                <label class="pop-label">业务</label>
-                <select class="select" id="business">
-                	<option>无</option>
-                </select>
-            </div>
-        </form>
+	      	</select>
+	      	<select class="select" id="city" onchange="change_city()">
+	          	<option value="ALL">请选择市</option>
+	      	</select>
+	      	<select class="select" id="county">
+	          	<option value="ALL">请选择区县</option>
+	      	</select>
+	        <select class="select" id="cate">
+	       		<option value="ALL">类别</option>
+	       		<c:forEach items="${businessCategories}" var="category">
+					<option value="${category.key}">${category.value}</option>
+				</c:forEach>
+			</select>
+		    <button type="button" id="btn-searchbusiness">搜索</button>
+		</div>
+	    <div>
+            <label class="pop-label">搜索结果</label>
+            <select class="select business">
+            		<option>无</option>
+            </select>
+        </div>     
+        <p class='warn business-empty'>配置业务项不能为空</p>
+	</div>
+	<div class="pop-fun">
+	 	<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
+        <button type="button" class="next">下一步</button>
     </div>
-    <!-- 底部功能区 -->
-    <div class="pop-fun">
-        <button type="button" id="btn-addapp" onclick="createApp()">确定</button>
-        <button class="button-close" onclick="clcWindow(this)">取消</button>
-    </div>
-    <!-- 底部功能区 -->
 </div>
-<!--新建微景展 end-->
-<!--属性编辑 start-->
-<div class="pop" id="pop-reuseapp">
+<!-- 业务配置  end -->
+<!-- 微景展配置  start-->
+<div class="pop set-app-name">
     <div class="pop-title">
-        <h4>复用微景展</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+       	<h4>微景展配置</h4>
+       	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
+   	</div>
+   	<div class="pop-cont">
+	    <div>
+            <label for="app-name">名称</label>
+            <input type="text" class="app-name" placeholder="输入微景展名称，不超过32个字符"/>          
+        </div>
+        <div class="warn warn-appname">微景展名称不能为空并且不能超过32个字符</div>
     </div>
-    <div class="pop-cont">
-        <form>
-            <div style="display:none">
-                <input type="text" id="app-id-reuse" />
-            </div>
-            <div>
-                <label for="app-name">名称</label>
-                <input type="text" id="app-name-reuse" placeholder="输入微景展名称，不超过32个字符" onblur="verifyName(this, 'warn-appname-edit', 'btn-addapp-edit')"/>
-                <div id="warn-appname-edit">微景展名称超过32个字符</div>
-            </div>
-            <div>
-                <label class="pop-label">区域</label>
-                <select class="select" id="country-reuse" disabled>
-                    <option>中国</option>
-                </select>
-                <select class="select" id="province-reuse"  onchange="change_province('edit')">
-                    <option value="ALL">请选择省份</option>
-	               	<c:forEach items="${provinces}" var="varProvince" varStatus="status">
-	                    	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-					</c:forEach>
-                </select>
-                <select class="select" id="city-reuse"  onchange="change_city('edit')">
-                    <option value="ALL">请选择市</option>
-                </select>
-                <select class="select" id="county-reuse">
-                    <option value="ALL">请选择区县</option>
-                </select>
-                <select class="select" id="cate-reuse">
-                </select>
-                <button type="button" id="btn-searchbusiness-reuse" onclick="searchBusinessEdit()">搜索</button>
-            </div>
-            <div>
-                <label class="pop-label">业务</label>
-                <select class="select" id="business-reuse">
-                	<option>无</option>
-                </select>
-            </div>
-        </form>
-    </div>
-    <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" id="btn-addapp-reuse" onclick="createReusedApp()">确定</button>
-        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
+    	<button type="button" class="cancel hidden">取消</button>
+        <button type="button" class="next">下一步</button>
+    	<button type="button" class="last">上一步</button>
     </div>
-    <!-- 底部功能区 -->
 </div>
-<!--属性编辑 end-->
-<!--属性编辑 start-->
-<div class="pop" id="pop-editapp">
-    <div class="pop-title">
-        <h4>更新微景展</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
-    </div>
-    <div class="pop-cont">
-        <form>
-            <div style="display:none">
-                <input type="text" id="app-id-edit" />
-            </div>
-            <div>
-                <label for="app-name">名称</label>
-                <input type="text" id="app-name-edit" placeholder="输入微景展名称，不超过32个字符" onblur="verifyName(this, 'warn-appname-edit', 'btn-addapp-edit')"/>
-                <div id="warn-appname-edit">微景展名称超过32个字符</div>
-            </div>
-            <div>
-                <label class="pop-label">区域</label>
-                <select class="select" id="country-edit" disabled>
-                    <option>中国</option>
-                </select>
-                <select class="select" id="province-edit"  onchange="change_province('edit')">
-                    <option value="ALL">请选择省份</option>
-	               	<c:forEach items="${provinces}" var="varProvince" varStatus="status">
-	                    	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-					</c:forEach>
-                </select>
-                <select class="select" id="city-edit"  onchange="change_city('edit')">
-                    <option value="ALL">请选择市</option>
-                </select>
-                <select class="select" id="county-edit">
-                    <option value="ALL">请选择区县</option>
-                </select>
-                <select class="select" id="cate-edit">
-                </select>
-                <button type="button" id="btn-searchbusiness-edit" onclick="searchBusinessEdit()">搜索</button>
-            </div>
-            <div>
-                <label class="pop-label">业务</label>
-                <select class="select" id="business-edit">
-                	<option>无</option>
-                </select>
-            </div>
-        </form>
-    </div>
-    <!-- 底部功能区 -->
-    <div class="pop-fun">
-        <button type="button" id="btn-addapp-edit" onclick="updateApp()">确定</button>
-        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-    </div>
-    <!-- 底部功能区 -->
-</div>
-<!--属性编辑 end-->
+<!-- 微景展配置 end -->
+
+
 <!-- 删除弹出层 start -->
 <div class="pop" id="pop-delete">
     <div class="pop-title">
@@ -301,13 +210,13 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var editOp = '<a class="property"'
-			+ 'onclick="editApp(\'{0}\',\'{1}\',\'{2}\', \'{3}\')">属性</a>'.format(row.app_id, row.app_name, row.business_id, row.business_name);
+		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
+		var editOp = '<a class="property">属性</a>';
 		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}">编辑</a>'
 				.format('${basePath}', row.app_id);
-		var reuseApp = '<a class="reuse" href="javascript:void(0)" onclick="reuseApp(\'{0}\',\'{1}\',\'{2}\', \'{3}\')">复用</a>'.format(row.app_id, row.app_name, row.business_id, row.business_name);
+		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-		return editOp + modifyOp + reuseApp + delApp;
+		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
 	}
 
 	function queryParams(params) {

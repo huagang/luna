@@ -4,11 +4,6 @@ var reuseAppDialog = $('#pop-reuseapp').clone();
 
 $(document).ready(function(){
     //新建微景展
-    $("#new-built").click(function(){
-    	$popwindow = $("#pop-addapp");
-        $popwindow.html(newAppDialog.html());
-        popWindow($popwindow)
-    });
     //搜索
     $("#search_apps").click(function() {
     	$('#table_apps').bootstrapTable("refresh");
@@ -21,218 +16,241 @@ $(document).ready(function(){
         	$('#table_apps').bootstrapTable("refresh");    
         }  
     }); 
-  
+    var controller = getAppController(".set_business",".set-app-name");
 });
 
 
-
-
-/*新建微景展，确认按钮*/
-function createApp(){
-    var app_name =$("#app-name").val();
-    var business_id = $("#business option:selected").val();
-    $.ajax({
-        url: host+'/manage/app.do?method=create_app',
-        type: 'POST',
-        async: true,
-        data: {
-        		"app_name": app_name,
-        		"business_id":business_id
-        		},
-        dataType:"json",
-        success: function (returndata) {
-            switch (returndata.code) {
-                case "0":
-                    $("#pop-overlay").css("display","none");
-                    $("#pop-addapp").css("display","none");
-                    $('#table_apps').bootstrapTable("refresh");
-                    break;
-                default :
-                    alert(returndata.msg);
-                    break;
-            }
-        },
-        error: function (returndata) {
-            alert("请求失败");
-        }
-    });
-}
-//实时验证名称
-function verifyName(obj,warnId, btnId){
-    var value = $(obj).val();
-    var len = value.length;
-    if(len>32||len==0){
-        if(len==0){
-            $("#" + warnId).html("微景展名称不能为空");
-        } else {
-            $("#" + warnId).html("微景展名称超过32个字符");
-        }
-        $("#" + btnId).attr("disabled",true);
-        $("#" + btnId).addClass("disable");
-        $("#" + warnId).css("display","block");
-    } else {
-        $("#" + btnId).attr("disabled",false);
-        $("#" + btnId).removeClass("disable");
-        $("#" + warnId).css("display","none");
-    }
-}
-//新建微景展，搜索功能
-function searchBusiness(){
-    var country = $("#country option:selected").val();
-    var province = $("#province option:selected").val();
-    var city = $("#city option:selected").val();
-    var county = $("#county option:selected").val();
-    var cate = $("#cate option:selected").val();
-    
-    var request_data = {
-    		"country_id":country,
-    		"province_id":province,
-    		"city_id":city,
-    		"county_id":county,
-    		"category_id":cate
-    	};
-    do_search_business(request_data, "business");
-}
-
-//属性编辑，搜索功能
-function searchBusinessEdit(){
-    var country = $("#country-edit option:selected").val();
-    var province = $("#province-edit option:selected").val();
-    var city = $("#city-edit option:selected").val();
-    var county = $("#county-edit option:selected").val();
-    var cate = $("#cate-edit option:selected").val();
-    
-    var request_data = {
-            "country_id":country,
-            "province_id":province,
-            "city_id":city,
-            "county_id":county,
-            "category_id":cate
-        };
-    do_search_business(request_data, "business-edit");
-    
-}
-
-function do_search_business(request_data, update_select) {
-	$.ajax({
-        url: host+'/manage/app.do?method=search_business',
-        type: 'POST',
-        async:true,
-        data: request_data,
-        dataType:"json",
-        success:function(returndata){
-            switch (returndata.code){
-                case "0":
-                	var items = returndata.data.rows;             
-            		var search_result_select = $("#" + update_select);
-                	search_result_select.empty();
-                    if(items.length > 0) { 
-                        search_result_select.append("<option value=''>请选择</option>");
-                    } else {
-                        search_result_select.append("<option value=''>无</option>");
-                    }
-    				for (var i = 0; i < items.length; i++) {
-    					var item = items[i];
-    					search_result_select.append("<option value = '"+item.business_id+"'>"+item.business_name+"</option>");
-    				}
-                	
-                    break;
-                default:
-                	alert("请求失败:" + returndata.msg);
-                	break;
-            }
-        },
-        error: function (returndata) {
-            alert("请求失败");
-        }
-    })
-}
-
-function createReusedApp(app_id, app_name, business_id, business_name){
-	// undone 未完成 等待接口对接
-	
-	/* 函数功能：将要复用的微景展id以及新的微景展名称和业务id发送给后台，
-	 * 从而新建一个微景展，这个微景展的页面与复用的微景展的页面一模一样。
+function getAppController(business_dialog_selector, app_dialog_selector){
+	/* @param business_dialog_selector  业务配置框的选择器
+	 * @param app_dialog_selector       微景展名称设置框的选择器
 	 */
-	var app_name =$("#app-name-reuse").val();
-    var business_id = $("#business-reuse option:selected").val();
-    var app_id = $("#app-id-reuse").val();
-    $.ajax({
-        url: host+'/manage/app.do?method=reuse_app',
-        type: 'POST',
-        async: true,
-        data: {
-        		"app_id": app_id,
-        		"app_name": app_name,
-        		"business_id":business_id
-        		},
-        dataType:"json",
-        success: function (returndata) {
-            switch (returndata.code) {
-                case "0":
-                    $("#pop-overlay").css("display","none");
-                    $("#pop-reuseapp").css("display","none");
-                    $('#table_apps').bootstrapTable("refresh");
-                    break;
-                default :
-                    alert(returndata.msg);
-                    break;
-            }
-        },
-        error: function (returndata) {
-            alert("请求失败");
-        }
-    });
-}
+	var controller = {
+		_app_id:'',        
+		_app_name:'',
+		_business_id:'',
+		_business_name:'',
+		_type:'',  // type类型有  "create", "update", "reuse",
+		_posturl:{ // 设置相关请求的url
+			create: host+'/manage/app.do?method=create_app',
+			update: host+'/manage/app.do?method=update_app',
+			reuse: host+'/manage/app.do?method=reuse_app',
+			searchBusiness: host+'/manage/app.do?method=search_business'
+		},
+		_business_dialog: $(business_dialog_selector),
+		_app_dialog: $(app_dialog_selector),
+		_bindEvent:function(){
+			// 绑定事件
+			$('.newApp').click(this.handleClick.bind(this));
+			$('.app-list').click(this.handleClick.bind(this));
+			this._business_dialog.find('.btn-close').click(function(){
+				this._business_dialog.removeClass('pop-show');
+			}.bind(this));
+			this._app_dialog.find('.btn-close').click(function(){
+				this._app_dialog.removeClass('pop-show');
+			}.bind(this));
+			this._business_dialog.find('.next').click(this.setBusinessNextStep.bind(this));
+			this._app_dialog.find('.last').click(this.setAppNameLastStep.bind(this));
+			this._app_dialog.find('.next').click(this.setAppNameNextStep.bind(this));
+			this._app_dialog.find('.cancel').click(function(){
+				this._app_dialog.removeClass('pop-show');
+			}.bind(this));
+			this._app_dialog.find('input.app-name').on("change",function(){
+				if(event.target.value.length <= 32){
+					this._app_name = event.target.value;
+					this._app_dialog.find(".warn-appname").removeClass('show');
+				}
+				else{
+					//超过了32个字符
+					this._app_name = event.target.value = event.target.value.substr(0,32);
+					this._app_dialog.find(".warn-appname").addClass('show');
+				}
+			}.bind(this));
+			this._business_dialog.find('#btn-searchbusiness').click(
+					this.searchBusiness.bind(this));
+			this._business_dialog.find(".business").on("change",function(){
+				this._business_id = event.target.value;
+				if(event.target.value){
+					$(".warn.business-empty").removeClass("show");
+				}
+			}.bind(this));
+		},
+		handleClick:function(){ 
+			//点击事件回调函数 可能是点击了"属性"，"复用"，"新建微景展"等标签
+			var classList = ['property', 'reuse', "newApp"], receive = '';
+			classList.forEach(function(className){
+				if(event.target.className.indexOf(className) > -1){
+					receive = className;
+				}
+			});
+			if(receive){
+				switch(receive){
+					case "property":
+						this.showBusinessConfigDialog('update',event.target);
+						break;
+					case "reuse":
+						this.showBusinessConfigDialog('reuse',event.target);
+						break;
+					case "newApp":
+						this.showBusinessConfigDialog('create',event.target);
+						break;
+				//	case 'del':
+					//	this.handleDeleteApp(target);
+					//	break;
+				}
+			}	
+		},
+		searchBusiness:function() {   
+			/* 点击搜索按钮来搜索业务信息
+			 * 发送请求时需要国家，省，市，县，栏目等信息
+			 */
+		    var request_data = {
+		    		"country_id":  	$("#country").val(),
+		    		"province_id": 	$("#province").val(),
+		    		"city_id": 		$("#city").val(),
+		    		"county_id":	$("#county").val(),
+		    		"category_id": 	$("#cate").val()
+		    };
+			$.ajax({
+		        url: this._posturl.searchBusiness,
+		        type: 'POST',
+		        async:true,
+		        data: request_data,
+		        dataType:"json",
+		        success:function(returndata){
+		            switch (returndata.code){
+		                case "0":
+		                	var items = returndata.data.rows;             
+		            		var search_result_select = this._business_dialog.find('.business');
+		                	search_result_select.empty();
+		                    if(items.length > 0) { 
+		                        search_result_select.append("<option value=''>请选择</option>");
+		                    } else {
+		                        search_result_select.append("<option value=''>无</option>");
+		                    }
+		                    var optionsHtml = "",item;
+		    				for (var i = 0; i < items.length; i++) {
+		    					item = items[i];
+		    					optionsHtml += "<option value = '" +
+		    						item.business_id+"'>"+item.business_name+"</option>";
+		    				}  	
+		    				search_result_select.append(optionsHtml);
+		                    break;
+		                default:
+		                	alert("请求失败:" + returndata.msg);
+		                	break;
+		            }
+		        }.bind(this),
+		        error: function (returndata) {
+		            alert("请求失败");
+		        }.bind(this)
+		    })
+		},
+		reset: function(){
+			//用于重置相关信息
+			
+			this._type = this._app_id = this._app_name = 
+				this._business_id = this._business_name = '';
+			this._app_dialog.find(".warn-appname").removeClass('show');
+			this._business_dialog.find(".warn.business-empty").removeClass("show");
+			this._app_dialog.find('.last').removeClass('hidden');
+			this._app_dialog.find('.next').html("下一步");
+			this._app_dialog.find('.cancel').addClass('hidden');
+			
+		},
+		showBusinessConfigDialog: function(type,target){
+			//  显示业务配置弹出框
+			if(!type){
+				return;
+			}
+			this.reset();
+			this._type = type || '';
+			if(type === 'update'){
+				var node = target.parentNode;		
+				this._business_name = node.getAttribute("data-business-name") || '';
+				this._business_id = node.getAttribute("data-business-id") || '';
+				this._app_id = node.getAttribute("data-app-id") || '';
+				this._app_name = node.getAttribute("data-app-name") || '';
+				this._app_dialog.find('input.app-name').val(this._app_name);
+				var option = "<option value='{0}'>{1}</option>".format(this._business_id,
+						this._business_name);
+				this._business_dialog.find('.select.business').html(option);
+				this._app_dialog.addClass("pop-show");
+				this._app_dialog.find('.last').addClass('hidden');
+				this._app_dialog.find('.next').html('确定');
+				this._app_dialog.find('.cancel').removeClass('hidden');
+			} else{
+				this._business_dialog.addClass("pop-show");
+				this._app_dialog.find('input.app-name').val("");
+				this._business_dialog.find('.select.business').html("<option>无</option>");
+			}
+		},
+		setBusinessNextStep: function(){
+			// 业务配置弹出框的“下一步”按钮的点击事件回调函数
+			// 用于验证业务信息是否配置以及显示微景展名称配置弹出框
+			if(this._business_id){
+				this._business_dialog.removeClass('pop-show');
+				this._app_dialog.addClass('pop-show');
+			} else{
+				//显示业务信息没有 配置
+				$(".warn.business-empty").addClass("show");
+			}
+		},
+		setAppNameLastStep:function(){
+			// 微景展名称配置弹出框的“上一步”按钮的点击事件回调函数
+			// 用于显示业务配置弹出框
+			this._business_dialog.addClass('pop-show');
+			this._app_dialog.removeClass('pop-show');
+		},
+		setAppNameNextStep: function(){
+			// 微景展名称配置弹出框的“下一步”按钮的点击事件回调函数
+			// 用于验证微景展名称是否填写以及
+			if(this._business_id && this._app_name){
+			    this._postData();
+			} else{
+				this._app_dialog.find(".warn-appname").addClass('show');
+			}
+		},
+		/*handleDeleteApp:function(target){
+			this._app_id = target.parentNode.data-app-id;
+			
+		},*/
+		freshAppList:function(){
+        	$('#table_apps').bootstrapTable("refresh");
+		},
+		_postData:function(){
+			if(!this._app_name || !this._business_id){
+				return;
+			}
+			var data = {
+		            "app_id": this._app_id || null,
+		            "app_name":this._app_name,
+		            "business_id": this._business_id
+		     };
+			$.ajax({
+		        url: this._posturl[this._type],
+		        type: 'POST',
+		        async:true,
+		        data: data,
+		        dataType:"json",
+		        success:function(data){
+		            if(data.code === "0"){
+		            	this._app_dialog.removeClass('pop-show');
+		            	this.freshAppList();
+		            }
+		            else{
+		            	alert("请求失败");
+		            }
+		        }.bind(this),
+		        error: function (data) {
+		            alert("请求失败");
+		        }
+		    });
+		}
+	};
+	controller._bindEvent();
+	return controller;
+};
 
-function reuseApp(app_id, app_name, business_id, business_name){
-	$popwindow = $("#pop-reuseapp");
-    $popwindow.html(reuseAppDialog.html());
-    popWindow($popwindow);
-    $("#app-name-reuse").val(app_name);
-    $("#app-id-reuse").val(app_id);
-    $("#business-reuse").empty();
-    $("#business-reuse").append("<option value='{0}'>{1}</option>".format(business_id, business_name));
-}
-
-function editApp(app_id, app_name, business_id, business_name) {
-	$popwindow = $("#pop-editapp");
-    $popwindow.html(editAppDialog.html());
-    popWindow($popwindow);
-    $("#app-name-edit").val(app_name);
-    $("#app-id-edit").val(app_id);
-    $("#business-edit").empty();
-    $("#business-edit").append("<option value='{0}'>{1}</option>".format(business_id, business_name));
-}
-
-function updateApp() {
-    var app_id = $("#app-id-edit").val();
-    var app_name = $("#app-name-edit").val();
-    var business_id = $("#business-edit").val();
-    $.ajax({
-        url: host+'/manage/app.do?method=update_app',
-        type: 'POST',
-        async:true,
-        data:{
-            "app_id": app_id,
-            "app_name":app_name,
-            "business_id": business_id
-        },
-        dataType:"json",
-        success:function(returndata){
-            switch (returndata.code){
-                case "0":
-                    $("#pop-editapp").css("diaplay","none");
-                    $("#pop-overlay").css("diaplay","none");
-                    $('#table_apps').bootstrapTable("refresh");
-                    break;
-            }
-        },
-        error: function (returndata) {
-            alert("请求失败");
-        }
-    });
-}
 /**
  * 显示删除区域的对话框
  * @param app_id
@@ -248,7 +266,8 @@ function delApp(obj, app_id){
     });
 }
 /**
- * 确认删除后的操作
+ * 发送删除请求给后台服务器
+ * @param app_id　要删除的微景展的id
  */
 function submit_delete_app(app_id, target){
 	$.ajax({
@@ -263,6 +282,7 @@ function submit_delete_app(app_id, target){
             	   target.remove();
                    $("#pop-overlay").css("display","none");
                    $("#pop-delete").css("display","none");
+                   $('#table_apps').bootstrapTable("refresh");
                    break;
                 default:
                 	alert(returndata.code + ":" + returndata.msg);

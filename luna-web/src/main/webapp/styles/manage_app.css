@@ -13,14 +13,50 @@
 .modify,
 .reuse{
     padding-right: 10px;
+    cursor: pointer;
 }
+
 /*弹出层，独有，新建微景展*/
+.pop.pop-show{
+	left: 0;
+    right: 0;
+    top: 30%;
+    width: 66%;
+    margin: auto;
+    display: block;
+}
+
+.pop.pop-show.set-app-name{
+	width: 40%;
+}
+
+.pop-show:before{
+	content: '.';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: #b2b2b2;
+    opacity: 0.5;
+    z-index: 100;
+}
+.pop-show .pop-title,
+.pop-show .pop-cont,
+.pop-show .pop-fun{
+	position:relative;
+	z-index:101;
+}
+
 .pop-cont div{
     margin-bottom: 10px;
 }
-#app-name,
-#app-name-edit{
-    width: 436px;
+.app-name{
+    width: 80%;
+}
+.pop-cont{
+	background-color: white;
 }
 .pop-cont select{
     min-width: 65px;
@@ -35,10 +71,24 @@
     left: 45px;
 }
 .pop-fun{
-    padding-right: 24px;
+   
+    background-color: white;
+    width: 100%;
+}
+.pop-fun button{
+	float:right;
+	margin-right: 24px;
 }
 /*删除类别*/
 .pop-tips{
     margin: 40px 40px;
     font-size: 14px;
+}
+.warn-tip{
+	padding: 0 25px;
+    color: #d0021b;
+}
+.block{
+	display: block;
+	padding-bottom: 5px;
 }
