@@ -156,7 +156,7 @@ public class PoiCommon {
 			return MsLunaMessage.getInstance().getMessage("LUNA.E0001", "POI名称");
 		}
 		if (CharactorUtil.countChineseEn(param) > POI.名称最大长度) {
-			return MsLunaMessage.getInstance().getMessage("luna.ms_00002", "POI名称", POI.名称最大长度);
+			return MsLunaMessage.getInstance().getMessage("LUNA.E0002", "POI名称", POI.名称最大长度);
 		}
 		return null;
 	}
@@ -373,6 +373,7 @@ public class PoiCommon {
 		}
 		return null;
 	}
+
 	/**
 	 * 检查联系电话是否合法<p>
 	 * 1.不能过长

@@ -148,7 +148,7 @@ public final class VbUtility {
 					}
 				}
 			} else {
-				System.out.println("QRCode content bytes length = " + contentBytes.length + " not in [ 0,120 ]. ");
+				MsLogger.debug("QRCode content bytes length = " + contentBytes.length + " not in [ 0,120 ]. ");
 				return null;
 			}
 			Image img = ImageIO.read(new File(logo));
@@ -196,7 +196,7 @@ public final class VbUtility {
 
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]图片格式不正确 ");
+			MsLogger.debug("[" + value + "]图片格式不正确 ");
 			return false;
 		}
 		return true;
@@ -210,7 +210,7 @@ public final class VbUtility {
 
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]音频格式不正确 ");
+			MsLogger.debug("[" + value + "]音频格式不正确 ");
 			return false;
 		}
 		return true;
@@ -224,7 +224,7 @@ public final class VbUtility {
 
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]视频格式不正确 ");
+			MsLogger.debug("[" + value + "]视频格式不正确 ");
 			return false;
 		}
 		return true;
@@ -238,7 +238,7 @@ public final class VbUtility {
 
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]图片格式不正确或者是没有上传的图片地址 ");
+			MsLogger.debug("[" + value + "]图片格式不正确或者是没有上传的图片地址 ");
 			return false;
 		}
 		return true;
@@ -252,7 +252,7 @@ public final class VbUtility {
 
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]音频格式不正确或者是没有上传的图片地址 ");
+			MsLogger.debug("[" + value + "]音频格式不正确或者是没有上传的图片地址 ");
 			return false;
 		}
 		return true;
@@ -267,7 +267,7 @@ public final class VbUtility {
 		
 		Matcher matcher1 = pattern1.matcher(value);
 		if (!matcher1.matches()) {
-			System.out.println("[" + value + "]视频格式不正确或者是没有上传的图片地址 ");
+			MsLogger.debug("[" + value + "]视频格式不正确或者是没有上传的图片地址 ");
 			return false;
 		}
 		return true;
