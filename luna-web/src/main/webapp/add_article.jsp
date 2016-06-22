@@ -20,22 +20,10 @@
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-    	
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/file_loading_tip.css">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_article.css">
-		<script type='text/javascript'>
-			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
-		</script>
-    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
-    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
-<!--     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/addCustomizeButton.js"></script>
- -->	    <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.12/libs/vbpano.js"></script>
-    	<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    	<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
-    	<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+		
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -129,8 +117,8 @@
 
 		        </div>
 		    </div>
-    <!--中间区域内容 end-->
-    <!-- </div> -->
+    		<!--中间区域内容 end-->
+    		<!-- </div> -->
 			<div class="content-footer">
 				<div class='button-container'>
 					<button class='publish'>发布</button>
@@ -139,6 +127,20 @@
 				</div>	         
 		    </div>
 		</div>
+		<script type='text/javascript'>
+			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
+			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+		</script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+    	<!-- <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/addCustomizeButton.js"></script> -->
+	    <!-- <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.12/libs/vbpano.js"></script> -->
+    	<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    	<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    	<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
     	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/add_article.js"></script>
 	</body>
 </html>

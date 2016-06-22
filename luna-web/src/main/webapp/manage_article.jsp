@@ -18,13 +18,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css"type="text/css" />
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_article.css">
 </head>
 <body ng-app="manageArticle" ng-controller="articleController as article">
 <div class="container-fluid">
@@ -87,13 +82,13 @@
 <!--模态窗口 -->
 <div id="pop-overlay" class="ng-hide" ng-show="article.dialogBaseShow"></div>
 <!--新建业务 start-->
-<div class="pop ng-hide" id="newArticleDialog" ng-show="article.newArticleShow">
+<div class="pop ng-hide" id="newArticleDialog" ng-show="article.newArticleShow" >
     <div class="pop-title">
         <h4>业务配置</h4>
         <a href="#" class="btn-close" ng-click="article.hideNewArticleDialog()"><img src="${basePath}/img/close.png" /></a>
     </div>
     <div class="pop-cont">
-        <div>
+        <div class="form-group">
             <label>选择业务</label>
             <select class="select" id="province" ng-model="article.provinceId" ng-change="article.changeProvince()">
                 <option value="ALL">请选择省份</option>
@@ -109,7 +104,7 @@
             <input type="text" ng-model="article.businessQuery" placeholder="输入业务名称" style="margin-top:15px;width:370px;">
             <button type="button" ng-click="article.searchBusiness()">搜索</button>
         </div>
-        <div>
+        <div class="form-group">
             <label>搜索结果</label>
             <select class="select" ng-model="article.businessId">
                 <option ng-repeat="item in article.businessOptions" value="{{item.business_id}}">{{item.business_name}}</option>
@@ -123,54 +118,15 @@
     <!-- 底部功能区 -->
 </div>
 <!--新建业务 end-->
-
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/manage_article.js"></script>
-<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
-<script type="text/javascript">
-    $(function() {
-        var id = 0, getRows = function() {
-            var rows = [];
-            for (var i = 0; i < 10; i++) {
-                rows.push({
-                    id : id
-                });
-                id++;
-            }
-            return rows;
-        }, $table = $('#table_article').bootstrapTable({
-            data : getRows()
-        });
-
-    });
-
-
-
-    function timeFormatter(value, row, index) {
-        return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
-                +'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
-    }
-
-    function operationFormatter(value, row, index) {
-        var id = row.id;
-        var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
-        var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, name);
-
-        return editOp + deleteOp;
-    }
-
-    function queryParams(params) {
-        //alert(JSON.stringify(params));
-        return {
-            limit : params.limit,
-            offset : params.offset,
-            sort : params.sort,
-            order : params.order
-        }
-    };
-</script>
-
+<script src="<%=request.getContextPath() %>/scripts/manage_article.js"></script>
 </body>
 </html>
