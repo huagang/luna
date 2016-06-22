@@ -271,4 +271,14 @@ public final class VbConstant {
 			return "";
 		}
 	}
+	
+	/**
+	 * 上传文件的类型
+	 */
+	public static final class UPLOAD_FILE_TYPE{
+		public static final String PIC= "pic";
+		public static final String AUDIO = "audio";
+		public static final String VIDEO = "video";
+		public static final String ZIP = "zip";
+	}
 }

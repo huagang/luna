@@ -256,6 +256,11 @@ public class VODUtil {
 		return classId;
 	}
 
+	public JSONObject upload2Cloud(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
+			String bucket, String path, String fileName) throws IOException {
+		return upload2Cloud(request, response, file, bucket + path, fileName);
+	}
+	
 	/**
 	 * 上传视频到腾讯云VOD
 	 * 
