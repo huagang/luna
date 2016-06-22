@@ -31,6 +31,10 @@ label{
     width: 100%;
     margin-bottom: 50px;
     text-align: left;
+    position: relative;
+}
+.lang-poi{
+    position: absolute;
 }
 .item-poi{
     margin-bottom: 20px;
