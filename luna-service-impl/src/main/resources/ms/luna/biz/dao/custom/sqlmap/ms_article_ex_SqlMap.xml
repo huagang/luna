@@ -2,6 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 <sqlMap namespace="ms_article">
     <resultMap id="MsArticleResult" class="ms.luna.biz.dao.custom.model.MsArticleResult">
+        <result column="id" property="id" jdbcType="INTEGER" />
         <result column="title" property="title" jdbcType="VARCHAR" />
         <result column="author" property="author" jdbcType="VARCHAR" />
         <result column="column_name" property="columnName" jdbcType="VARCHAR" />
@@ -12,6 +13,7 @@
     <select id="selectArticleWithFilter" resultMap="MsArticleResult"
             parameterClass="ms.luna.biz.dao.custom.model.MsArticleParameter">
         SELECT
+            a.id id,
             a.title title,
             a.author author,
             b.name column_name,

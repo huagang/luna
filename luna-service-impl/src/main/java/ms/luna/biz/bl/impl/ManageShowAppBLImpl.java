@@ -135,6 +135,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		msShowApp.setBusinessId(businessId);
 		msShowApp.setOwner(owner);
 		msShowApp.setAppStatus(MsShowAppConfig.AppStatus.NOT_AUDIT);
+
 		
 		try {
 			msShowAppDAO.insertSelective(msShowApp);
@@ -151,11 +152,16 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			page.setPageOrder(1);
 			page.setUpdateUser(owner);
 			msShowPageDAO.createOnePage(page);
-			
+
+			JSONObject ret = new JSONObject();
+			ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
+			return FastJsonUtil.sucess("成功添加微景展", ret);
+
 		} catch (Exception e) {
 			logger.error("Failed to insert app: " + json, e);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
 		}
-		return FastJsonUtil.sucess("成功添加微景展");
+
 		
 	}
 	

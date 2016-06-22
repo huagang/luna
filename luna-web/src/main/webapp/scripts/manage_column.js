@@ -200,7 +200,7 @@ function ColumnController($scope, $rootScope, $http) {
             method: 'POST',
             url: host + '/manage/column.do?method=delete_column',
             data: {
-                'id': id,
+                'id': id
             }
         };
         $http(request).then(function success(response) {

@@ -12,6 +12,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import ms.luna.biz.cons.ErrorCode;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -227,6 +229,20 @@ public class PulldownCtrl {
 			}
 		}
 		return counties;
+	}
+
+	@RequestMapping(params = "method=load_provinces")
+	public void loadProvinces(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		try {
+			List<Map<String, String>> provinces = loadProvinces();
+			response.getWriter().print(FastJsonUtil.sucess("", JSON.toJSON(provinces)));
+			return;
+		} catch (Exception ex) {
+			logger.error("Failed to load provinces", ex);
+			response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "加载省信息失败"));
+		}
 	}
 
 	@RequestMapping(params = "method=load_citys")

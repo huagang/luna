@@ -15,4 +15,5 @@ public interface ManageArticleService {
     JSONObject updateArticle(String json);
     JSONObject deleteArticle(int id);
     JSONObject loadArticle(String json);
+    JSONObject searchBusiness(String json);
 }
