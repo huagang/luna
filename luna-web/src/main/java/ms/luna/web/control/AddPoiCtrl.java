@@ -150,7 +150,7 @@ public class AddPoiCtrl extends BasicCtrl{
 		session.setAttribute("countys", lstCountys);
 
 		mav.addObject("poiModel", poiModel);
-		mav.setViewName("/add_poi.jsp.jsp");
+		mav.setViewName("/add_poi.jsp");
 		return mav;
 	}
 
@@ -305,7 +305,7 @@ public class AddPoiCtrl extends BasicCtrl{
 			if (result.getString("code").equals("0")) {
 				String token = result.getString("token");
 				JSONObject data = result.getJSONObject("data");
-				String vod_file_id = data.getString("fileId");
+				String vod_file_id = data.getString("vod_file_id");
 
 				// 记录写入数据库
 				JSONObject param = new JSONObject();
