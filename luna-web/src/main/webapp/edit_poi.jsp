@@ -40,7 +40,7 @@
         <div id="add-poi" class="add-poi">
             <div class="title-poi">
                 <h3>POI数据基本信息
-                	<label>英文版</label>
+                	<label class="langTag hide">（英文版）</label>
 					<a href="" id="changeLang" class="lang-poi">英文版</a>
                 </h3>
             </div>

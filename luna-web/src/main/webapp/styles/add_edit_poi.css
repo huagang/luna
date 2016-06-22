@@ -33,8 +33,13 @@ label{
     text-align: left;
     position: relative;
 }
+.langTag{
+    font-size: 14px;
+    color: #364c86;
+}
 .lang-poi{
-    position: absolute;
+    float: right;
+    font-size: 14px
 }
 .item-poi{
     margin-bottom: 20px;
