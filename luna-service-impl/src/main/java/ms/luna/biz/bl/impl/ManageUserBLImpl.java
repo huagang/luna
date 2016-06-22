@@ -90,7 +90,7 @@ public class ManageUserBLImpl implements ManageUserBL {
 		usersParameter.setMin(min);
 
 		String categoryId = param.getString("category_id");
-		if (!VbConstant.ALL.equals(categoryId)) {
+		if (!VbConstant.ZonePulldown.ALL.equals(categoryId)) {
 			usersParameter.setCategoryId(categoryId);
 		}
 

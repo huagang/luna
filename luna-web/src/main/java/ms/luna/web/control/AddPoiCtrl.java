@@ -55,15 +55,9 @@ public class AddPoiCtrl extends BasicCtrl{
 	@Resource(name="managePoiCtrl")
 	private ManagePoiCtrl managePoiCtrl;
 
-//	/**
-//	 * 页面上属性列表
-//	 */
-//	private List<SimpleModel> checkBoxTags;
-
 	/**
 	 * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
 	 */
-//	private Map<String, List<TagFieldModel>> tagFieldListMap = new LinkedHashMap<String, List<TagFieldModel>>();
 
 	/**
 	 * 页面初始化
@@ -74,9 +68,11 @@ public class AddPoiCtrl extends BasicCtrl{
 	public ModelAndView init(
 			HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		ModelAndView mav = new ModelAndView();
 		if (session == null) {
 			MsLogger.error("session is null");
-			return new ModelAndView("/error.jsp");
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 		session.setAttribute("menu_selected", "manage_poi");
 		PoiModel poiModel = new PoiModel();
@@ -91,7 +87,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			managePoiCtrl.initTags(session, data.getJSONObject("common_fields_def"), null);
 			session.setAttribute("private_fields", private_fields_def);
 		} else {
-			return new ModelAndView("/error.jsp");
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 
 		// 区域信息的下拉列表
@@ -115,6 +112,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 		} catch (Exception e) {
 			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 //		mav.addObject("provinces", lstProvinces);
 		session.setAttribute("provinces", lstProvinces);
@@ -136,6 +135,8 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 		} catch (Exception e) {
 			MsLogger.error(e);
+			mav.setViewName("/error.jsp");
+			return mav;
 		}
 		session.setAttribute("citys", lstCitys);
 
@@ -148,8 +149,8 @@ public class AddPoiCtrl extends BasicCtrl{
 //		mav.addObject("countys", lstCountys);
 		session.setAttribute("countys", lstCountys);
 
-		ModelAndView mav = new ModelAndView("/add_poi.jsp");
 		mav.addObject("poiModel", poiModel);
+		mav.setViewName("/add_poi.jsp.jsp");
 		return mav;
 	}
 
@@ -168,57 +169,6 @@ public class AddPoiCtrl extends BasicCtrl{
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
 
 		return PoiCommon.getInstance().param2Json(request, privateFieldsDef, Boolean.FALSE);
-//
-//		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
-//
-//		for (int i = 0; i < privateFieldsDef.size(); i++) {
-//			JSONObject field = privateFieldsDef.getJSONObject(i);
-//			if (!field.containsKey("field_def")) {
-//				continue;
-//			}
-//			JSONObject field_def = field.getJSONObject("field_def");
-//			fieldDefMap.put(field_def.getString("field_name"), field_def);
-//		}
-//
-//		for (Entry<String, String[]> entry : set) {
-//			if (!fieldDefMap.containsKey(entry.getKey())) {
-//				continue;
-//			}
-//
-//			String value = null;
-//			if (entry.getValue().length > 1) {
-//				StringBuilder sb = new StringBuilder();
-//				for (int i = 0; i < entry.getValue().length; i++) {
-//					if (i != 0) {
-//						sb.append(",");
-//					}
-//					sb.append(entry.getValue()[i]);
-//				}
-//				value = sb.toString();
-//			} else {
-//				value = entry.getValue()[0];
-//			}
-//			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-//			if (CharactorUtil.isPoiDataHasError(value, privateJson, Boolean.FALSE)) {
-//				String field_show_name = "";
-//				if (privateJson != null) {
-//					field_show_name = privateJson.getString("field_show_name");
-//				}
-//				throw new IllegalArgumentException("[" + field_show_name + "] 数据错误，请认真确认数据！");
-//			}
-//		}
-//		for (Entry<String, String[]> entry : set) {
-//			MsLogger.debug(entry.getKey() + "\t");
-//			if (param.containsKey(entry.getKey())) {
-//				continue;
-//			}
-//			if (entry.getValue().length > 1) {
-//				param.put(entry.getKey(), entry.getValue());
-//			} else {
-//				param.put(entry.getKey(), entry.getValue()[0]);
-//			}
-//		}
-//		return param;
 	}
 
 	/**
@@ -327,7 +277,7 @@ public class AddPoiCtrl extends BasicCtrl{
 	}
 
 	/**
-	 * 异步上传音频
+	 * 异步上传视频
 	 * @param request
 	 * @param response
 	 * @throws IOException 

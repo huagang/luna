@@ -274,39 +274,44 @@ function hideLoadingTip(selector) {
 }
 
 // 发送文章数据给后台 未完成状态
-function postData(type, successCallback, errorCallback) {
-    var error = window.articleStore.checkEmpty().error;
-    if (error) {
-        alert(error);
-        return;
-    }
-    var data = {
-        title: articleStore.title,
-        content: articleStore.content,
-        thumbnail: articleStore.thumbnail,
-        summary: articleStore.summary,
-        audio: articleStore.audio,
-        video: articleStore.video,
-        category: articleStore.category
-    };
-    $.ajax({
-        url: 'xxx?method=' + type,
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json',
-        processData: false,
-        success: function(data) {
-            if (window.toString.call(successCallback) === "[object Function]") {
-                successCallback(data);
-            }
-        },
-        error: function(data) {
-            if (window.toString.call(errorCallback) === "[object Function]") {
-                errorCallback({ error: 'upload', msg: '文件上传失败', data: data });
-            }
-        }
-    });
-}
+// function postData(type, successCallback, errorCallback){
+// 	var error = window.articleStore.checkEmpty().error;
+// 	if(error){
+// 		alert(error);
+// 		return;
+// 	}
+// 	var data = {
+// 		title: articleStore.title,
+// 		content: articleStore.content,
+// 		thumbnail: articleStore.thumbnail,
+// 		summary: articleStore.summary,
+// 		audio: articleStore.audio,
+// 		video: articleStore.video,
+// 		category: articleStore.category
+// 	};
+// 	$.ajax({
+// 		url:'xxx?method='+type,
+// 		type: 'POST',
+// 		data: JSON.stringify(data),
+// 		contentType: 'application/json',
+// 		processData: false,
+// 		success: function(data){
+// 			if( data.code === "0"){
+// 				if(window.toString.call(successCallback) === "[object Function]"){
+// 					successCallback(data);
+// 				}			
+// 			}
+// 			else if(window.toString.call(errorCallback) === "[object Function]"){
+// 				errorCallback({error: 'upload', msg: '发送请求失败', data:data});
+// 			}	
+// 		},
+// 		error:function(data){
+// 			if(window.toString.call(errorCallback) === "[object Function]"){
+// 				errorCallback({error: 'upload', msg: '发送请求失败', data:data});
+// 			}				
+// 		}
+// 	});
+// }
 
 /**
  * 初始化编辑器

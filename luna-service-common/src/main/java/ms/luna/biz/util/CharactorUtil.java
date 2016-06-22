@@ -5,13 +5,10 @@ package ms.luna.biz.util;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ms.luna.biz.cons.VbConstant;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -33,13 +30,13 @@ public class CharactorUtil {
 	}
 
 	public static String nullToALL(String src) {
-		return src == null || src.isEmpty() ? VbConstant.ALL: src;
+		return src == null || src.isEmpty() ? VbConstant.ZonePulldown.ALL: src;
 	}
 
 	public static String blankRegionNmToNoneBlank(String roleAuth, String regionNm) {
 		int auth = Integer.parseInt(roleAuth);
 		if (auth == VbConstant.AUTH_GAO_JI_GUAN_LI_YUAN) {
-			return VbConstant.ALL_REGION_NM;
+			return VbConstant.ZonePulldown.ALL_REGION_NM;
 		} else if (auth == VbConstant.AUTH_YOU_KE) {
 			return VbConstant.REGION_NM_YOU_KE;
 		}
@@ -271,64 +268,6 @@ public class CharactorUtil {
 		return result;
 	}
 
-	/**
-	 * POI私有字段内容检查
-	 * @param value
-	 * @param fieldDef
-	 * @return
-	 */
-	public static boolean isPoiDataHasError(String value, JSONObject fieldDef, Boolean valueIsLabel) {
-		if (fieldDef == null) {
-			return true;
-		}
-		int field_type = fieldDef.getInteger("field_type");
-		int field_size = fieldDef.getInteger("field_size");
-		switch (field_type) {
-			case VbConstant.POI_FIELD_TYPE.文本框:
-				// 整数数字
-				if (field_size == -1) {
-					return !isInteger(value);
-				}
-				// 字符串
-				// 检查长度
-				return countChineseEn(value) > field_size;
-
-			case VbConstant.POI_FIELD_TYPE.文本域:
-				return countChineseEn(value) > field_size;
-
-			case VbConstant.POI_FIELD_TYPE.复选框列表:
-				if (value == null || value.isEmpty()) {
-					return false;
-				}
-				JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
-				Set<String> set = new HashSet<String>();
-				if (valueIsLabel) {
-					for (int i = 0; i < extension_attr.size(); i++) {
-						JSONObject json = extension_attr.getJSONObject(i);
-						String label = json.getString(String.valueOf(i+1));
-						set.add(label);
-					}
-				} else {
-					for (int i = 0; i < extension_attr.size(); i++) {
-						set.add(String.valueOf(i+1));
-					}
-				}
-				if ((value.contains(",")||value.contains("，"))
-						&& (value.contains(";") || value.contains("；"))) {
-					return true;
-				}
-				value = value.replace(";", ",").replace("；", ",").replace("，", ",");
-				String[] vals = value.split("," , extension_attr.size());
-				for (int i = 0; i < vals.length; i++) {
-					if (!set.remove(vals[i])) {
-						return true;
-					}
-				}
-				return false;
-			default:
-				return false;
-		}
-	}
 
 	/**
 	 * Poi上传用文件是否存在check

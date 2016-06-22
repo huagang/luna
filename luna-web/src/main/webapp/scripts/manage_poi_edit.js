@@ -3,15 +3,6 @@
 //使用该脚本需要注意：1、展示url的input为id；2、上传按钮的id为id_fileup;3、提示的id为id_warn;
 //目前仅涉及到这三种文件上传，以后有需要在扩展
 $(function(){
-	$("input[type=file][file_type=image]").change(function(){
-		asyncUploadThumb(this);
-	});
-	$("input[type=file][file_type=audio]").change(function(){
-		asyncUploadAudio(this);
-	});
-	$("input[type=file][file_type=video]").change(function(){
-		asyncUploadVideo(this);
-	});
 //	回车搜索
 	$("#filterName").bind('keyup',function(){
     	var event = window.event || arguments.callee.caller.arguments[0];
@@ -24,11 +15,7 @@ $(function(){
 		var $popwindow = $('#pop-input');
 	    popWindow($popwindow);
 	});
-	
-//	$("#unsavedPoi-upload").click(function(){
-//		submitCheckedPoi();
-//	})
-	
+
 //	上传excel表格
 	$("input[type=file][file_type=excel]").change(function(){
 		asyncUploadExcel(this);
@@ -38,7 +25,7 @@ $(function(){
 			$("#btn-upload").attr('disabled',true);
 		}
 	});
-//  上传图片压缩包
+//	上传图片压缩包
 	$("input[type=file][file_type=zip]").change(function(){
 		asyncUploadZip(this);
 		if(($(this).attr('data_accuracy')=='true') && ($("#excel_fileup").attr('data_accuracy')=='true')){
@@ -93,9 +80,6 @@ $(function(){
             			var str = JSON.stringify(saveErrorPoi).replace(/\"/g, "&quot;").replace(/'/g,"&#39;");
             			saveErrorcontent = saveErrorcontent + "<tr>";
 
-            			//saveErrorcontent = saveErrorcontent + "<td><input type=\"checkbox\" /></td>";
-            			
-            			//saveErrorcontent = saveErrorcontent + "<td style=\"display:none;\">"+ str+"</td>";
             			saveErrorcontent = saveErrorcontent + "<td>"+ (i+1) + "</td>";
             			saveErrorcontent = saveErrorcontent + "<td>"+ saveErrorPoi.long_title + "</td>";
             			saveErrorcontent = saveErrorcontent + "<td>"+ saveErrorPoi.tag_name + "</td>";
@@ -189,122 +173,6 @@ function delPOI(obj, _id){
 	        }
 	    });
     });
-}
-
-//上传图片
-function asyncUploadThumb(obj,fileElementId) {
-	var $thumb = $(obj); //当前触发事件的元素
-	var thumbId = $thumb.attr("id"),
-		globalId = thumbId.indexOf("_");
-	var $thumburl = $("#" + thumbId.substring(0, globalId - 1)),
-		$warn = $("#" + thumbId.substring(0, globalId - 1) + "_warn");
-	var filePath = $(obj).val(),
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-		ext = filePath.substring(extStart + 1, filePath.length).toUpperCase(),
-		format = new Array('PNG', 'JPG'),    //图片格式
-		info = "图片仅限于png，jpg格式";
-	var hasError = fileFormatLimit(obj, format, ext, fileSize, $warn, info); //标志格式及大小是否符合要求
-	if (!hasError) {
-		$warn.css('display', 'none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url: host + "/manage_poi.do?method=upload_thumbnail",
-			secureuri: false,                       //是否启用安全提交,默认为false
-			fileElementId: fileElementId,           //文件选择框的id属性
-			dataType: 'json',                       //服务器返回的格式,可以是json或xml等
-			success: function (returndata) {        //服务器响应成功时的处理函数
-				if (returndata.code == '0') {
-					$thumburl.val(returndata.data.access_url);
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display', 'block');
-				}
-			},
-			error: function (returndata) { //服务器响应失败时的处理函数
-				$warn.html('图片上传失败，请重试！！');
-				$warn.css('display', 'block');
-			}
-		});
-	}
-	$thumb.val("");
-}
-//上传音频文件
-function asyncUploadAudio(obj,fileElementId){
-	var $audio = $(obj); //当前触发事件的元素
-	var audioId = $audio.attr("id"),
-		globalId = audioId.indexOf("_");
-	var $audiourl = $("#"+audioId.substring(0,globalId-1)),
-		$warn = $("#"+audioId.substring(0,globalId-1)+"_warn");
-	var filePath = $(obj).val(),
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-		ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
-		format = new Array('MP3','WAV','WMA','WAV'),    //图片格式
-		info = "音频仅限于MP3，WAV，WMA，WAV格式";
-	var hasError=fileFormatLimit(obj,format,ext,fileSize,$warn,info);   //标志格式及大小是否符合要求
-	if(!hasError){
-		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:host+"/manage_poi.do?method=upload_audio",
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId:fileElementId,           //文件选择框的id属性
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-					$audiourl.val(returndata.data.access_url);
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display','block');
-				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$warn.html('音频上传失败，请重试！！');
-				$warn.css('display','block');
-			}
-		});
-	}
-	$audio.val("");
-}
-
-//上传视频文件
-function asyncUploadVideo(obj,fileElementId){
-	var $video = $(obj); //当前触发事件的元素
-	var videoId = $video.attr("id"),
-		globalId = videoId.indexOf("_");
-	var $videourl = $("#"+videoId.substring(0,globalId-1)),
-		$warn = $("#"+videoId.substring(0,globalId-1)+"_warn");
-	var filePath = $(obj).val(),
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-		ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
-		format = new Array('AVI'),    //图片格式
-		info = "视频仅限于AVI格式";
-	var hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info);  //标志格式及大小是否符合要求
-	if(!hasError){
-		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:host+"/manage_poi.do?method=upload_video",
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId:fileElementId,           //文件选择框的id属性
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-					$videourl.val(returndata.data.access_url);
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display','block');
-				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$warn.html('视频上传失败，请重试！！');
-				$warn.css('display','block');
-			}
-		});
-	}
-	$video.val("");
 }
 
 //上传文件格式及大小限制

@@ -19,10 +19,107 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 
 public class PoiCommon {
+	
+	public static final class Excel {
+
+		/**
+		 * Excel打开时的默认Zoom值
+		 */
+		public static final Integer INIT_ZOOM = 80;
+
+		/**
+		 * FIXME:(1/3)创建新的共有字段时--->>>需要修改
+		 */
+		public static final Integer 公有字段个数 = 11;
+
+		/**
+		 * FIXME:(2/3)创建新的共有字段时--->>>需要修改<p>
+		 * 名称为空的场合以""存在，不允许出现跳过，否则会错乱
+		 */
+		public static final String[] NM_COL_BASES = new String[] {
+				"二级分类",
+				"详细介绍",
+				"缩略图",
+				"全景数据ID",
+				"联系电话"
+		};
+		/**
+		 * FIXME:(3/3)创建新的共有字段时--->>>需要修改<p>
+		 * 说明为空的场合以""存在，不允许出现跳过，否则会错乱
+		 */
+		public static final String[] DESC_COL_BASES = new String[] {
+				"二级分类名称",
+				"POI点的详细介绍",
+				"输入缩略图名称，不能包含中文",
+				"panoID或者页卡集标识",
+				"可为空\r\n：格式：(国家区号)-省市区号-具体号码"
+		};
+		/**
+		 * 模板文件名
+		 */
+		public static final String 模板文件名称 = "poi_templete.xlsx";
+		/**
+		 * 模板中的备注内容
+		 */
+		public static final String 模板Sheet名称 = "Templete_(备注)";
+
+		/**
+		 * A列
+		 */
+		public static final Integer INDEX_COL_A = 0;
+		/**
+		 * A列名称
+		 */
+		public static final String NM_COL_A = "名称";
+		/**
+		 * B列
+		 */
+		public static final Integer INDEX_COL_B = 1;
+		/**
+		 * B列名称
+		 */
+		public static final String NM_COL_B = "别名";
+		/**
+		 * C列
+		 */
+		public static final Integer INDEX_COL_C = 2;
+		/**
+		 * C列名称
+		 */
+		public static final String NM_COL_C = "纬度";
+		/**
+		 * D列
+		 */
+		public static final Integer INDEX_COL_D = 3;
+		/**
+		 * D列名称
+		 */
+		public static final String NM_COL_D = "经度";
+		/**
+		 * E列或EF两列
+		 */
+		public static final Integer INDEX_COL_E = 4;// index:4-5
+		/**
+		 * EF列名称
+		 */
+		public static final String NM_COL_E_F = "地址";
+		/**
+		 * F列
+		 */
+		public static final Integer INDEX_COL_F = 5;// index:5
+		/**
+		 * F列名称
+		 */
+		public static final String NM_COL_F = "";
+
+		/**
+		 * 基准列(强烈建议不动，如果需要增加新字段请参看 FIXME)
+		 */
+		public static final Integer INDEX_COL_BASE = 6;
+	}
 
 	public static final class POI {
 		public static final Integer 公共TAGID = 1;
-
 		/*
 		 *公共部分 
 		 */
@@ -59,7 +156,7 @@ public class PoiCommon {
 			return MsLunaMessage.getInstance().getMessage("LUNA.E0001", "POI名称");
 		}
 		if (CharactorUtil.countChineseEn(param) > POI.名称最大长度) {
-			return MsLunaMessage.getInstance().getMessage("luna.ms_00002", "POI名称", POI.名称最大长度);
+			return MsLunaMessage.getInstance().getMessage("LUNA.E0002", "POI名称", POI.名称最大长度);
 		}
 		return null;
 	}
@@ -276,6 +373,7 @@ public class PoiCommon {
 		}
 		return null;
 	}
+
 	/**
 	 * 检查联系电话是否合法<p>
 	 * 1.不能过长
@@ -463,7 +561,7 @@ public class PoiCommon {
 	}
 
 	/**
-	 * 检查私有字段值是否合法
+	 * 检查私有字段值是否合法(页面输入模式)
 	 * @param request
 	 * @param privateFieldsDef
 	 */
@@ -503,7 +601,7 @@ public class PoiCommon {
 				value = entry.getValue()[0];
 			}
 			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-			if (CharactorUtil.isPoiDataHasError(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
+			if (PoiCommon.checkPrivateField(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
 				String field_show_name = "";
 				if (privateJson != null) {
 					field_show_name = privateJson.getString("field_show_name");
@@ -514,10 +612,10 @@ public class PoiCommon {
 	}
 	/**
 	 * 转化请求参数中的私有字段到JSON中
-	 * @param request
-	 * @param privateFieldsDef
-	 * @param valueIsLabel
-	 * @return
+	 * @param request 前段传送过来的Request(含有私有以及共有字段键值对序列，只处理私有字段)
+	 * @param privateFieldsDef 私有字段的定义
+	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
+	 * @return JSONObject
 	 */
 	private JSONObject convertPrivateField2Json(HttpServletRequest request,
 			JSONArray privateFieldsDef, Boolean valueIsLabel) {
@@ -619,7 +717,66 @@ public class PoiCommon {
 		}
 		return result;
 	}
+	/**
+	 * POI私有字段合法性检查
+	 * @param value 校验内容
+	 * @param fieldDef 私有字段的定义
+	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
+	 * @return TRUE:有错误，FALSE：无错误
+	 */
+	public static boolean checkPrivateField(String value, JSONObject fieldDef, Boolean valueIsLabel) {
+		if (fieldDef == null) {
+			return true;
+		}
+		int field_type = fieldDef.getInteger("field_type");
+		int field_size = fieldDef.getInteger("field_size");
+		switch (field_type) {
+			case VbConstant.POI_FIELD_TYPE.文本框:
+				// 整数数字
+				if (field_size == -1) {
+					return !CharactorUtil.isInteger(value);
+				}
+				// 字符串
+				// 检查长度
+				return CharactorUtil.countChineseEn(value) > field_size;
 
+			case VbConstant.POI_FIELD_TYPE.文本域:
+				return CharactorUtil.countChineseEn(value) > field_size;
+
+			case VbConstant.POI_FIELD_TYPE.复选框列表:
+				if (value == null || value.isEmpty()) {
+					return false;
+				}
+				JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
+				Set<String> set = new HashSet<String>();
+				if (valueIsLabel) {
+					for (int i = 0; i < extension_attr.size(); i++) {
+						JSONObject json = extension_attr.getJSONObject(i);
+						String label = json.getString(String.valueOf(i+1));
+						set.add(label);
+					}
+				} else {
+					for (int i = 0; i < extension_attr.size(); i++) {
+						set.add(String.valueOf(i+1));
+					}
+				}
+				if ((value.contains(",")||value.contains("，"))
+						&& (value.contains(";") || value.contains("；"))) {
+					return true;
+				}
+				// 根据业务要求需要适配中英文的[；]、[;]以及中英文[，]、[,]但是分号和逗号不能同时存在
+				value = value.replace(";", ",").replace("；", ",").replace("，", ",");
+				String[] vals = value.split("," , extension_attr.size());
+				for (int i = 0; i < vals.length; i++) {
+					if (!set.remove(vals[i])) {
+						return true;
+					}
+				}
+				return false;
+			default:
+				return false;
+		}
+	}
 	/**
 	 * POI参数到JSON的转换
 	 * @param request

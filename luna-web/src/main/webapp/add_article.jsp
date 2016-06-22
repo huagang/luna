@@ -90,7 +90,7 @@
 		                <div class="group article-audio">
 		                    <p class='group-title'>音频</p>
 		                    <div class="">
-		                        <input type="text" name="audioName" id='audio' placeholder="请输入音频介绍地址">
+		                        <input type="text" name="audioName" readonly="true" id='audio' placeholder="请输入音频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>		                                
 		                        <!-- The file input field used as target for the file upload widget -->
 		                        	<input id="audio_fileup" type="file" file_type='audio' name="audio_fileup">
@@ -105,7 +105,7 @@
 		                <div class="group article-video">
 		                    <p class='group-title'>视频</p>
 		                    <div class="">
-		                        <input type="text" name="videoName" file_type='video' id='video' placeholder="请输入视频介绍地址">
+		                        <input type="text" name="videoName" readonly="true" file_type='video' id='video' placeholder="请输入视频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>                 
 		                        	<!-- The file input field used as target for the file upload widget -->
 		                        	<input id="video_fileup" type="file" name="video_fileup">
