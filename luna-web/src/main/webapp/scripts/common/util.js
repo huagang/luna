@@ -1,8 +1,8 @@
 'use strict';
 /**
  * @description: 常用方法、工具
- * @author: fangyuan(43726695@qq.com)
- * @update:
+ * @author: duyutao(452661976@qq.com)
+ * @update:2016-6-22
  */
 
 var Util = function() {

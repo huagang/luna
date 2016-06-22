@@ -1,12 +1,14 @@
 'use strict';
 /*global jQuery, $*/
+
 /**
  * @description: 接口
- * @author: fangyuan(43726695@qq.com)
- * @update:
+ * @author: duyutao(452661976@qq.com)
+ * @update:2016-6-22
  */
+
 var Inter = function() {
-    var context = "/luna-web";
+    var context = host;
     return {
         getApiUrl: function() {
             return {
@@ -18,6 +20,3 @@ var Inter = function() {
     };
 
 }();
-// jQuery(document).ready(function () {
-//     Inter.getApiUrl(); // init metronic core componets
-// });
