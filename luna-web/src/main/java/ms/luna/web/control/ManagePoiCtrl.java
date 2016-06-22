@@ -575,6 +575,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				if (subTag == null) {
 					isError = true;
 				}
+				// 检查共有字段是否合法
 				isError = isError || null != PoiCommon.getInstance().checkPoiName(long_title);
 				isError = isError || null != PoiCommon.getInstance().checkPoiOtherName(short_title);
 				isError = isError || null != PoiCommon.getInstance().checkLat(lat);
@@ -583,11 +584,12 @@ public class ManagePoiCtrl extends BasicCtrl{
 				isError = isError || null != PoiCommon.getInstance().checkPanoRama(panorama);
 				isError = isError || null != PoiCommon.getInstance().checkContactPhone(contact_phone);
 				isError = isError || CharactorUtil.fileFieldIsError(thumbnail, unzipedDir);
-				// 检查私有字段
+
+				// 检查私有字段是否合法(Excel模式)
 				for (int z = PoiCommon.Excel.公有字段个数; !isError && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 					String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 					String value = getCellValueAsString(row.getCell(z)).trim();
-					isError = isError || CharactorUtil.isPoiDataHasError(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
+					isError = isError || PoiCommon.checkPrivateField(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
 				}
 
 				// check检查有错误

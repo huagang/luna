@@ -560,7 +560,7 @@ public class PoiCommon {
 	}
 
 	/**
-	 * 检查私有字段值是否合法
+	 * 检查私有字段值是否合法(页面输入模式)
 	 * @param request
 	 * @param privateFieldsDef
 	 */
@@ -600,7 +600,7 @@ public class PoiCommon {
 				value = entry.getValue()[0];
 			}
 			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-			if (CharactorUtil.isPoiDataHasError(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
+			if (PoiCommon.checkPrivateField(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
 				String field_show_name = "";
 				if (privateJson != null) {
 					field_show_name = privateJson.getString("field_show_name");
@@ -716,7 +716,66 @@ public class PoiCommon {
 		}
 		return result;
 	}
+	/**
+	 * POI私有字段合法性检查
+	 * @param value 校验内容
+	 * @param fieldDef 私有字段的定义
+	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
+	 * @return TRUE:有错误，FALSE：无错误
+	 */
+	public static boolean checkPrivateField(String value, JSONObject fieldDef, Boolean valueIsLabel) {
+		if (fieldDef == null) {
+			return true;
+		}
+		int field_type = fieldDef.getInteger("field_type");
+		int field_size = fieldDef.getInteger("field_size");
+		switch (field_type) {
+			case VbConstant.POI_FIELD_TYPE.文本框:
+				// 整数数字
+				if (field_size == -1) {
+					return !CharactorUtil.isInteger(value);
+				}
+				// 字符串
+				// 检查长度
+				return CharactorUtil.countChineseEn(value) > field_size;
 
+			case VbConstant.POI_FIELD_TYPE.文本域:
+				return CharactorUtil.countChineseEn(value) > field_size;
+
+			case VbConstant.POI_FIELD_TYPE.复选框列表:
+				if (value == null || value.isEmpty()) {
+					return false;
+				}
+				JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
+				Set<String> set = new HashSet<String>();
+				if (valueIsLabel) {
+					for (int i = 0; i < extension_attr.size(); i++) {
+						JSONObject json = extension_attr.getJSONObject(i);
+						String label = json.getString(String.valueOf(i+1));
+						set.add(label);
+					}
+				} else {
+					for (int i = 0; i < extension_attr.size(); i++) {
+						set.add(String.valueOf(i+1));
+					}
+				}
+				if ((value.contains(",")||value.contains("，"))
+						&& (value.contains(";") || value.contains("；"))) {
+					return true;
+				}
+				// 根据业务要求需要适配中英文的[；]、[;]以及中英文[，]、[,]但是分号和逗号不能同时存在
+				value = value.replace(";", ",").replace("；", ",").replace("，", ",");
+				String[] vals = value.split("," , extension_attr.size());
+				for (int i = 0; i < vals.length; i++) {
+					if (!set.remove(vals[i])) {
+						return true;
+					}
+				}
+				return false;
+			default:
+				return false;
+		}
+	}
 	/**
 	 * POI参数到JSON的转换
 	 * @param request

@@ -169,57 +169,6 @@ public class AddPoiCtrl extends BasicCtrl{
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
 
 		return PoiCommon.getInstance().param2Json(request, privateFieldsDef, Boolean.FALSE);
-//
-//		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
-//
-//		for (int i = 0; i < privateFieldsDef.size(); i++) {
-//			JSONObject field = privateFieldsDef.getJSONObject(i);
-//			if (!field.containsKey("field_def")) {
-//				continue;
-//			}
-//			JSONObject field_def = field.getJSONObject("field_def");
-//			fieldDefMap.put(field_def.getString("field_name"), field_def);
-//		}
-//
-//		for (Entry<String, String[]> entry : set) {
-//			if (!fieldDefMap.containsKey(entry.getKey())) {
-//				continue;
-//			}
-//
-//			String value = null;
-//			if (entry.getValue().length > 1) {
-//				StringBuilder sb = new StringBuilder();
-//				for (int i = 0; i < entry.getValue().length; i++) {
-//					if (i != 0) {
-//						sb.append(",");
-//					}
-//					sb.append(entry.getValue()[i]);
-//				}
-//				value = sb.toString();
-//			} else {
-//				value = entry.getValue()[0];
-//			}
-//			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-//			if (CharactorUtil.isPoiDataHasError(value, privateJson, Boolean.FALSE)) {
-//				String field_show_name = "";
-//				if (privateJson != null) {
-//					field_show_name = privateJson.getString("field_show_name");
-//				}
-//				throw new IllegalArgumentException("[" + field_show_name + "] 数据错误，请认真确认数据！");
-//			}
-//		}
-//		for (Entry<String, String[]> entry : set) {
-//			MsLogger.debug(entry.getKey() + "\t");
-//			if (param.containsKey(entry.getKey())) {
-//				continue;
-//			}
-//			if (entry.getValue().length > 1) {
-//				param.put(entry.getKey(), entry.getValue());
-//			} else {
-//				param.put(entry.getKey(), entry.getValue()[0]);
-//			}
-//		}
-//		return param;
 	}
 
 	/**
