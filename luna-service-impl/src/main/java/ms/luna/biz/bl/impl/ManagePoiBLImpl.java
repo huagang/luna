@@ -21,6 +21,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -100,13 +101,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		List<Double> lnglatArray = null;
 		String zoneId = null;
 
+		String lang = param.getString("lang");
+
 		if (!force) {
 			// 1.名称
 			doc.put("long_title", param.getString("long_title"));
 			// 2.别名
 			doc.put("short_title", param.getString("short_title"));
 
-			// 3.类别一级菜单列表
+			// 3.类别一级菜单列表		
 			doc.put("tags", FastJsonUtil.castStrNumArray2IntNumArray(
 					this.convert2JsonArray(param, "tags")));
 
@@ -124,7 +127,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 5.地址
 			zoneId = param.getString("zone_id");
-			String mergerName = msZoneCacheBL.getMergerName(zoneId);
+
+			// 英文地域合并后的名称
+			String mergerName = null;
+			if (PoiCommon.POI.EN.equals(lang)) {
+				mergerName = msZoneCacheBL.getMergerNameEn(zoneId);
+			} else {
+				msZoneCacheBL.getMergerName(zoneId);
+			}
+
 			// zone id
 			doc.put("zone_id", zoneId);
 
@@ -137,7 +148,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 详细地址
 			doc.put("detail_address", param.getString("detail_address"));
 
-			// 6.简介
+			// 6.详细介绍
 			doc.put("brief_introduction", param.getString("brief_introduction"));
 
 			// 7.缩略图
@@ -153,13 +164,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			tag_ids = param.getString("tags");
 
 		} else {
-//			// 1.名称
+			// 1.名称
 			if (param.containsKey("long_title")) {
 				doc.put("long_title", param.getString("long_title"));
 			} else {
 				doc.put("long_title", "");
 			}
-			
+
 			// 2.别名
 			if (param.containsKey("short_title")) {
 				doc.put("short_title", param.getString("short_title"));
@@ -541,21 +552,76 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	public JSONObject updatePoi(String json) {
 
 		JSONObject param = JSONObject.parseObject(json);
+		String _id = param.getString("_id");
+
+		// 语言种类
+		String lang = param.getString("lang");
 		Document doc = this.json2BsonForInsertOrUpdate(param, Boolean.FALSE, Boolean.FALSE);
 
-		String _id = param.getString("_id");
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("$set", doc);
 
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
-		UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
+		MongoCollection<Document> poi_collection = null;
+		// 英文
+		if (PoiCommon.POI.EN.equals(lang)) {
+			poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
+			if (updateResult.getModifiedCount() == 0) {
+				updateDocument = new BasicDBObject();
+				doc.put("regist_hhmmss", doc.get("update_hhmmss"));
+				updateDocument.append("$set", doc);
+				updateResult = poi_collection.updateOne(keyId, updateDocument, new UpdateOptions().upsert(true));
+			}
+			if (updateResult.getModifiedCount() > 0 || updateResult.getUpsertedId() != null) {
+				return FastJsonUtil.sucess("success");
+			}
 
-		if (updateResult.getModifiedCount() > 0) {
-			return FastJsonUtil.sucess("success");
+			// 中文
+		} else {
+			poi_collection = mongoConnector.getDBCollection("poi_collection");
+			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
+			if (updateResult.getModifiedCount() > 0) {
+
+				// TODO:需要同步更新英文表
+				poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+				updateDocument = new BasicDBObject();
+				Document enDoc = new Document();
+				// 一级分类
+				enDoc.put("tags", doc.get("tags"));
+				// 二级分类
+				enDoc.put("sub_tag", doc.get("sub_tag"));
+				// 经纬度
+				enDoc.put("lnglat", doc.get("lnglat"));
+				// zone_id
+				enDoc.put("zone_id", doc.get("zone_id"));
+				// 省份
+				enDoc.put("province_id", doc.get("province_id"));
+				// 城市
+				enDoc.put("city_id", doc.get("city_id"));
+				// 区县
+				enDoc.put("county_id", doc.get("county_id"));
+				// 英文合并名称
+				enDoc.put("merger_name", msZoneCacheBL.getMergerNameEn((String)doc.get("zone_id")));
+				// 全景ID
+				enDoc.put("panorama", doc.get("panorama"));
+				// 更新时间
+				enDoc.put("update_hhmmss", doc.get("update_hhmmss"));
+
+				// TODO:私有字段如何维护呢？
+				updateResult = poi_collection.updateOne(keyId, updateDocument);
+				if (updateResult.getModifiedCount() == 0) {
+					updateDocument = new BasicDBObject();
+					updateDocument.append("$set", enDoc);
+					updateResult = poi_collection.updateOne(keyId, updateDocument, new UpdateOptions().upsert(true));
+				}
+
+				return FastJsonUtil.sucess("success");
+			}
 		}
-		return FastJsonUtil.error("-1", "fature");
+
+		return FastJsonUtil.error("-1", "failed");
 	}
 
 	@Override
@@ -634,8 +700,22 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		return data;
 	}
 
-	private Document getPoiById(String _id) {
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+	private Document getPoiById(String _id, String lang) {
+		MongoCollection<Document> poi_collection = null;
+
+		// 其他语种的POI(英文)
+		if (PoiCommon.POI.EN.equals(lang)) {
+			poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+			BasicDBObject keyId = new BasicDBObject();
+			keyId.put("_id", new ObjectId(_id));
+			Document doc = poi_collection.find(keyId).limit(1).first();
+			if (doc != null) {
+				return doc;
+			}
+		}
+		// 中文版POI
+		poi_collection = mongoConnector.getDBCollection("poi_collection");
+
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 		return poi_collection.find(keyId).limit(1).first(); 
@@ -738,8 +818,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject initEditPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
+
+		// 语言种类
+		String lang = param.getString("lang");
+
 		String _id = param.getString("_id");
-		Document docPoi = this.getPoiById(_id);
+		Document docPoi = this.getPoiById(_id, lang);
 		if (docPoi == null) {
 			MsLogger.debug("poi ["+_id+"] is not found!");
 			return FastJsonUtil.error("-1", "poi ["+_id+"] is not found!");
@@ -908,7 +992,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		for (int i = 0; i < no_check_errors.size(); i++) {
 			JSONObject poiJson = no_check_errors.getJSONObject(i);
 			try {
-				Document doc = json2BsonForInsertOrUpdate(poiJson, Boolean.TRUE, Boolean.FALSE);
+				Document doc = this.json2BsonForInsertOrUpdate(poiJson, Boolean.TRUE, Boolean.FALSE);
 				MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
 
 				boolean inserted = false;
@@ -957,11 +1041,6 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
 		return FastJsonUtil.sucess("success", data);
-	}
-
-	@Override
-	public JSONObject getPoi(String json) {
-		return initEditPoi(json);
 	}
 
 	private JSONArray convert2JsonArray(JSONObject param, String key) {

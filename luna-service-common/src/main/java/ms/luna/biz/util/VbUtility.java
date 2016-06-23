@@ -35,7 +35,8 @@ public final class VbUtility {
 	private static String PICS = "(\\.png|\\.bmp|\\.jpg|\\.tiff|\\.gif|\\.pcx|\\.tga|\\.exif|\\.fpx|\\.svg|\\.psd|\\.cdr|\\.pcd|\\.dxf|\\.ufo|\\.eps|\\.ai|\\.raw)";
 	private static String AUDIOS = "(\\.mp3|\\.wav|\\.wma|\\.ogg|\\.ape|\\.acc)";
 	private static String VIDEOS = "(\\.rm|\\.rmvb|\\.avi|\\.mp4|\\.3gp)";
-
+	private static String ZIPS = "(\\.zip)";
+	
 	public static String printStackTrace(Exception e) {
 		MsLogger.error(e);
 		StringWriter sw = new StringWriter();
@@ -319,6 +320,17 @@ public final class VbUtility {
 		return null;
 	}
 
+	public static String getExtensionOfZipFileName(String filename) {
+		String ext = getExtensionOfFileName(filename);
+		Pattern pattern = Pattern.compile(ZIPS, Pattern.CASE_INSENSITIVE);
+
+		Matcher matcher = pattern.matcher(ext);
+		if (matcher.matches()) {
+			return ext;
+		}
+		return null;
+	}
+	
 	/**
 	 * 判断文件名是否以.zip为后缀
 	 * @param fileName 需要判断的文件名

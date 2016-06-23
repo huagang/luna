@@ -14,6 +14,7 @@
     <result column="ref_id" property="refId" jdbcType="INTEGER" />
     <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
     <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="BIT" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" class="ms.luna.biz.dao.model.MsArticleWithBLOBs" extends="ms_article.BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -46,7 +47,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, title, abstract_pic, audio, video, business_id, column_id, author, type, ref_id, 
-    up_hhmmss, regist_hhmmss
+    up_hhmmss, regist_hhmmss, status
   </sql>
   <sql id="Blob_Column_List" >
     content, abstract_content
@@ -104,12 +105,12 @@
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article (id, title, abstract_pic, audio, video, 
       business_id, column_id, author, type, ref_id, 
-      up_hhmmss, regist_hhmmss, content, abstract_content
-      )
+      up_hhmmss, regist_hhmmss, status, content, 
+      abstract_content)
     values (#id:INTEGER#, #title:VARCHAR#, #abstractPic:VARCHAR#, #audio:VARCHAR#, #video:VARCHAR#, 
       #businessId:INTEGER#, #columnId:INTEGER#, #author:VARCHAR#, #type:BIT#, #refId:INTEGER#, 
-      #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #content:LONGVARCHAR#, #abstractContent:LONGVARCHAR#
-      )
+      #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #status:BIT#, #content:LONGVARCHAR#, 
+      #abstractContent:LONGVARCHAR#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs" >
     insert into ms_article
@@ -149,6 +150,9 @@
       </isNotNull>
       <isNotNull prepend="," property="registHhmmss" >
         regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        status
       </isNotNull>
       <isNotNull prepend="," property="content" >
         content
@@ -195,6 +199,9 @@
       </isNotNull>
       <isNotNull prepend="," property="registHhmmss" >
         #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        #status:BIT#
       </isNotNull>
       <isNotNull prepend="," property="content" >
         #content:LONGVARCHAR#
@@ -248,6 +255,9 @@
       <isNotNull prepend="," property="record.registHhmmss" >
         regist_hhmmss = #record.registHhmmss:TIMESTAMP#
       </isNotNull>
+      <isNotNull prepend="," property="record.status" >
+        status = #record.status:BIT#
+      </isNotNull>
       <isNotNull prepend="," property="record.content" >
         content = #record.content:LONGVARCHAR#
       </isNotNull>
@@ -273,6 +283,7 @@
       ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      status = #record.status:BIT#,
       content = #record.content:LONGVARCHAR#,
       abstract_content = #record.abstractContent:LONGVARCHAR#
     <isParameterPresent >
@@ -292,7 +303,8 @@
       type = #record.type:BIT#,
       ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
-      regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      status = #record.status:BIT#
     <isParameterPresent >
       <include refid="ms_article.Example_Where_Clause" />
     </isParameterPresent>
@@ -333,6 +345,9 @@
       <isNotNull prepend="," property="registHhmmss" >
         regist_hhmmss = #registHhmmss:TIMESTAMP#
       </isNotNull>
+      <isNotNull prepend="," property="status" >
+        status = #status:BIT#
+      </isNotNull>
       <isNotNull prepend="," property="content" >
         content = #content:LONGVARCHAR#
       </isNotNull>
@@ -355,6 +370,7 @@
       ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      status = #status:BIT#,
       content = #content:LONGVARCHAR#,
       abstract_content = #abstractContent:LONGVARCHAR#
     where id = #id:INTEGER#
@@ -371,7 +387,8 @@
       type = #type:BIT#,
       ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
-      regist_hhmmss = #registHhmmss:TIMESTAMP#
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      status = #status:BIT#
     where id = #id:INTEGER#
   </update>
 </sqlMap>

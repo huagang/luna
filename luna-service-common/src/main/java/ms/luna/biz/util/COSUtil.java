@@ -191,6 +191,20 @@ public class COSUtil {
 		return cosWrapper.uploadFile2Cloud(bytes, localServerTempPath, bucket, remotePath);
 	}
 
+	/**
+	 * 将文件之间上传到云
+	 * @param file 
+	 * @param bucket 
+	 * @param folder
+	 * @param filename 指定文件名
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject upload2Cloud(MultipartFile file, String bucket, String folder, String filename) throws Exception {
+		cosWrapper.upload2CloudDirect(file.getBytes(), bucket, folder, filename);
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		COSUtil.getInstance().deleteDirRecursive("/dev/h5/app/test/");
 	}

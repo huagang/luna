@@ -17,4 +17,18 @@ public class MsPoiFieldDAOImpl extends MsPoiFieldDAOBaseImpl implements MsPoiFie
 		List<MsTagFieldResult> results = getSqlMapClientTemplate().queryForList("ms_poi_field.selectFieldTags", msTagFieldParameter);
 		return results == null ? new ArrayList<MsTagFieldResult>() : results;
 	}
+
+	@Override
+	public List<MsTagFieldResult> selectPoiTags(MsTagFieldParameter msTagFieldParameter) {
+		@SuppressWarnings("unchecked")
+		List<MsTagFieldResult> list = getSqlMapClientTemplate().queryForList("ms_poi_field.selectPoiTags", msTagFieldParameter);
+		return list;
+	}
+
+	@Override
+	public List<MsTagFieldResult> selectFieldNames(MsTagFieldParameter msTagFieldParameter) {
+		@SuppressWarnings("unchecked")
+		List<MsTagFieldResult> list = getSqlMapClientTemplate().queryForList("ms_poi_field.selectFieldNames", msTagFieldParameter);
+		return list;
+	}
 }

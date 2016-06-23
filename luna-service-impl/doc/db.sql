@@ -11,6 +11,7 @@ CREATE TABLE `ms_article` (
   `author` varchar(20) NOT NULL COMMENT '作者',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型,0:中文,1:英文',
   `ref_id` int(11) NOT NULL DEFAULT '0' COMMENT '对应的中/英文文章id',
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '状态,0:未发布,1:已发布',
   `up_hhmmss` timestamp NULL DEFAULT NULL,
   `regist_hhmmss` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),

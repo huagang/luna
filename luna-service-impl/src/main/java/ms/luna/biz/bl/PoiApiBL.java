@@ -22,4 +22,7 @@ public interface PoiApiBL {
 
 	// 获取某个业务某个/几个标签下所有poi数据
 	JSONObject getPoisByBizIdAndTags(String json);
+	
+	// 获得第一层所有poi数据
+	JSONObject getPoisInFirstLevel(String json);
 }

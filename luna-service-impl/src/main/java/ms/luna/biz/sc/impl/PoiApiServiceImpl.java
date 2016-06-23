@@ -74,4 +74,15 @@ public class PoiApiServiceImpl implements PoiApiService {
 		return jSONObject;
 	}
 
+	@Override
+	public JSONObject getPoisInFirstLevel(String json) {
+		JSONObject jSONObject = null;
+		try {
+			jSONObject = poiApiBL.getPoisInFirstLevel(json);
+		} catch (Exception e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return jSONObject;
+	}
+
 }

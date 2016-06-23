@@ -2,12 +2,68 @@
  * Created by chenshangan on 6/16/16.
  */
 //app初始化
+
+var initPage = function() {
+
+    //初始化table
+    var initTable = function() {
+        var id = 0,
+            getRows = function() {
+                var rows = [];
+                for (var i = 0; i < 10; i++) {
+                    rows.push({
+                        id: id
+                    });
+                    id++;
+                }
+                return rows;
+            },
+            $table = $('#table_article').bootstrapTable({
+                data: getRows()
+            });
+    }
+
+    return {
+        init: function() {
+            initTable();
+        }
+    }
+}
+
+
+jQuery('document').ready(function(e) {
+    initPage.init();
+    // function timeFormatter(value, row, index) {
+    //     return '创建于：<span class="time-create">' + row.regist_hhmmss + '</span><br>' + '修改于：<span class="time-create">' + row.up_hhmmss + '</span>';
+    // }
+
+    // function operationFormatter(value, row, index) {
+    //     var id = row.id;
+    //     var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
+    //     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, name);
+
+    //     return editOp + deleteOp;
+    // }
+
+    // function queryParams(params) {
+    //     //alert(JSON.stringify(params));
+    //     return {
+    //         limit: params.limit,
+    //         offset: params.offset,
+    //         sort: params.sort,
+    //         order: params.order
+    //     }
+    // };
+});
+
+
+
 var manageArticle = angular.module('manageArticle', []);
 manageArticle.run(function($rootScope, $http) {
-    $http.defaults.headers.post = {'Content-Type': 'application/x-www-form-urlencoded'};
+    $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function(obj) {
         var str = [];
-        for(var p in obj) {
+        for (var p in obj) {
             str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         }
         return str.join("&");
@@ -39,11 +95,11 @@ function ArticleController($scope, $rootScope, $http) {
 
     };
 
-    this.changeProvince = function () {
+    this.changeProvince = function() {
         change_province();
     };
 
-    this.changeCity = function () {
+    this.changeCity = function() {
         change_city();
     }
     this.searchBusiness = function() {
@@ -59,45 +115,46 @@ function ArticleController($scope, $rootScope, $http) {
         };
         $http(request).then(function success(response) {
             var data = response.data;
-            if(data.code != '0') {
+            if (data.code != '0') {
                 $.alert(data.msg);
             } else {
                 $scope.article.businessOptions = data.data.rows;
             }
-        }, function error(response){
+        }, function error(response) {
             $.alert(response.data.msg);
         });
 
     };
 
     this.loadProvinces = function() {
-        if(this.provinceOptions.length != 0) {
+        if (this.provinceOptions.length != 0) {
             return;
         }
         var url = host + '/pulldown.do?method=load_provinces'
         $http.get(url).then(function success(response) {
-            var data = response.data;
-            if('0' == data.code) {
-                $scope.article.provinceOptions = data.data;
-            }
-        },
-        function error(response) {
-            //$.alert(response.data.msg);
-        });
+                var data = response.data;
+                if ('0' == data.code) {
+                    $scope.article.provinceOptions = data.data;
+                }
+            },
+            function error(response) {
+                //$.alert(response.data.msg);
+            });
     };
 
     this.showDialog = function($popwindow) {
+        // popWindow($popwindow);
         var h = $popwindow.height();
         var w = $popwindow.width();
         var $height = $(window).height();
         var $width = $(window).width();
-        if($height < h){
+        if ($height < h) {
             h = $height;
         }
         $popwindow.css({
-            "display":"block",
-            "top":($height-h)/2,
-            "left":($width-w)/2
+            "display": "block",
+            "top": ($height - h) / 2,
+            "left": ($width - w) / 2
         });
     };
 
@@ -110,7 +167,7 @@ function ArticleController($scope, $rootScope, $http) {
 
     this.hideNewArticleDialog = function() {
         this.dialogBaseShow = false;
-        this.newArticleShow  = false;
+        this.newArticleShow = false;
     };
 
     this.isEnable = function() {
@@ -118,9 +175,9 @@ function ArticleController($scope, $rootScope, $http) {
     };
 
     this.showCreateArticlePage = function() {
-        if(this.businessId) {
+        if (this.businessId) {
             window.location.href = host +
-            '/manage/article.do?method=create_article&business_id={0}'.format(this.businessId);
+                '/manage/article.do?method=create_article&business_id={0}'.format(this.businessId);
         }
 
     };
@@ -137,7 +194,7 @@ function ArticleController($scope, $rootScope, $http) {
         this.deleteArticleShow = false;
     };
 
-    this.submitDeleteArticle = function(id){
+    this.submitDeleteArticle = function(id) {
         var request = {
             method: 'POST',
             url: host + '/manage/article.do?method=delete_article',
@@ -147,13 +204,13 @@ function ArticleController($scope, $rootScope, $http) {
         };
         $http(request).then(function success(response) {
             var data = response.data;
-            if(data.code != '0') {
+            if (data.code != '0') {
                 $.alert(data.msg);
             } else {
                 $scope.article.hideDeleteDialog();
                 $('#table_article').bootstrapTable("refresh");
             }
-        }, function error(response){
+        }, function error(response) {
             $.alert(response.data.msg);
         });
 

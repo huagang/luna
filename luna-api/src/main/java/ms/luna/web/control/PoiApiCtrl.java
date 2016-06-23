@@ -34,24 +34,15 @@ public class PoiApiCtrl {
 	 * @param level 层级
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
 	 */
-	@RequestMapping(params = "method=getPoisWithLevel")
-	public void getPoisWithLevel(
+	@RequestMapping(params = "method=getPoisInFirstLevel")
+	public void getPoisInFirstLevel(
 			@RequestParam(required = true, value = "business_id") Integer business_id, 
-			@RequestParam(required = false, value = "level") Integer level,
 			@RequestParam(required = false, value = "fields") String fields,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		try{
-			if(level == null) {
-				level = 1;
-			}
-			if(level < 1){
-				response.getWriter().print(FastJsonUtil.error("-1", "level错误，不能小于1"));
-				response.setStatus(200);
-				return;
-			}
 			if(fields == null){
 				fields = "";
 			} else {
@@ -59,10 +50,9 @@ public class PoiApiCtrl {
 			}
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("business_id", business_id);
-			param.put("level", level);
 			param.put("fields", fields);
 			
-			JSONObject result = poiApiService.getPoisWithLevel(param.toString());
+			JSONObject result = poiApiService.getPoisInFirstLevel(param.toString());
 			MsLogger.debug(result.toString());
 			response.getWriter().print(result);
 			response.setStatus(200);
@@ -193,6 +183,7 @@ public class PoiApiCtrl {
 	@RequestMapping(params = "method=getPoisByBizIdAndTags")
 	public void getPoisByBizIdAndTags(
 			@RequestParam(required = true, value = "business_id") Integer business_id,
+			@RequestParam(required = true, value = "type") String type,
 			@RequestParam(required = true, value = "tags") String tags,
 			@RequestParam(required = false, value = "fields") String fields,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -212,10 +203,14 @@ public class PoiApiCtrl {
 			} else {
 				fields = fields.trim();
 			}
+			if(type.equals("hotel_type")){
+				type = "type";
+			}
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("business_id", business_id);
 			param.put("tags", tags);
 			param.put("fields", fields);
+			param.put("type", type);
 			
 			JSONObject result = poiApiService.getPoisByBizIdAndTags(param.toString());
 			MsLogger.debug(result.toString());

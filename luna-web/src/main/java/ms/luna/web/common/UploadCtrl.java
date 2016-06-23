@@ -2,6 +2,8 @@ package ms.luna.web.common;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.VODUtil;
+import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
+import ms.luna.biz.cons.VbConstant.UPLOAD_FILE_TYPE;
 import ms.luna.biz.util.COSUtil;
 import com.alibaba.fastjson.JSONObject;
 @Component("uploadCtrl")
@@ -105,6 +111,161 @@ public class UploadCtrl {
 	public void uploadAudio(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
+	}
+	
+	//-----------------------------------------------------------------------------------------------------
+	@RequestMapping(params = "method=uploadFile2Cloud")
+	public void uploadFile2Cloud(@RequestParam(required = true, value = "file") MultipartFile file,
+			@RequestParam(required = true, value = "type") String type,  		// 上传类型
+			@RequestParam(required = false, value = "bucket") String bucket,	// bucket
+			@RequestParam(required = false, value = "path") String path,		// 路径
+			@RequestParam(required = false, value = "filename") String filename,// 文件名
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		try{
+			// 类型检查
+			boolean flag = checkType(type);
+			if(!flag){
+				response.getWriter().print(FastJsonUtil.error("-1", "type must be image, audio, video or zip"));
+				response.setStatus(200);
+				return;
+			}
+			// 后缀名获取和检查
+			String ext = getExt(type,file.getOriginalFilename());// 
+			if (ext == null) {
+				response.getWriter().print(FastJsonUtil.error("-1", "filename extension is wrong"));
+				response.setStatus(200);
+				return;
+			}
+			// 文件大小检查
+			flag = checkFileSize(file,type);
+			if(!flag){
+				response.getWriter().print(FastJsonUtil.error("-1", "file size is larger"));
+				response.setStatus(200);
+				return;
+			}
+			// bucket
+			if(bucket == null){
+				bucket = getDefaultBucket(type);// 获取默认bucket
+			}
+			// 目录
+			if(path == null){
+				path = getDefaultPath(type);// 获取默认路径
+			}
+			// 文件名
+			if(filename == null){
+				filename = getDefaultName(ext);
+			}
+			
+			JSONObject result = uploadFile2Cloud(request, response, file, type, bucket, path, filename);
+			MsLogger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
+			
+			response.getWriter().print(result);
+			response.setStatus(200);
+		} catch(Exception e){
+			response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload file: " + e));
+			response.setStatus(200);
+		}
+			
+	}
+
+	private JSONObject uploadFile2Cloud(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
+			String type, String bucket, String path, String filename) throws Exception {
+		JSONObject result = new JSONObject();
+		if(type.equals(UPLOAD_FILE_TYPE.PIC) || type.equals(UPLOAD_FILE_TYPE.AUDIO)){
+			result = COSUtil.getInstance().upload2Cloud(file, bucket, path, filename);
+		} else if(type.equals(UPLOAD_FILE_TYPE.VIDEO)){
+			result = VODUtil.getInstance().upload2Cloud(request, response, file, bucket, path, filename);
+		} else if(type.equals(UPLOAD_FILE_TYPE.ZIP)){
+			//TODO
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 获得默认文件名(带后缀)
+	 * 
+	 * @param ext 文件后缀
+	 * @return
+	 */
+	private String getDefaultName(String ext) {
+		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		String fileNameInCloud = VbMD5.generateToken() + ext;
+		return fileNameInCloud;
+	}
+	
+	/**
+	 * 获得默认的文件路径
+	 * 
+	 * @param type 文件类型
+	 * @return
+	 */
+	private String getDefaultPath(String type) {
+		// TODO
+		return null;
+	}
+
+	/**
+	 * 获得默认的bucket
+	 * 
+	 * @param type 文件类型
+	 * @return
+	 */
+	private String getDefaultBucket(String type) {
+		// TODO
+		return null;
+	}
+
+	/**
+	 * 检查文件的大小是否符合要求
+	 * 
+	 * @param file 上传文件
+	 * @param type 文件类型
+	 * @return
+	 * @throws IOException 
+	 */
+	private boolean checkFileSize(MultipartFile file, String type) throws IOException {
+		// TODO
+		return false;
+	}
+
+	/**
+	 * 返回文件的后缀
+	 * 
+	 * @param type 文件类型
+	 * @param originalFilename 文件名（带后缀）
+	 * @return
+	 */
+	private String getExt(String type, String originalFilename) {
+		if(type.equals(UPLOAD_FILE_TYPE.PIC)){
+			return VbUtility.getExtensionOfPicFileName(originalFilename);
+		}
+		if(type.equals(UPLOAD_FILE_TYPE.AUDIO)){
+			return VbUtility.getExtensionOfAudioFileName(originalFilename);
+		}
+		if(type.equals(UPLOAD_FILE_TYPE.VIDEO)){
+			return VbUtility.getExtensionOfVideoFileName(originalFilename);
+		}
+		if(type.equals(UPLOAD_FILE_TYPE.ZIP)){
+			return VbUtility.getExtensionOfZipFileName(originalFilename);
+		}
+		return null;
+	}
+
+	/**
+	 * 检查文件类型是否满足要求
+	 * 
+	 * @param type 文件类型
+	 * @return
+	 */
+	private boolean checkType(String type) {
+		if(type.equals(UPLOAD_FILE_TYPE.PIC) || type.equals(UPLOAD_FILE_TYPE.AUDIO) || type.equals(UPLOAD_FILE_TYPE.VIDEO) || type.equals(UPLOAD_FILE_TYPE.ZIP)){
+			return true;
+		}
+		return false;
 	}
 
 }

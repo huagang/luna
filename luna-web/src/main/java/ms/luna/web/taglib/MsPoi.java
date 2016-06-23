@@ -8,6 +8,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.util.CreateHtmlUtil;
+import ms.luna.common.PoiCommon;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -24,6 +26,11 @@ public class MsPoi extends TagSupport {
 	 * 是否为只读模式
 	 */
 	private Boolean readonly;
+
+	/**
+	 * 语言种类
+	 */
+	private String lang;
 
 	/***
 	 * 
@@ -50,7 +57,7 @@ public class MsPoi extends TagSupport {
 						break;
 
 					case VbConstant.POI_FIELD_TYPE.复选框列表:
-						this.generateCheckBoxsTag(privateField);
+						this.generateCheckBoxsTag(privateField, lang);
 						break;
 
 					case VbConstant.POI_FIELD_TYPE.POINT:
@@ -113,7 +120,7 @@ public class MsPoi extends TagSupport {
 		out.append(poiInputArea);
 	}
 
-	private void generateCheckBoxsTag(JSONObject privateTag) throws IOException {
+	private void generateCheckBoxsTag(JSONObject privateTag, String lang) throws IOException {
 		JspWriter out = pageContext.getOut();
 		JSONObject field_def = privateTag.getJSONObject("field_def");
 		if (!field_def.containsKey("tag_id")) {
@@ -125,7 +132,8 @@ public class MsPoi extends TagSupport {
 		if (!field_def.containsKey("field_name")) {
 			throw new RuntimeException("field_name is mandatory!");
 		}
-		String poiCheckBoxs = CreateHtmlUtil.getInstance().convert2CheckBoxs(privateTag, readonly);
+		String poiCheckBoxs = CreateHtmlUtil.getInstance().convert2CheckBoxs(privateTag,
+				readonly || PoiCommon.POI.EN.equals(lang));
 		out.append(poiCheckBoxs);
 }
 
@@ -171,6 +179,20 @@ public class MsPoi extends TagSupport {
 	 */
 	public void setReadonly(Boolean readonly) {
 		this.readonly = readonly;
+	}
+
+	/**
+	 * @return the lang
+	 */
+	public String getLang() {
+		return lang;
+	}
+
+	/**
+	 * @param lang the lang to set
+	 */
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
 

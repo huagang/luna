@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.bl.MsZoneCacheBL;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.dao.custom.MsZoneDAO;
 import ms.luna.biz.dao.model.MsZone;
 import ms.luna.biz.dao.model.MsZoneCriteria;
@@ -31,7 +32,7 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 
 	private static String getZoneName2MsZoneId(String zoneName, int level) {
 		MsZone msZone = name2MsZone.get(zoneName + "#" + level);
-		return msZone == null ? "ALL" : msZone.getId();
+		return msZone == null ? VbConstant.ZonePulldown.ALL : msZone.getId();
 	}
 
 	/**
@@ -131,6 +132,33 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 	}
 
 	@Override
+	public String getMergerNameEn(String zoneId) {
+		String provinceId = this.getProvinceId(zoneId);
+		StringBuffer mergedNameEn = new StringBuffer();
+		if (!VbConstant.ZonePulldown.ALL.equals(provinceId)) {
+			MsZone msZone = msZoneCache.get(provinceId);
+			if (msZone != null) {
+				mergedNameEn.append(msZone.getPinyin());
+			}
+		}
+		String cityId = this.getCityId(zoneId);
+		if (!VbConstant.ZonePulldown.ALL.equals(cityId)) {
+			MsZone msZone = msZoneCache.get(cityId);
+			if (msZone != null) {
+				mergedNameEn.append(",").append(msZone.getPinyin());
+			}
+		}
+		String countyId = this.getCountyId(zoneId);
+		if (!VbConstant.ZonePulldown.ALL.equals(countyId)) {
+			MsZone msZone = msZoneCache.get(countyId);
+			if (msZone != null) {
+				mergedNameEn.append(",").append(msZone.getPinyin());
+			}
+		}
+		return mergedNameEn.toString();
+	}
+
+	@Override
 	public String getMergerName(String zoneId) {
 		String mergerName = mergerNameOfZoneIdMap.get(zoneId);
 		if (mergerName != null) {
@@ -154,11 +182,11 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 	public String getProvinceId(String zoneId) {
 		MsZone msZone = msZoneCache.get(zoneId);
 		if (msZone == null) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		}
 		Integer level = Integer.parseInt(msZone.getLevelType());
 		if (level < 1) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		} else if (level > 1) {
 			return getProvinceId(msZone.getParentId());
 		} else {
@@ -170,11 +198,11 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 	public String getCityId(String zoneId) {
 		MsZone msZone = msZoneCache.get(zoneId);
 		if (msZone == null) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		}
 		Integer level = Integer.parseInt(msZone.getLevelType());
 		if (level < 2) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		} else if (level > 2) {
 			return getCityId(msZone.getParentId());
 		} else {
@@ -186,11 +214,11 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 	public String getCountyId(String zoneId) {
 		MsZone msZone = msZoneCache.get(zoneId);
 		if (msZone == null) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		}
 		Integer level = Integer.parseInt(msZone.getLevelType());
 		if (level < 3) {
-			return "ALL";
+			return VbConstant.ZonePulldown.ALL;
 		} else if (level > 3) {
 			return getCountyId(msZone.getParentId());
 		} else {

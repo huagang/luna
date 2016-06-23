@@ -119,6 +119,15 @@ public class PoiCommon {
 	}
 
 	public static final class POI {
+		/**
+		 * 中文
+		 */
+		public static final String ZH = "zh";
+		/**
+		 * 英文
+		 */
+		public static final String EN = "en";
+
 		public static final Integer 公共TAGID = 1;
 		/*
 		 *公共部分 

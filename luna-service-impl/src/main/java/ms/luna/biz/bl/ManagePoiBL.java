@@ -26,13 +26,6 @@ public interface ManagePoiBL {
 	JSONObject addPoi(String json);
 
 	/**
-	 * 获取Poi值
-	 * @param json
-	 * @return
-	 */
-	JSONObject getPoi(String json);
-
-	/**
 	 * 更新POI
 	 * @param json
 	 * @return

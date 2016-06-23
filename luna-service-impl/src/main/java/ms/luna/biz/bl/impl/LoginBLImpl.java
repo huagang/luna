@@ -11,6 +11,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -161,10 +163,12 @@ public class LoginBLImpl implements LoginBL {
 		}
 
 		Set<String> accessUris = new HashSet<String>();
+		Set<Integer> resourceIdSet = new HashSet<>();
 		for (MsRFunctionResourceUri msRFunctionResourceUri : lstMsRFunctionResourceUri) {
-			this.loadUris(accessUris, msRFunctionResourceUri.getResourceId());
+			resourceIdSet.add(msRFunctionResourceUri.getResourceId());
 		}
 
+		this.loadUris(accessUris, resourceIdSet);
 		// 由于有外键关联，角色一定有值，且不为空值
 		MsRole msRole = msRoleDAO.selectByPrimaryKey(lstMsRUserRole.get(0).getMsRoleCode());
 		JSONObject data = JSONObject.parseObject("{}");
@@ -195,40 +199,50 @@ public class LoginBLImpl implements LoginBL {
 	}
 
 	/**
-	 * 递归获取资源列表
+	 *
 	 * @param accessUris
-	 * @param resourceId
+	 * @param resourceIdSet
 	 * @return
 	 */
-	private Set<String> loadUris(Set<String> accessUris ,Integer resourceId) {
-		MsResourceUri msResourceUri = msResourceUriDAO.selectByPrimaryKey(resourceId);
-		if (msResourceUri == null || !msResourceUri.getStatus()) {
-			MsLogger.debug("resourceId is missing: [" + resourceId + "]");
-			return accessUris;
-		}
-		// 叶子节点是内容
-		if (msResourceUri.getResourceUri() != null && !msResourceUri.getResourceUri().trim().isEmpty()) {
-			accessUris.add(msResourceUri.getResourceUri());
-			return accessUris;
-		}
+	private void loadUris(Set<String> accessUris, Set<Integer> resourceIdSet) {
 		MsResourceUriCriteria msResourceUriCriteria = new MsResourceUriCriteria();
-		msResourceUriCriteria.createCriteria()
-		.andParentIdEqualTo(msResourceUri.getResourceId())
-		.andStatusEqualTo(Boolean.TRUE);
-
-		List<MsResourceUri> lstMsResourceUri = msResourceUriDAO.selectByCriteria(msResourceUriCriteria);
-		if (lstMsResourceUri == null || lstMsResourceUri.isEmpty()) {
-			return accessUris;
+		msResourceUriCriteria.createCriteria().andResourceIdIn(Lists.newArrayList(resourceIdSet)).andStatusEqualTo(Boolean.TRUE);
+		List<MsResourceUri> msResourceUriList = msResourceUriDAO.selectByCriteria(msResourceUriCriteria);
+		if (msResourceUriList == null || msResourceUriList.isEmpty()) {
+			return;
 		}
-		for (MsResourceUri tempMsResourceUri : lstMsResourceUri) {
-			if (tempMsResourceUri.getResourceUri() != null && !tempMsResourceUri.getResourceUri().trim().isEmpty()) {
-				logger.debug("auth uri: " + tempMsResourceUri.getResourceUri());
-				accessUris.add(tempMsResourceUri.getResourceUri());
+
+		Set<Integer> parentIdSet = new HashSet<>();
+		for (MsResourceUri msResourceUri : msResourceUriList) {
+			// 叶子节点是内容
+			if (!StringUtils.isBlank(msResourceUri.getResourceUri())) {
+				accessUris.add(msResourceUri.getResourceUri());
 			} else {
-				this.loadUris(accessUris, tempMsResourceUri.getResourceId());
+				parentIdSet.add(msResourceUri.getResourceId());
 			}
 		}
-		return accessUris;
+		while(true) {
+			if (parentIdSet.size() == 0) {
+				return;
+			}
+
+			msResourceUriCriteria.clear();
+			msResourceUriCriteria.createCriteria().andParentIdIn(Lists.newArrayList(parentIdSet)).andStatusEqualTo(Boolean.TRUE);
+
+			msResourceUriList = msResourceUriDAO.selectByCriteria(msResourceUriCriteria);
+			if (msResourceUriList == null || msResourceUriList.isEmpty()) {
+				return;
+			}
+			// clear parentId set
+			parentIdSet.clear();
+			for (MsResourceUri msResourceUri : msResourceUriList) {
+				if (!StringUtils.isBlank(msResourceUri.getResourceUri())) {
+					accessUris.add(msResourceUri.getResourceUri());
+				} else {
+					parentIdSet.add(msResourceUri.getResourceId());
+				}
+			}
+		}
 	}
 
 	@Override
