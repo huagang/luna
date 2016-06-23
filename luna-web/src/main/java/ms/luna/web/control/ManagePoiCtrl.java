@@ -329,6 +329,28 @@ public class ManagePoiCtrl extends BasicCtrl{
 		}
 	}
 
+	@RequestMapping(params = "method=checkPoiCanBeDeleteOrNot")
+	public void checkPoiCanBeDeleteOrNot(@RequestParam(required = true, value="_id") String _id,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		try {
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+			JSONObject param = new JSONObject();
+			param.put("_id", _id);
+			JSONObject poisResult = managePoiService.checkPoiCanBeDeleteOrNot(param.toString());
+			MsLogger.info(poisResult.toJSONString());
+			response.getWriter().print(poisResult.toJSONString());
+			response.setStatus(200);
+			return;
+		} catch (Exception e) {
+			MsLogger.debug(e);
+			response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
+			response.setStatus(200);
+			return;
+		}
+	}
+
 	@RequestMapping(params = "method=asyncUploadPoisByExcel")
 	public void asyncUploadPoisByExcel(
 			@RequestParam(required = true, value = "excel_fileup")

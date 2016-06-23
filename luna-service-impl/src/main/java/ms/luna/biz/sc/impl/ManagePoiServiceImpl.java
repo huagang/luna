@@ -125,5 +125,15 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		}
 		return result;
 	}
+	@Override
+	public JSONObject checkPoiCanBeDeleteOrNot(String json) {
+		JSONObject result = null;
+		try {
+			result = managePoiBL.checkPoiCanBeDeleteOrNot(json);
+		} catch (RuntimeException e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
 
 }

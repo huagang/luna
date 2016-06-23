@@ -648,6 +648,19 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String _id = param.getString("_id");
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
+
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		Document document = poi_business_tree_index.find(keyId).limit(1).first();
+		Boolean isUsing = false;
+		if (document != null) {
+			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+			if (used_in_business.size() > 0) {
+				isUsing = true;
+			}
+		}
+		if (isUsing) {
+			return FastJsonUtil.error("-2", "该POI在业务关系配置中已经投入使用，请先从业务关系配置中移除！");
+		}
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
 		DeleteResult deleteResult = poi_collection.deleteOne(keyId);
 		if (deleteResult.getDeletedCount() > 0) {
@@ -1093,5 +1106,27 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject getTagsDef(String json) {
 		return FastJsonUtil.sucess("OK", this.getCommonFieldsDef());
+	}
+
+	@Override
+	public JSONObject checkPoiCanBeDeleteOrNot(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String _id = param.getString("_id");
+		BasicDBObject keyId = new BasicDBObject();
+		keyId.put("_id", new ObjectId(_id));
+
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		Document document = poi_business_tree_index.find(keyId).limit(1).first();
+		Boolean isUsing = false;
+		if (document != null) {
+			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+			if (used_in_business.size() > 0) {
+				isUsing = true;
+			}
+		}
+		if (isUsing) {
+			return FastJsonUtil.error("-2", "该POI在业务关系配置中已经投入使用，请先从业务关系配置中移除！");
+		}
+		return FastJsonUtil.error("0", "可以被删除");
 	}
 }

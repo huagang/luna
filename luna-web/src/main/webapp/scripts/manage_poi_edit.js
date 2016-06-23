@@ -136,42 +136,73 @@ function newBlankPoiReadOnly(_id) {
 
 //“删除”按钮，删除POI数据
 function delPOI(obj, _id){
-    var target = $(obj).parent().parent();
-    var $popwindow = $('#pop-delete');
-    popWindow($popwindow);
-    //弹窗中的确定按钮
-    $("#btn-delete").unbind().click(function(){
-        $.ajax({
-	        url: host+'/manage_poi.do?method=asyncDeletePoi',
-	        type: 'POST',
-	        async: false,
-	        data: {"_id":_id},
-	        dataType:"json",
-	        success: function (returndata) {
-	            var result = returndata;
-	            switch (result.code){
-	                case "0":
-	                	// 正常删除
-	                	$("#pop-overlay").css("display","none");
-	                    $popwindow.css("display","none");
-	                    $('#condition_search').click();
-						break;
-				 default:
-					 $("#status-message").html(result.msg).css('display','block');
-		            	setTimeout(function(){
-		            		$("#status-message").css('display','none');
-		            	 },2000);
-		            	break;
-	            }
-	        },
-	        error: function (returndata) {
-	            $("#status-message").html('请求失败！').css('display','block');
-            	setTimeout(function(){
-            		$("#status-message").css('display','none');
-            	 },2000);
-            	return;
-	        }
-	    });
+	$.ajax({
+        url: host+'/manage_poi.do?method=checkPoiCanBeDeleteOrNot',
+        type: 'POST',
+        async: false,
+        data: {"_id":_id},
+        dataType:"json",
+        success: function (returndata) {
+            var result = returndata;
+            switch (result.code){
+                case "0":
+                	// 可以被正常删除
+                	var target = $(obj).parent().parent();
+                    var $popwindow = $('#pop-delete');
+                    popWindow($popwindow);
+                    //弹窗中的确定按钮
+                    $("#btn-delete").unbind().click(function(){
+                        $.ajax({
+                	        url: host+'/manage_poi.do?method=asyncDeletePoi',
+                	        type: 'POST',
+                	        async: false,
+                	        data: {"_id":_id},
+                	        dataType:"json",
+                	        success: function (returndata) {
+                	            var result = returndata;
+                	            switch (result.code){
+                	                case "0":
+                	                	// 正常删除
+                	                	$("#pop-overlay").css("display","none");
+                	                    $popwindow.css("display","none");
+                	                    $('#condition_search').click();
+                						break;
+                				   default:
+                					 $("#status-message").html(result.msg).css('display','block');
+                		            	setTimeout(function(){
+                		            		$("#status-message").css('display','none');
+                		            	 },2000);
+                		            	break;
+                	            }
+                	        },
+                	        error: function (returndata) {
+                	            $("#status-message").html('请求失败！').css('display','block');
+                            	setTimeout(function(){
+                            		$("#status-message").css('display','none');
+                            	 },2000);
+                            	return;
+                	        }
+                	    });
+                    });
+					break;
+                case "-2":
+                	$.alert(result.msg);
+                	break;
+                default:
+                	$("#status-message").html(result.msg).css('display','block');
+	            	setTimeout(function(){
+	            		$("#status-message").css('display','none');
+	            	 },2000);
+	            	break;
+            }
+        },
+        error: function (returndata) {
+            $("#status-message").html('请求失败！').css('display','block');
+        	setTimeout(function(){
+        		$("#status-message").css('display','none');
+        	 },2000);
+        	return;
+        }
     });
 }
 

@@ -76,4 +76,11 @@ public interface ManagePoiBL {
 	 * @return
 	 */
 	JSONObject getTagsDef(String json);
+
+	/**
+	 * 检查POI是否可以被删除
+	 * @param json
+	 * @return
+	 */
+	JSONObject checkPoiCanBeDeleteOrNot(String json);
 }
