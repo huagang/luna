@@ -245,11 +245,11 @@ var initPage = function() {
     var initEvent = function() {
         // 事件绑定  保存按钮点击事件
         document.querySelector('.save').addEventListener('click', function(e) {
-            // var error = articleStore.checkEmpty().error;
-            // if (error) {
-            //     alert(error);
-            //     return;
-            // }
+             var error = articleStore.checkEmpty().error;
+         	if (error) {
+         		alert(error);
+         		return;
+         	}
             var data = {
             	id: articleStore.id || null,
             	business_id: articleStore.business_id,
@@ -318,9 +318,11 @@ var initPage = function() {
                 dataType: "json",
                 success: function(data) {
                     if (data.code == "0") {
+                    	 alert("发布成功");
                          console.log("发布成功");
                     } else {
                         console.log("发布失败");
+                        alert("发布失败");
                     }
                 },
                 error: function(data) {
@@ -461,8 +463,8 @@ var initPage = function() {
                     if (!this[item.id]) {
                         error += item.name + '项为空\n   ';
                     }
-                    return { error: error || null };
-                }.bind(this))
+                }.bind(this));
+                return { error: error || null };
             },
         };
         return articleStore;
@@ -538,7 +540,7 @@ var initPage = function() {
     	$("#thumbnail_show").attr('src', articleStore.thumbnail);
     	$("#audio").val(articleStore.audio);
     	$("#video").val(articleStore.video);
-    	$("#category").val(articleStore.category);
+    	$("#category option[value='" + articleStore.category +"']").attr("selected","selected")
     }
     return {
         init: function() {
