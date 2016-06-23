@@ -252,6 +252,7 @@ var initPage = function() {
             // }
             var data = {
             	id: articleStore.id || null,
+            	business_id: articleStore.business_id,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -388,6 +389,14 @@ var initPage = function() {
          *  video 视频
          *  category 栏目
          * */
+    	var business_id;
+    	try{
+    		 business_id = parseInt(location.href.match(/business_id=(\d+)/)[1]);
+    	} catch(e){
+    		business_id = null;
+    		console.error('url中缺乏business_id参数');
+    	}
+    	
         var articleStore = {
         	id:'',
             title: '',
@@ -397,6 +406,7 @@ var initPage = function() {
             audio: '',
             video:'',
             category: '',
+            business_id: business_id,
             checkEmpty: function() {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
