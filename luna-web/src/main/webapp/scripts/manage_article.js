@@ -54,7 +54,7 @@ function timeFormatter(value, row, index) {
 function operationFormatter(value, row, index) {
     var id = row.id;
     var title = row.title;
-    var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
+    var editOp = '<a class="edit" href="./article.do?method=update_article&id={0}" target="_blank">编辑</a>'.format(id);
     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, title);
 
     return editOp + deleteOp;
