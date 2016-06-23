@@ -492,7 +492,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				tagMap.put(msPoiTag.getTagId().toString(), msPoiTag.getTagName());
 			}
 		}
-
+		// 检查是否有英文版
+		MongoCollection<Document> poi_collection_en = mongoConnector.getDBCollection("poi_collection_en");
 		JSONArray pois = new JSONArray();
 		while (mongoCursor.hasNext()) {
 			Document docPoi= mongoCursor.next();
@@ -521,7 +522,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// poi的ID
 			String _id = docPoi.getObjectId("_id").toString();
-
+			
+			BasicDBObject keyId = new BasicDBObject();
+			keyId.put("_id", new ObjectId(_id));
+			if (poi_collection_en.find(keyId).limit(1).first() != null) {
+				poi.put("lang", PoiCommon.POI.EN);
+			} else {
+				poi.put("lang", PoiCommon.POI.ZH);
+			}
 			poi.put("short_title", short_title);
 			poi.put("long_title", long_title);
 			poi.put("lng", lng);
@@ -587,7 +595,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() > 0) {
 				// 尝试同步更新英文表
-				Document oldEnDoc = this.getPoiById(_id, PoiCommon.POI.EN);
+				Document oldEnDoc = this.getPoiById(_id, PoiCommon.POI.EN, Boolean.FALSE);
 				if (oldEnDoc != null) {
 					poi_collection = mongoConnector.getDBCollection("poi_collection_en");
 					Document enDoc = new Document();
@@ -734,24 +742,26 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		return data;
 	}
 
-	private Document getPoiById(String _id, String lang) {
+	private Document getPoiById(String _id, String lang, Boolean defaultInZh) {
 		MongoCollection<Document> poi_collection = null;
-
 		// 其他语种的POI(英文)
 		if (PoiCommon.POI.EN.equals(lang)) {
 			poi_collection = mongoConnector.getDBCollection("poi_collection_en");
 			BasicDBObject keyId = new BasicDBObject();
 			keyId.put("_id", new ObjectId(_id));
 			Document doc = poi_collection.find(keyId).limit(1).first();
-			return doc;
-
-		} else {
-			// 中文版POI
-			poi_collection = mongoConnector.getDBCollection("poi_collection");
-			BasicDBObject keyId = new BasicDBObject();
-			keyId.put("_id", new ObjectId(_id));
-			return poi_collection.find(keyId).limit(1).first(); 
+			if(doc != null) {
+				return doc;
+			}
+			if (!defaultInZh) {
+				return null;
+			}
 		}
+		// 中文版POI
+		poi_collection = mongoConnector.getDBCollection("poi_collection");
+		BasicDBObject keyId = new BasicDBObject();
+		keyId.put("_id", new ObjectId(_id));
+		return poi_collection.find(keyId).limit(1).first(); 
 	}
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
@@ -856,7 +866,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String lang = param.getString("lang");
 
 		String _id = param.getString("_id");
-		Document docPoi = this.getPoiById(_id, lang);
+		Document docPoi = this.getPoiById(_id, lang, Boolean.TRUE);
 		if (docPoi == null) {
 			MsLogger.debug("poi ["+_id+"] is not found!");
 			return FastJsonUtil.error("-1", "poi ["+_id+"] is not found!");

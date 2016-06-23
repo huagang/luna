@@ -281,6 +281,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					String long_title = poiJson.getString("long_title");
 					String poi_name = long_title.isEmpty() ? short_title : long_title;
 					row.put("poi_name", poi_name);
+					row.put("lang", poiJson.getString("lang"));
 
 					row.put("_id", poiJson.getString("_id"));
 					row.put("lng", poiJson.getString("lng"));

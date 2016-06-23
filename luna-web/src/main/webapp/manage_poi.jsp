@@ -77,7 +77,7 @@
 						        <thead>
 						            <tr>
 						                <th data-field="number" data-align="center">序号</th>
-						                <th data-field="poi_name" data-align="center" style="width:200px;">名称</th>
+						                <th data-field="poi_name" data-align="center" data-formatter="nameformatter" style="width:200px;">名称</th>
                                     	<th data-field="poi_tags" data-align="center">类别</th>
                                     	<th data-field="lat" data-align="center">纬度</th>
 						                <th data-field="lng" data-align="center">经度</th>
@@ -246,12 +246,18 @@
 		$('#condition_search').click(function() {
 			$table.bootstrapTable('refresh');
 		});
-		
 	});
 	function operationFormatter(value, row, index) {
 				return '<a class="detail" target="_blank" href="' + host +'/edit_poi.do?method=init&_id=' + row._id +'">详情</a>'
 			   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\')">删除</a>';
 	}
+	function nameformatter(value, row, index) {
+		var lang = '';
+		if (row.lang == 'en') {
+			lang = '(英)'
+		}
+		return '<span style="color:#F00">'+lang+'</span>' + row.poi_name;
+}
 	function queryParams(params) {
 		//alert(JSON.stringify(params));
 		return {
