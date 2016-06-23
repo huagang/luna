@@ -154,4 +154,22 @@ public class ManageColumnBLImpl implements ManageColumnBL {
 
         return FastJsonUtil.sucess("", data);
     }
+
+    @Override
+    public JSONObject readAllColumn() {
+        try {
+            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(new MsColumnCriteria());
+            JSONObject ret = new JSONObject();
+            for (MsColumn msColumn : msColumns) {
+                int columnId = msColumn.getId();
+                String columnName = msColumn.getName();
+                ret.put(columnName, columnId);
+            }
+            return FastJsonUtil.sucess("", ret);
+
+        } catch (Exception ex) {
+            logger.error("Failed to read all column", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取所有栏目失败");
+        }
+    }
 }

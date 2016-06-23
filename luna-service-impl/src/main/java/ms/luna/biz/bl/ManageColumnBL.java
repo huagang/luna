@@ -15,4 +15,5 @@ public interface ManageColumnBL {
     JSONObject updateColumn(String json);
     JSONObject deleteColumn(int id);
     JSONObject loadColumn(String json);
+    JSONObject readAllColumn();
 }

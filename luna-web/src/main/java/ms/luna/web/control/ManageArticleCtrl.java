@@ -53,7 +53,7 @@ public class ManageArticleCtrl extends BasicCtrl {
     public static final String READ_ARTICLE = "method=read_article";
     public static final String UPDATE_ARTICLE = "method=update_article";
     public static final String DELETE_ARTICLE = "method=delete_article";
-    public static final String SEARCH_ARTICLE = "method=search_article";
+    public static final String SEARCH_ARTICLE = "method=async_search_article";
     public static final String SEARCH_BUSINESS="method=search_business";
     public static final String PUBLISH_ARTICLE = "method=publish_article";
 
@@ -156,15 +156,17 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
-        JSONObject columnJsonData = manageColumnService.loadColumn(new JSONObject().toJSONString());
+        JSONObject columnJsonData = manageColumnService.readAllColumn();
         if(columnJsonData.getString("code").equals("0")) {
-
+            Map<String, Integer> columnMap = columnJsonData.getJSONObject("data").toJavaObject(Map.class);
+            modelAndView.addObject("columnMap", columnMap);
         }
         return modelAndView;
     }
 
     @RequestMapping(params = READ_ARTICLE)
     public void readArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
 
