@@ -52,6 +52,7 @@
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_article.js'></script>
 	</body>
 </html>

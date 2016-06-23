@@ -251,6 +251,7 @@ var initPage = function() {
             //     return;
             // }
             var data = {
+            	id: articleStore.id || null,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -260,23 +261,18 @@ var initPage = function() {
                 column_id: 1
             };
             console.log(data);
-            var url = 'http://localhost:8080/luna-web/add_article.do?method=init';
-            Util.setAjax(Inter.getApiUrl().saveArtcle, data, function(json) {
-                articleStore.id = "123123";
-                articleStore.previewUrl = "http://www.baidu.com";
+            var url = articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle;
+            Util.setAjax(url, data, function(data) {
 
-                // articleStore.id = json.data.id;
-                // articleStore.previewUrl = json.data.previewUrl;
-
-                if (json.code == "0") {
-
+                if (data.code == "0") {
+                    articleStore.id = data.data.id;
+                    articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
                     console.log("保存成功");
                 } else {
                     console.log("保存失败");
                 }
             }, function(json) {
-                articleStore.id = "123123";
-                articleStore.previewUrl = "http://www.baidu.com";
+            	alert("保存失败");
             });
         });
 
@@ -383,6 +379,7 @@ var initPage = function() {
     function getArticleStore() {
         // 文章内容更新监听器
         /* articleStore 用于存储文章信息,含有以下属性 
+         *  id 文章id  
          *  title 文章标题
          *  content 正文
          *  thumbnail 文章头图
@@ -392,6 +389,7 @@ var initPage = function() {
          *  category 栏目
          * */
         var articleStore = {
+        	id:'',
             title: '',
             content: '',
             thumbnail: '',

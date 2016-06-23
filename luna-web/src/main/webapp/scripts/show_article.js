@@ -3,6 +3,7 @@ window.onload = function(){
 	var content = "濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型代表，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型，濯水古镇街巷格局保留较为完整典型，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。";
 		
 	// 文章fake数据
+	var audio;
 	var data = {
 		title: '王阳明',
 		content: content.repeat(5),
@@ -47,8 +48,8 @@ window.onload = function(){
 			var btnWraper = document.querySelector('.video-btn-wrap');
 			btnWraper.addEventListener('click', function(){
 				showVideoModal();
-				if(window.audio){
-					window.audio.pause();
+				if(audio){
+					audio.pause();
 				}
 			});	
 			document.querySelector('.video-modal .mask').addEventListener('click', hideVideoModal);
@@ -89,7 +90,7 @@ window.onload = function(){
 		if(data.audio){
 			var audioBtnWraper = document.querySelector('.audio-btn-wrap');
 			audioBtnWraper.addEventListener('click', handleAudioControlClick);
-			window.audio = getAudio('.audio');
+			audio = getAudio('.audio');
 			audio.src = data.audio;
 		}
 	}
@@ -112,11 +113,12 @@ window.onload = function(){
 	
 	// 音频控制按钮点击后触发的方法  用于切换播放状态（播放状态有"播放", "停止"两个状态）
 	function handleAudioControlClick(){
-		var result = window.audio.toggle();
+		if(!audio) return;
+		var result = audio.toggle();
 		if(! result){
 			return;
 		}
-		if(window.audio.isPlaying){
+		if(audio.isPlaying){
 			document.querySelector('.icon-audio').classList.add('playing');
 		}
 		else {
