@@ -32,4 +32,7 @@ public interface ManagePoiService {
 
 	JSONObject getTagsDef(String json);
 
+	JSONObject checkPoiCanBeDeleteOrNot(String json);
+	
+
 }

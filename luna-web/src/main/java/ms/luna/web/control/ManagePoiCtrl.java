@@ -281,6 +281,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					String long_title = poiJson.getString("long_title");
 					String poi_name = long_title.isEmpty() ? short_title : long_title;
 					row.put("poi_name", poi_name);
+					row.put("lang", poiJson.getString("lang"));
 
 					row.put("_id", poiJson.getString("_id"));
 					row.put("lng", poiJson.getString("lng"));
@@ -317,6 +318,28 @@ public class ManagePoiCtrl extends BasicCtrl{
 			JSONObject param = new JSONObject();
 			param.put("_id", _id);
 			JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
+			MsLogger.info(poisResult.toJSONString());
+			response.getWriter().print(poisResult.toJSONString());
+			response.setStatus(200);
+			return;
+		} catch (Exception e) {
+			MsLogger.debug(e);
+			response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
+			response.setStatus(200);
+			return;
+		}
+	}
+
+	@RequestMapping(params = "method=checkPoiCanBeDeleteOrNot")
+	public void checkPoiCanBeDeleteOrNot(@RequestParam(required = true, value="_id") String _id,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		try {
+			response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+			response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+			JSONObject param = new JSONObject();
+			param.put("_id", _id);
+			JSONObject poisResult = managePoiService.checkPoiCanBeDeleteOrNot(param.toString());
 			MsLogger.info(poisResult.toJSONString());
 			response.getWriter().print(poisResult.toJSONString());
 			response.setStatus(200);
