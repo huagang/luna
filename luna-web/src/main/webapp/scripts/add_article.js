@@ -271,7 +271,7 @@ var initPage = function() {
                 success: function(data) {
                     if (data.code == "0") {
                         articleStore.id = data.data.id;
-                        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+                        articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
                         console.log("保存成功");
                     } else {
                         console.log("保存失败");
@@ -286,7 +286,7 @@ var initPage = function() {
             //
             //    if (data.code == "0") {
             //        articleStore.id = data.data.id;
-            //        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+            //        articleStore.previewUrl = "../show_article.do?method=init&app_id" + articleStore.id;
             //        console.log("保存成功");
             //    } else {
             //        console.log("保存失败");
