@@ -754,9 +754,9 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			JSONObject result = manageMerchantService.isAddedMerchantNmEist(param.toString());
 			MsLogger.debug("method:isAddedMerchantNmEist, result from service: "+result.toString());
 			
-			if (result.getString("code").equals("1")) {
+			if ("1".equals(result.getString("code"))) {
 				result.put("code", "0");
-			} else if (result.getString("code").equals("0")) {
+			} else if ("0".equals(result.getString("code"))) {
 				result.put("code", "1");
 			}
 			response.getWriter().print(result);
@@ -793,9 +793,9 @@ public class ManageMerchantCtrl extends BasicCtrl {
 			JSONObject result = manageMerchantService.isEditedMerchantNmEist(param.toString());
 			MsLogger.debug("method:isEditedMerchantNmEist, result from service: "+result.toString());
 			
-			if (result.getString("code").equals("1")) {
+			if ("1".equals(result.getString("code"))) {
 				result.put("code", "0");
-			} else if (result.getString("code").equals("0")) {
+			} else if ("0".equals(result.getString("code"))) {
 				result.put("code", "1");
 			}
 			response.getWriter().print(result);

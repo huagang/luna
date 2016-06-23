@@ -34,6 +34,7 @@ var initPage = function() {
 jQuery('document').ready(function(e) {
     initPage.init();
 });
+
 var APP_STATUS = {
     "0": "未发布",
     "1": "已发布"
@@ -52,8 +53,9 @@ function timeFormatter(value, row, index) {
 
 function operationFormatter(value, row, index) {
     var id = row.id;
+    var title = row.title;
     var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
-    var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, name);
+    var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, title);
 
     return editOp + deleteOp;
 }

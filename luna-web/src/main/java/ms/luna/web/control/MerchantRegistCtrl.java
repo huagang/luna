@@ -161,9 +161,9 @@ public class MerchantRegistCtrl extends BasicCtrl {
 			param.put("merchant_nm", merchant_nm);
 			JSONObject result = manageMerchantService.isAddedMerchantNmEist(param.toString());
 			MsLogger.debug("method:isAddedMerchantNmEist, result from service: "+result.toString());
-			if (result.getString("code").equals("1")) {
+			if ("1".equals(result.getString("code"))) {
 				result.put("code", "0");
-			} else if (result.getString("code").equals("0")) {
+			} else if ("0".equals(result.getString("code"))) {
 				result.put("code", "1");
 			}
 			response.getWriter().print(result);

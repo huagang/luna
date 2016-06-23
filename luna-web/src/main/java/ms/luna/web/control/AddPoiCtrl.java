@@ -306,14 +306,14 @@ public class AddPoiCtrl extends BasicCtrl{
 				param.put("vod_file_id", vod_file_id);
 				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
 				
-				if (resJson.getString("code").equals("0")) {// 成功
+				if ("0".equals(resJson.getString("code"))) {// 成功
 					// 存入缓存
 					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
 					response.getWriter().print(FastJsonUtil.sucess("成功", param));// 注：result中文件id的表示为fileId，非file_id
 				} else {
 					response.getWriter().print(FastJsonUtil.error("3", "写入数据库失败"));
 				}
-			} else if (result.getString("code").equals("2")) {
+			} else if ("2".equals(result.getString("code"))) {
 				response.getWriter().print(FastJsonUtil.error("2", "文件大小超过5M"));
 			} else {
 				response.getWriter().print(FastJsonUtil.error("4", "文件传输失败"));

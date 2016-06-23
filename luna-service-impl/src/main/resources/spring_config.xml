@@ -81,6 +81,10 @@
 		<constructor-arg value="mongo.properties"/>
 	</bean> 
 	
+	<bean id="poiApiNameMap" class="ms.biz.common.PoiApiNameMap">
+		<constructor-arg value="poiApi.properties"/>
+	</bean>
+	
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />

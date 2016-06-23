@@ -70,7 +70,17 @@ public class ManageColumnServiceImpl implements ManageColumnService {
             return manageColumnBL.loadColumn(json);
         } catch (Exception ex) {
             logger.error("Failed to load column", ex);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建栏目列表失败");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "加载栏目失败");
+        }
+    }
+
+    @Override
+    public JSONObject readAllColumn() {
+        try{
+            return manageColumnBL.readAllColumn();
+        } catch (Exception ex) {
+            logger.error("Failed to read all column", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取所有栏目失败");
         }
     }
 }
