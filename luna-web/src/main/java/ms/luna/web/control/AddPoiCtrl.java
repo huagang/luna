@@ -290,8 +290,10 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 			String fileName = VbMD5.generateToken() + ext;// 生成文件名
 			String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-			JSONObject result = VODUtil.getInstance().upload2Cloud(request, response, file,
-					VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+			String[] temp = request.getRequestURL().toString().split("/");
+			String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
+			JSONObject result = VODUtil.getInstance().upload2Cloud(file, 
+					VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName, webAddr);
 
 			// 文件上传
 			if (result.getString("code").equals("0")) {

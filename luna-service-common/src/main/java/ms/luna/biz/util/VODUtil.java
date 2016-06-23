@@ -31,7 +31,7 @@ public class VODUtil {
 	private static final String SECRETKEY_VIDEO = "Sf21i2X8xup47BruSG1zq9xJ7C3phC3K";
 	private static final String METHOD = "POST"; // 请求方法
 	private static final String REGION = "bj"; // 区域参数
-	private static final String URL = "/api/vodPlayApi.do?method=getVideoUrlsFromCallbackInfo&token="; // 转码回调地址
+	private static final String URL = "/api_vodPlayApi.do?method=getVideoUrlsFromCallbackInfo&token="; // 转码回调地址
 	private static final int DATASIZE = 1024 * 1024 * 5;// 视屏上传切片大小，默认5M
 	private static final long MAX_VIDEO_SIZE = 1024 * 1024 * 5;// 最大上传大小，设置5M
 
@@ -256,9 +256,8 @@ public class VODUtil {
 		return classId;
 	}
 
-	public JSONObject upload2Cloud(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
-			String bucket, String path, String fileName) throws IOException {
-		return upload2Cloud(request, response, file, bucket + path, fileName);
+	public JSONObject upload2Cloud(MultipartFile file, String bucket, String path, String fileName, String webAddr) throws IOException {
+		return upload2Cloud(file, bucket + path, fileName, webAddr);
 	}
 	
 	/**
@@ -274,11 +273,12 @@ public class VODUtil {
 	 *            转码回调地址,允许为null
 	 * @param datasize
 	 *            分块大小
+	 * @param webAddr
+	 * 			  url地址
 	 * @return
 	 * @throws IOException
 	 */
-	public JSONObject upload2Cloud(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
-			String path, String fileName) throws IOException {
+	public JSONObject upload2Cloud(MultipartFile file, String path, String fileName, String webAddr) throws IOException {
 		// 默认切片5M, 视频标签为null，转码，生成视频封面，无水印
 		// 生成转码回调地址
 		byte[] bytes = file.getBytes();
@@ -288,9 +288,12 @@ public class VODUtil {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String token = VbMD5.generateToken() + sdf.format(date);
-		String[] temp = request.getRequestURL().toString().split("/");
-		String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
-		String notifyUrl = webAddr + URL + token;
+//		String[] temp = request.getRequestURL().toString().split("/");
+//		String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
+		String notifyUrl = null;
+		if(webAddr != null){
+			notifyUrl = webAddr + URL + token;
+		}
 
 		int classId = createFolder(path);
 		if (classId == Integer.MIN_VALUE) {
