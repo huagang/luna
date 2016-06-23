@@ -132,7 +132,10 @@
 	</div>
 	<div class="pop-fun">
 	 	<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
-        <button type="button" class="next">下一步</button>
+	 	<div class='pull-right'>
+	 		<button type="button" class="next">下一步</button>
+	 	</div>
+        
     </div>
 </div>
 <!-- 业务配置  end -->
@@ -150,9 +153,12 @@
         <div class="warn warn-appname">微景展名称不能为空并且不能超过32个字符</div>
     </div>
     <div class="pop-fun">
-    	<button type="button" class="cancel hidden">取消</button>
-        <button type="button" class="next">下一步</button>
-    	<button type="button" class="last">上一步</button>
+    	<div class='pull-right'>
+    		<button type="button" class="last">上一步</button>
+    		<button type="button" class="next">下一步</button>
+    		<button type="button" class="cancel button-close hidden">取消</button>
+    	</div>
+    	
     </div>
 </div>
 <!-- 微景展配置 end -->
@@ -170,8 +176,11 @@
         </div>
         <!-- 底部功能区 -->
 	    <div class="pop-fun">
-	        <button type="button" id="btn-delete">确定</button>
-	        <button class="button-close"  onclick="clcWindow(this)">取消</button>
+	    	<div class='pull-right'>
+	    		<button type="button" id="btn-delete">确定</button>
+	        	<button class="button-close"  onclick="clcWindow(this)">取消</button>
+	    	</div>
+
 	    </div>
 	    <!-- 底部功能区 -->
     </div>
