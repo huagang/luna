@@ -12,6 +12,7 @@ import ms.luna.biz.dao.custom.model.MsArticleParameter;
 import ms.luna.biz.dao.custom.model.MsArticleResult;
 import ms.luna.biz.dao.custom.model.MsBusinessParameter;
 import ms.luna.biz.dao.custom.model.MsBusinessResult;
+import ms.luna.biz.dao.model.MsArticle;
 import ms.luna.biz.dao.model.MsArticleCriteria;
 import ms.luna.biz.dao.model.MsArticleWithBLOBs;
 import ms.luna.biz.table.MsArticleTable;
@@ -92,16 +93,22 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
     @Override
     public JSONObject createArticle(String json) {
-
         try {
             JSONObject articleObj = JSONObject.parseObject(json);
             MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
             msArticleDAO.insertSelective(msArticle);
+            MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+            msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
+            List<MsArticle> msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
+            if(msArticles != null && msArticles.size() == 1) {
+                JSONObject ret = new JSONObject();
+                ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
+                return FastJsonUtil.sucess("新建文章成功", ret);
+            }
         } catch (Exception ex) {
             logger.error("Failed to create article", ex);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "新建文章失败");
         }
-        return FastJsonUtil.sucess("新建文章成功");
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "新建文章失败");
     }
 
     @Override

@@ -210,7 +210,12 @@
 	}
 	
 	function statusFormatter(value, row, index) {
-		return APP_STATUS[row.app_status];
+		if(row.app_status === 1){
+			return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+		}else{
+			return APP_STATUS[row.app_status];
+		}
+		
 	}
 	
 	function timeFormatter(value, row, index) {
