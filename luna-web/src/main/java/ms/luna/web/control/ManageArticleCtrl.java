@@ -11,6 +11,7 @@ import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,7 @@ public class ManageArticleCtrl extends BasicCtrl {
     public static final String DELETE_ARTICLE = "method=delete_article";
     public static final String SEARCH_ARTICLE = "method=search_article";
     public static final String SEARCH_BUSINESS="method=search_business";
+    public static final String PUBLISH_ARTICLE = "method=publish_article";
 
     @RequestMapping(params = INIT)
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
@@ -120,12 +122,14 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @RequestMapping(params = CREATE_ARTICLE, method = RequestMethod.POST)
     public void submitCreateArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
         Pair<JSONObject, String> pair = toJson(request);
         if(pair.getRight() != null) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
             return;
         }
-
         try {
             JSONObject ret = manageArticleService.createArticle(pair.getLeft().toJSONString());
             response.getWriter().print(ret);
@@ -139,18 +143,22 @@ public class ManageArticleCtrl extends BasicCtrl {
     @RequestMapping(params = CREATE_ARTICLE, method = RequestMethod.GET)
     public ModelAndView createArticle(@RequestParam(required = true, value="business_id") int businessId,
                                       HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
         return modelAndView;
     }
 
     @RequestMapping(params = READ_ARTICLE)
-    public void readArticle(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void readArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+
         if(id < 0) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法"));
             return;
         }
-
         try{
             JSONObject ret = manageArticleService.getArticleById(id);
             response.getWriter().print(ret);
@@ -159,11 +167,13 @@ public class ManageArticleCtrl extends BasicCtrl {
             logger.error("Failed to read article: " + id, ex);
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "读取文章信息失败"));
         }
-
     }
 
     @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
-    public ModelAndView updateArticle(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
 
         JSONObject ret = manageArticleService.getArticleById(id);
         ModelAndView modelAndView = buildModelAndView("/add_article");
@@ -172,7 +182,10 @@ public class ManageArticleCtrl extends BasicCtrl {
     }
 
     @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.POST)
-    public void submitUpdateArticle(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void submitUpdateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
 
         if(id < 0) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法"));
@@ -200,7 +213,7 @@ public class ManageArticleCtrl extends BasicCtrl {
 
 
     @RequestMapping(params = DELETE_ARTICLE)
-    public void deleteArticle(@RequestParam(required = true) int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void deleteArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
@@ -260,6 +273,11 @@ public class ManageArticleCtrl extends BasicCtrl {
             logger.error("Failed to search business", ex);
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "搜索业务失败"));
         }
+    }
+
+    @RequestMapping(params = PUBLISH_ARTICLE)
+    public void publishArticle(@RequestParam(required = true, value = "id") int id,
+                               HttpServletRequest request, HttpServletResponse response) {
 
     }
 
