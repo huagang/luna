@@ -287,4 +287,8 @@ public final class FastJsonUtil {
 	public static JSONArray createBlankIntegerJsonArray() {
 		return castStrNumArray2IntNumArray(null);
 	}
+	public static void main(String[] args) {
+		String test = "[3]";
+		System.out.println(parse2Array(test).toJSONString());
+	}
 }
