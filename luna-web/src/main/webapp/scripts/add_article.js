@@ -262,19 +262,38 @@ var initPage = function() {
                 column_id: 1
             };
             console.log(data);
-            var url = articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle;
-            Util.setAjax(url, data, function(data) {
-
-                if (data.code == "0") {
-                    articleStore.id = data.data.id;
-                    articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
-                    console.log("保存成功");
-                } else {
-                    console.log("保存失败");
+            $.ajax({
+                url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
+                type: 'POST',
+                async: true,
+                data: data,
+                dataType: "json",
+                success: function(data) {
+                    if (data.code == "0") {
+                        articleStore.id = data.data.id;
+                        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+                        console.log("保存成功");
+                    } else {
+                        console.log("保存失败");
+                    }
+                },
+                error: function(data) {
+                    alert("保存失败");
                 }
-            }, function(json) {
-            	alert("保存失败");
             });
+            //var url = articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle;
+            //Util.setAjax(url, data, function(data) {
+            //
+            //    if (data.code == "0") {
+            //        articleStore.id = data.data.id;
+            //        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+            //        console.log("保存成功");
+            //    } else {
+            //        console.log("保存失败");
+            //    }
+            //}, function(json) {
+            //	alert("保存失败");
+            //});
         });
 
         // 事件绑定 预览按钮点击事件
