@@ -1,8 +1,11 @@
 package ms.luna.web.control;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageArticleService;
+import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.web.common.AreaOptionQueryBuilder;
@@ -42,6 +45,8 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @Autowired
     private ManageArticleService manageArticleService;
+    @Autowired
+    private ManageColumnService manageColumnService;
 
     public static final String INIT = "method=init";
     public static final String CREATE_ARTICLE = "method=create_article";
@@ -126,12 +131,16 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
         Pair<JSONObject, String> pair = toJson(request);
+        JSONObject articleJson = pair.getLeft();
         if(pair.getRight() != null) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
             return;
         }
         try {
-            JSONObject ret = manageArticleService.createArticle(pair.getLeft().toJSONString());
+            HttpSession session = request.getSession(false);
+            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            articleJson.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
+            JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
             response.getWriter().print(ret);
             return;
         } catch (Exception ex) {
@@ -147,6 +156,10 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
+        JSONObject columnJsonData = manageColumnService.loadColumn(new JSONObject().toJSONString());
+        if(columnJsonData.getString("code").equals("0")) {
+
+        }
         return modelAndView;
     }
 
@@ -277,8 +290,14 @@ public class ManageArticleCtrl extends BasicCtrl {
 
     @RequestMapping(params = PUBLISH_ARTICLE)
     public void publishArticle(@RequestParam(required = true, value = "id") int id,
-                               HttpServletRequest request, HttpServletResponse response) {
-
+                               HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            JSONObject ret = manageArticleService.publishArticle(id);
+            response.getWriter().print(ret.toJSONString());
+        } catch (Exception ex) {
+            logger.error("Failed to publish article");
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败"));
+        }
     }
 
 }

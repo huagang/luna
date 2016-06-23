@@ -66,13 +66,22 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         if(! StringUtils.isBlank(audio)) {
             msArticle.setAudio(audio);
         }
-        String video = articleObj.getString(articleObj.getString(MsArticleTable.FIELD_VIDEO));
+        String video = articleObj.getString(MsArticleTable.FIELD_VIDEO);
         if(! StringUtils.isBlank(video)) {
             msArticle.setVideo(video);
+        }
+        String author = articleObj.getString(MsArticleTable.FIELD_AUTHOR);
+        if(! StringUtils.isBlank(author)) {
+            msArticle.setAuthor(author);
         }
         int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
         if(column > 0) {
             msArticle.setColumnId(column);
+        }
+
+        int businessId = articleObj.getInteger(MsArticleTable.FIELD_BUSINESS_ID);
+        if(businessId > 0) {
+            msArticle.setBusinessId(businessId);
         }
 
         return msArticle;
@@ -87,6 +96,8 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
+        // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
+        jsonObject.put(MsArticleTable.FIELD_STATUS, msArticle.getStatus() ? 1 : 0);
 
         return jsonObject;
     }
@@ -223,5 +234,19 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             data.put("rows", rows);
         }
         return FastJsonUtil.sucess("检索成功", data);
+    }
+
+    @Override
+    public JSONObject publishArticle(int id) {
+        MsArticleWithBLOBs msArticle = new MsArticleWithBLOBs();
+        msArticle.setId(id);
+        msArticle.setStatus(true);
+        try {
+            msArticleDAO.updateByPrimaryKeySelective(msArticle);
+            return FastJsonUtil.sucess("发布文章成功");
+        } catch (Exception ex) {
+            logger.error("Failed to publish article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
+        }
     }
 }

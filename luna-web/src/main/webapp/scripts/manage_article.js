@@ -21,42 +21,52 @@ var initPage = function() {
             $table = $('#table_article').bootstrapTable({
                 data: getRows()
             });
-    }
+    };
 
     return {
         init: function() {
             initTable();
         }
     }
-}
+}();
 
 
 jQuery('document').ready(function(e) {
     initPage.init();
-    // function timeFormatter(value, row, index) {
-    //     return '创建于：<span class="time-create">' + row.regist_hhmmss + '</span><br>' + '修改于：<span class="time-create">' + row.up_hhmmss + '</span>';
-    // }
-
-    // function operationFormatter(value, row, index) {
-    //     var id = row.id;
-    //     var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
-    //     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, name);
-
-    //     return editOp + deleteOp;
-    // }
-
-    // function queryParams(params) {
-    //     //alert(JSON.stringify(params));
-    //     return {
-    //         limit: params.limit,
-    //         offset: params.offset,
-    //         sort: params.sort,
-    //         order: params.order
-    //     }
-    // };
 });
+var APP_STATUS = {
+    "0": "未发布",
+    "1": "已发布"
+};
 
+function statusFormatter(value, row, index) {
+    if(row.app_status === 1){
+        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+    } else {
+        return APP_STATUS[row.app_status];
+    }
+}
+function timeFormatter(value, row, index) {
+    return '创建于：<span class="time-create">' + row.regist_hhmmss + '</span><br>' + '修改于：<span class="time-create">' + row.up_hhmmss + '</span>';
+}
 
+function operationFormatter(value, row, index) {
+    var id = row.id;
+    var editOp = '<a class="edit" href="#" onclick="showUpdateArticleDialog({0})">编辑</a>'.format(id);
+    var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, name);
+
+    return editOp + deleteOp;
+}
+
+function queryParams(params) {
+    //alert(JSON.stringify(params));
+    return {
+        limit: params.limit,
+        offset: params.offset,
+        sort: params.sort,
+        order: params.order
+    }
+};
 
 var manageArticle = angular.module('manageArticle', []);
 manageArticle.run(function($rootScope, $http) {

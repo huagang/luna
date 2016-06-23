@@ -283,7 +283,7 @@ public class VODUtil {
 		// 生成转码回调地址
 		byte[] bytes = file.getBytes();
 		if (bytes.length > MAX_VIDEO_SIZE) {
-			return FastJsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
+			return FastJsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 20) + "M");
 		}
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

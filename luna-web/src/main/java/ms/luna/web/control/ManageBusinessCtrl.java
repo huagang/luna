@@ -132,7 +132,7 @@ public class ManageBusinessCtrl extends BasicCtrl {
 				return;
 			}
 			
-			String createUser = msUser.getUniqueId();
+			String createUser = msUser.getNickName();
 			JSONObject param = JSONObject.parseObject("{}");
 			param.put("business_name", businessName);
 			param.put("business_code", businessCode);

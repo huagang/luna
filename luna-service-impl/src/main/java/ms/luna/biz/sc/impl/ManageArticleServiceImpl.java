@@ -85,4 +85,14 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "搜索业务失败");
         }
     }
+
+    @Override
+    public JSONObject publishArticle(int id) {
+        try {
+            return manageArticleBL.publishArticle(id);
+        } catch (Exception ex) {
+            logger.error("Failed to publish article");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
+        }
+    }
 }

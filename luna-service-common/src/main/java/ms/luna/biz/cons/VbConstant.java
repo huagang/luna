@@ -1,7 +1,6 @@
 package ms.luna.biz.cons;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public final class VbConstant {
 	/**
@@ -275,10 +274,40 @@ public final class VbConstant {
 	/**
 	 * 上传文件的类型
 	 */
-	public static final class UPLOAD_FILE_TYPE{
+	public static final class UploadFileRule {
 		public static final String PIC= "pic";
 		public static final String AUDIO = "audio";
 		public static final String VIDEO = "video";
 		public static final String ZIP = "zip";
+
+		private static Map<String, Long> fileRule = new HashMap<>();
+		private static Set<String> pathSet = new HashSet<>();
+
+		static {
+			fileRule.put(PIC, 1024 * 1024 * 1l);
+			fileRule.put(AUDIO, 1024 * 1024 * 5l);
+			fileRule.put(VIDEO, 1024 * 1024 * 5l);
+			fileRule.put(ZIP, 1024 * 1024 * 5l);
+
+			pathSet.add("crm");
+			pathSet.add("business");
+			pathSet.add("poi");
+			pathSet.add("article");
+		}
+		public static boolean isValidFileType(String fileType) {
+			return fileRule.containsKey(fileType);
+		}
+
+		public static boolean isValidSize(String fileType, long size) {
+			if(fileRule.containsKey(fileType)) {
+				return size < fileRule.get(fileType);
+			}
+			return false;
+		}
+
+		public static boolean isValidPath(String path) {
+			return pathSet.contains(path);
+		}
 	}
+
 }

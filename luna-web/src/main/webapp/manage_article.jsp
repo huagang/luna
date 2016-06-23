@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css"type="text/css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" type="text/css" />
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_article.css">
 </head>
 <body ng-app="manageArticle" ng-controller="articleController as article">
@@ -60,6 +60,7 @@
                                     <th data-field="column_name" data-align="left">栏目</th>
                                     <th data-field="business_name" data-align="left">所属业务</th>
                                     <th data-formatter="timeFormatter" data-align="left">时间</th>
+                                    <th data-formatter="statusFormatter" data-align="left">状态</th>
                                     <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
                                 </tr>
                                 </thead>

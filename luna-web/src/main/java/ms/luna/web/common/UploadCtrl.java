@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.biz.util.VbUtility;
-import ms.luna.biz.cons.VbConstant.UPLOAD_FILE_TYPE;
+import ms.luna.biz.cons.VbConstant.UploadFileRule;
 import ms.luna.biz.util.COSUtil;
 import com.alibaba.fastjson.JSONObject;
 @Component("uploadCtrl")
@@ -33,12 +35,9 @@ import com.alibaba.fastjson.JSONObject;
 public class UploadCtrl {
 
 	private final static Logger logger = Logger.getLogger(UploadCtrl.class);
-	
-	private Set<String> validFileExtention;
-	
-	public UploadCtrl() {
 
-	}
+	private Random random = new Random();
+	private Set<String> validFileExtention;
 
 	@PostConstruct
 	public void init() {
@@ -61,7 +60,7 @@ public class UploadCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 
 		if (file == null || file.isEmpty()) {
-			response.getWriter().print(FastJsonUtil.error("-1", "file can not be empty"));
+			response.getWriter().print(FastJsonUtil.error("-1", "文件不能为空"));
 			response.setStatus(200);
 			return;
 		}
@@ -107,27 +106,21 @@ public class UploadCtrl {
 		}
 	}
 
-	@RequestMapping(params = "method=upload_audio")
-	public void uploadAudio(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-
-	}
-	
-	//-----------------------------------------------------------------------------------------------------
+	/**
+	 * 最终cos路径构成：bucket/{env}/{type}/{path}/{filename}
+	 */
 	@RequestMapping(params = "method=uploadFile2Cloud")
 	public void uploadFile2Cloud(@RequestParam(required = true, value = "file") MultipartFile file,
 			@RequestParam(required = true, value = "type") String type,  		// 上传类型
-			@RequestParam(required = false, value = "bucket") String bucket,	// bucket
 			@RequestParam(required = false, value = "path") String path,		// 路径
-			@RequestParam(required = false, value = "filename") String filename,// 文件名
+			@RequestParam(required = false, value = "filename") String fileName,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		try{
 			// 类型检查
-			boolean flag = checkType(type);
-			if(!flag){
+			if(! UploadFileRule.isValidFileType(type)){
 				response.getWriter().print(FastJsonUtil.error("-1", "type must be image, audio, video or zip"));
 				response.setStatus(200);
 				return;
@@ -140,26 +133,20 @@ public class UploadCtrl {
 				return;
 			}
 			// 文件大小检查
-			flag = checkFileSize(file,type);
-			if(!flag){
+			if(! UploadFileRule.isValidSize(type, file.getSize())){
 				response.getWriter().print(FastJsonUtil.error("-1", "file size is larger"));
 				response.setStatus(200);
 				return;
 			}
-			// bucket
-			if(bucket == null){
-				bucket = getDefaultBucket(type);// 获取默认bucket
-			}
 			// 目录
-			if(path == null){
+			if(StringUtils.isBlank(path) || (! UploadFileRule.isValidPath(path))){
 				path = getDefaultPath(type);// 获取默认路径
 			}
-			// 文件名
-			if(filename == null){
-				filename = getDefaultName(ext);
+			// TODO: 文件名，存在保留文件名称的需求? 这种情况下底层实现需要判断文件名是否已经存在
+			if(StringUtils.isBlank(fileName)) {
+				fileName = generateFileName(ext);
 			}
-			
-			JSONObject result = uploadFile2Cloud(request, response, file, type, bucket, path, filename);
+			JSONObject result = uploadFile2Cloud(file, type, COSUtil.LUNA_BUCKET, path, fileName);
 			MsLogger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
 			
 			response.getWriter().print(result);
@@ -171,14 +158,15 @@ public class UploadCtrl {
 			
 	}
 
-	private JSONObject uploadFile2Cloud(HttpServletRequest request, HttpServletResponse response, MultipartFile file,
+	private JSONObject uploadFile2Cloud(MultipartFile file,
 			String type, String bucket, String path, String filename) throws Exception {
 		JSONObject result = new JSONObject();
-		if(type.equals(UPLOAD_FILE_TYPE.PIC) || type.equals(UPLOAD_FILE_TYPE.AUDIO)){
-			result = COSUtil.getInstance().upload2Cloud(file, bucket, path, filename);
-		} else if(type.equals(UPLOAD_FILE_TYPE.VIDEO)){
-			result = VODUtil.getInstance().upload2Cloud(request, response, file, bucket, path, filename);
-		} else if(type.equals(UPLOAD_FILE_TYPE.ZIP)){
+		String realPath = type + "/" + path;
+		if(type.equals(UploadFileRule.PIC) || type.equals(UploadFileRule.AUDIO)){
+			result = COSUtil.getInstance().upload2Cloud(file, bucket, realPath, filename);
+		} else if(type.equals(UploadFileRule.VIDEO)){
+			result = VODUtil.getInstance().upload2Cloud(file, bucket, realPath, filename, "");
+		} else if(type.equals(UploadFileRule.ZIP)){
 			//TODO
 		}
 		
@@ -191,9 +179,9 @@ public class UploadCtrl {
 	 * @param ext 文件后缀
 	 * @return
 	 */
-	private String getDefaultName(String ext) {
-		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		String fileNameInCloud = VbMD5.generateToken() + ext;
+	private String generateFileName(String ext) {
+		String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10) + ext;
 		return fileNameInCloud;
 	}
 	
@@ -204,32 +192,7 @@ public class UploadCtrl {
 	 * @return
 	 */
 	private String getDefaultPath(String type) {
-		// TODO
-		return null;
-	}
-
-	/**
-	 * 获得默认的bucket
-	 * 
-	 * @param type 文件类型
-	 * @return
-	 */
-	private String getDefaultBucket(String type) {
-		// TODO
-		return null;
-	}
-
-	/**
-	 * 检查文件的大小是否符合要求
-	 * 
-	 * @param file 上传文件
-	 * @param type 文件类型
-	 * @return
-	 * @throws IOException 
-	 */
-	private boolean checkFileSize(MultipartFile file, String type) throws IOException {
-		// TODO
-		return false;
+		return COSUtil.DEFAULT_PATH;
 	}
 
 	/**
@@ -240,32 +203,19 @@ public class UploadCtrl {
 	 * @return
 	 */
 	private String getExt(String type, String originalFilename) {
-		if(type.equals(UPLOAD_FILE_TYPE.PIC)){
+		if(type.equals(UploadFileRule.PIC)){
 			return VbUtility.getExtensionOfPicFileName(originalFilename);
 		}
-		if(type.equals(UPLOAD_FILE_TYPE.AUDIO)){
+		if(type.equals(UploadFileRule.AUDIO)){
 			return VbUtility.getExtensionOfAudioFileName(originalFilename);
 		}
-		if(type.equals(UPLOAD_FILE_TYPE.VIDEO)){
+		if(type.equals(UploadFileRule.VIDEO)){
 			return VbUtility.getExtensionOfVideoFileName(originalFilename);
 		}
-		if(type.equals(UPLOAD_FILE_TYPE.ZIP)){
+		if(type.equals(UploadFileRule.ZIP)){
 			return VbUtility.getExtensionOfZipFileName(originalFilename);
 		}
 		return null;
-	}
-
-	/**
-	 * 检查文件类型是否满足要求
-	 * 
-	 * @param type 文件类型
-	 * @return
-	 */
-	private boolean checkType(String type) {
-		if(type.equals(UPLOAD_FILE_TYPE.PIC) || type.equals(UPLOAD_FILE_TYPE.AUDIO) || type.equals(UPLOAD_FILE_TYPE.VIDEO) || type.equals(UPLOAD_FILE_TYPE.ZIP)){
-			return true;
-		}
-		return false;
 	}
 
 }

@@ -15,6 +15,7 @@ public class COSUtil {
 	 * 所有的资源路径格式规范：带前导"/"，不带结尾"/"，避免重复或者缺少分割符
 	 */
 	public static final String LUNA_BUCKET = "luna";
+	public static final String DEFAULT_PATH = "default";
 	public static final String LUNA_VIEW_ROOT = "/view";
 	public static final String LUNA_H5_ROOT = "/h5";
 	public static final String LUNA_IMG_ROOT = "/img";

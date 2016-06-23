@@ -220,7 +220,7 @@ function copyToClipBoard(s) {
         if (!clip)
             return false;
         clip.setData(trans, null, clipid.kGlobalClipboard);
-        alert("已经复制到剪切板！" + "\n" + s)
+        alert("已经复制到剪切板！" + "\n" + s);
     }
 }
 
