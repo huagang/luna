@@ -4,15 +4,46 @@ window.onload = function(){
 		
 	// 文章fake数据
 	var audio;
-	var data = {
+	/*var data = {
 		title: '王阳明',
 		content: content.repeat(5),
 		thumbnail: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160616/0P2I3c3d2Q2b2H1Q3y2s0V2A0x0L3w1k.jpg',
 		audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160617/2N1H2q0a1Y0B1O3V1I263L123c20102D.mp3',
 		video:'14651978969259528073',
 		category:''
-	};
-	updateData(data);
+	};*/
+	initData();
+	function initData(){
+		var articleId = null;
+		try{
+			articleId = parseInt(location.href.match(/article_id=(\d+)/)[1]);
+		} catch(e){
+			alert("url中缺乏article_id参数")
+			return;
+		}
+		if(! articleId){return;}
+		$.ajax({
+			url: Inter.getApiUrl().readArticle,
+			type: 'GET',
+			data:{id: articleId},
+			dataType: 'json',
+			success:function(data){
+				if(data.code === "0"){
+					console.log("请求文章数据成功");
+					updateData(data.data);
+				}
+				else{
+					console.log("请求文章数据失败");
+				}
+				
+				
+			},
+			error:function(data){
+				console.log("请求文章数据失败");
+			}
+		});
+	}
+	
 	function updateData(data){
 		/* 根据获取的文章数据进行更新文章内容 */
 		
@@ -24,7 +55,7 @@ window.onload = function(){
 		
 		// 更新文章头图
 		var img = document.querySelector('.banner img');		
-		img.src = data.thumbnail;
+		img.src = data.abstract_pic;
 		img.onload = function(){
 			var banner = document.querySelector('.banner');
 			if(banner.clientHeight > 100){

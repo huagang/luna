@@ -6,9 +6,9 @@
 
 var initPage = function() {
 
-    var articleStore = getArticleStore();
-
+   
     var ue;
+    var articleStore = getArticleStore();
     /**
      * 初始化编辑器
      * @return {[type]} [description]
@@ -245,11 +245,11 @@ var initPage = function() {
     var initEvent = function() {
         // 事件绑定  保存按钮点击事件
         document.querySelector('.save').addEventListener('click', function(e) {
-            // var error = articleStore.checkEmpty().error;
-            // if (error) {
-            //     alert(error);
-            //     return;
-            // }
+             var error = articleStore.checkEmpty().error;
+         	if (error) {
+         		alert(error);
+         		return;
+         	}
             var data = {
             	id: articleStore.id || null,
             	business_id: articleStore.business_id,
@@ -271,8 +271,9 @@ var initPage = function() {
                 success: function(data) {
                     if (data.code == "0") {
                         articleStore.id = data.data.id;
-                        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+                        articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
                         console.log("保存成功");
+                        alert("保存文章成功");
                     } else {
                         console.log("保存失败");
                     }
@@ -286,7 +287,7 @@ var initPage = function() {
             //
             //    if (data.code == "0") {
             //        articleStore.id = data.data.id;
-            //        articleStore.previewUrl = "../app.do?method=init&app_id" + articleStore.id;
+            //        articleStore.previewUrl = "../show_article.do?method=init&app_id" + articleStore.id;
             //        console.log("保存成功");
             //    } else {
             //        console.log("保存失败");
@@ -298,22 +299,36 @@ var initPage = function() {
 
         // 事件绑定 预览按钮点击事件
         document.querySelector('.preview').addEventListener('click', function(e) {
-            window.open(articleStore.previewUrl);
-            console.log("预览事件");
+            if(articleStore.previewUrl){
+            	window.open(articleStore.previewUrl);
+                console.log("预览事件");
+            }
+            else{
+            	alert("文章没有保存，不能预览");
+            }
         });
 
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function(e) {
-            Util.setAjax(Inter.getApiUrl().publishArtcle, {id:articleStore.id}, function(json) {
-                if (json.code == "0") {
-                    console.log("保存成功");
-                } else {
-                    console.log("保存失败");
+        	$.ajax({
+                url: Inter.getApiUrl().publishArticle,
+                type: 'POST',
+                async: true,
+                data: {id: articleStore.id},
+                dataType: "json",
+                success: function(data) {
+                    if (data.code == "0") {
+                    	 alert("发布成功");
+                         console.log("发布成功");
+                    } else {
+                        console.log("发布失败");
+                        alert("发布失败");
+                    }
+                },
+                error: function(data) {
+                    alert("发布失败");
                 }
-            }, function(json) {
-              
             });
-            console.log("发布事件");
         });
 
         // 事件绑定  文章标题输入框onChange事件 
@@ -408,16 +423,20 @@ var initPage = function() {
          *  video 视频
          *  category 栏目
          * */
-    	var business_id;
+    	var business_id, id;
     	try{
     		 business_id = parseInt(location.href.match(/business_id=(\d+)/)[1]);
     	} catch(e){
     		business_id = null;
-    		console.error('url中缺乏business_id参数');
+    	}
+    	try{
+    		id = parseInt(location.href.match(/(\&|\?)id=(\d+)/)[2]);
+    	} catch(e){
+    		id = '';
     	}
     	
         var articleStore = {
-        	id:'',
+        	id: id,
             title: '',
             content: '',
             thumbnail: '',
@@ -426,6 +445,7 @@ var initPage = function() {
             video:'',
             category: '',
             business_id: business_id,
+            previewUrl : id ? "../show_article.do?method=init&article_id=" + id : '',
             checkEmpty: function() {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
@@ -443,8 +463,8 @@ var initPage = function() {
                     if (!this[item.id]) {
                         error += item.name + '项为空\n   ';
                     }
-                    return { error: error || null };
-                }.bind(this))
+                }.bind(this));
+                return { error: error || null };
             },
         };
         return articleStore;
@@ -475,10 +495,61 @@ var initPage = function() {
         var tip = document.querySelector(selector);
         tip.classList.add('hidden');
     }
+    function updateArticleData(id){
+    	$.ajax({
+    		url: Inter.getApiUrl().readArticle,
+    		type: 'GET',
+    		data: {id: id},
+    		dataType:'json',
+    		success: function(data){
+    			if(data.code === '0'){
+    				console.log("请求文章数据成功");
+    		    	var nameMapping = [
+    	           		{serverName: 'title', storeName: 'title'},
+    	           		{serverName: 'audio', storeName: 'audio'},
+    	           		{serverName: 'video', storeName: 'video'},
+    	           		{serverName: 'content', storeName: 'content'},
+    	           		{serverName: 'column_id', storeName: 'category'},
+    	           		{serverName: 'abstract_pic', storeName: 'thumbnail'},
+    	           		{serverName: 'abstract_content', storeName: 'summary'},
+    		    	];
+    		    	data = data.data;
+    		    	nameMapping.forEach(function(item){
+    		    		articleStore[item.storeName] = data[item.serverName];
+    		    	});
+    				insertArticleData();
+    			}
+    			else{
+    				console.log("请求文章数据失败");
+    			}
+    		},
+    		error: function(){
+    			console.log("请求文章数据失败");
+    		}
+    	})
+    }
+    function insertArticleData(){
+    	$('#title').val(articleStore.title);
+    	var intervalId = setInterval(function(){
+    		if(ue.body){
+    			ue.setContent(articleStore.content);
+    			clearInterval(intervalId);
+    		}
+    	},500);
+    	$("#summary").val(articleStore.summary);
+    	$("#thumbnail_show").attr('src', articleStore.thumbnail);
+    	$("#audio").val(articleStore.audio);
+    	$("#video").val(articleStore.video);
+    	$("#category option[value='" + articleStore.category +"']").attr("selected","selected")
+    }
     return {
         init: function() {
             initEditor();
             initEvent();
+            if(articleStore.id){
+            	$(".content-header").html("更新文章");
+            	updateArticleData(articleStore.id);
+            }
         }
     }
 }();

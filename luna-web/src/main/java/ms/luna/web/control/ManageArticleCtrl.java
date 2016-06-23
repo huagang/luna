@@ -191,7 +191,6 @@ public class ManageArticleCtrl extends BasicCtrl {
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
-
         JSONObject ret = manageArticleService.getArticleById(id);
         ModelAndView modelAndView = buildModelAndView("/add_article");
         JSONObject columnJsonData = manageColumnService.readAllColumn();
@@ -199,7 +198,6 @@ public class ManageArticleCtrl extends BasicCtrl {
             Map<String, Integer> columnMap = columnJsonData.getJSONObject("data").toJavaObject(Map.class);
             modelAndView.addObject("columnMap", columnMap);
         }
-//        modelAndView.addAllObjects(ret.getJSONObject("data").toJavaObject(Map.class));
         return modelAndView;
     }
 
