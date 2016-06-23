@@ -589,7 +589,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				for (int z = PoiCommon.Excel.公有字段个数; !isError && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
 					String field_show_name = getCellValueAsString(row0.getCell(z)).trim();
 					String value = getCellValueAsString(row.getCell(z)).trim();
-					isError = isError || PoiCommon.checkPrivateField(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
+					isError = isError || PoiCommon.getInstance().checkPrivateField(value, fieldsJsonByTag.get(field_show_name), Boolean.TRUE);
 				}
 
 				// check检查有错误

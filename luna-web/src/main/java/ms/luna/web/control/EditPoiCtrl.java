@@ -126,6 +126,36 @@ public class EditPoiCtrl extends BasicCtrl{
 	}
 
 	/**
+	 * 检查POI基础信息
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping(params = "method=checkPoi")
+	public void checkPoi(
+			@RequestParam(required = true, value = "poiId")
+			String _id,
+			@RequestParam(defaultValue="0", required = false, value = "lang")
+			String lang,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+		response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+
+		if (PoiCommon.POI.EN.equals(lang)) {
+			JSONObject result = managePoiService.downloadPoiTemplete("{}");
+			if (!"0".equals(result.get("code"))) {
+				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
+				return;
+			}
+			JSONObject data = result.getJSONObject("data");
+			JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
+			JSONObject param = PoiCommon.getInstance().checkParams(request, privateFieldsDef);
+			response.getWriter().print(param.toJSONString());
+			return;
+		}
+	}
+
+	/**
 	 * 添加POI基础信息
 	 * @param request
 	 * @param response
