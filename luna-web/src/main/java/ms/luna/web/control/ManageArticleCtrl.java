@@ -186,17 +186,15 @@ public class ManageArticleCtrl extends BasicCtrl {
         }
     }
 
-//    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
-//    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-//
-//        response.setHeader("Access-Control-Allow-Origin", "*");
-//        response.setContentType("text/html; charset=UTF-8");
-//
-//        JSONObject ret = manageArticleService.getArticleById(id);
-//        ModelAndView modelAndView = buildModelAndView("/add_article");
-//        modelAndView.addAllObjects(ret.getJSONObject("data").toJavaObject(Map.class));
-//        return modelAndView;
-//    }
+    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
+    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+        JSONObject ret = manageArticleService.getArticleById(id);
+        ModelAndView modelAndView = buildModelAndView("/add_article");
+        return modelAndView;
+    }
 
     @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.POST)
     public void submitUpdateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
