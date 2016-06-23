@@ -128,9 +128,10 @@ function ArticleController($scope, $rootScope, $http) {
         $http(request).then(function success(response) {
             var data = response.data;
             if (data.code != '0') {
-                $.alert(data.msg);
+                $scope.article.businessOptions = [{'business_id' : '', 'business_name': '无'}];
+                //$.alert(data.msg);
             } else {
-                $scope.article.businessOptions = data.data.rows;
+                $scope.article.businessOptions = [{'business_id' : '', 'business_name': '请选择'}].concat(data.data.rows);
             }
         }, function error(response) {
             $.alert(response.data.msg);

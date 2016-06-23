@@ -230,8 +230,6 @@ public class ManageArticleCtrl extends BasicCtrl {
         }
     }
 
-
-
     @RequestMapping(params = DELETE_ARTICLE)
     public void deleteArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
