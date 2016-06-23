@@ -193,6 +193,11 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setContentType("text/html; charset=UTF-8");
         JSONObject ret = manageArticleService.getArticleById(id);
         ModelAndView modelAndView = buildModelAndView("/add_article");
+        JSONObject columnJsonData = manageColumnService.readAllColumn();
+        if(columnJsonData.getString("code").equals("0")) {
+            Map<String, Integer> columnMap = columnJsonData.getJSONObject("data").toJavaObject(Map.class);
+            modelAndView.addObject("columnMap", columnMap);
+        }
         return modelAndView;
     }
 
