@@ -24,6 +24,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 
 import ms.biz.common.MongoConnector;
+import ms.biz.common.PoiApiNameMap;
 import ms.luna.biz.bl.PoiApiBL;
 import ms.luna.biz.dao.custom.MsPoiFieldDAO;
 import ms.luna.biz.dao.custom.MsPoiTagDAO;
@@ -48,7 +49,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 	@Autowired
 	private MsPoiTagDAO msPoiTagDAO;
 	
-	@Autowired MsPoiFieldDAO msPoiFieldDAO;
+	@Autowired 
+	MsPoiFieldDAO msPoiFieldDAO;
+	
+	@Autowired
+	private PoiApiNameMap poiApiNameMap;
 	
 	private static Map<String,String> fieldNamesLst = new LinkedHashMap<>();// (key：字段名称，value:字段显示名称)
 	
@@ -62,11 +67,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 	@Override
 	public JSONObject getPoisInFirstLevel(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		int business_id = param.getIntValue("business_id");
+		int biz_id = param.getIntValue("biz_id");
 		String fields = param.getString("fields");
 		String[] fieldsArr = fields.split(",");
 		// 获取业务关系树
-		Document tree = getBizTreeById(business_id);
+		Document tree = getBizTreeById(biz_id);
 		if(tree != null){
 			List<String> poiIdLst = null;
 			poiIdLst = getPoisWithLevelInBizTree(tree, 1);
@@ -83,7 +88,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 			}
 			data.put("pois", poiArray);
-			return FastJsonUtil.sucess("获取业务树(id:"+business_id+")第1层数据成功", data);
+			return FastJsonUtil.sucess("获取业务树(id:"+biz_id+")第1层数据成功", data);
 		} else {
 			return FastJsonUtil.error("1", "业务关系树不存在");
 		}
@@ -100,10 +105,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	@Override
 	public JSONObject getCtgrsByBizIdAndPoiId(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		int business_id = param.getIntValue("business_id");
+		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
 		// 获取业务关系树
-		Document tree = getBizTreeById(business_id);
+		Document tree = getBizTreeById(biz_id);
 		if(tree != null){
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
@@ -116,11 +121,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// 读取数据库
 				Document doc = getPoiById(_id);
 				if(doc == null){
-					throw new RuntimeException("(Method: getCtgrsByBizIdAndPoiId)业务关系树（id:"+business_id+"）中，id为"+_id+"的poi数据信息读取失败!");
+					throw new RuntimeException("(Method: getCtgrsByBizIdAndPoiId)业务关系树（id:"+biz_id+"）中，id为"+_id+"的poi数据信息读取失败!");
 				}
-				JSONObject poi = JSONObject.parseObject(doc.toJson());
-				JSONArray tags = poi.getJSONArray("tags");
-				ctgrIdSet.add(tags.getInteger(0));
+//				JSONObject poi = JSONObject.parseObject(doc.toJson());
+//				JSONArray tags = poi.getJSONArray("tags");
+				ArrayList<Integer> tags = (ArrayList<Integer>) doc.get("tags");
+				ctgrIdSet.add(tags.get(0));
 			}
 			// 根据类别id获取类别名称
 			String[] ctgrs = new String[ctgrIdSet.size()];
@@ -144,17 +150,69 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 	}
 
+	// 根据业务和POI获取下一层的二级类别列表
+	@Override
+	public JSONObject getSubCtgrsByBizIdAndPoiId(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		int biz_id = param.getIntValue("biz_id");
+		String poi_id = param.getString("poi_id");
+		int ctgr_id = param.getInteger("ctgr_id");
+		// 获取业务关系树
+		Document tree = getBizTreeById(biz_id);
+		if(tree != null){
+			// 获取给定poi结点下的子结点
+			List<String> poiIdLst = new ArrayList<>();
+			Document jsoncList = (Document) tree.get("c_list");
+			getPoisByParentId(poiIdLst,jsoncList, poi_id, 0, 0);
+			
+			JSONObject data = new JSONObject();
+			Set<Integer> subCtgrIdSet = new HashSet<>();	// 类别集合
+			for(String _id: poiIdLst){
+				// 读取数据库
+				Document doc = getPoiById(_id);
+				if(doc == null){
+					throw new RuntimeException("(Method: getSubCtgrsByBizIdAndPoiId)业务关系树（id:"+biz_id+"）中，id为"+_id+"的poi数据信息读取失败!");
+				}
+				ArrayList<Integer> tags = (ArrayList<Integer>) doc.get("tags");
+				if(!tags.isEmpty() && tags.get(0) == ctgr_id){
+					// 获取二级分类
+					int sub_tag_id = doc.getInteger("sub_tag");
+					subCtgrIdSet.add(sub_tag_id);
+				}
+				
+			}
+			
+			// 根据类别id获取类别名称
+			String[] subCtgrs = new String[subCtgrIdSet.size()];
+			int[] subCtgrIds = new int[subCtgrIdSet.size()];
+			
+			if(!subCtgrIdSet.isEmpty()){
+				int i = 0;
+				Map<Integer, String> map = getPoiTagsLst();
+				for(Integer subCtgrId : subCtgrIdSet){
+					subCtgrIds[i] = subCtgrId;
+					subCtgrs[i] = map.get(subCtgrId);
+					i++;
+				}
+			}
+			data.put("sub_ctgrs", subCtgrs);
+			data.put("sub_ctgr_ids", subCtgrIds);
+			return FastJsonUtil.sucess("二级分类列表信息获取成功！",data);
+		}
+		return null;
+	}
+	
 	// 根据业务，POI和一级类别获取下一层POI数据列表
 	@Override
 	public JSONObject getPoisByBizIdAndPoiIdAndCtgrId(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		int business_id = param.getIntValue("business_id");
+		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
 		int ctgr_id = param.getIntValue("ctgr_id");
 		String fields = param.getString("fields");
 		String[] fieldArr = fields.split(",");
 		// 获取业务关系树
-		Document tree = getBizTreeById(business_id);
+		Document tree = getBizTreeById(biz_id);
 		if(tree != null){
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
@@ -199,9 +257,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 			Map<Integer, String> poiTypes = getPoiTypesLst();
 			Map<Integer, String> poiSceneTypes = getPoiSceneTypesLst();
 			
-			if(fieldNames.containsKey(key) || key.equals("sub_tag")){
+			if(fieldNames.containsKey(key) || "sub_tag".equals(key)){
 				// 一级类别--tags
-				if(key.equals("tags")){
+				if("tags".equals(key)){
 					ArrayList<Integer> array = (ArrayList<Integer>) entry.getValue();
 					int tag = array.get(0);
 					if(poiTags.containsKey(tag)){
@@ -211,7 +269,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					continue;
 				} 
 				// 二级类别--sub_tag
-				if(key.equals("sub_tag")){
+				if("sub_tag".equals(key)){
 					int keyval = (int) entry.getValue();
 					if(poiTags.containsKey(keyval)){
 						poi.put("sub_ctgr", poiTags.get(keyval));
@@ -223,7 +281,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					continue;
 				}
 				// 标签--type
-				if(key.equals("type")){
+				if("type".equals(key)){
 					ArrayList<Integer> types = (ArrayList<Integer>) entry.getValue();
 					String[] tps = new String[types.size()];
 					int[] tpsId = new int[types.size()];
@@ -233,12 +291,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 							tpsId[i] = types.get(i);
 						}
 					}
-					poi.put("types", tps);
-					poi.put("type_ids", tpsId);
+					poi.put("hotel_type", tps);
+					poi.put("hotel_type_id", tpsId);
 					continue;
 				}
 				// 标签--scene_type
-				if(key.equals("scene_type")){
+				if("scene_type".equals(key)){
 					ArrayList<Integer> types = (ArrayList<Integer>) entry.getValue();
 					String[] tps = new String[types.size()];
 					int[] tpsId = new int[types.size()];
@@ -248,12 +306,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 							tpsId[i] = types.get(i);
 						}
 					}
-					poi.put("scene_types", tps);
-					poi.put("scene_type_ids", tpsId);
+					poi.put("scene_type", tps);
+					poi.put("scene_type_id", tpsId);
 					continue;
 				}
 				// 经纬度--lnglat
-				if(key.equals("lnglat")){
+				if("lnglat".equals(key)){
 					Document lnglat = (Document) entry.getValue();
 					ArrayList<Double> coordinates = (ArrayList<Double>) lnglat.get("coordinates");
 					double[] coords = new double[coordinates.size()];
@@ -263,25 +321,32 @@ public class PoiApiBLImpl implements PoiApiBL {
 					poi.put("lnglat", coords);
 					continue;
 				}
-				poi.put(key, entry.getValue());
+				key = poiApiNameMap.getOuterVal(key);
+//				if(key != null){// 判断映射表是否存在对应名称。fieldNames.containsKey(key)表明是存在的，不需要此判断
+					poi.put(poiApiNameMap.getOuterVal(key), entry.getValue());
+//				}
 			}
 		}
 		
 		return FastJsonUtil.sucess("获取POI数据成功", poi); 
 	}
 
-	// 获取某个业务某个/几个标签下所有poi数据
+	// 获取某个/几个标签下所有poi数据
 	@Override
 	public JSONObject getPoisByBizIdAndTags(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		int business_id = param.getIntValue("business_id");
+		int biz_id = param.getIntValue("biz_id");
 		String tags = param.getString("tags");
 		String fields = param.getString("fields");
 		String type = param.getString("type");
 		String[] tagArr = tags.split(",");
 		String[] fieldArr = fields.split(",");
+		
+		// 名称映射转换
+		type = poiApiNameMap.getInnerVal(type);
+
 		// 获取业务关系树
-		Document tree = getBizTreeById(business_id);
+		Document tree = getBizTreeById(biz_id);
 		if(tree != null){
 			// 获取子POI id集合
 			Document jsoncList = (Document)tree.get("c_list");
@@ -303,7 +368,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			return FastJsonUtil.error("1", "业务关系树不存在");
 		}
 	}
-	
+
 	//------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 缓存数据(key：字段名称，value:字段显示名称)
@@ -486,28 +551,26 @@ public class PoiApiBLImpl implements PoiApiBL {
 	
 	/**
 	 * 获取业务关系树
-	 * @param business_id 业务树id
+	 * @param biz_id 业务树id
 	 * @return
 	 */
-	private Document getBizTreeById(int business_id) {
+	private Document getBizTreeById(int biz_id) {
 		MongoCollection<Document> business_tree = mongoConnector.getDBCollection("business_tree");
 		BasicDBObject condition = new BasicDBObject();
-		condition.put("business_id", business_id);
+		condition.put("business_id", biz_id);
 		Document tree = null;
 		tree = business_tree.find(condition).first();
 		return tree;
 	}
 	
-
-	
 	/**
 	 * 获取树的同一层poi结点的id
-	 * @param business_id 业务树id
+	 * @param biz_id 业务树id
 	 * @param level 树的层级
 	 * @return
 	 */
 	List<String> getPoisWithLevelInBizTree(Document tree, int level){
-		if(level != 1){//待完成
+		if(level != 1){ //目前只获取第一层数据
 			return null;
 		}
 		Document subTree = (Document) tree.get("c_list");
@@ -518,7 +581,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		return null;
 	}
-	
 	
 	/**
 	 *  获取给定字段,id和标签的poi
@@ -546,7 +608,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return result;
 	}
 	
-
 	/**
 	 * 获取给定字段和id的poi
 	 * @param poi_id poi 的id
@@ -565,7 +626,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		return result;
 	}
-	
 
 	/**
 	 * 获取父poi下满足一级分类id的poi子结点（poi仅包含给定字段数据）
@@ -589,21 +649,21 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return result;
 	}
 
-
 	private JSONObject getPoiInfoByFields(Document doc, String[] fields) {
 		JSONObject result = new JSONObject();
 		if(doc != null){
 			Document resJson = doc;
 			for(String field : fields){
-				if(resJson.containsKey(field)){
-					String key = field;
+				field = poiApiNameMap.getInnerVal(field);
+				String key = field;
+				if(resJson.containsKey(key) || "sub_tag".equals(key)){
 					Map<String, String> fieldNames = getFieldNamesLst();
 					Map<Integer, String> poiTags = getPoiTagsLst();
 					Map<Integer, String> poiTypes = getPoiTypesLst();
 					
-					if(fieldNames.containsKey(key) || key.equals("sub_tag")){
+					if(fieldNames.containsKey(key) || "sub_tag".equals(key)){
 						// 一级类别--tags
-						if(key.equals("tags")){
+						if("tags".equals(key)){
 							ArrayList<Integer> array = (ArrayList<Integer>) resJson.get("tags");
 							int tag = array.get(0);
 							if(poiTags.containsKey(tag)){
@@ -613,7 +673,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							continue;
 						}
 						// 二级类别--sub_tag
-						if(key.equals("sub_tag")){
+						if("sub_tag".equals(key)){
 							int keyval = resJson.getInteger("sub_tag");
 							if(poiTags.containsKey(keyval)){
 								result.put("sub_ctgr", poiTags.get(keyval));
@@ -622,7 +682,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							continue;
 						}
 						// 标签--type
-						if(key.equals("type")){
+						if("type".equals(key)){
 							ArrayList<Integer> types = (ArrayList<Integer>) resJson.get("type");
 							String[] tps = new String[types.size()];
 							int[] tpsId = new int[types.size()];
@@ -632,12 +692,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 									tps[i] = poiTypes.get(tpsId[i]);
 								}
 							}
-							result.put("types", tps);
-							result.put("type_ids", tpsId);
+							result.put("hotel_type", tps);
+							result.put("hotel_type_id", tpsId);
 							continue;
 						}
 						// 标签--scene_type
-						if(key.equals("scene_type")){
+						if("scene_type".equals(key)){
 							ArrayList<Integer> types = (ArrayList<Integer>) resJson.get("scene_type");
 							String[] tps = new String[types.size()];
 							int[] tpsId = new int[types.size()];
@@ -647,12 +707,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 									tps[i] = poiTypes.get(tpsId[i]);
 								}
 							}
-							result.put("scene_types", tps);
-							result.put("scene_type_ids", tpsId);
+							result.put("scene_type", tps);
+							result.put("scene_type_id", tpsId);
 							continue;
 						}
 						// 经纬度--lnglat
-						if(key.equals("lnglat")){
+						if("lnglat".equals(key)){
 							Document lnglat = (Document) resJson.get("lnglat");
 							ArrayList<Double> coordinates = (ArrayList<Double>) lnglat.get("coordinates");
 							double[] coords = new double[coordinates.size()];
@@ -662,13 +722,17 @@ public class PoiApiBLImpl implements PoiApiBL {
 							result.put("lnglat", coords);
 							continue;
 						}
-						result.put(key, resJson.get(key));
+						result.put(poiApiNameMap.getOuterVal(key), resJson.get(key));
 					}
 				}
 			}
 		}
 		return result;
 	}
+
 	
 //	public static void main(String[] args) {
+//		Document doc = new Document();
+//		System.out.println(doc.containsKey(null));
+//	}
 }

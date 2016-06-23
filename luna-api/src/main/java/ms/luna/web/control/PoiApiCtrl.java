@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.zookeeper.Op.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -30,13 +29,13 @@ public class PoiApiCtrl {
 
 	/**
 	 * 根据业务获取一个层级的poi数据列表
-	 * @param business_id 业务树id
+	 * @param biz_id 业务树id
 	 * @param level 层级
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
 	 */
 	@RequestMapping(params = "method=getPoisInFirstLevel")
 	public void getPoisInFirstLevel(
-			@RequestParam(required = true, value = "business_id") Integer business_id, 
+			@RequestParam(required = true, value = "biz_id") Integer biz_id, 
 			@RequestParam(required = false, value = "fields") String fields,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
@@ -49,7 +48,7 @@ public class PoiApiCtrl {
 				fields = fields.trim();
 			}
 			JSONObject param = JSONObject.parseObject("{}");
-			param.put("business_id", business_id);
+			param.put("biz_id", biz_id);
 			param.put("fields", fields);
 			
 			JSONObject result = poiApiService.getPoisInFirstLevel(param.toString());
@@ -67,7 +66,7 @@ public class PoiApiCtrl {
 
 	/**
 	 * 根据业务和POI获取下一层的一级类别列表
-	 * @param business_id 业务id
+	 * @param biz_id 业务id
 	 * @param poi_id poi ID数据
 	 * @param request
 	 * @param response
@@ -75,7 +74,7 @@ public class PoiApiCtrl {
 	 */
 	@RequestMapping(params = "method=getCtgrsByBizIdAndPoiId")
 	public void getCtgrsByBizIdAndPoiId(
-			@RequestParam(required = true, value = "business_id") Integer business_id,
+			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
@@ -83,7 +82,7 @@ public class PoiApiCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 		try{
 			JSONObject param = JSONObject.parseObject("{}");
-			param.put("business_id", business_id);
+			param.put("biz_id", biz_id);
 			param.put("poi_id", poi_id);
 			
 			JSONObject result = poiApiService.getCtgrsByBizIdAndPoiId(param.toString());
@@ -98,9 +97,37 @@ public class PoiApiCtrl {
 		}
 	}
 
+	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
+	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
+			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "poi_id") String poi_id, 
+			@RequestParam(required = true, value = "ctgr_id") Integer ctgr_id, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		try{
+			JSONObject param = JSONObject.parseObject("{}");
+			param.put("biz_id", biz_id);
+			param.put("poi_id", poi_id);
+			param.put("ctgr_id", ctgr_id);
+			
+			JSONObject result = poiApiService.getSubCtgrsByBizIdAndPoiId(param.toString());
+			MsLogger.debug(result.toString());
+			response.getWriter().print(result);
+			response.setStatus(200);
+			return;
+			
+		} catch (Exception e ){
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
+		}
+	}
+	
 	/**
 	 * 根据业务，POI和一级类别获取下一层POI数据列表
-	 * @param business_id 业务id
+	 * @param biz_id 业务id
 	 * @param poi_id poi id
 	 * @param ctgr_id 一级类别id
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
@@ -110,10 +137,10 @@ public class PoiApiCtrl {
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndCtgrId")
 	public void getPoisByBizIdAndPoiIdAndCtgrId(
-			@RequestParam(required = true, value = "business_id") Integer business_id,
+			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "ctgr_id") int ctgr_id,
-			@RequestParam(required = false, value="fields") String fields,
+			@RequestParam(required = false, value= "fields") String fields,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -125,7 +152,7 @@ public class PoiApiCtrl {
 				fields = fields.trim();
 			}
 			JSONObject param = JSONObject.parseObject("{}");
-			param.put("business_id", business_id);
+			param.put("biz_id", biz_id);
 			param.put("poi_id", poi_id);
 			param.put("ctgr_id", ctgr_id);
 			param.put("fields", fields);
@@ -151,7 +178,7 @@ public class PoiApiCtrl {
 	 */
 	@RequestMapping(params = "method=getPoiById")
 	public void getPoiById(
-			@RequestParam(required = true) String poi_id, 
+			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -174,7 +201,7 @@ public class PoiApiCtrl {
 	
 	/**
 	 * 获取某个业务某个/几个标签下所有poi数据
-	 * @param business_id 业务id
+	 * @param biz_id 业务id
 	 * @param tags 标签（eg:"1,2,3"）
 	 * @param request
 	 * @param response
@@ -182,7 +209,7 @@ public class PoiApiCtrl {
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndTags")
 	public void getPoisByBizIdAndTags(
-			@RequestParam(required = true, value = "business_id") Integer business_id,
+			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "type") String type,
 			@RequestParam(required = true, value = "tags") String tags,
 			@RequestParam(required = false, value = "fields") String fields,
@@ -203,11 +230,8 @@ public class PoiApiCtrl {
 			} else {
 				fields = fields.trim();
 			}
-			if(type.equals("hotel_type")){
-				type = "type";
-			}
 			JSONObject param = JSONObject.parseObject("{}");
-			param.put("business_id", business_id);
+			param.put("biz_id", biz_id);
 			param.put("tags", tags);
 			param.put("fields", fields);
 			param.put("type", type);

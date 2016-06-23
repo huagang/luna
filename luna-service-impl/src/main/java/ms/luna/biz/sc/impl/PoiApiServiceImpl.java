@@ -85,4 +85,15 @@ public class PoiApiServiceImpl implements PoiApiService {
 		return jSONObject;
 	}
 
+	@Override
+	public JSONObject getSubCtgrsByBizIdAndPoiId(String json) {
+		JSONObject jSONObject = null;
+		try {
+			jSONObject = poiApiBL.getSubCtgrsByBizIdAndPoiId(json);
+		} catch (Exception e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return jSONObject;
+	}
+
 }

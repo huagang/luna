@@ -105,7 +105,7 @@ public class VodPlayCtrl {
 			String task = params.getString("task");
 
 			// 第一次回调
-			if (task.equals("file_upload")) {
+			if ("file_upload".equals(task)) {
 				JSONObject json1 = params.getJSONObject("data");
 				int ret = json1.getInteger("ret");
 				if (ret != -303) {
@@ -123,7 +123,7 @@ public class VodPlayCtrl {
 			}
 
 			// 第二次回调
-			if (task.equals("transcode")) {
+			if ("transcode".equals(task)) {
 				JSONObject json2 = params.getJSONObject("data");
 				int ret = json2.getInteger("ret");
 				String vod_file_id = json2.getString("file_id");// 腾讯云有时用file_id有时fileId
