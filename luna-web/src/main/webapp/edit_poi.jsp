@@ -47,7 +47,7 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
                 	<c:if test="${lang == 'zh'}">
-                		<a href="/luna-web/edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">英文版</a>
+                		<a href="/luna-web/edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
                 	</c:if>
                 </h3>
             </div>
