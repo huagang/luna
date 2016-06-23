@@ -770,6 +770,16 @@ public class PoiCommon {
 					result.put(entry.getKey(), value);
 					break;
 
+				case VbConstant.POI_FIELD_TYPE.图片:
+					result.put(entry.getKey(), value);
+					break;
+				case VbConstant.POI_FIELD_TYPE.视频:
+					result.put(entry.getKey(), value);
+					break;
+				case VbConstant.POI_FIELD_TYPE.音频:
+					result.put(entry.getKey(), value);
+					break;
+
 				case VbConstant.POI_FIELD_TYPE.复选框列表:
 					JSONArray array = FastJsonUtil.createBlankIntegerJsonArray();
 
