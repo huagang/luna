@@ -296,7 +296,7 @@ public class PoiCommon {
 	 * @return msg
 	 */
 	public String checkDetailAddress(String param) {
-		if (param == null || param.length() == 0) {
+		if (CharactorUtil.checkPoiDefaultStr(param, POI.详细地址最大长度)) {
 			return MsLunaMessage.getInstance().getMessage("LUNA.E0002", "详细地址", POI.详细地址最大长度);
 		}
 		return null;
