@@ -1,14 +1,18 @@
-var newAppDialog = $("#pop-addapp").clone();
-var editAppDialog = $("#pop-editapp").clone();
-var reuseAppDialog = $('#pop-reuseapp').clone();
+/*
+ *  @description 用于微景展管理页面的行为控制以及与数据请求
+ *  @author unknown
+ *  @update wumengqiang(dean@visualbusiness.com) 2016/6/22 15:20
+ *  
+ *  TODO LIST by wumengqiang
+ *     微景展复用接口对接
+ *   
+ */
 
 $(document).ready(function(){
-    //新建微景展
-    //搜索
+    //搜索微景展
     $("#search_apps").click(function() {
     	$('#table_apps').bootstrapTable("refresh");
-    }
-    );
+    });
     // 文本框回车搜索
     $('#like_filter_nm').keypress(function(event){  
         var keycode = (event.keyCode ? event.keyCode : event.which);  
@@ -31,10 +35,10 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		_business_name:'',
 		_type:'',  // type类型有  "create", "update", "reuse",
 		_posturl:{ // 设置相关请求的url
-			create: host+'/manage/app.do?method=create_app',
-			update: host+'/manage/app.do?method=update_app',
-			reuse: host+'/manage/app.do?method=reuse_app',
-			searchBusiness: host+'/manage/app.do?method=search_business'
+			create: host+'/manage/app.do?method=create_app',  //创建微景展请求 url
+			update: host+'/manage/app.do?method=update_app',  //更新微景展名称请求 url
+			reuse: host+'/manage/app.do?method=reuse_app',	  //TODO 复用微景展请求url
+			searchBusiness: host+'/manage/app.do?method=search_business' //搜索业务请求 url
 		},
 		_business_dialog: $(business_dialog_selector),
 		_app_dialog: $(app_dialog_selector),
@@ -100,8 +104,9 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 			}	
 		},
 		searchBusiness:function() {   
-			/* 点击搜索按钮来搜索业务信息
+			/* 点击搜索按钮来筛选业务信息
 			 * 发送请求时需要国家，省，市，县，栏目等信息
+			 * 返回数据为业务列表
 			 */
 		    var request_data = {
 		    		"country_id":  	$("#country").val(),
@@ -210,14 +215,14 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 				this._app_dialog.find(".warn-appname").addClass('show');
 			}
 		},
-		/*handleDeleteApp:function(target){
-			this._app_id = target.parentNode.data-app-id;
-			
-		},*/
 		freshAppList:function(){
+			//刷新微景展列表
         	$('#table_apps').bootstrapTable("refresh");
 		},
 		_postData:function(){
+			/*发送请求，包含新建微景展请求，更新微景展信息请求以及
+			 * 未完成（TODO 等待接口对接）的复用微景展请求
+			 */
 			if(!this._app_name || !this._business_id){
 				return;
 			}
@@ -236,9 +241,12 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		            if(data.code === "0"){
 		            	this._app_dialog.removeClass('pop-show');
 		            	this.freshAppList();
+		            	if(this._type === 'create'){
+		            		location.href = '../app.do?method=init&app_id=' + data.data.app_id;
+		            	}
 		            }
 		            else{
-		            	alert("请求失败");
+		            	alert(data.msg);
 		            }
 		        }.bind(this),
 		        error: function (data) {
@@ -247,7 +255,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		    });
 		}
 	};
-	controller._bindEvent();
+	controller._bindEvent(); //调用事件绑定函数，从而实现初始化。
 	return controller;
 };
 

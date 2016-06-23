@@ -109,38 +109,13 @@ function getArticleStore() {
      *  category 栏目
      * */
     var articleStore = {
-        get title() {
-            return this._title;
-        },
-        set title(value) { this._title = value },
-        get content() {
-            return this._content
-        },
-        set content(value) { this._content = value },
-        get thumbnail() {
-            return this._thumbnail
-        },
-        set thumbnail(value) { this._thumbnail = value },
-        get summary() {
-            return this._summary
-        },
-        set summary(value) { this._summary = value },
-        get audio() {
-            return this._audio
-        },
-        set audio(value) {
-            this._audio = value;
-        },
-        get video() {
-            return this._video
-        },
-        set video(value) {
-            this._video = value;
-        },
-        get category() {
-            return this._category;
-        },
-        set category(value) { this._category = value },
+    	title: '',
+        content: '',
+        thumbnail: '',
+        summary:'',
+        audio: '',
+        video:'',
+        category: '',
         checkEmpty: function() {
             /* 用于检查是否有必填项没有填
              * @return {object} error - 返回的是以{"error": string}格式的错误信息，
@@ -148,11 +123,11 @@ function getArticleStore() {
              */
             var error = '';
             var checkList = [
-                { id: '_title', name: '标题' },
-                { id: '_content', name: '正文' },
-                { id: '_thumbnail', name: '首图' },
-                { id: '_summary', name: '摘要' },
-                { id: '_category', name: '栏目' }
+                { id: 'title', name: '标题' },
+                { id: 'content', name: '正文' },
+                { id: 'thumbnail', name: '首图' },
+                { id: 'summary', name: '摘要' },
+                { id: 'category', name: '栏目' }
             ];
             checkList.map(function(item) {
                 if (!this[item.id]) {
