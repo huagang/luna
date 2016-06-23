@@ -3,6 +3,7 @@ package ms.luna.biz.bl.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import ms.biz.common.CommonQueryParam;
 import ms.luna.biz.bl.ManageArticleBL;
 import ms.luna.biz.cons.ErrorCode;
@@ -158,8 +159,9 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             // TODO: 删除云端数据（视频、音频等数据），计划抽离统一资源库，业务不用管理
         } catch (Exception ex) {
             logger.error(String.format("Failed to delete article [%d]", id), ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除文章失败");
         }
-        return null;
+        return FastJsonUtil.sucess("删除文章成功");
     }
 
     @Override
@@ -181,7 +183,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
             int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
             if(msArticleResults != null) {
-                data.put("rows", JSON.toJSON(msArticleResults));
+                data.put("rows", JSON.parse(JSON.toJSONString(msArticleResults, SerializerFeature.WriteDateUseDateFormat)));
                 data.put("total", total);
             }
         } catch (Exception ex) {

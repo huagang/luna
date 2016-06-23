@@ -70,15 +70,17 @@ public class ManageArticleCtrl extends BasicCtrl {
         return buildModelAndView("/manage_article");
     }
 
-    private Pair<JSONObject, String> toJson(HttpServletRequest request) {
+    private Pair<JSONObject, String> toJson(HttpServletRequest request, boolean isCreated) {
         String errMsg = null;
         JSONObject jsonObject = new JSONObject();
-        int businessId = RequestHelper.getInteger(request, MsArticleTable.FIELD_BUSINESS_ID);
-        if(businessId < 0) {
-            errMsg = "业务不合法";
-            return Pair.of(jsonObject, errMsg);
+        if(isCreated) {
+            int businessId = RequestHelper.getInteger(request, MsArticleTable.FIELD_BUSINESS_ID);
+            if (businessId < 0) {
+                errMsg = "业务不合法";
+                return Pair.of(jsonObject, errMsg);
+            }
+            jsonObject.put(MsArticleTable.FIELD_BUSINESS_ID, businessId);
         }
-        jsonObject.put(MsArticleTable.FIELD_BUSINESS_ID, businessId);
 
         String title = RequestHelper.getString(request, MsArticleTable.FIELD_TITLE);
         if(StringUtils.isBlank(title) || title.length() > 50) {
@@ -130,7 +132,7 @@ public class ManageArticleCtrl extends BasicCtrl {
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
-        Pair<JSONObject, String> pair = toJson(request);
+        Pair<JSONObject, String> pair = toJson(request, true);
         JSONObject articleJson = pair.getLeft();
         if(pair.getRight() != null) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
@@ -184,17 +186,17 @@ public class ManageArticleCtrl extends BasicCtrl {
         }
     }
 
-    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
-    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
-
-        JSONObject ret = manageArticleService.getArticleById(id);
-        ModelAndView modelAndView = buildModelAndView("/add_article");
-        modelAndView.addAllObjects(ret.getJSONObject("data").toJavaObject(Map.class));
-        return modelAndView;
-    }
+//    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
+//    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setContentType("text/html; charset=UTF-8");
+//
+//        JSONObject ret = manageArticleService.getArticleById(id);
+//        ModelAndView modelAndView = buildModelAndView("/add_article");
+//        modelAndView.addAllObjects(ret.getJSONObject("data").toJavaObject(Map.class));
+//        return modelAndView;
+//    }
 
     @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.POST)
     public void submitUpdateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -206,7 +208,7 @@ public class ManageArticleCtrl extends BasicCtrl {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法"));
             return;
         }
-        Pair<JSONObject, String> pair = toJson(request);
+        Pair<JSONObject, String> pair = toJson(request, false);
         if(pair.getRight() != null) {
             response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
             return;
@@ -214,6 +216,9 @@ public class ManageArticleCtrl extends BasicCtrl {
 
         try{
             JSONObject jsonObject = pair.getLeft();
+            HttpSession session = request.getSession(false);
+            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
             response.getWriter().print(ret);

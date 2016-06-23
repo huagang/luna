@@ -41,10 +41,10 @@ var APP_STATUS = {
 };
 
 function statusFormatter(value, row, index) {
-    if(row.app_status === 1){
-        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+    if(row.status === 1){
+        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.status] + "'/>";
     } else {
-        return APP_STATUS[row.app_status];
+        return APP_STATUS[row.status];
     }
 }
 function timeFormatter(value, row, index) {
