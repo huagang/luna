@@ -395,6 +395,90 @@ public class PoiCommon {
 	}
 
 	/**
+	 * 获取value值
+	 * @param paramMaps
+	 * @param key
+	 * @return
+	 */
+	private String getValueFromParamMap(Map<String, String[]> paramMaps, String key) {
+		String[] values = paramMaps.get(key);
+		return (values == null || values.length == 0) ? "" : values[0];
+	}
+
+	/**
+	 * 检查所有POI字段是否有中文的
+	 * @param paramMaps
+	 */
+	public String checkCommFieldsHasChineseChar(Map<String, String[]> paramMaps) {
+		String msg = null;
+		if (paramMaps == null) {
+			msg = MsLunaMessage.getInstance().getMessage("FW.E0002", "POI参数错误");
+			MsLogger.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
+		Boolean hasError = false;
+		// 名称
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "longName"));
+		// 别名
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "shortName"));
+		// 详细地址
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "detailAddress"));
+		// 详细介绍
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "briefIntroduction"));
+		// 联系电话
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "contact_phone"));
+
+		return hasError ? MsLunaMessage.getInstance().getMessage("LUNA.W0001") : null;
+	}
+
+	/**
+	 * 检查所有POI字段是否有中文的
+	 * @param paramMaps
+	 */
+	public String checkPrivateFieldsHasChineseChar(HttpServletRequest request, JSONArray privateFieldsDef) {
+		Map<String, String[]> paramMaps = request.getParameterMap();
+		Set<Entry<String, String[]>> set = paramMaps.entrySet();
+		
+		Boolean hasError = false;
+		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
+		for (int i = 0; i < privateFieldsDef.size(); i++) {
+			JSONObject field = privateFieldsDef.getJSONObject(i);
+			if (!field.containsKey("field_def")) {
+				continue;
+			}
+			JSONObject field_def = field.getJSONObject("field_def");
+			fieldDefMap.put(field_def.getString("field_name"), field_def);
+		}
+
+		// 遍历所有从客户端传过来的键值对
+		for (Entry<String, String[]> entry : set) {
+			// 无视私有字段以外的值
+			if (!fieldDefMap.containsKey(entry.getKey())) {
+				continue;
+			}
+			String value = null;
+			// 数组的场合，全部以字符串形式接收
+			if (entry.getValue().length > 1) {
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0; i < entry.getValue().length; i++) {
+					if (i != 0) {
+						sb.append(",");
+					}
+					sb.append(entry.getValue()[i]);
+				}
+				value = sb.toString();
+			} else {
+				value = entry.getValue()[0];
+			}
+			if (this.checkPrivateFieldHasChineseChar(value, fieldDefMap.get(entry.getKey()))) {
+				hasError = true;
+				break;
+			}
+		}
+		return hasError ? MsLunaMessage.getInstance().getMessage("LUNA.W0001") : null; 
+	}
+
+	/**
 	 * 对POI的公共字段做合法性检查
 	 * @param paramMaps
 	 * @return
@@ -414,7 +498,7 @@ public class PoiCommon {
 			throw new IllegalArgumentException(msg);
 		}
 		// 2.别名
-		msg = checkPoiOtherName(paramMaps.get(msg));
+		msg = checkPoiOtherName(paramMaps.get("shortName"));
 		if (msg != null) {
 			MsLogger.debug(msg);
 			throw new IllegalArgumentException(msg);
@@ -610,7 +694,7 @@ public class PoiCommon {
 				value = entry.getValue()[0];
 			}
 			JSONObject privateJson = fieldDefMap.get(entry.getKey());
-			if (PoiCommon.checkPrivateField(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
+			if (this.checkPrivateField(value, fieldDefMap.get(entry.getKey()), Boolean.FALSE)) {
 				String field_show_name = "";
 				if (privateJson != null) {
 					field_show_name = privateJson.getString("field_show_name");
@@ -733,7 +817,7 @@ public class PoiCommon {
 	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
 	 * @return TRUE:有错误，FALSE：无错误
 	 */
-	public static boolean checkPrivateField(String value, JSONObject fieldDef, Boolean valueIsLabel) {
+	public boolean checkPrivateField(String value, JSONObject fieldDef, Boolean valueIsLabel) {
 		if (fieldDef == null) {
 			return true;
 		}
@@ -786,6 +870,47 @@ public class PoiCommon {
 				return false;
 		}
 	}
+	
+	/**
+	 * POI私有字段合法性检查
+	 * @param value 校验内容
+	 * @param fieldDef 私有字段的定义
+	 * @param valueIsLabel 数组格式的内容：键和值的区分（键：TRUE,值：FALSE）。
+	 * @return TRUE:有错误，FALSE：无错误
+	 */
+	private boolean checkPrivateFieldHasChineseChar(String value, JSONObject fieldDef) {
+		int field_type = fieldDef.getInteger("field_type");
+		switch (field_type) {
+			case VbConstant.POI_FIELD_TYPE.文本框:
+			case VbConstant.POI_FIELD_TYPE.文本域:
+				// 字符串
+				return CharactorUtil.hasChineseChar(value);
+			default:
+				return false;
+		}
+	}
+
+	public JSONObject checkParams(HttpServletRequest request, JSONArray privateFieldsDef) {
+		String lang = getValueFromParamMap(request.getParameterMap(), "lang");
+		String msg = null;
+		try {
+			this.checkCommonFields(request.getParameterMap());
+			this.checkPrivateFields(request, privateFieldsDef);
+			if (POI.EN.equals(lang)) {
+				msg = checkCommFieldsHasChineseChar(request.getParameterMap());
+				if (msg == null) {
+					msg = checkPrivateFieldsHasChineseChar(request, privateFieldsDef);
+				}
+			}
+			if (msg == null) {
+				return FastJsonUtil.sucess("no check error");
+			}
+			return FastJsonUtil.error("-1", msg);
+		} catch (IllegalArgumentException iae) {
+			return FastJsonUtil.sucess("发生非中文错误");
+		}
+	}
+
 	/**
 	 * POI参数到JSON的转换
 	 * @param request
@@ -795,6 +920,7 @@ public class PoiCommon {
 	public JSONObject param2Json(HttpServletRequest request, JSONArray privateFieldsDef, Boolean valueIsLabel) {
 		this.checkCommonFields(request.getParameterMap());
 		this.checkPrivateFields(request, privateFieldsDef);
+
 		JSONObject comFieldJson = this.convertComField2Json(request);
 		JSONObject privateFieldJson = this.convertPrivateField2Json(request, privateFieldsDef, valueIsLabel);
 		comFieldJson.putAll(privateFieldJson);

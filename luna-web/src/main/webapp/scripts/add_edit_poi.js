@@ -292,39 +292,118 @@ $(function(){
 		hasError = check_description() || hasError;
 		if (!hasError) {
 			var formdata = new FormData($("#poiModel")[0]);
-			 $.ajax({
-		            url:host+"/edit_poi.do?method=updatePoi",
-		            type:'POST',
-		            async:false,
-		            cache:true,
-		            data: formdata,
-		            processData: false,
-		            contentType: false,
-		            dataType:'JSON',
-		            success:function(returndata){
-		                switch (returndata.code){
-		                    case "0":  //符合规则添加修改属性
-		                    	$("#status-message").html("修改成功，请刷新后查看").css('display','block');
-		                    	setTimeout(function(){
-		                    	$("#status-message").css('display','none');
-		                    	window.location.href=host + "/manage_poi.do?method=init";
-		                    	      },2000);
-		                    	break;
-		                    default:
-		                    	$("#status-message").html(returndata.msg).css('display','block');
-		                    	setTimeout(function(){
-		                    	$("#status-message").css('display','none');
-		                    	      },2000);
-		                    	break;
-		                }
-		            },
-		            error:function(){
-		            	$("#status-message").html('请求错误，或会话已经失效！').css('display','block');
-		                 setTimeout(function(){
-		                    $("#status-message").css('display','none');
-                       },2000);
-		            }
-		        });
+			var noerror = true;
+			var msg = "";
+			// 针对英文做检查
+			var lang = $("#lang").val();
+			if ('en' == lang) {
+				// check检查
+				$.ajax({
+					url:host+"/edit_poi.do?method=checkPoi",
+					type:'POST',
+					async:false,
+					cache:true,
+					data: formdata,
+					processData: false,
+					contentType: false,
+					dataType:'JSON',
+					success:function(returndata){
+						switch (returndata.code){
+						case "0": 
+							noerror = true;
+							break;
+						case "-1":
+							msg = returndata.msg;
+							noerror = false;
+							break;
+						default:
+							noerror = false;
+						}
+					},
+					error:function(){
+						$("#status-message").html('请求错误，或会话已经失效！').css('display','block');
+						setTimeout(function(){
+							$("#status-message").css('display','none');
+						},2000);
+					}
+				});
+			}
+			if (!noerror) {
+				$.confirm(msg, function(){
+					 $.ajax({
+				            url:host+"/edit_poi.do?method=updatePoi",
+				            type:'POST',
+				            async:true,
+				            cache:true,
+				            data: formdata,
+				            processData: false,
+				            contentType: false,
+				            dataType:'JSON',
+				            success:function(returndata){
+				                switch (returndata.code){
+				                    case "0":  //符合规则添加修改属性
+				                    	$("#status-message").html("修改成功，请刷新后查看").css('display','block');
+				                    	setTimeout(function(){
+				                    	$("#status-message").css('display','none');
+				                    	window.location.href=host + "/manage_poi.do?method=init";
+				                    	      },2000);
+				                    	break;
+				                    default:
+				                    	$("#status-message").html(returndata.msg).css('display','block');
+				                    	setTimeout(function(){
+				                    	$("#status-message").css('display','none');
+				                    	      },2000);
+				                    	break;
+				                }
+				            },
+				            error:function(){
+				            	$("#status-message").html('请求错误，或会话已经失效！').css('display','block');
+				                 setTimeout(function(){
+				                    $("#status-message").css('display','none');
+		                       },2000);
+				            }
+				        });
+				}, function(){
+				});
+			} else {
+				 // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
+				 // 后台对于提交上来的数据，不再做中文检查
+				 $.ajax({
+			            url:host+"/edit_poi.do?method=updatePoi",
+			            type:'POST',
+			            async:true,
+			            cache:true,
+			            data: formdata,
+			            processData: false,
+			            contentType: false,
+			            dataType:'JSON',
+			            success:function(returndata){
+			                switch (returndata.code){
+			                    case "0":  //符合规则添加修改属性
+			                    	$("#status-message").html("修改成功，请刷新后查看").css('display','block');
+			                    	setTimeout(function(){
+			                    	$("#status-message").css('display','none');
+			                    	window.location.href=host + "/manage_poi.do?method=init";
+			                    	      },2000);
+			                    	break;
+			                    default:
+			                    	$("#status-message").html(returndata.msg).css('display','block');
+			                    	setTimeout(function(){
+			                    	$("#status-message").css('display','none');
+			                    	      },2000);
+			                    	break;
+			                }
+			            },
+			            error:function(){
+			            	$("#status-message").html('请求错误，或会话已经失效！').css('display','block');
+			                 setTimeout(function(){
+			                    $("#status-message").css('display','none');
+	                       },2000);
+			            }
+			        });
+			
+			}
+			
 		} else {
 			$("#status-message").html('您的输入有误！').css('display','block');
             setTimeout(function(){

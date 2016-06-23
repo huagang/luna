@@ -583,38 +583,56 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			poi_collection = mongoConnector.getDBCollection("poi_collection");
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() > 0) {
+				// 尝试同步更新英文表
+				Document oldEnDoc = this.getPoiById(_id, PoiCommon.POI.EN);
+				if (oldEnDoc != null) {
+					poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+					Document enDoc = new Document();
+					// 一级分类
+					enDoc.put("tags", doc.get("tags"));
+					// 二级分类
+					enDoc.put("sub_tag", doc.get("sub_tag"));
+					// 经纬度
+					enDoc.put("lnglat", doc.get("lnglat"));
+					// zone_id
+					enDoc.put("zone_id", doc.get("zone_id"));
+					// 省份
+					enDoc.put("province_id", doc.get("province_id"));
+					// 城市
+					enDoc.put("city_id", doc.get("city_id"));
+					// 区县
+					enDoc.put("county_id", doc.get("county_id"));
+					// 英文合并名称
+					enDoc.put("merger_name", msZoneCacheBL.getMergerNameEn((String)doc.get("zone_id")));
+					// 全景ID
+					enDoc.put("panorama", doc.get("panorama"));
+					// 更新时间
+					enDoc.put("update_hhmmss", doc.get("update_hhmmss"));
 
-				// TODO:需要同步更新英文表
-				poi_collection = mongoConnector.getDBCollection("poi_collection_en");
-				updateDocument = new BasicDBObject();
-				Document enDoc = new Document();
-				// 一级分类
-				enDoc.put("tags", doc.get("tags"));
-				// 二级分类
-				enDoc.put("sub_tag", doc.get("sub_tag"));
-				// 经纬度
-				enDoc.put("lnglat", doc.get("lnglat"));
-				// zone_id
-				enDoc.put("zone_id", doc.get("zone_id"));
-				// 省份
-				enDoc.put("province_id", doc.get("province_id"));
-				// 城市
-				enDoc.put("city_id", doc.get("city_id"));
-				// 区县
-				enDoc.put("county_id", doc.get("county_id"));
-				// 英文合并名称
-				enDoc.put("merger_name", msZoneCacheBL.getMergerNameEn((String)doc.get("zone_id")));
-				// 全景ID
-				enDoc.put("panorama", doc.get("panorama"));
-				// 更新时间
-				enDoc.put("update_hhmmss", doc.get("update_hhmmss"));
+					String zhTags = FastJsonUtil.castStrNumArray2IntNumArray(doc.get("tags")).toJSONString();
+					String enTags = FastJsonUtil.castStrNumArray2IntNumArray(oldEnDoc.get("tags")).toJSONString();
 
-				// TODO:私有字段如何维护呢？
-				updateResult = poi_collection.updateOne(keyId, updateDocument);
-				if (updateResult.getModifiedCount() == 0) {
+					JSONArray privagteFields = this.getPrivateFields(null);
+					for (int i = 0; i < privagteFields.size(); i++) {
+						JSONObject privateField = privagteFields.getJSONObject(i);
+						JSONObject field_def = privateField.getJSONObject("field_def");
+						Integer fieldType = field_def.getInteger("field_type");
+						switch (fieldType) {
+						case VbConstant.POI_FIELD_TYPE.复选框列表:
+							enDoc.put((String)field_def.get("field_name"), doc.get(field_def.get("field_name")));
+							break;
+						default:
+							// 一级分类有变化，需要清空checkbox以外私有字段值
+							if (!zhTags.equals(enTags)) {
+								enDoc.put((String)field_def.get("field_name"), "");
+							}
+							break;
+						}
+					}
 					updateDocument = new BasicDBObject();
 					updateDocument.append("$set", enDoc);
-					updateResult = poi_collection.updateOne(keyId, updateDocument, new UpdateOptions().upsert(true));
+					// 私有字段维护
+					poi_collection.updateOne(keyId, updateDocument);
 				}
 
 				return FastJsonUtil.sucess("success");
@@ -709,16 +727,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			BasicDBObject keyId = new BasicDBObject();
 			keyId.put("_id", new ObjectId(_id));
 			Document doc = poi_collection.find(keyId).limit(1).first();
-			if (doc != null) {
-				return doc;
-			}
-		}
-		// 中文版POI
-		poi_collection = mongoConnector.getDBCollection("poi_collection");
+			return doc;
 
-		BasicDBObject keyId = new BasicDBObject();
-		keyId.put("_id", new ObjectId(_id));
-		return poi_collection.find(keyId).limit(1).first(); 
+		} else {
+			// 中文版POI
+			poi_collection = mongoConnector.getDBCollection("poi_collection");
+			BasicDBObject keyId = new BasicDBObject();
+			keyId.put("_id", new ObjectId(_id));
+			return poi_collection.find(keyId).limit(1).first(); 
+		}
 	}
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
