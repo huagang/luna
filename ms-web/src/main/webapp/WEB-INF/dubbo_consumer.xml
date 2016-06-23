@@ -14,7 +14,7 @@
 	<dubbo:application name="ms-web" />
 
 	<dubbo:consumer check="false" timeout="300000" retries="0" />
-	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}" group="luna"/>
+	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}" />
 
 	<dubbo:reference id="authoritySetService" interface="ms.luna.biz.sc.AuthoritySetService" />
 	<dubbo:reference id="categoryService" interface="ms.luna.biz.sc.CategoryService" />
