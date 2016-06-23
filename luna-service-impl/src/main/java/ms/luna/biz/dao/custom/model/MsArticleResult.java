@@ -19,6 +19,8 @@ public class MsArticleResult {
     private String title;
     @JSONField(name="author")
     private String author;
+    @JSONField(name="status")
+    private short status;
     @JSONField(name="column_name")
     private String columnName;
     @JSONField(name="business_name")
@@ -50,6 +52,14 @@ public class MsArticleResult {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public short getStatus() {
+        return status;
+    }
+
+    public void setStatus(short status) {
+        this.status = status;
     }
 
     public String getColumnName() {

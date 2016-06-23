@@ -48,9 +48,14 @@ function ColumnController($scope, $rootScope, $http) {
             var data = response.data;
             if('0' == data.code) {
                 var categories = data.data.categorys;
-                categories.forEach(function(categoryItem){
-                    this.categoryOptions[categoryItem.category_id] = categoryItem.nm_zh;
-                }, $scope.column);
+                if($.isEmptyObject(categories)) {
+                    $scope.column.categoryOptions[""] = "无";
+                } else {
+                    $scope.column.categoryOptions[""] = "请选择";
+                    categories.forEach(function (categoryItem) {
+                        this.categoryOptions[categoryItem.category_id] = categoryItem.nm_zh;
+                    }, $scope.column);
+                }
 
             }
         },

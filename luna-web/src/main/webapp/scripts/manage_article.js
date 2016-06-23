@@ -41,10 +41,10 @@ var APP_STATUS = {
 };
 
 function statusFormatter(value, row, index) {
-    if(row.app_status === 1){
-        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+    if(row.status === 1){
+        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.status] + "'/>";
     } else {
-        return APP_STATUS[row.app_status];
+        return APP_STATUS[row.status];
     }
 }
 function timeFormatter(value, row, index) {
@@ -128,9 +128,10 @@ function ArticleController($scope, $rootScope, $http) {
         $http(request).then(function success(response) {
             var data = response.data;
             if (data.code != '0') {
-                $.alert(data.msg);
+                $scope.article.businessOptions = [{'business_id' : '', 'business_name': '无'}];
+                //$.alert(data.msg);
             } else {
-                $scope.article.businessOptions = data.data.rows;
+                $scope.article.businessOptions = [{'business_id' : '', 'business_name': '请选择'}].concat(data.data.rows);
             }
         }, function error(response) {
             $.alert(response.data.msg);

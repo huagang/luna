@@ -15,6 +15,7 @@ CREATE TABLE `ms_article` (
   `up_hhmmss` timestamp NULL DEFAULT NULL,
   `regist_hhmmss` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE (`title`),
   KEY `business_id` (`business_id`),
   KEY `column_id` (`column_id`),
   KEY `up_hhmmss` (`up_hhmmss`),
