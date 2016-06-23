@@ -532,7 +532,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				if (i != 0) {
 					sb.append("、");
 				}
-				sb.append(tagMap.get(tags.getString(i)));
+				String label = tagMap.get(tags.getString(i));
+				if (label != null) {
+					sb.append(label);
+				}
 			}
 			poi.put("tags", sb.toString());
 			String province_name = msZoneCacheBL.getProvinceName(zone_id);
