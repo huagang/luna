@@ -95,4 +95,24 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
         }
     }
+
+    @Override
+    public JSONObject getColumnById(int id) {
+        try {
+            return manageArticleBL.getColumnById(id);
+        } catch (Exception ex) {
+            logger.error("Failed to get column");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
+    }
+
+    @Override
+    public JSONObject getColumnByBusinessId(int businessId) {
+        try {
+            return manageArticleBL.getColumnByBusinessId(businessId);
+        } catch (Exception ex) {
+            logger.error("Failed to get column");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
+    }
 }

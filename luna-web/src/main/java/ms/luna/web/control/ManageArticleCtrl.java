@@ -1,6 +1,5 @@
 package ms.luna.web.control;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
@@ -14,7 +13,6 @@ import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -158,7 +156,7 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
-        JSONObject columnJsonData = manageColumnService.readAllColumn();
+        JSONObject columnJsonData = manageArticleService.getColumnByBusinessId(businessId);
         if(columnJsonData.getString("code").equals("0")) {
             Map<String, Integer> columnMap = columnJsonData.getJSONObject("data").toJavaObject(Map.class);
             modelAndView.addObject("columnMap", columnMap);
@@ -192,14 +190,12 @@ public class ManageArticleCtrl extends BasicCtrl {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
 
-        JSONObject ret = manageArticleService.getArticleById(id);
         ModelAndView modelAndView = buildModelAndView("/add_article");
-        JSONObject columnJsonData = manageColumnService.readAllColumn();
+        JSONObject columnJsonData = manageArticleService.getColumnById(id);
         if(columnJsonData.getString("code").equals("0")) {
             Map<String, Integer> columnMap = columnJsonData.getJSONObject("data").toJavaObject(Map.class);
             modelAndView.addObject("columnMap", columnMap);
         }
-//        modelAndView.addAllObjects(ret.getJSONObject("data").toJavaObject(Map.class));
         return modelAndView;
     }
 

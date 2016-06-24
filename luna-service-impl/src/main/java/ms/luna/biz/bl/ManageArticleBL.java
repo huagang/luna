@@ -17,4 +17,6 @@ public interface ManageArticleBL {
     JSONObject loadArticle(String json);
     JSONObject searchBusiness(String json);
     JSONObject publishArticle(int id);
+    JSONObject getColumnById(int id);
+    JSONObject getColumnByBusinessId(int businessId);
 }

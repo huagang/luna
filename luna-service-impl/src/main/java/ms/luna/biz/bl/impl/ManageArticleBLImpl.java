@@ -9,13 +9,13 @@ import ms.luna.biz.bl.ManageArticleBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsArticleDAO;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
+import ms.luna.biz.dao.custom.MsColumnDAO;
+import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.model.MsArticleParameter;
 import ms.luna.biz.dao.custom.model.MsArticleResult;
 import ms.luna.biz.dao.custom.model.MsBusinessParameter;
 import ms.luna.biz.dao.custom.model.MsBusinessResult;
-import ms.luna.biz.dao.model.MsArticle;
-import ms.luna.biz.dao.model.MsArticleCriteria;
-import ms.luna.biz.dao.model.MsArticleWithBLOBs;
+import ms.luna.biz.dao.model.*;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +43,8 @@ public class ManageArticleBLImpl implements ManageArticleBL {
     private MsArticleDAO msArticleDAO;
     @Autowired
     private MsBusinessDAO msBusinessDAO;
+    @Autowired
+    private MsColumnDAO msColumnDAO;
 
     private MsArticleWithBLOBs toJavaObject(JSONObject articleObj) {
 
@@ -250,5 +252,41 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             logger.error("Failed to publish article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
         }
+    }
+
+    @Override
+    public JSONObject getColumnById(int id) {
+        try {
+            int businessId = msArticleDAO.selectBusinessIdById(id);
+            return getColumnByBusinessId(businessId);
+        } catch (Exception ex) {
+            logger.error("Failed to get column", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
+    }
+
+    @Override
+    public JSONObject getColumnByBusinessId(int businessId) {
+
+        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
+        if(categoryId == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "不存在对应的栏目");
+        }
+        MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+        msColumnCriteria.createCriteria().andCategoryIdEqualTo(categoryId);
+        try {
+            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+            JSONObject ret = new JSONObject();
+            for (MsColumn msColumn : msColumns) {
+                int columnId = msColumn.getId();
+                String columnName = msColumn.getName();
+                ret.put(columnName, columnId);
+            }
+            return FastJsonUtil.sucess("", ret);
+        } catch (Exception ex) {
+            logger.error("Failed to read all column", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
+
     }
 }

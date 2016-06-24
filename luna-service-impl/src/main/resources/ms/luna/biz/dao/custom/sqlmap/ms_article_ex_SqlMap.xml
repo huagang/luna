@@ -36,4 +36,17 @@
         </isEqual>
 
     </select>
+
+    <select id="selectBusinessIdById" parameterClass="Integer" resultClass="Integer">
+        select business_id
+        from ms_article
+        where id=#id#
+    </select>
+
+    <select id="selectCategoryIdByBusinessId" parameterClass="Integer" resultClass="String">
+        select
+            b.category_id category_id
+        from ms_business a left join ms_merchant_manage b on a.merchant_id = b.merchant_id
+        where a.business_id=#business_id#
+    </select>
 </sqlMap>

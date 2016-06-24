@@ -20,4 +20,22 @@ public class MsArticleDAOImpl extends MsArticleDAOBaseImpl implements MsArticleD
         List<MsArticleResult> results = getSqlMapClientTemplate().queryForList("ms_article.selectArticleWithFilter", parameter);
         return results;
     }
+
+    @Override
+    public int selectBusinessIdById(int id) {
+        List<Integer> results = getSqlMapClientTemplate().queryForList("ms_article.selectBusinessIdById", id);
+        if(results != null && results.size() == 1) {
+            return results.get(0);
+        }
+        return -1;
+    }
+
+    @Override
+    public String selectCategoryIdByBusinessId(int businessId) {
+        List<String> results = getSqlMapClientTemplate().queryForList("ms_article.selectCategoryIdByBusinessId", businessId);
+        if(results != null && results.size() == 1) {
+            return results.get(0);
+        }
+        return null;
+    }
 }
