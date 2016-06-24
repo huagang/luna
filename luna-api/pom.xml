@@ -250,6 +250,10 @@
 										<copy
 											file="config/dev/web.xml"
 											tofile="src/main/webapp/WEB-INF/web.xml" />
+										<delete file="src/main/resources/log4j.properties" />
+										<copy
+											file="config/dev/log4j.properties"
+											tofile="src/main/resources/log4j.properties" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -284,6 +288,10 @@
 										<copy
 											file="config/test/web.xml"
 											tofile="src/main/webapp/WEB-INF/web.xml" />
+										<delete file="src/main/resources/log4j.properties" />
+										<copy
+											file="config/test/log4j.properties"
+											tofile="src/main/resources/log4j.properties" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -315,6 +323,10 @@
 										<copy
 											file="config/release/web.xml"
 											tofile="src/main/webapp/WEB-INF/web.xml" />
+										<delete file="src/main/resources/log4j.properties" />
+										<copy
+											file="config/release/log4j.properties"
+											tofile="src/main/resources/log4j.properties" />
 									</tasks>
 								</configuration>
 							</execution>
