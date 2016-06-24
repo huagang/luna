@@ -145,7 +145,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					array.add(ctgr);
 				}
 			}
-			data.put("ctgr", array);
+			data.put("ctgrs", array);
 			return FastJsonUtil.sucess("biz_id:"+biz_id+",poi_id:"+poi_id+"一级分类列表获取成功",data);
 			
 		} else {
@@ -195,7 +195,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					array.add(subctgr);
 				}
 			}
-			data.put("sub_ctgr", array);
+			data.put("sub_ctgrs", array);
 			return FastJsonUtil.sucess("biz_id:"+biz_id+",poi_id:"+poi_id+",ctgr_id:"+ctgr_id+"二级分类列表信息获取成功",data);
 		}else {
 			return FastJsonUtil.error("1", "biz_id:"+biz_id+"biz_id:"+biz_id+"业务关系树不存在");
@@ -301,7 +301,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							data.add(type);
 						}
 					}
-					poi.put("hotel_type", data);
+					poi.put("hotel_types", data);
 					continue;
 				}
 				// 标签--scene_type
@@ -317,7 +317,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							data.add(type);
 						}
 					}
-					poi.put("scene_type", data);
+					poi.put("scene_types", data);
 					continue;
 				}
 				// 经纬度--lnglat
@@ -748,7 +748,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 									array.add(data);
 								}
 							}
-							result.put("hotel_type", array);
+							result.put("hotel_types", array);
 							continue;
 						}
 						// 标签--scene_type
@@ -763,7 +763,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 									data.put("scene_type_nm", poiTypes.get(id));
 								}
 							}
-							result.put("scene_type", array);
+							result.put("scene_types", array);
 							continue;
 						}
 						// 经纬度--lnglat
