@@ -675,6 +675,8 @@ function tagIdMatchedInTagIds(tag_id, tag_ids) {
 }
 function cleanFileInput(_elementId) {
 	$("#"+_elementId).val("");
+	$("#thumbnail-show").attr("picExist","false");
+	$("#div-img").css("display", "none");
 }
 // 显示私有字段域
 function displayPrivateField() {
