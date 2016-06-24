@@ -27,6 +27,8 @@ public class PoiApiCtrl {
 	@Autowired
 	private PoiApiService poiApiService;
 
+	private static String[] LANG = {"zh", "en"}; // 语言
+	
 	/**
 	 * 根据业务获取一个层级的poi数据列表
 	 * @param biz_id 业务树id
@@ -37,6 +39,7 @@ public class PoiApiCtrl {
 	public void getPoisInFirstLevel(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id, 
 			@RequestParam(required = false, value = "fields") String fields,
+			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -47,15 +50,37 @@ public class PoiApiCtrl {
 			} else {
 				fields = fields.trim();
 			}
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
 			param.put("fields", fields);
 			
-			JSONObject result = poiApiService.getPoisInFirstLevel(param.toString());
-			MsLogger.debug(result.toString());
-			response.getWriter().print(result);
-			response.setStatus(200);
-			return;
+			if(lang == null){
+				JSONObject datas = new JSONObject();
+				JSONObject result = null;
+				for(String language : LANG){
+					param.put("lang", language);
+					result = poiApiService.getPoisInFirstLevel(param.toString());
+					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+					if("0".equals(result.getString("code"))){
+						JSONObject data = result.getJSONObject("data");
+						datas.put(language, data.getJSONObject(language));
+					} else {
+						response.getWriter().print(result);
+						response.setStatus(200);
+						return;
+					}
+				}
+				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				response.setStatus(200);
+				return;
+			} else {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoisInFirstLevel(param.toString());
+				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
+				response.getWriter().print(result);
+				response.setStatus(200);
+				return;
+			}
 		} catch (Exception e){
 			response.getWriter().print(FastJsonUtil.error("-1", e));
 			response.setStatus(200);
@@ -81,7 +106,7 @@ public class PoiApiCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		try{
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
 			param.put("poi_id", poi_id);
 			
@@ -97,6 +122,16 @@ public class PoiApiCtrl {
 		}
 	}
 
+	
+	/**
+	 * 根据业务和POI获取下一层的二级类别列表
+	 * @param biz_id
+	 * @param poi_id
+	 * @param ctgr_id
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
 	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
@@ -107,7 +142,7 @@ public class PoiApiCtrl {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		try{
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
 			param.put("poi_id", poi_id);
 			param.put("ctgr_id", ctgr_id);
@@ -141,6 +176,7 @@ public class PoiApiCtrl {
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "ctgr_id") int ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
+			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -151,17 +187,39 @@ public class PoiApiCtrl {
 			} else {
 				fields = fields.trim();
 			}
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
 			param.put("poi_id", poi_id);
 			param.put("ctgr_id", ctgr_id);
 			param.put("fields", fields);
 			
-			JSONObject result = poiApiService.getPoisByBizIdAndPoiIdAndCtgrId(param.toString());
-			MsLogger.debug(result.toString());
-			response.getWriter().print(result.toString());
-			response.setStatus(200);
-			return;
+			if(lang == null){
+				JSONObject datas = new JSONObject();
+				JSONObject result = null;
+				for(String language : LANG){
+					param.put("lang", language);
+					result = poiApiService.getPoisByBizIdAndPoiIdAndCtgrId(param.toString());
+					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+					if("0".equals(result.getString("code"))){
+						JSONObject data = result.getJSONObject("data");
+						datas.put(language, data.getJSONObject(language));
+					} else {
+						response.getWriter().print(result);
+						response.setStatus(200);
+						return;
+					}
+				}
+				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				response.setStatus(200);
+				return;
+			} else {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoisByBizIdAndPoiIdAndCtgrId(param.toString());
+				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
+				response.getWriter().print(result);
+				response.setStatus(200);
+				return;
+			}
 		} catch (Exception e){
 			response.getWriter().print(FastJsonUtil.error("-1", e));
 			response.setStatus(200);
@@ -179,19 +237,42 @@ public class PoiApiCtrl {
 	@RequestMapping(params = "method=getPoiById")
 	public void getPoiById(
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
+			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		try{
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("poi_id", poi_id);
 			
-			JSONObject result = poiApiService.getPoiInfoById(param.toString());
-			MsLogger.debug(result.toString());
-			response.getWriter().print(result);
-			response.setStatus(200);
-			return;
+			if(lang == null){
+				JSONObject datas = new JSONObject();
+				JSONObject result = null;
+				for(String language : LANG){
+					param.put("lang", language);
+					result = poiApiService.getPoiInfoById(param.toString());
+					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+					if("0".equals(result.getString("code"))){
+						JSONObject data = result.getJSONObject("data");
+						datas.put(language, data.getJSONObject(language));
+					} else {
+						response.getWriter().print(result);
+						response.setStatus(200);
+						return;
+					}
+				}
+				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				response.setStatus(200);
+				return;
+			} else {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoiInfoById(param.toString());
+				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
+				response.getWriter().print(result);
+				response.setStatus(200);
+				return;
+			}
 		} catch (Exception e) {
 			response.getWriter().print(FastJsonUtil.error("-1", e));
 			response.setStatus(200);
@@ -213,6 +294,7 @@ public class PoiApiCtrl {
 			@RequestParam(required = true, value = "type") String type,
 			@RequestParam(required = true, value = "tags") String tags,
 			@RequestParam(required = false, value = "fields") String fields,
+			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -230,17 +312,39 @@ public class PoiApiCtrl {
 			} else {
 				fields = fields.trim();
 			}
-			JSONObject param = JSONObject.parseObject("{}");
+			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
 			param.put("tags", tags);
 			param.put("fields", fields);
 			param.put("type", type);
 			
-			JSONObject result = poiApiService.getPoisByBizIdAndTags(param.toString());
-			MsLogger.debug(result.toString());
-			response.getWriter().print(result);
-			response.setStatus(200);
-			return;
+			if(lang == null){
+				JSONObject datas = new JSONObject();
+				JSONObject result = null;
+				for(String language : LANG){
+					param.put("lang", language);
+					result = poiApiService.getPoisByBizIdAndTags(param.toString());
+					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+					if("0".equals(result.getString("code"))){
+						JSONObject data = result.getJSONObject("data");
+						datas.put(language, data.getJSONObject(language));
+					} else {
+						response.getWriter().print(result);
+						response.setStatus(200);
+						return;
+					}
+				}
+				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				response.setStatus(200);
+				return;
+			} else {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoisByBizIdAndTags(param.toString());
+				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
+				response.getWriter().print(result);
+				response.setStatus(200);
+				return;
+			}
 		} catch (Exception e){
 			response.getWriter().print(FastJsonUtil.error("-1", e));
 			response.setStatus(200);
@@ -263,19 +367,19 @@ public class PoiApiCtrl {
 		return false;
 	}
 	
-	public static void main(String[] args) {
-		String[] tags = {
-				"124232",
-				"1,2,3",
-				"12,232,12",
-				" 12",
-				"1 2",
-				" 1 2",
-				"2 , 2",
-				"1,2213,3 ",
-				"1,22 13,3 "
-		};
-		for(String tag : tags)
-			System.out.println(checkTags(tag));
-	}
+//	public static void main(String[] args) {
+//		String[] tags = {
+//				"124232",
+//				"1,2,3",
+//				"12,232,12",
+//				" 12",
+//				"1 2",
+//				" 1 2",
+//				"2 , 2",
+//				"1,2213,3 ",
+//				"1,22 13,3 "
+//		};
+//		for(String tag : tags)
+//			System.out.println(checkTags(tag));
+//	}
 }
