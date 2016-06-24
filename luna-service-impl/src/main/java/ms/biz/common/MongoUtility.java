@@ -47,8 +47,8 @@ public final class MongoUtility {
 
 		// 一级分类、须完全匹配
 		// tags: {$all: [7]},
-		JSONArray tags = param.getJSONArray("tags");
-		tags = FastJsonUtil.castStrNumArray2IntNumArray(tags);
+		JSONArray tags = FastJsonUtil.parse2Array(param.getString("tags"));
+//		tags = FastJsonUtil.castStrNumArray2IntNumArray(tags);
 		condition.append("tags", new BasicBSONObject("$all", tags));
 
 		// 存在二级分类的话，则作为检索条件,如果不存在的话，认为已经匹配

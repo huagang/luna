@@ -133,7 +133,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			if (PoiCommon.POI.EN.equals(lang)) {
 				mergerName = msZoneCacheBL.getMergerNameEn(zoneId);
 			} else {
-				msZoneCacheBL.getMergerName(zoneId);
+				mergerName = msZoneCacheBL.getMergerName(zoneId);
 			}
 
 			// zone id

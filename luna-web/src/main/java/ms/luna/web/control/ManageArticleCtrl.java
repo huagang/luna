@@ -189,7 +189,6 @@ public class ManageArticleCtrl extends BasicCtrl {
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
-
         ModelAndView modelAndView = buildModelAndView("/add_article");
         JSONObject columnJsonData = manageArticleService.getColumnById(id);
         if(columnJsonData.getString("code").equals("0")) {
