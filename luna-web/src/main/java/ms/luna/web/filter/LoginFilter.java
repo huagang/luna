@@ -44,7 +44,7 @@ public class LoginFilter implements Filter {
 	static {	
 		skipUriAfterLogin.addAll(Arrays.asList(
 				webRoot + "/uploadCtrl.do",
-				webRoot + "/add_article.do",
+				webRoot + "/show_poi.do",
 				webRoot + "/show_article.do",
 				webRoot + "/api_vodPlay.do",
 				webRoot + "/fileUpload.do",
