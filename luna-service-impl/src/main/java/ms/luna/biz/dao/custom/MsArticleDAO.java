@@ -10,4 +10,6 @@ public interface MsArticleDAO extends MsArticleDAOBase {
 
     public List<MsArticleResult> selectArticleWithFilter(MsArticleParameter parameter);
 
+    public int selectBusinessIdById(int id);
+    public String selectCategoryIdByBusinessId(int businessId);
 }

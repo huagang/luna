@@ -625,6 +625,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("lat", lat);
 					checkErrorPoi.put("lng", lng);
 					checkErrorPoi.put("tags", tagname_2_tags.get(tag_name));
+					checkErrorPoi.put("subTag", subTag);
 
 					checkErrorPoi.put("short_title", short_title);
 					checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
@@ -683,6 +684,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("lat", lat);
 							checkErrorPoi.put("lng", lng);
 							checkErrorPoi.put("tags", tagname_2_tags.get(tag_name));
+							checkErrorPoi.put("subTag", subTag);
 
 							checkErrorPoi.put("short_title", short_title);
 							checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
@@ -758,6 +760,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 						checkErrorPoi.put("lat", lat);
 						checkErrorPoi.put("lng", lng);
 						checkErrorPoi.put("tags", tagname_2_tags.get(tag_name));
+						checkErrorPoi.put("subTag", subTag);
 
 						checkErrorPoi.put("short_title", short_title);
 						checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));

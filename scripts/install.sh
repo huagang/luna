@@ -28,4 +28,4 @@ mvn clean install
 cd ..
 cd luna-web
 git pull
-mvn clean package
+mvn clean package -Pdev -skipTests

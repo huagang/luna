@@ -16,7 +16,6 @@
 	<dubbo:application name="luna-api" />
 
 	<dubbo:consumer check="false" timeout="300000" retries="0" />
-	<!-- <dubbo:registry protocol="zookeeper" address="115.159.87.160:2181"/> -->
 	<dubbo:registry protocol="zookeeper" address="10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181" />
 
 	<dubbo:reference id="loginService" interface="ms.luna.biz.sc.LoginService" />

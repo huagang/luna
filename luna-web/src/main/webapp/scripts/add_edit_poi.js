@@ -4,7 +4,7 @@
 $(function() {
     var haserror = false;
     var ue;
-    if($('#editor').length>0){
+    if ($('#editor').length > 0) {
         ue = initEditor();
     }
     //名称
@@ -682,6 +682,8 @@ function tagIdMatchedInTagIds(tag_id, tag_ids) {
 
 function cleanFileInput(_elementId) {
     $("#" + _elementId).val("");
+    $("#thumbnail-show").attr("picExist", "false");
+    $("#div-img").css("display", "none");
 }
 // 显示私有字段域
 function displayPrivateField() {
@@ -1007,3 +1009,4 @@ function initEditor() {
     });
     return ue;
 }
+
