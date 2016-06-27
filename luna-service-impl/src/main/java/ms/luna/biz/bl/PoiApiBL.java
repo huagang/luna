@@ -19,6 +19,9 @@ public interface PoiApiBL {
 		
 	// 根据业务，POI和一级类别获取下一层POI数据列表
 	JSONObject getPoisByBizIdAndPoiIdAndCtgrId(String json);
+	
+	// 根据业务，POI和二级类别获取下一层POI数据列表
+	JSONObject getPoisByBizIdAndPoiIdAndSubCtgrId(String json);
 
 	// 获取具体POI数据信息
 	JSONObject getPoiInfoById(String json);
