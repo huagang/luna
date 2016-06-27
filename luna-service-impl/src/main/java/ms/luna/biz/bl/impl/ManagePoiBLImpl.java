@@ -436,7 +436,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 		if (document != null) {
 			if (inserted) {
-				return FastJsonUtil.sucessWithMsg("LUNA.I0002", "POI["+param.getString("long_title")+"]");
+				return FastJsonUtil.sucessWithMsg("LUNA.I0002", new Object[]{"POI["+param.getString("long_title")+"]"});
 			}
 			return FastJsonUtil.errorWithMsg("LUNA.E0007", "POI["+param.getString("long_title")+"]");
 		} else {
