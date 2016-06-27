@@ -185,7 +185,7 @@ function delPOI(obj, _id){
                 	    });
                     });
 					break;
-                case "-2":
+                case "LUNA.E0006":
                 	$.alert(result.msg);
                 	break;
                 default:

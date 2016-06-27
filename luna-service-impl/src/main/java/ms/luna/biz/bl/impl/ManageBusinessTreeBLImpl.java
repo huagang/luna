@@ -44,6 +44,8 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.common.MsLunaMessage;
+import ms.luna.common.PoiCommon;
 
 /**
  * @author Mark
@@ -72,11 +74,11 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		Integer businessId = param.getInteger("business_id");
 		String businessName = this.getBusinessNameExist(businessId);
 		if (businessName == null) {
-			return FastJsonUtil.error("-199", "business is not exist");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
 		}
 
 		// 在mongoDB中查找业务树的数据
-		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection("business_tree");
+		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 
 		BasicDBObject condition = new BasicDBObject();
 		condition.put("business_id", businessId);
@@ -99,7 +101,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 			return FastJsonUtil.error("-1", "保存失败!");
 		}
 
-		return FastJsonUtil.sucess("success: save bussiness tree");
+		return FastJsonUtil.sucessWithMsg("LUNA.I0003", new Object[]{businessName});
 	}
 
 	@Override
@@ -110,14 +112,14 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		Integer businessId = param.getInteger("businessId");
 		String businessName = this.getBusinessNameExist(businessId);
 		if (businessName == null) {
-			return FastJsonUtil.error("-199", "business is not exist");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
 		}
 
 		// 在mongoDB中查找业务树的数据
-		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection("business_tree");
+		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 		Document document = this.findWithBusinessIdInBussinessPoiTree(biz_tree, businessId);
 		if (document == null) {
-			return FastJsonUtil.error("-2", "bussiness_id creating failed");
+			FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
 		}
 
 		// 1.获取列表
@@ -142,7 +144,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		data.put("poiDef", poiDef);
 		data.put("tags", tags);
 
-		return FastJsonUtil.sucess("success: load bussiness tree data", data);
+		return FastJsonUtil.sucessWithMsg("LUNA.I0004", data, new Object[] {"POI[" + businessName + "]"});
 	}
 
 	/**
@@ -154,10 +156,10 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 		Integer businessId = param.getInteger("businessId");
 		if (!this.isBusinessIdExist(businessId)) {
-			return FastJsonUtil.error("-199", "该业务不存在，不能创建POI数据关系配置！");
+			return FastJsonUtil.errorWithMsg("LUNA.E0014", businessId);
 		}
 
-		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection("business_tree");
+		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 
 		Document document = new Document();
 		Date date = new Date();
@@ -172,28 +174,21 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		try {
 			biz_tree.insertOne(document);
 		} catch (Exception e) {
-			MsLogger.error("bussiness is already existing or bussiness_id creating failed!", e);
-			return FastJsonUtil.error("-2", "该业务的POI数据关系配置已经存在，不能重复创建！");
+			String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0015");
+			return FastJsonUtil.error("-2", msg , e);
 		}
 		document = this.findWithBusinessIdInBussinessPoiTree(biz_tree, businessId);
 		if (document == null) {
-			return FastJsonUtil.error("-2", "创建POI数据关系配置失败！");
+			return FastJsonUtil.errorWithMsg("LUNA.E0013", "POI数据关系配置");
 		}
-//		JSONObject data = new JSONObject();
-//		data.put("_id", document.getObjectId("_id").toString());
-//		data.put("business_id", document.getInteger("business_id"));
-//		document.put("c_list", document.get("c_list"));
-//		data.put("regist_hhmmss", document.getDate("regist_hhmmss"));
-//		data.put("update_hhmmss", document.getDate("update_hhmmss"));
-//		data.put("updated_by_unique_id", document.getString("updated_by_unique_id"));
-		return FastJsonUtil.sucess("success: 成功创建POI数据关系配置！");
+		return FastJsonUtil.sucessWithMsg("LUNA.I0005", new Object[]{"POI数据关系配置"});
 	}
 
 	@Override
 	public JSONObject deleteBusinessTree(String json) {
 		JSONObject param = JSON.parseObject(json);
 		Integer businessId = param.getInteger("businessId");
-		MongoCollection<Document> business_tree = mongoConnector.getDBCollection("business_tree");
+		MongoCollection<Document> business_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 		BasicDBObject condition = new BasicDBObject();
 		condition.put("business_id", businessId);
 
@@ -202,9 +197,9 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 		DeleteResult deleteResult = business_tree.deleteOne(condition);
 		if (deleteResult.getDeletedCount() > 0) {
-			return FastJsonUtil.sucess("成功删除POI数据关系配置!");
+			return FastJsonUtil.sucessWithMsg("LUNA.I0006", new Object[]{"POI数据关系配置"});
 		}
-		return FastJsonUtil.error("-1", "删除POI数据关系配置失败!");
+		return FastJsonUtil.errorWithMsg("LUNA.E0016", "POI数据关系配置");
 	}
 
 	@Override
@@ -224,7 +219,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 		String keyWord = null;
 
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		Long total = 0L;
 		if (offset == null) {
 			offset = 0;
@@ -363,7 +358,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		Integer offset = FastJsonUtil.getInteger(param, "offset");
 		Integer limit = FastJsonUtil.getInteger(param, "limit");
 
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("business_tree");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 		Long total = 0L;
 		if (offset == null) {
 			offset = 0;
@@ -440,7 +435,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		String cityId = FastJsonUtil.getString(param, "cityId");
 		String countyId = FastJsonUtil.getString(param, "countyId");
 		if (CharactorUtil.isEmpyty(provinceId) || "ALL".equals(provinceId)) {
-			throw new IllegalArgumentException("provinceId can not be empty or ALL [" + provinceId + "]");
+			throw new IllegalArgumentException(MsLunaMessage.getInstance().getMessage("LUNA.E0017", "省份"));
 		}
 
 		cityId = "ALL".equals(cityId) ? null: cityId;
@@ -473,7 +468,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		}
 		JSONObject data = new JSONObject();
 		data.put("bizList", array);
-		return FastJsonUtil.sucess("OK", data);
+		return FastJsonUtil.sucessWithMsg("LUNA.I0004", data, new Object[]{"业务列表"});
 	}
 
 	/**
@@ -489,7 +484,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		if (_ids.isEmpty()) {
 			return pois;
 		}
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 
 		BasicDBObject condition = new BasicDBObject();
 		BasicDBList _poiIds = new BasicDBList();
@@ -573,7 +568,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 			this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
 		}
 
-		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
 
 		long addCount = 0;
 		for (String newId : newPoiIds) {
@@ -637,7 +632,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 			this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
 		}
 
-		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
 
 		long count = 0;
 		for (String oldId : oldPoiIds) {
@@ -655,7 +650,8 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 				count += updateResult.getModifiedCount();
 			}
 		}
-		MsLogger.info("deleted bizId ["+ businessId+" to poi. Total =["+count+"]件");
+		String msg = MsLunaMessage.getInstance().getMessage("LUNA.I0006", "业务ID["+businessId +"]下"+"["+count +"]件索引POI");
+		MsLogger.info(msg);
 	}
 
 	/**
