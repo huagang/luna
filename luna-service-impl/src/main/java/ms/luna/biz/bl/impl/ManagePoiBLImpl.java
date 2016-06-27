@@ -42,6 +42,7 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+import ms.luna.common.MsLunaMessage;
 import ms.luna.common.PoiCommon;
 
 import com.alibaba.fastjson.JSONArray;
@@ -265,13 +266,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		for (int i = 0; i < privateFields.size(); i++) {
 			JSONObject privateField = privateFields.getJSONObject(i);
 			JSONObject field_def = privateField.getJSONObject("field_def");
-
+			String fieldShowName = field_def.getString("field_show_name");
 			String field_name_def = field_def.getString("field_name");
 			int field_type = field_def.getInteger("field_type");
 			int field_size = field_def.getInteger("field_size");
 			String field_tag_ids = field_def.getString("tag_id");
 			Object field_name_val = null;
-			
+
 			switch (field_type) {
 				case VbConstant.POI_FIELD_TYPE.复选框列表:
 					field_name_val = FastJsonUtil.castStrNumArray2IntNumArray(
@@ -289,9 +290,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					}
 					break;
 				default:
-					MsLogger.debug("field [" + field_name_def + "] is missing!");
+					String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0001", fieldShowName);
+					MsLogger.error(msg);
 					if (!force) {
-						throw new RuntimeException("field [" +field_name_def + "] is missing!");
+						throw new RuntimeException(msg);
 					}
 					break;
 			}
@@ -303,8 +305,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					if (field_size != -1) {
 						if (!force) {
 							if (CharactorUtil.countChineseEn((String)field_name_val) > field_size) {
-								MsLogger.debug("field [" +field_name_def + "], is too long!");
-								throw new RuntimeException("field [" +field_name_def + "], is too long!");
+								String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0002", fieldShowName, field_size);
+								MsLogger.error(msg);
+								throw new RuntimeException(msg);
 							}
 						}
 					}
@@ -323,14 +326,18 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					break;
 				case VbConstant.POI_FIELD_TYPE.POINT:
 					if (!force) {
-						throw new RuntimeException("POINT 类型的私有字段， 需要实现，暂时没有实现");
+						String msg = MsLunaMessage.getInstance().getMessage("FW.E0004", field_type);
+						MsLogger.error(msg);
+						throw new RuntimeException(msg);
 					}
 					break;
 				case VbConstant.POI_FIELD_TYPE.图片:
 					if (needSave(tag_ids, field_tag_ids)) {
 						if (!force) {
 							if (!VbUtility.checkCOSPicIsOK((String)field_name_val)) {
-								throw new RuntimeException("图片地址不正确或者不是已上传的地址["+field_name_val+"]");
+								String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0009", field_name_val, "图片");
+								MsLogger.error(msg);
+								throw new RuntimeException(msg);
 							}
 						}
 						doc.put(field_name_def, field_name_val);
@@ -342,7 +349,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					if (needSave(tag_ids, field_tag_ids)) {
 						if (!force) {
 							if (!VbUtility.checkCOSAudioIsOK((String)field_name_val)) {
-								throw new RuntimeException("音频地址不正确或者不是已上传的地址["+field_name_val+"]");
+								String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0009", field_name_val, "音频");
+								MsLogger.error(msg);
+								throw new RuntimeException(msg);
 							}
 						}
 						doc.put(field_name_def, field_name_val);
@@ -354,7 +363,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					if (needSave(tag_ids, field_tag_ids)) {
 						if (!force) {
 							if (!VbUtility.checkCOSVideoIsOK((String)field_name_val)) {
-								throw new RuntimeException("视频地址不正确或者不是已上传的地址");
+								String msg = MsLunaMessage.getInstance().getMessage("LUNA.E0009", field_name_val, "视频");
+								MsLogger.error(msg);
+								throw new RuntimeException(msg);
 							}
 						}
 						//-----------------------------------------------------------------------
@@ -368,10 +379,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					break;
 				case VbConstant.POI_FIELD_TYPE.下拉列表:
 					// TODO:
-					throw new RuntimeException("下拉列表 类型的私有字段， 需要实现，暂时没有实现");
+					String msg = MsLunaMessage.getInstance().getMessage("FW.E0003");
+					MsLogger.error(msg);
+					throw new RuntimeException(msg);
 //					break;
 				default:
-					throw new RuntimeException("暂时没有扩展的私有字段类型["+ field_type +"]");
+					msg = MsLunaMessage.getInstance().getMessage("FW.E0004", field_type);
+					MsLogger.error(msg);
+					throw new RuntimeException(msg);
 //					break;
 			}
 		}
@@ -404,7 +419,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		JSONObject param = JSONObject.parseObject(json);
 		Document doc = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.FALSE);
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 
 		boolean inserted = false;
 		Document document = null;
@@ -421,11 +436,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 		if (document != null) {
 			if (inserted) {
-				return FastJsonUtil.sucess("新建插入成功");
+				return FastJsonUtil.sucessWithMsg("LUNA.I0002", "POI["+param.getString("long_title")+"]");
 			}
-			return FastJsonUtil.error("-1", "已经存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0007", "POI["+param.getString("long_title")+"]");
 		} else {
-			return FastJsonUtil.error("-2", "插入失败");
+			return FastJsonUtil.errorWithMsg("LUNA.E0008", "POI["+param.getString("long_title")+"]");
 		}
 	}
 
@@ -441,7 +456,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			limit = param.getInteger("limit");
 		}
 
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 
 		Long total = 0L;
 
@@ -493,7 +508,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 		// 检查是否有英文版
-		MongoCollection<Document> poi_collection_en = mongoConnector.getDBCollection("poi_collection_en");
+		MongoCollection<Document> poi_collection_en = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
 		JSONArray pois = new JSONArray();
 		while (mongoCursor.hasNext()) {
 			Document docPoi= mongoCursor.next();
@@ -577,7 +592,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MongoCollection<Document> poi_collection = null;
 		// 英文
 		if (PoiCommon.POI.EN.equals(lang)) {
-			poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() == 0) {
 				updateDocument = new BasicDBObject();
@@ -591,13 +606,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 中文
 		} else {
-			poi_collection = mongoConnector.getDBCollection("poi_collection");
+			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() > 0) {
 				// 尝试同步更新英文表
 				Document oldEnDoc = this.getPoiById(_id, PoiCommon.POI.EN, Boolean.FALSE);
 				if (oldEnDoc != null) {
-					poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+					poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
 					Document enDoc = new Document();
 					// 一级分类
 					enDoc.put("tags", doc.get("tags"));
@@ -650,7 +665,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 
-		return FastJsonUtil.error("-1", "failed");
+		return FastJsonUtil.errorWithMsg("LUNA.E0010", param.getString("long_title"));
 	}
 
 	@Override
@@ -660,7 +675,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 
-		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
@@ -670,15 +685,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 		if (isUsing) {
-			return FastJsonUtil.error("-2", "该POI在业务关系配置中已经投入使用，请先从业务关系配置中移除！");
+			return FastJsonUtil.errorWithMsg("LUNA.E0006");
 		}
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		DeleteResult deleteResult = poi_collection.deleteOne(keyId);
 		if (deleteResult.getDeletedCount() > 0) {
 			return FastJsonUtil.sucess("success");
 		}
 
-		return FastJsonUtil.error("-1", "not existing");
+		return FastJsonUtil.errorWithMsg("LUNA.E0011", _id);
 	}
 
 	/**
@@ -746,7 +761,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MongoCollection<Document> poi_collection = null;
 		// 其他语种的POI(英文)
 		if (PoiCommon.POI.EN.equals(lang)) {
-			poi_collection = mongoConnector.getDBCollection("poi_collection_en");
+			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
 			BasicDBObject keyId = new BasicDBObject();
 			keyId.put("_id", new ObjectId(_id));
 			Document doc = poi_collection.find(keyId).limit(1).first();
@@ -758,7 +773,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 		// 中文版POI
-		poi_collection = mongoConnector.getDBCollection("poi_collection");
+		poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 		return poi_collection.find(keyId).limit(1).first(); 
@@ -868,8 +883,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String _id = param.getString("_id");
 		Document docPoi = this.getPoiById(_id, lang, Boolean.TRUE);
 		if (docPoi == null) {
-			MsLogger.debug("poi ["+_id+"] is not found!");
-			return FastJsonUtil.error("-1", "poi ["+_id+"] is not found!");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "POI["+_id+"]");
 		}
 
 		JSONObject data = new JSONObject();
@@ -1036,7 +1050,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			JSONObject poiJson = no_check_errors.getJSONObject(i);
 			try {
 				Document doc = this.json2BsonForInsertOrUpdate(poiJson, Boolean.TRUE, Boolean.FALSE);
-				MongoCollection<Document> poi_collection = mongoConnector.getDBCollection("poi_collection");
+				MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 
 				boolean inserted = false;
 				Document document = null;
@@ -1128,7 +1142,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
 
-		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection("poi_business_tree_index");
+		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
@@ -1138,8 +1152,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 		if (isUsing) {
-			return FastJsonUtil.error("-2", "该POI在业务关系配置中已经投入使用，请先从业务关系配置中移除！");
+			return FastJsonUtil.errorWithMsg("LUNA.E0006");
 		}
-		return FastJsonUtil.error("0", "可以被删除");
+		return FastJsonUtil.sucess(MsLunaMessage.getInstance().getMessage("LUNA.I0001"));
 	}
 }
