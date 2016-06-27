@@ -170,8 +170,8 @@
                             <span class="superscript">*</span>坐标
                         </div>
                         <div class="value-poi">
-                            <form:input id="latitude" placeholder="请输入纬度" readonly="${poiReadOnly || lang == 'en'}" path="lat" maxlength="10"/>
-                            <form:input id="longitude" placeholder="请输入经度" readonly="${poiReadOnly || lang == 'en'}" path="lng" maxlength="10"/>
+                            <form:input id="latitude" placeholder="请输入纬度" readonly="${poiReadOnly || lang == 'en'}" path="lat" maxlength="21"/>
+                            <form:input id="longitude" placeholder="请输入经度" readonly="${poiReadOnly || lang == 'en'}" path="lng" maxlength="21"/>
                             <c:if test="${!poiReadOnly && lang!='en'}">
                             	<span class="url-ex"><a href="http://lbs.qq.com/tool/getpoint/" target="_blank">坐标拾取器</a></span>
                             </c:if>

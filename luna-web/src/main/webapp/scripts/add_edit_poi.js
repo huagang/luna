@@ -49,32 +49,32 @@ $(function() {
             }, 5);
     });
     //2、输入
-    // $("#longitude").on('keyup keydown', function(e) {
-    //     if (e.type != 'paste') {
-    //         var input = $("#longitude").val();
-    //         var len_input = input.length;
-    //         // if (len_input > 10) {
-    //         //     if (e.keyCode != 8) {
-    //         //         return false;
-    //         //     } else {
-    //         //         $("#longitude").val(input);
-    //         //     }
-    //         // }
-    //     }
-    // });
-    // $("#latitude").on('keyup keydown', function(e) {
-    //     if (e.type != 'paste') {
-    //         var input = $("#latitude").val();
-    //         var len_input = input.length;
-    //         // if (len_input > 10) {
-    //         //     if (e.keyCode != 8) {
-    //         //         return false;
-    //         //     } else {
-    //         //         $("#latitude").val(input);
-    //         //     }
-    //         // }
-    //     }
-    // });
+    $("#longitude").on('keyup keydown', function(e) {
+        if (e.type != 'paste') {
+            var input = $("#longitude").val();
+            var len_input = input.length;
+            if (len_input > 10) {
+                if (e.keyCode != 8) {
+                    return false;
+                } else {
+                    $("#longitude").val(input);
+                }
+            }
+        }
+    });
+    $("#latitude").on('keyup keydown', function(e) {
+        if (e.type != 'paste') {
+            var input = $("#latitude").val();
+            var len_input = input.length;
+            if (len_input > 10) {
+                if (e.keyCode != 8) {
+                    return false;
+                } else {
+                    $("#latitude").val(input);
+                }
+            }
+        }
+    });
     //编辑POI数据，坐标(纬度)
     $("#latitude").blur(function() {
         if (!checkLnglatitude('latitude')) {
