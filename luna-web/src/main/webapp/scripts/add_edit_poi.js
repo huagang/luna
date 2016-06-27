@@ -7,7 +7,9 @@ $(function() {
     if ($('#editor').length > 0) {
         //如果是用了百度地图，则初始化，并回显
         ue = initEditor();
-        ue.setContent($('#description').val());
+        ue.ready(function() {
+            ue.setContent($('#description').val());
+        });
     }
     //名称
     $("#long_title").bind('keyup', function() {
@@ -287,7 +289,7 @@ $(function() {
     });
 
     $("#btn-POI-save").click(function() {
-
+        $('#description').val(ue.getContent());
         var hasError = false;
         hasError = checkTitleLong() || hasError;
         hasError = checkTitleShort() || hasError;
