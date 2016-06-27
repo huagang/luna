@@ -4,8 +4,6 @@ body{
 }
 
 body.view {
-	padding: 20px 60px;
-	line-height: 24px;
 	font-size: 14px;
 }
 

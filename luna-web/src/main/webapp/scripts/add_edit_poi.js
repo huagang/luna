@@ -5,7 +5,9 @@ $(function() {
     var haserror = false;
     var ue;
     if ($('#editor').length > 0) {
+        //如果是用了百度地图，则初始化，并回显
         ue = initEditor();
+        ue.setContent($('#description').val());
     }
     //名称
     $("#long_title").bind('keyup', function() {
@@ -45,32 +47,32 @@ $(function() {
             }, 5);
     });
     //2、输入
-    $("#longitude").on('keyup keydown', function(e) {
-        if (e.type != 'paste') {
-            var input = $("#longitude").val();
-            var len_input = input.length;
-            if (len_input > 10) {
-                if (e.keyCode != 8) {
-                    return false;
-                } else {
-                    $("#longitude").val(input);
-                }
-            }
-        }
-    });
-    $("#latitude").on('keyup keydown', function(e) {
-        if (e.type != 'paste') {
-            var input = $("#latitude").val();
-            var len_input = input.length;
-            if (len_input > 10) {
-                if (e.keyCode != 8) {
-                    return false;
-                } else {
-                    $("#latitude").val(input);
-                }
-            }
-        }
-    });
+    // $("#longitude").on('keyup keydown', function(e) {
+    //     if (e.type != 'paste') {
+    //         var input = $("#longitude").val();
+    //         var len_input = input.length;
+    //         // if (len_input > 10) {
+    //         //     if (e.keyCode != 8) {
+    //         //         return false;
+    //         //     } else {
+    //         //         $("#longitude").val(input);
+    //         //     }
+    //         // }
+    //     }
+    // });
+    // $("#latitude").on('keyup keydown', function(e) {
+    //     if (e.type != 'paste') {
+    //         var input = $("#latitude").val();
+    //         var len_input = input.length;
+    //         // if (len_input > 10) {
+    //         //     if (e.keyCode != 8) {
+    //         //         return false;
+    //         //     } else {
+    //         //         $("#latitude").val(input);
+    //         //     }
+    //         // }
+    //     }
+    // });
     //编辑POI数据，坐标(纬度)
     $("#latitude").blur(function() {
         if (!checkLnglatitude('latitude')) {
@@ -414,6 +416,7 @@ $(function() {
     });
 
     $("#btn-POI-save-add").click(function() {
+        $('#description').val(ue.getContent());
         var hasError = false;
         hasError = checkTitleLong() || hasError;
         hasError = checkTitleShort() || hasError;
@@ -598,13 +601,13 @@ function lonlatPaste(value, target) {
 
 function check_description() {
     var hasError = false;
-    //  var value = $("#description").val();
-    //    if(value.length==0){
-    //        $("#description-warn").css("display","block");
-    //        hasError = true;
-    //    }else{
-    //        $("#description-warn").css("display","none");
-    //    }
+    var value = $("#description").val();
+    if (value.length == 0) {
+        $("#description-warn").css("display", "block");
+        hasError = true;
+    } else {
+        $("#description-warn").css("display", "none");
+    }
     return hasError;
 };
 
@@ -786,24 +789,13 @@ function findZoneIdsWithQQZoneName(lat, lng) {
  * @return {[type]} [description]
  */
 function initEditor() {
-    //插入全景
-    // var createVb = function(ueDom, i) {
-    //     ueDom.execCommand('inserthtml', '', true);
-    //     var pano = {};
-    //     pano = new com.vbpano.Panorama(window.frames['ueditor_0'].contentWindow.document.getElementById("vbContainer" + i));
-    //     pano.setPanoId("E8D36DE566E14AC28407E0729D5CDF80");
-    //     pano.setHeading(180);
-    //     pano.setPitch(-20);
-    //     pano.setRoll(0);
-    //     pano.setAutoplayEnable(false);
-    //     pano.setGravityEnable(false);
-    // };
 
     // /*重置上传附件请求的地址*/
+
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function(action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return 'http://localhost:8080/luna-web/add_article.do?method=upload_img';
+            return Inter.getApiUrl().uploadImageInArtcle;
         } else if (action == 'uploadvideo') {
             return 'http://localhost:8080/luna-web/add_article.do?method=upload_video';
         } else {
@@ -811,196 +803,17 @@ function initEditor() {
         }
     };
 
-    // /*注册添加音乐按钮*/
-    // UE.registerUI('insertmusic', function(editor, uiName) {
-    //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-    //     editor.registerCommand(uiName, {
-    //         execCommand: function() {
-    //             alert('execCommand:' + uiName);
-    //         }
-    //     });
-
-    //     //创建一个button
-    //     var btn = new UE.ui.Button({
-    //         //按钮的名字
-    //         name: uiName,
-    //         //提示
-    //         title: "音乐",
-    //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-    //         cssRules: 'background-position: -18px -40px;',
-    //         //点击时执行的命令
-    //         onclick: function() {
-    //             //这里可以不用执行命令,做你自己的操作也可
-    //             var cmd = "insertmusic";
-    //             var dialog,
-    //                 outDialog = function(options) {
-    //                     var dialog = new baidu.editor.ui.Dialog(options);
-    //                     dialog.addListener('hide', function() {
-
-    //                         if (dialog.editor) {
-    //                             var editor = dialog.editor;
-    //                             try {
-    //                                 if (browser.gecko) {
-    //                                     var y = editor.window.scrollY,
-    //                                         x = editor.window.scrollX;
-    //                                     editor.body.focus();
-    //                                     editor.window.scrollTo(x, y);
-    //                                 } else {
-    //                                     editor.focus();
-    //                                 }
-
-
-    //                             } catch (ex) {}
-    //                         }
-    //                     });
-    //                     return dialog;
-    //                 };
-    //             var options = UE.utils.extend({
-    //                 iframeUrl: editor.ui.mapUrl(editor.options.iframeUrlMap[cmd]),
-    //                 editor: editor,
-    //                 className: 'edui-for-' + cmd,
-    //                 title: "音乐",
-    //                 holdScroll: cmd === 'insertimage',
-    //                 fullscreen: /charts|preview/.test(cmd),
-    //                 closeDialog: editor.getLang("closeDialog")
-    //             }, 'ok' == 'ok' ? {
-    //                 buttons: [{
-    //                     className: 'edui-okbutton',
-    //                     label: editor.getLang("ok"),
-    //                     editor: editor,
-    //                     onclick: function() {
-    //                         dialog.close(true);
-    //                     }
-    //                 }, {
-    //                     className: 'edui-cancelbutton',
-    //                     label: editor.getLang("cancel"),
-    //                     editor: editor,
-    //                     onclick: function() {
-    //                         dialog.close(false);
-    //                     }
-    //                 }]
-    //             } : {});
-    //             dialog = new outDialog(options);
-    //             dialog.render();
-    //             dialog.open();
-    //         }
-    //     });
-
-    //     //当点到编辑内容上时，按钮要做的状态反射
-    //     editor.addListener('selectionchange', function() {
-    //         var state = editor.queryCommandState(uiName);
-    //         if (state == -1) {
-    //             btn.setDisabled(true);
-    //             btn.setChecked(false);
-    //         } else {
-    //             btn.setDisabled(false);
-    //             btn.setChecked(state);
-    //         }
-    //     });
-
-    //     //因为你是添加button,所以需要返回这个button
-    //     return btn;
-    // }, [15]);
-
-    // // /*注册添加视频按钮*/
-    // // UE.registerUI('添加视频', function(editor, uiName) {
-    // //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-    // //     editor.registerCommand(uiName, {
-    // //         execCommand: function() {
-    // //             alert('execCommand:' + uiName);
-    // //         }
-    // //     });
-
-    // //     //创建一个button
-    // //     var btn = new UE.ui.Button({
-    // //         //按钮的名字
-    // //         name: uiName,
-    // //         //提示
-    // //         title: uiName,
-    // //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-    // //         cssRules: 'background-position: -320px -20px;',
-    // //         //点击时执行的命令
-    // //         onclick: function() {
-    // //             //这里可以不用执行命令,做你自己的操作也可
-    // //             editor.execCommand('music', {
-    // //                 width: 400,
-    // //                 height: 95,
-    // //                 align: "center",
-    // //                 url: "http://audio.xmcdn.com/group14/M00/30/C1/wKgDZFb2fqDziRfjADbBrgdSFfY096.m4a"
-    // //             });
-    // //         }
-    // //     });
-
-    // //     //当点到编辑内容上时，按钮要做的状态反射
-    // //     editor.addListener('selectionchange', function() {
-    // //         var state = editor.queryCommandState(uiName);
-    // //         if (state == -1) {
-    // //             btn.setDisabled(true);
-    // //             btn.setChecked(false);
-    // //         } else {
-    // //             btn.setDisabled(false);
-    // //             btn.setChecked(state);
-    // //         }
-    // //     });
-
-    // //     //因为你是添加button,所以需要返回这个button
-    // //     return btn;
-    // // });
-
-    // /*注册添加全景按钮*/
-    // UE.registerUI('添加全景', function(editor, uiName) {
-    //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-    //     editor.registerCommand(uiName, {
-    //         execCommand: function() {
-    //             alert('execCommand:' + uiName);
-    //         }
-    //     });
-
-    //     //创建一个button
-    //     var btn = new UE.ui.Button({
-    //         //按钮的名字
-    //         name: uiName,
-    //         //提示
-    //         title: uiName,
-    //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-    //         cssRules: 'background-position: -500px 0;',
-    //         //点击时执行的命令
-    //         onclick: function() {
-    //             //这里可以不用执行命令,做你自己的操作也可
-    //             // ue.execCommand('inserthtml', '<div class="vbContainer" style="width:100%;height:800px;position:relative;">啊上大法师地方</div>', true);
-
-    //             var $container = window.frames['ueditor_0'].contentWindow.document.getElementsByClassName("vbContainer");
-
-    //             console.log($container);
-    //             createVb(ue, $container.length + 1);
-    //         }
-    //     });
-
-    //     //当点到编辑内容上时，按钮要做的状态反射
-    //     editor.addListener('selectionchange', function() {
-    //         var state = editor.queryCommandState(uiName);
-    //         if (state == -1) {
-    //             btn.setDisabled(true);
-    //             btn.setChecked(false);
-    //         } else {
-    //             btn.setDisabled(false);
-    //             btn.setChecked(state);
-    //         }
-    //     });
-
-    //     //因为你是添加button,所以需要返回这个button
-    //     return btn;
-    // });
-
     /*获取编辑器实例*/
     ue = UE.getEditor('editor', {
         allowDivTransToP: false,
         elementPathEnabled: false,
         toolbars: [
-            ['fontfamily', '|', 'fontsize', '|', 'bold', 'italic', 'underline', 'forecolor', '|', 'justifyleft',
-                'justifyright',
-                'justifycenter',
-                'justifyjustify', '|',
+            ['fontfamily', '|',
+                'fontsize', '|',
+                'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
+                'justifyleft',
+                'justifyright', 'justifycenter', 'justifyjustify', '|',
+                'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                 'simpleupload',
                 // 'music',
                 'insertvideo',
@@ -1009,4 +822,3 @@ function initEditor() {
     });
     return ue;
 }
-

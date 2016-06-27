@@ -170,8 +170,8 @@
                             <span class="superscript">*</span>坐标
                         </div>
                         <div class="value-poi">
-                            <form:input id="latitude" placeholder="请输入纬度" readonly="${poiReadOnly || lang == 'en'}" path="lat" maxlength="21"/>
-                            <form:input id="longitude" placeholder="请输入经度" readonly="${poiReadOnly || lang == 'en'}" path="lng" maxlength="21"/>
+                            <form:input id="latitude" placeholder="请输入纬度" readonly="${poiReadOnly || lang == 'en'}" path="lat" maxlength="10"/>
+                            <form:input id="longitude" placeholder="请输入经度" readonly="${poiReadOnly || lang == 'en'}" path="lng" maxlength="10"/>
                             <c:if test="${!poiReadOnly && lang!='en'}">
                             	<span class="url-ex"><a href="http://lbs.qq.com/tool/getpoint/" target="_blank">坐标拾取器</a></span>
                             </c:if>
@@ -222,7 +222,8 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">详细介绍</div>
                         <div class="value-poi">
-		                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
+		                    <script id="editor" type="text/plain" style="width:550px;height:500px;"></script>
+                            <form:textarea id="description" readonly="${poiReadOnly}" path="briefIntroduction" cssClass="poi-des" style="display:none;"/>
                         </div>
                         <div class="warn" id="description-warn">不能为空</div>
                     </div>
@@ -371,6 +372,7 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="${basePath}/scripts/common/interface.js"></script>
 <script src="${basePath}/scripts/add_edit_poi.js"></script>
 <script src="${basePath}/scripts/popup.js"></script>
 <script type="text/javascript">

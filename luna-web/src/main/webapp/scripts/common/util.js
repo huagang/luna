@@ -19,7 +19,7 @@ var Util = function() {
             var ajaxOptions = {
                 type: method || 'POST',
                 dataType: 'json',
-                data: JSON.stringify(args),
+                data: args,
                 // data: args,
                 cache: false,
                 crossDomain: true, //跨域问题

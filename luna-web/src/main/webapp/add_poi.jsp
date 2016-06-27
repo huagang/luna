@@ -142,6 +142,7 @@
                         <div class="label-poi label-ver">详细介绍</div>
                         <div class="value-poi">
                             <script id="editor" type="text/plain" style="width:550px;height:500px;"></script>
+                            <form:textarea id="description" readonly="${poiReadOnly}" path="briefIntroduction" cssClass="poi-des" style="display:none;"/>
                         </div>
                         <div class="warn" id="description-warn">不能为空</div>
                     </div>
