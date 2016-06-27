@@ -3,7 +3,6 @@ package ms.luna.web.control;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -371,10 +370,11 @@ public class PoiApiCtrl {
 			@RequestParam(required = false, value = "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
-
+		request.setCharacterEncoding("UTF-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
-		tags = URLDecoder.decode(tags, "UTF-8");
+		tags = string2ChineseChar(tags);
+		MsLogger.debug(tags);
 		try{
 			JSONObject param = new JSONObject();
 			if(fields == null){
@@ -457,21 +457,25 @@ public class PoiApiCtrl {
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		String[] tags = {
-				"124232",
-				"1,2,3",
-				"12,232,12",
-				" 12",
-				"1 2",
-				" 1 2",
-				"2 , 2",
-				"1,2213,3 ",
-				"1,22 13,3 "
-		};
-		for(String tag : tags)
-			System.out.println(checkTags(tag));
-//		String tags = "特色,农家";//%E7%89%B9%E8%89%B2%2C%E5%86%9C%E5%AE%B6
-		System.out.println(URLEncoder.encode("特色", "utf-8"));
+		    String s = "%E7%89%B9%E8%89%B2";
+	        s = string2ChineseChar(s);
+	        System.out.println(s);
+		//System.out.println(URLDecoder.decode("%E7%89%B9%E8%89%B2","UTF-8"));
+//		String[] tags = {
+//				"124232",
+//				"1,2,3",
+//				"12,232,12",
+//				" 12",
+//				"1 2",
+//				" 1 2",
+//				"2 , 2",
+//				"1,2213,3 ",
+//				"1,22 13,3 "
+//		};
+//		for(String tag : tags)
+//			System.out.println(checkTags(tag));
+////		String tags = "特色,农家";//%E7%89%B9%E8%89%B2%2C%E5%86%9C%E5%AE%B6
+//		System.out.println(URLEncoder.encode("特色", "utf-8"));
 //		System.out.println( tags );
 //		tags = URLDecoder.decode(tags, "utf-8");
 //		System.out.println(tags);
@@ -480,4 +484,21 @@ public class PoiApiCtrl {
 //			System.out.println(aa);
 //		}
 	}
+	
+    public static String string2ChineseChar(String string) throws UnsupportedEncodingException {
+          
+        StringBuffer unicode = new StringBuffer();
+        for (int i = 0; i < string.length(); i++) {
+            // 取出每一个字符
+            char c = string.charAt(i);
+            // 转换为unicode(用于解码)
+            unicode.append("%" + Integer.toHexString(c));
+        }
+        // 16进制数据
+        String result = unicode.toString();
+        // 转汉字
+        return URLDecoder.decode(
+        		URLDecoder.decode(result, "UTF-8"), // Unicode
+        		"UTF-8");
+    }
 }
