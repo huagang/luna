@@ -180,7 +180,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
-		int ctgr_id = param.getInteger("category_id");
+		int ctgr_id = param.getInteger("ctgr_id");
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
@@ -233,7 +233,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
-		int ctgr_id = param.getIntValue("category_id");
+		int ctgr_id = param.getIntValue("ctgr_id");
 		String fields = param.getString("fields");
 		String lang = param.getString("lang");
 		String[] fieldArr;
@@ -283,7 +283,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
-		int sub_ctgr_id = param.getIntValue("sub_category_id");
+		int sub_ctgr_id = param.getIntValue("sub_ctgr_id");
 		String fields = param.getString("fields");
 		String lang = param.getString("lang");
 		String[] fieldArr;
@@ -390,7 +390,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					int tag = array.getIntValue(0);
 					JSONObject data = new JSONObject();
 					if (poiTags.containsKey(tag)) {
-						data.put("category_nm", poiTags.get(tag));
+						data.put("category_name", poiTags.get(tag));
 						data.put("category_id", tag);
 					}
 					poi.put("category", data);
@@ -514,7 +514,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 					continue;
 				}
 				// TODO 加入全景类别与名称
-				key = poiApiNameMap.getOuterVal(key);
 				// if(key != null){//
 				// 判断映射表是否存在对应名称。fieldNames.containsKey(key)表明是存在的，不需要此判断
 				poi.put(poiApiNameMap.getOuterVal(key), entry.getValue());
@@ -1122,7 +1121,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							JSONObject data = new JSONObject();
 							int tag = array.getIntValue(0);
 							if (poiTags.containsKey(tag)) {
-								data.put("category_nm", poiTags.get(tag));
+								data.put("category_name", poiTags.get(tag));
 								data.put("category_id", tag);
 							}
 							result.put("category", data);

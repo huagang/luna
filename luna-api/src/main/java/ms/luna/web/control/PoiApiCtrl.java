@@ -140,7 +140,7 @@ public class PoiApiCtrl {
 	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
-			@RequestParam(required = true, value = "ctgr_id") Integer ctgr_id, 
+			@RequestParam(required = true, value = "category_id") Integer ctgr_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
@@ -246,7 +246,7 @@ public class PoiApiCtrl {
 	public void getPoisByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
-			@RequestParam(required = true, value = "ctgr_id") int ctgr_id,
+			@RequestParam(required = true, value = "category_id") int ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -315,7 +315,7 @@ public class PoiApiCtrl {
 	public void getPoisByBizIdAndPoiIdAndSubCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
-			@RequestParam(required = true, value = "sub_ctgr_id") int sub_ctgr_id,
+			@RequestParam(required = true, value = "sub_category_id") int sub_ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
