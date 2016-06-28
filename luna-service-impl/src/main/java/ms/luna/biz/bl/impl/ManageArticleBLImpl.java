@@ -82,8 +82,8 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             msArticle.setColumnId(column);
         }
 
-        int businessId = articleObj.getInteger(MsArticleTable.FIELD_BUSINESS_ID);
-        if(businessId > 0) {
+        Integer businessId = articleObj.getInteger(MsArticleTable.FIELD_BUSINESS_ID);
+        if(businessId != null && businessId > 0) {
             msArticle.setBusinessId(businessId);
         }
 
