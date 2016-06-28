@@ -190,6 +190,7 @@
 <!--弹出层 end-->
 
 <script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script type="text/javascript">
 	var APP_STATUS = {

@@ -28,6 +28,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 	/* @param business_dialog_selector  业务配置框的选择器
 	 * @param app_dialog_selector       微景展名称设置框的选择器
 	 */
+	var urls = Inter.getApiUrl();
 	var controller = {
 		_app_id:'',        
 		_app_name:'',
@@ -35,10 +36,10 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		_business_name:'',
 		_type:'',  // type类型有  "create", "update", "reuse",
 		_posturl:{ // 设置相关请求的url
-			create: host+'/manage/app.do?method=create_app',  //创建微景展请求 url
-			update: host+'/manage/app.do?method=update_app',  //更新微景展名称请求 url
-			reuse: host+'/manage/app.do?method=reuse_app',	  //TODO 复用微景展请求url
-			searchBusiness: host+'/manage/app.do?method=search_business' //搜索业务请求 url
+			create: urls.createApp,  //创建微景展请求 url
+			update: urls.updateApp,  //更新微景展名称请求 url
+			reuse: urls.copyApp,	  //复用微景展请求url
+			searchBusiness: urls.searchBusiness //搜索业务请求 url
 		},
 		_business_dialog: $(business_dialog_selector),
 		_app_dialog: $(app_dialog_selector),
@@ -183,7 +184,12 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 				this._app_dialog.find('.last').addClass('hidden');
 				this._app_dialog.find('.next').html('确定');
 				this._app_dialog.find('.cancel').removeClass('hidden');
-			} else{
+			}
+			else{
+				if(type === 'reuse'){
+					var node = target.parentNode;
+					this._app_id = node.getAttribute("data-app-id") || '';
+				}
 				this._business_dialog.addClass("pop-show");
 				this._app_dialog.find('input.app-name').val("");
 				this._business_dialog.find('.select.business').html("<option>无</option>");
@@ -220,14 +226,12 @@ function getAppController(business_dialog_selector, app_dialog_selector){
         	$('#table_apps').bootstrapTable("refresh");
 		},
 		_postData:function(){
-			/*发送请求，包含新建微景展请求，更新微景展信息请求以及
-			 * 未完成（TODO 等待接口对接）的复用微景展请求
-			 */
+			// 发送请求，包含新建微景展请求，更新微景展信息请求
 			if(!this._app_name || !this._business_id){
 				return;
 			}
 			var data = {
-		            "app_id": this._app_id || null,
+		            "source_app_id": this._app_id || null,
 		            "app_name":this._app_name,
 		            "business_id": this._business_id
 		     };
@@ -241,7 +245,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		            if(data.code === "0"){
 		            	this._app_dialog.removeClass('pop-show');
 		            	this.freshAppList();
-		            	if(this._type === 'create'){
+		            	if(this._type === 'create' || this._type === 'reuse'){
 		            		location.href = '../app.do?method=init&app_id=' + data.data.app_id;
 		            	}
 		            }
