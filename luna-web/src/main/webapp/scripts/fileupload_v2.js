@@ -52,8 +52,8 @@ var FileUploader = {
 		}
 		return {error: null};
 	},
-	uploadFile: function(elementId, type, file, successCallback, errorCallback){
-		/* @param elementId 上传文件的input标签的id
+	uploadFile: function(elementSel, type, file, successCallback, errorCallback){
+		/* @param elementSel 上传文件的input标签的选择器
 		 * @param type 上传文件的类型,可选值为'thumbnail','audio','video'
 		 * @param file 上传的文件
 		 * @param successCallback 上传文件成功后的回调函数
@@ -66,7 +66,7 @@ var FileUploader = {
 			return;
 		}
 		var data = new FormData();
-		data.append(document.querySelector('#'+elementId).name,file);
+		data.append(document.querySelector(elementSel).name,file);
 		$.ajax({
 			//处理文件上传操作的服务器端地址
 			url:this._host+"/add_poi.do?method=upload_"+type,
