@@ -373,7 +373,7 @@ var initPage = function() {
             var preview = document.querySelector('#thumbnail_show');
             preview.src = '';
             showLoadingTip('.pic_tip');
-            FileUploader.uploadFile('#pic_fileup', 'thumbnail', event.target.files[0], function(data) {
+            FileUploader.uploadFile('thumbnail', event.target.files[0], function(data) {
                 preview.src = articleStore.thumbnail = data.data.access_url;
                 clearWarn('#pic_warn');
                 hideLoadingTip('.pic_tip');
@@ -387,7 +387,7 @@ var initPage = function() {
         document.querySelector('#video_fileup').addEventListener('change', function() {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
-            FileUploader.uploadFile('#video_fileup', 'video', event.target.files[0], function(data) {
+            FileUploader.uploadFile('video', event.target.files[0], function(data) {
                 document.querySelector('#video').value = articleStore.video = data.data.vod_file_id;
                 clearWarn('#video_warn');
                 hideLoadingTip('.video_tip');
@@ -401,7 +401,7 @@ var initPage = function() {
         document.querySelector('#audio_fileup').addEventListener('change', function() {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
-            FileUploader.uploadFile('#audio_fileup', 'audio', event.target.files[0], function(data) {
+            FileUploader.uploadFile('audio', event.target.files[0], function(data) {
                 document.querySelector('#audio').value = articleStore.audio = data.data.access_url;
                 clearWarn('#audio_warn');
                 hideLoadingTip('.audio_tip');
