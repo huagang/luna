@@ -793,13 +793,12 @@ function findZoneIdsWithQQZoneName(lat, lng) {
 function initEditor() {
 
     // /*重置上传附件请求的地址*/
-
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function(action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return Inter.getApiUrl().uploadImageInArtcle;
+            return host + "/add_poi.do?method=upload_thumbnail";
         } else if (action == 'uploadvideo') {
-            return 'http://localhost:8080/luna-web/add_article.do?method=upload_video';
+            return host + "/add_poi.do?method=upload_video";
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
