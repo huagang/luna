@@ -160,11 +160,11 @@
    				
    			</div>
    			<div class='part-right'>
-   				<div class='char-limit-container'>
+   				<div class='char-limit-wrapper'>
    					<input type="text" class="app-name" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
    					<span class='counter'>0/32</span>
    				</div>
-   				<div class='char-limit-container'>
+   				<div class='char-limit-wrapper'>
    					<textarea type='text' class='app-description' maxlength='128'
    					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
    					<span class='counter'>0/128</span>
