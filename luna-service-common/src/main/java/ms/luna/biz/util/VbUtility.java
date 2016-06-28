@@ -308,6 +308,10 @@ public final class VbUtility {
 		}
 		return null;
 	}
+	public static String getFileName(String path) {
+		int lastIndex = path.lastIndexOf("/");
+		return lastIndex < 0 || path.length() == 1 ? path : path.substring(lastIndex + 1); 
+	}
 
 	public static String getExtensionOfVideoFileName(String filename) {
 		String ext = getExtensionOfFileName(filename);
