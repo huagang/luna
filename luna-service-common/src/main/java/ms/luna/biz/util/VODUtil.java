@@ -275,10 +275,12 @@ public class VODUtil {
 	 *            分块大小
 	 * @param webAddr
 	 * 			  url地址
+	 * @param isTranscode
+	 * 			 是否转码：1,转码；0,不转码 
 	 * @return
 	 * @throws IOException
 	 */
-	public JSONObject upload2Cloud(MultipartFile file, String path, String fileName, String webAddr) throws IOException {
+	public JSONObject upload2Cloud(MultipartFile file, String path, String fileName, String webAddr, int isTranscode) throws IOException {
 		// 默认切片5M, 视频标签为null，转码，生成视频封面，无水印
 		// 生成转码回调地址
 		byte[] bytes = file.getBytes();
@@ -300,12 +302,35 @@ public class VODUtil {
 			return FastJsonUtil.error("1", "文件夹创建失败");
 		}
 
-		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, notifyUrl, null, 1, 1, 0);
+		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, notifyUrl, null, isTranscode, 1, 0);
 
 		if (result.getString("code").equals("0")) { // token用于缓存处理
 			result.put("token", token);
 		}
 		return result;
+	}
+
+	/**
+	 * 上传视频到腾讯云VOD
+	 * 
+	 * @param file
+	 *            上传文件，MutipartFile形式
+	 * @param path
+	 *            上传路径
+	 * @param fileName
+	 *            上传后的显示文件名
+	 * @param notifyUrl
+	 *            转码回调地址,允许为null
+	 * @param datasize
+	 *            分块大小
+	 * @param webAddr
+	 * 			  url地址
+	 * @return
+	 * @throws IOException
+	 */
+	public JSONObject upload2Cloud(MultipartFile file, String path, String fileName, String webAddr) throws IOException {
+		return upload2Cloud(file, path, fileName, webAddr, 1);
+		
 	}
 
 	/**
