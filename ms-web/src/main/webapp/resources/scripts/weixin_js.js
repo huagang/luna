@@ -55,15 +55,15 @@ function initConfig() {
             }
         });
 
-        $("#opt-btn-wrap").on("click",".open_map",function(){
+        $(".app-wrap").on("click",".navimg",function(){
            //alert(detailData["title"]);
-           if(typeof(detailData)!="undefined")
-           {
-              openWeiXinlatitude = detailData["navlat"];
-              openWeiXinlongitude = detailData["navlng"];
-              openWeiXinMapName = detailData["title"];
-              openWeiXinMapAddress = detailData["address"]?detailData["address"]:"";
-           }
+
+
+              openWeiXinlatitude =$(this).attr("endPosition").split(",")[0];
+              openWeiXinlongitude = $(this).attr("endPosition").split(",")[1];
+              openWeiXinMapName = $(this).attr("endName");
+              openWeiXinMapAddress = "";
+    alert(openWeiXinlatitude);
             wx.openLocation({
                 latitude: Number(openWeiXinlatitude),
               longitude: Number(openWeiXinlongitude),

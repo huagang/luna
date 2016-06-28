@@ -252,14 +252,14 @@ var initPage = function() {
          	}
             var data = {
             	id: articleStore.id || null,
-            	business_id: articleStore.business_id,
+            	business_id: articleStore.business_id || -1,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: 1
+                column_id: articleStore.category
             };
             console.log(data);
             $.ajax({
@@ -270,12 +270,14 @@ var initPage = function() {
                 dataType: "json",
                 success: function(data) {
                     if (data.code == "0") {
-                        articleStore.id = data.data.id;
-                        articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
-                        console.log("保存成功");
+                    	if(!articleStore.id){
+                    		articleStore.id = data.data.id;
+                            articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
+                            
+                    	}
                         alert("保存文章成功");
                     } else {
-                        console.log("保存失败");
+                        alert(data.msg || "保存失败");
                     }
                 },
                 error: function(data) {
@@ -443,7 +445,7 @@ var initPage = function() {
             summary:'',
             audio: '',
             video:'',
-            category: '',
+            category: $("#category option:first-child").val() || '',
             business_id: business_id,
             previewUrl : id ? "../show_article.do?method=init&article_id=" + id : '',
             checkEmpty: function() {

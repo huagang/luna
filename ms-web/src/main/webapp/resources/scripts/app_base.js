@@ -24,6 +24,14 @@ $(document).ready(function(){
 	$(".app-wrap").on("click","[hrefurl]",function(){
 		window.location.href=$(this).attr("hrefurl");
 	});
+	$(".app-wrap").on("click",".navimg",function(){
+		detailData={
+			"navlat":$(this).attr("endPosition").split(",")[0],
+			"navlng":$(this).attr("endPosition").split(",")[1],
+			"title":$(this).attr("endName").split(",")[0]
+		};
+		showNav();
+	});
 	if(pageData.code!="0"){
 		alert(pageData.msg);
 		return;
@@ -42,7 +50,13 @@ $(document).ready(function(){
 	            } else if(n.startsWith("img")) {
 	            	var img = new Img(value);
 	            	componentHtml = img.build();
-	            }
+	            } else if(n.startsWith("pano")) {
+					var pano = new Pano(value);
+					componentHtml = pano.build();
+				} else if(n.startsWith("nav")) {
+					var nav = new Nav(value);
+					componentHtml = nav.build();
+				}
 	            $(".app-wrap").append(componentHtml);
 		});
 	}
@@ -156,10 +170,124 @@ $(document).ready(function(){
     }
 
 	function Nav(data) {
+		this.value=data;
+		BaseComponent.call(this);
 
+		this.build =function(){
+			this.setPosition();
+			// Img.prototype.setPosition.call();
+
+			this.html.children("div").append('<img class="navimg" src="' + this.value.content.icon + '" endName="'+ this.value.content.endName +'" endPosition="'+ this.value.content.endPosition +'" startName="'+ this.value.content.startName +'" startPosition="'+ this.value.content.startPosition +'" />');
+
+			this.setMoreInfo();
+
+			this.setAction();
+
+			return this.html;
+		}
 	}
 
 	function Pano(data) {
+		this.value=data;
+		BaseComponent.call(this);
 
+		this.build =function(){
+			this.setPosition();
+    		// Img.prototype.setPosition.call();
+
+			this.html.children("div").append('<a href="http://wap.visualbusiness.cn/vb/?panoID='+ this.value.content.panoId +'"><img src="' + this.value.content.icon + '"/></a>');
+
+			this.setMoreInfo();
+
+    		this.setAction();
+
+    		return this.html;
+		}
 	}
 });
+
+
+//获取地理位置和导航等信息
+var myLongitude;
+var myLatitude;
+var latlng={"lng":"106.704800","lat":"26.571970"};
+var detailData={
+	"navlat":"",
+	"navlng":"",
+	"title":""
+};
+function showNav() {
+     //if(!is_weixn()){
+        getMyLocation();
+     //}
+    // var url = "http://map.qq.com/nav/drive?start="+latlng.lng+"%2C"+latlng.lat+"&dest="+detailData["nav"]["lng"]+"%2C"+detailData["nav"]["lat"]+"&sword=我的位置&eword="+detailData["title"]+"&ref=mobilemap&referer=";
+    // window.location.href=url;
+ }
+// HTML填充信息窗口内容
+
+function getMyLocation(){
+
+	var options={
+	    enableHighAccuracy:true,
+	    maximumAge:1000
+	}
+	if(navigator.geolocation){
+	    //浏览器支持geolocation
+	    // alert("before");
+	    navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess,getMyLocationOnError,options);
+	    // alert("end");
+	}else{
+	    //浏览器不支持geolocation
+	    alert("请检查手机定位设置，或者更换其他支持定位的浏览器尝试！");
+	}
+}
+
+//成功?
+function getMyLocationOnSuccess(position){
+//返回用户位置
+//经度
+myLongitude = position.coords.longitude;
+//纬度
+myLatitude = position.coords.latitude;
+// alert(myLatitude);
+//将经纬度转换成腾讯坐标
+qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude,myLongitude), 1, function(res){
+//取出经纬度并且赋值
+ latlng = res[0];
+    var url = "http://map.qq.com/nav/drive?start="+latlng.lng+"%2C"+latlng.lat+"&dest="+detailData["navlng"]+"%2C"+detailData["navlat"]+"&sword=我的位置&eword="+detailData["title"]+"&ref=mobilemap&referer=";
+    // alert(url);
+    window.location.href=url;
+});
+// alert("经度"+myLongitude);
+// alert("纬度"+myLatitude);
+}
+
+//失败?
+function getMyLocationOnError(error){
+    switch(error.code){
+        case 1:
+        alert("位置服务被拒绝?");
+        break;
+
+        case 2:
+        alert("暂时获取不到位置信息");
+        break;
+
+        case 3:
+        alert("获取信息超时");
+        break;
+
+        default:
+         alert("未知错误");
+        break;
+    }
+}
+ function is_weixn(){  
+    var ua = navigator.userAgent.toLowerCase();  
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {  
+        return true;  
+    } else {  
+        return false;  
+    }  
+}  
+

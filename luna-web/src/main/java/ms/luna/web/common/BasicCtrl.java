@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 import com.alibaba.fastjson.JSONObject;
 
@@ -60,19 +61,41 @@ public abstract class BasicCtrl {
 					file.getBytes(), localServerTempPath, addressInCloud + "/" + fileNameInCloud);
 
 			if ("0".equals(result.getString("code"))) {
+				String url = result.getJSONObject("data").getString("access_url");
+				result.put("original", file.getOriginalFilename());
+				result.put("name", VbUtility.getFileName(url));
+				result.put("url", url);
+				result.put("size", file.getSize());
+				result.put("type", VbUtility.getExtensionOfPicFileName(url));
+				result.put("state", "SUCCESS");
 				// access_url
 				response.getWriter().print(result.toString());
 				response.setStatus(200);
 				return;
 
 			} else {
+				result.put("original", file.getOriginalFilename());
+				result.put("name", file.getOriginalFilename());
+				result.put("url", "");
+				result.put("size", file.getSize());
+				result.put("type", "");
+				result.put("state", "FAIL");
+
 				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 				response.setStatus(200);
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			response.getWriter().print(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			MsLogger.error(e);
+			result = new JSONObject();
+			result.put("original", file.getOriginalFilename());
+			result.put("name", file.getOriginalFilename());
+			result.put("url", "");
+			result.put("size", file.getSize());
+			result.put("type", "");
+			result.put("state", "FAIL");
+			result.putAll(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
+			response.getWriter().print(result.toJSONString());
 			response.setStatus(200);
 			return;
 		}

@@ -204,3 +204,12 @@ label{
 .pop-fun button{
 	height:30px;
 }
+.publish-option{
+	width: 760px;
+    margin-left: 18px;
+}
+.publish-option label,
+.publish-option input{
+	cursor: pointer;
+}
+    

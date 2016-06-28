@@ -530,11 +530,11 @@ function creatPageComponentsHtml(pageID,componentID,componentType){
             break;
         case "nav":
         	newComponent.attr("component-type","nav");
-        	newComponent.children("div").append('<img src="' + imghost + '/img/sample.png"/>');
+        	newComponent.children("div").append('<img src="' + imghost + '/img/samplenav.png"/>');
             break;
         case "pano":
             newComponent.attr("component-type","pano");
-            newComponent.children("div").append('<img src="' + imghost + '/img/sample.png" />');
+            newComponent.children("div").append('<img src="' + imghost + '/img/samplepano.png" />');
             break;
         default:
             $.alert("未知的组件类型");
