@@ -12,20 +12,17 @@
 
 base_dir=$(dirname $0)
 cd $base_dir/../
-cd luna-service-common
 git pull
+cd luna-service-common
 mvn clean install -Pdev
 
 cd ..
 cd luna-service-generator
-git pull
 mvn clean install
 cd ..
 cd luna-service-interface
-git pull
 mvn clean install
 
 cd ..
 cd luna-web
-git pull
-mvn clean package -Pdev -skipTests
+mvn clean package -Pdev -DskipTests

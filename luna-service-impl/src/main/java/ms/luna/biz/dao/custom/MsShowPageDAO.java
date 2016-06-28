@@ -44,6 +44,8 @@ public interface MsShowPageDAO {
 	
 	public void deletePagesByAppId(int appId);
 	public void deletePageById(String pageId);
+
+	public void copyAllPages(int sourceAppId, int destAppId, String user);
 	
 	public void updatePageOrder(Map<String, Integer> pageOrders);
 

@@ -64,6 +64,11 @@ public class ManageShowAppServiceImpl implements ManageShowAppService {
 	}
 
 	@Override
+	public JSONObject copyApp(String json) {
+		return manageShowAppBL.copyApp(json);
+	}
+
+	@Override
 	public JSONObject publishApp(String json) {
 		return manageShowAppBL.publishApp(json);
 	}

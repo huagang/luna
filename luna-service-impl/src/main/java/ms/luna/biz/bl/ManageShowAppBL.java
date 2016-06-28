@@ -15,6 +15,8 @@ public interface ManageShowAppBL {
 	JSONObject updateApp(String json);
 	
 	boolean existAppName(String appName);
+
+	JSONObject copyApp(String json);
 	
 	JSONObject searchBusiness(String json);
 	
