@@ -271,7 +271,7 @@
                     <ms:poi readonly="${poiReadOnly}" lang="${lang}" privateFields="${private_fields}"/>
                 </div>
                 <div class='publish-option'>
-                	<input type='checkbox'  id='publish'/>
+                	<form:input type='checkbox'  id='publish'/>
                 	<label for='publish'>同步生成poi详情页</label>
                 	<a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>              	
                 </div>

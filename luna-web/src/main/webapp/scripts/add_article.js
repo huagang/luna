@@ -252,7 +252,7 @@ var initPage = function() {
          	}
             var data = {
             	id: articleStore.id || null,
-            	business_id: articleStore.business_id || 4,
+            	business_id: articleStore.business_id || -1,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
