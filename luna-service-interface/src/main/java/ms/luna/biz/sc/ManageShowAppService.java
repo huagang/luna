@@ -23,6 +23,8 @@ public interface ManageShowAppService {
 	JSONObject updateApp(String json);
 	
 	boolean existAppName(String appName);
+
+	JSONObject copyApp(String json);
 	
 	JSONObject searchBusiness(String json);
 	

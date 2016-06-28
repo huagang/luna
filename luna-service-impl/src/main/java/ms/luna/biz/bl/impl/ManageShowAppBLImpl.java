@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.sun.jna.platform.win32.OaIdl;
 import ms.luna.biz.table.MsBusinessTable;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -120,39 +122,15 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		String appName = FastJsonUtil.getString(jsonObject, "app_name");
-		int businessId = FastJsonUtil.getInteger(jsonObject, "business_id");
-		//用于存储用户微景展资源路径
-		String appCode = appName;
 		String owner = FastJsonUtil.getString(jsonObject, "owner");
-		
-		if(existAppName(appName)) {
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称已经存在");
-		}
-		
-		MsShowApp msShowApp = new MsShowApp();
-		msShowApp.setAppName(appName);
-		msShowApp.setAppCode(appCode);
-		msShowApp.setBusinessId(businessId);
-		msShowApp.setOwner(owner);
-		msShowApp.setAppStatus(MsShowAppConfig.AppStatus.NOT_AUDIT);
 
-		
 		try {
-			msShowAppDAO.insertSelective(msShowApp);
-			// create index page for new app
-			MsShowAppCriteria msShowAppCriteria = new MsShowAppCriteria();
-			MsShowAppCriteria.Criteria criteria = msShowAppCriteria.createCriteria();
-			criteria.andAppNameEqualTo(appName);
+			Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
+			if(! createResult.getLeft()) {
+				return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+			}
 			int appId = msShowAppDAO.selectIdByName(appName);
-			MsShowPage page = new MsShowPage();
-			page.setAppId(appId);
-			page.setPageName("首页");
-			page.setPageCode("index");
-			page.setPageContent(new HashMap<String, Object>());
-			page.setPageOrder(1);
-			page.setUpdateUser(owner);
-			msShowPageDAO.createOnePage(page);
-
+			createInitalPage(appId, owner);
 			JSONObject ret = new JSONObject();
 			ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
 			return FastJsonUtil.sucess("成功添加微景展", ret);
@@ -161,8 +139,58 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			logger.error("Failed to insert app: " + json, e);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
 		}
+	}
 
-		
+	private Pair<Boolean, Pair<Integer, String>> createAppInfo(JSONObject jsonObject) {
+		String appName = FastJsonUtil.getString(jsonObject, "app_name");
+		int businessId = FastJsonUtil.getInteger(jsonObject, "business_id");
+		//用于存储用户微景展资源路径
+		String appCode = appName;
+		String owner = FastJsonUtil.getString(jsonObject, "owner");
+
+		if(existAppName(appName)) {
+			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "微景展名称已经存在"));
+		}
+		MsShowApp msShowApp = new MsShowApp();
+		msShowApp.setAppName(appName);
+		msShowApp.setAppCode(appCode);
+		msShowApp.setBusinessId(businessId);
+		msShowApp.setOwner(owner);
+		msShowApp.setAppStatus(MsShowAppConfig.AppStatus.NOT_AUDIT);
+		try {
+			msShowAppDAO.insertSelective(msShowApp);
+		} catch (Exception ex) {
+			logger.error("Failed to create app", ex);
+			return Pair.of(false, Pair.of(ErrorCode.INTERNAL_ERROR, "创建微景展失败"));
+		}
+		return Pair.of(true, null);
+	}
+
+	private boolean createInitalPage(int appId, String owner) {
+
+		// create index page for new app
+		try {
+			MsShowPage page = new MsShowPage();
+			// welcome page
+			page.setAppId(appId);
+			page.setPageName("欢迎页");
+			page.setPageCode("welcome");
+			page.setPageContent(new HashMap<String, Object>());
+			page.setUpdateUser(owner);
+			page.setPageOrder(1);
+			msShowPageDAO.createOnePage(page);
+
+			// index page
+			page.setPageName("首页");
+			page.setPageCode("index");
+			page.setPageOrder(2);
+			msShowPageDAO.createOnePage(page);
+		} catch (Exception ex) {
+			logger.error("Failed to create initial page");
+			return false;
+		}
+
+		return true;
 	}
 	
 	private boolean existAppName(int appId, String appName) {
@@ -289,7 +317,33 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		int count = msShowAppDAO.countByCriteria(msShowAppCriteria);
 		return count != 0;
 	}
-	
+
+	@Override
+	public JSONObject copyApp(String json) {
+
+		JSONObject jsonObject = JSON.parseObject(json);
+		int sourceAppId = jsonObject.getInteger("source_app_id");
+		Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
+		if(! createResult.getLeft()) {
+			return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+		}
+
+		String appName = jsonObject.getString("app_name");
+		String owner = jsonObject.getString("owner");
+		int appId = msShowAppDAO.selectIdByName(appName);
+
+		try {
+			if (appId > 0) {
+				msShowPageDAO.copyAllPages(sourceAppId, appId, owner);
+			}
+		} catch (Exception ex) {
+			logger.error("Failed to copy app", ex);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "复用微景展失败");
+		}
+
+		return FastJsonUtil.sucess("");
+	}
+
 	private boolean existOnlineAppByAppId(int appId) {
 		MsShowApp record = msShowAppDAO.selectByPrimaryKey(appId);
 		if(record == null) {

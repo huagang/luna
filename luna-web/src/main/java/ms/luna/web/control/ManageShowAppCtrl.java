@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -44,6 +45,15 @@ public class ManageShowAppCtrl extends BasicCtrl {
 	
 	private final static Logger logger = Logger.getLogger(ManageShowAppCtrl.class);
 
+	private final static String INIT = "method=init";
+	private final static String CREATE_APP = "method=create_app";
+	private final static String UPDATE_APP = "method=update_app";
+	private final static String DELETE_APP = "method=delete_app";
+	private final static String SEARCH_APP = "method=async_search_apps";
+	private final static String SEARCH_BUSINESS = "method=search_business";
+	private final static String COPY_APP = "method=copy_app";
+
+
 	@Autowired
 	private ManageShowAppService manageShowAppService;
 	
@@ -55,7 +65,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(params = "method=init")
+	@RequestMapping(params = INIT)
 	public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			HttpSession session = request.getSession(false);
@@ -83,7 +93,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		return appName.length() <= 16;
 	}
 	
-	@RequestMapping(params = "method=create_app")
+	@RequestMapping(params = CREATE_APP)
 	public void createApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -113,7 +123,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		
 	}
 	
-	@RequestMapping(params = "method=update_app")
+	@RequestMapping(params = UPDATE_APP)
 	public void updateApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -144,7 +154,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.getWriter().print(result.toString());
 	}
 	
-	@RequestMapping(params = "method=delete_app")
+	@RequestMapping(params = DELETE_APP)
 	public void deleteApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -158,7 +168,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.getWriter().print(result.toString());
 	}
 
-	@RequestMapping(params = "method=async_search_apps")
+	@RequestMapping(params = SEARCH_APP)
 	public void asyncSearchApps(@RequestParam(required = false) Integer offset,
 			@RequestParam(required = false) Integer limit, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -197,7 +207,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.setStatus(200);
 	}
 	
-	@RequestMapping(params = "method=search_business")
+	@RequestMapping(params = SEARCH_BUSINESS)
 	public void searchBusiness(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
@@ -214,6 +224,42 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		response.getWriter().print(result.toString());
 		response.setStatus(200);		
 		
+	}
+
+	@RequestMapping(params = COPY_APP)
+	public void copyApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+
+		String appName = RequestHelper.getString(request, "app_name");
+		int businessId = RequestHelper.getInteger(request, "business_id");
+		int sourceAppId = RequestHelper.getInteger(request, "source_app_id");
+		if(businessId < 0) {
+			response.getWriter().print("业务id不合法");
+			return;
+		}
+		if(! isValidName(appName)) {
+			response.getWriter().print("业务名称不合法");
+			return;
+		}
+		if(sourceAppId < 0) {
+			response.getWriter().print("源微景展不合法");
+			return;
+		}
+
+		HttpSession session = request.getSession(false);
+		MsUser msUser = (MsUser)session.getAttribute("msUser");
+		String owner = msUser.getNickName();
+
+		JSONObject jsonObject = JSONObject.parseObject("{}");
+		jsonObject.put("app_name", appName);
+		jsonObject.put("business_id", businessId);
+		jsonObject.put("source_app_id", sourceAppId);
+		jsonObject.put("owner", owner);
+		JSONObject result = manageShowAppService.createApp(jsonObject.toString());
+
+		response.getWriter().print(result.toString());
+
 	}
 	
 }
