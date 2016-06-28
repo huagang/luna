@@ -40,7 +40,7 @@ public class PoiApiCtrl {
 	 */
 	@RequestMapping(params = "method=getPoisInFirstLevel")
 	public void getPoisInFirstLevel(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id, 
+			@RequestParam(required = true, value = "business_id") Integer biz_id, 
 			@RequestParam(required = false, value = "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -100,9 +100,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getCtgrsByBusinessIdAndPoiId")
+	@RequestMapping(params = "method=getCtgrsByBizIdAndPoiId")
 	public void getCtgrsByBizIdAndPoiId(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
@@ -135,9 +135,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getSubCtgrsByBusinessIdAndPoiIdAndCtgrId")
+	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
 	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "ctgr_id") Integer ctgr_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -174,9 +174,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiId")
+	@RequestMapping(params = "method=getPoisByBizIdAndPoiId")
 	public void getPoisByBizIdAndPoiId(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
@@ -240,9 +240,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiIdAndCtgrId")
+	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndCtgrId")
 	public void getPoisByBizIdAndPoiIdAndCtgrId(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "ctgr_id") int ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
@@ -308,9 +308,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiIdAndSubCtgrId")
+	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndSubCtgrId")
 	public void getPoisByBizIdAndPoiIdAndSubCtgrId(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "sub_ctgr_id") int sub_ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
@@ -428,9 +428,9 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBusinessIdAndTags")
+	@RequestMapping(params = "method=getPoisByBizIdAndTags")
 	public void getPoisByBizIdAndTags(
-			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "tags") String tags,
 			@RequestParam(required = false, value = "type") String type,
 			@RequestParam(required = false, value = "fields") String fields,
