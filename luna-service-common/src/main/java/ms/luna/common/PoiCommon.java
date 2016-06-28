@@ -19,7 +19,37 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 
 public class PoiCommon {
-	
+
+	/**
+	 * mongo表名
+	 * @author Mark
+	 *
+	 */
+	public static final class MongoTable {
+		/**
+		 * 中文版POI表名
+		 */
+		public static final String TABLE_POI_ZH = "poi_collection";
+		/**
+		 * 英文版POI表名
+		 */
+		public static final String TABLE_POI_EN = "poi_collection_en";
+		/**
+		 * POI在业务树中使用索引列表
+		 */
+		public static final String TABLE_POI_USED_INDEX = "poi_business_tree_index";
+
+		/**
+		 * 业务树
+		 */
+		public static final String TABLE_BUSINESS_TREEE = "business_tree";
+	}
+
+	/**
+	 * Excel相关配置信息
+	 * @author Mark
+	 *
+	 */
 	public static final class Excel {
 
 		/**
@@ -118,6 +148,11 @@ public class PoiCommon {
 		public static final Integer INDEX_COL_BASE = 6;
 	}
 
+	/**
+	 * Poi常量信息
+	 * @author Administrator
+	 *
+	 */
 	public static final class POI {
 		/**
 		 * 中文
@@ -438,7 +473,7 @@ public class PoiCommon {
 	public String checkPrivateFieldsHasChineseChar(HttpServletRequest request, JSONArray privateFieldsDef) {
 		Map<String, String[]> paramMaps = request.getParameterMap();
 		Set<Entry<String, String[]>> set = paramMaps.entrySet();
-		
+
 		Boolean hasError = false;
 		Map<String, JSONObject> fieldDefMap = new LinkedHashMap<String, JSONObject>();
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
@@ -757,65 +792,65 @@ public class PoiCommon {
 			int field_type = fieldDef.getInteger("field_type");
 			int field_size = fieldDef.getInteger("field_size");
 			switch (field_type) {
-				case VbConstant.POI_FIELD_TYPE.文本框:
-					// 整数数字
-					if (field_size == -1) {
-						result.put(entry.getKey(), Integer.parseInt(value));
-					} else {
-						result.put(entry.getKey(), value);
+			case VbConstant.POI_FIELD_TYPE.文本框:
+				// 整数数字
+				if (field_size == -1) {
+					result.put(entry.getKey(), Integer.parseInt(value));
+				} else {
+					result.put(entry.getKey(), value);
+				}
+				break;
+
+			case VbConstant.POI_FIELD_TYPE.文本域:
+				result.put(entry.getKey(), value);
+				break;
+
+			case VbConstant.POI_FIELD_TYPE.图片:
+				result.put(entry.getKey(), value);
+				break;
+			case VbConstant.POI_FIELD_TYPE.视频:
+				result.put(entry.getKey(), value);
+				break;
+			case VbConstant.POI_FIELD_TYPE.音频:
+				result.put(entry.getKey(), value);
+				break;
+
+			case VbConstant.POI_FIELD_TYPE.复选框列表:
+				JSONArray array = FastJsonUtil.createBlankIntegerJsonArray();
+
+				JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
+				value = value.replace(";", ",").replace("；", ",").replace("，", ",");
+				String[] vals = value.split("," , extension_attr.size());
+
+				Set<String> set = new HashSet<String>();
+				// excel里传是Label标签值的场合
+				if (valueIsLabel) {
+					Map<String, Integer> map = new LinkedHashMap<String, Integer>();
+					for (int i = 0; i < extension_attr.size(); i++) {
+						JSONObject json = extension_attr.getJSONObject(i);
+						String label = json.getString(String.valueOf(i+1));
+						set.add(label);
+						map.put(label, i+1);
 					}
-					break;
-
-				case VbConstant.POI_FIELD_TYPE.文本域:
-					result.put(entry.getKey(), value);
-					break;
-
-				case VbConstant.POI_FIELD_TYPE.图片:
-					result.put(entry.getKey(), value);
-					break;
-				case VbConstant.POI_FIELD_TYPE.视频:
-					result.put(entry.getKey(), value);
-					break;
-				case VbConstant.POI_FIELD_TYPE.音频:
-					result.put(entry.getKey(), value);
-					break;
-
-				case VbConstant.POI_FIELD_TYPE.复选框列表:
-					JSONArray array = FastJsonUtil.createBlankIntegerJsonArray();
-
-					JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
-					value = value.replace(";", ",").replace("；", ",").replace("，", ",");
-					String[] vals = value.split("," , extension_attr.size());
-
-					Set<String> set = new HashSet<String>();
-					// excel里传是Label标签值的场合
-					if (valueIsLabel) {
-						Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-						for (int i = 0; i < extension_attr.size(); i++) {
-							JSONObject json = extension_attr.getJSONObject(i);
-							String label = json.getString(String.valueOf(i+1));
-							set.add(label);
-							map.put(label, i+1);
-						}
-						for (int i = 0; i < vals.length; i++) {
-							if (set.remove(vals[i])) {
-								array.add(map.get(vals[i]));
-							}
-						}
-					} else {
-						for (int i = 0; i < extension_attr.size(); i++) {
-							set.add(String.valueOf(i+1));
-						}
-						for (int i = 0; i < vals.length; i++) {
-							if (set.remove(vals[i])) {
-								array.add(Integer.parseInt(vals[i]));
-							}
+					for (int i = 0; i < vals.length; i++) {
+						if (set.remove(vals[i])) {
+							array.add(map.get(vals[i]));
 						}
 					}
-					result.put(entry.getKey(), array);
-					break;
-				default:
-					break;
+				} else {
+					for (int i = 0; i < extension_attr.size(); i++) {
+						set.add(String.valueOf(i+1));
+					}
+					for (int i = 0; i < vals.length; i++) {
+						if (set.remove(vals[i])) {
+							array.add(Integer.parseInt(vals[i]));
+						}
+					}
+				}
+				result.put(entry.getKey(), array);
+				break;
+			default:
+				break;
 			}
 		}
 		return result;
@@ -834,53 +869,53 @@ public class PoiCommon {
 		int field_type = fieldDef.getInteger("field_type");
 		int field_size = fieldDef.getInteger("field_size");
 		switch (field_type) {
-			case VbConstant.POI_FIELD_TYPE.文本框:
-				// 整数数字
-				if (field_size == -1) {
-					return !CharactorUtil.isInteger(value);
-				}
-				// 字符串
-				// 检查长度
-				return CharactorUtil.countChineseEn(value) > field_size;
+		case VbConstant.POI_FIELD_TYPE.文本框:
+			// 整数数字
+			if (field_size == -1) {
+				return !CharactorUtil.isInteger(value);
+			}
+			// 字符串
+			// 检查长度
+			return CharactorUtil.countChineseEn(value) > field_size;
 
-			case VbConstant.POI_FIELD_TYPE.文本域:
-				return CharactorUtil.countChineseEn(value) > field_size;
+		case VbConstant.POI_FIELD_TYPE.文本域:
+			return CharactorUtil.countChineseEn(value) > field_size;
 
-			case VbConstant.POI_FIELD_TYPE.复选框列表:
-				if (value == null || value.isEmpty()) {
-					return false;
+		case VbConstant.POI_FIELD_TYPE.复选框列表:
+			if (value == null || value.isEmpty()) {
+				return false;
+			}
+			JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
+			Set<String> set = new HashSet<String>();
+			if (valueIsLabel) {
+				for (int i = 0; i < extension_attr.size(); i++) {
+					JSONObject json = extension_attr.getJSONObject(i);
+					String label = json.getString(String.valueOf(i+1));
+					set.add(label);
 				}
-				JSONArray extension_attr = fieldDef.getJSONArray("extension_attrs");
-				Set<String> set = new HashSet<String>();
-				if (valueIsLabel) {
-					for (int i = 0; i < extension_attr.size(); i++) {
-						JSONObject json = extension_attr.getJSONObject(i);
-						String label = json.getString(String.valueOf(i+1));
-						set.add(label);
-					}
-				} else {
-					for (int i = 0; i < extension_attr.size(); i++) {
-						set.add(String.valueOf(i+1));
-					}
+			} else {
+				for (int i = 0; i < extension_attr.size(); i++) {
+					set.add(String.valueOf(i+1));
 				}
-				if ((value.contains(",")||value.contains("，"))
-						&& (value.contains(";") || value.contains("；"))) {
+			}
+			if ((value.contains(",")||value.contains("，"))
+					&& (value.contains(";") || value.contains("；"))) {
+				return true;
+			}
+			// 根据业务要求需要适配中英文的[；]、[;]以及中英文[，]、[,]但是分号和逗号不能同时存在
+			value = value.replace(";", ",").replace("；", ",").replace("，", ",");
+			String[] vals = value.split("," , extension_attr.size());
+			for (int i = 0; i < vals.length; i++) {
+				if (!set.remove(vals[i])) {
 					return true;
 				}
-				// 根据业务要求需要适配中英文的[；]、[;]以及中英文[，]、[,]但是分号和逗号不能同时存在
-				value = value.replace(";", ",").replace("；", ",").replace("，", ",");
-				String[] vals = value.split("," , extension_attr.size());
-				for (int i = 0; i < vals.length; i++) {
-					if (!set.remove(vals[i])) {
-						return true;
-					}
-				}
-				return false;
-			default:
-				return false;
+			}
+			return false;
+		default:
+			return false;
 		}
 	}
-	
+
 	/**
 	 * POI私有字段合法性检查
 	 * @param value 校验内容
@@ -891,12 +926,12 @@ public class PoiCommon {
 	private boolean checkPrivateFieldHasChineseChar(String value, JSONObject fieldDef) {
 		int field_type = fieldDef.getInteger("field_type");
 		switch (field_type) {
-			case VbConstant.POI_FIELD_TYPE.文本框:
-			case VbConstant.POI_FIELD_TYPE.文本域:
-				// 字符串
-				return CharactorUtil.hasChineseChar(value);
-			default:
-				return false;
+		case VbConstant.POI_FIELD_TYPE.文本框:
+		case VbConstant.POI_FIELD_TYPE.文本域:
+			// 字符串
+			return CharactorUtil.hasChineseChar(value);
+		default:
+			return false;
 		}
 	}
 

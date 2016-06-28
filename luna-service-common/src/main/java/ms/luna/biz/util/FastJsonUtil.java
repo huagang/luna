@@ -2,6 +2,9 @@ package ms.luna.biz.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+
+import ms.luna.common.MsLunaMessage;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
@@ -21,7 +24,7 @@ public final class FastJsonUtil {
 		}
 		for (int i = 0; i < params.length; i++) {
 			if (!jsonObject.containsKey(params[i])) {
-				JSONObject result = JSON.parseObject("{}");
+				JSONObject result = new JSONObject();
 				result.put("code", "-1");
 				result.put("msg", "缺少参数:"+params[i]);
 				result.put("data", "{}");
@@ -30,7 +33,7 @@ public final class FastJsonUtil {
 			}
 			String value = jsonObject.getString(params[i]);
 			if (value == null || value.length() == 0) {
-				JSONObject result = JSON.parseObject("{}");
+				JSONObject result = new JSONObject();
 				result.put("code", "-2");
 				result.put("msg", "参数值为空:"+params[i]);
 				result.put("data", "{}");
@@ -164,8 +167,17 @@ public final class FastJsonUtil {
 
 	public static JSONObject error(String code, String msg) {
 		MsLogger.error(msg, 1);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", code);
+		result.put("msg", msg);
+		result.put("data", "{}");
+		return result;
+	}
+	public static JSONObject errorWithMsg(String key, Object... params) {
+		String msg = MsLunaMessage.getInstance().getMessage(key, params);
+		MsLogger.error(msg, 1);
+		JSONObject result = new JSONObject();
+		result.put("code", key);
 		result.put("msg", msg);
 		result.put("data", "{}");
 		return result;
@@ -173,7 +185,7 @@ public final class FastJsonUtil {
 
 	public static JSONObject error(String code, Throwable th) {
 		MsLogger.error(th.getMessage(), 1, th);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", code);
 		result.put("msg", th.getMessage());
 		result.put("data", "{}");
@@ -182,7 +194,7 @@ public final class FastJsonUtil {
 
 	public static JSONObject error(String code, String msg, Throwable th) {
 		MsLogger.error(msg, 1, th);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", code);
 		result.put("msg", msg);
 		result.put("data", "{}");
@@ -191,7 +203,7 @@ public final class FastJsonUtil {
 
 	public static JSONObject error(int code, String msg) {
 		MsLogger.error(msg, 2);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", String.valueOf(code));
 		result.put("msg", msg);
 		result.put("data", "{}");
@@ -199,7 +211,7 @@ public final class FastJsonUtil {
 	}
 	public static JSONObject error(int code, String msg, Throwable th) {
 		MsLogger.error(msg, 2, th);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", String.valueOf(code));
 		result.put("msg", msg);
 		result.put("data", "{}");
@@ -208,23 +220,43 @@ public final class FastJsonUtil {
 
 	public static JSONObject sucess(String msg, Object data) {
 		MsLogger.info(msg, 1);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
 		result.put("data", data);
 		return result;
 	}
+	public static JSONObject sucessWithMsg(String key, Object data, Object... params) {
+		String msg = MsLunaMessage.getInstance().getMessage(key, params);
+		MsLogger.info(msg, 1);
+		JSONObject result = new JSONObject();
+		result.put("code", 0);
+		result.put("msg", msg);
+		result.put("data", data);
+		return result;
+	}
+	
 	public static JSONObject sucess(String msg) {
 		MsLogger.info(msg, 1);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
 		result.put("data", "{}");
 		return result;
 	}
+	public static JSONObject sucessWithMsg(String key, Object... params) {
+		String msg = MsLunaMessage.getInstance().getMessage(key, params);
+		MsLogger.info(msg, 1);
+		JSONObject result = new JSONObject();
+		result.put("code", 0);
+		result.put("msg", msg);
+		result.put("data", "{}");
+		return result;
+	}
+
 	public static JSONObject sucess(String msg, String data) {
 		MsLogger.info(msg, 1);
-		JSONObject result = JSON.parseObject("{}");
+		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
 		result.put("data", data);

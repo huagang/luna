@@ -245,7 +245,7 @@ $(document).ready(function(){
             dataType: "json",
             success: function(returndata){
                 if ("0" != returndata.code) {
-                    $.alert('请求结果出错');
+                    $.alert(returndata.msg);
                     initBusinessTreeData();
                     return;
                 }

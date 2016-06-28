@@ -222,7 +222,8 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">详细介绍</div>
                         <div class="value-poi">
-                            <form:textarea id="description" readonly="${poiReadOnly}" path="briefIntroduction" cssClass="poi-des"/>
+		                    <script id="editor" type="text/plain" style="width:550px;height:500px;"></script>
+                            <form:textarea id="description" readonly="${poiReadOnly}" path="briefIntroduction" cssClass="poi-des" style="display:none;"/>
                         </div>
                         <div class="warn" id="description-warn">不能为空</div>
                     </div>
@@ -369,6 +370,14 @@
 	</div>
 	<!--删除类别 end-->
 </body>
+<script type='text/javascript'>
+	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
+	window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+</script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="${basePath}/scripts/common/interface.js"></script>
 <script src="${basePath}/scripts/add_edit_poi.js"></script>
 <script src="${basePath}/scripts/popup.js"></script>
 <script type="text/javascript">
