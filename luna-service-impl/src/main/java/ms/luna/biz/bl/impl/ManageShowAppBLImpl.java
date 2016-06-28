@@ -341,7 +341,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "复用微景展失败");
 		}
 
-		return FastJsonUtil.sucess("");
+		JSONObject ret = new JSONObject();
+		ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
+		return FastJsonUtil.sucess("", ret);
 	}
 
 	private boolean existOnlineAppByAppId(int appId) {
