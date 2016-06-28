@@ -21,6 +21,15 @@ var Inter = function() {
                 readPoi: context + '', //TODO 读取poi数据信息
                 //编辑器上传图片
                 uploadImageInArtcle: context + "/manage/article.do?method=upload_img",//上传图片
+                
+                //微景展操作
+                createApp: context + '/manage/app.do?method=create_app',  //创建微景展
+                updateApp: context + '/manage/app.do?method=update_app',  //更新微景展信息
+                copyApp: context + '/manage/app.do?method=copy_app', //复用app
+                
+                // 业务搜索
+                searchBusiness: context+'/manage/app.do?method=search_business', //搜索业务请求
+                
             };
         }
     };

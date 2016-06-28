@@ -69,6 +69,13 @@ a:active{
     color:#445FA8;
     text-decoration:none;
 }
+/*字体相关配置*/
+.fw-normal{
+    font-weight: normal;
+}
+
+
+
 .container-fluid{
     padding: 0;
     margin: 0;

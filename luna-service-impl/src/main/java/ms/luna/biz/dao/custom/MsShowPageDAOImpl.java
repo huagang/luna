@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import com.mongodb.client.model.WriteModel;
 import org.bson.BsonDateTime;
 import org.bson.BsonInt32;
 import org.bson.Document;
@@ -96,19 +97,9 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 	 * @return pageId mongodb中的document key(_id)
 	 */
 	public String createOnePage(MsShowPage page) {
-		Document document = new Document();
-		String pageId = ObjectId.get().toString(); 
-		document.append(FIELD_PAGE_ID, pageId);
-		document.append(FIELD_APP_ID, page.getAppId());
-		document.append(FIELD_PAGE_NAME, page.getPageName());
-		document.append(FIELD_PAGE_CODE, page.getPageCode());
-		document.append(FIELD_PAGE_CONTENT, page.getPageContent());
-		document.append(FIELD_PAGE_ORDER, page.getPageOrder());
-		document.append(FIELD_CREATE_TIME, new BsonDateTime(System.currentTimeMillis()));
-		document.append(FIELD_UPDATE_USER, page.getUpdateUser());
-		
-		showPageCollection.insertOne(document);
-		return pageId;
+		Document document = insertPage2Document(page);
+		showPageCollection.insertOne(insertPage2Document(page));
+		return document.getString(FIELD_PAGE_ID);
 	}
 	
 	public void updatePageName(MsShowPage page) {
@@ -150,6 +141,18 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 	public void deletePageById(String pageId) {
 		showPageCollection.deleteOne(Filters.eq(FIELD_PAGE_ID, pageId));
 	}
+
+	public void copyAllPages(int sourceAppId, int destAppId, String user) {
+		List<MsShowPage> msShowPages = readAllPageDetailByAppId(sourceAppId);
+		List<Document> documents = new ArrayList<>(msShowPages.size());
+		for(MsShowPage msShowPage : msShowPages) {
+			msShowPage.setPageId(ObjectId.get().toString());
+			msShowPage.setAppId(destAppId);
+			msShowPage.setUpdateUser(user);
+			documents.add(insertPage2Document(msShowPage));
+		}
+		showPageCollection.insertMany(documents);
+	}
 	
 	private Document updatePage2Document(MsShowPage page) {
 		
@@ -159,6 +162,20 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_UPDATE_USER, page.getUpdateUser());
 		document.append(FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
 		
+		return document;
+	}
+
+	private Document insertPage2Document(MsShowPage page) {
+		Document document = new Document();
+		String pageId = ObjectId.get().toString();
+		document.append(FIELD_PAGE_ID, pageId);
+		document.append(FIELD_APP_ID, page.getAppId());
+		document.append(FIELD_PAGE_NAME, page.getPageName());
+		document.append(FIELD_PAGE_CODE, page.getPageCode());
+		document.append(FIELD_PAGE_CONTENT, page.getPageContent());
+		document.append(FIELD_PAGE_ORDER, page.getPageOrder());
+		document.append(FIELD_CREATE_TIME, new BsonDateTime(System.currentTimeMillis()));
+		document.append(FIELD_UPDATE_USER, page.getUpdateUser());
 		return document;
 	}
 	

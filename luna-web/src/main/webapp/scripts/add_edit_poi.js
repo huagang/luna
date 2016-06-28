@@ -791,7 +791,6 @@ function findZoneIdsWithQQZoneName(lat, lng) {
  * @return {[type]} [description]
  */
 function initEditor() {
-
     // /*重置上传附件请求的地址*/
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function(action) {
@@ -803,7 +802,6 @@ function initEditor() {
             return this._bkGetActionUrl.call(this, action);
         }
     };
-
     /*获取编辑器实例*/
     ue = UE.getEditor('editor', {
         allowDivTransToP: false,
