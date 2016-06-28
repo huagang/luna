@@ -418,33 +418,47 @@
                     </div>
                     <div class="bg-set">
                       <h2>导航数据</h2>
-                      <input type="radio" name="position" ng-value=0 ng-model="nav.currentComponent.navType" ng-change="nav.changeNavType()">当前位置为起点
-                      <input type="radio" name="position" ng-value=1 ng-model="nav.currentComponent.navType" ng-change="nav.changeNavType()">自定义起点坐标
+                      <input id="rdcur" type="radio" name="position" ng-value=0 ng-model="nav.currentComponent.navType" ng-change="nav.changeNavType()"> <label for="rdcur" class="fw-normal">当前位置为起点</label>
+                      <br/>
+                      <input id="rdcus" type="radio" name="position" ng-value=1 ng-model="nav.currentComponent.navType" ng-change="nav.changeNavType()"> <label for="rdcus" class="fw-normal">
+                      自定义起点坐标</label>
                     </div>
 
                     <div>
-                      <form name="navPositionForm">
-                        <div class="ng-hide" ng-show="nav.currentComponent.navType">
-                          线路起点名称：<input type="text" name="startName" placeholder="输入线路起点中文名称" ng-model="nav.content.startName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeStartName()">
-                          <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.required">起点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.minlength">起点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-10个字符）</span>
+                      <form name="navPositionForm" class="navPositionForm">
+                        <div class="form-group clearfix ng-hide" ng-show="nav.currentComponent.navType">
+                          <label for=""  title="线路起点名称" class="fw-normal col-md-3 text-right">起点名称：</label>
+                          <div class="col-md-8">
+                            <input type="text" name="startName" placeholder="输入线路起点中文名称" ng-model="nav.content.startName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeStartName()">
+                            <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.required">起点名称长度不合法（请输入2-10个字符）</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.minlength">起点名称长度不合法（请输入2-10个字符）</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-10个字符）</span>
+                          </div>
                         </div>
-                        <div class="ng-hide" ng-show="nav.currentComponent.navType">
-                          线路起点坐标：<input type="text" name="startPosition" placeholder="34.000000,180.890000" ng-model="nav.content.startPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeStartPosition()">
-                          <span ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.required">起点坐标不能为空</span>
-                          <span ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.pattern">起点坐标格式不合法</span>
+                        <div class="form-group clearfix ng-hide" ng-show="nav.currentComponent.navType">
+                           <label for=""  title="线路起点坐标" class="fw-normal col-md-3 text-right">起点坐标：</label>
+                          <div class="col-md-8">
+                            <input type="text" name="startPosition" placeholder="34.000000,180.890000" ng-model="nav.content.startPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeStartPosition()">
+                            <span class="help-block text-error" ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.required">起点坐标不能为空</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.startPosition.$touched && navPositionForm.startPosition.$error.pattern">起点坐标格式不合法</span>
+                          </div>
                         </div>
-                        <div>
-                          线路终点名称：<input type="text" name="endName" placeholder="输入线路终点中文名称" ng-model="nav.content.endName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeEndName()">
-                          <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.required">终点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.minlength">终点名称长度不合法（请输入2-10个字符）</span>
-                          <span ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-10个字符）</span>
+                        <div class="form-group clearfix">
+                          <label for=""  title="线路终点名称" class="fw-normal col-md-3 text-right">终点名称：</label>
+                          <div class="col-md-8">
+                            <input type="text" name="endName" placeholder="输入线路终点中文名称" ng-model="nav.content.endName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeEndName()">
+                            <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.required">终点名称长度不合法（请输入2-10个字符）</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.minlength">终点名称长度不合法（请输入2-10个字符）</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-10个字符）</span>
+                          </div>
                         </div>
-                        <div>
-                          线路终点坐标：<input type="text" name="endPosition" placeholder="34.000000,180.890000" ng-model="nav.content.endPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeEndPosition()">
-                          <span ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.required">终点坐标不能为空</span>
-                          <span ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.pattern">终点坐标格式不合法</span>
+                        <div class="form-group clearfix">
+                          <label for="" title="线路终点坐标" class="fw-normal col-md-3 text-right">终点坐标：</label>
+                          <div class="col-md-8">
+                            <input type="text" name="endPosition" placeholder="34.000000,180.890000" ng-model="nav.content.endPosition" required ng-pattern="/[0-9.]+,[0-9.]+/" ng-blur="nav.changeEndPosition()" >
+                            <span class="help-block text-error " ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.required">终点坐标不能为空</span>
+                            <span class="help-block text-error" ng-show="navPositionForm.endPosition.$touched && navPositionForm.endPosition.$error.pattern">终点坐标格式不合法</span>
+                          </div>
                         </div>
                       </form>
                     </div>
