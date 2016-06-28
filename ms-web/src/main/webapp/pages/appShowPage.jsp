@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <script type="text/javascript" src="http://public-10002033.file.myqcloud.com/plugins/jquery.js"></script>
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin_js.js"></script>
