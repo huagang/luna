@@ -186,6 +186,11 @@
                 	</div>
                     <ms:poi readonly="false" privateFields="${private_fields}"/>
                 </div>
+                <div class='publish-option'>
+                	<input type='checkbox'  id='publish'/>
+                	<label for='publish'>同步生成poi详情页</label>
+                	<a href="javascript:void(0)" class='hidden'>预览</a>              	
+                </div>
 	        	<button type="button" class="save" id="btn-POI-save-add">保存</button>
             </form:form>
         </div>

@@ -18,6 +18,7 @@ var Inter = function() {
                 publishArticle: context+'/manage/article.do?method=publish_article', //发布文章
                 readArticle: context + "/manage/article.do?method=read_article", //读取文章数据
                 deleteArticle: context + "/manage/article.do?method=delete_article",//删除文章
+                readPoi: context + '', //TODO
             };
         }
     };
