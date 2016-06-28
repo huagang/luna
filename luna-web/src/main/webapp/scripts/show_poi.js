@@ -115,7 +115,8 @@ function getPoiController(){
 	
 	// 导航点击事件绑定的函数
 	function handleNavigation(lng, lat){
-		if(navigator.userAgent.match(/MicroMessenger/i)){
+		var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
+		if(is_weixin){
 			//判定为微信网页
 			if(wx){
 				try{
@@ -133,10 +134,11 @@ function getPoiController(){
 			}
 		}
 		else{
-			// 坐标转换请求，每日请求次数上限为10万次   从腾讯地图转换到百度地图
-			//demo  http://developer.baidu.com/map/jsdemo.htm#a5_1
+			/*  
+			*	demo  http://developer.baidu.com/map/jsdemo.htm#a5_1
+			*   文档  http://developer.baidu.com/map/reference/index.php?title=Class:%E6%A0%B8%E5%BF%83%E7%B1%BB/Map
+			*/
 			if($('#container').html()){
-				$('.map-wrapper').addClass('active');
 				return;
 			}
 			var map = new BMap.Map("container");          // 创建地图实例  
@@ -147,12 +149,21 @@ function getPoiController(){
 			$('.map-wrapper .icon-back').on('click', function(){
 				$('.map-wrapper').removeClass('active');
 			});
+			
+			// 坐标转换请求，从腾讯地图转换到百度地图
 			convertor.translate([new BMap.Point(lng, lat)], 3, 5, function(data){
 				if(data.status === 0){
 					var point = new BMap.Point(data.points[0].lng, data.points[0].lat);  // 创建点坐标  
 					var marker = new BMap.Marker(point);
 					map.addOverlay(marker);
-					map.setCenter(data.points[0]);		
+					map.setCenter(data.points[0]);	
+					$('.navigation').on('click',function(){
+						$('.map-wrapper').addClass('active');
+						setTimeout(function(){
+							map.setCenter(point);
+							map.setZoom(15);
+						},100);
+					});
 				}
 			});
 		}

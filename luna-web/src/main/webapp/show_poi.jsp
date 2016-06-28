@@ -73,7 +73,9 @@
 		
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-				<script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+		<script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+		<!--  注意，下面引用文件的地址ak项表示密钥，由于暂时公司没有密钥，所以暂时使用个人密钥 
+			  TODO 以公司的百度开发者密钥来替换下面的ak密钥-->
 		<script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
 		<script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
