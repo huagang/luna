@@ -169,7 +169,6 @@
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi">
                             <form:input id="panorama" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
-							<a href="#" style="margin-left: 8px;">全景编辑</a>                            <div class="warn" id="panorama_warn">不能为空</div>
                         </div>
                     </div>
 					<div class="item-poi">
