@@ -18,9 +18,10 @@
 
 /*弹出层，独有，新建微景展*/
 .pop.pop-show{
+	position: fixed;
 	left: 0;
     right: 0;
-    top: 30%;
+    top: 15%;
     width: 66%;
     margin: auto;
     display: block;
@@ -145,14 +146,19 @@ img.abstract-pic{
 
 .char-limit-wrapper{
 	position: relative;
+	margin: 0;
+}
+
+.char-limit-wrapper textarea{
+	display: block;
 }
 
 .char-limit-wrapper .counter{
 	position: absolute;
-    right: 10px;
-    top: 0;
-    line-height: 30px;
-    color: #707070;
+    right: 5px;
+    bottom: 5px;
+    line-height: 14px;
+    color: #999;
 }
 
 

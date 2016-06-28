@@ -47,13 +47,26 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 			// 绑定事件
 			$('.newApp').click(this.handleClick.bind(this));
 			$('.app-list').click(this.handleClick.bind(this));
+			
+			// 业务配置
+			
 			this._business_dialog.find('.btn-close').click(function(){
 				this._business_dialog.removeClass('pop-show');
 			}.bind(this));
 			this._app_dialog.find('.btn-close').click(function(){
 				this._app_dialog.removeClass('pop-show');
 			}.bind(this));
-			this._business_dialog.find('.next').click(this.setBusinessNextStep.bind(this));
+			this._business_dialog.find('.next').click(this.setBusinessNextStep.bind(this));		
+			this._business_dialog.find('#btn-searchbusiness').click(
+					this.searchBusiness.bind(this));
+			this._business_dialog.find(".business").on("change",function(){
+				this._business_id = event.target.value;
+				if(event.target.value){
+					$(".warn.business-empty").removeClass("show");
+				}
+			}.bind(this));
+			
+			//微景展配置
 			this._app_dialog.find('.last').click(this.setAppNameLastStep.bind(this));
 			this._app_dialog.find('.next').click(this.setAppNameNextStep.bind(this));
 			this._app_dialog.find('.cancel').click(function(){
@@ -70,14 +83,11 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 					this._app_dialog.find(".warn-appname").addClass('show');
 				}
 			}.bind(this));
-			this._business_dialog.find('#btn-searchbusiness').click(
-					this.searchBusiness.bind(this));
-			this._business_dialog.find(".business").on("change",function(){
-				this._business_id = event.target.value;
-				if(event.target.value){
-					$(".warn.business-empty").removeClass("show");
-				}
-			}.bind(this));
+			this._app_dialog.find('.setting-normal .padding-left input').on('change', this.uploadImg.bind(this));
+			
+		},
+		uploadImg: function(conSel, previewSel){
+			FileUploader.uploadFile('')
 		},
 		handleClick:function(){ 
 			//点击事件回调函数 可能是点击了"属性"，"复用"，"新建微景展"等标签
