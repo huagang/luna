@@ -100,7 +100,7 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getCtgrsByBizIdAndPoiId")
+	@RequestMapping(params = "method=getCtgrsByBusinessIdAndPoiId")
 	public void getCtgrsByBizIdAndPoiId(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
@@ -135,7 +135,7 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
+	@RequestMapping(params = "method=getSubCtgrsByBusinessIdAndPoiIdAndCtgrId")
 	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
@@ -164,6 +164,72 @@ public class PoiApiCtrl {
 	}
 	
 	/**
+	 * 根据业务和poi获取下一层的POI列表
+	 * 
+	 * @param biz_id
+	 * @param poi_id
+	 * @param fields
+	 * @param lang
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiId")
+	public void getPoisByBizIdAndPoiId(
+			@RequestParam(required = true, value = "biz_id") Integer biz_id,
+			@RequestParam(required = true, value = "poi_id") String poi_id, 
+			@RequestParam(required = false, value= "fields") String fields,
+			@RequestParam(required = false, value = "lang") String lang,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html; charset=UTF-8");
+		try{
+			if(fields == null){
+ 				fields = "";
+			} else {
+				fields = fields.trim();
+			}
+			JSONObject param = new JSONObject();
+			param.put("biz_id", biz_id);
+			param.put("poi_id", poi_id);
+			param.put("fields", fields);
+			
+			if(lang == null){
+				JSONObject datas = new JSONObject();
+				JSONObject result = null;
+				for(String language : LANG){
+					param.put("lang", language);
+					result = poiApiService.getPoisByBizIdAndPoiId(param.toString());
+					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+					if("0".equals(result.getString("code"))){
+						JSONObject data = result.getJSONObject("data");
+						datas.put(language, data.getJSONObject(language));
+					} else {
+						response.getWriter().print(result);
+						response.setStatus(200);
+						return;
+					}
+				}
+				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				response.setStatus(200);
+				return;
+			} else {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoisByBizIdAndPoiId(param.toString());
+				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
+				response.getWriter().print(result);
+				response.setStatus(200);
+				return;
+			}
+		} catch (Exception e){
+			response.getWriter().print(FastJsonUtil.error("-1", e));
+			response.setStatus(200);
+			return;
+		}
+	}
+	
+	/**
 	 * 根据业务，POI和一级类别获取下一层POI数据列表
 	 * @param biz_id 业务id
 	 * @param poi_id poi id
@@ -174,7 +240,7 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndCtgrId")
+	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiIdAndCtgrId")
 	public void getPoisByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
@@ -242,7 +308,7 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndSubCtgrId")
+	@RequestMapping(params = "method=getPoisByBusinessIdAndPoiIdAndSubCtgrId")
 	public void getPoisByBizIdAndPoiIdAndSubCtgrId(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
@@ -362,7 +428,7 @@ public class PoiApiCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=getPoisByBizIdAndTags")
+	@RequestMapping(params = "method=getPoisByBusinessIdAndTags")
 	public void getPoisByBizIdAndTags(
 			@RequestParam(required = true, value = "biz_id") Integer biz_id,
 			@RequestParam(required = true, value = "tags") String tags,

@@ -14,6 +14,9 @@ public interface PoiApiService {
 	// 根据业务和POI获取下一层的一级类别列表
 	JSONObject getCtgrsByBizIdAndPoiId(String json);
 	
+	// 根据业务和poi获取下一层的POI列表
+	JSONObject getPoisByBizIdAndPoiId(String json);
+	
 	// 根据 业务和POI获取下一层的二级类别列表
 	JSONObject getSubCtgrsByBizIdAndPoiId(String json);
 	
@@ -31,4 +34,5 @@ public interface PoiApiService {
 	
 	// 获得第一层所有poi数据
 	JSONObject getPoisInFirstLevel(String json);
+	
 }
