@@ -256,7 +256,7 @@ public class ManageShowAppCtrl extends BasicCtrl {
 		jsonObject.put("business_id", businessId);
 		jsonObject.put("source_app_id", sourceAppId);
 		jsonObject.put("owner", owner);
-		JSONObject result = manageShowAppService.createApp(jsonObject.toString());
+		JSONObject result = manageShowAppService.copyApp(jsonObject.toString());
 
 		response.getWriter().print(result.toString());
 

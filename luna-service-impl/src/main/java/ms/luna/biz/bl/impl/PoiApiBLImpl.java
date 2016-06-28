@@ -38,7 +38,6 @@ import ms.luna.biz.dao.model.MsBusiness;
 import ms.luna.biz.dao.model.MsPoiField;
 import ms.luna.biz.dao.model.MsPoiFieldCriteria;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.MsLogger;
 
 /**
  * @author greek
@@ -89,6 +88,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 		// 获取业务关系树
@@ -113,11 +113,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 			data.put("pois", poiArray);
 			JSONObject resultdata = returnSuccessData("id:" + biz_id + "业务树第1层数据成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -168,11 +167,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("ctgrs", array);
 //			return FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + "一级分类列表获取成功", data);
 			JSONObject resultdata = FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + "一级分类列表获取成功", data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -222,7 +220,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("sub_ctgrs", array);
 //			return FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + "二级分类列表信息获取成功", data);
 			JSONObject resultdata = FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + "二级分类列表信息获取成功", data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
@@ -244,6 +241,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 		// 获取业务关系树
@@ -271,13 +269,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("pois", poiArray);
 //			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + " poi数据列表获取成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
-			resultdata.put("ctgr_id", ctgr_id);
 			resultdata.put("ctgr_nm", getPoiTypeId2NmLst().get(ctgr_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -295,6 +291,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 		// 获取业务关系树
@@ -314,13 +311,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("pois", poiArray);
 //			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",sub_ctgr_id:" + sub_ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",sub_ctgr_id:" + sub_ctgr_id + " poi数据列表获取成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
-			resultdata.put("sub_ctgr_id", sub_ctgr_id);
 			resultdata.put("sub_ctgr_nm", getPoiTypeId2NmLst().get(sub_ctgr_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -337,6 +332,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 		// 获取业务关系树
@@ -357,11 +353,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("pois", poiArray);
 //			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + " poi数据列表获取成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -373,8 +368,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String lang = param.getString("lang");
 		Document doc = getPoiById(poi_id, lang);
 		if (doc == null) {
-			MsLogger.debug("poi [" + poi_id + "] is not found!");
-			return FastJsonUtil.error("-1", "poi [" + poi_id + "] is not found!");
+			return returnSuccessData("poi_id:" + poi_id + "poi数据获取成功", lang, new JSONObject());
 		}
 
 		// 从poi数据中挑选数据
@@ -464,6 +458,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// 区域名称
 				if ("merger_name".equals(key)) {
 					String merger_name = (String) entry.getValue();
+					if(merger_name == null){
+						merger_name = "";
+					}
 					String[] names = (merger_name).split(",");
 					JSONObject data = poi.getJSONObject("address");
 					if (data == null) {
@@ -476,7 +473,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					for (int i = 0; i < names.length; i++) {
 						nameList.set(i, names[i]);
 					}
-					data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
+//					data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
 					data.put("country_nm", nameList.get(0));
 					data.put("province_nm", nameList.get(1));
 					data.put("city_nm", nameList.get(2));
@@ -506,6 +503,17 @@ public class PoiApiBLImpl implements PoiApiBL {
 					poi.put("address", data);
 					continue;
 				}
+				if("panorama".equals(key)) {
+					String panorama_id = (String) entry.getValue();
+					JSONObject data = poi.getJSONObject("panorama");
+					if(data == null){
+						data = new JSONObject();
+					}
+					data.put(poiApiNameMap.getOuterVal("panorama"), panorama_id);
+					poi.put("panorama", data);
+					continue;
+				}
+				// TODO 加入全景类别与名称
 				key = poiApiNameMap.getOuterVal(key);
 				// if(key != null){//
 				// 判断映射表是否存在对应名称。fieldNames.containsKey(key)表明是存在的，不需要此判断
@@ -1103,6 +1111,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					Map<Integer, String> poiTags = getPoiTagsLst();
 					Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
 					Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+					Map<Integer, String> poiPanoramaTypes = getPoiPanoramaCtgrId2NmLst();
 
 					if (fieldNames.containsKey(key) || "sub_tag".equals(key)) {
 						// 一级类别--tags
@@ -1181,6 +1190,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 						// 区域名称
 						if ("merger_name".equals(key)) {
 							String merger_name = resJson.getString("merger_name");
+							if(merger_name == null){
+								merger_name = "";
+							}
 							String[] names = (merger_name).split(",");
 							JSONObject data = result.getJSONObject("address");
 							if (data == null) {
@@ -1193,7 +1205,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							for (int i = 0; i < names.length; i++) {
 								nameList.set(i, names[i]);
 							}
-							data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
+//							data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
 							data.put("country_nm", nameList.get(0));
 							data.put("province_nm", nameList.get(1));
 							data.put("city_nm", nameList.get(2));
@@ -1223,6 +1235,17 @@ public class PoiApiBLImpl implements PoiApiBL {
 							result.put("address", data);
 							continue;
 						}
+						if("panorama".equals(key)) {
+							String panorama_id = resJson.getString("panorama");
+							JSONObject data = result.getJSONObject("panorama");
+							if(data == null){
+								data = new JSONObject();
+							}
+							data.put(poiApiNameMap.getOuterVal("panorama"), panorama_id);
+							result.put("panorama", data);
+							continue;
+						}
+						// TODO 加入全景类别与名称
 						result.put(poiApiNameMap.getOuterVal(key), resJson.get(key));
 					}
 				}
@@ -1238,6 +1261,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 
@@ -1262,11 +1286,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("pois", poiArray);
 //			return returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
@@ -1280,6 +1303,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			fieldArr = null;
 		} else {
 			fields = fields.replaceAll("address", "zone_id,merger_name,detail_address");
+			fields = fields.replaceAll("panorama", "panorama_id,panorama_ctgr_id,panorama_ctgr_nm");
 			fieldArr = fields.split(",");
 		}
 
@@ -1300,11 +1324,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			data.put("pois", poiArray);
 //			return returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
-			resultdata.put("business_id", biz_id);
 			resultdata.put("businessTree_nm", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.error("1", "biz_id:" + biz_id + "业务关系树不存在");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
 		}
 	}
 
