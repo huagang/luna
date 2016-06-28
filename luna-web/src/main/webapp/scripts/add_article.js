@@ -270,8 +270,11 @@ var initPage = function() {
                 dataType: "json",
                 success: function(data) {
                     if (data.code == "0") {
-                        articleStore.id = data.data.id;
-                        articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
+                    	if(!articleStore.id){
+                    		articleStore.id = data.data.id;
+                            articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
+                            
+                    	}
                         alert("保存文章成功");
                     } else {
                         alert(data.msg || "保存失败");
