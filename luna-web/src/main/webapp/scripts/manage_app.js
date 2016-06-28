@@ -87,7 +87,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 			
 		},
 		uploadImg: function(conSel, previewSel){
-			FileUploader.uploadFile('')
+			FileUploader.uploadFile('.setting-normal .padding-left input', 'thumbnail', 'thumbnail', event.target.files[0]);
 		},
 		handleClick:function(){ 
 			//点击事件回调函数 可能是点击了"属性"，"复用"，"新建微景展"等标签

@@ -155,7 +155,7 @@
    				<img class='abstract-pic' src="../img/pure-logo2x.png" />
    				<div class='fileup-container'>
    					<button class='button-close'>更换封面</button>
-   					<input type='file' accept="image/*" />
+   					<input type='file' name='thumbnail_fileup' accept="image/*" />
    				</div>
    				
    			</div>
