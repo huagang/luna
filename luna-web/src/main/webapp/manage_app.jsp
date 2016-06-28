@@ -152,10 +152,22 @@
    	<div class="pop-cont">
    		<div class='setting-normal'>
    			<div class='part-left'>
-   				<img class='abstract-pic' src="../img/pure-logo2x.png" />
-   				<div class='fileup-container'>
-   					<button class='button-close'>更换封面</button>
-   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+   				<div class='file-uploader'>
+   					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   				<div class='fileup-container'>
+	   					<button class='button-close'>更换封面</button>
+	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   				</div>
+   				</div> 				
+   				<div class='preview-container hidden'>
+   					<img class='preview-img' src="" />
+   					<div class='file-edit-container'>
+   						<div class='img-wrapper'>
+   							<img src='../img/icon-edit.png'/>
+   						</div>
+	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+   					</div>
+   					<p>更换封面</p>
    				</div>
    				
    			</div>

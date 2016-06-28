@@ -335,7 +335,7 @@ var initPage = function() {
 
         // 事件绑定  文章标题输入框onChange事件 
         // 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
-        document.querySelector('#title').addEventListener('change', function() {
+        document.querySelector('#title').addEventListener('change', function(event) {
             articleStore.title = event.target.value;
         });
 
@@ -346,29 +346,29 @@ var initPage = function() {
         });
 
         // 事件绑定  文章摘要输入框onChange事件
-        document.querySelector('#summary').addEventListener('change', function() {
+        document.querySelector('#summary').addEventListener('change', function(event) {
             articleStore.summary = event.target.value;
         });
 
         // 事件绑定  文章栏目选择框onChange事件
-        document.querySelector('#category').addEventListener('change', function() {
+        document.querySelector('#category').addEventListener('change', function(event) {
             articleStore.category = event.target.value;
         });
 
         // 事件绑定  音频url输入框onChange事件
-        document.querySelector('#audio').addEventListener('change', function() {
+        document.querySelector('#audio').addEventListener('change', function(event) {
             articleStore.audio = event.target.value;
             clearWarn('#audio_warn');
         });
 
         // 事件绑定  视频url输入框onChange事件
-        document.querySelector('#video').addEventListener('change', function() {
+        document.querySelector('#video').addEventListener('change', function(event) {
             articleStore.video = event.target.value;
             clearWarn('#video_warn');
         });
 
         // 事件绑定  文章头图文件onChange事件 
-        document.querySelector('#pic_fileup').addEventListener('change', function() {
+        document.querySelector('#pic_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             var preview = document.querySelector('#thumbnail_show');
             preview.src = '';
@@ -384,7 +384,7 @@ var initPage = function() {
         });
 
         // 事件绑定  视频文件onChange事件 
-        document.querySelector('#video_fileup').addEventListener('change', function() {
+        document.querySelector('#video_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
             FileUploader.uploadFile('video', event.target.files[0], function(data) {
@@ -398,7 +398,7 @@ var initPage = function() {
         });
 
         // 事件绑定  音频文件onChange事件 
-        document.querySelector('#audio_fileup').addEventListener('change', function() {
+        document.querySelector('#audio_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
             FileUploader.uploadFile('audio', event.target.files[0], function(data) {

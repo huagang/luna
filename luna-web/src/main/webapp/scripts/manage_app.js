@@ -59,7 +59,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 			this._business_dialog.find('.next').click(this.setBusinessNextStep.bind(this));		
 			this._business_dialog.find('#btn-searchbusiness').click(
 					this.searchBusiness.bind(this));
-			this._business_dialog.find(".business").on("change",function(){
+			this._business_dialog.find(".business").on("change",function(event){
 				this._business_id = event.target.value;
 				if(event.target.value){
 					$(".warn.business-empty").removeClass("show");
@@ -72,7 +72,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 			this._app_dialog.find('.cancel').click(function(){
 				this._app_dialog.removeClass('pop-show');
 			}.bind(this));
-			this._app_dialog.find('input.app-name').on("change",function(){
+			this._app_dialog.find('input.app-name').on("change",function(event){
 				if(event.target.value.length <= 32){
 					this._app_name = event.target.value;
 					this._app_dialog.find(".warn-appname").removeClass('show');
@@ -83,13 +83,25 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 					this._app_dialog.find(".warn-appname").addClass('show');
 				}
 			}.bind(this));
-			this._app_dialog.find('.setting-normal .padding-left input').on('change', this.uploadImg.bind(this));
+			this._app_dialog.find('.setting-normal .padding-left input').on('change', 
+					this.uploadImg.bind(this, '.setting-normal .file-uploader', 
+							'.setting-normal .preview-container',''));
 			
 		},
-		uploadImg: function(conSel, previewSel){
-			FileUploader.uploadFile('.setting-normal .padding-left input', 'thumbnail', 'thumbnail', event.target.files[0]);
+		uploadImg: function(conSel, previewSel, previewImgSel, event){
+			FileUploader.uploadFile('thumbnail', event.target.files[0], function(data){
+				$(conSel).addClass('hidden');
+				$(previewSel).removeClass('hidden');
+				if(!previewImgSel){
+					//preview img的默认class为 preview-img
+					previewImgSel = previewSel + ' .preview-img';
+				}
+				$(previewImgSel).attr(src, data.data.access_url);
+			}, function(data){
+				alert('上传图片失败');
+			});
 		},
-		handleClick:function(){ 
+		handleClick:function(event){ 
 			//点击事件回调函数 可能是点击了"属性"，"复用"，"新建微景展"等标签
 			var classList = ['property', 'reuse', "newApp"], receive = '';
 			classList.forEach(function(className){
