@@ -73,7 +73,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {
@@ -211,7 +212,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {
@@ -279,7 +281,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {
@@ -347,7 +350,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {
@@ -401,7 +405,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {
@@ -449,7 +454,6 @@ public class PoiApiCtrl {
 				fields = fields.trim();
 			}
 			
-			
 			// 如果传入了type参数，则认为传入的是id。否则认为传入的是tagNm
 			tags = tags.trim();
 			if(type != null){ 
@@ -466,7 +470,6 @@ public class PoiApiCtrl {
 					return;
 				}
 				type = "";
-				
 			}
 			param.put("biz_id", biz_id);
 			param.put("fields", fields);
@@ -489,7 +492,8 @@ public class PoiApiCtrl {
 						return;
 					}
 				}
-				response.getWriter().print(FastJsonUtil.sucess(result.getString("msg"),datas));
+				result.put("data", datas);
+				response.getWriter().print(result);
 				response.setStatus(200);
 				return;
 			} else {

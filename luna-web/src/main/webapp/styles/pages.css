@@ -627,3 +627,14 @@ a.wj-img-clc{
 #btn-copy-url{
 	margin-left: 20px;
 }
+/*
+导航位置样式
+ */
+.navPositionForm .form-group label{
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+}
+.text-error{
+    color:#e73d4a;
+}
