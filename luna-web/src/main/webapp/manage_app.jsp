@@ -145,12 +145,40 @@
        	<h4>微景展配置</h4>
        	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
    	</div>
+   	<ul class='pop-menu'>
+   		<li class='normal active'><a href='#'>常用设置</a></li>
+   		<li class='share'><a href='#'>分享设置</a></li>
+   	</ul>
    	<div class="pop-cont">
-	    <div>
-            <label for="app-name">名称</label>
-            <input type="text" class="app-name" placeholder="输入微景展名称，不超过32个字符"/>          
-        </div>
-        <div class="warn warn-appname">微景展名称不能为空并且不能超过32个字符</div>
+   		<div class='setting-normal'>
+   			<div class='part-left'>
+   				<img class='abstract-pic' src="../img/pure-logo2x.png" />
+   				<div class='fileup-container'>
+   					<button class='button-close'>更换封面</button>
+   					<input type='file' accept="image/*" />
+   				</div>
+   				
+   			</div>
+   			<div class='part-right'>
+   				<div class='char-limit-container'>
+   					<input type="text" class="app-name" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+   					<span class='counter'>0/32</span>
+   				</div>
+   				<div class='char-limit-container'>
+   					<textarea type='text' class='app-description' maxlength='128'
+   					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+   					<span class='counter'>0/128</span>
+   				</div>
+   				
+   				
+   			</div>
+   		</div>
+   		<div class='setting-share hidden'>
+   			<div class='part-left'>
+   			</div>
+   			<div class='part-right'>
+   			</div>
+   		</div>
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
@@ -191,6 +219,7 @@
 
 <script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script type="text/javascript">
 	var APP_STATUS = {
 			"-1": "已删除",
