@@ -7968,7 +7968,6 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 ci.call(this, root)
             }
         },
-
         /**
          * 注册输出过滤规则
          * @method  addOutputRule
@@ -10079,7 +10078,8 @@ UE.plugins['defaultfilter'] = function () {
                         }
                         var tmpNode, p = UE.uNode.createElement('p');
                         while (tmpNode = node.firstChild()) {
-                            if (tmpNode.type == 'text' || !UE.dom.dtd.$block[tmpNode.tagName]) {
+                            if (tmpNode.type == 'text' || !UE.dom.dtd.$block[tmpNode
+                                .tagName]) {
                                 p.appendChild(tmpNode);
                             } else {
                                 if (p.firstChild()) {

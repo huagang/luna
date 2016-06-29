@@ -17,10 +17,10 @@
 		<meta name="Description" content="皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。" />
     	<meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
 		<title>皓月平台</title>
-		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/> 	
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/showArticle.css">
+		<link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/> 	
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showArticle.css">
 	</head>
 	<body>
 		<div class='wrapper'>
@@ -51,13 +51,13 @@
 			</div>
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
-		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+		<script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
 		<script type="text/javascript">
 			var pageData = ${articleJson};
 			console.log(pageData);
 		</script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/luna.config.js'></script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/showArticle.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showArticle.js'></script>
 	</body>
 </html>
