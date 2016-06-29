@@ -1,5 +1,6 @@
 package ms.luna.biz.bl.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CloudConfig;
@@ -249,7 +250,17 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	public JSONObject deleteBusinessById(int id) {
 		// TODO Auto-generated method stub
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(id);
-		MtaWrapper.deleteApp(msBusiness.getStatId(), msBusiness.getSecretKey());
+		String ret = MtaWrapper.deleteApp(msBusiness.getStatId(), msBusiness.getSecretKey());
+		if(ret == null) {
+			logger.error("Failed to delete qq stats for business: " + id);
+		} else {
+			JSONObject jsonObject = JSON.parseObject(ret);
+			if(0 != jsonObject.getIntValue("code")) {
+				logger.error("Failed to delete qq stats for business: " +
+						id + ", info " + jsonObject.getString("info"));
+			}
+
+		}
 		msBusinessDAO.deleteByPrimaryKey(id);
 		return FastJsonUtil.sucess("成功删除业务信息！");
 	}
