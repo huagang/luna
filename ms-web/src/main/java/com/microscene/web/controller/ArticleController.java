@@ -30,7 +30,7 @@ public class ArticleController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ModelAndView indexPage(@PathVariable int id, HttpServletRequest request) {
-        JSONObject jsonObject = manageArticleService.getArticleById(id);
+        JSONObject jsonObject = manageArticleService.getOnlineArticleById(id);
         ModelAndView modelAndView = buildModelAndView("showArticle");
         modelAndView.addObject("articleJson", jsonObject);
         return modelAndView;

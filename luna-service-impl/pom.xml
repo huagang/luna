@@ -252,6 +252,7 @@
 				<cosBaseDir>/dev</cosBaseDir>
 				<mongo.dbname>lunapoi</mongo.dbname>
 				<msWebUrl>http://localhost:8081</msWebUrl>
+				<mtaQQ>3463673430</mtaQQ>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -305,6 +306,7 @@
 				<mongo.dbname>lunapoi</mongo.dbname>
 				<cosBaseDir>/test</cosBaseDir>
 				<msWebUrl>http://luna-test.visualbusiness.cn/ms-web</msWebUrl>
+				<mtaQQ>3463673430</mtaQQ>
 			</properties>
 			<build>
 				<plugins>
@@ -355,6 +357,7 @@
 				<mongo.dbname>luna</mongo.dbname>
 				<cosBaseDir>/release</cosBaseDir>
 				<msWebUrl>http://luna.visualbusiness.cn/ms-web</msWebUrl>
+				<mtaQQ>3186008740</mtaQQ>
 			</properties>
 			<build>
 				<plugins>
