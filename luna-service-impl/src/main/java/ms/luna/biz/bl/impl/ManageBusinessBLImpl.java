@@ -117,6 +117,9 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		try {
 			String statInfo = MtaWrapper.createApp(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, ServiceConfig.getLong(ServiceConfig.MTA_QQ));
 			// str:{"code":0,"info":"success","data":{"app_id":500032916,"secret_key":"4ead8d782c516966b64424ab52500412"}}
+			if(statInfo == null) {
+				return FastJsonUtil.error("-1", "创建腾讯统计账号失败");
+			}
 			JSONObject jsonStat = JSONObject.parseObject(statInfo);
 			if ("0".equals(jsonStat.getString("code"))) {
 				JSONObject statData = jsonStat.getJSONObject("data");
