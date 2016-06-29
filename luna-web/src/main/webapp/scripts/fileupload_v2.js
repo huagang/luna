@@ -34,7 +34,12 @@ var FileUploader = {
 			size: 5000000  //(5M)
 		}
 	},
-	
+	_formNamesForFile: {
+		"thumbnail": "thumbnail_fileup",
+		"video": "video_fileup",
+		"audio": "audio_fileup",
+	},
+	                    
 	/* 检查上传文件是否合乎要求
 	 * @param type {string} 上传文件的类型,可选值为'thumbnail','audio','video'
 	 * @param file {file}   上传的文件
@@ -52,9 +57,8 @@ var FileUploader = {
 		}
 		return {error: null};
 	},
-	uploadFile: function(elementSel, type, file, successCallback, errorCallback){
-		/* @param elementSel 上传文件的input标签的选择器
-		 * @param type 上传文件的类型,可选值为'thumbnail','audio','video'
+	uploadFile: function(type, file, successCallback, errorCallback){
+		/* @param type 上传文件的类型,可选值为'thumbnail','audio','video'
 		 * @param file 上传的文件
 		 * @param successCallback 上传文件成功后的回调函数
 		 * @param errorCallback 上传文件失败后调用此函数（包含文件验证失败） 
@@ -66,7 +70,7 @@ var FileUploader = {
 			return;
 		}
 		var data = new FormData();
-		data.append(document.querySelector(elementSel).name,file);
+		data.append(this._formNamesForFile[type],file);
 		$.ajax({
 			//处理文件上传操作的服务器端地址
 			url:this._host+"/add_poi.do?method=upload_"+type,
