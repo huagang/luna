@@ -270,7 +270,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 //			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
-			resultdata.put("category_name", getPoiTypeId2NmLst().get(ctgr_id));
+			resultdata.put("category_name", getPoiTagsLst().get(ctgr_id));
 			return resultdata;
 		} else {
 			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
@@ -312,7 +312,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 //			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",sub_ctgr_id:" + sub_ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
-			resultdata.put("sub_category_name", getPoiTypeId2NmLst().get(sub_ctgr_id));
+			resultdata.put("sub_category_name",  getPoiTagsLst().get(sub_ctgr_id));
 			return resultdata;
 		} else {
 			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
