@@ -27,17 +27,7 @@ var initPage = function() {
         //     pano.setGravityEnable(false);
         // };
 
-        // /*重置上传附件请求的地址*/
-        // UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
-        // UE.Editor.prototype.getActionUrl = function(action) {
-        //     if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-        //         return 'http://localhost:8080/luna-web/add_article.do?method=upload_img';
-        //     } else if (action == 'uploadvideo') {
-        //         return 'http://localhost:8080/luna-web/add_article.do?method=upload_video';
-        //     } else {
-        //         return this._bkGetActionUrl.call(this, action);
-        //     }
-        // };
+
 
         // /*注册添加音乐按钮*/
         // UE.registerUI('insertmusic', function(editor, uiName) {
@@ -84,7 +74,7 @@ var initPage = function() {
         //                     return dialog;
         //                 };
         //             var options = UE.utils.extend({
-        //                 iframeUrl: editor.ui.mapUrl(editor.options.iframeUrlMap[cmd]),
+        //                 iframeUrl: editor.ui.mapUrl(editor.options.iframeUrlMap["insertmusic"]),
         //                 editor: editor,
         //                 className: 'edui-for-' + cmd,
         //                 title: "音乐",
@@ -128,7 +118,7 @@ var initPage = function() {
 
         //     //因为你是添加button,所以需要返回这个button
         //     return btn;
-        // }, [15]);
+        // }, [20]);
 
         // // /*注册添加视频按钮*/
         // // UE.registerUI('添加视频', function(editor, uiName) {
@@ -220,17 +210,30 @@ var initPage = function() {
         //     return btn;
         // });
 
+        // /*重置上传附件请求的地址*/
+        UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+        UE.Editor.prototype.getActionUrl = function(action) {
+            if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+                return Inter.getApiUrl().uploadImageInArtcle;
+            } else if (action == 'uploadvideo') {
+                return Inter.getApiUrl().uploadVideoInArtcle;
+            } else {
+                return this._bkGetActionUrl.call(this, action);
+            }
+        };
         /*获取编辑器实例*/
         ue = UE.getEditor('editor', {
             allowDivTransToP: false,
             elementPathEnabled: false,
             toolbars: [
-                ['fontfamily', '|', 'fontsize', '|', 'bold', 'italic', 'underline', 'forecolor', '|', 'justifyleft',
-                    'justifyright',
-                    'justifycenter',
-                    'justifyjustify', '|',
+                ['fontfamily', '|',
+                    'fontsize', '|',
+                    'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
+                    'justifyleft',
+                    'justifyright', 'justifycenter', 'justifyjustify', '|',
+                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'simpleupload',
-                    // 'music',
+                    // 'insertmusic',
                     'insertvideo',
                 ]
             ],
