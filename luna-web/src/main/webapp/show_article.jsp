@@ -28,13 +28,14 @@
 				<img src=''/>
 			</div>
 			<div class='toolbar'>
-				<span class='title'></span>
-				<span class="btn-wrap video-btn-wrap hidden">
+				<div class='title'>
+				</div>
+				<div class="btn-wrap video-btn-wrap hidden">
 					<i class="icon icon-video"></i>
-				</span>
-				<span class="btn-wrap audio-btn-wrap hidden">
+				</div>
+				<div class="btn-wrap audio-btn-wrap hidden">
 					<i class="icon icon-audio"></i>
-				</span>				
+				</div>				
 			</div>
 			<div class='content-wrapper'>
 				<div class='content'></div>	
@@ -52,6 +53,7 @@
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_article.js'></script>
 	</body>

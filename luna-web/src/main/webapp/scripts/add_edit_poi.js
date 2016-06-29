@@ -604,12 +604,12 @@ function lonlatPaste(value, target) {
 function check_description() {
     var hasError = false;
     var value = $("#description").val();
-    if (value.length == 0) {
-        $("#description-warn").css("display", "block");
-        hasError = true;
-    } else {
-        $("#description-warn").css("display", "none");
-    }
+    // if (value.length == 0) {
+    //     $("#description-warn").css("display", "block");
+    //     hasError = true;
+    // } else {
+    //     $("#description-warn").css("display", "none");
+    // }
     return hasError;
 };
 

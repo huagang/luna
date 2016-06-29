@@ -26,6 +26,10 @@ html,body{
 	flex-shrink: 1;
     overflow: scroll;
 }
+.content img,.content video{
+	width: 100%;
+}
+
 .banner{
 	max-height: 200px;
     overflow: hidden;
@@ -39,7 +43,8 @@ html,body{
 }
 .toolbar{
 	height: 56px;
-    background-color: white;
+	background-color: white;
+	position: relative;
 }
 .toolbar .title{
 	color: #4d5b6c;
@@ -47,6 +52,13 @@ html,body{
 	height: 56px;
 	line-height: 56px;
 	padding-left: 20px;
+	float: left;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	position: absolute;
+	width: 100%;
+	padding-right: 96px;
+	overflow: hidden;
 }
 .toolbar .btn-wrap{
 	float: right;

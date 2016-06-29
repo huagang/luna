@@ -20,7 +20,7 @@
 		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/> 	
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/show_article.css">
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/showArticle.css">
 	</head>
 	<body>
 		<div class='wrapper'>
@@ -52,8 +52,12 @@
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+		<script type="text/javascript">
+			var pageData = ${articleJson};
+			console.log(pageData);
+		</script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_article.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/showArticle.js'></script>
 	</body>
 </html>

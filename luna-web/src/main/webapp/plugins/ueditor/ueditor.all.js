@@ -17652,8 +17652,9 @@ UE.plugins['video'] = function (){
 
         var str;
         switch (type){
-            case 'image': //background:url(http://ueditor.baidu.com/ueditor/themes/default/images/videologo.gif) no-repeat center center;border:1px solid gray;
-                str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\bvideo-js\b/, '') + '"'  +
+            case 'image': 
+                // str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\bvideo-js\b/, '') + '"'  +
+               str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\bvideo-js\b/, '') + '"'  +
                     ' src="' + me.options.UEDITOR_HOME_URL+'themes/default/images/spacer.gif" style="background:url(http://cdn.visualbusiness.cn/public/vb/img/videologo.gif) no-repeat center center; border:1px solid gray;'+(align ? 'float:' + align + ';': '')+'" />'
                 break;
             case 'embed':
@@ -23975,6 +23976,11 @@ UE.plugin.register('autosave', function (){
 
             'contentchange': function () {
 
+               //新增加的代码
+                if (!me.getOpt('enableAutoSave')) {
+                    return;
+                }
+
                 if ( !saveKey ) {
                     return;
                 }
@@ -27807,6 +27813,7 @@ UE.ui = baidu.editor.ui = {};
         'searchreplace':'~/dialogs/searchreplace/searchreplace.html',
         'map':'~/dialogs/map/map.html',
         'gmap':'~/dialogs/gmap/gmap.html',
+        'insertmusic':'~/dialogs/video/video.html',
         'insertvideo':'~/dialogs/video/video.html',
         'help':'~/dialogs/help/help.html',
         'preview':'~/dialogs/preview/preview.html',
@@ -27950,7 +27957,7 @@ UE.ui = baidu.editor.ui = {};
 
     var dialogBtns = {
         noOk:['searchreplace', 'help', 'spechars', 'webapp','preview'],
-        ok:['attachment', 'anchor', 'link', 'insertimage', 'map', 'gmap', 'insertframe', 'wordimage',
+        ok:['attachment', 'anchor', 'link', 'insertimage', 'map', 'gmap', 'insertframe', 'wordimage','insertmusic',
             'insertvideo', 'insertframe', 'edittip', 'edittable', 'edittd', 'scrawl', 'template', 'music', 'background', 'charts']
     };
 

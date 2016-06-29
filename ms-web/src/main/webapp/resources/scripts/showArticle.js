@@ -15,34 +15,35 @@ window.onload = function() {
     initData();
 
     function initData() {
-        var articleId = null;
-        try {
-            articleId = parseInt(location.href.match(/article_id=(\d+)/)[1]);
-        } catch (e) {
-            alert("url中缺乏article_id参数")
-            return;
-        }
-        if (!articleId) {
-            return; }
-        $.ajax({
-            url: Inter.getApiUrl().readArticle,
-            type: 'GET',
-            data: { id: articleId },
-            dataType: 'json',
-            success: function(data) {
-                if (data.code === "0") {
-                    console.log("请求文章数据成功");
-                    updateData(data.data);
-                } else {
-                    console.log("请求文章数据失败");
-                }
-
-
-            },
-            error: function(data) {
-                console.log("请求文章数据失败");
-            }
-        });
+        updateData(pageData);
+        //var articleId = null;
+        //try {
+        //    articleId = parseInt(location.href.match(/article_id=(\d+)/)[1]);
+        //} catch (e) {
+        //    alert("url中缺乏article_id参数")
+        //    return;
+        //}
+        //if (!articleId) {
+        //    return; }
+        //$.ajax({
+        //    url: Inter.getApiUrl().readArticle,
+        //    type: 'GET',
+        //    data: { id: articleId },
+        //    dataType: 'json',
+        //    success: function(data) {
+        //        if (data.code === "0") {
+        //            console.log("请求文章数据成功");
+        //            updateData(data.data);
+        //        } else {
+        //            console.log("请求文章数据失败");
+        //        }
+        //
+        //
+        //    },
+        //    error: function(data) {
+        //        console.log("请求文章数据失败");
+        //    }
+        //});
     }
 
     /* 根据获取的文章数据进行更新文章内容 */

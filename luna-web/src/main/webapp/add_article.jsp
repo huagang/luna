@@ -134,6 +134,7 @@
 			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
 			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
 		</script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>

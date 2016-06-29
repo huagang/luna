@@ -5,8 +5,6 @@
  */
 
 var initPage = function() {
-
-   
     var ue;
     var articleStore = getArticleStore();
     /**
@@ -257,7 +255,7 @@ var initPage = function() {
             	id: articleStore.id || null,
             	business_id: articleStore.business_id || -1,
                 title: articleStore.title,
-                content: articleStore.content,
+                content: ue.getContent(),
                 abstract_content: articleStore.summary,
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
