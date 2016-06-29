@@ -13,7 +13,7 @@
 	<!-- 提供方应用信息，用于计算依赖关系 -->
 	<dubbo:application name="ms-web" />
 
-	<dubbo:consumer check="false" timeout="300000" retries="0" />
+	<dubbo:consumer check="false" timeout="10000" retries="0" />
 	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}" />
 
 	<dubbo:reference id="authoritySetService" interface="ms.luna.biz.sc.AuthoritySetService" />
@@ -30,5 +30,7 @@
 	<dubbo:reference id="registService" interface="ms.luna.biz.sc.RegistService" />
 	<dubbo:reference id="showPageComponentService" interface="ms.luna.biz.sc.ShowPageComponentService" />
 	<dubbo:reference id="vodPlayService" interface="ms.luna.biz.sc.VodPlayService" />
+	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService" />
+	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService" />
 	
 </beans>
