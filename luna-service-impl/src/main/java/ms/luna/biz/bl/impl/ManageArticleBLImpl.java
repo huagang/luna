@@ -289,4 +289,22 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         }
 
     }
+
+    @Override
+    public JSONObject getOnlineArticleById(int id) {
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        msArticleCriteria.createCriteria()
+                         .andIdEqualTo(id)
+                         .andStatusEqualTo(true);
+        try {
+            List<MsArticleWithBLOBs> msArticleWithBLOBList = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+            if (msArticleWithBLOBList != null && msArticleWithBLOBList.size() == 1) {
+                return FastJsonUtil.sucess("", toJson(msArticleWithBLOBList.get(0)));
+            } else {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章不存在");
+            }
+        } catch (Exception ex) {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
 }

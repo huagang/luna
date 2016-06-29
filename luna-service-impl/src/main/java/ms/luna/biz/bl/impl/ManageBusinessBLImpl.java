@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.CommonQueryParam;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
@@ -114,7 +115,7 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		business.setMerchantId(merchantId);
 		business.setCreateUser(createUser);
 		try {
-			String statInfo = MtaWrapper.getRegistResult(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, CloudConfig.ADMIN_QQ);
+			String statInfo = MtaWrapper.createApp(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, ServiceConfig.getLong(ServiceConfig.MTA_QQ));
 			// str:{"code":0,"info":"success","data":{"app_id":500032916,"secret_key":"4ead8d782c516966b64424ab52500412"}}
 			JSONObject jsonStat = JSONObject.parseObject(statInfo);
 			if ("0".equals(jsonStat.getString("code"))) {
@@ -244,6 +245,8 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	@Override
 	public JSONObject deleteBusinessById(int id) {
 		// TODO Auto-generated method stub
+		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(id);
+		MtaWrapper.deleteApp(msBusiness.getStatId(), msBusiness.getSecretKey());
 		msBusinessDAO.deleteByPrimaryKey(id);
 		return FastJsonUtil.sucess("成功删除业务信息！");
 	}

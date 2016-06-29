@@ -19,4 +19,5 @@ public interface ManageArticleService {
     JSONObject publishArticle(int id);
     JSONObject getColumnById(int id);
     JSONObject getColumnByBusinessId(int businessId);
+    JSONObject getOnlineArticleById(int id);
 }
