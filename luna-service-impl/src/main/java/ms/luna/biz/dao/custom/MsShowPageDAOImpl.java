@@ -53,13 +53,14 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		return pageList;
 	}
 	
-	public MsShowPage readIndexPageDetailByAppId(int appId) {
-		
-		Bson query = Filters.and(Filters.eq(FIELD_APP_ID, appId), Filters.eq(FIELD_PAGE_ORDER, 1));
+	public List<MsShowPage> readIndexPageDetailByAppId(int appId) {
+		// index page consists of the first two pages
+		Bson query = Filters.and(Filters.eq(FIELD_APP_ID, appId), Filters.lte(FIELD_PAGE_ORDER, 2));
 		MongoIterable<MsShowPage> res = showPageCollection.find(query)
-						  				.limit(1)
+										.sort(new Document(FIELD_PAGE_ORDER, 1))
 						  				.map(new Document2MsShowPage());
-		return res.first();
+		List<MsShowPage> pageList = new ArrayList<>();
+		return res.into(pageList);
 		
 	}
 	

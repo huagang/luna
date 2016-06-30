@@ -24,7 +24,7 @@ public interface MsShowPageDAO {
 	public static final String FIELD_UPDATE_USER = "update_user";
 	
 	public List<MsShowPage>	readAllPageDetailByAppId(int appId);
-	public MsShowPage readIndexPageDetailByAppId(int appId);
+	public List<MsShowPage> readIndexPageDetailByAppId(int appId);
 	public List<MsShowPage> readAllPageSummaryByAppId(int appId, List<String> summaryFields);
 	public MsShowPage readPageSummary(String pageId, List<String> summaryFields);
 	public MsShowPage readPageDetail(String pageId);

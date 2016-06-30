@@ -204,9 +204,9 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 	public JSONObject getIndexPage(int appId) {
 		// TODO Auto-generated method stub
 		
-		MsShowPage msShowPage = msShowPageDAO.readIndexPageDetailByAppId(appId);
-		if(msShowPage != null) {
-			return FastJsonUtil.sucess("", JSON.toJSON(msShowPage));
+		List<MsShowPage> msShowPages = msShowPageDAO.readIndexPageDetailByAppId(appId);
+		if(msShowPages != null) {
+			return FastJsonUtil.sucess("", JSON.toJSON(msShowPages));
 		}
 		return FastJsonUtil.error(ErrorCode.NOT_FOUND, "页面未找到");
 	}
