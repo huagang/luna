@@ -2,6 +2,7 @@ package com.microscene.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.ManageArticleService;
+import ms.luna.biz.table.MsArticleTable;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,11 @@ public class ArticleController extends BaseController {
     public ModelAndView indexPage(@PathVariable int id, HttpServletRequest request) {
         JSONObject jsonObject = manageArticleService.getOnlineArticleById(id);
         ModelAndView modelAndView = buildModelAndView("showArticle");
+        if(jsonObject.getIntValue("code") == 0) {
+            JSONObject data = jsonObject.getJSONObject("data");
+            modelAndView.addObject("title", data.getString(MsArticleTable.FIELD_TITLE));
+            modelAndView.addObject("description", data.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT));
+        }
         modelAndView.addObject("articleJson", jsonObject);
         return modelAndView;
     }
