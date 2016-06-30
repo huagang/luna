@@ -110,6 +110,7 @@
 		                    <p class='group-title'>栏目</p>
 		                    <div class="">
 		                        <select class="" name="category" id='category'>
+									<option value="0">无</option>
 									<c:forEach items="${columnMap}" var="column">
 										<option value="${column.value}">${column.key}</option>
 									</c:forEach>
