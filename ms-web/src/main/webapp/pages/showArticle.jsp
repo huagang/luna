@@ -51,13 +51,13 @@
 			</div>
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
-		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+		<script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
 		<script type="text/javascript">
 			var pageData = ${articleJson};
 			console.log(pageData);
 		</script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/luna.config.js'></script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
-		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/showArticle.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
+		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showArticle.js'></script>
 	</body>
 </html>

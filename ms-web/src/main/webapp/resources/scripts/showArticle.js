@@ -15,7 +15,8 @@ window.onload = function() {
     initData();
 
     function initData() {
-        updateData(pageData);
+        console.log(pageData.data);
+        updateData(pageData.data);
         //var articleId = null;
         //try {
         //    articleId = parseInt(location.href.match(/article_id=(\d+)/)[1]);
