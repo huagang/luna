@@ -17,10 +17,10 @@
 		<meta name="Description" content="${description}" />
     	<meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
 		<title>${title}</title>
-		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/> 	
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/showArticle.css">
+		<link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showArticle.css">
 	</head>
 	<body>
 		<div class='wrapper'>

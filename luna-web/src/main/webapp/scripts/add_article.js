@@ -246,16 +246,18 @@ var initPage = function() {
     var initEvent = function() {
         // 事件绑定  保存按钮点击事件
         document.querySelector('.save').addEventListener('click', function(e) {
+            // articleStore.content = content
             var error = articleStore.checkEmpty().error;
             if (error) {
                 alert(error);
                 return;
             }
+
             var data = {
                 id: articleStore.id || null,
                 business_id: articleStore.business_id || -1,
                 title: articleStore.title,
-                content: ue.getContent(),
+                content: articleStore.content,
                 abstract_content: articleStore.summary,
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
@@ -326,10 +328,10 @@ var initPage = function() {
         });
 
         // 事件绑定 文章正文富文本编辑器contentChange事件
-        // ue.addListener('contentChange', function() {
-        //     var content = ue.getContent();
-        //     articleStore.content = content;
-        // });
+        ue.addListener('contentChange', function() {
+            var content = ue.getContent();
+            articleStore.content = content;
+        });
 
         // 事件绑定  文章摘要输入框onChange事件
         document.querySelector('#summary').addEventListener('change', function() {
