@@ -32,9 +32,13 @@ html,body{
 .bg-canvas{
 	background-position: top center;
 	background-repeat: no-repeat;
-	background-size:contain;
+	background-size:cover;
 }
 
+.component-group{
+    width: 100%;
+    height: 100%;
+}
 .componentbox .con,.componentbox .con img{
 	width: 100%;
 	height: 100%;
@@ -46,4 +50,22 @@ html,body{
     width: 100%;
     word-wrap: break-word;
     word-break:break-all;
+}
+.componentbox .scene ,.componentbox .scene li {
+    height: 100%;
+    width: 100%;
+}
+.componentbox .scene li img{
+    width: 150%;
+    height: 110%;
+    margin-left: -25%;
+    margin-top: -5%;
+}
+.go-right{
+    margin-left: -15%;
+    transition: margin-left 4s;
+    -webkit-transition: margin-left 4s;
+    width: 126%;
+    margin-left: -10%;
+    height: 100%;
 }

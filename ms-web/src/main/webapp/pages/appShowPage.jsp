@@ -23,7 +23,6 @@
         getShareInfo(window.document.location.href,shareInfo);
         var pageData = ${pageData};
         var host = "<%=request.getContextPath() %>";
-        console.log(pageData);
     </script>
 </body>
 </html>

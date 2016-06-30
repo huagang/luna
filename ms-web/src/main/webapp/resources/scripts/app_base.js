@@ -39,21 +39,28 @@ $(document).ready(function() {
         alert(pageData.msg);
         return;
     } else {
-        var arrPageDatas = pageData.data,curPageGroup={};
+        var arrPageDatas = pageData.data,
+            curPageGroup = {};
         for (var i = 0; i < arrPageDatas.length; i++) {
-            var item = arrPageDatas[i],$comGroup=$('<div class="component-group"></div>');
-            if(document.querySelector('.component-group')){
-            	$comGroup.hide();
+            var item = arrPageDatas[i],
+                $comGroup = $('<div class="component-group '+item.page_code+'"></div>');
+            if (document.querySelector('.component-group')) {
+                $comGroup.hide();
             }
             $(".app-wrap").append($comGroup);
             if (item.page_code == "welcome") {
+                console.log(item);
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
                     var componentHtml = "";
                     if (n.startsWith("canvas")) {
-                    	
                         var canvas = new Canvas(value);
                         componentHtml = canvas.build();
+                        if (value.bgimg) {
+                            var welCanvas = new WelComeCanvas(value);
+                            var newComponentHtml = welCanvas.build();
+                            $comGroup.append(newComponentHtml);                        	
+                        }
                     } else if (n.startsWith("text")) {
                         var text = new Text(value);
                         componentHtml = text.build();
@@ -69,6 +76,12 @@ $(document).ready(function() {
                     }
                     $comGroup.append(componentHtml);
                 });
+                setTimeout(function(){
+                    if($('.welcome').next('.component-group').children().length>0){
+                        $('.welcome').fadeOut(1000);
+                        $('.welcome').next('.component-group').show();
+                    }
+                },4000);
             } else {
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
@@ -94,6 +107,12 @@ $(document).ready(function() {
             }
         }
     }
+
+
+    // var scene = $('.scene')[0];
+    var scene = document.querySelector('.scene');
+    var parallax = new Parallax(scene);
+    $('.scene').find('.img-wraper').addClass('go-right');
 
     /*TODO：增加动画页面 End*/
 
@@ -130,6 +149,7 @@ $(document).ready(function() {
             }
             this.html.children("div").children().attr("style", this.value.style_other);
         };
+
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
                 if (this.value.action.href.type == "inner") {
@@ -141,6 +161,33 @@ $(document).ready(function() {
         };
     }
 
+    /**
+     * 欢迎界面canvas
+     */
+    function WelComeCanvas(data) {
+
+        this.value = data;
+        this.value.type = "scene";
+
+        BaseComponent.call(this);
+
+        this.build = function() {
+            var $scene = $('<ul id="scene" class="scene" data-scalar-x="10" data-scalar-y="2"></ul>');
+            if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "") {
+                $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
+            }
+            this.html.children("div").append($scene);
+            this.html.css("position", "absolute");
+            this.html.css("left", "0px");
+            this.html.css("top", "0px");
+            this.html.css("width", "100%");
+            this.html.css("height", "100%");
+            this.html.addClass("bg-canvas");
+            this.html.css("z-index", "0");
+
+            return this.html;
+        };
+    }
 
     function Canvas(data) {
 
