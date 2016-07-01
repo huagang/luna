@@ -74,7 +74,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 	private static Map<String, Integer> poiSceneTypeNm2IdLst = new LinkedHashMap<>();// (key:type值,value:type的id)
 
-	private static Map<Integer, String> poiPanoramaCtgrId2NmLst = new LinkedHashMap<>(); // (key:全景类别id，value: 全景类别名称)
+	private static Map<Integer, String> poiPanoramaTypeId2NmLst = new LinkedHashMap<>(); // (key:全景类别id，value: 全景类别名称)
 
 	// 获得第一层所有poi数据
 	@Override
@@ -99,15 +99,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
-			// if(poiIdLst != null){
-			// for(String poiId:poiIdLst){
-			// // 根据业务树poi节点，在poi_collection中获取具体poi信息
-			// JSONObject poi = getPoiInfoWtihFields(poiId,fieldArr,lang);
-			// if(!poi.isEmpty()){
-			// poiArray.add(poi);
-			// }
-			// }
-			// }
 			if (poiIdLst != null) {
 				poiArray = getPoiInfoWtihFields(poiIdLst, fieldArr, lang);
 			}
@@ -380,6 +371,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			Map<Integer, String> poiTags = getPoiTagsLst();
 			Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
 			Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+			Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
 
 			if (fieldNames.containsKey(key) || "sub_tag".equals(key)) {
 				// 一级类别--tags
@@ -511,9 +503,27 @@ public class PoiApiBLImpl implements PoiApiBL {
 					}
 					data.put(poiApiNameMap.getOuterVal("panorama"), panorama_id);
 					poi.put("panorama", data);
+					
+					// 加入默认全景类型，默认为“专辑”
+					data.put("panorama_type_id", 2);
+					data.put("panorama_type_name", poiPanoTypes.get(2));
+					
 					continue;
 				}
-				// TODO 加入全景类别与名称
+				if("panorama_type".equals(key)) {
+					Integer panorama_type_id = (Integer) entry.getValue();
+					JSONObject data = poi.getJSONObject("panorama");
+					if(data == null){
+						data = new JSONObject();
+					}
+					if(poiPanoTypes.containsKey(panorama_type_id)){
+						String panorama_type_name = poiPanoTypes.get(panorama_type_id);
+						data.put("panorama_type_id", panorama_type_id);
+						data.put("panorama_type_name", panorama_type_name);
+					}
+					poi.put("panorama", data);
+					continue;
+				}
 				// if(key != null){//
 				// 判断映射表是否存在对应名称。fieldNames.containsKey(key)表明是存在的，不需要此判断
 				poi.put(poiApiNameMap.getOuterVal(key), entry.getValue());
@@ -705,12 +715,37 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return poiSceneTypeNm2IdLst;
 	}
 
-	private Map<Integer, String> getPoiPanoramaCtgrId2NmLst() {
-		if (!poiPanoramaCtgrId2NmLst.isEmpty()) {
-			return poiPanoramaCtgrId2NmLst;
+	private Map<Integer, String> getPoiPanoramaTypeId2NmLst() {
+		if (!poiPanoramaTypeId2NmLst.isEmpty()) {
+			return poiPanoramaTypeId2NmLst;
 		}
-		// TODO
-		return null;
+		synchronized (PoiApiBLImpl.class) {
+			if(poiPanoramaTypeId2NmLst.isEmpty()) {
+				MsPoiFieldCriteria msPoiFieldCriteria = new MsPoiFieldCriteria();
+				MsPoiFieldCriteria.Criteria criteria = msPoiFieldCriteria.createCriteria();
+				criteria.andFieldNameEqualTo("panorama_type");
+				List<MsPoiField> msPoiFields= msPoiFieldDAO.selectByCriteria(msPoiFieldCriteria);
+				if (!msPoiFields.isEmpty()) {
+					MsPoiField msPoiField = msPoiFields.get(0);
+					String extensionAttrs = msPoiField.getExtensionAttrs();
+					if (extensionAttrs == null) {
+						return poiPanoramaTypeId2NmLst;
+					}
+					JSONArray array = JSONArray.parseArray(extensionAttrs);
+					for (int i = 0; i < array.size(); i++) {
+						JSONObject type = array.getJSONObject(i);
+						Set<Entry<String, Object>> entrySet = type.entrySet();
+						for (Entry<String, Object> entry : entrySet) {
+							String key = entry.getKey();
+							String value = (String) entry.getValue();
+							poiPanoramaTypeId2NmLst.put(Integer.parseInt(key), value);
+						}
+					}
+				}
+			}
+			
+		}
+		return poiPanoramaTypeId2NmLst;
 	}
 
 	/**
@@ -1105,12 +1140,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 			for (String field : fields) {
 				field = poiApiNameMap.getInnerVal(field);
 				String key = field;
-				if (resJson.containsKey(key) || "sub_tag".equals(key)) {
+				if (resJson.containsKey(key) || "sub_tag".equals(key) || "panorama_type".equals(key)) { // "sub_tag"在mongo中但不在mysql field字段中，而panorama_type在mysql field字段但可能不在mongo中(前期未设计)
 					Map<String, String> fieldNames = getFieldNamesLst();
 					Map<Integer, String> poiTags = getPoiTagsLst();
 					Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
 					Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
-					Map<Integer, String> poiPanoramaTypes = getPoiPanoramaCtgrId2NmLst();
+					Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
 
 					if (fieldNames.containsKey(key) || "sub_tag".equals(key)) {
 						// 一级类别--tags
@@ -1234,6 +1269,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							result.put("address", data);
 							continue;
 						}
+						// 全景标识
 						if("panorama".equals(key)) {
 							String panorama_id = resJson.getString("panorama");
 							JSONObject data = result.getJSONObject("panorama");
@@ -1244,7 +1280,27 @@ public class PoiApiBLImpl implements PoiApiBL {
 							result.put("panorama", data);
 							continue;
 						}
-						// TODO 加入全景类别与名称
+						// 全景类型
+						if("panorama_type".equals(key)) {
+							// 获取类别id和类别名称
+							Integer panorama_type_id = resJson.getInteger("panorama_type");
+							if( panorama_type_id == null) { // 兼容之前没有全景类别的数据
+								panorama_type_id = 2;// 默认为2--专辑
+							}
+							String panorama_type_name = null;
+							if(poiPanoTypes.containsKey(panorama_type_id)){
+								panorama_type_name = poiPanoTypes.get(panorama_type_id);
+							}
+							// 聚合
+							JSONObject data = result.getJSONObject("panorama");
+							if(data == null){
+								data = new JSONObject();
+							}
+							data.put("panorama_type_id", panorama_type_id);
+							data.put("panorama_type_name", panorama_type_name);
+							result.put("panorama", data);
+							continue;
+						}
 						result.put(poiApiNameMap.getOuterVal(key), resJson.get(key));
 					}
 				}

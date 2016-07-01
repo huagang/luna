@@ -6,19 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
 import com.qcloud.vod.Module.ModifiedVod;
 import com.qcloud.vod.Utilities.SHA1;
 
 import ms.luna.biz.cons.VbConstant;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 视频点播

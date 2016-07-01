@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
@@ -37,8 +40,6 @@ import ms.luna.web.control.api.VodPlayCtrl;
 import ms.luna.web.control.api.VodPlayCtrl.REFRESHMODE;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 @Component("addPoiCtrl")
 @Controller
 @RequestMapping("/add_poi.do")
@@ -323,23 +324,26 @@ public class AddPoiCtrl extends BasicCtrl{
 				vodJson = FastJsonUtil.error("4", "文件传输失败");
 			}
 
+			String phone_url = "";
 			if ("0".equals(result.getString("code"))) {
 				JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
-				String phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
-				vodJson.put("original", file.getOriginalFilename());
-				vodJson.put("name", file.getOriginalFilename());
-				vodJson.put("url", phone_url);
-				vodJson.put("size", file.getSize());
+				
+				if("0".equals(result.getString("code"))){
+					phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
+				}
+			}
+			if(!"".equals(phone_url)) {
 				vodJson.put("type", VbUtility.getExtensionOfPicFileName(phone_url));
 				vodJson.put("state", "SUCCESS");
 			} else {
-				vodJson.put("original", file.getOriginalFilename());
-				vodJson.put("name", file.getOriginalFilename());
-				vodJson.put("url", "");
-				vodJson.put("size", file.getSize());
 				vodJson.put("type", "");
 				vodJson.put("state", "FAIL");
 			}
+			vodJson.put("url", phone_url);
+			vodJson.put("original", file.getOriginalFilename());
+			vodJson.put("name", file.getOriginalFilename());
+			vodJson.put("size", file.getSize());
+			
 			response.getWriter().print(vodJson.toJSONString());
 			response.setStatus(200);
 			return;
@@ -359,5 +363,16 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 			return;
 		}
+	}
+	
+	public static void main(String[] args) {
+//		JSONObject vodResult = FastJsonUtil.error("1", "转码未完成");
+		JSONObject data = new JSONObject();
+		JSONObject vodResult = FastJsonUtil.sucess("ok", data);
+		MsLogger.debug(vodResult.toJSONString());
+		JSONObject data2 = vodResult.getJSONObject("data");
+		String vod_original_file_url = data2.getString("vod_original_file_url");
+		System.out.println(vod_original_file_url);
+		
 	}
 }
