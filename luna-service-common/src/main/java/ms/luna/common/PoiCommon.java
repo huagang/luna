@@ -694,8 +694,13 @@ public class PoiCommon {
 		param.put("thumbnail_1_1", "");
 		param.put("thumbnail_16_9", "");
 
-		// 8、全景类型
-		param.put("panorama_type", paramMaps.get("panoramaType")[0]);
+		// 8、全景类型 
+		// radiobutton被禁用后无法向form表单传递参数。此处设置了一个临时存取区域
+		if(paramMaps.get("panoramaType") == null){
+			param.put("panorama_type", paramMaps.get("tempPanoType")[0]);
+		} else {
+			param.put("panorama_type", paramMaps.get("panoramaType")[0]);
+		}
 				
 		// 8.全景数据ID
 		values = paramMaps.get("panorama");
