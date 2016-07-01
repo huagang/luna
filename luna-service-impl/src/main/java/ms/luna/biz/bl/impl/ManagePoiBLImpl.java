@@ -35,6 +35,8 @@ import ms.luna.biz.dao.custom.MsPoiFieldDAO;
 import ms.luna.biz.dao.custom.MsPoiTagDAO;
 import ms.luna.biz.dao.custom.model.MsTagFieldParameter;
 import ms.luna.biz.dao.custom.model.MsTagFieldResult;
+import ms.luna.biz.dao.model.MsPoiField;
+import ms.luna.biz.dao.model.MsPoiFieldCriteria;
 import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
 import ms.luna.biz.model.MsUser;
@@ -159,6 +161,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
+			
+			// 8.全景类型
+			doc.put("panorama_type", Integer.parseInt(param.getString("panorama_type")));
+			
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 
@@ -255,6 +261,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
+			
+			// 8.全景类型
+			doc.put("panorama_type", Integer.parseInt(param.getString("panorama_type")));
+						
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 		}
@@ -630,6 +640,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("county_id", doc.get("county_id"));
 					// 英文合并名称
 					enDoc.put("merger_name", msZoneCacheBL.getMergerNameEn((String)doc.get("zone_id")));
+					// 全景类型
+					enDoc.put("panorama_type", doc.get("panorama_type"));
 					// 全景ID
 					enDoc.put("panorama", doc.get("panorama"));
 					// 更新时间
@@ -754,6 +766,27 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		JSONObject data = new JSONObject();
 		data.put("tags_def", tags);
+		
+		// 获得全景类别
+		JSONArray types = new JSONArray();
+		
+		MsPoiFieldCriteria msPoiFieldCriteria = new MsPoiFieldCriteria();
+		MsPoiFieldCriteria.Criteria criteria = msPoiFieldCriteria.createCriteria();
+		criteria.andFieldNameEqualTo("panorama_type");
+		List<MsPoiField> list = msPoiFieldDAO.selectByCriteria(msPoiFieldCriteria);
+		if(list == null) {
+			data.put("panorama_type", types);
+		} else{
+			String type = list.get(0).getExtensionAttrs();
+			JSONArray typeArray = JSONArray.parseArray(type != null? type:"[]");
+			for(int i = 0; i < typeArray.size(); i++){
+				JSONObject panoType = new JSONObject();
+				panoType.put("panorama_type_id", i + 1 + "");// 考虑到simpleModel的使用，将取出来的数据转化为string类型，存进去的时候变为Integer
+				panoType.put("panorama_type_name", typeArray.getJSONObject(i).get(i + 1 + ""));
+				types.add(panoType);
+			}
+			data.put("panorama_type", types);
+		}
 		return data;
 	}
 
@@ -851,7 +884,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			panorama = docPoi.getString("panorama");
 		}
 		commonFieldsVal.put("panorama", panorama);
-
+		
+		// 8.全景类型
+		if(docPoi.containsKey("panorama_type")) {
+			commonFieldsVal.put("panorama_type", docPoi.getInteger("panorama_type")+"");
+		} else {
+			commonFieldsVal.put("panorama_type", "2");
+		}
+		
 		// 9.联系电话
 		String contact_phone = "";
 		if (docPoi.containsKey("contact_phone")) {
@@ -1056,7 +1096,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				Document document = null;
 				// 保证插入数据，在判重策略下是唯一的
 				synchronized (MongoConnector.class) {
-					document = MongoUtility.findOnePoi(poi_collection, poiJson);
+					document = MongoUtility.findOnePoi(poi_collection, poiJson);// 返回相似POI
 					if (document == null) {
 						poi_collection.insertOne(doc);
 						inserted = true;
