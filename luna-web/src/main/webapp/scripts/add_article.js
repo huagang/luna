@@ -376,7 +376,8 @@ var initPage = function() {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
             FileUploader.uploadFile('video', event.target.files[0], function(data) {
-                document.querySelector('#video').value = articleStore.video = data.data.vod_file_id;
+                console.log(data);
+                document.querySelector('#video').value = articleStore.video = data.url;
                 clearWarn('#video_warn');
                 hideLoadingTip('.video_tip');
             }, function(data) {
