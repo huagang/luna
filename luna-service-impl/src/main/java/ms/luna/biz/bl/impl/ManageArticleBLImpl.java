@@ -186,6 +186,12 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
+            for(MsArticleResult msArticleResult : msArticleResults) {
+                if(msArticleResult.getStatus() == 1) {
+                    String url = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticleResult.getId();
+                    msArticleResult.setUrl(url);
+                }
+            }
             int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
             if(msArticleResults != null) {
                 data.put("rows", JSON.parse(JSON.toJSONString(msArticleResults, SerializerFeature.WriteDateUseDateFormat)));
@@ -250,7 +256,10 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         msArticle.setStatus(true);
         try {
             msArticleDAO.updateByPrimaryKeySelective(msArticle);
-            return FastJsonUtil.sucess("发布文章成功");
+            JSONObject jsonObject = new JSONObject();
+            String url = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + id;
+            jsonObject.put("url", url);
+            return FastJsonUtil.sucess("发布文章成功", jsonObject);
         } catch (Exception ex) {
             logger.error("Failed to publish article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");

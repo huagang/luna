@@ -25,10 +25,13 @@ public class MsArticleResult {
     private String columnName;
     @JSONField(name="business_name")
     private String businessName;
+    @JSONField(name="url")
+    private String url;
     @JSONField(name="regist_hhmmss", format="yyyy-MM-dd HH:mm:ss")
     private Date registhhmmss;
     @JSONField(name="up_hhmmss", format="yyyy-MM-dd HH:mm:ss")
     private Date uphhmmss;
+
 
     public int getId() {
         return id;
@@ -76,6 +79,14 @@ public class MsArticleResult {
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Date getRegisthhmmss() {
