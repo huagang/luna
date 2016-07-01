@@ -3,8 +3,18 @@
 author：franco
 time:20160504
 */
-$(document).ready(function() {
 
+var objdata = {
+    myPosition: {
+        "lat": "39.964758",
+        "lng": "116.355246",
+    },
+    destPosition:{
+
+    }
+}
+
+$(document).ready(function() {
 
     function init() {
         var w = $(".app-wrap");
@@ -24,17 +34,28 @@ $(document).ready(function() {
     $(".app-wrap").on("click", "[hrefurl]", function() {
         window.location.href = $(this).attr("hrefurl");
     });
-    $(".app-wrap").on("click", ".navimg", function() {
-        detailData = {
-            "navlat": $(this).attr("endPosition").split(",")[0],
-            "navlng": $(this).attr("endPosition").split(",")[1],
-            "title": $(this).attr("endName").split(",")[0]
+
+    //导航绑定点击事件
+    $(".app-wrap").on("click", ".navimg", function(e) {
+        //获取地理位置和导航等信息
+        // var myLongitude;
+        // var myLatitude;
+
+
+        var detailData = {
+            "navStartLat": $(this).attr("startPosition").split(",")[0],
+            "navStartLng": $(this).attr("startPosition").split(",")[1],
+            "navStartName": $(this).attr("startName").split(",")[0],
+            "navEndLat": $(this).attr("endPosition").split(",")[0],
+            "navEndLng": $(this).attr("endPosition").split(",")[1],
+            "navEndName": $(this).attr("endName").split(",")[0],
+            'navType': $(this).data('navtype')
         };
-        showNav();
+        console.log(detailData);
+        showNav(detailData);
     });
+
     /*TODO：增加动画页面 Start*/
-
-
     if (pageData.code != "0") {
         alert(pageData.msg);
         return;
@@ -43,23 +64,23 @@ $(document).ready(function() {
             curPageGroup = {};
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                $comGroup = $('<div class="component-group '+item.page_code+'"></div>');
+                $comGroup = $('<div class="component-group ' + item.page_code + '"></div>');
             if (document.querySelector('.component-group')) {
                 $comGroup.hide();
             }
             $(".app-wrap").append($comGroup);
+            console.log(item);
             if (item.page_code == "welcome") {
-                console.log(item);
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
                     var componentHtml = "";
                     if (n.startsWith("canvas")) {
                         var canvas = new Canvas(value);
                         componentHtml = canvas.build();
-                        if (value.bgimg) {
+                        if (value.bgimg) { //欢迎页面是否有背景图片
                             var welCanvas = new WelComeCanvas(value);
                             var newComponentHtml = welCanvas.build();
-                            $comGroup.append(newComponentHtml);                        	
+                            $comGroup.append(newComponentHtml);
                         }
                     } else if (n.startsWith("text")) {
                         var text = new Text(value);
@@ -76,12 +97,13 @@ $(document).ready(function() {
                     }
                     $comGroup.append(componentHtml);
                 });
-                setTimeout(function(){
-                    if($('.welcome').next('.component-group').children().length>0){
+                //设置首页滑动到第一页
+                setTimeout(function() {
+                    if ($('.welcome').next('.component-group').children().length > 0) {
                         $('.welcome').fadeOut(1000);
-                        $('.welcome').next('.component-group').show();
+                        $('.welcome').next('.component-group').show(1000);
                     }
-                },4000);
+                }, 4000);
             } else {
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
@@ -109,19 +131,14 @@ $(document).ready(function() {
     }
 
 
-    // var scene = $('.scene')[0];
+    //初始化 欢迎页的视差效果
     var scene = document.querySelector('.scene');
     var parallax = new Parallax(scene);
     $('.scene').find('.img-wraper').addClass('go-right');
 
     /*TODO：增加动画页面 End*/
 
-
-    // (function initWelcome() {
-    //     var scene = document.querySelector('.bg-canvas');
-    //     var parallax = new Parallax(scene);
-    // })();
-
+    /* 基础组件 */
     function BaseComponent() {
 
         this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
@@ -189,6 +206,7 @@ $(document).ready(function() {
         };
     }
 
+    /* 普通页面的画布 */
     function Canvas(data) {
 
         this.value = data;
@@ -217,7 +235,7 @@ $(document).ready(function() {
         };
     }
 
-
+    /* 文本组件 */
     function Text(data) {
 
         this.value = data;
@@ -237,7 +255,7 @@ $(document).ready(function() {
             return this.html;
         };
     }
-
+    /* 图片组件 */
     function Img(data) {
 
         this.value = data;
@@ -259,6 +277,7 @@ $(document).ready(function() {
         };
     }
 
+    /* 导航组件 */
     function Nav(data) {
         this.value = data;
         BaseComponent.call(this);
@@ -267,7 +286,7 @@ $(document).ready(function() {
             this.setPosition();
             // Img.prototype.setPosition.call();
 
-            this.html.children("div").append('<img class="navimg" src="' + this.value.content.icon + '" endName="' + this.value.content.endName + '" endPosition="' + this.value.content.endPosition + '" startName="' + this.value.content.startName + '" startPosition="' + this.value.content.startPosition + '" />');
+            this.html.children("div").append('<img class="navimg" src="' + this.value.content.icon + '" endName="' + this.value.content.endName + '" endPosition="' + this.value.content.endPosition + '" startName="' + this.value.content.startName + '" startPosition="' + this.value.content.startPosition + '" data-navtype="'+ this.value.navType +'" />');
 
             this.setMoreInfo();
 
@@ -277,6 +296,7 @@ $(document).ready(function() {
         }
     }
 
+    /* 全景组件 */
     function Pano(data) {
         this.value = data;
         BaseComponent.call(this);
@@ -297,30 +317,28 @@ $(document).ready(function() {
 });
 
 
-//获取地理位置和导航等信息
-var myLongitude;
-var myLatitude;
-var latlng = { "lng": "106.704800", "lat": "26.571970" };
-var detailData = {
-    "navlat": "",
-    "navlng": "",
-    "title": ""
-};
 
-function showNav() {
-    //if(!is_weixn()){
-    getMyLocation();
-    //}
-    // var url = "http://map.qq.com/nav/drive?start="+latlng.lng+"%2C"+latlng.lat+"&dest="+detailData["nav"]["lng"]+"%2C"+detailData["nav"]["lat"]+"&sword=我的位置&eword="+detailData["title"]+"&ref=mobilemap&referer=";
-    // window.location.href=url;
+
+function showNav(posiData) {
+    if (!is_weixn()) {
+        var url;
+        if (posiData.navType==0) { //+"&ref=mobilemap&referer=";
+            objdata.destPosition = posiData;
+            getMyLocation();
+        } else {
+            url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLat + "%2C" + posiData.navStartLng + "&dest=" + posiData.navEndLat + "%2C" + posiData.navEndLng + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+            window.location.href = url;
+        }
+    }
 }
-// HTML填充信息窗口内容
 
+// HTML填充信息窗口内容
 function getMyLocation() {
 
     var options = {
         enableHighAccuracy: true,
-        maximumAge: 1000
+        maximumAge: 1000,
+
     }
     if (navigator.geolocation) {
         //浏览器支持geolocation
@@ -333,7 +351,7 @@ function getMyLocation() {
     }
 }
 
-//成功?
+//获取坐标位置成功
 function getMyLocationOnSuccess(position) {
     //返回用户位置
     //经度
@@ -345,15 +363,15 @@ function getMyLocationOnSuccess(position) {
     qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
         //取出经纬度并且赋值
         latlng = res[0];
-        var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "%2C" + latlng.lat + "&dest=" + detailData["navlng"] + "%2C" + detailData["navlat"] + "&sword=我的位置&eword=" + detailData["title"] + "&ref=mobilemap&referer=";
-        // alert(url);
+        var url = "http://map.qq.com/nav/drive?start=" + latlng.lat + "%2C" + latlng.lng + "&dest=" + objdata.destPosition.navEndLat + "%2C" + objdata.destPosition.navEndLng + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
+            // alert(url);
         window.location.href = url;
     });
     // alert("经度"+myLongitude);
     // alert("纬度"+myLatitude);
 }
 
-//失败?
+//获取坐标位置失败
 function getMyLocationOnError(error) {
     switch (error.code) {
         case 1:

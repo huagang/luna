@@ -51,6 +51,9 @@ html,body{
     word-wrap: break-word;
     word-break:break-all;
 }
+.componentbox .scene{
+    overflow: hidden;
+}
 .componentbox .scene ,.componentbox .scene li {
     height: 100%;
     width: 100%;
@@ -68,4 +71,8 @@ html,body{
     width: 126%;
     margin-left: -10%;
     height: 100%;
+}
+
+.componentbox .navimg:hover{
+    cursor: pointer;
 }
