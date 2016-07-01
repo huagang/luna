@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,15 @@ public class ArticleController extends BaseController {
     private ManageArticleService manageArticleService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ModelAndView indexPage(@PathVariable int id, HttpServletRequest request) {
-        JSONObject jsonObject = manageArticleService.getOnlineArticleById(id);
+    public ModelAndView showArticle(@PathVariable int id,
+                                    @RequestParam(required = false, value = "preview") String preview) {
+
+        JSONObject jsonObject;
+        if(preview != null) {
+            jsonObject = manageArticleService.getArticleById(id);
+        } else {
+            jsonObject = manageArticleService.getOnlineArticleById(id);
+        }
         ModelAndView modelAndView = buildModelAndView("showArticle");
         if(jsonObject.getIntValue("code") == 0) {
             JSONObject data = jsonObject.getJSONObject("data");
@@ -41,5 +49,7 @@ public class ArticleController extends BaseController {
         modelAndView.addObject("articleJson", jsonObject);
         return modelAndView;
     }
+
+
 
 }
