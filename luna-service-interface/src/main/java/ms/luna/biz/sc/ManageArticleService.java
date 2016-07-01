@@ -19,5 +19,8 @@ public interface ManageArticleService {
     JSONObject publishArticle(int id);
     JSONObject getColumnById(int id);
     JSONObject getColumnByBusinessId(int businessId);
+    JSONObject getArticleByBusinessAndColumnName(String businessName, String columnNames);
+    JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds);
     JSONObject getOnlineArticleById(int id);
+    JSONObject getOnlineArticleByIdForApi(int id);
 }

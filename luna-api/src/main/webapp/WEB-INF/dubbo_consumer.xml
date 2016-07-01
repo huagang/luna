@@ -20,5 +20,6 @@
 
 	<dubbo:reference id="loginService" interface="ms.luna.biz.sc.LoginService" />
 	<dubbo:reference id="poiApiService" interface="ms.luna.biz.sc.PoiApiService" />
+	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService" />
 
 </beans>

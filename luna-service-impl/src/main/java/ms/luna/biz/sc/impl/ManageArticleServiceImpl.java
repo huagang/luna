@@ -117,9 +117,40 @@ public class ManageArticleServiceImpl implements ManageArticleService {
     }
 
     @Override
+    public JSONObject getArticleByBusinessAndColumnName(String businessName, String columnNames) {
+        try {
+            return manageArticleBL.getArticleByBusinessAndColumnName(businessName, columnNames);
+        } catch (Exception ex) {
+            logger.error("Failed to get article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds) {
+        try {
+            return manageArticleBL.getArticleByBusinessAndColumnId(businessId, columnIds);
+        } catch (Exception ex) {
+            logger.error("Failed to get article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    @Override
     public JSONObject getOnlineArticleById(int id) {
         try {
             return manageArticleBL.getOnlineArticleById(id);
+        } catch (Exception ex) {
+            logger.error("Failed to get online article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取在线文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getOnlineArticleByIdForApi(int id) {
+
+        try {
+            return manageArticleBL.getOnlineArticleByIdForApi(id);
         } catch (Exception ex) {
             logger.error("Failed to get online article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取在线文章失败");

@@ -20,4 +20,7 @@ public interface ManageArticleBL {
     JSONObject getColumnById(int id);
     JSONObject getColumnByBusinessId(int businessId);
     JSONObject getOnlineArticleById(int id);
+    JSONObject getArticleByBusinessAndColumnName(String businessName, String columnName);
+    JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds);
+    JSONObject getOnlineArticleByIdForApi(int id);
 }
