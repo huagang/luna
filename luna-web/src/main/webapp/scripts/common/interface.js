@@ -19,6 +19,7 @@ var Inter = function() {
                 readArticle: context + "/manage/article.do?method=read_article", //读取文章数据
                 deleteArticle: context + "/manage/article.do?method=delete_article",//删除文章
                 readPoi: context + '', //TODO 读取poi数据信息
+                
                 //编辑器上传图片
                 uploadImageInArtcle: context + "/add_poi.do?method=upload_thumbnail",//上传图片
                 uploadVideoInArtcle: context + "/add_poi.do?method=upload_video",//上传视频

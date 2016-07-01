@@ -40,6 +40,11 @@ var APP_STATUS = {
     "1": "已发布"
 };
 
+//名称列的处理
+function titleFormatter (value,row,index){
+    return row.status==1?'<a href="'+row.url+'" target="_blank" >'+value+'</a>':value;
+}
+
 function statusFormatter(value, row, index) {
     if(row.status === 1){
         return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.status] + "'/>";

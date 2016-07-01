@@ -329,6 +329,8 @@ function showNav(posiData) {
             url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLat + "%2C" + posiData.navStartLng + "&dest=" + posiData.navEndLat + "%2C" + posiData.navEndLng + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
             window.location.href = url;
         }
+    }else{
+        // alert("我是微信");
     }
 }
 

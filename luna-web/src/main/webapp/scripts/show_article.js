@@ -31,7 +31,6 @@ window.onload = function() {
             dataType: 'json',
             success: function(data) {
                 if (data.code === "0") {
-                    data.data.content= '<p><img src="http://view.luna.visualbusiness.cn/dev/poi/pic/20160629/3J0a1w1E0b1i1G3r2P2V3i2A0L3-070n.jpg" title="" alt="ab206b338744ebf8e99963d0d9f9d72a6159a732.jpg"/><img src="http://view.luna.visualbusiness.cn/dev/poi/pic/20160629/1-2e3e3h213z0I072P1M1Z3T0N0S2d1s.png" title="" alt="白沟站.png"/></p><p><img src="http://view.luna.visualbusiness.cn/dev/poi/pic/20160629/1b250C0v0A1E3d0J3S1_0J3m1y1J3C3M.png" title="" alt="白沟站.png"/></p><p>啊上大法师地方啊速读法开始丁锦飞；了卡圣诞节；联发科 &nbsp;</p><p><video class="edui-upload-video  vjs-default-skin video-js" controls="" preload="none" width="420" height="280" src="http://200011112.vod.myqcloud.com/200011112_5ad05e683dc511e68bb3057362a003af.f0.mp4" data-setup="{}"></video></p><p><video class="edui-upload-video  vjs-default-skin video-js" controls="" preload="none" width="420" height="280" src="http://200011112.vod.myqcloud.com/200011112_5ad05e683dc511e68bb3057362a003af.f0.mp4" data-setup="{}"></video></p>';
                 	var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g,function(word){
                         return word.replace(/height="[0-9]*"/,"");
                 	});

@@ -18,24 +18,23 @@
     <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
     <title>${title}</title>
 
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/show_article.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/show_poi.css">
+    <link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showArticle.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showPoi.css">
 </head>
 <body>
 <div class='wrapper'>
     <div class='banner'>
         <img src=''/>
         <div class='btn-container'>
-            <div class='panorama'>
+    <!--         <div class='panorama'>
                 <a href="javascript:void(0)">
                     <div class='icon icon-panorama'></div>
                     <p>进入全景</p>
                 </a>
-            </div>
+            </div> -->
             <div class='navigation'>
                 <div class='icon icon-navigation'></div>
                 <p>导航</p>
@@ -71,19 +70,21 @@
 </div>
 
 <audio class='audio' src volume='1.0'></audio>
-<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+
+<script src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
 <script type="text/javascript">
     var poiData = ${poiJson};
-    console.log(poiData);
+     console.log(poiData);
 </script>
-<script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <!--  注意，下面引用文件的地址ak项表示密钥，由于暂时公司没有密钥，所以暂时使用个人密钥
       TODO 以公司的百度开发者密钥来替换下面的ak密钥-->
-<script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
-<script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script>
-<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
-<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/weixin_config.js'></script>
+<!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
+<script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script> -->
+<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
+<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/weixin_config.js'></script>
 
-<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_poi.js'></script>
+<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showPoi.js'></script>
 </body>
 </html>
