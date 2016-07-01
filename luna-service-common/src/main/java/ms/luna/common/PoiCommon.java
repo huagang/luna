@@ -60,7 +60,7 @@ public class PoiCommon {
 		/**
 		 * FIXME:(1/3)创建新的共有字段时--->>>需要修改
 		 */
-		public static final Integer 公有字段个数 = 11;
+		public static final Integer 公有字段个数 = 12;
 
 		/**
 		 * FIXME:(2/3)创建新的共有字段时--->>>需要修改<p>
@@ -70,7 +70,8 @@ public class PoiCommon {
 				"二级分类",
 				"详细介绍",
 				"缩略图",
-				"全景数据ID",
+				"全景类型",
+				"全景标识",
 				"联系电话"
 		};
 		/**
@@ -81,6 +82,7 @@ public class PoiCommon {
 				"二级分类名称",
 				"POI点的详细介绍",
 				"输入缩略图名称，不能包含中文",
+				"全景类别名称，可为空，默认值为专辑",
 				"panoID或者页卡集标识",
 				"可为空\r\n：格式：(国家区号)-省市区号-具体号码"
 		};
@@ -429,6 +431,27 @@ public class PoiCommon {
 		return checkContactPhone(param == null || param.length == 0 ? null : param[0]);
 	}
 
+	
+	/**
+	 * 检查全景类别是否合法
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public String checkPanoRamaType(String param){
+		return null;
+	}
+	
+	/**
+	 * 检查全景类别是否合法
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public String checkPanoRamaType(String[] param){
+		return checkContactPhone(param == null || param.length == 0 ? null : param[0]);
+	}
+	
 	/**
 	 * 获取value值
 	 * @param paramMaps
@@ -581,7 +604,8 @@ public class PoiCommon {
 			MsLogger.debug(msg);
 			throw new IllegalArgumentException(msg);
 		}
-
+		// 8.全景类别：未查
+		
 		// 8.全景数据ID
 		msg = checkPanoRama(paramMaps.get("panorama"));
 		if (msg != null) {
@@ -670,6 +694,9 @@ public class PoiCommon {
 		param.put("thumbnail_1_1", "");
 		param.put("thumbnail_16_9", "");
 
+		// 8、全景类型
+		param.put("panorama_type", paramMaps.get("panoramaType")[0]);
+				
 		// 8.全景数据ID
 		values = paramMaps.get("panorama");
 		if (values == null || values.length == 0) {

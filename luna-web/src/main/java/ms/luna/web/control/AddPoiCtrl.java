@@ -141,6 +141,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		lstCountys.add(simpleModel);
 		session.setAttribute("countys", lstCountys);
 
+		// 设置默认全景类型
+		poiModel.setPanoramaType("2");
 		mav.addObject("poiModel", poiModel);
 		mav.setViewName("/add_poi.jsp");
 		return mav;

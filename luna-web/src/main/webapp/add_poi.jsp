@@ -168,6 +168,7 @@
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi">
+				            <form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
                             <form:input id="panorama" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
                         </div>
                     </div>

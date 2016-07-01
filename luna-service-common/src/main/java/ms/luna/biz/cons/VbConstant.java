@@ -107,6 +107,7 @@ public final class VbConstant {
 		public static final int 音频 = 6;
 		public static final int 视频 = 7;
 		public static final int 下拉列表 = 8;
+		public static final int 单选框列表=9;
 	}
 	public static final class USER_STATUS {
 		public static final String 正常 = "0";

@@ -278,6 +278,8 @@ public class EditPoiCtrl extends BasicCtrl{
 				poiModel.setBriefIntroduction(common_fields_val.getString("brief_introduction"));
 				poiModel.setThumbnail(common_fields_val.getString("thumbnail"));
 
+				// 8.全景类型
+				poiModel.setPanoramaType(common_fields_val.getString("panorama_type"));
 				// 8.全景数据ID
 				poiModel.setPanorama(common_fields_val.getString("panorama"));
 				// 9.联系电话

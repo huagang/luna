@@ -41,6 +41,11 @@ public class PoiModel implements Serializable {
 	private String panorama = null;
 
 	/**
+	 * 全景类型
+	 */
+	private String panoramaType = null;
+	
+	/**
 	 * 联系电话
 	 */
 	private String contact_phone = null;
@@ -276,6 +281,14 @@ public class PoiModel implements Serializable {
 	 */
 	public void setSpecifications1(Boolean specifications1) {
 		this.specifications1 = specifications1;
+	}
+
+	public String getPanoramaType() {
+		return panoramaType;
+	}
+
+	public void setPanoramaType(String panoramaType) {
+		this.panoramaType = panoramaType;
 	}
 
 	/**

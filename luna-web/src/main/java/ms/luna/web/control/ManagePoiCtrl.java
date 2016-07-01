@@ -142,12 +142,14 @@ public class ManagePoiCtrl extends BasicCtrl{
 	}
 
 	/**
-	 * 初始化一级和二级分类列表
+	 * 初始化一级、二级分类列表和全景类型
 	 * @param request
 	 */
 	public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
 		List<SimpleModel> topTags = new ArrayList<SimpleModel>();
 		JSONArray tags = common_fields_def.getJSONArray("tags_def");
+		List<SimpleModel> panoramaTypes = new ArrayList<SimpleModel>();
+		JSONArray types = common_fields_def.getJSONArray("panorama_type");
 
 		List<SimpleModel> lstSubTag = new ArrayList<SimpleModel>();
 		for (int i = 0; i < tags.size(); i++) {
@@ -170,13 +172,23 @@ public class ManagePoiCtrl extends BasicCtrl{
 				}
 			}
 		}
+		
+		for (int i = 0; i < types.size(); i++) {
+			JSONObject tag = types.getJSONObject(i);
+			SimpleModel simpleModel = new SimpleModel();
+			simpleModel.setValue(tag.getString("panorama_type_id"));
+			simpleModel.setLabel(tag.getString("panorama_type_name"));
+			panoramaTypes.add(simpleModel);
+		}
 
 		// 一级下拉列表
 		session.setAttribute("topTags", topTags);
 		// 二级下拉列表
 		session.setAttribute("subTags", lstSubTag);
+		// 全景类型列表
+		session.setAttribute("panoramaTypes", panoramaTypes);
 	}
-
+	
 	/**
 	 * 页面初始化
 	 * @param request
@@ -365,8 +377,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		String date = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 
-		String pathOfDate = uploadedFilePath + date + "/";
-		String savedExcel = VbUtility.saveFile(pathOfDate, excel_fileup, ".xlsx", "poi_excel.xlsx");
+		String pathOfDate = uploadedFilePath + date + "/";// eg: /data1/luna/uploadedFile/20160630205121714/
+		String savedExcel = VbUtility.saveFile(pathOfDate, excel_fileup, ".xlsx", "poi_excel.xlsx");// eg: /data1/luna/uploadedFile/20160630205121714/poi_excel.xlsx
 
 		String savedZip = null;
 		String unZipped = null;
@@ -460,14 +472,22 @@ public class ManagePoiCtrl extends BasicCtrl{
 	private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
 			throws EncryptedDocumentException, InvalidFormatException, IOException {
 
-		JSONObject tagsDef = managePoiService.getInitInfo("{}");
+		JSONObject tagsDef = managePoiService.getInitInfo("{}"); // 获取公共属性定义(tags定义)
 		if (!"0".equals(tagsDef.getString("code"))) {
 			return FastJsonUtil.error("-1", "没能正确获得分类定义信息");
 		}
 		tagsDef = tagsDef.getJSONObject("data");
 
 		JSONArray array = tagsDef.getJSONArray("tags_def");
-
+		
+		Map<String, String> panaramaTypeName2Id = new LinkedHashMap<>();
+		JSONArray panaramaTypes = tagsDef.getJSONArray("panorama_type");
+		for(int i = 0;i < panaramaTypes.size(); i++) {
+			String panorama_type_id = panaramaTypes.getJSONObject(i).getString("panorama_type_id");
+			String panorama_type_name = panaramaTypes.getJSONObject(i).getString("panorama_type_name");
+			panaramaTypeName2Id.put(panorama_type_name, panorama_type_id);
+		}
+		
 		// 子分类名称到ID的转换Map
 		Map<String, Integer> 分类名称加子分类名称To子分类编号Map = new LinkedHashMap<String, Integer>();
 		for (int i = 0; i < array.size(); i++) {
@@ -488,9 +508,9 @@ public class ManagePoiCtrl extends BasicCtrl{
 		JSONObject data = result.getJSONObject("data");
 		JSONArray privateFieldsDef = data.getJSONArray("privateFieldsDef");
 
-		Map<String, Map<String, JSONObject>> fieldsGroupByTagName = new LinkedHashMap<String, Map<String, JSONObject>>();
+		Map<String, Map<String, JSONObject>> fieldsGroupByTagName = new LinkedHashMap<String, Map<String, JSONObject>>();// 根据一级类别将不同的私有字段划分到对应类别下
 
-		Map<String, String> tagname_2_tags = new HashMap<String, String>();
+		Map<String, String> tagname_2_tags = new HashMap<String, String>();// 一级类别名称与id的映射
 		for (int i = 0; i < privateFieldsDef.size(); i++) {
 			JSONObject field = privateFieldsDef.getJSONObject(i);
 			JSONObject field_def = null;
@@ -524,16 +544,16 @@ public class ManagePoiCtrl extends BasicCtrl{
 			}
 		}
 
-		JSONArray checkErrors = new JSONArray();
-		JSONArray saveErrors = new JSONArray();
+		JSONArray checkErrors = new JSONArray();// 初步检查时的错误POIs
+		JSONArray saveErrors = new JSONArray(); // 保存时出错的POIs
 		JSONArray noCheckErrorPois = new JSONArray();
 
 		InputStream inp = new FileInputStream(savedExcel);
 		Workbook wb = WorkbookFactory.create(inp);
-		int sheetNum = wb.getNumberOfSheets();
+		int sheetNum = wb.getNumberOfSheets();// sheet: excel的sheet页
 		for (int i = 0; i < sheetNum; i++) {
 			Sheet sheet = wb.getSheetAt(i);
-			if ("Templete_(备注)".equals(sheet.getSheetName())) {
+			if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
 				continue;
 			}
 			String tag_name = sheet.getSheetName();
@@ -545,15 +565,15 @@ public class ManagePoiCtrl extends BasicCtrl{
 				continue;
 			}
 
-			int rowStart = Math.max(3, sheet.getFirstRowNum());
-			int rowEnd = Math.max(2, sheet.getLastRowNum());
+			int rowStart = Math.max(3, sheet.getFirstRowNum());	// poi数据excle中开始行
+			int rowEnd = Math.max(2, sheet.getLastRowNum());	// poi数据excle中结束行
 			Row row0 = sheet.getRow(0);
 			for (int j = rowStart; j <= rowEnd; j++) {
 				Row row = sheet.getRow(j);
 				Boolean allBlank = true;
-				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {
-					if (!CharactorUtil.isEmpyty(getCellValueAsString(row.getCell(0)).trim())) {
-						allBlank = false;
+				for (int z = 0; allBlank && z < fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数; z++) {// fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数： 私有字段格式+公有字段个数
+					if (!CharactorUtil.isEmpyty(getCellValueAsString(row.getCell(0)).trim())) { // 检测该行从1-fieldsJsonByTag.size() + PoiCommon.Excel.公有字段个数 列是否都是空
+						allBlank = false;														// excel中可能存在超出输入范围的数据
 					}
 				}
 				if (allBlank) {
@@ -584,10 +604,13 @@ public class ManagePoiCtrl extends BasicCtrl{
 				String brief_introduction = getCellValueAsString(row.getCell(7)).trim();
 				// 缩略图
 				String thumbnail = getCellValueAsString(row.getCell(8)).trim();
+				// 8.全景类别.panorama_type默认为"专辑"
+				String panorama_type = "2";
+				String panorama_type_name = getCellValueAsString(row.getCell(9)).trim();
 				// 8.全景数据ID
-				String panorama = getCellValueAsString(row.getCell(9)).trim();
+				String panorama = getCellValueAsString(row.getCell(10)).trim();
 				// 9.联系电话
-				String contact_phone = getCellValueAsString(row.getCell(10)).trim();
+				String contact_phone = getCellValueAsString(row.getCell(11)).trim();
 
 				Boolean isError = (zone_id == null ? Boolean.TRUE : Boolean.FALSE);
 
@@ -598,6 +621,15 @@ public class ManagePoiCtrl extends BasicCtrl{
 				if (subTag == null) {
 					isError = true;
 				}
+				
+				// 检查全景类型是否合法
+				if(!CharactorUtil.isEmpyty(panorama_type_name)){
+					panorama_type = panaramaTypeName2Id.get(panorama_type_name);
+				}
+				if(panorama_type == null){
+					isError = true;
+				}
+				
 				// 检查共有字段是否合法
 				isError = isError || null != PoiCommon.getInstance().checkPoiName(long_title);
 				isError = isError || null != PoiCommon.getInstance().checkPoiOtherName(short_title);
@@ -633,6 +665,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("brief_introduction", brief_introduction);
 					checkErrorPoi.put("thumbnail", thumbnail);
 
+					// 8.全景标识
+					checkErrorPoi.put("panorama_type", panorama_type);
 					// 8.全景数据ID 
 					checkErrorPoi.put("panorama", panorama);
 					// 9.联系电话
@@ -692,6 +726,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("brief_introduction", brief_introduction);
 							checkErrorPoi.put("thumbnail", thumbnail);
 
+							// 8.全景类型
+							checkErrorPoi.put("panorama_type", panorama_type);
 							// 8.全景数据ID
 							checkErrorPoi.put("panorama", panorama);
 							// 9.联系电话
@@ -734,6 +770,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 					noCheckErrorPoi.put("tags", tagname_2_tags.get(tag_name));
 					noCheckErrorPoi.put("subTag", subTag);
 
+					// 8.全景类型
+					noCheckErrorPoi.put("panorama_type", panorama_type);
 					// 8.全景数据ID
 					noCheckErrorPoi.put("panorama", panorama);
 					noCheckErrorPoi.put("contact_phone", contact_phone);
@@ -768,6 +806,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 						checkErrorPoi.put("brief_introduction", brief_introduction);
 						checkErrorPoi.put("thumbnail", thumbnail);
 
+						// 8.全景类型
+						checkErrorPoi.put("panorama_type",panorama_type);
 						// 8.全景数据ID
 						checkErrorPoi.put("panorama", panorama);
 						// 9.联系电话
@@ -1038,7 +1078,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 				result =big.setScale(6, BigDecimal.ROUND_HALF_UP).toPlainString();
 			}
 			break;
-		case HSSFCell.CELL_TYPE_STRING:
+		case HSSFCell.CELL_TYPE_STRING:// 输入值为string类型
 			result = cell.getStringCellValue();
 			break;
 		case HSSFCell.CELL_TYPE_BOOLEAN:
@@ -1176,7 +1216,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 								unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
 						if ("0".equals(uploadResult.getString("code"))) {
 							JSONObject uploadedData = uploadResult.getJSONObject("data");
-							value = uploadedData.getString("fileId");
+							value = uploadedData.getString("vod_file_id");
 						} else {
 							uploadError = true;
 						}
