@@ -364,6 +364,7 @@ public class EditPoiCtrl extends BasicCtrl{
 		mav.setViewName("/edit_poi.jsp");
 		mav.addObject("poiReadOnly", Boolean.FALSE);
 		mav.addObject("poiModel", poiModel);
+		mav.addObject("tempPanoType", poiModel.getPanoramaType());//radiobutton被禁用后无法向form表单传递参数。此处设置了一个临时存取区域
 		return mav;
 	}
 }
