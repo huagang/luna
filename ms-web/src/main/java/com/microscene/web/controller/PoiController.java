@@ -33,7 +33,6 @@ public class PoiController extends BaseController {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ModelAndView poiDetail(@PathVariable String id, @RequestParam(required = false, value = "lang") String lang,
                                   HttpServletRequest request) {
-        logger.info("get poi info: " + id);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("_id", id);
         if(lang == null) {
@@ -42,7 +41,7 @@ public class PoiController extends BaseController {
         jsonObject.put("lang", lang);
         JSONObject ret = managePoiService.initEditPoi(jsonObject.toJSONString());
         ModelAndView modelAndView = buildModelAndView("showPoi");
-        if(ret.getIntValue("code") == 0) {
+        if(ret.getString("code").equals("0")) {
             JSONObject data = ret.getJSONObject("data");
             modelAndView.addObject("title", data.getJSONObject("common_fields_val").getString("short_title"));
             modelAndView.addObject("description", data.getJSONObject("common_fields_val").getString("long_title"));
