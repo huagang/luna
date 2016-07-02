@@ -274,7 +274,8 @@
                 <div class='publish-option'>
                 	<input type='checkbox'  id='publish'/>
                 	<label for='publish'>同步生成poi详情页</label>
-                	<a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>              	
+                	<%-- <a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>  --%>       
+                 	<a target='_blank' href="${preview_url}">预览</a>      	
                 </div>
                 <c:if test="${!poiReadOnly}">
 		        	<button type="button" class="save" id="btn-POI-save">保存</button>

@@ -285,6 +285,10 @@ public class EditPoiCtrl extends BasicCtrl{
 				// 9.联系电话
 				poiModel.setContact_phone(common_fields_val.getString("contact_phone"));
 
+				// 预览地址
+				String preview_url = common_fields_val.getString("preview_url");
+				mav.addObject("preview_url", preview_url);
+				
 				JSONArray privateFields = data.getJSONArray("private_fields");
 				session.setAttribute("private_fields", privateFields);
 			} else {

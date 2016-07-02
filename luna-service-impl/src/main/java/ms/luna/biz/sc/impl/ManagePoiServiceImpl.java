@@ -135,5 +135,15 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		}
 		return result;
 	}
+	@Override
+	public JSONObject initPoiPreview(String json) {
+		JSONObject result = null;
+		try {
+			result = managePoiBL.initPoiPreview(json);
+		} catch (RuntimeException e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
 
 }

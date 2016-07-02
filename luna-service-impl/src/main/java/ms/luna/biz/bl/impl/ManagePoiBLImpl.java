@@ -28,6 +28,7 @@ import com.mongodb.client.result.UpdateResult;
 import ms.biz.common.AuthenticatedUserHolder;
 import ms.biz.common.MongoConnector;
 import ms.biz.common.MongoUtility;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManagePoiBL;
 import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.cons.VbConstant;
@@ -814,7 +815,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		commonFieldsVal.put("_id", docPoi.getObjectId("_id".toString()));
+		String _id = docPoi.getObjectId("_id").toString();
+		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id".toString()));
+		commonFieldsVal.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		/*
 		 * 公共字段值
 		 */
@@ -1195,5 +1198,50 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			return FastJsonUtil.errorWithMsg("LUNA.E0006");
 		}
 		return FastJsonUtil.sucess(MsLunaMessage.getInstance().getMessage("LUNA.I0001"));
+	}
+
+	@Override
+	public JSONObject initPoiPreview(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+
+		String _id = param.getString("_id");
+		String lang = param.getString("lang");
+		Document docPoi = this.getPoiById(_id, lang, Boolean.TRUE);
+		if (docPoi == null) {
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "POI["+_id+"]");
+		}
+
+		JSONObject data = new JSONObject();
+		String long_title = docPoi.getString("long_title");// poi 名称
+		
+		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
+		JSONArray coordinates = lnglat.getJSONArray("coordinates");
+		Double lng = coordinates.getDouble(0);// 经度
+		Double lat = coordinates.getDouble(1);// 纬度
+		
+		String brief_introduction = docPoi.getString("brief_introduction");
+		String thumbnail = docPoi.getString("thumbnail");
+		String audio = docPoi.getString("audio");
+		String video = docPoi.getString("video");
+		String panorama = docPoi.getString("panorama");
+		Integer panorama_type;
+		if(docPoi.containsKey("panorama_type")){
+			panorama_type = docPoi.getInteger("panorama_type");
+		} else {
+			// TODO 默认数值在common中定义
+			panorama_type = 2; // 默认为专辑 
+		}
+		
+		data.put("long_title", long_title);
+		data.put("lng", lng);
+		data.put("lat", lat);
+		data.put("brief_introduction", brief_introduction);
+		data.put("thumbnail", thumbnail);
+		data.put("video", video);
+		data.put("audio", audio);
+		data.put("panorama", panorama);
+		data.put("panorama_type", panorama_type);
+		
+		return FastJsonUtil.sucess("success", data);
 	}
 }

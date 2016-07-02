@@ -34,5 +34,6 @@ public interface ManagePoiService {
 
 	JSONObject checkPoiCanBeDeleteOrNot(String json);
 	
+	JSONObject initPoiPreview(String json);
 
 }
