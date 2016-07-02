@@ -17,6 +17,8 @@ window.onload = function() {
     function initData() {
         console.log(pageData.data);
         updateData(pageData.data);
+        //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup','{}');
+
         //var articleId = null;
         //try {
         //    articleId = parseInt(location.href.match(/article_id=(\d+)/)[1]);

@@ -20,6 +20,9 @@
 		<link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    	<!-- 引入video的css -->
+		<link href="<%=request.getContextPath() %>/resources/styles/videoJs.css" rel="stylesheet">
+    	<!-- 引入video的css End-->
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showArticle.css">
 	</head>
 	<body>
@@ -52,12 +55,20 @@
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
+	    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    	<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin_js.js"></script>
 		<script type="text/javascript">
+	        // var shareInfo={"title":"${title}","desc":"${description}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
+	        var shareInfo={"title":"${title}","desc":"${description}"};
+    		getShareInfo(window.document.location.href,shareInfo);
 			var pageData = ${articleJson};
-			console.log(pageData);
+			// console.log(pageData);
 		</script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
+		<!-- 引入video的 js -->
+		<script src='<%=request.getContextPath()%>/resources/scripts/videoJs.js'></script>
+	  	<!-- 引入video的 js End -->
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showArticle.js'></script>
 	</body>
 </html>
