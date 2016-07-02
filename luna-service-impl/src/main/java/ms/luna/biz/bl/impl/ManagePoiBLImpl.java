@@ -1219,6 +1219,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Double lng = coordinates.getDouble(0);// 经度
 		Double lat = coordinates.getDouble(1);// 纬度
 		
+		String short_title = docPoi.getString("short_title");
 		String brief_introduction = docPoi.getString("brief_introduction");
 		String thumbnail = docPoi.getString("thumbnail");
 		String audio = docPoi.getString("audio");
@@ -1232,6 +1233,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			panorama_type = 2; // 默认为专辑 
 		}
 		
+		data.put("short_title", short_title);
 		data.put("long_title", long_title);
 		data.put("lng", lng);
 		data.put("lat", lat);
