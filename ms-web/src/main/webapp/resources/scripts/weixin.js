@@ -58,7 +58,7 @@
     //初始化微信的引用
     wechat.prototype.initConfig = function() {
         var self = this;
-        alert(JSON.stringify(this.options));
+        //alert(JSON.stringify(this.options));
         console.log(this.options);
         this.wx.config({
             debug: true,
