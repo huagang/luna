@@ -1236,7 +1236,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		MsVideoUploadCriteria msVideoUploadCriteria = new MsVideoUploadCriteria();
 		MsVideoUploadCriteria.Criteria criteria = msVideoUploadCriteria.createCriteria();
-		criteria.andVodFileIdEqualTo(video).andStatusEqualTo("1");
+		criteria.andVodFileIdEqualTo(video);
 		List<MsVideoUpload> records = msVideoUploadDAO.selectByCriteria(msVideoUploadCriteria);
 
 		if(!records.isEmpty()){
