@@ -11,23 +11,22 @@
 
     var wechat = function(wx, options) {
         var self = this,
-            curDate = new Date();
-        var defaults = {
-            title: '皓月平台',
-            desc: '皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。',
-            link: 'http://luna.visualbusiness.cn/', //正式
-            imgUrl: 'http://luna.visualbusiness.cn/images/share.png', //正式
-            signatureUrl: '', //生成签名的url 
-            appId: 'wxa0c7da25637df906',
-            nonceStr: '',
-            timestamp: curDate.getTime(),
-            signature: '',
-            openWeiXinlatitude: 22.52131,
-            openWeiXinlongitude: 113.8961,
-            openWeiXinMapName: "",
-            openWeiXinMapAddress: "",
-            readyCallback: function() {}, //完成之后的回调函数
-        };
+            defaults = {
+                title: '皓月平台',
+                desc: '皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。',
+                link: 'http://luna.visualbusiness.cn/', //正式
+                imgUrl: 'http://luna.visualbusiness.cn/images/share.png', //正式
+                signatureUrl: '', //生成签名的url 
+                appId: 'wxa0c7da25637df906',
+                nonceStr: '',
+                timestamp: '',
+                signature: '',
+                openWeiXinlatitude: 22.52131,
+                openWeiXinlongitude: 113.8961,
+                openWeiXinMapName: "",
+                openWeiXinMapAddress: "",
+                readyCallback: function() {}, //完成之后的回调函数
+            };
 
         //合并参数
         this.options = $.extend({}, defaults, options);
@@ -58,9 +57,8 @@
     //初始化微信的引用
     wechat.prototype.initConfig = function() {
         var self = this;
-        alert(JSON.stringify(this.options));
         console.log(this.options);
-        this.wx.config({
+        var ops = {
             debug: true,
             appId: this.options.appId,
             timestamp: this.options.timestamp,
@@ -81,7 +79,10 @@
                 'openLocation',
                 'getLocation'
             ]
-        });
+        }
+        alert(JSON.stringify(ops));
+
+        this.wx.config(ops);
 
         this.wx.ready(function() {
 
