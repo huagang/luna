@@ -20,7 +20,7 @@
             signatureUrl: '', //生成签名的url 
             appId: 'wxa0c7da25637df906',
             nonceStr: '',
-            timeStamp: curDate.getTime(),
+            timestamp: curDate.getTime(),
             signature: '',
             openWeiXinlatitude: 22.52131,
             openWeiXinlongitude: 113.8961,
@@ -47,7 +47,7 @@
             if (response) {
                 var dataJson = JSON.parse(response);
                 self.options.nonceStr = dataJson.noncestr;
-                self.options.timeStamp = dataJson.timestamp;
+                self.options.timestamp = dataJson.timestamp;
                 self.options.signature = dataJson.signature;
                 self.initConfig();
             }
@@ -58,12 +58,12 @@
     //初始化微信的引用
     wechat.prototype.initConfig = function() {
         var self = this;
-        //alert(JSON.stringify(this.options));
+        alert(JSON.stringify(this.options));
         console.log(this.options);
         this.wx.config({
             debug: true,
             appId: this.options.appId,
-            timestamp: this.options.timeStamp,
+            timestamp: this.options.timestamp,
             nonceStr: this.options.nonceStr,
             signature: this.options.signature,
             jsApiList: [
