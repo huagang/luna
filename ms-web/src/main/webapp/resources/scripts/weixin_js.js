@@ -43,6 +43,7 @@ function initConfig() {
         ]
     });
     wx.ready(function() {
+        // alert(shareData);
         wx.onMenuShareAppMessage(shareData);
         wx.onMenuShareTimeline(shareData);
         wx.checkJsApi({
@@ -88,6 +89,12 @@ function initConfig() {
 
 }
 
+/**
+ * 设置微信分享的信息
+ * @param  {[type]} url       [description]
+ * @param  {[type]} shareInfo [description]
+ * @return {[type]}           [description]
+ */
 function getShareInfo(url, shareInfo) {
     var newUrl = url.replace(new RegExp("&", "g"), "%26");
     // alert(shareData.link);

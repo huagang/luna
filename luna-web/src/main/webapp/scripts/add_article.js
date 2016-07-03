@@ -221,14 +221,15 @@ var initPage = function() {
         };
         /*获取编辑器实例*/
         ue = UE.getEditor('editor', {
+            initialFrameHeight: 600,
+            autoHeightEnabled: false,
             allowDivTransToP: false,
             elementPathEnabled: false,
             toolbars: [
                 ['fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                    'justifyleft',
-                    'justifyright', 'justifycenter', 'justifyjustify', '|',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'simpleupload',
                     // 'insertmusic',
@@ -246,7 +247,7 @@ var initPage = function() {
     var initEvent = function() {
         // 事件绑定  保存按钮点击事件
         document.querySelector('.save').addEventListener('click', function(e) {
-            // articleStore.content = content
+            articleStore.content = ue.getContent();
             var error = articleStore.checkEmpty().error;
             if (error) {
                 alert(error);
@@ -264,6 +265,7 @@ var initPage = function() {
                 video: articleStore.video,
                 column_id: articleStore.category
             };
+            console.log(data);
             $.ajax({
                 url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
                 type: 'POST',
@@ -446,13 +448,13 @@ var initPage = function() {
                 var checkList = [
                     { id: 'title', name: '标题' },
                     { id: 'content', name: '正文' },
-                    { id: 'thumbnail', name: '首图' },
-                    { id: 'summary', name: '摘要' },
-                    { id: 'category', name: '栏目' }
+                    // { id: 'thumbnail', name: '首图' },
+                    // { id: 'summary', name: '摘要' },
+                    // { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function(item) {
                     if (!this[item.id]) {
-                        error += item.name + '项为空\n   ';
+                        error += '\n ' + item.name + '项不能为空  ';
                     }
                 }.bind(this));
                 return { error: error || null };

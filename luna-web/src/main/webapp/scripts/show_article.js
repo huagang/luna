@@ -1,17 +1,9 @@
 window.onload = function() {
     var host = lunaConfig.host;
-    var content = "濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型代表，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型，濯水古镇街巷格局保留较为完整典型，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。";
 
     // 文章fake数据
     var audio;
-    /*var data = {
-    	title: '王阳明',
-    	content: content.repeat(5),
-    	thumbnail: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160616/0P2I3c3d2Q2b2H1Q3y2s0V2A0x0L3w1k.jpg',
-    	audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160617/2N1H2q0a1Y0B1O3V1I263L123c20102D.mp3',
-    	video:'14651978969259528073',
-    	category:''
-    };*/
+
     initData();
 
     function initData() {
@@ -23,7 +15,8 @@ window.onload = function() {
             return;
         }
         if (!articleId) {
-            return; }
+            return;
+        }
         $.ajax({
             url: Inter.getApiUrl().readArticle,
             type: 'GET',
@@ -31,19 +24,19 @@ window.onload = function() {
             dataType: 'json',
             success: function(data) {
                 if (data.code === "0") {
-                	var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g,function(word){
-                        return word.replace(/height="[0-9]*"/,"");
-                	});
+                    // var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g, function(word) {
+                    //     return word.replace(/height="[0-9]*"/, "");
+                    // });
                     console.log("请求文章数据成功");
-                    data.data.content = content;
-                    console.log(data.data);
-
+                    // data.data.content = content;
+                    // console.log(content);
                     updateData(data.data);
+                    jQuery.getScript(host+"/scripts/video.min.js", function(data, status, jqxhr) {
+                        console.log('重新加载js文件完成');                        
+                    });
                 } else {
                     console.log("请求文章数据失败");
                 }
-
-
             },
             error: function(data) {
                 console.log("请求文章数据失败");
@@ -61,25 +54,29 @@ window.onload = function() {
         document.querySelector('.content').innerHTML = data.content;
 
         // 更新文章头图
-        var img = document.querySelector('.banner img');
-        img.src = data.abstract_pic;
-        img.onload = function() {
-            var banner = document.querySelector('.banner');
-            if (banner.clientHeight > 100) {
-                var wrapper = document.querySelector('.content-wrapper');
-                wrapper.addEventListener('scroll', function() {
-                    if (wrapper.scrollTop > 0) {
-                        banner.classList.add('sm');
-                    } else {
-                        banner.classList.remove('sm');
-                    }
+        if (data.abstract_pic) {
+            var img = document.querySelector('.banner img');
+            img.src = data.abstract_pic;
+            img.onload = function() {
+                var banner = document.querySelector('.banner');
+                if (banner.clientHeight > 100) {
+                    var wrapper = document.querySelector('.content-wrapper');
+                    wrapper.addEventListener('scroll', function() {
+                        if (wrapper.scrollTop > 0) {
+                            banner.classList.add('sm');
+                        } else {
+                            banner.classList.remove('sm');
+                        }
 
-                });
+                    });
+                }
             }
-
+        } else {
+            var img = document.querySelector('.banner img');
+            img.style.display = 'none';
         }
 
-        // 更新文章视频信息，视频信息可以为空		
+        // 更新文章视频信息，视频信息可以为空        
         if (data.video) {
 
             var btnWraper = document.querySelector('.video-btn-wrap');
@@ -170,7 +167,8 @@ window.onload = function() {
             _isPlaying: false,
             _loaded: false,
             get isPlaying() {
-                return this._isPlaying; },
+                return this._isPlaying;
+            },
             set src(value) { // 设置audio src
                 this._src = value;
                 this._target = document.querySelector(this._selector);

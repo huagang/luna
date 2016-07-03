@@ -56,13 +56,16 @@
 		<audio class='audio' src volume='1.0'></audio>
 		<script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
 	    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    	<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin_js.js"></script>
+    	<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 		<script type="text/javascript">
-	        // var shareInfo={"title":"${title}","desc":"${description}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
-	        var shareInfo={"title":"${title}","desc":"${description}"};
-    		getShareInfo(window.document.location.href,shareInfo);
+			var wechatOptions = {
+				title: '${title}',
+				desc: '${description}',
+			};
+			var wechat = new weChat(wx,wechatOptions);
+
 			var pageData = ${articleJson};
-			// console.log(pageData);
+			
 		</script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>

@@ -804,6 +804,8 @@ function initEditor() {
     };
     /*获取编辑器实例*/
     ue = UE.getEditor('editor', {
+        initialFrameHeight: 600,    // 设置行高
+        autoHeightEnabled: false,   //设置不自动扩高
         allowDivTransToP: false,
         elementPathEnabled: false,
         toolbars: [

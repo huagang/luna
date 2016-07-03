@@ -1,8 +1,3 @@
-<!-- 
-	@content 文章模板页面
-	@author_name wumengqiang
-	@author_email dean@visualbusiness.com   
--->
 <!doctype html>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
@@ -20,6 +15,9 @@
 		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/> 	
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+	   	<!-- 引入video的css -->
+	 		<link href="<%=request.getContextPath() %>/styles/videoJs.css" rel="stylesheet">
+    	<!-- 引入video的css End-->
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/show_article.css">
 	</head>
 	<body>
@@ -52,9 +50,16 @@
 			</div>
 		</div>
 		<audio class='audio' src volume='1.0'></audio>
+
+
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
+	
+		<!-- 引入video的 js 改成通过js内加载 -->
+		<!-- <script src='<%=request.getContextPath()%>/scripts/videoJs.js'></script> -->
+	  	<!-- 引入video的 js End -->
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_article.js'></script>
 	</body>
 </html>
