@@ -2,6 +2,7 @@ package ms.luna.biz.bl.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ public class VodPlayBLImpl implements VodPlayBL{
 	public JSONObject createVodRecord(String json) {
 		JSONObject param = JSONObject.parseObject(json);
 		String vod_file_id = param.getString("vod_file_id");
+		String vod_original_file_url = param.getString("vod_original_file_url");
 		
 		// 能否保证腾讯云每次上传文件的id都不同？为安全起见，检测vod_file_id是否已存在。
 		MsVideoUpload msVideo = msVideoUploadDAO.selectByPrimaryKey(vod_file_id);
@@ -42,6 +44,9 @@ public class VodPlayBLImpl implements VodPlayBL{
 		
 		MsVideoUpload msVideoUpload = new MsVideoUpload();
 		msVideoUpload.setVodFileId(vod_file_id);
+		if(StringUtils.isNotBlank(vod_original_file_url)) {
+			msVideoUpload.setVodOriginalFileUrl(vod_original_file_url);
+		}
 		msVideoUploadDAO.insertSelective(msVideoUpload);
 		return FastJsonUtil.sucess("success");
 	}

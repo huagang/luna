@@ -1244,10 +1244,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			String vod_original_file_url = record.getVodOriginalFileUrl();
 			if(vod_original_file_url != null){
 				data.put("video", vod_original_file_url);
-			} else {
-				data.put("video", video);
-				MsLogger.warn("Failed to get video url");
 			}
+		}
+		if(! data.containsKey("video")) {
+			data.put("video", video);
+			MsLogger.warn("Failed to get video url");
 		}
 
 		data.put("short_title", short_title);

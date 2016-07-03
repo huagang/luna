@@ -297,40 +297,48 @@ public class AddPoiCtrl extends BasicCtrl{
 			String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
 			JSONObject result = VODUtil.getInstance().upload2Cloud(file, 
 					VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName, webAddr, 0);
-			String vod_file_id = null;
-			JSONObject vodJson = null;
+//			String vod_file_id = null;
+//			JSONObject vodJson = null;
 			// 文件上传
-			if ("0".equals(result.getString("code"))) {
-				String token = result.getString("token");
-				JSONObject data = result.getJSONObject("data");
-				vod_file_id = data.getString("vod_file_id");
-
-				// 记录写入数据库
-				JSONObject param = new JSONObject();
-				param.put("vod_file_id", vod_file_id);
-				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
-				if ("0".equals(resJson.getString("code"))) {// 成功
-					// 存入缓存
-					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
-
-					// 注：result中文件id的表示为fileId，非file_id
-					vodJson = FastJsonUtil.sucess("成功", param);
-				} else {
-					vodJson = FastJsonUtil.error("3", "写入数据库失败");
-				}
-			} else if ("2".equals(result.getString("code"))) {
-				vodJson = FastJsonUtil.error("2", "文件大小超过5M");
-			} else {
-				vodJson = FastJsonUtil.error("4", "文件传输失败");
-			}
+//			if ("0".equals(result.getString("code"))) {
+//				String token = result.getString("token");
+//				JSONObject data = result.getJSONObject("data");
+//				vod_file_id = data.getString("vod_file_id");
+//
+//				// 记录写入数据库
+//				JSONObject param = new JSONObject();
+//				param.put("vod_file_id", vod_file_id);
+//				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
+//				if ("0".equals(resJson.getString("code"))) {// 成功
+//					// 存入缓存
+//					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
+//
+//					// 注：result中文件id的表示为fileId，非file_id
+//					vodJson = FastJsonUtil.sucess("成功", param);
+//				} else {
+//					vodJson = FastJsonUtil.error("3", "写入数据库失败");
+//				}
+//			} else if ("2".equals(result.getString("code"))) {
+//				vodJson = FastJsonUtil.error("2", "文件大小超过5M");
+//			} else {
+//				vodJson = FastJsonUtil.error("4", "文件传输失败");
+//			}
 
 			String phone_url = "";
+			JSONObject vodJson = new JSONObject();
 			if ("0".equals(result.getString("code"))) {
+				JSONObject data = result.getJSONObject("data");
+				String vod_file_id = data.getString("vod_file_id");
 				JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
 				
 				if("0".equals(result.getString("code"))){
 					phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
 				}
+				JSONObject param = new JSONObject();
+				param.put("vod_file_id", vod_file_id);
+				param.put("vod_original_file_url", phone_url);
+				vodPlayService.createVodRecord(param.toString());
+				vodJson = FastJsonUtil.sucess("成功", param);
 			}
 			if(!"".equals(phone_url)) {
 				vodJson.put("type", VbUtility.getExtensionOfPicFileName(phone_url));
