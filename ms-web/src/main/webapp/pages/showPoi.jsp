@@ -73,12 +73,14 @@
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 <script type="text/javascript">
+    var poiData = ${poiJson};
     var wechatOptions = {
         title: '${title}',
         desc: '${description}',
+        link: window.location.href,
+        imgUrl:poiData.data.thumbnail
     };
     var wechat = new weChat(wx,wechatOptions);
-    var poiData = ${poiJson};
     console.log(poiData);
 </script>
 <!--  注意，下面引用文件的地址ak项表示密钥，由于暂时公司没有密钥，所以暂时使用个人密钥

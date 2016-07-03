@@ -52,13 +52,15 @@
 	    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     	<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 		<script type="text/javascript">
+			var pageData = ${articleJson};
 			var wechatOptions = {
 				title: '${title}',
 				desc: '${description}',
+		        link: window.location.href,
+        		imgUrl:pageData.data.abstract_pic
 			};
 			var wechat = new weChat(wx,wechatOptions);
 
-			var pageData = ${articleJson};
 			
 		</script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>

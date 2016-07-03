@@ -34,12 +34,12 @@
             title: this.options.title,
             desc: this.options.desc,
             link: this.options.link,
-            imgUrl: this.imgUrl,
+            imgUrl: this.options.imgUrl,
         };
         // console.log(this);
 
         this.wx = wx;
-        this.options.signatureUrl = this.options.signatureUrl || 'http://sfs.visualbusiness.cn/SimpleServer/signature_q?appId=wxa0c7da25637df906&url=' + window.location.href;
+        this.options.signatureUrl = this.options.signatureUrl || 'http://sfs.visualbusiness.cn/SimpleServer/signature_q?appId=wxa0c7da25637df906&url=' + encodeURIComponent(window.location.href);
         // this.options.signatureUrl = 'http://sfs.visualbusiness.cn/SimpleServer/signature_q?appId=wxa0c7da25637df906&url=http://guiyang.visualbusiness.cn/';
 
         $.get(this.options.signatureUrl, function(response) {
