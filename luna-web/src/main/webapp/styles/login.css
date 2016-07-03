@@ -1,4 +1,4 @@
-/*登录页面*/
+/*ÃƒÆ’Ã‚Â§ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â½ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÆ’Ã‚Â©Ãƒâ€šÃ‚Â¡Ãƒâ€šÃ‚ÂµÃƒÆ’Ã‚Â©Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â¢*/
 /*author:Demi*/
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,article,aside,details,figcaption,figure,footer,header,menu,nav,section{margin:0;padding:0}
 body,
@@ -39,14 +39,14 @@ button:hover{
     margin: 0;
 }
 .inner-wrap{
-    width: 1200px;
+    /* width: 1200px; */
     margin: auto;
 }
 h1{
     font-weight: normal;
     line-height: 36px;
 }
-/*导航条样式*/
+/*ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¯Ãƒâ€šÃ‚Â¼ÃƒÆ’Ã‚Â¨Ãƒâ€¹Ã¢â‚¬Â Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â Ãƒâ€šÃ‚Â·ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¼Ãƒâ€šÃ‚Â*/
 .navbar{
     background-color: #364c86;
     border: none;
@@ -69,24 +69,24 @@ h1{
     height: 64px;
     padding: 12px 0;
 }
-/*登录*/
+/*ÃƒÆ’Ã‚Â§ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â½ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢*/
 .content{
     background: #FFFFFF url("../img/login_bg.jpg") center 0 no-repeat;
 }
 .login-main{
     position: relative;
-    width: 1200px;
+    /* width: 1200px; */
     height: 550px;
 }
 .login{
-    position: relative;
+    position: absolute;
     border: 1px solid #dddddd;
-    float: right;
     margin-top: 96px;
     width: 348px;
     height: 372px;
     padding: 25px 24px 30px 24px;
     background: #FFFFFF;
+    right: 17%;
 }
 .account{
     text-align: center;
@@ -152,6 +152,11 @@ a.link-url:hover{
 .process{
     padding: 36px 54px;
 }
+
+.process table{
+    margin: 0 auto;
+    max-width: 1092px;
+}
 .symbol{
     display: inline-block;
     text-align: center;
@@ -180,7 +185,7 @@ table>tbody>tr>td{
     color: #838383;
 }
 
-/*页脚样式*/
+/*ÃƒÆ’Ã‚Â©Ãƒâ€šÃ‚Â¡Ãƒâ€šÃ‚ÂµÃƒÆ’Ã‚Â¨ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â Ãƒâ€šÃ‚Â·ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¼Ãƒâ€šÃ‚Â*/
 .foot{
     margin: 70px 0 33px 0;
     line-height: 21px;
