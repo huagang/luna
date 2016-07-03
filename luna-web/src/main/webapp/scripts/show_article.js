@@ -24,15 +24,12 @@ window.onload = function() {
             dataType: 'json',
             success: function(data) {
                 if (data.code === "0") {
-                    // var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g, function(word) {
-                    //     return word.replace(/height="[0-9]*"/, "");
-                    // });
-                    console.log("请求文章数据成功");
-                    // data.data.content = content;
-                    // console.log(content);
+                
+                    data.data.content = filterImgInContent(data.data.content);
+
                     updateData(data.data);
-                    jQuery.getScript(host+"/scripts/video.min.js", function(data, status, jqxhr) {
-                        console.log('重新加载js文件完成');                        
+                    jQuery.getScript(host + "/scripts/video.min.js", function(data, status, jqxhr) {
+                        console.log('重新加载js文件完成');
                     });
                 } else {
                     console.log("请求文章数据失败");
@@ -205,4 +202,26 @@ window.onload = function() {
             }
         };
     }
+};
+/**
+ * 内容里面的图片宽度调整
+ */
+function filterImgInContent(content) {
+    var clientWidth = document.querySelector('.content').clientWidth;
+    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
+        var reg = /width="([0-9]*?)"/;
+        var widthNum = word.match(reg);
+        if (widthNum[1] > clientWidth) {
+            console.log('大于');
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        } else {
+            console.log('小于');
+        }
+        return word;
+    });
+    console.log(content);
+    return content;
 }

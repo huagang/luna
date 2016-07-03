@@ -14,8 +14,10 @@ html,body{
 }
 .wrapper{
 	display: flex;
-    flex-direction: column;
-    height: 100%;
+	flex-direction: column;
+	height: 100%;
+	max-width: 670px;
+	margin: 0 auto;
 }
 .wrapper > div{
 	flex-shrink: 0;
@@ -131,4 +133,7 @@ html,body{
 .video{
 	height: auto;
     width: 100%;
+}
+.video-js{
+	margin:0 auto;
 }

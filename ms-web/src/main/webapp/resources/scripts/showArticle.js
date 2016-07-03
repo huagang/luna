@@ -5,18 +5,24 @@ window.onload = function() {
     // 文章fake数据
     var audio;
     /*var data = {
-    	title: '王阳明',
-    	content: content.repeat(5),
-    	thumbnail: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160616/0P2I3c3d2Q2b2H1Q3y2s0V2A0x0L3w1k.jpg',
-    	audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160617/2N1H2q0a1Y0B1O3V1I263L123c20102D.mp3',
-    	video:'14651978969259528073',
-    	category:''
+        title: '王阳明',
+        content: content.repeat(5),
+        thumbnail: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160616/0P2I3c3d2Q2b2H1Q3y2s0V2A0x0L3w1k.jpg',
+        audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160617/2N1H2q0a1Y0B1O3V1I263L123c20102D.mp3',
+        video:'14651978969259528073',
+        category:''
     };*/
     initData();
 
     function initData() {
         console.log(pageData.data);
+        // var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g, function(word) {
+        //     return word.replace(/height="[0-9]*"/, "");
+        // });
+        pageData.data.content = filterImgInContent(pageData.data.content);
         updateData(pageData.data);
+
+
         //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup','{}');
 
         //var articleId = null;
@@ -77,9 +83,8 @@ window.onload = function() {
 
         }
 
-        // 更新文章视频信息，视频信息可以为空		
+        // 更新文章视频信息，视频信息可以为空        
         if (data.video) {
-
             var btnWraper = document.querySelector('.video-btn-wrap');
             btnWraper.addEventListener('click', function() {
                 showVideoModal();
@@ -116,8 +121,6 @@ window.onload = function() {
                     }
                 });
             }
-
-
         }
 
         // 更新文章音频信息，音频信息可以为空
@@ -168,7 +171,8 @@ window.onload = function() {
             _isPlaying: false,
             _loaded: false,
             get isPlaying() {
-                return this._isPlaying; },
+                return this._isPlaying;
+            },
             set src(value) { // 设置audio src
                 this._src = value;
                 this._target = document.querySelector(this._selector);
@@ -205,4 +209,26 @@ window.onload = function() {
             }
         };
     }
+};
+/**
+ * 内容里面的图片宽度调整
+ */
+function filterImgInContent(content) {
+    var clientWidth = document.querySelector('.content').clientWidth;
+    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
+        var reg = /width="([0-9]*?)"/;
+        var widthNum = word.match(reg);
+        if (widthNum[1] > clientWidth) {
+            console.log('大于');
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        } else {
+            console.log('小于');
+        }
+        return word;
+    });
+    console.log(content);
+    return content;
 }
