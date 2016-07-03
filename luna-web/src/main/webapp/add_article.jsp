@@ -1,8 +1,3 @@
-<!-- 
-	@content 新建文章页面
-	@author_name wumengqiang
-	@author_email dean@visualbusiness.com   
--->
 <!doctype html>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

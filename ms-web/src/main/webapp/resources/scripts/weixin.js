@@ -33,7 +33,7 @@
             link: this.options.link, 
             imgUrl: this.imgUrl, 
         }
-        console.log(this);
+        // console.log(this);
 
         this.wx = wx;
         this.initConfig();

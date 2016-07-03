@@ -21,6 +21,9 @@
     <link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    <!-- 引入video的css -->
+    <link href="<%=request.getContextPath() %>/resources/styles/videoJs.css" rel="stylesheet">
+    <!-- 引入video的css End-->
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showArticle.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/showPoi.css">
 </head>
@@ -29,12 +32,12 @@
     <div class='banner'>
         <img src=''/>
         <div class='btn-container'>
-    <!--         <div class='panorama'>
+            <div class='panorama hidden '>
                 <a href="javascript:void(0)">
                     <div class='icon icon-panorama'></div>
                     <p>进入全景</p>
                 </a>
-            </div> -->
+            </div>
             <div class='navigation'>
                 <div class='icon icon-navigation'></div>
                 <p>导航</p>
@@ -72,19 +75,27 @@
 <audio class='audio' src volume='1.0'></audio>
 
 <script src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
-<script type="text/javascript">
-    var poiData = ${poiJson};
-     console.log(poiData);
-</script>
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
+<script type="text/javascript">
+    var wechatOptions = {
+        title: '${title}',
+        desc: '${description}',
+    };
+    var wechat = new weChat(wx,wechatOptions);
+    var poiData = ${poiJson};
+    console.log(poiData);
+</script>
 <!--  注意，下面引用文件的地址ak项表示密钥，由于暂时公司没有密钥，所以暂时使用个人密钥
       TODO 以公司的百度开发者密钥来替换下面的ak密钥-->
 <!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
 <script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script> -->
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/weixin_config.js'></script>
-
+<!-- 引入video的 js -->
+<script src='<%=request.getContextPath()%>/resources/scripts/videoJs.js'></script>
+<!-- 引入video的 js End -->
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showPoi.js'></script>
 </body>
 </html>

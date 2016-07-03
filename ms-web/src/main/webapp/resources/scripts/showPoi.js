@@ -1,90 +1,102 @@
+/**
+ * Poi展示功能
+ * Author : WuMentQiang
+ * Date : 2016-7-1
+ * @type {Object}
+ */
 var objdata = {
-    destPosition: {}
+    destPosition: {} //目的地位置信息
 }
 
 $(document).ready(function() {
     getPoiController().init();
 });
 
+//初始化页面
 function getPoiController() {
     var audio, audioDom, videoDom, host;
 
     return {
-        init: init
+        init: function() {
+            audio = getAudio(".audio");
+            audioDom = getAudioDomControl(audio);
+            videoDom = getVideoDomControl(audio);
+            host = '/luna-web';
+            // weixinConfig();
+            initData(updateData);
+        }
     }
 
-
-    function init() {
-        audio = getAudio(".audio");
-        audioDom = getAudioDomControl(audio);
-        videoDom = getVideoDomControl(audio);
-        host = '/luna-web';
-        // weixinConfig();
-        initData(updateData);
-    }
-
-    // 初始化数据
+    // 初始化页面数据 目前数据直接从页面中带过来
     function initData(successCallback, errorCallback) {
         //fake data
         var data = {
-            poi_name: poiData.data.common_fields_val.long_title,
-            lat: poiData.data.common_fields_val.lat,
-            lng: poiData.data.common_fields_val.lng,
-            content: poiData.data.common_fields_val.brief_introduction,
-            abstract_pic: poiData.data.common_fields_val.thumbnail,
-            audio: poiData.data.private_fields[1].field_val.value,
-            video: poiData.data.private_fields[2].field_val.value,
+            poi_name: poiData.data.long_title,
+            lat: poiData.data.lat,
+            lng: poiData.data.lng,
+            content: poiData.data.brief_introduction,
+            abstract_pic: poiData.data.thumbnail,
+            audio: poiData.data.audio,
+            video: poiData.data.video,
+            panorama: poiData.data.panorama,
+            panorama_type: poiData.data.panorama_type,
             category: ''
         };
 
+        //设置导航目的地信息
         objdata.destPosition.lat = data.lat;
         objdata.destPosition.lng = data.lng;
         objdata.destPosition.navEndName = data.poi_name;
 
         if (typeof successCallback === 'function') {
             successCallback(data);
+            //给现有video标签加上 videoJs的效果
+            //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup', '{}');
         }
         return;
 
-        var poiId = null;
-        try {
-            poiId = parseInt(location.href.match(/poi_id=(\d+)/)[1]);
-        } catch (e) {
-            alert("url中缺乏poi_id参数")
-            return;
-        }
-        if (!poiId) {
-            return;
-        }
-        $.ajax({
-            url: Inter.getApiUrl().readPoi, // to add
-            type: 'GET',
-            data: { id: poiId },
-            dataType: 'json',
-            success: function(data) {
-                if (data.code === "0") {
-                    console.log("请求poi数据成功");
-                    if (typeof successCallback === 'function') {
-                        successCallback(data.data);
-                    }
-                } else {
-                    if (typeof errorCallback === 'function') {
-                        errorCallback(data);
-                    }
-                    console.log("请求poi数据失败");
-                }
-            },
-            error: function(data) {
-                if (typeof errorCallback === 'function') {
-                    errorCallback(data);
-                }
-                console.log("请求poi数据失败");
-            }
-        });
+        // var poiId = null;
+        // try {
+        //     poiId = parseInt(location.href.match(/poi_id=(\d+)/)[1]);
+        // } catch (e) {
+        //     alert("url中缺乏poi_id参数")
+        //     return;
+        // }
+        // if (!poiId) {
+        //     return;
+        // }
+        // $.ajax({
+        //     url: Inter.getApiUrl().readPoi, // to add
+        //     type: 'GET',
+        //     data: { id: poiId },
+        //     dataType: 'json',
+        //     success: function(data) {
+        //         if (data.code === "0") {
+        //             console.log("请求poi数据成功");
+        //             if (typeof successCallback === 'function') {
+        //                 successCallback(data.data);
+        //             }
+        //         } else {
+        //             if (typeof errorCallback === 'function') {
+        //                 errorCallback(data);
+        //             }
+        //             console.log("请求poi数据失败");
+        //         }
+        //     },
+        //     error: function(data) {
+        //         if (typeof errorCallback === 'function') {
+        //             errorCallback(data);
+        //         }
+        //         console.log("请求poi数据失败");
+        //     }
+        // });
     }
 
-
-
+    /**
+     * 更新页面数据
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
     function updateData(data) {
         $(".navigation").on("click", handleNavigation.bind(this, data.lng, data.lat));
         // 更新文章标题信息
@@ -97,24 +109,46 @@ function getPoiController() {
         var img = document.querySelector('.banner img');
         img.src = data.abstract_pic;
         img.onload = function() {
-            var banner = document.querySelector('.banner');
-            if (banner.clientHeight > 100) {
-                var wrapper = document.querySelector('.content-wrapper');
-                wrapper.addEventListener('scroll', function() {
-                    if (wrapper.scrollTop > 0) {
-                        banner.classList.add('sm');
-                    } else {
-                        banner.classList.remove('sm');
-                    }
+                var banner = document.querySelector('.banner');
+                if (banner.clientHeight > 100) {
+                    var wrapper = document.querySelector('.content-wrapper');
+                    wrapper.addEventListener('scroll', function() {
+                        if (wrapper.scrollTop > 0) {
+                            banner.classList.add('sm');
+                        } else {
+                            banner.classList.remove('sm');
+                        }
 
-                });
+                    });
+                }
             }
-        }
+
+        //初始化视频信息
         if (data.video) {
             videoDom.setVideoSrc(data.video);
         }
+        //初始化音频信息
         if (data.audio) {
             audioDom.setAudioSrc(data.audio);
+        }
+        //初始化全景信息
+        if (data.panorama) {
+            var url;
+            switch (data.panorama_type) {
+                case 1: //单点全景
+                    url = "http://single.pano.visualbusiness.cn/PanoViewer.html?panoId=" + data.panorama;
+                    break;
+                case 2: //专辑全景
+                    // url = "http://pano.visualbusiness.cn/album/index.html?panoId="+data.panorama;
+                    url = "http://pano.visualbusiness.cn/album/index.html?panoId=" + data.panorama;
+                    break;
+                case 3: //相册全景
+                    alert('正在努力实现中，请使用单点和专辑相册');
+                    url = "http://wap.visualbusiness.cn/panoengine/PanoViewer/PanoAlbum.jiaxiulou.html";
+                    break;
+            }
+            $('.panorama').removeClass('hidden');
+            $('.panorama').find('a').attr('href', url);
         }
     }
 
@@ -139,7 +173,7 @@ function getPoiController() {
             }
         } else {
             /*  
-             *	demo  http://developer.baidu.com/map/jsdemo.htm#a5_1
+             *  demo  http://developer.baidu.com/map/jsdemo.htm#a5_1
              *   文档  http://developer.baidu.com/map/reference/index.php?title=Class:%E6%A0%B8%E5%BF%83%E7%B1%BB/Map
              */
 
@@ -148,7 +182,7 @@ function getPoiController() {
 
 
             // if($('#container').html()){
-            // 	return;
+            //  return;
             // }
             // var map = new BMap.Map("container");          // 创建地图实例  
             // var point = new BMap.Point(lng, lat);  // 创建点坐标  
@@ -156,24 +190,24 @@ function getPoiController() {
             // var convertor = new BMap.Convertor();
             // $('.map-wrapper').addClass('active');
             // $('.map-wrapper .icon-back').on('click', function(){
-            // 	$('.map-wrapper').removeClass('active');
+            //  $('.map-wrapper').removeClass('active');
             // });
 
             // // 坐标转换请求，从腾讯地图转换到百度地图
             // convertor.translate([new BMap.Point(lng, lat)], 3, 5, function(data){
-            // 	if(data.status === 0){
-            // 		var point = new BMap.Point(data.points[0].lng, data.points[0].lat);  // 创建点坐标  
-            // 		var marker = new BMap.Marker(point);
-            // 		map.addOverlay(marker);
-            // 		map.setCenter(data.points[0]);	
-            // 		$('.navigation').on('click',function(){
-            // 			$('.map-wrapper').addClass('active');
-            // 			setTimeout(function(){
-            // 				map.setCenter(point);
-            // 				map.setZoom(15);
-            // 			},100);
-            // 		});
-            // 	}
+            //  if(data.status === 0){
+            //      var point = new BMap.Point(data.points[0].lng, data.points[0].lat);  // 创建点坐标  
+            //      var marker = new BMap.Marker(point);
+            //      map.addOverlay(marker);
+            //      map.setCenter(data.points[0]);  
+            //      $('.navigation').on('click',function(){
+            //          $('.map-wrapper').addClass('active');
+            //          setTimeout(function(){
+            //              map.setCenter(point);
+            //              map.setZoom(15);
+            //          },100);
+            //      });
+            //  }
             // });
         }
     }

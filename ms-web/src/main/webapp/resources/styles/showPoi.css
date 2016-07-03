@@ -20,18 +20,18 @@
 
 .icon-panorama{
 	width: 32px;
-    height: 28px;
-    background-position: -34px -136px;
-    margin: 0 auto 5px;
-    display: block;
+	height: 28px;
+	background-position: -34px -102px;
+	margin: 0 auto 5px;
+	display: block;
 }
 
 .icon-navigation{
 	width: 29px;
-    height: 28px;
-    background-position: -68px -136px;
-    display: block;
-    margin: 0 auto 5px;
+	height: 28px;
+	background-position: -68px -102px;
+	display: block;
+	margin: 0 auto 5px;
 }
 
 .map-wrapper{
