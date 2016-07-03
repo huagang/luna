@@ -16,17 +16,6 @@ $(document).ready(function() {
 function getPoiController() {
     var audio, audioDom, videoDom, host;
 
-    return {
-        init: function() {
-            audio = getAudio(".audio");
-            audioDom = getAudioDomControl(audio);
-            videoDom = getVideoDomControl(audio);
-            host = '/luna-web';
-            // weixinConfig();
-            initData(updateData);
-        }
-    }
-
     // 初始化页面数据 目前数据直接从页面中带过来
     function initData(successCallback, errorCallback) {
         //fake data
@@ -109,22 +98,23 @@ function getPoiController() {
         var img = document.querySelector('.banner img');
         img.src = data.abstract_pic;
         img.onload = function() {
-                var banner = document.querySelector('.banner');
-                if (banner.clientHeight > 100) {
-                    var wrapper = document.querySelector('.content-wrapper');
-                    wrapper.addEventListener('scroll', function() {
-                        if (wrapper.scrollTop > 0) {
-                            banner.classList.add('sm');
-                        } else {
-                            banner.classList.remove('sm');
-                        }
+            var banner = document.querySelector('.banner');
+            if (banner.clientHeight > 100) {
+                var wrapper = document.querySelector('.content-wrapper');
+                wrapper.addEventListener('scroll', function() {
+                    if (wrapper.scrollTop > 0) {
+                        banner.classList.add('sm');
+                    } else {
+                        banner.classList.remove('sm');
+                    }
 
-                    });
-                }
+                });
             }
+        }
 
         //初始化视频信息
         if (data.video) {
+            console.log(data);
             videoDom.setVideoSrc(data.video);
         }
         //初始化音频信息
@@ -266,33 +256,38 @@ function getPoiController() {
                 }.bind(this));
                 document.querySelector('.video-modal .mask').addEventListener('click', this.hideVideoModal);
                 //video 可能是video id,也可能是video url，所以需要进行判断
-                if (!/^\d+$/.test(video)) {
+                if (video) {
                     document.querySelector('.video').src = video;
                     btnWraper.classList.remove('hidden');
-                } else {
-                    $.ajax({
-                        url: host + "/api_vodPlay.do",
-                        type: "GET",
-                        data: { method: "getVideoUrls", fileId: video },
-                        dataType: "json",
-                        success: function(data) {
-                            if (data.code === '0') {
-                                // 按照视频类型优先级来获取视频url，例如vod_original_file_url是最高优先级
-                                var videoTypes = ["vod_original_file_url", "vod_normal_mp4_url", "vod_phone_hls_url"];
-                                var src = "";
-                                videoTypes.forEach(function(type) {
-                                    if (!src && data.data[type]) {
-                                        src = data.data[type];
-                                    }
-                                });
-                                if (src) {
-                                    btnWraper.classList.remove('hidden');
-                                    document.querySelector('.video').src = src;
-                                }
-                            }
-                        }
-                    });
                 }
+
+                // if (!/^\d+$/.test(video)) {
+                //     document.querySelector('.video').src = video;
+                //     btnWraper.classList.remove('hidden');
+                // } else {
+                //     $.ajax({
+                //         url: host + "/api_vodPlay.do",
+                //         type: "GET",
+                //         data: { method: "getVideoUrls", fileId: video },
+                //         dataType: "json",
+                //         success: function(data) {
+                //             if (data.code === '0') {
+                //                 // 按照视频类型优先级来获取视频url，例如vod_original_file_url是最高优先级
+                //                 var videoTypes = ["vod_original_file_url", "vod_normal_mp4_url", "vod_phone_hls_url"];
+                //                 var src = "";
+                //                 videoTypes.forEach(function(type) {
+                //                     if (!src && data.data[type]) {
+                //                         src = data.data[type];
+                //                     }
+                //                 });
+                //                 if (src) {
+                //                     btnWraper.classList.remove('hidden');
+                //                     document.querySelector('.video').src = src;
+                //                 }
+                //             }
+                //         }
+                //     });
+                // }
             }
         }
     }
@@ -355,8 +350,14 @@ function getPoiController() {
         if (navigator.geolocation) {
             //浏览器支持geolocation
             // alert("before");
-            navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
-            // alert("end");
+            try {
+                navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
+            } catch (e) {
+                //取出经纬度并且赋值
+                console.log('定位出现了问题');
+                // var url ='http://apis.map.qq.com/uri/v1/geocoder?coord='+ objdata.destPosition.lat + "%2C" + objdata.destPosition.lng +'&referer=myapp';
+                // window.location.href = url;
+            }
         } else {
             //浏览器不支持geolocation
             alert("请检查手机定位设置，或者更换其他支持定位的浏览器尝试！");
@@ -410,6 +411,17 @@ function getPoiController() {
             return true;
         } else {
             return false;
+        }
+    }
+
+    return {
+        init: function() {
+            audio = getAudio(".audio");
+            audioDom = getAudioDomControl(audio);
+            videoDom = getVideoDomControl(audio);
+            host = '/luna-web';
+            // weixinConfig();
+            initData(updateData);
         }
     }
 }

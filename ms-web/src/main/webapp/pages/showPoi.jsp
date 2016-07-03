@@ -1,10 +1,4 @@
-<!--
-@content poi详情页面
-@author_name wumengqiang
-@author_email dean@visualbusiness.com
--->
-<!doctype html>
-<%@ page contentType="text/html;charset=UTF-8" %>
+﻿<!doctype html>
 <html>
 <head>
     <meta charset='utf8'>
