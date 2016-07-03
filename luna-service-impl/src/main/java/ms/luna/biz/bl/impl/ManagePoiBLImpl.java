@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import ms.luna.biz.dao.custom.MsVideoUploadDAO;
+import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +38,6 @@ import ms.luna.biz.dao.custom.MsPoiFieldDAO;
 import ms.luna.biz.dao.custom.MsPoiTagDAO;
 import ms.luna.biz.dao.custom.model.MsTagFieldParameter;
 import ms.luna.biz.dao.custom.model.MsTagFieldResult;
-import ms.luna.biz.dao.model.MsPoiField;
-import ms.luna.biz.dao.model.MsPoiFieldCriteria;
-import ms.luna.biz.dao.model.MsPoiTag;
-import ms.luna.biz.dao.model.MsPoiTagCriteria;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -66,6 +64,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	@Autowired
 	private MsZoneCacheBL msZoneCacheBL;
+
+	@Autowired
+	private MsVideoUploadDAO msVideoUploadDAO;
 
 	/**
 	 * tag标签的level=1的部分
@@ -1232,14 +1233,29 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// TODO 默认数值在common中定义
 			panorama_type = 2; // 默认为专辑 
 		}
-		
+
+		MsVideoUploadCriteria msVideoUploadCriteria = new MsVideoUploadCriteria();
+		MsVideoUploadCriteria.Criteria criteria = msVideoUploadCriteria.createCriteria();
+		criteria.andVodFileIdEqualTo(video).andStatusEqualTo("1");
+		List<MsVideoUpload> records = msVideoUploadDAO.selectByCriteria(msVideoUploadCriteria);
+
+		if(!records.isEmpty()){
+			MsVideoUpload record = records.get(0);
+			String vod_original_file_url = record.getVodOriginalFileUrl();
+			if(vod_original_file_url != null){
+				data.put("video", vod_original_file_url);
+			} else {
+				data.put("video", video);
+				MsLogger.warn("Failed to get video url");
+			}
+		}
+
 		data.put("short_title", short_title);
 		data.put("long_title", long_title);
 		data.put("lng", lng);
 		data.put("lat", lat);
 		data.put("brief_introduction", brief_introduction);
 		data.put("thumbnail", thumbnail);
-		data.put("video", video);
 		data.put("audio", audio);
 		data.put("panorama", panorama);
 		data.put("panorama_type", panorama_type);

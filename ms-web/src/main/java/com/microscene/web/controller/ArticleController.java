@@ -1,6 +1,7 @@
 package com.microscene.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.table.MsArticleTable;
 import org.apache.log4j.Logger;
@@ -45,8 +46,11 @@ public class ArticleController extends BaseController {
             JSONObject data = jsonObject.getJSONObject("data");
             modelAndView.addObject("title", data.getString(MsArticleTable.FIELD_TITLE));
             modelAndView.addObject("description", data.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT));
+            modelAndView.addObject("articleJson", jsonObject);
+        } else {
+            return buildModelAndView("404");
         }
-        modelAndView.addObject("articleJson", jsonObject);
+
         return modelAndView;
     }
 
