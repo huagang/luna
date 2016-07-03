@@ -6,10 +6,7 @@ import ms.luna.biz.table.MsArticleTable;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,22 +28,24 @@ public class PoiController extends BaseController {
     private ManagePoiService managePoiService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ModelAndView poiDetail(@PathVariable String id, @RequestParam(required = false, value = "lang") String lang,
-                                  HttpServletRequest request) {
+    public ModelAndView poiDetail(@PathVariable String id, @RequestParam(required = false, value = "lang") String lang) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("_id", id);
         if(lang == null) {
             lang = "zh";
         }
         jsonObject.put("lang", lang);
-        JSONObject ret = managePoiService.initEditPoi(jsonObject.toJSONString());
+        JSONObject ret = managePoiService.initPoiPreview(jsonObject.toJSONString());
         ModelAndView modelAndView = buildModelAndView("showPoi");
         if(ret.getString("code").equals("0")) {
             JSONObject data = ret.getJSONObject("data");
-            modelAndView.addObject("title", data.getJSONObject("common_fields_val").getString("short_title"));
-            modelAndView.addObject("description", data.getJSONObject("common_fields_val").getString("long_title"));
+            modelAndView.addObject("title", data.getString("short_title"));
+            modelAndView.addObject("description", data.getString("long_title"));
+            modelAndView.addObject("poiJson", ret);
+        } else {
+            return buildModelAndView("404");
         }
-        modelAndView.addObject("poiJson", ret);
+
         return modelAndView;
     }
 
