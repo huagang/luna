@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.dubbo.common.json.JSON;
+import ms.luna.biz.cons.ErrorCode;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -20,11 +23,14 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Component
 @Controller
 @RequestMapping("/servicepoi.do")
 public class PoiApiCtrl {
+
+	private final static Logger logger = Logger.getLogger(PoiApiCtrl.class);
 
 	@Autowired
 	private PoiApiService poiApiService;
@@ -34,19 +40,17 @@ public class PoiApiCtrl {
 	/**
 	 * 根据业务获取一个层级的poi数据列表
 	 * @param biz_id 业务树id
-	 * @param level 层级
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
 	 * @param lang 语言
 	 */
 	@RequestMapping(params = "method=getPoisInFirstLevel")
-	public void getPoisInFirstLevel(
+	@ResponseBody
+	public JSONObject getPoisInFirstLevel(
 			@RequestParam(required = true, value = "business_id") Integer biz_id, 
 			@RequestParam(required = false, value = "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+
 		try{
 			if(fields == null){
 				fields = "";
@@ -68,27 +72,19 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoisInFirstLevel(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 		
 	}
@@ -102,13 +98,12 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getCtgrsByBizIdAndPoiId")
-	public void getCtgrsByBizIdAndPoiId(
+	@ResponseBody
+	public JSONObject getCtgrsByBizIdAndPoiId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
+
 		try{
 			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
@@ -116,13 +111,9 @@ public class PoiApiCtrl {
 			
 			JSONObject result = poiApiService.getCtgrsByBizIdAndPoiId(param.toString());
 			MsLogger.debug(result.toString());
-			response.getWriter().print(result);
-			response.setStatus(200);
-			return;
+			return result;
 		} catch (Exception e ){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 
@@ -137,14 +128,13 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
-	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(
+	@ResponseBody
+	public JSONObject getSubCtgrsByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "category_id") Integer ctgr_id, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
-		
+
 		try{
 			JSONObject param = new JSONObject();
 			param.put("biz_id", biz_id);
@@ -153,14 +143,12 @@ public class PoiApiCtrl {
 			
 			JSONObject result = poiApiService.getSubCtgrsByBizIdAndPoiId(param.toString());
 			MsLogger.debug(result.toString());
-			response.getWriter().print(result);
-			response.setStatus(200);
-			return;
+
+			return result;
 			
 		} catch (Exception e ){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			logger.error("Failed to getSubCtgrsByBizIdAndPoiIdAndCtgrId", e);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 	
@@ -176,15 +164,14 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiId")
-	public void getPoisByBizIdAndPoiId(
+	@ResponseBody
+	public JSONObject getPoisByBizIdAndPoiId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
 		try{
 			if(fields == null){
  				fields = "";
@@ -207,27 +194,20 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoisByBizIdAndPoiId(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			logger.error("Failed to getPoisByBizIdAndPoiId", e);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 	
@@ -243,7 +223,8 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndCtgrId")
-	public void getPoisByBizIdAndPoiIdAndCtgrId(
+	@ResponseBody
+	public JSONObject getPoisByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "category_id") int ctgr_id,
@@ -276,27 +257,19 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoisByBizIdAndPoiIdAndCtgrId(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 	
@@ -312,7 +285,8 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndSubCtgrId")
-	public void getPoisByBizIdAndPoiIdAndSubCtgrId(
+	@ResponseBody
+	public JSONObject getPoisByBizIdAndPoiIdAndSubCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = true, value = "sub_category_id") int sub_ctgr_id,
@@ -320,8 +294,6 @@ public class PoiApiCtrl {
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
 		try{
 			if(fields == null){
 				fields = "";
@@ -345,27 +317,19 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoisByBizIdAndPoiIdAndSubCtgrId(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 	
@@ -378,7 +342,8 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoiById")
-	public void getPoiById(
+	@ResponseBody
+	public JSONObject getPoiById(
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -400,27 +365,19 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoiInfoById(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e) {
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 	}
 	
@@ -434,16 +391,14 @@ public class PoiApiCtrl {
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndTags")
-	public void getPoisByBizIdAndTags(
+	@ResponseBody
+	public JSONObject getPoisByBizIdAndTags(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "tags") String tags,
 			@RequestParam(required = false, value = "type") String type,
 			@RequestParam(required = false, value = "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
-		request.setCharacterEncoding("UTF-8");
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
 		tags = string2ChineseChar(tags);
 		MsLogger.debug(tags);
 		try{
@@ -459,15 +414,11 @@ public class PoiApiCtrl {
 			if(type != null){ 
 				boolean flag = checkTags(tags);// 标签格式检测
 				if(!flag){
-					response.getWriter().print(FastJsonUtil.error("-1", "标签:"+tags+"格式错误"));
-					response.setStatus(200);
-					return;
+					return FastJsonUtil.error("-1", "标签:"+tags+"格式错误");
 				} 
 			} else {
 				if("".equals(tags)){ // 标签格式检测
-					response.getWriter().print(FastJsonUtil.error("-1", "标签:"+tags+"格式错误"));
-					response.setStatus(200);
-					return;
+					return FastJsonUtil.error("-1", "标签:"+tags+"格式错误");
 				}
 				type = "";
 			}
@@ -487,27 +438,19 @@ public class PoiApiCtrl {
 						JSONObject data = result.getJSONObject("data");
 						datas.put(language, data.getJSONObject(language));
 					} else {
-						response.getWriter().print(result);
-						response.setStatus(200);
-						return;
+						return result;
 					}
 				}
 				result.put("data", datas);
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				return result;
 			} else {
 				param.put("lang", lang);
 				JSONObject result = poiApiService.getPoisByBizIdAndTags(param.toString());
-				MsLogger.debug("获取lang:"+lang+"数据"+result.toString());
-				response.getWriter().print(result);
-				response.setStatus(200);
-				return;
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
 			}
 		} catch (Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", e));
-			response.setStatus(200);
-			return;
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "服务器内部错误");
 		}
 
 	}
