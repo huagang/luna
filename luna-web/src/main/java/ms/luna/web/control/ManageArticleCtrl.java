@@ -95,17 +95,9 @@ public class ManageArticleCtrl extends BasicCtrl {
         jsonObject.put(MsArticleTable.FIELD_CONTENT, content);
 
         String abstractPic = RequestHelper.getString(request, MsArticleTable.FIELD_ABSTRACT_PIC);
-        if(StringUtils.isBlank(abstractPic)) {
-            errMsg = "文章头图不能为空";
-            return Pair.of(jsonObject, errMsg);
-        }
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, abstractPic);
 
         String abstractContent = RequestHelper.getString(request, MsArticleTable.FIELD_ABSTRACT_CONTENT);
-        if(StringUtils.isBlank(abstractContent)) {
-            errMsg = "文章摘要不能为空";
-            return Pair.of(jsonObject, errMsg);
-        }
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, abstractContent);
 
         String audio = RequestHelper.getString(request, MsArticleTable.FIELD_AUDIO);
