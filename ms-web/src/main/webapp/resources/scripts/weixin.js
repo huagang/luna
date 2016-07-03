@@ -10,19 +10,23 @@
     var NAME = "weChat";
 
     var wechat = function(wx, options) {
+        var self = this,
+            curDate = new Date();
         var defaults = {
             title: '皓月平台',
             desc: '皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。',
             link: 'http://luna.visualbusiness.cn/', //正式
             imgUrl: 'http://luna.visualbusiness.cn/images/share.png', //正式
+            signatureUrl: '', //生成签名的url 
+            appId: 'wxa0c7da25637df906',
             nonceStr: '',
-            timeStamp: '',
+            timeStamp: curDate.getTime(),
             signature: '',
             openWeiXinlatitude: 22.52131,
             openWeiXinlongitude: 113.8961,
             openWeiXinMapName: "",
             openWeiXinMapAddress: "",
-            readyCallback:function(){},  //完成之后的回调函数
+            readyCallback: function() {}, //完成之后的回调函数
         };
 
         //合并参数
@@ -30,23 +34,35 @@
         this.shareData = {
             title: this.options.title,
             desc: this.options.desc,
-            link: this.options.link, 
-            imgUrl: this.imgUrl, 
-        }
+            link: this.options.link,
+            imgUrl: this.imgUrl,
+        };
         // console.log(this);
 
         this.wx = wx;
-        this.initConfig();
+        this.options.signatureUrl = this.options.signatureUrl || 'http://sfs.visualbusiness.cn/SimpleServer/signature_q?appId=wxa0c7da25637df906&url=' + window.location.href;
+        // this.options.signatureUrl = 'http://sfs.visualbusiness.cn/SimpleServer/signature_q?appId=wxa0c7da25637df906&url=http://guiyang.visualbusiness.cn/';
+
+        $.get(this.options.signatureUrl, function(response) {
+            if (response) {
+                var dataJson = JSON.parse(response);
+                self.options.nonceStr = dataJson.noncestr;
+                self.options.timeStamp = dataJson.timestamp;
+                self.options.signature = dataJson.signature;
+                self.initConfig();
+            }
+        });
+
     }
 
     //初始化微信的引用
     wechat.prototype.initConfig = function() {
         var self = this;
-        // alert(JSON.stringify(self.shareData));
-
+        alert(JSON.stringify(this.options));
+        console.log(this.options);
         this.wx.config({
-            debug: false,
-            appId: 'wxa0c7da25637df906',
+            debug: true,
+            appId: this.options.appId,
             timestamp: this.options.timeStamp,
             nonceStr: this.options.nonceStr,
             signature: this.options.signature,
@@ -70,12 +86,12 @@
         this.wx.ready(function() {
 
             //分享给朋友
-            this.wx.onMenuShareAppMessage(self.shareData);
+            self.wx.onMenuShareAppMessage(self.shareData);
             //分享到朋友圈
-            this.wx.onMenuShareTimeline(self.shareData);
-            
+            self.wx.onMenuShareTimeline(self.shareData);
+
             //判断当前客户端版本是否支持指定JS接口
-            this.wx.checkJsApi({
+            self.wx.checkJsApi({
                 jsApiList: [
                     'getLocation',
                     'openLocation',
@@ -84,9 +100,9 @@
                     //alert(JSON.stringify(res));
                 }
             });
-            
+
             //成功回调函数
-            this.readyCallback();
+            self.options.readyCallback();
 
             // $(".app-wrap").on("click", ".navimg", function() {
             //     openWeiXinlatitude = $(this).attr("endPosition").split(",")[0];
