@@ -229,7 +229,7 @@ var initPage = function() {
                 ['fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent','|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'simpleupload',
                     // 'insertmusic',

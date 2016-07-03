@@ -34,7 +34,7 @@ function getPoiController() {
             poi_name: poiData.data.long_title,
             lat: poiData.data.lat,
             lng: poiData.data.lng,
-            content: poiData.data.brief_introduction,
+            content: filterImgInContent(poiData.data.brief_introduction),
             abstract_pic: poiData.data.thumbnail,
             audio: poiData.data.audio,
             video: poiData.data.video,
@@ -412,4 +412,26 @@ function getPoiController() {
             return false;
         }
     }
+}
+/**
+ * 内容里面的图片宽度调整
+ */
+function filterImgInContent(content) {
+    var clientWidth = document.querySelector('.content').clientWidth;
+    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
+        var reg = /width="([0-9]*?)"/;
+        var widthNum = word.match(reg);
+        if (widthNum[1] > clientWidth) {
+            console.log('大于');
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        } else {
+            console.log('小于');
+        }
+        return word;
+    });
+    console.log(content);
+    return content;
 }

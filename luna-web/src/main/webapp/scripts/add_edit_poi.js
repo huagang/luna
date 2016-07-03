@@ -804,16 +804,15 @@ function initEditor() {
     };
     /*获取编辑器实例*/
     ue = UE.getEditor('editor', {
-        initialFrameHeight: 600,    // 设置行高
-        autoHeightEnabled: false,   //设置不自动扩高
+        initialFrameHeight: 600, // 设置行高
+        autoHeightEnabled: false, //设置不自动扩高
         allowDivTransToP: false,
         elementPathEnabled: false,
         toolbars: [
             ['fontfamily', '|',
                 'fontsize', '|',
                 'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                'justifyleft',
-                'justifyright', 'justifycenter', 'justifyjustify', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                 'simpleupload',
                 // 'music',
