@@ -286,7 +286,7 @@ public class EditPoiCtrl extends BasicCtrl{
 				poiModel.setContact_phone(common_fields_val.getString("contact_phone"));
 
 				// 预览地址
-				String preview_url = common_fields_val.getString("preview_url");
+				String preview_url = data.getString("preview_url");
 				mav.addObject("preview_url", preview_url);
 				
 				JSONArray privateFields = data.getJSONArray("private_fields");
