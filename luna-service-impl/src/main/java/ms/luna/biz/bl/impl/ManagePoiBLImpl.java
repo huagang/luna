@@ -165,7 +165,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			doc.put("panorama", param.getString("panorama"));
 			
 			// 8.全景类型
-			doc.put("panorama_type", Integer.parseInt(param.getString("panorama_type")));
+			doc.put("panorama_type", param.getInteger("panorama_type"));
 			
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
@@ -265,7 +265,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			doc.put("panorama", param.getString("panorama"));
 			
 			// 8.全景类型
-			doc.put("panorama_type", Integer.parseInt(param.getString("panorama_type")));
+			doc.put("panorama_type", param.getInteger("panorama_type"));
 						
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
@@ -783,7 +783,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			JSONArray typeArray = JSONArray.parseArray(type != null? type:"[]");
 			for(int i = 0; i < typeArray.size(); i++){
 				JSONObject panoType = new JSONObject();
-				panoType.put("panorama_type_id", i + 1 + "");// 考虑到simpleModel的使用，将取出来的数据转化为string类型，存进去的时候变为Integer
+				panoType.put("panorama_type_id", i + 1);
 				panoType.put("panorama_type_name", typeArray.getJSONObject(i).get(i + 1 + ""));
 				types.add(panoType);
 			}
@@ -816,9 +816,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		String _id = docPoi.getObjectId("_id").toString();
 		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id".toString()));
-		commonFieldsVal.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
+		
 		/*
 		 * 公共字段值
 		 */
@@ -891,7 +890,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		
 		// 8.全景类型
 		if(docPoi.containsKey("panorama_type")) {
-			commonFieldsVal.put("panorama_type", docPoi.getInteger("panorama_type")+"");
+			commonFieldsVal.put("panorama_type", docPoi.getInteger("panorama_type"));
 		} else {
 			commonFieldsVal.put("panorama_type", "2");
 		}
@@ -935,6 +934,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 
@@ -1133,6 +1133,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject initFixPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
+		String _id = param.getString("_id");
 
 		Document docPoi = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
@@ -1141,6 +1142,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 
