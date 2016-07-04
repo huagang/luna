@@ -77,8 +77,8 @@
     // var desc = 
     // console.log();
     var wechatOptions = {
-        title: ${title},
-        desc: ${description},
+        title: "${title}",
+        desc: "${description}",
         link: window.location.href,
         imgUrl:poiData.data.thumbnail
     };

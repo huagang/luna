@@ -59,7 +59,7 @@
         var self = this;
         // console.log(this.options);
         var ops = {
-            debug: false,
+            debug: true,
             appId: this.options.appId,
             timestamp: this.options.timestamp,
             nonceStr: this.options.nonceStr,

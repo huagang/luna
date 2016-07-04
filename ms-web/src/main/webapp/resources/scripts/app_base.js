@@ -9,7 +9,7 @@ var objdata = {
         "lat": "39.964758",
         "lng": "116.355246",
     },
-    destPosition:{
+    destPosition: {
 
     }
 }
@@ -31,8 +31,10 @@ $(document).ready(function() {
         // window.location.reload();
     });
 
-    $(".app-wrap").on("click", "[hrefurl]", function() {
+    $(".app-wrap").on("click", "[hrefurl]", function(e) {
+        e.stopPropagation();
         window.location.href = $(this).attr("hrefurl");
+
     });
 
     //导航绑定点击事件
@@ -40,7 +42,8 @@ $(document).ready(function() {
         //获取地理位置和导航等信息
         // var myLongitude;
         // var myLatitude;
-
+        e.preventDefault();
+        e.stopPropagation();
 
         var detailData = {
             "navStartLat": $(this).attr("startPosition").split(",")[0],
@@ -57,7 +60,7 @@ $(document).ready(function() {
 
     /*TODO：增加动画页面 Start*/
     if (pageData.code != "0") {
-        alert(pageData.msg);
+        // alert(pageData.msg);
         return;
     } else {
         var arrPageDatas = pageData.data,
@@ -286,7 +289,7 @@ $(document).ready(function() {
             this.setPosition();
             // Img.prototype.setPosition.call();
 
-            this.html.children("div").append('<img class="navimg" src="' + this.value.content.icon + '" endName="' + this.value.content.endName + '" endPosition="' + this.value.content.endPosition + '" startName="' + this.value.content.startName + '" startPosition="' + this.value.content.startPosition + '" data-navtype="'+ this.value.navType +'" />');
+            this.html.children("div").append('<img class="navimg" src="' + this.value.content.icon + '" endName="' + this.value.content.endName + '" endPosition="' + this.value.content.endPosition + '" startName="' + this.value.content.startName + '" startPosition="' + this.value.content.startPosition + '" data-navtype="' + this.value.navType + '" />');
 
             this.setMoreInfo();
 
@@ -322,15 +325,28 @@ $(document).ready(function() {
 function showNav(posiData) {
     if (!is_weixn()) {
         var url;
-        if (posiData.navType==0) { //+"&ref=mobilemap&referer=";
+        if (posiData.navType == 0) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
             getMyLocation();
         } else {
             url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLat + "%2C" + posiData.navStartLng + "&dest=" + posiData.navEndLat + "%2C" + posiData.navEndLng + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
-            window.location.href = url;
+             window.location.href = url;
         }
-    }else{
-        // alert("我是微信");
+    } else {
+        if (wx) {
+            try {
+                wx.openLocation({
+                    latitude: posiData.navEndLat, // 纬度，浮点数，范围为90 ~ -90
+                    longitude: posiData.navEndLng, // 经度，浮点数，范围为180 ~ -180。
+                    name: posiData.navEndName, // 位置名
+                    address: '', // 地址详情说明
+                    scale: 1, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+                });
+            } catch (e) {
+                console.log(e.msg);
+            }
+        }
     }
 }
 
@@ -366,7 +382,7 @@ function getMyLocationOnSuccess(position) {
         //取出经纬度并且赋值
         latlng = res[0];
         var url = "http://map.qq.com/nav/drive?start=" + latlng.lat + "%2C" + latlng.lng + "&dest=" + objdata.destPosition.navEndLat + "%2C" + objdata.destPosition.navEndLng + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
-            // alert(url);
+        // alert(url);
         window.location.href = url;
     });
     // alert("经度"+myLongitude);
