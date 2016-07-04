@@ -54,11 +54,12 @@
 		<script type="text/javascript">
 			var pageData = ${articleJson};
 			var wechatOptions = {
-				title: '${title}',
-				desc: '${description}',
+				title: pageData.data.title,
+				desc: pageData.data.abstract_content,
 		        link: window.location.href,
         		imgUrl:pageData.data.abstract_pic
 			};
+			console.log(wechatOptions);
 			var wechat = new weChat(wx,wechatOptions);
 
 			

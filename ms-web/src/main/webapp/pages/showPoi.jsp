@@ -74,14 +74,15 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 <script type="text/javascript">
     var poiData = ${poiJson};
+    // var desc = 
+    // console.log();
     var wechatOptions = {
-        title: '${title}',
-        desc: '${description}',
+        title: poiData.data.long_title,
+        desc: poiData.data.long_title,
         link: window.location.href,
         imgUrl:poiData.data.thumbnail
     };
     var wechat = new weChat(wx,wechatOptions);
-    console.log(poiData);
 </script>
 <!--  注意，下面引用文件的地址ak项表示密钥，由于暂时公司没有密钥，所以暂时使用个人密钥
       TODO 以公司的百度开发者密钥来替换下面的ak密钥-->

@@ -43,42 +43,6 @@ function getPoiController() {
             //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup', '{}');
         }
         return;
-
-        // var poiId = null;
-        // try {
-        //     poiId = parseInt(location.href.match(/poi_id=(\d+)/)[1]);
-        // } catch (e) {
-        //     alert("url中缺乏poi_id参数")
-        //     return;
-        // }
-        // if (!poiId) {
-        //     return;
-        // }
-        // $.ajax({
-        //     url: Inter.getApiUrl().readPoi, // to add
-        //     type: 'GET',
-        //     data: { id: poiId },
-        //     dataType: 'json',
-        //     success: function(data) {
-        //         if (data.code === "0") {
-        //             console.log("请求poi数据成功");
-        //             if (typeof successCallback === 'function') {
-        //                 successCallback(data.data);
-        //             }
-        //         } else {
-        //             if (typeof errorCallback === 'function') {
-        //                 errorCallback(data);
-        //             }
-        //             console.log("请求poi数据失败");
-        //         }
-        //     },
-        //     error: function(data) {
-        //         if (typeof errorCallback === 'function') {
-        //             errorCallback(data);
-        //         }
-        //         console.log("请求poi数据失败");
-        //     }
-        // });
     }
 
     /**
@@ -162,43 +126,7 @@ function getPoiController() {
                 }
             }
         } else {
-            /*  
-             *  demo  http://developer.baidu.com/map/jsdemo.htm#a5_1
-             *   文档  http://developer.baidu.com/map/reference/index.php?title=Class:%E6%A0%B8%E5%BF%83%E7%B1%BB/Map
-             */
-
             getMyLocation();
-
-
-
-            // if($('#container').html()){
-            //  return;
-            // }
-            // var map = new BMap.Map("container");          // 创建地图实例  
-            // var point = new BMap.Point(lng, lat);  // 创建点坐标  
-            // map.centerAndZoom(point, 15); 
-            // var convertor = new BMap.Convertor();
-            // $('.map-wrapper').addClass('active');
-            // $('.map-wrapper .icon-back').on('click', function(){
-            //  $('.map-wrapper').removeClass('active');
-            // });
-
-            // // 坐标转换请求，从腾讯地图转换到百度地图
-            // convertor.translate([new BMap.Point(lng, lat)], 3, 5, function(data){
-            //  if(data.status === 0){
-            //      var point = new BMap.Point(data.points[0].lng, data.points[0].lat);  // 创建点坐标  
-            //      var marker = new BMap.Marker(point);
-            //      map.addOverlay(marker);
-            //      map.setCenter(data.points[0]);  
-            //      $('.navigation').on('click',function(){
-            //          $('.map-wrapper').addClass('active');
-            //          setTimeout(function(){
-            //              map.setCenter(point);
-            //              map.setZoom(15);
-            //          },100);
-            //      });
-            //  }
-            // });
         }
     }
 
@@ -260,34 +188,6 @@ function getPoiController() {
                     document.querySelector('.video').src = video;
                     btnWraper.classList.remove('hidden');
                 }
-
-                // if (!/^\d+$/.test(video)) {
-                //     document.querySelector('.video').src = video;
-                //     btnWraper.classList.remove('hidden');
-                // } else {
-                //     $.ajax({
-                //         url: host + "/api_vodPlay.do",
-                //         type: "GET",
-                //         data: { method: "getVideoUrls", fileId: video },
-                //         dataType: "json",
-                //         success: function(data) {
-                //             if (data.code === '0') {
-                //                 // 按照视频类型优先级来获取视频url，例如vod_original_file_url是最高优先级
-                //                 var videoTypes = ["vod_original_file_url", "vod_normal_mp4_url", "vod_phone_hls_url"];
-                //                 var src = "";
-                //                 videoTypes.forEach(function(type) {
-                //                     if (!src && data.data[type]) {
-                //                         src = data.data[type];
-                //                     }
-                //                 });
-                //                 if (src) {
-                //                     btnWraper.classList.remove('hidden');
-                //                     document.querySelector('.video').src = src;
-                //                 }
-                //             }
-                //         }
-                //     });
-                // }
             }
         }
     }
@@ -380,8 +280,6 @@ function getPoiController() {
             // alert(url);
             window.location.href = url;
         });
-        // alert("经度"+myLongitude);
-        // alert("纬度"+myLatitude);
     }
 
     //获取坐标位置失败
@@ -434,16 +332,12 @@ function filterImgInContent(content) {
         var reg = /width="([0-9]*?)"/;
         var widthNum = word.match(reg);
         if (widthNum[1] > clientWidth) {
-            console.log('大于');
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
             word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
             //word = word.replace(/height="[0-9]*"/, '');
             //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
-        } else {
-            console.log('小于');
-        }
+        } 
         return word;
     });
-    console.log(content);
     return content;
 }
