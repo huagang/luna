@@ -54,8 +54,8 @@
 		<script type="text/javascript">
 			var pageData = ${articleJson};
 			var wechatOptions = {
-				title: pageData.data.title,
-				desc: pageData.data.abstract_content,
+		        title: ${title},
+		        desc: ${description},
 		        link: window.location.href,
         		imgUrl:pageData.data.abstract_pic
 			};
