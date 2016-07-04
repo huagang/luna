@@ -121,6 +121,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 3.类别二级菜单
 			doc.put("sub_tag", param.getInteger("subTag"));
 
+			// 3.分享摘要
+			doc.put("share_desc", param.getString("share_desc"));
+			
 			lnglatArray = new ArrayList<Double>();
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray.add(param.getDouble("lng"));
@@ -202,7 +205,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			} else {
 				doc.put("sub_tag", 0);
 			}
-
+			// 3.分享摘要
+			if (param.containsKey("share_desc")) {
+				doc.put("share_desc", param.getString("share_desc"));
+			} else {
+				doc.put("share_desc", "");
+			}
+			
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray = new ArrayList<Double>();
 			try {
@@ -630,6 +639,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("tags", doc.get("tags"));
 					// 二级分类
 					enDoc.put("sub_tag", doc.get("sub_tag"));
+					// 分享摘要
+					enDoc.put("share_desc", doc.get("share_desc"));
 					// 经纬度
 					enDoc.put("lnglat", doc.get("lnglat"));
 					// zone_id
@@ -846,6 +857,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			commonFieldsVal.put("subTag", 0);
 		}
 
+		// 3.分享摘要
+		if(docPoi.containsKey("share_desc")) {// share_dec字段后加，早期POI可能不存在该字段info
+			commonFieldsVal.put("share_desc", docPoi.getString("share_desc"));
+		} else {
+			commonFieldsVal.put("share_desc", "");
+		}
+		
 		// 4.经纬度
 		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
 		JSONArray coordinates = lnglat.getJSONArray("coordinates");

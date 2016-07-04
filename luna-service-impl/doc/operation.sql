@@ -1,1 +1,3 @@
 ALTER table ms_article change COLUMN `abstract_content` `abstract_content` text NOT NULL COMMENT '摘要';
+insert into ms_poi_field (field_name, field_show_name, display_order, field_type, field_size, placeholder, field_tips_for_templete, extension_attrs, field_introduction) values ("share_desc","分享摘要",3, 4, 20480, null, null, null, "用于针对单个POI点的分享介绍");
+insert into  ms_r_tag_field (tag_id, field_name) values (1, "share_desc");

@@ -60,7 +60,7 @@ public class PoiCommon {
 		/**
 		 * FIXME:(1/3)创建新的共有字段时--->>>需要修改
 		 */
-		public static final Integer 公有字段个数 = 12;
+		public static final Integer 公有字段个数 = 13;
 
 		/**
 		 * FIXME:(2/3)创建新的共有字段时--->>>需要修改<p>
@@ -68,6 +68,7 @@ public class PoiCommon {
 		 */
 		public static final String[] NM_COL_BASES = new String[] {
 				"二级分类",
+				"分享摘要",
 				"详细介绍",
 				"缩略图",
 				"全景类型",
@@ -80,6 +81,7 @@ public class PoiCommon {
 		 */
 		public static final String[] DESC_COL_BASES = new String[] {
 				"二级分类名称",
+				"POI点的分享摘要",
 				"POI点的详细介绍",
 				"输入缩略图名称，不能包含中文",
 				"全景类别名称，可为空，默认值为专辑",
@@ -479,6 +481,8 @@ public class PoiCommon {
 		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "longName"));
 		// 别名
 		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "shortName"));
+		// 分享摘要
+		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "shareDesc"));
 		// 详细地址
 		hasError = hasError || CharactorUtil.hasChineseChar(getValueFromParamMap(paramMaps, "detailAddress"));
 		// 详细介绍
@@ -630,6 +634,9 @@ public class PoiCommon {
 		// 2.别名
 		param.put("short_title", paramMaps.get("shortName")[0]);
 
+		// 3.分享摘要
+		param.put("share_desc", paramMaps.get("shareDesc")[0]);
+		
 		// 3.一级类别（topTag）
 		param.put("tags", FastJsonUtil.castStrNumArray2IntNumArray(
 				paramMaps.get("topTag")));

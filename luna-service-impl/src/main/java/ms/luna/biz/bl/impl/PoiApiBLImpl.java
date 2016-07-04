@@ -365,14 +365,17 @@ public class PoiApiBLImpl implements PoiApiBL {
 		// 从poi数据中挑选数据
 		Set<Entry<String, Object>> entrySet = doc.entrySet();
 		JSONObject poi = new JSONObject();
+		Map<String, String> fieldNames = getFieldNamesLst();
+		Map<Integer, String> poiTags = getPoiTagsLst();
+		Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
+		Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+		Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
+		
+		// 分享摘要--数据库中可能不存在该字段
+		poi.put(poiApiNameMap.getOuterVal("share_desc"), "");
+		
 		for (Entry<String, Object> entry : entrySet) {
 			String key = entry.getKey();
-			Map<String, String> fieldNames = getFieldNamesLst();
-			Map<Integer, String> poiTags = getPoiTagsLst();
-			Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
-			Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
-			Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
-
 			if (fieldNames.containsKey(key) || "sub_tag".equals(key)) {
 				// 一级类别--tags
 				if ("tags".equals(key)) {
@@ -495,6 +498,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					poi.put("address", data);
 					continue;
 				}
+				// 全景标识
 				if("panorama".equals(key)) {
 					String panorama_id = (String) entry.getValue();
 					JSONObject data = poi.getJSONObject("panorama");
@@ -510,6 +514,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					
 					continue;
 				}
+				// 全景类型
 				if("panorama_type".equals(key)) {
 					Integer panorama_type_id = (Integer) entry.getValue();
 					JSONObject data = poi.getJSONObject("panorama");
@@ -1140,7 +1145,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			for (String field : fields) {
 				field = poiApiNameMap.getInnerVal(field);
 				String key = field;
-				if (resJson.containsKey(key) || "sub_tag".equals(key) || "panorama_type".equals(key)) { // "sub_tag"在mongo中但不在mysql field字段中，而panorama_type在mysql field字段但可能不在mongo中(前期未设计)
+//				if (resJson.containsKey(key) || "sub_tag".equals(key) || "panorama_type".equals(key)) { // "sub_tag"在mongo中但不在mysql field字段中，而panorama_type在mysql field字段但可能不在mongo中(前期未设计)
 					Map<String, String> fieldNames = getFieldNamesLst();
 					Map<Integer, String> poiTags = getPoiTagsLst();
 					Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
@@ -1301,10 +1306,19 @@ public class PoiApiBLImpl implements PoiApiBL {
 							result.put("panorama", data);
 							continue;
 						}
+						// 分享摘要
+						if("share_desc".equals(key)){//
+							String share_desc = resJson.getString(key);
+							if(share_desc == null) {
+								share_desc = "";// 数据库中可能不存在
+							}
+							result.put("share_desc", share_desc);
+							continue;
+						}
 						result.put(poiApiNameMap.getOuterVal(key), resJson.get(key));
 					}
 				}
-			}
+//			}
 		}
 		return result;
 	}

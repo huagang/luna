@@ -75,6 +75,11 @@ public class PoiModel implements Serializable {
 	private Integer subTag;
 
 	/**
+	 * 分享摘要
+	 */
+	private String shareDesc;
+	
+	/**
 	 * 类别(POI TAG)
 	 */
 	private List<SimpleModel> poiTags = new ArrayList<SimpleModel>();
@@ -471,6 +476,17 @@ public class PoiModel implements Serializable {
 	 */
 	public void setSubTag(Integer subTag) {
 		this.subTag = subTag;
+	}
+
+	public String getShareDesc() {
+		return shareDesc;
+	}
+
+	/**
+	 * @param shareDesc share_desc to set
+	 */
+	public void setShareDesc(String shareDesc) {
+		this.shareDesc = shareDesc;
 	}
 
 }
