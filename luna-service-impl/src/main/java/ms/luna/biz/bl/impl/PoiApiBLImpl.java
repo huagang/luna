@@ -924,7 +924,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoByFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -979,7 +979,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoByFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1042,7 +1042,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoByFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1084,7 +1084,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoByFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1125,7 +1125,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoByFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1135,7 +1135,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return array;
 	}
 
-	private JSONObject getPoiInfoByFields(Document doc, String[] fields) {
+	private JSONObject getPoiInfoWithFields(Document doc, String[] fields) {
 		JSONObject result = new JSONObject();
 		if (fields == null || fields.length == 0) {
 			fields = poiApiNameMap.getApiFields();
@@ -1145,7 +1145,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			for (String field : fields) {
 				field = poiApiNameMap.getInnerVal(field);
 				String key = field;
-//				if (resJson.containsKey(key) || "sub_tag".equals(key) || "panorama_type".equals(key)) { // "sub_tag"在mongo中但不在mysql field字段中，而panorama_type在mysql field字段但可能不在mongo中(前期未设计)
+				if (resJson.containsKey(key) || "sub_tag".equals(key) || "panorama_type".equals(key)) { // "sub_tag"在mongo中但不在mysql field字段中，而panorama_type在mysql field字段但可能不在mongo中(前期未设计)
 					Map<String, String> fieldNames = getFieldNamesLst();
 					Map<Integer, String> poiTags = getPoiTagsLst();
 					Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
@@ -1318,7 +1318,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 						result.put(poiApiNameMap.getOuterVal(key), resJson.get(key));
 					}
 				}
-//			}
+			}
 		}
 		return result;
 	}
