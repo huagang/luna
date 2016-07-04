@@ -14,7 +14,22 @@ $(document).ready(function() {
 
 //初始化页面
 function getPoiController() {
-    var audio, audioDom, videoDom, host;
+    var audio, audioDom, videoDom, host,
+    refUrl = Util.location('ref');
+
+    /**
+     * 判断是否有url 中是否有ref,如果有则显示返回按钮
+     * @param  {[type]} refUrl [description]
+     * @return {[type]}        [description]
+     */
+    if(refUrl){
+        document.querySelector('.goback').classList.remove('hidden');
+        document.querySelector('.goback a').addEventListener('click',function(e){
+            e.preventDefault();
+            //alert('hi!');
+            window.history.go(-1);
+        });
+    }
 
     // 初始化页面数据 目前数据直接从页面中带过来
     function initData(successCallback, errorCallback) {

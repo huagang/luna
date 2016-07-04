@@ -15,6 +15,7 @@
     <link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/icon.css">
     <!-- 引入video的css -->
     <link href="<%=request.getContextPath() %>/resources/styles/videoJs.css" rel="stylesheet">
     <!-- 引入video的css End-->
@@ -51,6 +52,10 @@
         <div class='content'></div>
     </div>
 </div>
+<div class="goback hidden ">
+    <a href="javascript:void(0)" class=""><i class="icon icon-goback"></i></a>
+</div>
+
 <div class='video-modal hidden'>
     <div class='mask'></div>
     <div class='video-dialog'>
@@ -89,7 +94,7 @@
 <!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
 <script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script> -->
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
-<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/weixin_config.js'></script>
+<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/util.js'></script>
 <!-- 引入video的 js -->
 <script src='<%=request.getContextPath()%>/resources/scripts/videoJs.js'></script>
 <!-- 引入video的 js End -->

@@ -1,60 +1,74 @@
-.banner{
-	position: relative;
+.banner {
+    position: relative;
 }
-.banner .btn-container{
-	position: absolute;
+
+.banner .btn-container {
+    position: absolute;
     right: 20px;
     bottom: 5px;
     color: white;
 }
-.banner .btn-container > div{
-	display: inline-block;
+
+.banner .btn-container > div {
+    display: inline-block;
 }
 
-.panorama{
-	margin-right: 10px;
-}
-.panorama a{
-	color: white;
+.panorama {
+    margin-right: 10px;
 }
 
-.icon-panorama{
-	width: 32px;
-	height: 28px;
-	background-position: -34px -102px;
-	margin: 0 auto 5px;
-	display: block;
+.panorama a {
+    color: white;
 }
 
-.icon-navigation{
-	width: 29px;
-	height: 28px;
-	background-position: -68px -102px;
-	display: block;
-	margin: 0 auto 5px;
+.icon-panorama {
+    width: 32px;
+    height: 28px;
+    background-position: -34px -102px;
+    margin: 0 auto 5px;
+    display: block;
 }
 
-.map-wrapper{
-	position: absolute;
+.icon-navigation {
+    width: 29px;
+    height: 28px;
+    background-position: -68px -102px;
+    display: block;
+    margin: 0 auto 5px;
+}
+
+.map-wrapper {
+    position: absolute;
     top: 0;
     left: 0;
     height: 0;
     width: 0;
 }
-.map-wrapper.active{
-	height: 100%;
-	width: 100%;
+
+.map-wrapper.active {
+    height: 100%;
+    width: 100%;
 }
 
-.map-wrapper.active #container{
-	height: 100%;
-	width: 100%;
+.map-wrapper.active #container {
+    height: 100%;
+    width: 100%;
 }
-.map-wrapper.active .icon-back{
-	position: fixed;
+
+.map-wrapper.active .icon-back {
+    position: fixed;
     top: 25px;
     left: 10px;
     height: 33px;
     width: 33px;
     background-position: 0px -133px;
+}
+
+.goback {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    width: 33px;
+    height: 33px;
+    z-index: 10;
 }

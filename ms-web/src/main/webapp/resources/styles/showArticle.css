@@ -78,12 +78,12 @@ html,body{
 	position: relative;
 	padding: 12px 5px;
 }
-.icon{
+/*.icon{
 	background: url(../images/icons-2x.png) no-repeat;
     display: inline-block;
     background-size: 800px 504px;
     cursor: pointer;
-}
+}*/
 .toolbar .icon-audio{
 	width: 33px;
     height: 33px;
