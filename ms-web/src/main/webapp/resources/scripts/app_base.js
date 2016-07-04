@@ -319,9 +319,11 @@ $(document).ready(function() {
     }
 });
 
-
-
-
+/**
+ * 导航事件
+ * @param  {[type]} posiData [description]
+ * @return {[type]}          [description]
+ */
 function showNav(posiData) {
     if (!is_weixn()) {
         var url;
@@ -330,14 +332,14 @@ function showNav(posiData) {
             getMyLocation();
         } else {
             url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLat + "%2C" + posiData.navStartLng + "&dest=" + posiData.navEndLat + "%2C" + posiData.navEndLng + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
-             window.location.href = url;
+            window.location.href = url;
         }
     } else {
         if (wx) {
             try {
                 var locationOptions = {
-                    latitude: posiData.navEndLat, // 纬度，浮点数，范围为90 ~ -90
-                    longitude: posiData.navEndLng, // 经度，浮点数，范围为180 ~ -180。
+                    latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
+                    longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
                     name: posiData.navEndName, // 位置名
                     address: '', // 地址详情说明
                     scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
