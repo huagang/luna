@@ -12,6 +12,7 @@
     var wechat = function(wx, options) {
         var self = this,
             defaults = {
+                debug:false,
                 title: '皓月平台',
                 desc: '皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。',
                 link: 'http://luna.visualbusiness.cn/', //正式
@@ -59,7 +60,7 @@
         var self = this;
         // console.log(this.options);
         var ops = {
-            debug: true,
+            debug: this.options.debug,
             appId: this.options.appId,
             timestamp: this.options.timestamp,
             nonceStr: this.options.nonceStr,

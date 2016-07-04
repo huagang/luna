@@ -345,7 +345,6 @@ function showNav(posiData) {
                     scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                     infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                 }
-                alert(JSON.stringify(locationOptions));
                 wx.openLocation(locationOptions);
             } catch (e) {
                 console.log(e.msg);
