@@ -54,14 +54,12 @@
 		<script type="text/javascript">
 			var pageData = ${articleJson};
 			var wechatOptions = {
-				title: '${title}',
-				desc: '${description}',
+		        title: "${title}",
+		        desc: "${description}",
 		        link: window.location.href,
         		imgUrl:pageData.data.abstract_pic
 			};
 			var wechat = new weChat(wx,wechatOptions);
-
-			
 		</script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>

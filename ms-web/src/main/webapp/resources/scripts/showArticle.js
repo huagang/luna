@@ -15,10 +15,6 @@ window.onload = function() {
     initData();
 
     function initData() {
-        console.log(pageData.data);
-        // var content = data.data.content.replace(/<video .*? height="[0-9]*" .*?>/g, function(word) {
-        //     return word.replace(/height="[0-9]*"/, "");
-        // });
         pageData.data.content = filterImgInContent(pageData.data.content);
         updateData(pageData.data);
 
@@ -219,16 +215,12 @@ function filterImgInContent(content) {
         var reg = /width="([0-9]*?)"/;
         var widthNum = word.match(reg);
         if (widthNum[1] > clientWidth) {
-            console.log('大于');
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
             word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
             //word = word.replace(/height="[0-9]*"/, '');
             //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
-        } else {
-            console.log('小于');
-        }
+        } 
         return word;
     });
-    console.log(content);
     return content;
 }

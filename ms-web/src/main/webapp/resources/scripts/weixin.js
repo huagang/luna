@@ -12,6 +12,7 @@
     var wechat = function(wx, options) {
         var self = this,
             defaults = {
+                debug:false,
                 title: '皓月平台',
                 desc: '皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。',
                 link: 'http://luna.visualbusiness.cn/', //正式
@@ -57,9 +58,9 @@
     //初始化微信的引用
     wechat.prototype.initConfig = function() {
         var self = this;
-        console.log(this.options);
+        // console.log(this.options);
         var ops = {
-            debug: true,
+            debug: this.options.debug,
             appId: this.options.appId,
             timestamp: this.options.timestamp,
             nonceStr: this.options.nonceStr,
@@ -79,12 +80,14 @@
                 'openLocation',
                 'getLocation'
             ]
-        }
-        alert(JSON.stringify(ops));
+        };
+        // alert(JSON.stringify(ops));
 
         this.wx.config(ops);
 
         this.wx.ready(function() {
+
+            console.log(self.shareData);
 
             //分享给朋友
             self.wx.onMenuShareAppMessage(self.shareData);
@@ -104,23 +107,14 @@
 
             //成功回调函数
             self.options.readyCallback();
-
-            // $(".app-wrap").on("click", ".navimg", function() {
-            //     openWeiXinlatitude = $(this).attr("endPosition").split(",")[0];
-            //     openWeiXinlongitude = $(this).attr("endPosition").split(",")[1];
-            //     openWeiXinMapName = $(this).attr("endName");
-            //     openWeiXinMapAddress = "";
-            //     // alert(openWeiXinlatitude);
-            //     // alert(openWeiXinlongitude);
-            //     // alert(openWeiXinMapName);
-            //     wx.openLocation({
-            //         latitude: Number(openWeiXinlatitude),
-            //         longitude: Number(openWeiXinlongitude),
-            //         name: openWeiXinMapName,
-            //         address: openWeiXinMapAddress,
-            //         scale: 14,
-            //         infoUrl: 'http://luna.visualbusiness.cn'
-            //     });
+            // 调用地图方法
+            // wx.openLocation({
+            //     latitude: Number(openWeiXinlatitude),
+            //     longitude: Number(openWeiXinlongitude),
+            //     name: openWeiXinMapName,
+            //     address: openWeiXinMapAddress,
+            //     scale: 14,
+            //     infoUrl: 'http://luna.visualbusiness.cn'
             // });
         });
 
