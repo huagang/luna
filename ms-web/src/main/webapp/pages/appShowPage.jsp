@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>luna-app</title>
+    <title>${share_info_title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta id="vb_viewport" name="viewport" content="width=device-width,initial-scale=1,minimum-scale=0.1,maximum-scale=10,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -28,6 +28,7 @@
             link: window.location.href,
             imgUrl:"${share_info_pic}"
         };
+        alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
