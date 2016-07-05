@@ -55,7 +55,6 @@
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <!-- END REFER LINK -->
-<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
 <script type="text/javascript">

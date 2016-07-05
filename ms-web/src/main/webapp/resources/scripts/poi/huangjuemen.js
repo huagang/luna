@@ -227,181 +227,6 @@ var initHJMPoiPage = function() {
     }
 }()
 
-
-
-// //初始化页面
-// function getPoiController() {
-//     var audio, audioDom, videoDom, host,
-
-
-
-
-//         // 初始化页面数据 目前数据直接从页面中带过来
-//         function initData(successCallback, errorCallback) {
-//             //fake data
-
-
-//             //设置导航目的地信息
-//             objdata.destPosition.lat = data.lat;
-//             objdata.destPosition.lng = data.lng;
-//             objdata.destPosition.navEndName = data.poi_name;
-
-//             if (typeof successCallback === 'function') {
-//                 successCallback(data);
-//                 //给现有video标签加上 videoJs的效果
-//                 //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup', '{}');
-//             }
-//             return;
-//         }
-
-//     /**
-//      * 更新页面数据
-//      * @param  {[type]} data [description]
-//      * @return {[type]}      [description]
-//      */
-//     function updateData(data) {
-//         $(".navigation").on("click", handleNavigation.bind(this, data.lng, data.lat, data.poi_name));
-
-
-
-//         //初始化视频信息
-//         if (data.video) {
-//             console.log(data);
-//             videoDom.setVideoSrc(data.video);
-//         }
-//         //初始化音频信息
-//         if (data.audio) {
-//             audioDom.setAudioSrc(data.audio);
-//         }
-
-//     }
-
-//     // 导航点击事件绑定的函数
-//     function handleNavigation(lng, lat, poi_name) {
-
-//     }
-
-//     function getAudioDomControl(audio) {
-//         return {
-//             // 显示音频控制按钮
-//             showAudioWrapper: function() {
-//                 document.querySelector('.audio-btn-wrap').classList.remove('hidden');
-//             },
-
-//             // 音频控制按钮点击后触发的方法  用于切换播放状态（播放状态有"播放", "停止"两个状态）
-//             handleAudioControlClick: function() {
-//                 if (!audio) return;
-//                 var result = audio.toggle();
-//                 if (!result) {
-//                     return;
-//                 }
-//                 if (audio.isPlaying) {
-//                     document.querySelector('.icon-audio').classList.add('playing');
-//                 } else {
-//                     document.querySelector('.icon-audio').classList.remove('playing');
-//                 }
-//             },
-//             setAudioSrc: function(url) {
-//                 var audioBtnWraper = document.querySelector('.audio-btn-wrap');
-//                 audioBtnWraper.addEventListener('click', this.handleAudioControlClick);
-//                 audio.src = url;
-//                 $('.audio').on("canplay", this.showAudioWrapper.bind(this));
-//             }
-//         }
-//     }
-
-//     function getVideoDomControl(audio) {
-//         return {
-//             // 显示视频框来观看视频
-//             showVideoModal: function() {
-//                 document.querySelector('.video-modal').classList.remove('hidden');
-//             },
-
-//             // 隐藏视频框并停止视频播放
-//             hideVideoModal: function() {
-//                 document.querySelector('.video-modal').classList.add('hidden');
-//                 document.querySelector('.video').pause();
-//             },
-
-//             setVideoSrc: function(video) {
-//                 var btnWraper = document.querySelector('.video-btn-wrap');
-//                 btnWraper.addEventListener('click', function() {
-//                     this.showVideoModal();
-//                     if (audio) {
-//                         audio.pause();
-//                         document.querySelector('.icon-audio').classList.remove('playing');
-
-//                     }
-//                 }.bind(this));
-//                 document.querySelector('.video-modal .mask').addEventListener('click', this.hideVideoModal);
-//                 //video 可能是video id,也可能是video url，所以需要进行判断
-//                 if (video) {
-//                     document.querySelector('.video').src = video;
-//                     btnWraper.classList.remove('hidden');
-//                 }
-//             }
-//         }
-//     }
-
-//     // 音频控制器工厂方法   含有音频当前播放状态和播放、停止方法
-//     // @param {string} selector - audio标签选择器
-//     function getAudio(selector) {
-//         return {
-//             _selector: selector,
-//             _isPlaying: false,
-//             _loaded: false,
-//             get isPlaying() {
-//                 return this._isPlaying;
-//             },
-//             set src(value) { // 设置audio src
-//                 this._src = value;
-//                 this._target = document.querySelector(this._selector);
-//                 this._target.src = value;
-//                 this._loaded = false;
-//                 this._target.addEventListener("canplay", this.handleLoaded.bind(this));
-//             },
-//             handleLoaded: function() {
-//                 this._loaded = true;
-//             },
-//             play: function() {
-//                 if (this._loaded && this._src && !this._isPlaying) {
-//                     this._target.play();
-//                     this._isPlaying = true;
-//                     return true;
-//                 }
-//                 return false;
-//             },
-//             pause: function() {
-//                 if (this._loaded && this._src && this._isPlaying) {
-//                     this._target.pause();
-//                     this._isPlaying = false;
-//                     return true;
-//                 }
-//                 return false;
-//             },
-//             toggle: function() {
-//                 if (this._loaded && this._src) {
-//                     this._isPlaying ? this.pause() : this.play();
-//                     return true;
-//                 }
-//                 return false;
-//             }
-//         };
-//     }
-
-
-
-//     return {
-//         init: function() {
-//             audio = getAudio(".audio");
-//             audioDom = getAudioDomControl(audio);
-//             videoDom = getVideoDomControl(audio);
-//             host = '/luna-web';
-//             // weixinConfig();
-//             initData(updateData);
-//         }
-//     }
-// }
 /**
  * 内容里面的图片宽度调整
  */
@@ -428,6 +253,12 @@ $(document).ready(function() {
 
     initHJMPoiPage.init();
 });
+
+/**
+ * 回到顶部的滚动
+ * @param  {[type]} e [description]
+ * @return {[type]}   [description]
+ */
 function pageScroll(e) {
     //把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
     window.scrollBy(0, -100);
