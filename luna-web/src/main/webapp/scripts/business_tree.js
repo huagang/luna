@@ -12,7 +12,7 @@ var treeHtml="";
 var RootDataTemplate={
     "business_id":"",
     "business_name":"",
-    "c_list":{}
+    "c_list":[]
 };
 var poiDefTemplate={
 	    "_id":"",
@@ -21,11 +21,11 @@ var poiDefTemplate={
 }
 var PoiDataTemplate={
     "_id":"",
-    "c_list":{}
+    "c_list":[]
 };
 var TypeDataTemplate={
     "type_id":"",
-    "c_list":{}
+    "c_list":[]
 };
 
 $(document).ready(function(){
@@ -110,21 +110,33 @@ $(document).ready(function(){
 
     $(".luna-tree").on('click','.item-opt.delete',function(){
         var _this=$(this);
-        var parents=$(this).parents("ul");
-        var ps=[];
+        var parents_li=$(this).parents("li");
+        var ps_li=[];
         $.confirm("确定要删除么？删除后无法恢复！", function(){
-            for(var i=0;i<parents.length;i++){
-                if($(parents[i]).attr("level-item-id") && $(parents[i]).attr("level-item-id")!=""){
-                    ps.push($(parents[i]).attr("level-item-id"));
+            for(var i=0;i<parents_li.length;i++){
+                if(($(parents_li[i]).attr("level-item-id") && $(parents_li[i]).attr("level-item-id")!="")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+                    if($(parents_li[i]).attr("keyorder") && $(parents_li[i]).attr("keyorder")!=""){
+                        ps_li.push($(parents_li[i]).attr("keyorder"));
+                        // console.log($(parents_li[i]).attr("keyorder"));
+                    }else{
+                        ps_li.push($(parents_li[i]).index());
+                        // console.log($(parents_li[i]).index());
+                    }
                 }
             }
             var current_data=treeDate;
-            for(var i=(ps.length-1);i>=0;i--){
-                current_data=current_data.c_list[ps[i]];
+            for(var i=(ps_li.length-1);i>0;i--){
+                current_data=current_data.c_list[ps_li[i]];
             }
-            delete current_data.c_list[_this.attr("item_id")];
-            showTreeData();
-            saveTreeData();
+            for(var m=0;m<current_data.c_list.length;m++){
+                if(current_data.c_list[m]._id==_this.attr("item_id")){
+                    current_data.c_list.splice(m, 1);
+                    showTreeData();
+                    saveTreeData();
+                    return;
+                }
+            }
+            // delete current_data.c_list[_this.attr("item_id")];
         }, function(){
             
         });
@@ -134,27 +146,29 @@ $(document).ready(function(){
 
     var _this_poi={},
     	parents_poi={},
-    	ps=[];
+        parents_poi_li={},
+    	ps=[],
+        ps_li=[];
     
     $(".luna-tree").on('click','.item-opt.addchild',function(){
     	// 点击添加子节点时，需要加载默认的poi列表数据
     	searchPois();
     	_this_poi=$(this);
     	parents_poi=$(this).parents("ul");
+        parents_poi_li=$(this).parents("li");
     	ps=[];
         var $pop_window = $("#childPoi");
         popWindow($pop_window);
     });
     
-    var _this_poi={},
-    	parents_poi={},
-    	ps=[];
     
     $("#btn-add-poi").on('click',function(){
     	
     	var _this=_this_poi;
         var parents=parents_poi;
+        var parents_li=parents_poi_li;
         var ps=[];
+        var ps_li=[];
         var chk_value=[];
         $('.list-result-poi input:checked').each(function(){ 
         	chk_value.push([$(this).attr("poi_id"),$(this).attr("poi_tags"),$(this).parent().text()]); 
@@ -162,22 +176,43 @@ $(document).ready(function(){
         if(chk_value.length>0){
         	for(var c=0;c<chk_value.length;c++){
                 ps=[];
-        		for(var i=0;i<parents.length;i++){
-    	            if($(parents[i]).attr("level-item-id") && $(parents[i]).attr("level-item-id")!=""){
-    	                ps.push($(parents[i]).attr("level-item-id"));
-    	            }
-    	        }
+        		// for(var i=0;i<parents.length;i++){
+    	     //        if($(parents[i]).attr("level-item-id") && $(parents[i]).attr("level-item-id")!=""){
+    	     //            ps.push($(parents[i]).attr("level-item-id"));
+          //               // console.log($(parents[i]).index());
+    	     //        }
+    	     //    }
+                ps_li=[];
+
+                for(var i=0;i<parents_li.length;i++){
+                    if(($(parents_li[i]).attr("level-item-id") && $(parents_li[i]).attr("level-item-id")!="")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+                        if($(parents_li[i]).attr("keyorder") && $(parents_li[i]).attr("keyorder")!=""){
+                            ps_li.push($(parents_li[i]).attr("keyorder"));
+                            // console.log($(parents_li[i]).attr("keyorder"));
+                        }else{
+                            ps_li.push($(parents_li[i]).index());
+                            // console.log($(parents_li[i]).index());
+                        }
+                    }
+                }
     	        var current_data=treeDate;
-    	        for(var i=(ps.length-1);i>=0;i--){
-    	            current_data=current_data.c_list[ps[i]];
+    	        for(var i=(ps_li.length-1);i>=0;i--){
+    	            current_data=current_data.c_list[ps_li[i]];
     	        }
+                for(var m=0;m<current_data.c_list.length;m++){
+                    if(current_data.c_list[m]._id==chk_value[c][0]){
+                        return;
+                    }
+                }
+
     	        var newchild=$.extend(true, {}, PoiDataTemplate);
     	        newchild._id=chk_value[c][0];
-    	        if(_this.attr("item_id") && _this.attr("item_id") !=""){
-    	            current_data.c_list[_this.attr("item_id")].c_list[chk_value[c][0]]=newchild;
-    	        }else{
-    	            current_data.c_list[chk_value[c][0]]=newchild;
-    	        }
+                current_data.c_list.push(newchild);
+    	        // if(_this.attr("item_id") && _this.attr("item_id") !=""){
+    	        //     current_data.c_list[_this.attr("item_id")].c_list[chk_value[c][0]]=newchild;
+    	        // }else{
+    	        //     current_data.c_list[chk_value[c][0]]=newchild;
+    	        // }
 
     	        if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
 	    	        var newDefChild=$.extend(true, {}, poiDefTemplate);
@@ -211,6 +246,9 @@ $(document).ready(function(){
             		treeDate = returndata.data.treeDate;
             		poiDef = returndata.data.poiDef;
             		tags = returndata.data.tags;
+                    if(typeof(treeDate.c_list.length)=="undefined"){
+                        treeDate=formateCList(treeDate);
+                    }
             		showTreeData();
             	} else {
             		 $.alert('请求结果出错');
@@ -238,6 +276,7 @@ $(document).ready(function(){
 
     // 保存业务树
     function saveTreeData(){
+        // console.log(JSON.stringify(treeDate));
         $.ajax({
             type: "POST",
             url: host+"/business_tree.do?method=saveBusinessTree",
@@ -267,7 +306,12 @@ $(document).ready(function(){
         var treeHtml="";
         if(data._id&&data._id!="" && typeof(data.business_id)=="undefined"){
             if(poiDef[data._id] && poiDef[data._id]!=""){
-                treeHtml='<li>';
+                if(typeof(data.keyorder)!="undefined"){
+                    var ordernum='keyorder="'+data.keyorder+'"';
+                }else{
+                    var ordernum='';
+                }
+                treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
                 treeHtml+='<div class="item-name" item_id="'+data._id+'" >'
                             +'<span class="item-title">'+poiDef[data._id].name+'</span>'
                             +'<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
@@ -284,7 +328,7 @@ $(document).ready(function(){
             for(var key in data.c_list) {
                 n++;
             }
-            treeHtml='<li>';
+            treeHtml='<li level-type-id="'+data.type_id+'">';
             treeHtml+='<div class="item-name item-type" type_id="'+data.type_id+'" >'
                         +'<span class="item-type-color bg-color'+data.type_id.toString().charAt(data.type_id.toString().length-1)+'"></span>'
                         +'<span class="item-type-name">'+tags[data.type_id]+'</span>'
@@ -296,6 +340,8 @@ $(document).ready(function(){
                 treeHtml+='<ul level-item-id="'+data._id+'">';
             }else if(data.type_id){
                 treeHtml+='<ul level-type-id="'+data.type_id+'">';
+            }else if(data.business_id){
+                treeHtml+='<ul level-business-id="'+data.business_id+'">';
             }else{
                 treeHtml+='<ul>';
             }
@@ -303,6 +349,7 @@ $(document).ready(function(){
             level++;
             for(var key in data.c_list) {
                 n++;
+                // console.log(key);
                 treeHtml+=initTreeHtml(data.c_list[key],1,level);
             }
             treeHtml+='</ul>';
@@ -327,7 +374,7 @@ $(document).ready(function(){
                     for(var key1 in data.c_list[key].c_list){
                         // var tags_list=poiDef[key1].tags;
                        //var tags_lists=tags_list.split(",");
-                    	var tags_lists = poiDef[key1].tags
+                    	var tags_lists = poiDef[data.c_list[key].c_list[key1]._id].tags;
                         for(var i=0;i<tags_lists.length;i++){
                             if(typeof(datanew.c_list[key].c_list[tags_lists[i]])=="undefined"){
                                 datanew.c_list[key].c_list[tags_lists[i]]={};
@@ -337,6 +384,7 @@ $(document).ready(function(){
                                 datanew.c_list[key].c_list[tags_lists[i]]["c_list"]={};
                             }
                             datanew.c_list[key].c_list[tags_lists[i]]["c_list"][key1]=$.extend(true, {}, data.c_list[key].c_list[key1]);  
+                            datanew.c_list[key].c_list[tags_lists[i]]["c_list"][key1].keyorder=key1;
                         }
                     }
                }else{
@@ -349,6 +397,24 @@ $(document).ready(function(){
         return datanew;
     }
     
+    //json data to  arraylist  处理历史数据，把c_list由json转成array
+    function formateCList(data){
+        var datanew=$.extend(true, {}, data);
+        datanew.c_list=[];
+        if(data.c_list && !$.isEmptyObject(data.c_list)){
+            for(var key in data.c_list) {
+                if(data.c_list[key].c_list &&  !$.isEmptyObject(data.c_list[key].c_list))
+                {
+                    datanew.c_list.push(formateCList(data.c_list[key]));
+                }else{
+                    data.c_list[key].c_list=[];
+                    datanew.c_list.push(data.c_list[key]);
+                }
+            }  
+        }
+        return datanew;
+    }
+
     //点击空白处关闭菜单
     $(document).mouseup(function(e){
 	  var _con = $('.item-child-btn,.item-opt-wrap');   // 设置目标区域
