@@ -33,22 +33,22 @@ var initHJMPoiPage = function() {
         };
 
         // 更新文章头图
-        var img = document.querySelector('.banner img');
-        img.src = data.abstract_pic;
-        img.onload = function() {
-            var banner = document.querySelector('.banner');
-            if (banner.clientHeight > 100) {
-                var wrapper = document.querySelector('.content-wrapper');
-                wrapper.addEventListener('scroll', function() {
-                    if (wrapper.scrollTop > 0) {
-                        banner.classList.add('sm');
-                    } else {
-                        banner.classList.remove('sm');
-                    }
-
-                });
-            }
-        }
+        //var img = document.querySelector('.banner img');
+        //img.src = data.abstract_pic;
+        //img.onload = function() {
+        //    var banner = document.querySelector('.banner');
+        //    if (banner.clientHeight > 100) {
+        //        var wrapper = document.querySelector('.content-wrapper');
+        //        wrapper.addEventListener('scroll', function() {
+        //            if (wrapper.scrollTop > 0) {
+        //                banner.classList.add('sm');
+        //            } else {
+        //                banner.classList.remove('sm');
+        //            }
+        //
+        //        });
+        //    }
+        //}
 
         //设置导航目的地信息
         objdata.destPosition.lat = data.lat;

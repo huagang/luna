@@ -15,7 +15,6 @@
     <link href="<%=request.getContextPath() %>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/common.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/icon.css">
     <!-- 引入video的css -->
     <link href="<%=request.getContextPath() %>/resources/styles/videoJs.css" rel="stylesheet">
     <!-- 引入video的css End-->
@@ -32,13 +31,13 @@
     </div>
     <div class="toolsbar">
         <div class="tool-item hidden">
-            <a id="phoneLink" href="wtai://wp/mc;10086" data-type="phone" ><i class="icon-phone"></i></a>
+            <a id="phoneLink" href="wtai://wp/mc;10086" data-type="phone" ><i class="icon icon-phone"></i></a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon-nav"></i></a>
+        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i></a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item hidden"><a id="panorama" href="javascript:;" data-type="pano"><i class="icon-pano"></i></a></div>
+        <div class="tool-item hidden"><a id="panorama" href="javascript:;" data-type="pano"><i class="icon icon-pano"></i></a></div>
     </div>
     <div class="content-wrapper">
        <div id="content" class='content'></div>
@@ -48,7 +47,7 @@
     </div>
 </div>
 <div class="goback hidden ">
-    <a href="javascript:void(0)" class=""><i class="icon icon-goback"></i></a>
+    <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
 
 <!-- BEGIN REFER LINK  -->
