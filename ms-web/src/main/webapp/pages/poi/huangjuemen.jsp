@@ -63,7 +63,7 @@
         title: "${title}",
         desc: "${description}",
         link: window.location.href,
-        imgUrl:poiData.data.abstract_pic
+        imgUrl:poiData.data.thumbnail
     };
 </script>
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>

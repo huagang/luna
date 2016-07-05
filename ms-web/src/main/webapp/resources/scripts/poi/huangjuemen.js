@@ -29,7 +29,7 @@ var initHJMPoiPage = function() {
             province: poiData.data.province || '河北省',
             city: poiData.data.city || '保定市',
             county: poiData.data.county || '白沟镇',
-            phone: poiData.data.phone || '10086'
+            phone: poiData.data.contact_phone || '10086'
         };
 
         // 更新文章头图

@@ -36,11 +36,11 @@ public class PoiController extends BaseController {
         }
         jsonObject.put("lang", lang);
         JSONObject ret = managePoiService.initPoiPreview(jsonObject.toJSONString());
-        ModelAndView modelAndView = buildModelAndView("showPoi");
+        ModelAndView modelAndView = buildModelAndView("poi/huangjuemen");
         if(ret.getString("code").equals("0")) {
             JSONObject data = ret.getJSONObject("data");
             modelAndView.addObject("title", data.getString("long_title"));
-            modelAndView.addObject("description", data.getString("long_title"));
+            modelAndView.addObject("description", data.getString("share_desc"));
             modelAndView.addObject("poiJson", ret);
         } else {
             return buildModelAndView("404");
@@ -62,7 +62,7 @@ public class PoiController extends BaseController {
         if(ret.getString("code").equals("0")) {
             JSONObject data = ret.getJSONObject("data");
             modelAndView.addObject("title", data.getString("long_title"));
-            modelAndView.addObject("description", data.getString("long_title"));
+            modelAndView.addObject("description", data.getString("share_desc"));
             modelAndView.addObject("poiJson", ret);
         } else {
             return buildModelAndView("404");
