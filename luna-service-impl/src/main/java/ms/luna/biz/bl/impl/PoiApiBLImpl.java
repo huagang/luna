@@ -28,6 +28,7 @@ import com.mongodb.client.MongoCursor;
 
 import ms.biz.common.MongoConnector;
 import ms.biz.common.PoiApiNameMap;
+import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.bl.PoiApiBL;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.MsPoiFieldDAO;
@@ -62,6 +63,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 	@Autowired
 	private PoiApiNameMap poiApiNameMap;
 
+	@Autowired
+	private MsZoneCacheBL msZoneCacheBL;
+	
 	private static Map<String, String> fieldNamesLst = new LinkedHashMap<>();// (key：字段名称，value:字段显示名称)
 
 	private static Map<Integer, String> poiTagsLst = new LinkedHashMap<>();// (key:类型id, value:类型名称)
@@ -156,7 +160,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 			}
 			data.put("categorys", array);
-//			return FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + "一级分类列表获取成功", data);
 			JSONObject resultdata = FastJsonUtil.sucess("success", data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
@@ -209,7 +212,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 			}
 			data.put("sub_categorys", array);
-//			return FastJsonUtil.sucess("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + "二级分类列表信息获取成功", data);
 			JSONObject resultdata = FastJsonUtil.sucess("success", data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
@@ -247,18 +249,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
 			// 获取子结点中类型为ctgrId，且含有指定字段的集合
-			// for(String _id: poiIdLst){
-			// JSONObject poi = getPoiInfoByCtgrIdWithFields(poiIdLst, _id,
-			// ctgr_id, fieldArr, lang);
-			// if(!poi.isEmpty()){
-			// poiArray.add(poi);
-			// }
-			// }
 			if (!poiIdLst.isEmpty()) {
 				poiArray = getPoiInfoByCtgrIdWithFields(poiIdLst, ctgr_id, fieldArr, lang);
 			}
 			data.put("pois", poiArray);
-//			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",ctgr_id:" + ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			resultdata.put("category_name", getPoiTagsLst().get(ctgr_id));
@@ -300,7 +294,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				poiArray = getPoiInfoBySubCtgrIdWithFields(poiIdLst, sub_ctgr_id, fieldArr, lang);
 			}
 			data.put("pois", poiArray);
-//			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + ",sub_ctgr_id:" + sub_ctgr_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			resultdata.put("sub_category_name",  getPoiTagsLst().get(sub_ctgr_id));
@@ -342,7 +335,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				poiArray = getPoiInfoWtihFields(poiIdLst, fieldArr, lang);
 			}
 			data.put("pois", poiArray);
-//			return returnSuccessData("biz_id:" + biz_id + ",poi_id:" + poi_id + " poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
@@ -452,28 +444,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 				// 区域名称
 				if ("merger_name".equals(key)) {
-					String merger_name = (String) entry.getValue();
-					if(merger_name == null){
-						merger_name = "";
-					}
-					String[] names = (merger_name).split(",");
-					JSONObject data = poi.getJSONObject("address");
-					if (data == null) {
-						data = new JSONObject();
-					}
-					List<String> nameList = new ArrayList<>();
-					for (int i = 0; i < 4; i++) {
-						nameList.add("");
-					}
-					for (int i = 0; i < names.length; i++) {
-						nameList.set(i, names[i]);
-					}
-//					data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
-					data.put("country", nameList.get(0));
-					data.put("province", nameList.get(1));
-					data.put("city", nameList.get(2));
-					data.put("county", nameList.get(3));
-					poi.put("address", data);
 					continue;
 				}
 				// 区域id
@@ -484,6 +454,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 						data = new JSONObject();
 					}
 					data.put(poiApiNameMap.getOuterVal("zone_id"), zone_id);
+					
+					String country_id = "100000"; //默认为中国
+					String province_id = doc.getString("province_id");
+					String city_id = doc.getString("city_id");
+					String county_id = doc.getString("county_id");
+					String country = msZoneCacheBL.getZoneName(country_id, lang);
+					String province = msZoneCacheBL.getZoneName(province_id, lang);
+					String city = msZoneCacheBL.getZoneName(city_id, lang);
+					String county = msZoneCacheBL.getZoneName(county_id, lang);
+					data.put("country", country);
+					data.put("province", province);
+					data.put("city", city);
+					data.put("county", county);
+					
 					poi.put("address", data);
 					continue;
 				}
@@ -924,7 +908,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -979,7 +963,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1042,7 +1026,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1084,7 +1068,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1125,7 +1109,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
-				JSONObject poi = getPoiInfoWithFields(docPoi, fields);
+				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
 					array.add(poi);
@@ -1135,7 +1119,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return array;
 	}
 
-	private JSONObject getPoiInfoWithFields(Document doc, String[] fields) {
+	private JSONObject getPoiInfoWithFields(Document doc, String[] fields, String lang) {
 		JSONObject result = new JSONObject();
 		if (fields == null || fields.length == 0) {
 			fields = poiApiNameMap.getApiFields();
@@ -1228,28 +1212,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 						}
 						// 区域名称
 						if ("merger_name".equals(key)) {
-							String merger_name = resJson.getString("merger_name");
-							if(merger_name == null){
-								merger_name = "";
-							}
-							String[] names = (merger_name).split(",");
-							JSONObject data = result.getJSONObject("address");
-							if (data == null) {
-								data = new JSONObject();
-							}
-							List<String> nameList = new ArrayList<>();
-							for (int i = 0; i < 4; i++) {
-								nameList.add("");
-							}
-							for (int i = 0; i < names.length; i++) {
-								nameList.set(i, names[i]);
-							}
-//							data.put(poiApiNameMap.getOuterVal("merger_name"), merger_name);
-							data.put("country", nameList.get(0));
-							data.put("province", nameList.get(1));
-							data.put("city", nameList.get(2));
-							data.put("county", nameList.get(3));
-							result.put("address", data);
 							continue;
 						}
 						// 区域id
@@ -1260,6 +1222,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 								data = new JSONObject();
 							}
 							data.put(poiApiNameMap.getOuterVal("zone_id"), zone_id);
+							
+							String country_id = "100000"; //默认为中国
+							String province_id = doc.getString("province_id");
+							String city_id = doc.getString("city_id");
+							String county_id = doc.getString("county_id");
+							String country = msZoneCacheBL.getZoneName(country_id, lang);
+							String province = msZoneCacheBL.getZoneName(province_id, lang);
+							String city = msZoneCacheBL.getZoneName(city_id, lang);
+							String county = msZoneCacheBL.getZoneName(county_id, lang);
+							data.put("country", country);
+							data.put("province", province);
+							data.put("city", city);
+							data.put("county", county);
+							
 							result.put("address", data);
 							continue;
 						}
@@ -1353,7 +1329,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				poiArray = getPoiInfoByTagsWithFields(poiIdLst, type, tagArr, fieldArr, lang);
 			}
 			data.put("pois", poiArray);
-//			return returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
@@ -1391,7 +1366,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				poiArray = getPoiInfoByTagsWithFields(poiIdLst, typesAndIds, fieldArr, lang);
 			}
 			data.put("pois", poiArray);
-//			return returnSuccessData("biz_id:" + biz_id + ",tags:" + tags + "poi数据列表获取成功", lang, data);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
