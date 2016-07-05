@@ -49,4 +49,26 @@ public class PoiController extends BaseController {
         return modelAndView;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/hjm/{id}")
+    public ModelAndView hjmPoiDetail(@PathVariable String id, @RequestParam(required = false, value = "lang") String lang) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("_id", id);
+        if(lang == null) {
+            lang = "zh";
+        }
+        jsonObject.put("lang", lang);
+        JSONObject ret = managePoiService.initPoiPreview(jsonObject.toJSONString());
+        ModelAndView modelAndView = buildModelAndView("poi/huangjuemen");
+        if(ret.getString("code").equals("0")) {
+            JSONObject data = ret.getJSONObject("data");
+            modelAndView.addObject("title", data.getString("long_title"));
+            modelAndView.addObject("description", data.getString("long_title"));
+            modelAndView.addObject("poiJson", ret);
+        } else {
+            return buildModelAndView("404");
+        }
+
+        return modelAndView;
+    }
+
 }
