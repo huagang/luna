@@ -230,7 +230,7 @@ public final class FastJsonUtil {
 		String msg = MsLunaMessage.getInstance().getMessage(key, params);
 		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
-		result.put("code", 0);
+		result.put("code", "0");
 		result.put("msg", msg);
 		result.put("data", data);
 		return result;
@@ -248,7 +248,7 @@ public final class FastJsonUtil {
 		String msg = MsLunaMessage.getInstance().getMessage(key, params);
 		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
-		result.put("code", 0);
+		result.put("code", "0");
 		result.put("msg", msg);
 		result.put("data", "{}");
 		return result;

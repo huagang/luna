@@ -600,17 +600,19 @@ public class ManagePoiCtrl extends BasicCtrl{
 				String subTagName = getCellValueAsString(row.getCell(6)).trim();
 				Integer subTag = 0;
 
+				// 分享摘要
+				String share_desc = getCellValueAsString(row.getCell(7)).trim();
 				// 详细介绍
-				String brief_introduction = getCellValueAsString(row.getCell(7)).trim();
+				String brief_introduction = getCellValueAsString(row.getCell(8)).trim();
 				// 缩略图
-				String thumbnail = getCellValueAsString(row.getCell(8)).trim();
+				String thumbnail = getCellValueAsString(row.getCell(9)).trim();
 				// 8.全景类别.panorama_type默认为"专辑"
 				String panorama_type = "2";
-				String panorama_type_name = getCellValueAsString(row.getCell(9)).trim();
+				String panorama_type_name = getCellValueAsString(row.getCell(10)).trim();
 				// 8.全景数据ID
-				String panorama = getCellValueAsString(row.getCell(10)).trim();
+				String panorama = getCellValueAsString(row.getCell(11)).trim();
 				// 9.联系电话
-				String contact_phone = getCellValueAsString(row.getCell(11)).trim();
+				String contact_phone = getCellValueAsString(row.getCell(12)).trim();
 
 				Boolean isError = (zone_id == null ? Boolean.TRUE : Boolean.FALSE);
 
@@ -660,6 +662,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					checkErrorPoi.put("subTag", subTag);
 
 					checkErrorPoi.put("short_title", short_title);
+					checkErrorPoi.put("share_desc", share_desc);
 					checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
 					checkErrorPoi.put("detail_address", detail_address);
 					checkErrorPoi.put("brief_introduction", brief_introduction);
@@ -721,6 +724,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 							checkErrorPoi.put("subTag", subTag);
 
 							checkErrorPoi.put("short_title", short_title);
+							checkErrorPoi.put("share_desc", share_desc);
 							checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
 							checkErrorPoi.put("detail_address", detail_address);
 							checkErrorPoi.put("brief_introduction", brief_introduction);
@@ -760,6 +764,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 					noCheckErrorPoi.put("lng", lng);
 
 					noCheckErrorPoi.put("short_title", short_title);
+					noCheckErrorPoi.put("share_desc", share_desc);
 					noCheckErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
 					noCheckErrorPoi.put("detail_address", detail_address);
 					noCheckErrorPoi.put("brief_introduction", brief_introduction);
@@ -801,6 +806,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 						checkErrorPoi.put("subTag", subTag);
 
 						checkErrorPoi.put("short_title", short_title);
+						checkErrorPoi.put("share_desc", share_desc);
 						checkErrorPoi.put("zone_id", CharactorUtil.nullToBlank(zone_id));
 						checkErrorPoi.put("detail_address", detail_address);
 						checkErrorPoi.put("brief_introduction", brief_introduction);
