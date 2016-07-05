@@ -23,15 +23,15 @@
 <body>
 <div class='wrapper'>
     <div class='banner'>
-        <img src='/resources/images/hjm/banner.png'/>
+        <img src=''/>
         <div class="title">
-            <h1 id="poiName" class="poiName">鱼湾人家</h1>
-            <h4 class="poiGeoInfo-wrapper"><i class="icon-geoLocation"></i><label for="" id="poiGeoInfo" class="poiGeoInfo">重庆·铜梁</label></h4>
+            <h1 id="poiName" class="poiName"></h1>
+            <h4 class="poiGeoInfo-wrapper"><i class="icon-geoLocation"></i><label for="" id="poiGeoInfo" class="poiGeoInfo"></label></h4>
         </div>
     </div>
     <div class="toolsbar">
         <div class="tool-item hidden">
-            <a id="phoneLink" href="wtai://wp/mc;10086" data-type="phone" ><i class="icon icon-phone"></i></a>
+            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i></a>
             <div class="vr-line"></div>
         </div>
         <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i></a>
