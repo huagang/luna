@@ -1,15 +1,14 @@
 package ms.luna.web.exception;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LunaWebException implements HandlerExceptionResolver {
 
@@ -18,7 +17,7 @@ public class LunaWebException implements HandlerExceptionResolver {
 			HttpServletResponse response,
 			Object handler,
 			Exception ex) {
-		MappingJacksonJsonView view = new MappingJacksonJsonView();
+		MappingJackson2JsonView view = new MappingJackson2JsonView();
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("code", "-1");
 		attributes.put("msg", "处理过程中发生异常！");

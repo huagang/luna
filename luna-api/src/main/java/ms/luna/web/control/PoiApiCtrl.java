@@ -15,17 +15,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-@Component
+@CrossOrigin(origins = {"*"}, methods={RequestMethod.GET})
 @Controller
 @RequestMapping("/servicepoi.do")
 public class PoiApiCtrl {
