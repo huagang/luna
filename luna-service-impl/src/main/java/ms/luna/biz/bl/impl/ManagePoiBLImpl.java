@@ -1253,6 +1253,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String province = msZoneCacheBL.getZoneName(province_id, lang);
 		String city = msZoneCacheBL.getZoneName(city_id, lang);
 		String county = msZoneCacheBL.getZoneName(county_id, lang);
+		String share_desc = "";
+		if(docPoi.containsKey("share_desc")) {
+			share_desc = docPoi.getString("share_desc");
+		}
 		Integer panorama_type;
 		if(docPoi.containsKey("panorama_type")){
 			panorama_type = docPoi.getInteger("panorama_type");
@@ -1285,6 +1289,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("province", province);
 		data.put("city", city);
 		data.put("county", county);
+		data.put("share_desc", share_desc);
 		
 		return FastJsonUtil.sucess("success", data);
 	}
