@@ -93,7 +93,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("$set", document);
 
-		this.updatePoiBusinessTreeIndex(param.getJSONObject("c_list"), biz_tree, businessId);
+		this.updatePoiBusinessTreeIndex(param.getJSONArray("c_list"), biz_tree, businessId);
 
 		// 更新保存业务树
 		UpdateResult updateResult = biz_tree.updateOne(condition, updateDocument);
@@ -130,10 +130,16 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		treeDate.put("c_list", document.get("c_list"));
 
 		// 2.获取POI定义列表
-		JSONObject jsoncList = treeDate.getJSONObject("c_list");
-		MsLogger.info(jsoncList.toJSONString());
 		Set<String> set = new LinkedHashSet<String>();
-		readPoiId2Set(set, jsoncList);
+		if (!json.isEmpty()) {
+			Object clist = treeDate.get("c_list");
+			//兼容老的map结构数据
+			if(clist instanceof Map<?, ?>) {
+				this.readPoiId2Set(set, treeDate.getJSONObject("c_list"));
+			} else if(clist instanceof List<?>) {
+				this.readPoiId2Set(set, treeDate.getJSONArray("c_list"));
+			}
+		}
 		JSONObject poiDef = this.getPoisForBusinessTree(set);
 
 		// 3.获取tag定义列表
@@ -545,7 +551,22 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		}
 	}
 
-	private void updatePoiBusinessTreeIndex(JSONObject jsoncList, MongoCollection<Document> business_tree, Integer businessId) {
+	private void readPoiId2Set(Set<String> set, JSONArray jsoncList) {
+		if(jsoncList == null) {
+			return;
+		}
+		for(int i = 0; i < jsoncList.size(); i++) {
+			JSONObject element = jsoncList.getJSONObject(i);
+			String id = element.getString("_id");
+			set.add(id);
+			JSONArray subJsonArray = element.getJSONArray("c_list");
+			if(subJsonArray != null && subJsonArray.size() > 0) {
+				readPoiId2Set(set, subJsonArray);
+			}
+		}
+	}
+
+	private void updatePoiBusinessTreeIndex(JSONArray jsoncList, MongoCollection<Document> business_tree, Integer businessId) {
 		Set<String> newPoiIds = new HashSet<String>();
 		this.readPoiId2Set(newPoiIds, jsoncList);
 
@@ -565,7 +586,13 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		// poiIds(old)
 		Set<String> oldPoiIds = new LinkedHashSet<String>();
 		if (!json.isEmpty()) {
-			this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
+			Object oldClist = json.get("c_list");
+			//兼容老的map结构数据
+			if(oldClist instanceof Map<?, ?>) {
+				this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
+			} else if(oldClist instanceof List<?>) {
+				this.readPoiId2Set(oldPoiIds, json.getJSONArray("c_list"));
+			}
 		}
 
 		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
@@ -629,7 +656,13 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		// poiIds(old)
 		Set<String> oldPoiIds = new LinkedHashSet<String>();
 		if (!json.isEmpty()) {
-			this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
+			Object oldClist = json.get("c_list");
+			//兼容老的map结构数据
+			if(oldClist instanceof Map<?, ?>) {
+				this.readPoiId2Set(oldPoiIds, json.getJSONObject("c_list"));
+			} else if(oldClist instanceof List<?>) {
+				this.readPoiId2Set(oldPoiIds, json.getJSONArray("c_list"));
+			}
 		}
 
 		MongoCollection<Document> poi_business_tree_index = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_USED_INDEX);
