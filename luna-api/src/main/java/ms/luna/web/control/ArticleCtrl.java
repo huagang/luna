@@ -6,11 +6,8 @@ import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -19,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2016-06-30
  */
 
-@Component
+@CrossOrigin(origins = {"*"}, methods={RequestMethod.GET})
 @Controller
 @RequestMapping("/article")
 public class ArticleCtrl {
