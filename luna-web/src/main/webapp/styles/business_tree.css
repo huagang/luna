@@ -100,9 +100,12 @@ right connector from last child*/
     display: inline-block;
     height: 36px;
     white-space: nowrap;
-    text-overflow: ellipsis;
     position: relative;
     overflow: visible;
+}
+.luna-tree .item-title > p{
+	overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .luna-tree .item-title .poi_info{

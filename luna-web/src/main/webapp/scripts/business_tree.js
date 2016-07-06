@@ -324,9 +324,9 @@ $(document).ready(function(){
                 }
                 treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
                 treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
-                   + '<span class="item-title"><a target="_blank" '
+                   + '<span class="item-title"><p><a target="_blank" '
                    + 	'href="./edit_poi.do?method=init&_id='+ data._id +'">' 
-                   +     poiDef[data._id].name + '</a>' + getTooltip(data._id)
+                   +     poiDef[data._id].name + '</a></p>' + getTooltip(data._id)
                    + '</span>'
                    + '<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
                    + '<div class="item-opt-wrap">'
