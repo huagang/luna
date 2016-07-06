@@ -176,11 +176,8 @@
         </div>
         <!-- 底部功能区 -->
 	    <div class="pop-fun">
-	    	<div class='pull-right'>
-	    		<button type="button" id="btn-delete">确定</button>
-	        	<button class="button-close"  onclick="clcWindow(this)">取消</button>
-	    	</div>
-
+	    	<button type="button" id="btn-delete">确定</button>
+	        <button class="button-close"  onclick="clcWindow(this)">取消</button>
 	    </div>
 	    <!-- 底部功能区 -->
     </div>
