@@ -117,6 +117,9 @@ right connector from last child*/
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 200px;
+    word-break: break-all;
+    white-space: pre-wrap;
 }
 	
 .luna-tree .item-title:hover .poi_info{
