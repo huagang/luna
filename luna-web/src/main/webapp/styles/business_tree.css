@@ -99,10 +99,31 @@ right connector from last child*/
     width: 103px;
     display: inline-block;
     height: 36px;
-    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    position: relative;
+    overflow: visible;
 }
+
+.luna-tree .item-title .poi_info{
+	display: none;
+	z-index: 1000;
+	position: absolute;
+	top: 100%;
+    margin: 10px 0 0 -5px;
+	background-color: #efefef;
+	left: 0;
+	line-height: 24px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+	
+.luna-tree .item-title:hover .poi_info{
+	display: block;	
+}
+
+
 .luna-tree .item-name .item-child-btn{
     float: right;
     margin-right: 0px;

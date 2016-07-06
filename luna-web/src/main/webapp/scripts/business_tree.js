@@ -296,6 +296,17 @@ $(document).ready(function(){
     }
     var level=1,
         deep=1;
+    
+    function getTooltip(_id, name){
+    	var tip = '<div class="poi_info"><p>长标题：'+ poiDef[_id].name + '</p>';
+    	var coordinates = poiDef[_id].coordinates;
+    	if( coordinates && coordinates.length === 2){
+    		tip += '<p>纬度：' + coordinates[1] + '</p><p>经度：' + coordinates[0] + '</p>';
+    	}
+    	tip += '</div>';
+    	return tip;
+    }
+    
     var initTreeHtml = function(data,type,level){
     	if(!level){
     		level=1;
@@ -315,8 +326,7 @@ $(document).ready(function(){
                 treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
                    + '<span class="item-title"><a target="_blank" '
                    + 	'href="./edit_poi.do?method=init&_id='+ data._id +'">' 
-                   +     poiDef[data._id].name + '</a><div class="tooltip"><p>'+ '长标题' + '</p>'
-                   +     '<p>纬度：' + '纬度' + '</p><p>经度:' +'经度' + '</p></div>' 
+                   +     poiDef[data._id].name + '</a>' + getTooltip(data._id)
                    + '</span>'
                    + '<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
                    + '<div class="item-opt-wrap">'
