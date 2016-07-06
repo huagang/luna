@@ -133,8 +133,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
-			Document jsoncList = (Document) tree.get("c_list");
-			getPoisByParentId(poiIdLst, jsoncList, poi_id, 0, 0);
+			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
 			JSONObject data = new JSONObject();
 			Set<Integer> ctgrIdSet = new HashSet<>(); // 类别集合
@@ -180,8 +179,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
-			Document jsoncList = (Document) tree.get("c_list");
-			getPoisByParentId(poiIdLst, jsoncList, poi_id, 0, 0);
+			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
 			JSONObject data = new JSONObject();
 			Set<Integer> subCtgrIdSet = new HashSet<>(); // 类别集合
@@ -242,9 +240,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
-			Document jsoncList = (Document) tree.get("c_list");
 			// 注：目前仅获得第一层下的poi结点
-			getPoisByParentId(poiIdLst, jsoncList, poi_id, 0, 0);
+			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
@@ -284,9 +281,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
-			Document jsoncList = (Document) tree.get("c_list");
 			// 注：目前仅获得第一层下的poi结点
-			getPoisByParentId(poiIdLst, jsoncList, poi_id, 0, 0);
+			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
@@ -324,9 +320,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
-			Document jsoncList = (Document) tree.get("c_list");
 			// 注：目前仅获得第一层下的poi结点
-			getPoisByParentId(poiIdLst, jsoncList, poi_id, 0, 0);
+			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
@@ -775,6 +770,19 @@ public class PoiApiBLImpl implements PoiApiBL {
 	}
 
 	/**
+	 * 兼容不同的business_tree存储格式
+	 */ 
+	private void getPoisByParentId(List<String> pois, Document tree, String poi_id, int level, int order, boolean flag) {
+		JSONObject aTree = JSONObject.parseObject(tree.toJson());
+		Object oldClist = aTree.get("c_list");
+		if(oldClist instanceof Map<?,?>) {
+			getPoisByParentId(pois, (Document)tree.get("c_list"), poi_id, level, order);
+		} else if(oldClist instanceof List<?>){
+			getPoisByParentId(pois, aTree.getJSONArray("c_list"), poi_id, level, order);
+		}
+	}
+	
+	/**
 	 * 获得某个poi的子poi结点
 	 * 
 	 * @param pois
@@ -810,6 +818,31 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 	}
 
+	private void getPoisByParentId(List<String> pois, JSONArray jsoncList, String poi_id, int level, int order) {
+		if (level < 0) {
+			return;
+		}
+		for(int i = 0; i<jsoncList.size();i++){
+			JSONObject sub = jsoncList.getJSONObject(i);
+			String _id = sub.getString("_id");
+			JSONArray subClist = sub.getJSONArray("c_list");
+			if(subClist.size() == 0) {// 下一层无poi数据
+				continue;
+			}
+			// 当前结点是查找结点, 拿下一层数据
+			if (_id.equals(poi_id) && level == 0) {
+				for(int j = 0; j < subClist.size(); j++){
+					JSONObject poi = subClist.getJSONObject(j);
+					String _sub_id = poi.getString("_id");
+					pois.add(_sub_id);
+				}
+				return;
+			}
+			// 递归向下，层级减1
+			getPoisByParentId(pois, subClist, poi_id, level - 1, order);
+		}
+	}
+	
 	/**
 	 * mongodb数据库business_tree表，递归查找Poi集合
 	 * 
@@ -855,17 +888,30 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 *            树的层级
 	 * @return
 	 */
-	List<String> getPoisWithLevelInBizTree(Document tree, int level) {
+	List<String> getPoisWithLevelInBizTree(Document doctree, int level) {
 		if (level != 1) { // 目前只获取第一层数据
 			return null;
 		}
-		Document subTree = (Document) tree.get("c_list");
-		if (!subTree.isEmpty()) {
-			Set<String> keys = subTree.keySet();
-			ArrayList<String> lst = new ArrayList<>(keys);
-			return lst;
+		ArrayList<String> lst = null;
+		JSONObject tree = JSONObject.parseObject(doctree.toJson());
+		Object oldClist = tree.get("c_list");
+		if(oldClist != null){
+			if(oldClist instanceof Map<?,?>){
+				JSONObject subTree = tree.getJSONObject("c_list");
+				Set<String> keys = subTree.keySet();
+				lst = new ArrayList<>(keys);
+			} else {
+				JSONArray subTree = tree.getJSONArray("c_list");
+				lst = new ArrayList<>();
+				for(int i = 0; i < subTree.size(); i++){
+					lst.add(subTree.getJSONObject(i).getString("_id"));
+				}
+			}
 		}
-		return null;
+		if(lst == null || lst.isEmpty()){
+			return null;
+		}
+		return lst;
 	}
 
 	/**
@@ -1024,18 +1070,24 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 			BasicDBObject or = new BasicDBObject("$or", value);
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
+			Map<String, JSONObject> pois = new LinkedHashMap<>();
+			// 将搜索结果放入集合
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
 				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
-					array.add(poi);
+					pois.put(docPoi.get("_id").toString(), poi);
 				}
 			}
+			array = getPoiInOrder(poiIdLst, pois);
 		}
 		return array;
 	}
 
+	
+
+	
 	/**
 	 * 获取父poi下满足一级分类id的poi子结点（poi仅包含给定字段数据）
 	 * 
@@ -1066,14 +1118,16 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 			BasicDBObject or = new BasicDBObject("$or", value);
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
+			Map<String, JSONObject> pois = new LinkedHashMap<>();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
 				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
-					array.add(poi);
+					pois.put(docPoi.get("_id").toString(), poi);
 				}
 			}
+			array = getPoiInOrder(poiIdLst, pois);
 		}
 		return array;
 	}
@@ -1107,18 +1161,39 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 			BasicDBObject or = new BasicDBObject("$or", value);
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
+			Map<String, JSONObject> pois = new LinkedHashMap<>();
 			while (mongoCursor.hasNext()) {
 				Document docPoi = mongoCursor.next();
 				JSONObject poi = getPoiInfoWithFields(docPoi, fields, lang);
 				if (!poi.isEmpty()) {
 					poi.put("poi_id", docPoi.get("_id").toString());
-					array.add(poi);
+					pois.put(docPoi.get("_id").toString(), poi);
+				}
+			}
+			array = getPoiInOrder(poiIdLst, pois);
+		}
+		return array;
+	}
+
+	/**
+	 * @param poiIdLst poi点顺序集合
+	 * @param pois 通过mongo搜索出的满足条件的POI
+	 * @return
+	 */
+	private JSONArray getPoiInOrder(List<String> poiIdLst, Map<String, JSONObject> pois){
+		JSONArray array = new JSONArray();
+		// 按照顺序放入数据
+		if(pois.size() != 0) {
+			for(int i = 0; i < poiIdLst.size(); i++){
+				String id = poiIdLst.get(i);
+				if(pois.containsKey(id)) {
+					array.add(pois.get(id));
 				}
 			}
 		}
 		return array;
 	}
-
+	
 	private JSONObject getPoiInfoWithFields(Document doc, String[] fields, String lang) {
 		JSONObject result = new JSONObject();
 		if (fields == null || fields.length == 0) {

@@ -90,3 +90,7 @@
 	display: block;
 	padding-bottom: 5px;
 }
+/* 设置删除弹框按钮向右对齐 */
+#pop-delete .pop-fun{
+	width: auto;
+}

@@ -296,6 +296,17 @@ $(document).ready(function(){
     }
     var level=1,
         deep=1;
+    
+    function getTooltip(_id, name){
+    	var tip = '<div class="poi_info"><p>长标题：'+ poiDef[_id].name + '</p>';
+    	var coordinates = poiDef[_id].coordinates;
+    	if( coordinates && coordinates.length === 2){
+    		tip += '<p>纬度：' + coordinates[1] + '</p><p>经度：' + coordinates[0] + '</p>';
+    	}
+    	tip += '</div>';
+    	return tip;
+    }
+    
     var initTreeHtml = function(data,type,level){
     	if(!level){
     		level=1;
@@ -312,14 +323,17 @@ $(document).ready(function(){
                     var ordernum='';
                 }
                 treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
-                treeHtml+='<div class="item-name" item_id="'+data._id+'" >'
-                            +'<span class="item-title">'+poiDef[data._id].name+'</span>'
-                            +'<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
-                            +'<div class="item-opt-wrap">'
-                                +'<div class="item-opt addchild" item_id="'+data._id+'">添加子节点</div>'
-                                +'<div class="item-opt delete" item_id="'+data._id+'">删除</div>'
-                            +'</div>'
-                        +'</div>';
+                treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
+                   + '<span class="item-title"><p><a target="_blank" '
+                   + 	'href="./edit_poi.do?method=init&_id='+ data._id +'">' 
+                   +     poiDef[data._id].name + '</a></p>' + getTooltip(data._id)
+                   + '</span>'
+                   + '<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
+                   + '<div class="item-opt-wrap">'
+                   + '<div class="item-opt addchild" item_id="'+data._id+'">添加子节点</div>'
+                   + '<div class="item-opt delete" item_id="'+data._id+'">删除</div>'
+                   + '</div>'
+                   + '</div>';
             }else{
                 return "";
             }
