@@ -258,10 +258,10 @@
 		            </div>	
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
-                        <div class="value-poi">
+                        <div class="value-poi panoramaType">
                         	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
                         	<form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
-                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
+                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入相册id或者单场景点id"/>
                         </div>
                     </div>
                     <div class="item-poi">
