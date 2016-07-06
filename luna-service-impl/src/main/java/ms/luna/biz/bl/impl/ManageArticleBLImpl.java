@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.Lists;
 import ms.biz.common.CommonQueryParam;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageArticleBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsArticleDAO;
@@ -17,6 +19,7 @@ import ms.luna.biz.dao.custom.model.MsBusinessParameter;
 import ms.luna.biz.dao.custom.model.MsBusinessResult;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.table.MsArticleTable;
+import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -50,31 +53,31 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
         MsArticleWithBLOBs msArticle = new MsArticleWithBLOBs();
         String title = articleObj.getString(MsArticleTable.FIELD_TITLE);
-        if(! StringUtils.isBlank(title)) {
+        if(StringUtils.isNotBlank(title)) {
             msArticle.setTitle(title);
         }
         String content = articleObj.getString(MsArticleTable.FIELD_CONTENT);
-        if(! StringUtils.isBlank(content)) {
+        if(StringUtils.isNotBlank(content)) {
             msArticle.setContent(content);
         }
         String abstractContent = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT);
-        if(! StringUtils.isBlank(abstractContent)) {
+        if(StringUtils.isNotBlank(abstractContent)) {
             msArticle.setAbstractContent(abstractContent);
         }
         String abstractPic = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_PIC);
-        if(! StringUtils.isBlank(abstractPic)) {
+        if(StringUtils.isNotBlank(abstractPic)) {
             msArticle.setAbstractPic(abstractPic);
         }
         String audio = articleObj.getString(MsArticleTable.FIELD_AUDIO);
-        if(! StringUtils.isBlank(audio)) {
+        if(StringUtils.isNotBlank(audio)) {
             msArticle.setAudio(audio);
         }
         String video = articleObj.getString(MsArticleTable.FIELD_VIDEO);
-        if(! StringUtils.isBlank(video)) {
+        if(StringUtils.isNotBlank(video)) {
             msArticle.setVideo(video);
         }
         String author = articleObj.getString(MsArticleTable.FIELD_AUTHOR);
-        if(! StringUtils.isBlank(author)) {
+        if(StringUtils.isNotBlank(author)) {
             msArticle.setAuthor(author);
         }
         int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
@@ -183,6 +186,12 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
+            for(MsArticleResult msArticleResult : msArticleResults) {
+                if(msArticleResult.getStatus() == 1) {
+                    String url = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticleResult.getId();
+                    msArticleResult.setUrl(url);
+                }
+            }
             int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
             if(msArticleResults != null) {
                 data.put("rows", JSON.parse(JSON.toJSONString(msArticleResults, SerializerFeature.WriteDateUseDateFormat)));
@@ -247,7 +256,10 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         msArticle.setStatus(true);
         try {
             msArticleDAO.updateByPrimaryKeySelective(msArticle);
-            return FastJsonUtil.sucess("发布文章成功");
+            JSONObject jsonObject = new JSONObject();
+            String url = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + id;
+            jsonObject.put("url", url);
+            return FastJsonUtil.sucess("发布文章成功", jsonObject);
         } catch (Exception ex) {
             logger.error("Failed to publish article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
@@ -289,4 +301,190 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         }
 
     }
+
+    @Override
+    public JSONObject getOnlineArticleById(int id) {
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        msArticleCriteria.createCriteria()
+                         .andIdEqualTo(id)
+                         .andStatusEqualTo(true);
+        try {
+            List<MsArticleWithBLOBs> msArticleWithBLOBList = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+            if (msArticleWithBLOBList != null && msArticleWithBLOBList.size() == 1) {
+                return FastJsonUtil.sucess("", toJson(msArticleWithBLOBList.get(0)));
+            } else {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章不存在");
+            }
+        } catch (Exception ex) {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getArticleByBusinessAndColumnName(String businessName, String columnNames) {
+        MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
+        msBusinessCriteria.createCriteria().andBusinessNameEqualTo(businessName);
+        List<MsBusiness> msBusinesses = msBusinessDAO.selectByCriteria(msBusinessCriteria);
+        if(msBusinesses == null || msBusinesses.size() == 0) {
+            logger.warn(String.format("业务名称[%s]不存在", businessName));
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
+        }
+        int businessId = msBusinesses.get(0).getBusinessId();
+        // 栏目需要通过业务类别来获取
+        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
+        if(categoryId == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
+        }
+        Map<Integer, String> columnInfoMap = new HashMap<>();
+        if(StringUtils.isNotBlank(columnNames)) {
+            String[] split = columnNames.split(",|，");
+            List<String> columnNameList = Lists.newArrayList(split);
+            MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+            MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
+            criteria.andCategoryIdEqualTo(categoryId);
+            if(columnNameList != null) {
+                criteria.andNameIn(columnNameList);
+            }
+            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+            if(msColumns == null || msColumns.size() == 0) {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "栏目不存在");
+            }
+            for(MsColumn msColumn : msColumns) {
+                columnInfoMap.put(msColumn.getId(), msColumn.getName());
+            }
+        }
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        MsArticleCriteria.Criteria criteria = msArticleCriteria.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId)
+                .andStatusEqualTo(true);
+        if(columnInfoMap.size() > 0) {
+            criteria.andColumnIdIn(Lists.newArrayList(columnInfoMap.keySet()));
+        }
+        msArticleCriteria.setOrderByClause("regist_hhmmss desc");
+        List<MsArticleWithBLOBs> msArticleWithBLOBses = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+
+        if(columnInfoMap.size() == 0) {
+            Set<Integer> columnIdSet = new HashSet<>();
+            for(MsArticleWithBLOBs msArticleWithBLOBs : msArticleWithBLOBses) {
+                columnIdSet.add(msArticleWithBLOBs.getColumnId());
+            }
+            MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+            msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+            for (MsColumn msColumn : msColumns) {
+                columnInfoMap.put(msColumn.getId(), msColumn.getName());
+            }
+        }
+        if(msArticleWithBLOBses == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "文章不存在");
+        }
+        return FastJsonUtil.sucess("success", toJsonForApiList(msArticleWithBLOBses, columnInfoMap));
+
+    }
+
+    @Override
+    public JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds) {
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        MsArticleCriteria.Criteria criteria = msArticleCriteria.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId)
+                .andStatusEqualTo(true);
+        Set<Integer> columnIdSet = new HashSet<>();
+        if(StringUtils.isNotBlank(columnIds)) {
+            String[] tokens = columnIds.split(",|，");
+            for(String token : tokens) {
+                if(StringUtils.isNumeric(token)) {
+                    columnIdSet.add(Integer.parseInt(token));
+                }
+            }
+        }
+
+        if(columnIdSet.size() > 0) {
+            criteria.andColumnIdIn(Lists.newArrayList(columnIdSet));
+        }
+        msArticleCriteria.setOrderByClause("regist_hhmmss desc");
+        List<MsArticleWithBLOBs> msArticleWithBLOBses = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+
+        if(msArticleWithBLOBses == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "文章不存在");
+        }
+
+        Map<Integer, String> columnInfoMap = new HashMap<>();
+        if(columnIdSet.size() == 0) {
+            for(MsArticleWithBLOBs msArticleWithBLOBs : msArticleWithBLOBses) {
+                columnIdSet.add(msArticleWithBLOBs.getColumnId());
+            }
+        }
+
+        MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+        msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+        List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+        for (MsColumn msColumn : msColumns) {
+            columnInfoMap.put(msColumn.getId(), msColumn.getName());
+        }
+        return FastJsonUtil.sucess("success", toJsonForApiList(msArticleWithBLOBses, columnInfoMap));
+    }
+
+    @Override
+    public JSONObject getOnlineArticleByIdForApi(int id) {
+
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        msArticleCriteria.createCriteria()
+                .andIdEqualTo(id)
+                .andStatusEqualTo(true);
+        try {
+            List<MsArticleWithBLOBs> msArticleWithBLOBList = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+            if (msArticleWithBLOBList != null && msArticleWithBLOBList.size() == 1) {
+                MsArticleWithBLOBs msArticleWithBLOBs = msArticleWithBLOBList.get(0);
+                JSONObject jsonObject = toJsonForApiSingle(msArticleWithBLOBList.get(0));
+                MsColumn msColumn = msColumnDAO.selectByPrimaryKey(msArticleWithBLOBs.getColumnId());
+                if(msColumn == null) {
+                    jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, "无");
+                } else {
+                    jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, msColumn.getName());
+                }
+                return FastJsonUtil.sucess("success", jsonObject);
+            } else {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章不存在");
+            }
+        } catch (Exception ex) {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    private JSONArray toJsonForApiList(List<MsArticleWithBLOBs> msArticleWithBLOBsList, Map<Integer, String> columnInfoMap) {
+
+        JSONArray jsonArray = new JSONArray();
+        for(MsArticleWithBLOBs msArticle : msArticleWithBLOBsList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+            jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
+            jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
+            String columnName = columnInfoMap.get(msArticle.getColumnId());
+            jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, columnName == null ? "无" : columnName);
+            jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
+            jsonObject.put("create_time", DateUtil.format(msArticle.getRegistHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+            jsonObject.put("publish_time", DateUtil.format(msArticle.getUpHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, msArticle.getAuthor());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
+
+    private JSONObject toJsonForApiSingle(MsArticleWithBLOBs msArticle) {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+        jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
+        jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
+        jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
+        jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
+        jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+        jsonObject.put("create_time", DateUtil.format(msArticle.getRegistHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+        jsonObject.put("publish_time", DateUtil.format(msArticle.getUpHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+        jsonObject.put(MsArticleTable.FIELD_AUTHOR, msArticle.getAuthor());
+
+        return jsonObject;
+    }
+
+
 }

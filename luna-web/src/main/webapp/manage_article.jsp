@@ -55,7 +55,7 @@
                                 <thead>
                                 <tr>
                                     <th data-field="id" data-visible="false"></th>
-                                    <th data-field="title" data-align="left">标题</th>
+                                    <th data-formatter="titleFormatter" data-field="title" data-align="left">标题</th>
                                     <th data-field="author" data-align="left">作者</th>
                                     <th data-field="column_name" data-align="left">栏目</th>
                                     <th data-field="business_name" data-align="left">所属业务</th>

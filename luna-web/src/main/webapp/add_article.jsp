@@ -1,8 +1,3 @@
-<!-- 
-	@content 新建文章页面
-	@author_name wumengqiang
-	@author_email dean@visualbusiness.com   
--->
 <!doctype html>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -110,6 +105,7 @@
 		                    <p class='group-title'>栏目</p>
 		                    <div class="">
 		                        <select class="" name="category" id='category'>
+									<option value="0">无</option>
 									<c:forEach items="${columnMap}" var="column">
 										<option value="${column.value}">${column.key}</option>
 									</c:forEach>
@@ -134,6 +130,7 @@
 			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
 			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
 		</script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>

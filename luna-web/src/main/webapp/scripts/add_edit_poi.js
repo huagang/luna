@@ -604,12 +604,12 @@ function lonlatPaste(value, target) {
 function check_description() {
     var hasError = false;
     var value = $("#description").val();
-    if (value.length == 0) {
-        $("#description-warn").css("display", "block");
-        hasError = true;
-    } else {
-        $("#description-warn").css("display", "none");
-    }
+    // if (value.length == 0) {
+    //     $("#description-warn").css("display", "block");
+    //     hasError = true;
+    // } else {
+    //     $("#description-warn").css("display", "none");
+    // }
     return hasError;
 };
 
@@ -804,14 +804,15 @@ function initEditor() {
     };
     /*获取编辑器实例*/
     ue = UE.getEditor('editor', {
+        initialFrameHeight: 600, // 设置行高
+        autoHeightEnabled: false, //设置不自动扩高
         allowDivTransToP: false,
         elementPathEnabled: false,
         toolbars: [
             ['fontfamily', '|',
                 'fontsize', '|',
                 'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                'justifyleft',
-                'justifyright', 'justifycenter', 'justifyjustify', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                 'simpleupload',
                 // 'music',

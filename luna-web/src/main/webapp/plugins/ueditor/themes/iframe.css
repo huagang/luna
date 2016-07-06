@@ -5,6 +5,8 @@ body{
 
 body.view {
 	font-size: 14px;
+	padding: 5px 10px;
+	line-height: 21px;
 }
 
 .view > p:after{
@@ -13,3 +15,6 @@ body.view {
 	clear:both;
 }
 
+.view img{
+	max-width: 100%;
+}

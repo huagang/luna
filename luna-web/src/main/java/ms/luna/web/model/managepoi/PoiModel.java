@@ -41,6 +41,11 @@ public class PoiModel implements Serializable {
 	private String panorama = null;
 
 	/**
+	 * 全景类型
+	 */
+	private String panoramaType = null;
+	
+	/**
 	 * 联系电话
 	 */
 	private String contact_phone = null;
@@ -69,6 +74,11 @@ public class PoiModel implements Serializable {
 	 */
 	private Integer subTag;
 
+	/**
+	 * 分享摘要
+	 */
+	private String shareDesc;
+	
 	/**
 	 * 类别(POI TAG)
 	 */
@@ -278,6 +288,14 @@ public class PoiModel implements Serializable {
 		this.specifications1 = specifications1;
 	}
 
+	public String getPanoramaType() {
+		return panoramaType;
+	}
+
+	public void setPanoramaType(String panoramaType) {
+		this.panoramaType = panoramaType;
+	}
+
 	/**
 	 * @return the specifications2
 	 */
@@ -458,6 +476,17 @@ public class PoiModel implements Serializable {
 	 */
 	public void setSubTag(Integer subTag) {
 		this.subTag = subTag;
+	}
+
+	public String getShareDesc() {
+		return shareDesc;
+	}
+
+	/**
+	 * @param shareDesc share_desc to set
+	 */
+	public void setShareDesc(String shareDesc) {
+		this.shareDesc = shareDesc;
 	}
 
 }

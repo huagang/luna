@@ -14,18 +14,27 @@ html,body{
 }
 .wrapper{
 	display: flex;
-    flex-direction: column;
-    height: 100%;
+	flex-direction: column;
+	height: 100%;
+	max-width: 670px;
+	margin: 0 auto;
 }
 .wrapper > div{
 	flex-shrink: 0;
 }
 .wrapper div.content-wrapper{
-	padding: 15px 20px;
+	/* padding: 15px 20px; */
 	flex-grow: 1;
 	flex-shrink: 1;
-    overflow: scroll;
+	/* overflow: scroll; */
+	font-size: 16px;
+	line-height: 28px;
+	margin: 10px 10px;
 }
+.content img,.content video{
+	width: 100%;
+}
+
 .banner{
 	max-height: 200px;
     overflow: hidden;
@@ -39,21 +48,33 @@ html,body{
 }
 .toolbar{
 	height: 56px;
-    background-color: white;
+	background-color: white;
+	position: relative;
+	/* padding: 0 10px; */
 }
 .toolbar .title{
-	color: #4d5b6c;
+	color: #000;
 	font-size: 24px;
 	height: 56px;
 	line-height: 56px;
-	padding-left: 20px;
+	padding-left: 10px;
+	float: left;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	position: absolute;
+	width: 100%;
+	padding-right: 110px;
+	overflow: hidden;
+}
+.btn-wrap:nth-child(2){
+	margin-right:5px;
 }
 .toolbar .btn-wrap{
 	float: right;
-    margin-right: 10px;
-    margin-top: 11px;
-    height: 33px;
-    width: auto;
+	height: 56px;
+	width: auto;
+	position: relative;
+	padding: 12px 5px;
 }
 .icon{
 	background: url(../img/icons-2x.png) no-repeat;
@@ -66,6 +87,7 @@ html,body{
     height: 33px;
     background-position: -132px -100px;
 }
+
 .toolbar .icon-audio.playing{
     background-position: -132px -133px;
 }
@@ -111,4 +133,7 @@ html,body{
 .video{
 	height: auto;
     width: 100%;
+}
+.video-js{
+	margin:0 auto;
 }

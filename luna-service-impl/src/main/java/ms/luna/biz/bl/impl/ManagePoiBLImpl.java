@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import ms.luna.biz.dao.custom.MsVideoUploadDAO;
+import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import com.mongodb.client.result.UpdateResult;
 import ms.biz.common.AuthenticatedUserHolder;
 import ms.biz.common.MongoConnector;
 import ms.biz.common.MongoUtility;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManagePoiBL;
 import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.cons.VbConstant;
@@ -35,8 +38,6 @@ import ms.luna.biz.dao.custom.MsPoiFieldDAO;
 import ms.luna.biz.dao.custom.MsPoiTagDAO;
 import ms.luna.biz.dao.custom.model.MsTagFieldParameter;
 import ms.luna.biz.dao.custom.model.MsTagFieldResult;
-import ms.luna.biz.dao.model.MsPoiTag;
-import ms.luna.biz.dao.model.MsPoiTagCriteria;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -63,6 +64,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	@Autowired
 	private MsZoneCacheBL msZoneCacheBL;
+
+	@Autowired
+	private MsVideoUploadDAO msVideoUploadDAO;
 
 	/**
 	 * tag标签的level=1的部分
@@ -117,6 +121,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 3.类别二级菜单
 			doc.put("sub_tag", param.getInteger("subTag"));
 
+			// 3.分享摘要
+			doc.put("share_desc", param.getString("share_desc"));
+			
 			lnglatArray = new ArrayList<Double>();
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray.add(param.getDouble("lng"));
@@ -159,6 +166,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
+			
+			// 8.全景类型
+			doc.put("panorama_type", param.getInteger("panorama_type"));
+			
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 
@@ -194,7 +205,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			} else {
 				doc.put("sub_tag", 0);
 			}
-
+			// 3.分享摘要
+			if (param.containsKey("share_desc")) {
+				doc.put("share_desc", param.getString("share_desc"));
+			} else {
+				doc.put("share_desc", "");
+			}
+			
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray = new ArrayList<Double>();
 			try {
@@ -255,6 +272,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
+			
+			// 8.全景类型
+			doc.put("panorama_type", param.getInteger("panorama_type"));
+						
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 		}
@@ -618,6 +639,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("tags", doc.get("tags"));
 					// 二级分类
 					enDoc.put("sub_tag", doc.get("sub_tag"));
+					// 分享摘要
+					enDoc.put("share_desc", doc.get("share_desc"));
 					// 经纬度
 					enDoc.put("lnglat", doc.get("lnglat"));
 					// zone_id
@@ -630,6 +653,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("county_id", doc.get("county_id"));
 					// 英文合并名称
 					enDoc.put("merger_name", msZoneCacheBL.getMergerNameEn((String)doc.get("zone_id")));
+					// 全景类型
+					enDoc.put("panorama_type", doc.get("panorama_type"));
 					// 全景ID
 					enDoc.put("panorama", doc.get("panorama"));
 					// 更新时间
@@ -754,6 +779,27 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		JSONObject data = new JSONObject();
 		data.put("tags_def", tags);
+		
+		// 获得全景类别
+		JSONArray types = new JSONArray();
+		
+		MsPoiFieldCriteria msPoiFieldCriteria = new MsPoiFieldCriteria();
+		MsPoiFieldCriteria.Criteria criteria = msPoiFieldCriteria.createCriteria();
+		criteria.andFieldNameEqualTo("panorama_type");
+		List<MsPoiField> list = msPoiFieldDAO.selectByCriteria(msPoiFieldCriteria);
+		if(list == null) {
+			data.put("panorama_type", types);
+		} else{
+			String type = list.get(0).getExtensionAttrs();
+			JSONArray typeArray = JSONArray.parseArray(type != null? type:"[]");
+			for(int i = 0; i < typeArray.size(); i++){
+				JSONObject panoType = new JSONObject();
+				panoType.put("panorama_type_id", i + 1);
+				panoType.put("panorama_type_name", typeArray.getJSONObject(i).get(i + 1 + ""));
+				types.add(panoType);
+			}
+			data.put("panorama_type", types);
+		}
 		return data;
 	}
 
@@ -781,7 +827,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		commonFieldsVal.put("_id", docPoi.getObjectId("_id".toString()));
+		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id".toString()));
+		
 		/*
 		 * 公共字段值
 		 */
@@ -810,6 +857,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			commonFieldsVal.put("subTag", 0);
 		}
 
+		// 3.分享摘要
+		if(docPoi.containsKey("share_desc")) {// share_dec字段后加，早期POI可能不存在该字段info
+			commonFieldsVal.put("share_desc", docPoi.getString("share_desc"));
+		} else {
+			commonFieldsVal.put("share_desc", "");
+		}
+		
 		// 4.经纬度
 		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
 		JSONArray coordinates = lnglat.getJSONArray("coordinates");
@@ -851,7 +905,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			panorama = docPoi.getString("panorama");
 		}
 		commonFieldsVal.put("panorama", panorama);
-
+		
+		// 8.全景类型
+		if(docPoi.containsKey("panorama_type")) {
+			commonFieldsVal.put("panorama_type", docPoi.getInteger("panorama_type"));
+		} else {
+			commonFieldsVal.put("panorama_type", "2");
+		}
+		
 		// 9.联系电话
 		String contact_phone = "";
 		if (docPoi.containsKey("contact_phone")) {
@@ -891,6 +952,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 
@@ -1056,7 +1118,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				Document document = null;
 				// 保证插入数据，在判重策略下是唯一的
 				synchronized (MongoConnector.class) {
-					document = MongoUtility.findOnePoi(poi_collection, poiJson);
+					document = MongoUtility.findOnePoi(poi_collection, poiJson);// 返回相似POI
 					if (document == null) {
 						poi_collection.insertOne(doc);
 						inserted = true;
@@ -1089,6 +1151,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject initFixPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
+		String _id = param.getString("_id");
 
 		Document docPoi = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
@@ -1097,6 +1160,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 
@@ -1155,5 +1219,78 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			return FastJsonUtil.errorWithMsg("LUNA.E0006");
 		}
 		return FastJsonUtil.sucess(MsLunaMessage.getInstance().getMessage("LUNA.I0001"));
+	}
+
+	@Override
+	public JSONObject initPoiPreview(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+
+		String _id = param.getString("_id");
+		String lang = param.getString("lang");
+		Document docPoi = this.getPoiById(_id, lang, Boolean.TRUE);
+		if (docPoi == null) {
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "POI["+_id+"]");
+		}
+
+		JSONObject data = new JSONObject();
+		String long_title = docPoi.getString("long_title");// poi 名称
+		
+		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
+		JSONArray coordinates = lnglat.getJSONArray("coordinates");
+		Double lng = coordinates.getDouble(0);// 经度
+		Double lat = coordinates.getDouble(1);// 纬度
+		
+		String short_title = docPoi.getString("short_title");
+		String brief_introduction = docPoi.getString("brief_introduction");
+		String thumbnail = docPoi.getString("thumbnail");
+		String audio = docPoi.getString("audio");
+		String video = docPoi.getString("video");
+		String panorama = docPoi.getString("panorama");
+		String contact_phone = docPoi.getString("contact_phone");
+		String province_id = docPoi.getString("province_id");
+		String city_id = docPoi.getString("city_id");
+		String county_id = docPoi.getString("county_id");
+		String province = msZoneCacheBL.getZoneName(province_id, lang);
+		String city = msZoneCacheBL.getZoneName(city_id, lang);
+		String county = msZoneCacheBL.getZoneName(county_id, lang);
+		String share_desc = "";
+		if(docPoi.containsKey("share_desc")) {
+			share_desc = docPoi.getString("share_desc");
+		}
+		Integer panorama_type;
+		if(docPoi.containsKey("panorama_type")){
+			panorama_type = docPoi.getInteger("panorama_type");
+		} else {
+			// TODO 默认数值在common中定义
+			panorama_type = 2; // 默认为专辑 
+		}
+
+		MsVideoUpload msVideoUpload = msVideoUploadDAO.selectByPrimaryKey(video);
+
+		if(msVideoUpload != null){
+			String vod_original_file_url = msVideoUpload.getVodOriginalFileUrl();
+			if(vod_original_file_url != null){
+				data.put("video", vod_original_file_url);
+			}
+		} else {
+			MsLogger.warn("Failed to get video url: " + video);
+		}
+
+		data.put("short_title", short_title);
+		data.put("long_title", long_title);
+		data.put("lng", lng);
+		data.put("lat", lat);
+		data.put("brief_introduction", brief_introduction);
+		data.put("thumbnail", thumbnail);
+		data.put("audio", audio);
+		data.put("panorama", panorama);
+		data.put("panorama_type", panorama_type);
+		data.put("contact_phone", contact_phone);
+		data.put("province", province);
+		data.put("city", city);
+		data.put("county", county);
+		data.put("share_desc", share_desc);
+		
+		return FastJsonUtil.sucess("success", data);
 	}
 }

@@ -39,7 +39,7 @@ button:hover{
     margin: 0;
 }
 .inner-wrap{
-    width: 1200px;
+    /* width: 1200px; */
     margin: auto;
 }
 h1{
@@ -75,18 +75,19 @@ h1{
 }
 .login-main{
     position: relative;
-    width: 1200px;
+    /* width: 1200px; */
     height: 550px;
+    margin: 0 auto;
 }
 .login{
-    position: relative;
+    position: absolute;
     border: 1px solid #dddddd;
-    float: right;
     margin-top: 96px;
     width: 348px;
     height: 372px;
     padding: 25px 24px 30px 24px;
     background: #FFFFFF;
+    right: 12%;
 }
 .account{
     text-align: center;
@@ -122,11 +123,11 @@ input:-webkit-autofill{
     cursor: pointer;
 }
 a.link-url{
-	color:#ffffff !important;
+    color:#ffffff !important;
 }
 a.link-url:hover{
-	color:#ffffff !important;
-	text-decoration:none;
+    color:#ffffff !important;
+    text-decoration:none;
 }
 .register{
     text-align: right;
@@ -151,6 +152,11 @@ a.link-url:hover{
 }
 .process{
     padding: 36px 54px;
+}
+
+.process table{
+    margin: 0 auto;
+    max-width: 1092px;
 }
 .symbol{
     display: inline-block;

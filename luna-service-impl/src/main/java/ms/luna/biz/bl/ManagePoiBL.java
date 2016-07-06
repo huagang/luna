@@ -83,4 +83,11 @@ public interface ManagePoiBL {
 	 * @return
 	 */
 	JSONObject checkPoiCanBeDeleteOrNot(String json);
+	
+	/**
+	 * 获取POI预览页信息
+	 * @param json
+	 * @return
+	 */
+	JSONObject initPoiPreview(String json);
 }

@@ -278,11 +278,19 @@ public class EditPoiCtrl extends BasicCtrl{
 				poiModel.setBriefIntroduction(common_fields_val.getString("brief_introduction"));
 				poiModel.setThumbnail(common_fields_val.getString("thumbnail"));
 
+				// 3.分享摘要
+				poiModel.setShareDesc(common_fields_val.getString("share_desc"));
+				// 8.全景类型
+				poiModel.setPanoramaType(common_fields_val.getString("panorama_type"));
 				// 8.全景数据ID
 				poiModel.setPanorama(common_fields_val.getString("panorama"));
 				// 9.联系电话
 				poiModel.setContact_phone(common_fields_val.getString("contact_phone"));
 
+				// 预览地址
+				String preview_url = data.getString("preview_url");
+				mav.addObject("preview_url", preview_url);
+				
 				JSONArray privateFields = data.getJSONArray("private_fields");
 				session.setAttribute("private_fields", privateFields);
 			} else {
@@ -362,6 +370,7 @@ public class EditPoiCtrl extends BasicCtrl{
 		mav.setViewName("/edit_poi.jsp");
 		mav.addObject("poiReadOnly", Boolean.FALSE);
 		mav.addObject("poiModel", poiModel);
+		mav.addObject("tempPanoType", poiModel.getPanoramaType());//radiobutton被禁用后无法向form表单传递参数。此处设置了一个临时存取区域
 		return mav;
 	}
 }

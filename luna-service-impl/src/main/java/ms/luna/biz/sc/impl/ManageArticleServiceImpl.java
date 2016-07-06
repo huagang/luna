@@ -41,7 +41,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.getArticleById(id);
         } catch (Exception ex) {
-            logger.error("Failed to get article");
+            logger.error("Failed to get article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
         }
     }
@@ -51,7 +51,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.updateArticle(json);
         } catch (Exception ex) {
-            logger.error("Failed to update article");
+            logger.error("Failed to update article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败");
         }
     }
@@ -61,7 +61,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.deleteArticle(id);
         } catch (Exception ex) {
-            logger.error("Failed to delete article");
+            logger.error("Failed to delete article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除文章失败");
         }
     }
@@ -71,7 +71,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.loadArticle(json);
         } catch (Exception ex) {
-            logger.error("Failed to load article");
+            logger.error("Failed to load article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
         }
     }
@@ -91,7 +91,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.publishArticle(id);
         } catch (Exception ex) {
-            logger.error("Failed to publish article");
+            logger.error("Failed to publish article", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
         }
     }
@@ -101,7 +101,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.getColumnById(id);
         } catch (Exception ex) {
-            logger.error("Failed to get column");
+            logger.error("Failed to get column", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
         }
     }
@@ -111,8 +111,49 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         try {
             return manageArticleBL.getColumnByBusinessId(businessId);
         } catch (Exception ex) {
-            logger.error("Failed to get column");
+            logger.error("Failed to get column", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
+    }
+
+    @Override
+    public JSONObject getArticleByBusinessAndColumnName(String businessName, String columnNames) {
+        try {
+            return manageArticleBL.getArticleByBusinessAndColumnName(businessName, columnNames);
+        } catch (Exception ex) {
+            logger.error("Failed to get article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds) {
+        try {
+            return manageArticleBL.getArticleByBusinessAndColumnId(businessId, columnIds);
+        } catch (Exception ex) {
+            logger.error("Failed to get article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getOnlineArticleById(int id) {
+        try {
+            return manageArticleBL.getOnlineArticleById(id);
+        } catch (Exception ex) {
+            logger.error("Failed to get online article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取在线文章失败");
+        }
+    }
+
+    @Override
+    public JSONObject getOnlineArticleByIdForApi(int id) {
+
+        try {
+            return manageArticleBL.getOnlineArticleByIdForApi(id);
+        } catch (Exception ex) {
+            logger.error("Failed to get online article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取在线文章失败");
         }
     }
 }

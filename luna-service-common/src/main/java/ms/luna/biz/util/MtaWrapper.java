@@ -1,5 +1,13 @@
 package ms.luna.biz.util;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
@@ -8,88 +16,100 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Test;
-
 public class MtaWrapper {
+	private final static Logger logger = Logger.getLogger(MtaWrapper.class);
+
 	private static final String MS_SECRET_KEY ="PQ0&(2mAs5Ns1!@M";
-	private static final String URL_REGIST = "http://mta.qq.com/h5/api/ctr_register/register";
+	private static final String REGISTER_URL = "http://mta.qq.com/h5/api/ctr_register/register";
+	private static final String DELETE_URL = "http://mta.qq.com/h5/api/ctr_register/delete_app";
 	private static final String SOURCE = "4";
 
-	private static String getSingedParams(String params) {
-
-		Map<String, String> sortedMap = new TreeMap<String, String>(new Comparator<String>() {
-			public int compare(String key1, String key2) {
-				return key1.compareTo(key2);
-			}
-		});
-
-		String[] tokens = params.split("&");
-		for (String t : tokens) {
-			String[] kv = t.split("=", t.length());
-			if (kv.length == 2) {
-				sortedMap.put(kv[0], t);
-			}
-		}
-		StringBuilder sb = new StringBuilder(MS_SECRET_KEY);
-		for (String value: sortedMap.values()) {
-			sb.append(value);
-		}
-
-		/*
-		 * 【原始参数值】 + 【签名】 + 【秘钥】+【升序后的参数的MD5值】
-		 */
-		return params + "&sign=" + VbMD5.getCommonMD5Str(sb.toString());
-	}
 	/**
-	 * source 类型默认为4，同样参数多次调用会返回不同的 app_id 和 app_secert_key
-	 * 
-	 * @param app_name		应用名称，不做重复检查
-	 * @param app_type		应用类型
-	 * @param domain		站点域名，可以为空，传入""即可
-	 * @param admin_qq		管理员QQ号码
+	 *
+	 * @param paramMap sorted map
 	 * @return
-	 * @throws Exception 
-	 * @throws IOException 
 	 */
-	public static String getRegistResult(String app_name,int app_type,String domain, long admin_qq) throws IOException, Exception{
-
-		StringBuilder sortedParams = new StringBuilder();
-		try {
-			sortedParams.append("admin_qq=")
-			.append(admin_qq)
-			.append("&app_name=")
-			.append(URLEncoder.encode(app_name,"UTF-8"))
-			.append("&app_type=")
-			.append(app_type);
-			if(domain != null && !domain.isEmpty()){
-				sortedParams.append("&domain=")
-				.append(URLEncoder.encode(domain,"UTF-8"));
-			}
-			sortedParams.append("&source=")
-			.append(SOURCE);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RuntimeException("不支持UTF-8编码类型");
+	private static String generateSign(Map<String, Object> paramMap, String appKey) {
+		StringBuilder sb = new StringBuilder(appKey);
+		for(Map.Entry<String, Object> entry : paramMap.entrySet()) {
+			sb.append(entry.getKey());
+			sb.append("=");
+			sb.append(entry.getValue());
 		}
-		String uri = MtaWrapper.URL_REGIST + "?" +getSingedParams(sortedParams.toString());
 
-		URLConnection conn = MsHttpRequest.sendPost(uri);
-		return MsHttpRequest.conver2JsonString(conn.getInputStream());
+		return VbMD5.getCommonMD5Str(sb.toString());
+
+	}
+
+	public static String createApp(String appName, int appType, String domain, long adminQQ) {
+
+		HttpClient httpClient = new HttpClient();
+		Map<String, Object> requestParamMap = new TreeMap<>();
+		requestParamMap.put("app_name", appName);
+		requestParamMap.put("app_type", appType);
+		requestParamMap.put("source", SOURCE);
+
+		if(StringUtils.isNotBlank(domain)) {
+			try {
+				requestParamMap.put("domain", URLEncoder.encode(domain, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				logger.error("Invalid encoding for domain: " + domain, e);
+			}
+		}
+		requestParamMap.put("admin_qq", adminQQ);
+		requestParamMap.put("sign", generateSign(requestParamMap, MS_SECRET_KEY));
+		StringBuilder sb = new StringBuilder(REGISTER_URL + "?");
+		for(Map.Entry<String, Object> entry : requestParamMap.entrySet()) {
+			sb.append(entry.getKey() + "=" + entry.getValue() + "&");
+		}
+		String url = sb.substring(0, sb.length() - 1);
+
+		return httpGet(url);
+
+	}
+
+	public static String deleteApp(int appId, String appKey) {
+
+		Map<String, Object> requestParamMap = new TreeMap<>();
+		requestParamMap.put("app_id", appId);
+		requestParamMap.put("source", SOURCE);
+		requestParamMap.put("sign", generateSign(requestParamMap, appKey));
+		StringBuilder sb = new StringBuilder(DELETE_URL + "?");
+		for(Map.Entry<String, Object> entry : requestParamMap.entrySet()) {
+			sb.append(entry.getKey() + "=" + entry.getValue() + "&");
+		}
+		String url = sb.substring(0, sb.length() - 1);
+
+		return httpGet(url);
+	}
+
+	private static String httpGet(String url) {
+
+		HttpClient httpClient = new HttpClient();
+		GetMethod getMethod = new GetMethod(url);
+		HttpMethodParams params = new HttpMethodParams();
+		params.setSoTimeout(500);
+		getMethod.setParams(params);
+		try {
+			int statusCode = httpClient.executeMethod(getMethod);
+			if(statusCode == HttpStatus.SC_OK) {
+				return new String(getMethod.getResponseBody(), "utf-8");
+			}
+		} catch (IOException ex) {
+			logger.error("Failed to request url: " + url, ex);
+		}
+
+		return null;
 	}
 
 	@Test
-	public void test() {
-        String sr = null;
-		try {//regionNmZh, 微景展通用类型, H5轻应用的域名domain, 腾讯云管理用QQ号码
-			sr = MtaWrapper.getRegistResult("testfirst",2,"", 277239523L);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        System.out.println("str:"+sr);
+	public void test() throws Exception {
+
+		String ret = null;
+		ret = MtaWrapper.createApp("mta",2, "luna.visualbusiness.com", 3463673430l);
+        System.out.println("result: " + ret);
+
+//		ret = MtaWrapper.deleteApp(500145273, "4a1c6998022f828856464e6f6d94d754");
+//		System.out.println("result: " + ret);
     }
 }

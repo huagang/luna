@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
@@ -37,8 +40,6 @@ import ms.luna.web.control.api.VodPlayCtrl;
 import ms.luna.web.control.api.VodPlayCtrl.REFRESHMODE;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 @Component("addPoiCtrl")
 @Controller
 @RequestMapping("/add_poi.do")
@@ -141,6 +142,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		lstCountys.add(simpleModel);
 		session.setAttribute("countys", lstCountys);
 
+		// 设置默认全景类型
+		poiModel.setPanoramaType("2");
 		mav.addObject("poiModel", poiModel);
 		mav.setViewName("/add_poi.jsp");
 		return mav;
@@ -294,50 +297,61 @@ public class AddPoiCtrl extends BasicCtrl{
 			String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
 			JSONObject result = VODUtil.getInstance().upload2Cloud(file, 
 					VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName, webAddr, 0);
-			String vod_file_id = null;
-			JSONObject vodJson = null;
+//			String vod_file_id = null;
+//			JSONObject vodJson = null;
 			// 文件上传
-			if ("0".equals(result.getString("code"))) {
-				String token = result.getString("token");
-				JSONObject data = result.getJSONObject("data");
-				vod_file_id = data.getString("vod_file_id");
+//			if ("0".equals(result.getString("code"))) {
+//				String token = result.getString("token");
+//				JSONObject data = result.getJSONObject("data");
+//				vod_file_id = data.getString("vod_file_id");
+//
+//				// 记录写入数据库
+//				JSONObject param = new JSONObject();
+//				param.put("vod_file_id", vod_file_id);
+//				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
+//				if ("0".equals(resJson.getString("code"))) {// 成功
+//					// 存入缓存
+//					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
+//
+//					// 注：result中文件id的表示为fileId，非file_id
+//					vodJson = FastJsonUtil.sucess("成功", param);
+//				} else {
+//					vodJson = FastJsonUtil.error("3", "写入数据库失败");
+//				}
+//			} else if ("2".equals(result.getString("code"))) {
+//				vodJson = FastJsonUtil.error("2", "文件大小超过5M");
+//			} else {
+//				vodJson = FastJsonUtil.error("4", "文件传输失败");
+//			}
 
-				// 记录写入数据库
+			String phone_url = "";
+			JSONObject vodJson = new JSONObject();
+			if ("0".equals(result.getString("code"))) {
+				JSONObject data = result.getJSONObject("data");
+				String vod_file_id = data.getString("vod_file_id");
+				JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
+				
+				if("0".equals(result.getString("code"))){
+					phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
+				}
 				JSONObject param = new JSONObject();
 				param.put("vod_file_id", vod_file_id);
-				JSONObject resJson = vodPlayService.createVodRecord(param.toString());
-				if ("0".equals(resJson.getString("code"))) {// 成功
-					// 存入缓存
-					VodPlayCtrl.refreshVodFileTokenCache(token, REFRESHMODE.ADD);
-
-					// 注：result中文件id的表示为fileId，非file_id
-					vodJson = FastJsonUtil.sucess("成功", param);
-				} else {
-					vodJson = FastJsonUtil.error("3", "写入数据库失败");
-				}
-			} else if ("2".equals(result.getString("code"))) {
-				vodJson = FastJsonUtil.error("2", "文件大小超过5M");
-			} else {
-				vodJson = FastJsonUtil.error("4", "文件传输失败");
+				param.put("vod_original_file_url", phone_url);
+				vodPlayService.createVodRecord(param.toString());
+				vodJson = FastJsonUtil.sucess("成功", param);
 			}
-
-			if ("0".equals(result.getString("code"))) {
-				JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
-				String phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
-				vodJson.put("original", file.getOriginalFilename());
-				vodJson.put("name", file.getOriginalFilename());
-				vodJson.put("url", phone_url);
-				vodJson.put("size", file.getSize());
+			if(!"".equals(phone_url)) {
 				vodJson.put("type", VbUtility.getExtensionOfPicFileName(phone_url));
 				vodJson.put("state", "SUCCESS");
 			} else {
-				vodJson.put("original", file.getOriginalFilename());
-				vodJson.put("name", file.getOriginalFilename());
-				vodJson.put("url", "");
-				vodJson.put("size", file.getSize());
 				vodJson.put("type", "");
 				vodJson.put("state", "FAIL");
 			}
+			vodJson.put("url", phone_url);
+			vodJson.put("original", file.getOriginalFilename());
+			vodJson.put("name", file.getOriginalFilename());
+			vodJson.put("size", file.getSize());
+			
 			response.getWriter().print(vodJson.toJSONString());
 			response.setStatus(200);
 			return;
@@ -357,5 +371,16 @@ public class AddPoiCtrl extends BasicCtrl{
 			}
 			return;
 		}
+	}
+	
+	public static void main(String[] args) {
+//		JSONObject vodResult = FastJsonUtil.error("1", "转码未完成");
+		JSONObject data = new JSONObject();
+		JSONObject vodResult = FastJsonUtil.sucess("ok", data);
+		MsLogger.debug(vodResult.toJSONString());
+		JSONObject data2 = vodResult.getJSONObject("data");
+		String vod_original_file_url = data2.getString("vod_original_file_url");
+		System.out.println(vod_original_file_url);
+		
 	}
 }

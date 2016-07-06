@@ -190,6 +190,11 @@ function copy_code(copyText)
   alert('copy成功！');
 }
 
+/**
+ * 复制到剪切版
+ * @param  {[type]} s [description]
+ * @return {[type]}   [description]
+ */
 function copyToClipBoard(s) {
     //alert(s);
     if (window.clipboardData) {
@@ -379,7 +384,6 @@ function modify(){
 			currentComponent = {};
 		}
 	}
-
 })(lunaPage);
 
 

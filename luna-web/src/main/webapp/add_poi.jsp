@@ -58,6 +58,14 @@
                         </div>
                     </div>
                     <div class="item-poi">
+                        <div class="label-poi label-ver">分享摘要</div>
+                        <div class="value-poi">
+                           <!--  <script id="editor" type="text/plain" style="width:550px;height:500px;"></script> -->
+                            <form:textarea id="share_desc" readonly="${poiReadOnly}" path="shareDesc" cssClass="poi-des" />
+                        </div>
+                        <div class="warn" id="description-warn">不能为空</div>
+                    </div>
+                    <div class="item-poi">
                         <div class="label-poi property-label-poi">类别</div>
                         <div class="value-poi property-poi">
                          <%-- <c:forEach items="${poiModel['poiTags']}" var="varTag" varStatus="varTagStatus">
@@ -168,6 +176,7 @@
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi">
+				            <form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
                             <form:input id="panorama" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
                         </div>
                     </div>

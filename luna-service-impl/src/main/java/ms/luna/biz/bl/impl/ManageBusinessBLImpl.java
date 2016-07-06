@@ -1,9 +1,11 @@
 package ms.luna.biz.bl.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.CommonQueryParam;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
@@ -114,8 +116,11 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		business.setMerchantId(merchantId);
 		business.setCreateUser(createUser);
 		try {
-			String statInfo = MtaWrapper.getRegistResult(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, CloudConfig.ADMIN_QQ);
+			String statInfo = MtaWrapper.createApp(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, ServiceConfig.getLong(ServiceConfig.MTA_QQ));
 			// str:{"code":0,"info":"success","data":{"app_id":500032916,"secret_key":"4ead8d782c516966b64424ab52500412"}}
+			if(statInfo == null) {
+				return FastJsonUtil.error("-1", "创建腾讯统计账号失败");
+			}
 			JSONObject jsonStat = JSONObject.parseObject(statInfo);
 			if ("0".equals(jsonStat.getString("code"))) {
 				JSONObject statData = jsonStat.getJSONObject("data");
@@ -244,6 +249,18 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	@Override
 	public JSONObject deleteBusinessById(int id) {
 		// TODO Auto-generated method stub
+		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(id);
+		String ret = MtaWrapper.deleteApp(msBusiness.getStatId(), msBusiness.getSecretKey());
+		if(ret == null) {
+			logger.error("Failed to delete qq stats for business: " + id);
+		} else {
+			JSONObject jsonObject = JSON.parseObject(ret);
+			if(0 != jsonObject.getIntValue("code")) {
+				logger.error("Failed to delete qq stats for business: " +
+						id + ", info " + jsonObject.getString("info"));
+			}
+
+		}
 		msBusinessDAO.deleteByPrimaryKey(id);
 		return FastJsonUtil.sucess("成功删除业务信息！");
 	}

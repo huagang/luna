@@ -71,6 +71,14 @@
                         </div>
                     </div>
                     <div class="item-poi">
+                    <div class="label-poi label-ver">分享摘要</div>
+                        <div class="value-poi">
+                            <!-- <script id="editor" type="text/plain" style="width:550px;height:500px;"></script> -->
+                            <form:textarea id="share_desc" readonly="${poiReadOnly}" path="shareDesc" cssClass="poi-des" />
+                        </div>
+                        <div class="warn" id="description-warn">不能为空</div>
+                    </div>
+                    <div class="item-poi">
                         <div class="label-poi property-label-poi">类别</div>
                         <div class="value-poi property-poi">
 		                   <c:choose>
@@ -248,9 +256,11 @@
 		             		<img id="thumbnail-show" picExist="false" alt="" src="" onload="thumbnailDisplay(this,100,120)">
 		             	</div>
 		            </div>	
-                     <div class="item-poi">
+                    <div class="item-poi">
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi">
+                        	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
+                        	<form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
                             <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
                         </div>
                     </div>
@@ -270,9 +280,10 @@
                     <ms:poi readonly="${poiReadOnly}" lang="${lang}" privateFields="${private_fields}"/>
                 </div>
                 <div class='publish-option'>
-                	<input type='checkbox'  id='publish'/>
+                	<input type='checkbox'  id='publish' checked="checked" />
                 	<label for='publish'>同步生成poi详情页</label>
-                	<a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>              	
+                	<%-- <a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>  --%>       
+                 	<a target='_blank' href="${preview_url}">预览</a>      	
                 </div>
                 <c:if test="${!poiReadOnly}">
 		        	<button type="button" class="save" id="btn-POI-save">保存</button>

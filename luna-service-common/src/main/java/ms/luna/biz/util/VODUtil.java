@@ -1,24 +1,18 @@
 package ms.luna.biz.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
+import com.qcloud.vod.Module.ModifiedVod;
+import com.qcloud.vod.Utilities.SHA1;
+import ms.luna.biz.cons.VbConstant;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
-import com.qcloud.vod.Module.ModifiedVod;
-import com.qcloud.vod.Utilities.SHA1;
-
-import ms.luna.biz.cons.VbConstant;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 视频点播
@@ -56,9 +50,6 @@ public class VODUtil {
 	}
 
 	public static VODUtil getInstance() {
-		if (vodUtil == null) {
-			vodUtil = new VODUtil();
-		}
 		return vodUtil;
 	}
 
@@ -94,6 +85,7 @@ public class VODUtil {
 				String definition_nm = VbConstant.VOD_DEFINITION.ConvertName(definition); // 获得格式在数据库中的对应名称
 				String url = play.getString("url");
 				data.put(definition_nm, url);
+				data.put(definition, url);
 			}
 			return FastJsonUtil.sucess("视频url信息获取成功", data);
 		}
@@ -269,10 +261,6 @@ public class VODUtil {
 	 *            上传路径
 	 * @param fileName
 	 *            上传后的显示文件名
-	 * @param notifyUrl
-	 *            转码回调地址,允许为null
-	 * @param datasize
-	 *            分块大小
 	 * @param webAddr
 	 * 			  url地址
 	 * @param isTranscode
@@ -319,10 +307,6 @@ public class VODUtil {
 	 *            上传路径
 	 * @param fileName
 	 *            上传后的显示文件名
-	 * @param notifyUrl
-	 *            转码回调地址,允许为null
-	 * @param datasize
-	 *            分块大小
 	 * @param webAddr
 	 * 			  url地址
 	 * @return
@@ -333,6 +317,9 @@ public class VODUtil {
 		
 	}
 
+	public JSONObject upload2Cloud(String file, String path, String fileName) throws IOException {
+		return this.upload2Cloud(file, path, fileName, 0);
+	}
 	/**
 	 * @param file
 	 *            视频文件路径名称，如"d:\\video.mp4"
@@ -343,7 +330,7 @@ public class VODUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public JSONObject upload2Cloud(String file, String path, String fileName) throws IOException {
+	public JSONObject upload2Cloud(String file, String path, String fileName, int isTranscode) throws IOException {
 		long fileSize = new File(file).length();
 		if (fileSize > MAX_VIDEO_SIZE) {
 			return FastJsonUtil.error("2", "文件大小超过" + (MAX_VIDEO_SIZE >> 16) + "M");
@@ -354,7 +341,7 @@ public class VODUtil {
 			return FastJsonUtil.error("1", "文件夹创建失败");
 		}
 
-		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, null, null, 1, 1, 0);
+		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, null, null, isTranscode, 1, 0);
 
 		return result;
 	}

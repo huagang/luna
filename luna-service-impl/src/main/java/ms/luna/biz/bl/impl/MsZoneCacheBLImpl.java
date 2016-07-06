@@ -18,6 +18,7 @@ import ms.luna.biz.dao.custom.MsZoneDAO;
 import ms.luna.biz.dao.model.MsZone;
 import ms.luna.biz.dao.model.MsZoneCriteria;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.PoiCommon;
 
 @Service("msZoneCacheBL")
 public class MsZoneCacheBLImpl implements MsZoneCacheBL {
@@ -258,5 +259,18 @@ public class MsZoneCacheBLImpl implements MsZoneCacheBL {
 		}
 		subZoneIdsMap.put(zoneId, zone_ids);
 		return zone_ids;
+	}
+	
+	@Override
+	public String getZoneName(String zone_id, String lang) {
+		MsZone msZone = msZoneCache.get(zone_id);
+		if(msZone == null) {
+			return "";
+		}
+		if(PoiCommon.POI.ZH.equals(lang)) {
+			return msZone.getName();
+		} else {
+			return msZone.getPinyin();
+		}
 	}
 }
