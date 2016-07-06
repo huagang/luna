@@ -173,9 +173,9 @@
 		             		<img id="thumbnail-show" picExist="false" alt="" src="" onload="thumbnailDisplay(this,100,120)">
 		             	</div>
 		            </div>					
-                    <div class="item-poi">
+                    <div class="item-poi ">
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
-                        <div class="value-poi">
+                        <div class="value-poi panoramaType">
 				            <form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
                             <form:input id="panorama" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入全景页卡标识符或者场景点id"/>
                         </div>
