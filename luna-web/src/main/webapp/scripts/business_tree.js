@@ -243,7 +243,6 @@ $(document).ready(function(){
             success: function(returndata){
             	if ("0" == returndata.code) {
             		// 页面初始化，由后台返回的三个主要json对象
-            		console.log(returndata);
             		treeDate = returndata.data.treeDate;
             		poiDef = returndata.data.poiDef;
             		tags = returndata.data.tags;
@@ -298,7 +297,6 @@ $(document).ready(function(){
     var level=1,
         deep=1;
     var initTreeHtml = function(data,type,level){
-    	console.log(data);
     	if(!level){
     		level=1;
     	}
@@ -314,14 +312,18 @@ $(document).ready(function(){
                     var ordernum='';
                 }
                 treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
-                treeHtml+='<div class="item-name" item_id="'+data._id+'" >'
-                            +'<span class="item-title"><a target="_blank" href="./edit_poi.do?method=init&_id='+ data._id +'">'+poiDef[data._id].name+'</a></span>'
-                            +'<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
-                            +'<div class="item-opt-wrap">'
-                                +'<div class="item-opt addchild" item_id="'+data._id+'">添加子节点</div>'
-                                +'<div class="item-opt delete" item_id="'+data._id+'">删除</div>'
-                            +'</div>'
-                        +'</div>';
+                treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
+                   + '<span class="item-title"><a target="_blank" '
+                   + 	'href="./edit_poi.do?method=init&_id='+ data._id +'">' 
+                   +     poiDef[data._id].name + '</a><div class="tooltip"><p>'+ '长标题' + '</p>'
+                   +     '<p>纬度：' + '纬度' + '</p><p>经度:' +'经度' + '</p></div>' 
+                   + '</span>'
+                   + '<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
+                   + '<div class="item-opt-wrap">'
+                   + '<div class="item-opt addchild" item_id="'+data._id+'">添加子节点</div>'
+                   + '<div class="item-opt delete" item_id="'+data._id+'">删除</div>'
+                   + '</div>'
+                   + '</div>';
             }else{
                 return "";
             }
