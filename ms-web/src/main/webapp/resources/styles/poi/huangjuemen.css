@@ -27,7 +27,7 @@ body {
     /* left: 15px; */
     width: 100%;
     padding: 5px 0 10px 15px;
-    background: rgba(0,0,0,0.2);
+    background: linear-gradient(to top, rgba(0,0,0,0.5) , rgba(0,0,0,0) );
 }
 
 .title {
