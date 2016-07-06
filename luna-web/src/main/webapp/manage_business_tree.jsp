@@ -204,13 +204,8 @@
 
 	function operationFormatter(value, row, index) {
 		var business_id = row.business_id;
-		var business_name = row.business_name;
-		var province_id = row.province_id;
-		var city_id = row.city_id;
-		var county_id = row.county_id;
 
-		var editOp = '<a class="edit" href="javascript:void(0)" onclick="editBusinessTree('+business_id+','+province_id+','+city_id+','+county_id+')">编辑</a>'.format(
-				business_id, province_id,city_id,county_id);
+		var editOp = '<a target="_blank" class="edit" href="./business_tree.do?method=init&business_id=' + business_id + '">编辑</a>';
 		var deleteOp = '<a class="delete" href="javascript:void(0)" onclick="delBusinessTree(this,' + business_id + ')">删除</a>';
 
 		return editOp + deleteOp;
