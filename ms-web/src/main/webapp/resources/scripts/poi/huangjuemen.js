@@ -78,12 +78,11 @@ var initHJMPoiPage = function() {
                     url = "http://single.pano.visualbusiness.cn/PanoViewer.html?panoId=" + data.panorama;
                     break;
                 case 2: //专辑全景
-                    // url = "http://pano.visualbusiness.cn/album/index.html?panoId="+data.panorama;
-                    url = "http://pano.visualbusiness.cn/album/index.html?panoId=" + data.panorama;
+                    // url = "http://pano.visualbusiness.cn/album/index.html?panoId=" + data.panorama;
+                    url = "http://pano.visualbusiness.cn/album/index.html?albumId=" + data.panorama;
                     break;
                 case 3: //相册全景
-                    alert('正在努力实现中，请使用单点和专辑相册');
-                    url = "http://wap.visualbusiness.cn/panoengine/PanoViewer/PanoAlbum.jiaxiulou.html";
+                    url = "http://data.pano.visualbusiness.cn/rest/album/view/" + data.panorama;
                     break;
             }
             $('#panorama').closest('.tool-item').removeClass('hidden');
