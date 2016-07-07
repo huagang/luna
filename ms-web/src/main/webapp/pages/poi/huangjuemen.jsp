@@ -71,5 +71,8 @@
 <script src='<%=request.getContextPath()%>/resources/scripts/videoJs.js'></script>
 <!-- 引入video的 js End -->
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/poi/huangjuemen.js'></script>
+<!-- 腾讯统计 Poi -->
+<script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="500149847" ></script>
+<!--  腾讯统计 -->
 </body>
 </html>
