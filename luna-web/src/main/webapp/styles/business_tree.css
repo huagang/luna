@@ -110,19 +110,17 @@ right connector from last child*/
 
 .luna-tree .item-title .poi_info{
 	display: none;
-	z-index: 1000;
-	position: absolute;
-	top: 100%;
-    margin: 10px 0 0 -5px;
-	background-color: #efefef;
-	left: 0;
-	line-height: 24px;
-    padding: 10px;
+    z-index: 1000;
+    position: absolute;
+    margin: 1px 0 0 -5px;
+    background-color: #efefef;
+    left: 0;
+    line-height: 21px;
+    padding: 8px 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 200px;
     word-break: break-all;
-    white-space: pre-wrap;
+    font-size: 12px;
 }
 	
 .luna-tree .item-title:hover .poi_info{
