@@ -1,6 +1,7 @@
 package ms.luna.biz.dao.custom;
 
 import ms.luna.biz.dao.MsPoiFieldDAOBaseImpl;
+import ms.luna.biz.dao.custom.model.MsPoiFieldNameResult;
 import ms.luna.biz.dao.custom.model.MsTagFieldParameter;
 import ms.luna.biz.dao.custom.model.MsTagFieldResult;
 
@@ -26,9 +27,9 @@ public class MsPoiFieldDAOImpl extends MsPoiFieldDAOBaseImpl implements MsPoiFie
 	}
 
 	@Override
-	public List<MsTagFieldResult> selectFieldNames(MsTagFieldParameter msTagFieldParameter) {
+	public List<MsPoiFieldNameResult> selectFieldNames() {
 		@SuppressWarnings("unchecked")
-		List<MsTagFieldResult> list = getSqlMapClientTemplate().queryForList("ms_poi_field.selectFieldNames", msTagFieldParameter);
+		List<MsPoiFieldNameResult> list = getSqlMapClientTemplate().queryForList("ms_poi_field.selectFieldNames");
 		return list;
 	}
 }
