@@ -19,6 +19,7 @@ mvn clean install -Pdev -DskipTests
 cd ..
 cd luna-service-generator
 mvn clean install
+
 cd ..
 cd luna-service-interface
 mvn clean install
