@@ -638,3 +638,25 @@ a.wj-img-clc{
 .text-error{
     color:#e73d4a;
 }
+
+/*音频控制样式 */
+.audio-upload .title
+{
+    /* width: 10%; */
+}
+.audio-upload .fileurl
+{
+    height: 30px;
+    padding: 0 5px;
+    margin: 0 5px;
+    width: 60%;
+}
+.audio-upload .btn-local
+{
+    margin-top: 10px;
+    width: 85%;
+}
+.audio-set .bg-set .form-group [type='radio'] {
+    display: inline-block;
+}
+.audio-set .bg-set .form-group label[for] {font-weight: normal;margin-right: 10px;}
