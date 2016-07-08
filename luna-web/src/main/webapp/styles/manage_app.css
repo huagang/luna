@@ -21,14 +21,14 @@
 	position: fixed;
 	left: 0;
     right: 0;
-    top: 15%;
+    top: 7%;
     width: 66%;
     margin: auto;
     display: block;
 }
 
 .pop.pop-show.set-app-name{
-	width: 40%;
+	width: 560px;
 }
 
 .pop-show:before{
@@ -89,14 +89,66 @@
 	display: inline-block;
     width: 140px;
     height: 140px;
-    margin-right: 5%;
+    margin-right: 8px;
     position: relative;
     background-color: #445FA8;
 }
 
-.part-right{
-	vertical-align: top;
+
+.part-left .preview-container{
+	width: 140px;
+	height: 140px;
+	overflow: hidden;
+	position: relative;
+	background-color: white;
 }
+.part-left .preview-img{
+	width: 140px;
+	height: 140px;
+}
+.img-wrapper{
+	position: relative;
+    margin: auto;
+    padding: 14px 0 0 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;  
+    height: 45px;
+    width: 45px;
+}
+
+.img-wrapper input{
+	position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    height: 45px;
+    width: 45px;
+    cursor: pointer;
+}
+
+.file-edit-container{
+	position: absolute;
+    top: 30px;
+    left: 35px;
+    width: 70px;
+}
+
+.img-wrapper:hover {
+    background-color: #476ac6;
+}
+
+.img-wrapper img {
+	margin: 0px auto;
+    display: block;
+    height: 17px;
+    width: 17px;
+}
+
+.file-edit-container p{
+	color: white;
+    text-align: center;
+}
+
 img.abstract-pic{
 	width: 60px;
 	height: 60px;
@@ -107,7 +159,7 @@ img.abstract-pic{
 .fileup-container{    
     position: relative;
     height: 30px;
-    width: 96px;
+    width: 125px;
     margin: 0 auto;
 }
 .fileup-container input{
@@ -126,32 +178,32 @@ img.abstract-pic{
 	display: block;
 }
 
-
 .part-right{
-	display: inline-block;
+	vertical-align: top;
 	position: relative;
-	width: 60%;
+	float: right;
 }
 
-.part-right .app-description{
+.part-right textarea{
 	margin: 0px;
     width: 100%;
     margin-top: 20px;
     height: 90px;
     resize: none;
+    display: block;
 }
-.part-right .app-name{
-    width: 100%;
+
+.part-right input,
+.part-right textarea{
+    width: 340px;
 }
+
 
 .char-limit-wrapper{
 	position: relative;
 	margin: 0;
 }
 
-.char-limit-wrapper textarea{
-	display: block;
-}
 
 .char-limit-wrapper .counter{
 	position: absolute;
@@ -164,8 +216,46 @@ img.abstract-pic{
 
 /* 通用设置部分  css end*/
 
+/* 分享设置部分 start */
+.setting-share .newShare{
+	margin: -19px 0 15px 0;
+}
+
+.setting-share div.share-item {
+    display: block !important;
+}
+
+.setting-share div.share-item .share-title{
+    display: block !important;
+}
+
+.setting-share div.share-item.hidden {
+    display: none !important;
+}
+.share-delete{
+	float: right;
+    height: 18px;
+    cursor: pointer;
+}
+.order-0 .share-delete{
+	display: none;
+}
+.divider{
+    border-bottom: 1px solid #e5e5e5;
+    margin-top: 4px;
+}
+
+.setting-share .share-item:last-child .divider{
+	border-bottom: none;
+}
+
+
+/* 分享设置部分 end */
+
 
 .pop-cont{
+	max-height: 400px;
+    overflow-y: scroll;
 	background-color: white;
 }
 .pop-cont select{

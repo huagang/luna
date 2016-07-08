@@ -147,15 +147,15 @@
    	</div>
    	<ul class='pop-menu'>
    		<li class='normal active'><a href='#'>常用设置</a></li>
-   		<li class='share'><a href='#'>分享设置</a></li>
+   		<li class='share '><a href='#'>分享设置</a></li>
    	</ul>
-   	<div class="pop-cont">
-   		<div class='setting-normal'>
+   	<div class="pop-cont ">
+   		<div class='setting-normal '>
    			<div class='part-left'>
    				<div class='file-uploader'>
    					<img class='abstract-pic' src="../img/pure-logo2x.png" />
 	   				<div class='fileup-container'>
-	   					<button class='button-close'>更换封面</button>
+	   					<button class='button-close fileupload-tip'>更换封面</button>
 	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
 	   				</div>
    				</div> 				
@@ -164,10 +164,11 @@
    					<div class='file-edit-container'>
    						<div class='img-wrapper'>
    							<img src='../img/icon-edit.png'/>
+   							<input type='file' name='thumbnail_fileup' accept="image/*" />
    						</div>
-	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+   						<p class='fileupload-tip'>更换封面</p>
    					</div>
-   					<p>更换封面</p>
+   					
    				</div>
    				
    			</div>
@@ -186,10 +187,51 @@
    			</div>
    		</div>
    		<div class='setting-share hidden'>
-   			<div class='part-left'>
-   			</div>
-   			<div class='part-right'>
-   			</div>
+   			<p class='newShare'>
+   				<a  href='javascript:void(0)'>+新建分享，</a>
+   				<span>最多五条分享设置,随机呈现</span>
+   			</p>
+   			
+   			<!-- 用于新建分享时复制 -->
+   			<div class='share-item hidden' data-order=''>
+   				<div class='clearfix'>
+   					<img class='share-delete' src='../img/icon-delete-gray.png' />
+   				</div>	
+	   			<div class='part-left'>
+	  				<div class='file-uploader'>
+	  					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   					<div class='fileup-container'>
+	   						<button class='button-close fileupload-tip'>更换缩略图</button>
+	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   					</div>
+	  				</div> 				
+	  				<div class='preview-container hidden'>
+	  					<img class='preview-img' src="" />
+	  					<div class='file-edit-container'>
+	  						<div class='img-wrapper'>
+	  							<img src='../img/icon-edit.png'/>
+	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
+	  						</div>
+	  						<p class='fileupload-tip'>更换缩略图</p>
+	  					</div>
+	  				</div>
+	  			</div>
+	  			<div class='part-right'>
+	  				<div class='char-limit-wrapper'>
+	  					<input class='share-title' type="text" class="" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+	  					<span class='counter'>0/32</span>
+	  				</div>
+	  				<div class='char-limit-wrapper'>
+	  					<textarea type='text' class='share-description' maxlength='128'
+	  					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+	  					<span class='counter'>0/128</span>
+	  				</div>	  				
+	  			</div>
+	  			<p class='divider'></p>
+  			</div>
+  			
+   			
+	  		
    		</div>
     </div>
     <div class="pop-fun">
