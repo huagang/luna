@@ -6,6 +6,7 @@ import com.qcloud.vod.ModifiedQcloudApiModuleCenter;
 import com.qcloud.vod.Module.ModifiedVod;
 import com.qcloud.vod.Utilities.SHA1;
 import ms.luna.biz.cons.VbConstant;
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,6 +22,9 @@ import java.util.TreeMap;
  *
  */
 public class VODUtil {
+
+	private final static Logger logger = Logger.getLogger(VODUtil.class);
+
 	private static final String SECRETID_VIDEO = "AKIDx3s5Ewr1t8NziCpG5bJMiN7DM4Hw3dRC";// 视频上传密匙
 	private static final String SECRETKEY_VIDEO = "Sf21i2X8xup47BruSG1zq9xJ7C3phC3K";
 	private static final String METHOD = "POST"; // 请求方法
@@ -287,9 +291,9 @@ public class VODUtil {
 
 		int classId = createFolder(path);
 		if (classId == Integer.MIN_VALUE) {
+			logger.error("Failed to create vod folder");
 			return FastJsonUtil.error("1", "文件夹创建失败");
 		}
-
 		JSONObject result = multipartUploadVodFile(file, fileName, DATASIZE, classId, notifyUrl, null, isTranscode, 1, 0);
 
 		if (result.getString("code").equals("0")) { // token用于缓存处理

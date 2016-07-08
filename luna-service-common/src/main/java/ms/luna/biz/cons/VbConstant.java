@@ -276,38 +276,117 @@ public final class VbConstant {
 	 * 上传文件的类型
 	 */
 	public static final class UploadFileRule {
-		public static final String PIC= "pic";
-		public static final String AUDIO = "audio";
-		public static final String VIDEO = "video";
-		public static final String ZIP = "zip";
+		public static final String TYPE_PIC = "pic";
+		public static final String TYPE_AUDIO = "audio";
+		public static final String TYPE_VIDEO = "video";
+		public static final String TYPE_ZIP = "zip";
 
-		private static Map<String, Long> fileRule = new HashMap<>();
+		static class FileOption {
+			private long size;
+			private String format;
+			private Set<String> formatSet;
+
+			public FileOption() {
+				formatSet = new HashSet<>();
+			}
+
+			public FileOption(long size, String format) {
+				this();
+				this.size = size;
+				this.format = format;
+				this.toFormatSet();
+			}
+
+			private void toFormatSet() {
+				if(this.format != null) {
+					formatSet.addAll(Arrays.asList(this.format.split(",")));
+				}
+			}
+			public long getSize() {
+				return size;
+			}
+
+			public void setSize(long size) {
+				this.size = size;
+			}
+
+			public String getFormat() {
+				return format;
+			}
+
+			public void setFormat(String format) {
+				this.format = format;
+				this.toFormatSet();
+			}
+
+			public boolean isValidFormat(String format) {
+				if(format == null) {
+					return false;
+				}
+				return formatSet.contains(format);
+			}
+		}
+
+		private static Map<String, FileOption> fileRule = new HashMap<>();
 		private static Set<String> pathSet = new HashSet<>();
 
 		static {
-			fileRule.put(PIC, 1024 * 1024 * 1l);
-			fileRule.put(AUDIO, 1024 * 1024 * 5l);
-			fileRule.put(VIDEO, 1024 * 1024 * 5l);
-			fileRule.put(ZIP, 1024 * 1024 * 5l);
+			// file format should
+			fileRule.put(TYPE_PIC, new FileOption(1024 * 1024 * 1l, ".png,.bmp,.jpg,.jpeg"));
+			fileRule.put(TYPE_AUDIO, new FileOption(1024 * 1024 * 5l, ".mp3,.wav,.wma,.ogg,.ape,.acc"));
+			fileRule.put(TYPE_VIDEO, new FileOption(1024 * 1024 * 5l, ".rm,.rmvb,.avi,.mp4,.3gp"));
+			fileRule.put(TYPE_ZIP, new FileOption(1024 * 1024 * 5l, ".zip"));
 
-			pathSet.add("crm");
-			pathSet.add("business");
-			pathSet.add("poi");
-			pathSet.add("article");
+//			pathSet.add("crm");
+//			pathSet.add("business");
+//			pathSet.add("poi");
+//			pathSet.add("article");
+		}
+
+		public static Set<String> getValidFileTypes() {
+			return fileRule.keySet();
+		}
+
+		public static String getValidFileFormat(String fileType) {
+			FileOption fileOption = fileRule.get(fileType);
+			if(fileOption != null) {
+				return fileOption.getFormat();
+			}
+			return null;
 		}
 		public static boolean isValidFileType(String fileType) {
 			return fileRule.containsKey(fileType);
 		}
 
 		public static boolean isValidSize(String fileType, long size) {
-			if(fileRule.containsKey(fileType)) {
-				return size < fileRule.get(fileType);
+			FileOption fileOption = fileRule.get(fileType);
+			if(fileOption != null) {
+				return size < fileOption.getSize();
 			}
 			return false;
 		}
 
-		public static boolean isValidPath(String path) {
-			return pathSet.contains(path);
+		public static boolean isValidFormat(String fileType, String format) {
+			FileOption fileOption = fileRule.get(fileType);
+			if(fileOption != null) {
+				return fileOption.isValidFormat(format);
+			}
+			return false;
+		}
+
+//		public static boolean isValidPath(String path) {
+//			return pathSet.contains(path);
+//		}
+
+		public static String getFileExtention(String fileName) {
+			if(fileName == null) {
+				return "";
+			}
+			int idx = fileName.lastIndexOf(".");
+			if(idx > 0) {
+				return fileName.substring(idx);
+			}
+			return "";
 		}
 	}
 
