@@ -48,7 +48,7 @@ public class QCosUtil {
             if(retJson.getIntValue("code") == 0) {
                 data.put(ACCESS_URL, retJson.getJSONObject("data").getString(ACCESS_URL));
             } else {
-                return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "文件已经存在");
+                return FastJsonUtil.error(retJson.getIntValue("code"), "上传失败");
             }
         } catch (Exception e) {
             logger.error("Failed to upload file: " + remoteFilePath, e);
@@ -79,7 +79,7 @@ public class QCosUtil {
             if(retJson.getIntValue("code") == 0) {
                 data.put(ACCESS_URL, retJson.getJSONObject("data").getString(ACCESS_URL));
             } else {
-                return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "文件已经存在");
+                return FastJsonUtil.error(retJson.getIntValue("code"), "上传失败");
             }
         } catch (Exception e) {
             logger.error("Failed to upload file: " + remoteFilePath, e);
