@@ -21,6 +21,8 @@ public class QCosUtil {
 
     private final static Logger logger = Logger.getLogger(QCosUtil.class);
 
+    public static final String ACCESS_URL = QCosConfig.ACCESS_URL;
+
     private static QCosUtil instance = new QCosUtil();
     private CosCloud cosCloud;
 
@@ -44,7 +46,9 @@ public class QCosUtil {
             logger.debug(ret);
             JSONObject retJson = JSON.parseObject(ret);
             if(retJson.getIntValue("code") == 0) {
-                data.put("access_url", retJson.getJSONObject("data").getString("access_url"));
+                data.put(ACCESS_URL, retJson.getJSONObject("data").getString(ACCESS_URL));
+            } else {
+                return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "文件已经存在");
             }
         } catch (Exception e) {
             logger.error("Failed to upload file: " + remoteFilePath, e);
@@ -73,7 +77,9 @@ public class QCosUtil {
             logger.debug(ret);
             JSONObject retJson = JSON.parseObject(ret);
             if(retJson.getIntValue("code") == 0) {
-                data.put("access_url", retJson.getJSONObject("data").getString("access_url"));
+                data.put(ACCESS_URL, retJson.getJSONObject("data").getString(ACCESS_URL));
+            } else {
+                return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "文件已经存在");
             }
         } catch (Exception e) {
             logger.error("Failed to upload file: " + remoteFilePath, e);
@@ -93,14 +99,13 @@ public class QCosUtil {
             String ret = cosCloud.getFileStat(bucket, remoteFilePath);
             JSONObject retJson = JSON.parseObject(ret);
             if(retJson.getIntValue("code") == 0) {
-                data.put("access_url", retJson.getJSONObject("data").getString("access_url"));
+                data.put(ACCESS_URL, retJson.getJSONObject("data").getString(ACCESS_URL));
+                return FastJsonUtil.sucess("", data);
             }
         } catch (Exception e) {
             logger.error("Failed to read access url", e);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取访问地址失败");
         }
-
-        return FastJsonUtil.sucess("", data);
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取访问地址失败");
     }
 
     public JSONObject existFile(String bucket, String remoteFilePath) {

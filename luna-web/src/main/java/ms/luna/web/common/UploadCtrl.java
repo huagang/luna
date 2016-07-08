@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.QCosConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant.UploadFileRule;
+import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,9 @@ public class UploadCtrl {
 	private Random random = new Random();
 	private Set<String> validFileExtention;
 	private QCosUtil qCosUtil;
+
+	@Autowired
+	private VodPlayService vodPlayService;
 
 	@PostConstruct
 	public void init() {
@@ -166,13 +171,55 @@ public class UploadCtrl {
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
+			// current naming rule can ensure that file will not exist on cos
 			result = qCosUtil.uploadFileFromStream(bucket, realPath, file.getInputStream(), false);
+			if(type.equals(UploadFileRule.TYPE_PIC)) {
+				BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+				if(result.containsKey("data")) {
+					JSONObject data = result.getJSONObject("data");
+					data.put("height", bufferedImage.getHeight());
+					data.put("width", bufferedImage.getWidth());
+				}
+			}
+			// replace access url
+			LunaQCosUtil.replaceAccessUrl(result);
+
 		} else if(type.equals(UploadFileRule.TYPE_VIDEO)){
 			String realPath = String.format("/%s/%s", bucket, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
-			result = VODUtil.getInstance().upload2Cloud(file, realPath, filename, "", 0);
+			JSONObject vodResult = VODUtil.getInstance().upload2Cloud(file, realPath, filename, "", 0);
+
+			JSONObject retData = new JSONObject();
+			retData.put("original", file.getOriginalFilename());
+			retData.put("name", file.getOriginalFilename());
+			retData.put("size", file.getSize());
+			retData.put("type", UploadFileRule.getFileExtention(file.getOriginalFilename()));
+			boolean success = false;
+
+			if(vodResult.getString("code").equals("0")) {
+				JSONObject data = vodResult.getJSONObject("data");
+				String vodFileId = data.getString("vod_file_id");
+				JSONObject urlResult = VODUtil.getInstance().getVodPlayUrls(vodFileId);
+				if("0".equals(urlResult.getString("code"))) {
+					String originFileUrl = urlResult.getJSONObject("data").getString("vod_original_file_url");
+					JSONObject param = new JSONObject();
+					param.put("vod_file_id", vodFileId);
+					param.put("vod_original_file_url", originFileUrl);
+					vodPlayService.createVodRecord(param.toString());
+					retData.put(QCosConfig.ACCESS_URL, originFileUrl);
+					retData.put("status", "SUCCESS");
+					result = FastJsonUtil.sucess("", retData);
+					success = true;
+				}
+			}
+			if(! success) {
+				retData.put("status", "FAIL");
+				result = FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "");
+				result.put("data", retData);
+			}
+
 		} else if(type.equals(UploadFileRule.TYPE_ZIP)){
 			//TODO: do not process zip now
 		}
