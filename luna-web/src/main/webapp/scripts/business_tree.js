@@ -72,6 +72,13 @@ $(document).ready(function(){
     $("#btn-search-pois-for-business-tree").click(function(){
     	searchPois();
     });
+    $('.list-result-poi').delegate('label', 'mouseover', function(event){
+    	var target = $(event.currentTarget);
+    	var offset = target.offset();
+    	console.log(offset.top);
+    	target.find('.poi_info').css('top', offset.top - $(document).scrollTop() + 30 + 'px')
+    		.css('left', offset.left + 'px');
+    });
 
     //显示搜索结果POI
     function showSearchPois(tag){
@@ -80,7 +87,19 @@ $(document).ready(function(){
 			if(tag && tag!="" && $.inArray(parseInt(tag), searchPoisForBizTree[key].tags)<0){
 				continue;
 			}
-			$(".list-result-poi").append('<label for="resultpoi'+searchPoisForBizTree[key]._id+'"><input type="checkbox" class="checkbox" id="resultpoi'+searchPoisForBizTree[key]._id+'" poi_id="'+searchPoisForBizTree[key]._id+'" poi_tags="'+searchPoisForBizTree[key].tags+'"/>'+searchPoisForBizTree[key].name+'</label>');
+			
+	    	var tip = '<div class="poi_info"><p>长标题：'+ '测试-伍孟强测试-伍孟强测试-伍孟强测试-伍孟强'  + '</p>';
+	    	var coordinates = ['39', '135'];
+	    	if( coordinates && coordinates.length === 2){
+	    		tip += '<p>纬度：' + coordinates[1] + '</p><p>经度：' + coordinates[0] + '</p>';
+	    	}
+	    	tip += '</div>';
+	    	
+			$(".list-result-poi").append('<label for="resultpoi'+ searchPoisForBizTree[key]._id
+				+ '"><input type="checkbox" class="checkbox" id="resultpoi'
+				+ searchPoisForBizTree[key]._id + '" poi_id="' + searchPoisForBizTree[key]._id 
+				+ '" poi_tags="'+searchPoisForBizTree[key].tags + '"/>' + 
+				searchPoisForBizTree[key].name+ tip + '</label>');
         }
 		if($(".list-result-poi").html() == ""){
 //			$(".list-result-poi").append('<span >未找到匹配的POI数据，<a href="#" onclick="">马上添加</a></span>');
