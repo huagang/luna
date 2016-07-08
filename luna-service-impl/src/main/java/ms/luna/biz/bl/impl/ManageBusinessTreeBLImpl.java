@@ -282,6 +282,11 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 			// Poi ID
 			poi.put("_id", docPoi.getObjectId("_id").toString());
+			Document lnglat = docPoi.get("lnglat", Document.class);
+			if(lnglat.getString("type").equals("Point")) {
+				List<Double> coordinates = (List<Double>) lnglat.get("coordinates");
+				poi.put("coordinates", JSON.toJSON(coordinates));
+			}
 			pois.add(poi);
 		}
 		JSONObject data = new JSONObject();
