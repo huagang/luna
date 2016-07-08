@@ -514,7 +514,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// }
 			}
 		}
-		return returnSuccessData("poi_id:" + poi_id + "poi数据获取成功", lang, poi);
+		return returnSuccessData("success", lang, poi);
 	}
 
 	// 获取某个/几个标签下所有poi数据
@@ -849,6 +849,18 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * @param set
 	 * @param jsoncList
 	 */
+	private void getPoisFromBizTree(Document docTree, Set<String> set ) {
+		JSONObject tree = JSONObject.parseObject(docTree.toJson());
+		Object oldClist = tree.get("c_list");
+		if(oldClist instanceof Map<?,?>) {
+			Document jsoncList = (Document)docTree.get("c_list");
+			getPoisFromBizTree(set, jsoncList);
+		} else {
+			JSONArray jsoncList = tree.getJSONArray("c_list");
+			getPoisFromBizTree(set, jsoncList);
+		}
+	}
+
 	private void getPoisFromBizTree(Set<String> set, Document jsoncList) {
 		Set<Entry<String, Object>> entrySet = jsoncList.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
@@ -856,6 +868,19 @@ public class PoiApiBLImpl implements PoiApiBL {
 			Document innerJsoncList = (Document) entry.getValue();
 			set.add(_id);
 			Document subClist = (Document) innerJsoncList.get("c_list");
+			if (subClist.isEmpty()) {
+				continue;
+			}
+			getPoisFromBizTree(set, subClist);
+		}
+	}
+	
+	private void getPoisFromBizTree(Set<String> set, JSONArray jsoncList) {
+		for(int i = 0; i < jsoncList.size(); i++) {
+			JSONObject json = jsoncList.getJSONObject(i);
+			String _id = json.getString("_id");
+			set.add(_id);
+			JSONArray subClist = json.getJSONArray("c_list");
 			if (subClist.isEmpty()) {
 				continue;
 			}
@@ -1393,9 +1418,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
 			// 获取子POI id集合
-			Document jsoncList = (Document) tree.get("c_list");
 			Set<String> poiIdLst = new HashSet<>();
-			getPoisFromBizTree(poiIdLst, jsoncList);
+			getPoisFromBizTree(tree, poiIdLst);
 
 			// 根据标签和字段返回满足要求的poi
 			JSONObject data = new JSONObject();
@@ -1430,9 +1454,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
 			// 获取子POI id集合
-			Document jsoncList = (Document) tree.get("c_list");
 			Set<String> poiIdLst = new HashSet<>();
-			getPoisFromBizTree(poiIdLst, jsoncList);
+			getPoisFromBizTree(tree, poiIdLst);
 
 			// 根据标签和字段返回满足要求的poi
 			JSONObject data = new JSONObject();

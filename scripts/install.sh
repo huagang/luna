@@ -13,12 +13,14 @@
 base_dir=$(dirname $0)
 cd $base_dir/../
 git pull
+
 cd luna-service-common
 mvn clean install -Pdev -DskipTests
 
 cd ..
 cd luna-service-generator
 mvn clean install
+
 cd ..
 cd luna-service-interface
 mvn clean install
