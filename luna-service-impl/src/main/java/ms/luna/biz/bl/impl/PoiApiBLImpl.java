@@ -103,7 +103,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				String field_name = list.get(i).getFieldName();
 				String field_alias = list.get(i).getFieldAlias();
 				db2api_nm.put(field_name, field_alias);
-				api2db_nm.put(field_alias, field_name);
+				api2db_nm.put(field_alias, field_name); 
 			}
 //			
 //			// MySql有而Mongo没有的字段
