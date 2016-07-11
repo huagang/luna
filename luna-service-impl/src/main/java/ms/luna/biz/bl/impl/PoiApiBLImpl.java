@@ -94,6 +94,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 	private static Map<Integer, List<String>> poiTag2PrivateField = new LinkedHashMap<>(); // (key:类型id, value:类型下的私有字段名称)
 	
+	/**
+	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
+	 */
+	private static Map<Integer, Integer> topTag2SubTagOthersCache = new LinkedHashMap<>();// (旅游景点, 其他) --> (2,18)
+	
 	@Override
 	public void init() {
 		// ---------------数据库字段名称与对外接口名称的映射关系---------------
@@ -1185,23 +1190,30 @@ public class PoiApiBLImpl implements PoiApiBL {
 						// ----------拆分字段----------
 						// 一级类别
 						if ("tags".equals(field)) {
+							continue;
+						}
+						// 二级分类
+						if ("sub_tag".equals(field)) {
 							JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
 							JSONObject data = new JSONObject();
 							int tag = array.getIntValue(0);
+							if(tag == 0) {//未选择，默认为其他（兼容旧数据）
+								tag = 8;//TODO
+							}
 							if (poiTags.containsKey(tag)) {
 								data.put("category_name", poiTags.get(tag));
 								data.put("category_id", tag);
 							}
 							result.put("category", data);
-							continue;
-						}
-						// 二级分类
-						if ("sub_tag".equals(field)) {
-							int keyval = poi.getInteger("sub_tag");
-							JSONObject data = new JSONObject();
-							if (poiTags.containsKey(keyval)) {
-								data.put("sub_category_name", poiTags.get(keyval));
-								data.put("sub_category_id", keyval);
+							
+							int sub_tag = poi.getInteger("sub_tag");
+							if(sub_tag == 0){
+								sub_tag = getTopTag2SubTagOthersCache().get(tag)；
+							}
+							JSONObject data2 = new JSONObject();
+							if (poiTags.containsKey(sub_tag)) {
+								data2.put("sub_category_name", poiTags.get(sub_tag));
+								data2.put("sub_category_id", sub_tag);
 							}
 							result.put("sub_category", data);
 							continue;
@@ -1336,5 +1348,32 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject json = new JSONObject();
 		json.put(lang, data);
 		return FastJsonUtil.sucess(msg, json);
+	}
+	
+	/**
+	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
+	 * @return
+	 */
+	private Map<Integer, Integer> getTopTag2SubTagOthersCache() {
+		if(!topTag2SubTagOthersCache.isEmpty()){
+			return topTag2SubTagOthersCache;
+		}
+		synchronized (ManagePoiBLImpl.class) {
+			if(topTag2SubTagOthersCache.isEmpty()){
+				MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
+				MsPoiTagCriteria.Criteria criteria = msPoiTagCriteria.createCriteria();
+				criteria.andTagNameEqualTo("其他").andParentTagIdNotEqualTo(0);
+				List<MsPoiTag> msPoiTaglst = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
+				if(!msPoiTaglst.isEmpty()) {
+					for(int i = 0;i < msPoiTaglst.size(); i++){
+						Integer tag_id = msPoiTaglst.get(i).getTagId();
+						Integer parent_tag_id = msPoiTaglst.get(i).getParentTagId();
+						topTag2SubTagOthersCache.put(parent_tag_id, tag_id);
+					}
+				}
+				
+			}
+		}
+		return topTag2SubTagOthersCache;
 	}
 }
