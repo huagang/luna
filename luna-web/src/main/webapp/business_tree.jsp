@@ -76,6 +76,7 @@
       <div class="item-value">
         <div class="region">
           <select class="select" id="province" onchange="change_province()">
+          	  <option value="ALL">请选择省</option>
               <c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
                    <c:choose>
                    		<c:when test="${provinceId==varProvince['province_id']}">

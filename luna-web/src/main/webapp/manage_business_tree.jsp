@@ -43,6 +43,7 @@
                     <div class="main-hd"><h3>POI数据关系配置</h3></div>
 		    		<div class="region">
 		            	<select class="select" id="province" onchange="change_province()">
+		            	  <option value="ALL">请选择省</option>
 			              <c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
 			                   <c:choose>
 			                   		<c:when test="${provinceId==varProvince['province_id']}">
