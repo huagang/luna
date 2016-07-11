@@ -4,24 +4,24 @@
 var componentPanel = {
 
     init: function(componentType) {
-        if(componentType) {
+        if (componentType) {
             $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
         }
         currentController = componentType + "Div";
         var controllerManagerDiv = $("#controller-manager");
         var children = controllerManagerDiv.children();
-        for(var i = 0; i < children.length; i++) {
-            if($(children[i]).attr("id") == currentController) {
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
                 $(children[i]).show();
             } else {
                 $(children[i]).hide();
             }
         }
-        
+
     },
     update: function(componentType) {
         $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
-        
+
     }
 
 };
@@ -29,10 +29,10 @@ var componentPanel = {
 //app初始化
 var showPage = angular.module('showPage', []);
 showPage.run(function($rootScope, $http) {
-    $http.defaults.headers.post = {'Content-Type': 'application/x-www-form-urlencoded'};
+    $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function(obj) {
         var str = [];
-        for(var p in obj) {
+        for (var p in obj) {
             str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         }
         return str.join("&");
@@ -46,9 +46,10 @@ showPage.controller('imgController', ['$scope', '$rootScope', ImgController]);
 showPage.controller('navController', ['$scope', '$rootScope', NavController]);
 showPage.controller('panoController', ['$scope', '$rootScope', PanoController]);
 showPage.controller('audioController', ['$scope', '$rootScope', AudioController]);
+showPage.controller('videoController', ['$scope', '$rootScope', VideoController]);
 
 function MenuController($scope, $rootScope, $http) {
-    
+
     this.QRShow = false;
     this.QRImg = "";
 
@@ -58,7 +59,7 @@ function MenuController($scope, $rootScope, $http) {
     };
 
     this.savePage = function() {
-        if(currentPageId) {
+        if (currentPageId) {
             lunaPage.savePage(currentPageId, true);
         }
     };
@@ -66,21 +67,21 @@ function MenuController($scope, $rootScope, $http) {
         var request = {
             method: 'POST',
             url: host + '/app.do?method=preview',
-            data: {'app_id': appId}
-        };   
-        $http(request).then(function success(response){
-            var data = response.data;
-            if('0' == data.code) {
-                $scope.menu.QRShow = true;
-                $scope.menu.QRImg = data.data.QRImg;
-            } else {
-                $.alert(data.msg);
-            }
-        }, 
-        function error(response){
-            $.alert(response.data.msg);
-        });
-      
+            data: { 'app_id': appId }
+        };
+        $http(request).then(function success(response) {
+                var data = response.data;
+                if ('0' == data.code) {
+                    $scope.menu.QRShow = true;
+                    $scope.menu.QRImg = data.data.QRImg;
+                } else {
+                    $.alert(data.msg);
+                }
+            },
+            function error(response) {
+                $.alert(response.data.msg);
+            });
+
     };
 
     this.closeQR = function() {
@@ -92,26 +93,26 @@ function MenuController($scope, $rootScope, $http) {
         $("#publishQRcode").attr("src", data.QRImg);
         $("#publishURL").attr("href", data.link).text(data.link);
         $.dialog({
-            "title":"发布成功",
-            "content":$(".publish-wrap").html(),
-            "ok":function(){
+            "title": "发布成功",
+            "content": $(".publish-wrap").html(),
+            "ok": function() {
                 this.close()
             },
-            "lock":true
+            "lock": true
         });
         //给弹出的二维码框复制按钮绑定复制方法
         $(".copy").zclip({
-    		path: host+"/plugins/jquery.zclip/ZeroClipboard.swf",
-    		copy: function(){
-    		return $(this).siblings(".copyed").text();
-    		},
-    		beforeCopy:function(){/* 按住鼠标时的操作 */
-    			$(this).css("color","orange");
-    		},
-    		afterCopy:function(){/* 复制成功后的操作 */
-    			$.alert("复制成功");
+            path: host + "/plugins/jquery.zclip/ZeroClipboard.swf",
+            copy: function() {
+                return $(this).siblings(".copyed").text();
+            },
+            beforeCopy: function() { /* 按住鼠标时的操作 */
+                $(this).css("color", "orange");
+            },
+            afterCopy: function() { /* 复制成功后的操作 */
+                $.alert("复制成功");
             }
-    	});
+        });
     };
 
     //发布微景展响应函数
@@ -119,53 +120,53 @@ function MenuController($scope, $rootScope, $http) {
         var request = {
             method: 'POST',
             url: host + '/app.do?method=publishApp',
-            data: {'app_id': appId}
-        };   
+            data: { 'app_id': appId }
+        };
 
-        $http(request).then(function success(response){
-            var data = response.data;
-            if('0' == data.code) {
-                $scope.menu.publishDialog(data.data);
-                
-            } else if('409' == data.code) {
-                //already exist online app
-                $.confirm('此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作？', function(){
-                    var request = {
-                        method: 'POST',
-                        url: host + '/app.do?method=publishApp',
-                        data: {'app_id': appId, 'force': 1}
-                    };
+        $http(request).then(function success(response) {
+                var data = response.data;
+                if ('0' == data.code) {
+                    $scope.menu.publishDialog(data.data);
 
-                    $http(request).then(function success(response) {
-                       var data = response.data;
-                       if('0' == data.code) {
-                            $scope.menu.publishDialog(data.data);
-                       } else {
-                            $.alert("发布失败，请重新尝试");
-                       }
-                    },
-                    function error(response) {
-                        $.alert(response.data.msg);
-                    });
-                    
-                },
-                function() {
-                    //$.alert(response.data.msg);
-                });
-            } else {
-                $.alert("发布失败，请重新尝试");
-            }   
-        },
-        function error(response){
-            $.alert(response.data.msg);
-        });
+                } else if ('409' == data.code) {
+                    //already exist online app
+                    $.confirm('此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作？', function() {
+                            var request = {
+                                method: 'POST',
+                                url: host + '/app.do?method=publishApp',
+                                data: { 'app_id': appId, 'force': 1 }
+                            };
+
+                            $http(request).then(function success(response) {
+                                    var data = response.data;
+                                    if ('0' == data.code) {
+                                        $scope.menu.publishDialog(data.data);
+                                    } else {
+                                        $.alert("发布失败，请重新尝试");
+                                    }
+                                },
+                                function error(response) {
+                                    $.alert(response.data.msg);
+                                });
+
+                        },
+                        function() {
+                            //$.alert(response.data.msg);
+                        });
+                } else {
+                    $.alert("发布失败，请重新尝试");
+                }
+            },
+            function error(response) {
+                $.alert(response.data.msg);
+            });
 
     };
-    
+
     this.appSetting = function() {
         popWindow($("#pop-set"));
         //初始化已经加载过，防止初始化失败，此处再请求一次
-        if(! $("#app_name").val()) {
+        if (!$("#app_name").val()) {
             console.log("reload app setting");
             getAppSetting();
         }
@@ -177,7 +178,7 @@ function MenuController($scope, $rootScope, $http) {
 function BaseComponentController() {
 
     this.isEmptyStr = function(str) {
-        if(str == null || str == "" || str == "none") {
+        if (str == null || str == "" || str == "none") {
             return true;
         }
         return false;
@@ -219,43 +220,43 @@ function InteractComponentController() {
 
     this.action = {
         "href": {
-                'typeOptions': ['none', 'inner', 'outer', 'email', 'phone', 'return'],
-                'pageOptions': [],
-                'innerValue':'',
-                'outerValue':'',
-                'email':'',
-                'phone':''
-            }
+            'typeOptions': ['none', 'inner', 'outer', 'email', 'phone', 'return'],
+            'pageOptions': [],
+            'innerValue': '',
+            'outerValue': '',
+            'email': '',
+            'phone': ''
+        }
     };
-    
+
     this.init = function() {
         InteractComponentController.prototype.init.call(this);
         // 控制tab选中样式和标签对应的div内容是否显示
         this.tabs = {
             'style': {
                 'tab': 'on',
-                'content': true 
+                'content': true
             },
             'interact': {
                 'tab': '',
-                'content': false 
+                'content': false
             }
         };
 
-       /* 
-        * add action properties for interact component
-        * this should not happen, it's better to initialized it outside by page-engine which provide component template for each component
-        *
-        */
-        if(this.currentComponent.action == undefined) {
+        /* 
+         * add action properties for interact component
+         * this should not happen, it's better to initialized it outside by page-engine which provide component template for each component
+         *
+         */
+        if (this.currentComponent.action == undefined) {
             this.currentComponent.action = {
                 'href': {
                     'type': 'none',
-                    'value':''
+                    'value': ''
                 }
             };
         } else {
-            if(this.currentComponent.action['href'].type == 'inner') {
+            if (this.currentComponent.action['href'].type == 'inner') {
                 this.loadPages();
             }
 
@@ -305,8 +306,8 @@ function InteractComponentController() {
         this.action['href'].pageOptions.length = 0;
         var pages = lunaPage.pages;
         var pageIdArr = Object.keys(pages);
-        if(pageIdArr) {
-            pageIdArr.forEach(function(pageId){
+        if (pageIdArr) {
+            pageIdArr.forEach(function(pageId) {
                 this.action['href'].pageOptions.push({
                     id: pageId,
                     name: pages[pageId].page_name
@@ -318,8 +319,8 @@ function InteractComponentController() {
     };
 
     this.changeTab = function(tabName) {
-        for(var i in this.tabs) {
-            if(tabName == i) {
+        for (var i in this.tabs) {
+            if (tabName == i) {
                 this.tabs[i].tab = 'on';
                 this.tabs[i].content = true;
             } else {
@@ -333,43 +334,42 @@ function InteractComponentController() {
 InteractComponentController.prototype = new BaseComponentController();
 
 function CanvasController($scope, $rootScope) {
-	
+
     this.init = function() {
         CanvasController.prototype.init(this);
         this.backgroundImg = this.currentComponent.bgimg;
     };
 
     this.changeBackgroundColor = function() {
-        
+
         updatePageComponentsHtml(currentPageId, currentComponentId);
-        
+
     }
-    
+
     this.changeBackgroundImg = function() {
-        if(this.backgroundImg) {
+        if (this.backgroundImg) {
             this.currentComponent.bgimg = this.backgroundImg;
             updatePageComponentsHtml(currentPageId, currentComponentId);
         }
         //console.log($rootScope.isEmptyStr(this.backgroundImg));
     };
-	this.removeBackgroundImg = function() {
+    this.removeBackgroundImg = function() {
         this.backgroundImg = '';
-        this.currentComponent.bgimg= '';
+        this.currentComponent.bgimg = '';
         updatePageComponentsHtml(currentPageId, currentComponentId);
-	};
+    };
 
     this.saveBackgroundImg = function() {
         this.currentComponent.bgimg = this.backgroundImg;
     };
-	
+
 }
 
 CanvasController.prototype = new BaseComponentController();
 
 function TextController($scope, $rootScope) {
 
-    this.changeContent = function() {
-    };
+    this.changeContent = function() {};
 }
 
 TextController.prototype = new InteractComponentController();
@@ -382,7 +382,7 @@ function ImgController($scope, $rootScope) {
         // controller内其他元素会因为model变化发生显示变化，所以设置一个临时变量而不是直接绑定currentComponent，避免页面非预期的变化
         this.content = this.currentComponent.content;
     };
-  
+
     this.changeContent = function() {
         this.currentComponent.content = this.content;
         updatePageComponentsHtml(currentPageId, currentComponentId);
@@ -392,7 +392,7 @@ function ImgController($scope, $rootScope) {
         this.content = '';
     };
     this.saveImg = function() {
-        this.currentComponent.content = this.content;    
+        this.currentComponent.content = this.content;
     }
 
 }
@@ -406,7 +406,7 @@ function NavController($scope, $rootScope) {
     this.init = function() {
         NavController.prototype.init.call(this);
         //目前没有显式事件来触发清空起点信息，所以存储上可能会存了不需要存的起点信息，只能根据navType决定类型
-        if(this.currentComponent.navType == 0) {
+        if (this.currentComponent.navType == 0) {
             this.currentComponent.content.startName = "";
             this.currentComponent.content.startPosition = "";
         }
@@ -414,15 +414,15 @@ function NavController($scope, $rootScope) {
     };
 
     this.changeIcon = function() {
-        if(this.content.icon) {
+        if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponentId);      
-            console.log("change icon");     
-        }       
+            updatePageComponentsHtml(currentPageId, currentComponentId);
+            console.log("change icon");
+        }
     };
 
     this.changeNavType = function() {
-        if(this.currentComponent.navType == 0) {
+        if (this.currentComponent.navType == 0) {
             this.content.startName = "";
             this.content.startPosition = "";
         }
@@ -430,7 +430,7 @@ function NavController($scope, $rootScope) {
 
     this.changeStartName = function() {
         var startName = this.content.startName;
-        if(startName && startName.length >= 2 && startName.length <= 10) {
+        if (startName && startName.length >= 2 && startName.length <= 10) {
             this.currentComponent.content.startName = this.content.startName;
             console.log("save startName");
         }
@@ -438,7 +438,7 @@ function NavController($scope, $rootScope) {
 
     this.changeStartPosition = function() {
         var startPosition = this.content.startPosition;
-        if(startPosition && this.navPositionPattern.test(startPosition)) {
+        if (startPosition && this.navPositionPattern.test(startPosition)) {
             this.currentComponent.content.startPosition = startPosition;
             console.log("save startPosition");
         }
@@ -446,7 +446,7 @@ function NavController($scope, $rootScope) {
 
     this.changeEndName = function() {
         var endName = this.content.endName;
-        if(endName && endName.length >= 2 && endName.length <= 10) {
+        if (endName && endName.length >= 2 && endName.length <= 10) {
             this.currentComponent.content.endName = this.content.endName;
             console.log("save endName");
         }
@@ -455,7 +455,7 @@ function NavController($scope, $rootScope) {
 
     this.changeEndPosition = function() {
         var endPosition = this.content.endPosition;
-        if(endPosition && this.navPositionPattern.test(endPosition)) {
+        if (endPosition && this.navPositionPattern.test(endPosition)) {
             this.currentComponent.content.endPosition = endPosition;
             console.log("save endPosition");
         }
@@ -473,58 +473,76 @@ function PanoController($scope, $rootScope) {
     };
 
     this.changeIcon = function() {
-        if(this.content.icon) {
+        if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponentId);      
-            console.log("change icon");     
-        }       
+            updatePageComponentsHtml(currentPageId, currentComponentId);
+            console.log("change icon");
+        }
     };
 
     this.changePanoId = function() {
-        if(this.content.panoId) {
+        if (this.content.panoId) {
             this.currentComponent.content.panoId = this.content.panoId;
-            console.log("change panoId");     
+            console.log("change panoId");
         }
     }
-    
+
 }
 
 PanoController.prototype = new InteractComponentController();
 
 
-/*初始化音频控件*/
+/* 初始化音频控件 */
 function AudioController($scope, $rootScope) {
-    
-    this.init = function(){
+
+    this.init = function() {
         AudioController.prototype.init.call(this);
-        this.content = jQuery.extend(true,{},this.currentComponent.content);
-        this.content.file="";
+        this.content = jQuery.extend(true, {}, this.currentComponent.content);
+        this.content.file = "";
     }
 
-    this.changeAudioFile = function(){
+    this.changeAudioFile = function() {
         // this.currentComponent.content.file = this.content.file;
         // console.log(this.currentComponent.content.file);
         // console.log('changeAudioFile');
-    } 
+    }
 
-    this.changePlayIcon = function(){
+    this.changePlayIcon = function() {
         // console.log(this.currentComponent.content.playIcon);
         // console.log('changeAudioFile');
     }
 
-    this.changePauseIcon = function(){
+    this.changePauseIcon = function() {
         // console.log(this.currentComponent.content.stopIcon);
         // console.log('changePauseIcon');
     }
 
-    this.changeAutoPlay = function(){
+    this.changeAutoPlay = function() {
         // console.log(this.currentComponent.content.autoPlay);
         // console.log('changeAutoPlay');
     }
-    this.changeLoopPlay = function(){
+    this.changeLoopPlay = function() {
         // console.log(this.currentComponent.content.loopPlay);
         // console.log('changeLoopPlay');
     }
 }
 
 AudioController.prototype = new InteractComponentController();
+/* AudioController End */
+
+/* Init Video Controller Start */
+function VideoController($scope, $rootScope) {
+
+    this.init = function() {
+        VideoController.prototype.init.call(this);
+        this.content = jQuery.extend(true, {}, this.currentComponent.content);
+    }
+
+    this.changeVideoUrl = function() {
+
+    }
+
+}
+
+VideoController.prototype = new InteractComponentController();
+/* Init Video Controller End */

@@ -136,6 +136,21 @@ $(function() {
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("audio");
 
+    });    
+    
+    //视频组件
+    $("#videoComponent").click(function() {
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+    
+        lunaPage.creatPageComponents(currentPageId, null, "video");
+        currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
+        currentComponent["_id"] = currentComponentId;
+        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        componentPanel.init("video");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("video");
     });
 
     //右键删除组件

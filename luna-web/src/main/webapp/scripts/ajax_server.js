@@ -440,29 +440,32 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
      异步提交视频音频:
      form_id form表单
      flag url_id是否显示img url
-     fileType 上传文件类型
+     fileType 上传文件类型  pic、audio、video、zip
      file_obj 文件表单本身
      url_id 图片地址输入框
      author:Victor Du
 */
-function async_upload_audioVideo(form_id, file_obj, url_id, fileType,flag) {
+function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceType, flag) {
     var formobj = document.getElementById(form_id),
         urlElement;
     if (url_id) {
         urlElement = document.getElementById(url_id);
     }
-    // var $url = $(urlElement);
-    // urlElement.value = "I am audio url";
-    // $url.trigger('change');
-    // $url.trigger('blur');
 
     var formdata = new FormData(formobj);
-    var fileType2Method = {
-            'audio': 'upload_audio',
-        };
+    formdata.append('type',fileType);
+    formdata.append('resource_type',resourceType);
+    formdata.append('resource_id','');
+
+    // var fileType2Method = {
+    //     'audio': 'upload_audio',
+    //     'video': 'upload_video'
+    // };
+
 
     $.ajax({
-        url: host + '/add_poi.do?method='+fileType2Method[fileType],
+        // url: host + '/add_poi.do?method=' + fileType2Method[fileType],
+        url: Inter.getApiUrl().uploadPath,
         type: 'POST',
         cache: false,
         async: false,
@@ -497,7 +500,7 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType,flag) {
                 }
                 currentComponent.width = parseInt(currentComponent.width);
                 currentComponent.height = parseInt(currentComponent.height);
-                urlElement.value = returndata.url;
+                urlElement.value = returndata.data.access_url;
                 var urlObj = $("#" + url_id);
                 urlObj.trigger("focus");
                 urlObj.trigger("change");
