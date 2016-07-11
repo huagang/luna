@@ -17,8 +17,10 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_router.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 
 </head>
 <body ng-app="manageRouter" ng-controller="routerController as router">
@@ -55,7 +57,7 @@
                 			<tr ng-repeat="rowData in router.rowsData" data-rowOrder={{$index}}>
                 				<td>{{rowData.routerName}}</td>
                 				<td>{{rowData.businessName}}</td>
-                				<td>{{rowData.energyCost}}</td>
+                				<td>{{router.costMapping[rowData.energyCost]}}</td>
                 				<td>{{rowData.creator}}</td>
                 				<td>
                 					<a href='javascript:void(0)' class='router-update'>属性</a>
@@ -68,33 +70,33 @@
                 </div>
                  <!--主题内容 end-->
                  <!-- 线路设置弹窗 start -->
-                 <div class='pop set_business' ng-show="article.state==='new'">
+                 <div class='pop set_business ng-hide' ng-show="router.state==='new'">
                  	<div class="pop-title">
 						<h4>线路设置</h4> 
-				        <a href="#" class="btn-close" ng-click='article.changeState("init")'><img src="${basePath}/img/close.png" /></a>
+				        <a href="#" class="btn-close" ng-click='router.changeState("init")'><img src="${basePath}/img/close.png" /></a>
 					</div>
 					<div class="pop-cont">
 						<div class='router-name'>
 							<label for='name'>线路名称</label>
-							<input name='name' id='name' ngModel='router.data.name'/>
+							<input name='name' id='name' ng-model='router.data.name'/>
 						</div>
 						<div class='router-description'>
 							<label for='description'>线路介绍</label>
-							<textarea name='description' id='description' ngModel='router.data.description'></textarea>
+							<textarea name='description' id='description' ng-model='router.data.description'></textarea>
 						</div>
 						<div class='router-pic'>
 							<label for='pic'>线路封面图</label>
-							<input disabled='disabled' name='pic' id='pic' ngBind='router.data.pic'/>
+							<input disabled='disabled' name='pic' id='pic' ng-bind='router.data.pic'/>
 							<div class='uploader'>
-								<input type='file' name='thumbnail' class='fileup-thumbnail'/>
+								<input type='file' ng-model='router.data.file' custom-change name='file' class='fileup-thumbnail'/>
 								<button class='button'>本地上传</button>
 							</div>
 						</div>
 						<div>
 							<label for='energyCost'>体力消耗</label>
-							<select name='energyCost' id='energyCost' ngModel='router.data.energyCost'>
+							<select name='energyCost' id='energyCost' ng-model='router.data.energyCost'>
 								<option value='little'>较小</option>
-								<option value='middle'>中等</option>
+								<option value='fine'>中等</option>
 								<option value='large'>较大</option>
 							</select>
 						</div>
@@ -102,14 +104,18 @@
 						
 					</div>
 					<div class="pop-fun">     
+						<div class='pull-right'>
+							<button class='button' ng-click='router.handleCreateRouter()'>确认</button>
+							<button class='button-close' ng-click='router.changeState("init")'>取消</button>
+						</div>
     				</div>
                  </div>
                  <!-- 线路设置弹窗 end -->
                  <!-- 线路删除弹窗 start -->
-                 <div class='pop set_business' ng-show="article.state==='new'">
+                 <div class='pop set_business ng-hide' ng-show="router.state==='delete'">
                  	<div class="pop-title">
 						<h4>关联业务</h4> 
-				        <a href="#" class="btn-close" ng-click='article.changeState("init")'><img src="${basePath}/img/close.png" /></a>
+				        <a href="#" class="btn-close" ng-click='router.changeState("init")'><img src="${basePath}/img/close.png" /></a>
 					</div>
 					<div class="pop-cont">
 					</div>
@@ -122,8 +128,9 @@
     </div>
 </div>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_router.js"></script>
 </body>
 </html>

@@ -1,0 +1,53 @@
+input{
+	padding: 0 10px;
+}
+.button，
+.button-close{
+	height: 36px;
+}
+.pop{   
+    display: block;
+    width: 40%;
+    left: 30%;
+    top: 0%;
+}
+.pop-cont > div > label{
+	width: 20%;
+	direction: rtl;
+	vertical-align: top;
+	
+}
+
+.pop-cont > div > textarea
+{
+	width: 75%;
+	height: 100px;
+	vertical-align: top;
+}
+.pop-cont > div > input{
+	width: 75%;
+	height: 36px;
+	vertical-align: top;
+}
+.pop-cont > div{
+	margin-bottom: 15px;
+}
+
+
+.pop-cont .router-pic input{
+	width: 50%;
+	margin-right: 10px;
+}
+.uploader{
+	display: inline-block;
+    width: 25%;
+    position: relative;
+}
+.uploader .fileup-thumbnail{
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
