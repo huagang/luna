@@ -31,7 +31,7 @@ $(document).ready(function(){
  * @param counterSelector - 计数器选择器
  * @param maxNum  - 输入框允许的最大值
  */
-function getCounter(inputSelector, counterSelector, maxNum){
+function getCounter(inputSelector, counterSelector, maxNum, curNum){
 	var counter = {
 		target: $(inputSelector),
 		counter: $(counterSelector),
@@ -42,6 +42,9 @@ function getCounter(inputSelector, counterSelector, maxNum){
 			if(this.target.length > 0){
 				this.target.bind('input', this.handleChange.bind(this));
 				//this.target[0].addEventListener('change',this.handleChange.bind(this));
+			}
+			if(curNum > 0 ){
+				this.updateCounter(curNum);
 			}
 		},
 		handleChange:function(event){
@@ -176,9 +179,22 @@ function getNormalController(appSel, data){
 function getShareController(data){
 	data = data || [];
 	var controller = {
+		_defaultTitle: '',
 		num: data.length,
 		data: data,
 		counters: [],
+		updateDefaultTitle: function(value){
+			this._defaultTitle = value;
+			this.data.forEach(function(item, index){
+				if(item.title === ''){
+					this.counters[index].titleCounter.updateCounter(value.length);
+					$(['.share-item.order-',index, ' .share-title' ].join('')).val(value);
+					item.title = value;
+				}
+			}.bind(this));
+			
+				
+		},
 		init: function(){
 			// 事件绑定
 			
@@ -236,17 +252,20 @@ function getShareController(data){
 				cloneEle.removeClass('hidden').addClass('order-'+this.num)
 						.attr('data-order', this.num);
 				$('.setting-share').append(cloneEle);
-				this.data.push({
-					title: '',
-					description: '',
-					pic: ''
-				});
-				
+				var data = {
+						title: this._defaultTitle || '',
+						description: '',
+						pic: ''
+				};
+				this.data.push(data);
+				if(data.title){
+					cloneEle.find('.share-title').val(data.title);
+				}
 				var titleSel = [".share-item.order-", this.num, " .share-title"].join(''),
 					desSel = [".share-item.order-", this.num, " .share-description"].join('');
 				this.counters.push({
-					titleCounter: getCounter(titleSel, titleSel + ' + .counter' ,32),
-					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128),
+					titleCounter: getCounter(titleSel, titleSel + ' + .counter' ,32, data.title.length),
+					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128, data.description.legth),
 				});
 				this.num += 1;
 			}
@@ -478,12 +497,16 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			
 			//微景展配置框菜单切换 切换到分享设置
 			shareMenu.click(function(){
+				if(this.normalController.data.appName){
+					this.shareController.updateDefaultTitle(this.normalController.data.appName);
+				}
+				
 				shareMenu.addClass('active');
 				normalMenu.removeClass('active');
 				$('.setting-share').removeClass('hidden');
 				$('.setting-normal').addClass('hidden');
 				
-			});
+			}.bind(this));
 			
 			//微景展配置框菜单切换 切换到常用设置
 			normalMenu.click(function(){
