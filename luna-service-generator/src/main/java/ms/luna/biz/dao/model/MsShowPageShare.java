@@ -1,4 +1,4 @@
-package ms.biz.common.dao.model;
+package ms.luna.biz.dao.model;
 
 import java.io.Serializable;
 
