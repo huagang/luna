@@ -154,9 +154,7 @@ public class COSUtil {
 	}
 
 	/**
-	 * 
-	 * @param appid
-	 * @param srcFile
+	 *
 	 * @param dst_folder
 	 * @param fileName
 	 * @return
@@ -178,7 +176,6 @@ public class COSUtil {
 
 	/**
 	 * 保存本地图片或者html
-	 * @param srcHtml
 	 * @param localFolder
 	 * @param ext
 	 * @return
