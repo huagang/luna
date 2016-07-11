@@ -1208,7 +1208,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							
 							int sub_tag = poi.getInteger("sub_tag");
 							if(sub_tag == 0){
-								sub_tag = getTopTag2SubTagOthersCache().get(tag)；
+								sub_tag = getTopTag2SubTagOthersCache().get(tag);
 							}
 							JSONObject data2 = new JSONObject();
 							if (poiTags.containsKey(sub_tag)) {
