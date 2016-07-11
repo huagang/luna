@@ -45,6 +45,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
 import ms.luna.common.MsLunaMessage;
 import ms.luna.common.PoiCommon;
+import ms.luna.common.PoiCommon.POI;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -73,6 +74,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	 */
 	private final static int TAG_LEVEL_TOP = 1;
 
+	private Map<Integer, Integer> topTag2SubTagOthersCache = new LinkedHashMap<>();// (旅游景点, 其他) --> (2,18) 
+										 // (基础设施,其他) -->(7,61) (其他, 其他) --> (8, 62)
+	
 	/**
 	 * 获取分类信息<br>
 	 */
@@ -551,6 +555,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			Object poiTags = docPoi.get("tags");
 			if (poiTags != null) {
 				tags = FastJsonUtil.parse2Array(poiTags);
+				if(tags.getInteger(0) == 0) {
+					tags.set(0, POI.TOPTAG_DEFAULT);//兼容之前数据，未选择时默认为“其他”
+				}
 			}
 
 			// 地域Id
@@ -843,19 +850,29 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		JSONArray tags_values = FastJsonUtil.createBlankIntegerJsonArray();
 		Object poiTags = docPoi.get("tags");
 		if (poiTags != null) {
-			tags_values = FastJsonUtil.castStrNumArray2IntNumArray(
-					FastJsonUtil.parse2Array(poiTags));
+			tags_values = FastJsonUtil.castStrNumArray2IntNumArray(FastJsonUtil.parse2Array(poiTags));
+			if(tags_values.getInteger(0) == 0) { // 没有选择一级分类,默认为“其他”（兼容之前的数据）
+				tags_values.set(0, POI.TOPTAG_DEFAULT);
+			}
 		} else {
-			tags_values.add(0);
+			tags_values.add(POI.TOPTAG_DEFAULT) ;
 		}
 		commonFieldsVal.put("tags_values", tags_values);
 
 		// 3.标签二级类别值
+//		if (docPoi.containsKey("sub_tag")) {
+//			commonFieldsVal.put("subTag", docPoi.getInteger("sub_tag"));
+//		} else {
+//			commonFieldsVal.put("subTag", 0);
+//		}
+		Integer sub_tag = 0;
 		if (docPoi.containsKey("sub_tag")) {
-			commonFieldsVal.put("subTag", docPoi.getInteger("sub_tag"));
-		} else {
-			commonFieldsVal.put("subTag", 0);
+			sub_tag = docPoi.getInteger("sub_tag");
 		}
+		if(sub_tag == 0) {// 兼容之前数据，如果未选择，默认为“其他”
+			sub_tag = getTopTag2SubTagOthersCache().get(tags_values.getInteger(0));
+		}
+		commonFieldsVal.put("subTag", sub_tag == null ? 0 : sub_tag);
 
 		// 3.分享摘要
 		if(docPoi.containsKey("share_desc")) {// share_dec字段后加，早期POI可能不存在该字段info
@@ -1292,5 +1309,32 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("share_desc", share_desc);
 		
 		return FastJsonUtil.sucess("success", data);
+	}
+	
+	/**
+	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
+	 * @return
+	 */
+	private Map<Integer, Integer> getTopTag2SubTagOthersCache() {
+		if(!topTag2SubTagOthersCache.isEmpty()){
+			return topTag2SubTagOthersCache;
+		}
+		synchronized (ManagePoiBLImpl.class) {
+			if(topTag2SubTagOthersCache.isEmpty()){
+				MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
+				MsPoiTagCriteria.Criteria criteria = msPoiTagCriteria.createCriteria();
+				criteria.andTagNameEqualTo("其他").andParentTagIdNotEqualTo(0);
+				List<MsPoiTag> msPoiTaglst = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
+				if(!msPoiTaglst.isEmpty()) {
+					for(int i = 0;i < msPoiTaglst.size(); i++){
+						Integer tag_id = msPoiTaglst.get(i).getTagId();
+						Integer parent_tag_id = msPoiTaglst.get(i).getParentTagId();
+						topTag2SubTagOthersCache.put(parent_tag_id, tag_id);
+					}
+				}
+				
+			}
+		}
+		return topTag2SubTagOthersCache;
 	}
 }
