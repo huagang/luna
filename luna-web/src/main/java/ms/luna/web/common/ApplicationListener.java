@@ -3,6 +3,7 @@ package ms.luna.web.common;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import ms.luna.biz.cons.QCosConfig;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.web.util.WebHelper;
@@ -25,7 +26,8 @@ public class ApplicationListener implements ServletContextListener {
 		// webHelper
 		event.getServletContext().setAttribute("webHelper", new WebHelper());
 		String cosBaseDir = event.getServletContext().getInitParameter("cosBaseDir");
-		COSUtil.cosBaseDir = cosBaseDir; 
+		COSUtil.cosBaseDir = cosBaseDir;
+		QCosConfig.ENV = cosBaseDir;
 		String vodBaseDir = event.getServletContext().getInitParameter("vodBaseDir");
 		VODUtil.vodBaseDir = vodBaseDir; 
 	}
