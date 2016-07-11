@@ -168,7 +168,7 @@ public class UploadCtrl {
 			String type, String bucket, String resourceType, String resourceId, String filename) throws Exception {
 		JSONObject result = new JSONObject();
 		if(type.equals(UploadFileRule.TYPE_PIC) || type.equals(UploadFileRule.TYPE_AUDIO)) {
-			String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, type, resourceType);
+			String realPath = String.format("%s/%s/%s", QCosConfig.ENV, type, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
@@ -239,7 +239,7 @@ public class UploadCtrl {
 	 */
 	private String generateFileName(String ext) {
 		String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10) + ext;
+		String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10, '0') + ext;
 		return fileNameInCloud;
 	}
 	
