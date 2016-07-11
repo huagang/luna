@@ -14,4 +14,5 @@ public class QCosConfig {
     public static final int DEFAULT_TIMEOUT_IN_SECONDS = 60;
     public static final String ACCESS_URL = "access_url";
     public static final String LUNA_BUCKET = "luna";
+    public static String ENV = "";
 }

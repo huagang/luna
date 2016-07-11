@@ -167,7 +167,7 @@ public class UploadCtrl {
 			String type, String bucket, String resourceType, String resourceId, String filename) throws Exception {
 		JSONObject result = new JSONObject();
 		if(type.equals(UploadFileRule.TYPE_PIC) || type.equals(UploadFileRule.TYPE_AUDIO)) {
-			String realPath = String.format("/%s/%s/%s", bucket, type, resourceType);
+			String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, type, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
@@ -185,7 +185,7 @@ public class UploadCtrl {
 			LunaQCosUtil.replaceAccessUrl(result);
 
 		} else if(type.equals(UploadFileRule.TYPE_VIDEO)){
-			String realPath = String.format("/%s/%s", bucket, resourceType);
+			String realPath = String.format("/%s%s/%s", bucket, QCosConfig.ENV, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
