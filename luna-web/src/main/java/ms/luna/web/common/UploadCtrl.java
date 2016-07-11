@@ -172,24 +172,28 @@ public class UploadCtrl {
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
+			realPath += "/" + filename;
 			// current naming rule can ensure that file will not exist on cos
 			result = qCosUtil.uploadFileFromStream(bucket, realPath, file.getInputStream(), false);
-			if(type.equals(UploadFileRule.TYPE_PIC)) {
-				BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-				if(result.containsKey("data")) {
-					JSONObject data = result.getJSONObject("data");
-					data.put("height", bufferedImage.getHeight());
-					data.put("width", bufferedImage.getWidth());
+			if(result.getString("code").equals("0")) {
+				if (type.equals(UploadFileRule.TYPE_PIC)) {
+					BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+					if (result.containsKey("data")) {
+						JSONObject data = result.getJSONObject("data");
+						data.put("height", bufferedImage.getHeight());
+						data.put("width", bufferedImage.getWidth());
+					}
 				}
+				// replace access url
+				LunaQCosUtil.replaceAccessUrl(result);
 			}
-			// replace access url
-			LunaQCosUtil.replaceAccessUrl(result);
 
 		} else if(type.equals(UploadFileRule.TYPE_VIDEO)){
-			String realPath = String.format("/%s%s/%s", bucket, QCosConfig.ENV, resourceType);
+			String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
+			realPath += "/" + filename;
 			JSONObject vodResult = VODUtil.getInstance().upload2Cloud(file, realPath, filename, "", 0);
 
 			JSONObject retData = new JSONObject();
