@@ -70,6 +70,10 @@
                   <i class="icon icon-comp-audio"></i><br/>
                   <span>音频</span>
                 </div>
+                <div class="component-btn" id="videoComponent">
+                  <i class="icon icon-comp-video"></i><br/>
+                  <span>视频</span>
+                </div>
                 <div class="component-btn" id="moreComponents">
                   <i class="icon icon-comp-more"></i><br/>
                   <span>更多</span>
@@ -637,7 +641,7 @@
                                   <span class="title">音频文件</span>
                                   <input class="fileurl audio-url" id="audioFileUrl" placeholder="请上传音频文件" ng-model="audio.currentComponent.content.file" ng-blur="audio.changeAudioFile()" readonly="readonly" />
                                   <button class="btn btn-local">上传</button>
-                                  <input type="file" onchange="async_upload_audioVideo('audioFileForm',this,'audioFileUrl','audio',true);" class="file file-local" id="upload-model" name="audio_fileup" />
+                                  <input type="file" onchange="async_upload_audioVideo('audioFileForm',this,'audioFileUrl','audio','app',true);" class="file file-local" id="upload-model" name="file" />
                               </form>
 
                               <form id="audioPlayIconForm" name="audioPlayIconForm" method="post" enctype="multipart/form-data" class="audio-upload">
@@ -711,6 +715,109 @@
                               <div class="item">
                                   <label>
                                       <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                              </div>
+                          </form>
+                      </div>
+                      <!-- 交互样式 -->
+                  </div>
+                  <!-- audio controller end -->
+
+                  <!-- video controller begin -->
+                  <div id="videoDiv" ng-controller="videoController as video" class="video-set">
+                      <button id="initVideo" ng-click="video.init()" class="ng-hide">Init</button>
+                      <button id="updateVideo" ng-click="video.update()" class="ng-hide">Update</button>
+                      <div>
+                          <div class="menu-control menu-control-wrap">
+                              <a href="#" class="style" ng-class="video.tabs.style.tab" ng-click="video.changeTab('style')">样式</a>
+                              <a href="#" class="interact" ng-class="video.tabs.interact.tab" ng-click="video.changeTab('interact')">交互</a>
+                          </div>
+                      </div>
+                      <div ng-show="video.tabs.style.content">
+                          <!-- 模块大小位置 -->
+                          <div class="position">
+                              <h2><label>大小和位置</label></h2>
+                              <ul class="list-pos">
+                                  <li>
+                                      <span>X</span>
+                                      <input type="number" ng-model="video.currentComponent.x" ng-blur="video.changeX()" />px</li>
+                                  <li>
+                                      <span>Y</span>
+                                      <input type="number" ng-model="video.currentComponent.y" ng-blur="video.changeY()" />px</li>
+                                  <li>
+                                      <span>宽</span>
+                                      <input type="number" ng-model="video.currentComponent.width" ng-blur="video.changeWidth()" />px</li>
+                                  <li>
+                                      <span>高</span>
+                                      <input ttype="number" ng-model="video.currentComponent.height" ng-blur="video.changeHeight()" />px</li></ul>
+                          </div>
+                          <!-- 模块大小位置-->
+                          <div class="bg-set">
+                              <h2><label>视频设置</label></h2>
+                              <div class="form-group clearfix">
+                                  <div class="col-md-6">
+                                    <input type="radio" name="" class="radio" value="1" id="dialogVideo" ng-model="video.currentComponent.content.videoShowType" ng-click="" ng-checked="true" /><label for="dialogVideo">弹窗视频</label>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <input type="radio" name="" class="radio" value="2" id="innerVideo" ng-model="video.currentComponent.content.videoShowType" ng-click=""/><label for="innerVideo">内嵌视频</label>
+                                  </div>
+                              </div>
+
+                              <form id="videoIconForm" name="videoIconForm" method="post" enctype="multipart/form-data" class="video-upload">
+                                  <span class="title">视频图标</span>
+                                  <input class="fileurl video-url" id="videoIconUrl" placeholder="请上传视频图标" ng-model="video.currentComponent.content.videoIcon" ng-blur="" readonly="readonly" />
+                                  <button class="btn btn-local">上传</button>
+                                  <input type="file" onchange="async_upload_pic('videoIconForm','',true,'',this,'videoIconUrl');" class="file file-local" id="" name="pic" />
+                              </form>
+
+                              <form id="videoFileForm" name="videoFileForm" method="post" enctype="multipart/form-data" class="video-upload">
+                                  <span class="title">视频文件</span>
+                                  <input class="fileurl play-icon-url" id="videoFileUrl" placeholder="请上传视频频文件" ng-model="video.currentComponent.content.videoUrl" ng-blur="changeVideoUrl" />
+                                  <button class="btn btn-local">上传</button>
+                                  <input type="file" onchange="async_upload_audioVideo('videoFileForm',this,'videoFileUrl','video','app',true);" class="file file-local" id="" name="file" />
+                              </form>
+
+                          </div>
+                      </div>
+                      <!-- 交互样式 -->
+                      <div class="interaction" ng-show="video.tabs.interact.content">
+                          <form name="videoInteractForm">
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="none" ng-click="video.clearHref()"/>无链接
+                                  </label>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                  <input type="url" class="txt" name="outerValue" ng-model="video.action.href.outerValue" ng-change="video.changeOuterHref()" ng-disabled="video.currentComponent.action.href.type != 'outer'"/>
+                                  <div role="alert">
+                                      <span class="error" ng-show="videoInteractForm.outerValue.$error.url">url格式不合法</span>
+                                  </div>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="inner" ng-click="video.loadPages()"/>微展页面：
+                                  </label><br/>
+                                  <select class="select" ng-model="video.action.href.innerValue" ng-change="video.changeInnerHref()" ng-disabled="video.currentComponent.action.href.type != 'inner'">
+                                      <option ng-repeat="option in video.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
+                                  </select>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                  <input type="email" class="txt" name="email" ng-model="video.action.href.email" ng-change="video.changeEmail()" ng-disabled="video.currentComponent.action.href.type != 'email'"/>
+                                  <div role="alert">
+                                      <span class="error" ng-show="videoInteractForm.email.$error.email">email格式不合法</span>
+                                  </div>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                  <input type="text" class="txt" ng-model="video.action.href.phone" ng-change="video.changePhone()" ng-disabled="video.currentComponent.action.href.type != 'phone'"/>
+                              </div>
+                              <div class="item">
+                                  <label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
                               </div>
                           </form>
                       </div>
@@ -832,14 +939,14 @@
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
-        <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
-        <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
-          <!-- 删除用户弹出层 -->
-        </body>
-
-      </html>
+    <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
+    <!-- 删除用户弹出层 -->    
+    </body>
+  </html>

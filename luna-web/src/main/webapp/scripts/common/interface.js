@@ -30,7 +30,10 @@ var Inter = function() {
                 copyApp: context + '/manage/app.do?method=copy_app', //复用app
                 
                 // 业务搜索
-                searchBusiness: context+'/manage/app.do?method=search_business', //搜索业务请求
+                searchBusiness: context+'/manage/app.do?method=search_business', //搜索业务请求              
+
+                // 上传路径
+                uploadPath: context+'/uploadCtrl.do?method=uploadFile2Cloud', //统一上传接口
                 
             };
         }

@@ -76,3 +76,52 @@ html,body{
 .componentbox .navimg:hover{
     cursor: pointer;
 }
+
+/*视频弹出框的样式*/
+.video-dialog{
+    position: absolute;
+    top: 26%;
+    width: 80%;
+    margin-left: 10%;
+    background-color:white;
+    border-radius: 4px;
+    z-index: 99999;
+}
+
+.video-title{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+.video-title span{
+    padding: 8px 22%;
+    border-bottom: 4px #d40909 solid;
+}
+
+.video-tip{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #707070; 
+}
+.mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.video{
+    height: auto;
+    width: 100%;
+}
+/*@media screen and (min-width: 992px){
+    div.video-dialog{
+        width: 40%;
+        margin-left: 30%;
+        position:absolute;
+        top:10%;
+    }
+}*/
+/*视频弹出框的样式 End*/
