@@ -74,7 +74,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	 */
 	private final static int TAG_LEVEL_TOP = 1;
 
-	private Map<Integer, Integer> topTag2SubTagOthersCache = new LinkedHashMap<>();// (旅游景点, 其他) --> (2,18) 
+	
+	/**
+	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
+	 */
+	private static Map<Integer, Integer> topTag2SubTagOthersCache = new LinkedHashMap<>();// (旅游景点, 其他) --> (2,18) 
 										 // (基础设施,其他) -->(7,61) (其他, 其他) --> (8, 62)
 	
 	/**
