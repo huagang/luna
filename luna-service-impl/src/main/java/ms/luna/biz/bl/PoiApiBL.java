@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONObject;
  *
  */
 public interface PoiApiBL {
-
+	
+	void init();
+	
 	// 根据业务获取一个层级的poi数据列表
 	JSONObject getPoisWithLevel(String json);
 
@@ -34,4 +36,5 @@ public interface PoiApiBL {
 	
 	// 获得第一层所有poi数据
 	JSONObject getPoisInFirstLevel(String json);
+	
 }

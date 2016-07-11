@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.MsZoneCacheBL;
+import ms.luna.biz.bl.PoiApiBL;
 import ms.luna.biz.util.COSUtil;
 
 public class LunaProviderDev extends Thread {
@@ -38,6 +39,8 @@ public class LunaProviderDev extends Thread {
 		}
 		MsZoneCacheBL msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
 		msZoneCacheBL.init();
+		PoiApiBL poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
+		poiApiBL.init();
 		System.out.println("LunaProvider Service is started!");
 		try {
 			while(true) {

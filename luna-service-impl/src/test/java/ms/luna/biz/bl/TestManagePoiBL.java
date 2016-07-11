@@ -14,9 +14,9 @@ import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.util.COSUtil;
 
-public class TestManagePoiBlImpl {
+public class TestManagePoiBL {
 
-	private final static Logger logger = Logger.getLogger(TestManageShowAppBL.class);
+	private final static Logger logger = Logger.getLogger(TestManagePoiBL.class);
 	
 	
 	private ManagePoiBL managePoiBL;
