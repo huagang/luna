@@ -73,6 +73,7 @@ public class QCosUtil {
             if(overwrite) {
                 cosCloud.deleteFile(bucket, remoteFilePath);
             }
+            logger.debug("remoteFilePath: " + remoteFilePath);
             String ret = cosCloud.uploadFile(bucket, remoteFilePath, inputStream);
             logger.debug(ret);
             JSONObject retJson = JSON.parseObject(ret);
