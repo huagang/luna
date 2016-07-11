@@ -180,21 +180,15 @@ public class LoginBLImpl implements LoginBL {
 
 		// 获取角色下可以访问的URI权限列表设置
 		data.put("access_uris", accessUris);
+		logger.debug(accessUris);
 
-		// 记录登录时间、ip、模式、unique_id
-		ThreadPoolExecutor tpe = new ThreadPoolExecutor(
-				1, 1, 10, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(1));
-		tpe.execute(new Runnable(){
-			@Override
-			public void run() {
-				MsLogonLog msLogonLog =  new MsLogonLog();
-				msLogonLog.setIpAddress(ipAddress);
-				msLogonLog.setMode(VbConstant.USER_LOGIN_MODE.用户名密码);
-				msLogonLog.setUniqueId(uniqueId);
-				msLogonLogDAO.insertSelective(msLogonLog);
-			}
-		});
+		//记录访问日志, TODO: 单独service异步记录
+		MsLogonLog msLogonLog =  new MsLogonLog();
+		msLogonLog.setIpAddress(ipAddress);
+		msLogonLog.setMode(VbConstant.USER_LOGIN_MODE.用户名密码);
+		msLogonLog.setUniqueId(uniqueId);
+		msLogonLogDAO.insertSelective(msLogonLog);
+
 		return FastJsonUtil.sucess("OK", data);
 	}
 

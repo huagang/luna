@@ -139,7 +139,7 @@ public class BusinessTreeCtrl {
 	public void searchPoisForBizTree(
 			@RequestParam(required = false) Integer offset,
 			@RequestParam(required = false) Integer limit,
-			@RequestParam(required = true, value="province_id") String provinceId,
+			@RequestParam(required = false, value="province_id") String provinceId,
 			@RequestParam(required = false, value="city_id") String cityId,
 			@RequestParam(required = false, value="county_id") String countId,
 			@RequestParam(required = false, value="keyWord") String keyWord,
