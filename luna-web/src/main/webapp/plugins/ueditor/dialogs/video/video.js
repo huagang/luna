@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//debugger
 (function(){
 
     var video = {},
@@ -295,7 +296,8 @@
                 url: uploadDir + file.url,
                 width:width,
                 height:height,
-                align:align
+                align:align,
+                poster:file.poster
             });
         }
 
@@ -737,7 +739,8 @@
                         uploadVideoList.push({
                             'url': json.url,
                             'type': json.type,
-                            'original':json.original
+                            'original':json.original,
+                            'poster':json.poster||''
                         });
                         $file.append('<span class="success"></span>');
                     } else {

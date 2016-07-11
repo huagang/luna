@@ -152,12 +152,13 @@ public class UploadCtrl {
 			}
 			String fileName = generateFileName(ext);
 			JSONObject result = uploadFile2Cloud(file, type, QCosConfig.LUNA_BUCKET, resourceType, resourceId, fileName);
-			MsLogger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
+			logger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
 			
 			response.getWriter().print(result);
 			response.setStatus(200);
 		} catch(Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload file: " + e));
+			logger.error("Failed to upload file", e);
+			response.getWriter().print(FastJsonUtil.error("-1", "上传文件失败"));
 			response.setStatus(200);
 		}
 			

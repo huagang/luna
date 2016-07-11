@@ -75,6 +75,8 @@ componentPanoModelTemplate = {
         }
     }
 };
+
+//音频
 componentAudioModelTemplate = {
     "_id": "",
     "type": "audio",
@@ -87,6 +89,24 @@ componentAudioModelTemplate = {
         "panoId": "",
         "pauseIcon": "",
         "playIcon": ""
+    },
+    "action": {
+        "href": {
+            "type": "none",
+            "value": ""
+        }
+    }
+};
+//视频
+componentVideoModelTemplate = {
+    "_id": "",
+    "type": "video",
+    "content": {
+        "icon": "",
+        "panoId": "",
+        "videoShowType": '', //视频展示类型
+        "videoUrl": "",
+        "videoIcon": "",
     },
     "action": {
         "href": {
@@ -561,6 +581,10 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
             newComponent.attr("component-type", "audio");
             newComponent.children("div").append('<img src="' + imghost + '/img/sampleaudio.png" />');
             break;
+        case "video":
+            newComponent.attr("component-type", "video");
+            newComponent.children("div").append('<img src="' + imghost + '/img/samplevideo.png" />');
+            break;
         default:
             $.alert("未知的组件类型");
             return;
@@ -625,6 +649,14 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "audio":
             newComponent.attr("component-type", "audio");
+            var icon = imghost + "/img/sample.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "video":
+            newComponent.attr("component-type", "video");
             var icon = imghost + "/img/sample.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
@@ -705,6 +737,9 @@ function updatePageComponents(pageID, componentID) {
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         case "audio":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;        
+        case "video":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         default:
