@@ -644,17 +644,16 @@ function getAppController(businessDialogSelector, appDialogSelector){
 				alert(result.msg);
 			}
 			// 发送请求，包含新建微景展请求，更新微景展信息请求
-			if(!this.data.normalController.appName || !this.data.businessController.businessId){
+			if(!this.normalController.data.appName || !this.businessController.data.businessId){
 				return;
 			}
 			var data = {
 	            "sourcedata.appId": this.data.appId || null,
-	            "app_name":this.data.normalController.appName,
-	            "description": this.data.normalController.appDescription,
-	            "pic": this.data.normalController.coverUrl,
-	            "business_id": this.data.businessController.businessId,
-	            "share_data": this.data.shareController.data
-		            
+	            "app_name":this.normalController.data.appName,
+	            "description": this.normalController.data.appDescription,
+	            "pic": this.normalController.data.coverUrl,
+	            "business_id": this.businessController.data.businessId,
+	            "share_data": this.shareController.data
 		     };
 			console.log(data);
 			$.ajax({
