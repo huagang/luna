@@ -134,7 +134,7 @@ public class UploadCtrl {
 			}
 			// 后缀名获取和检查
 			String ext = UploadFileRule.getFileExtention(file.getOriginalFilename());
-			if (UploadFileRule.isValidFormat(type, ext)) {
+			if (! UploadFileRule.isValidFormat(type, ext)) {
 				response.getWriter().print(FastJsonUtil.error("-1", "文件格式不支持"));
 				response.setStatus(200);
 				return;
