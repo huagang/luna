@@ -1,5 +1,17 @@
 /*微景展管理平台样式*/
 /*author:Demi*/
+
+#pop-message{
+	min-width: 200px;
+}
+#pop-message .pop-fun{
+	text-align: center;
+    padding-right: 0;
+}
+#pop-message .message{
+	white-space: pre-wrap;
+}
+
 /*用户搜索*/
 #new-built{
     float: right;

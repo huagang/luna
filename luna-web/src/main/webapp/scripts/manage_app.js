@@ -114,6 +114,14 @@ function getNormalController(appSel, data){
 			this._appNameCounter.updateCounter(this.data.appName.length);
 			this._appDescriptionCounter.updateCounter(this.data.appDescription.length);
 		},
+		checkValidation: function(){
+			if(this.data.appName){
+				return {error: null};
+			}
+			else{
+				return {error: 'empty', msg: '微景展名称不能为空\n'};
+			}
+		},
 		updateData: function(data){
 			/* 用于更新常用设置信息
 			 * @data 常用设置信息
@@ -152,7 +160,7 @@ function getNormalController(appSel, data){
 				$(conSel + ' .fileupload-tip').html("更换封面");
 			}.bind(this), function(data){
 				$(conSel + ' .fileupload-tip').html("更换封面");
-				alert(data.msg || '上传图片失败');
+				showMessage(data.msg || '上传图片失败');
 				
 			});
 		},
@@ -231,7 +239,7 @@ function getShareController(data){
 				this.data.push({
 					title: '',
 					description: '',
-					abstractPic: ''
+					pic: ''
 				});
 				
 				var titleSel = [".share-item.order-", this.num, " .share-title"].join(''),
@@ -252,6 +260,16 @@ function getShareController(data){
 			}
 			this.num -= 1;
 		},
+		checkValidation: function(){
+			var errorMsg;
+			this.data.forEach(function(item, index){
+				if(! errorMsg && (! item.title || ! item.description || ! item.pic) ){
+					errorMsg = "分享的标题、描述以及缩略图不能为空\n";
+				}
+			});
+			
+			return {error: errorMsg ? 'empty' : null, msg: errorMsg};
+		},
 		updateData: function(data){
 			this.reset();	
 			if(data && data.length > 0){
@@ -263,11 +281,11 @@ function getShareController(data){
 					this.newShare();
 					var itemSel = '.share-item.order-' + index;
 					// 设置缩略图
-					if(item.abstractPic){
+					if(item.pic){
 						$(itemSel + ' .file-uploader').addClass('hidden');
 						var preview = $(itemSel + ' .preview-container');
 						preview.removeClass('hidden');
-						preview.find('.preview-img').attr("src", item.abstractPic);
+						preview.find('.preview-img').attr("src", item.pic);
 					}
 					// 设置分享标题
 					if(item.title){
@@ -293,11 +311,11 @@ function getShareController(data){
 				shareEle.find('.file-uploader').addClass('hidden');
 				shareEle.find('.preview-container').removeClass('hidden');
 				shareEle.find('.preview-img').attr("src", data.data.access_url);
-				this.data[order].abstractPic = data.data.access_url;
+				this.data[order].pic = data.data.access_url;
 				$(tipSel).html("更换缩略图");
 			}.bind(this), function(data){
 				$(tipSel).html("更换缩略图");
-				alert(data.msg || '上传图片失败');
+				showMessage(data.msg || '上传图片失败');
 			});
 		},
 		reset:function(){
@@ -381,12 +399,12 @@ function getBusinessController(businessDialogSelector, data){
 		    				search_result_select.append(optionsHtml);
 		                    break;
 		                default:
-		                	alert("请求失败:" + returndata.msg);
+		                	showMessage("请求失败:" + returndata.msg);
 		                	break;
 		            }
 		        }.bind(this),
 		        error: function (returndata) {
-		            alert("请求失败");
+		            showMessage("请求失败");
 		        }.bind(this)
 		    })
 		},
@@ -418,7 +436,6 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			coverUrl: '',
 			businessId:'',
 			businessName:'',
-			
 		},
 		businessController: getBusinessController(businessDialogSelector), // 业务配置控制器
 		shareController: getShareController(),  //分享设置控制器
@@ -454,7 +471,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			// 微景展配置框事件绑定
 			
 			this._appDialog.find('.last').click(this.setAppNameLastStep.bind(this));
-			this._appDialog.find('.next').click(this.setAppNameNextStep.bind(this));
+			this._appDialog.find('.next').click(this._postData.bind(this));
 					
 			var shareMenu = this._appDialog.find('.share'),
 				normalMenu = this._appDialog.find('.normal');
@@ -594,7 +611,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 		setBusinessNextStep: function(){
 			// 业务配置弹出框的“下一步”按钮的点击事件回调函数
 			// 用于验证业务信息是否配置以及显示微景展名称配置弹出框
-			if(this.businessController.data.businessId){
+			if(this.businessController.data.businessId > 0){
 				this._businessDialog.removeClass('pop-show');
 				this._appDialog.addClass('pop-show');
 			} else{
@@ -608,29 +625,38 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			this._businessDialog.addClass('pop-show');
 			this._appDialog.removeClass('pop-show');
 		},
-		setAppNameNextStep: function(){
-			// 微景展名称配置弹出框的“下一步”按钮的点击事件回调函数
-			// 用于验证微景展名称是否填写以及
-			if(this.data.businessId && this.data.appName){
-			    this._postData();
-			} else{
-				this._appDialog.find(".warn-appname").addClass('show');
-			}
-		},
 		freshAppList:function(){
 			//刷新微景展列表
         	$('#table_apps').bootstrapTable("refresh");
 		},
+		_checkValidation: function(){
+			var result = this.normalController.checkValidation();
+			var errorMsg = result.error ? result.msg : '';
+			result = this.shareController.checkValidation();
+			errorMsg += result.error ? result.msg : '';
+			return {error: errorMsg ? 'empty' : null, msg: errorMsg};
+		},
 		_postData:function(){
+			// 微景展名称配置弹出框的“下一步”按钮的点击事件回调函数
+			// 用于验证微景展名称是否填写
+			var result = this._checkValidation();
+			if(result.error){
+				alert(result.msg);
+			}
 			// 发送请求，包含新建微景展请求，更新微景展信息请求
-			if(!this.data.appName || !this.data.businessId){
+			if(!this.data.normalController.appName || !this.data.businessController.businessId){
 				return;
 			}
 			var data = {
-		            "sourcedata.appId": this.data.appId || null,
-		            "app_name":this.data.appName,
-		            "business_id": this.data.businessId
+	            "sourcedata.appId": this.data.appId || null,
+	            "app_name":this.data.normalController.appName,
+	            "description": this.data.normalController.appDescription,
+	            "pic": this.data.normalController.coverUrl,
+	            "business_id": this.data.businessController.businessId,
+	            "share_data": this.data.shareController.data
+		            
 		     };
+			console.log(data);
 			$.ajax({
 	            url: this._posturl[this._type],
 		        type: 'POST',
@@ -646,11 +672,11 @@ function getAppController(businessDialogSelector, appDialogSelector){
 		            	}
 		            }
 		            else{
-		            	alert(data.msg);
+		            	showMessage(data.msg);
 		            }
 		        }.bind(this),
 		        error: function (data) {
-		            alert("请求失败");
+		            showMessage("请求失败");
 		        }
 		    });
 		}
@@ -693,12 +719,21 @@ function submit_delete_app(app_id, target){
                    $('#table_apps').bootstrapTable("refresh");
                    break;
                 default:
-                	alert(returndata.code + ":" + returndata.msg);
+                	showMessage(returndata.code + ":" + returndata.msg);
                 break;
             }
         },
         error: function (returndata) {
-        	alert("请求失败!");
+        	showMessage("请求失败!");
         }
     });
+}
+
+function showMessage(msg){
+	$("#pop-message .message").text(msg);
+	popWindow($('#pop-message'));
+	$("#btn-mes").click(function(){
+		$("#pop-message").css('display', "none");
+		$('#pop-overlay').css('display', 'none')
+	});
 }

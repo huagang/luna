@@ -267,11 +267,11 @@
 </div>
 <a target="_blank" id="open_new_tab" style="display:none" href="#">在新窗口打开新的链接</a>
 <!--弹出层 end-->
-
-<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
+<jsp:include page="/templete/message.jsp"/>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script type="text/javascript">
 	var APP_STATUS = {
 			"-1": "已删除",
