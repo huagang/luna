@@ -34,7 +34,6 @@ $(document).ready(function() {
     $(".app-wrap").on("click", "[hrefurl]", function(e) {
         e.stopPropagation();
         window.location.href = $(this).attr("hrefurl");
-
     });
 
     //导航绑定点击事件
@@ -54,29 +53,28 @@ $(document).ready(function() {
             "navEndName": $(this).attr("endName").split(",")[0],
             'navType': $(this).data('navtype')
         };
-        console.log(detailData);
         showNav(detailData);
     });
 
     //音频播放点击事件
-    $(".app-wrap").on('click','.btn-playAudio',function(e){
-        console.log(123) ;
-       e.preventDefault();
-       e.stopPropagation();
-    
-       var playIcon = $(this).data('playicon'),
-           pauseIcon = $(this).data('pauseicon');
-    
-       //如果是播放状态
-       if ($(this).hasClass('pausing')) {
-           $(this).find('img').attr('src',pauseIcon);
-           $(this).find('audio')[0].play();
-       } else {
-           $(this).find('img').attr('src',playIcon);
-           $(this).find('audio')[0].pause();
-       }
-       $(this).toggleClass('pausing');
-       $(this).toggleClass('playing');
+    $(".app-wrap").on('click', '.btn-playAudio', function(e) {
+        console.log(123);
+        e.preventDefault();
+        e.stopPropagation();
+
+        var playIcon = $(this).data('playicon'),
+            pauseIcon = $(this).data('pauseicon');
+
+        //如果是播放状态
+        if ($(this).hasClass('pausing')) {
+            $(this).find('img').attr('src', pauseIcon);
+            $(this).find('audio')[0].play();
+        } else {
+            $(this).find('img').attr('src', playIcon);
+            $(this).find('audio')[0].pause();
+        }
+        $(this).toggleClass('pausing');
+        $(this).toggleClass('playing');
     });
 
     $(".app-wrap").on("click", ".navimg", function(e) {
@@ -98,6 +96,18 @@ $(document).ready(function() {
         console.log(detailData);
         showNav(detailData);
     });
+    // 弹框视频弹出效果  
+    $(".app-wrap").on("click", ".btn-playVideo", function(e) {
+        var videourl = $(this).data('videourl');
+        $('#diaVideo').attr('src', videourl);
+        $('.video-modal').show();
+    });
+    $('.app-wrap').on('click', '.video-modal', function(e) {
+        $(this).hide();
+        $(this).find('video')[0].pause();
+    });
+    // 弹框视频弹出效果  End
+
 
     /*TODO：增加动画页面 Start*/
     if (pageData.code != "0") {
@@ -149,6 +159,10 @@ $(document).ready(function() {
                             var audio = new Audio(value);
                             componentHtml = audio.build();
                             break;
+                        case 'video':
+                            var video = new Video(value);
+                            componentHtml = video.build();
+                            break;
                     }
 
                     $comGroup.append(componentHtml);
@@ -190,6 +204,10 @@ $(document).ready(function() {
                             var audio = new Audio(value);
                             componentHtml = audio.build();
                             break;
+                        case 'video':
+                            var video = new Video(value);
+                            componentHtml = video.build();
+                            break;
                     }
                     $comGroup.append(componentHtml);
                 });
@@ -204,6 +222,14 @@ $(document).ready(function() {
     $('.scene').find('.img-wraper').addClass('go-right');
 
     /*TODO：增加动画页面 End*/
+
+    //用videoJs 初始化
+    $('.video-js').each(function(index, el) {
+        videojs(el, {}, function() {
+            // Player (this) is initialized and ready.
+            console.log('视频初始化完成');
+        });
+    });
 
     /* 基础组件 */
     function BaseComponent() {
@@ -388,23 +414,23 @@ $(document).ready(function() {
         BaseComponent.call(this);
 
         this.build = function() {
-            var loopPlay ='';
+            var loopPlay = '';
 
             this.setPosition();
 
-            this.value.content.playIcon =  this.value.content.playIcon|| 'http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png';
-            this.value.content.pauseIcon =  this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file =  this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+            this.value.content.playIcon = this.value.content.playIcon || 'http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png';
+            this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
+            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
 
-            if(this.value.content.loopPlay=='1'){
-                loopPlay='loopPlay="loopPlay"';
+            if (this.value.content.loopPlay == '1') {
+                loopPlay = 'loopPlay="loopPlay"';
             }
 
             // 自动播放
             if (this.value.content.autoPlay == "1") {
-                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio playing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.pauseIcon + '" /> <audio style="display:none;" src="'+this.value.content.file+'" autoplay="autoplay" controls '+loopPlay+'></audio></a> ');
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio playing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.pauseIcon + '" /> <audio style="display:none;" src="' + this.value.content.file + '" autoplay="autoplay" controls ' + loopPlay + '></audio></a> ');
             } else {
-                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio pausing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.playIcon + '" />  <audio style="display:none;" src="'+this.value.content.file+'"  controls '+loopPlay+'></audio></a>');
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio pausing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.playIcon + '" />  <audio style="display:none;" src="' + this.value.content.file + '"  controls ' + loopPlay + '></audio></a>');
             }
 
             this.setMoreInfo();
@@ -414,7 +440,38 @@ $(document).ready(function() {
             return this.html;
         }
     }
+    /* 视频组件 */
+    function Video(data) {
+        this.value = data;
+        BaseComponent.call(this);
 
+        this.build = function() {
+            var loopPlay = '',
+                videoWidth = this.value.width ? 'width = "' + this.value.width + this.value.unit + '"' : '',
+                videoHeight = this.value.height ? 'height = "' + this.value.height + this.value.unit + '"' : '',
+                videoIcon = this.value.content.videoIcon || this.value.content.icon,
+                showType = this.value.content.videoShowType = this.value.content.videoShowType || '1';
+
+            this.setPosition();
+
+            this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
+            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+
+            if (showType == '1') {
+                //弹框组件
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playVideo" data-videoicon = "' + videoIcon + '" data-videourl = "' + this.value.content.videoUrl + '"><img  src="' + videoIcon + '" /></a> ');
+            } else {
+                //内嵌组件
+                this.html.children("div").append('<video src="' + this.value.content.videoUrl + '" class="video-js" controls preload="auto"  ' + videoWidth + ' ' + videoHeight + ' data-setup="{}" ></video>');
+            }
+
+            this.setMoreInfo();
+
+            this.setAction();
+
+            return this.html;
+        }
+    }
 });
 
 /**
