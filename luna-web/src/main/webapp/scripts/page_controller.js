@@ -491,8 +491,40 @@ function PanoController($scope, $rootScope) {
 
 PanoController.prototype = new InteractComponentController();
 
-function AudioController($scope, $rootScope) {
 
+/*初始化音频控件*/
+function AudioController($scope, $rootScope) {
+    
+    this.init = function(){
+        AudioController.prototype.init.call(this);
+        this.content = jQuery.extend(true,{},this.currentComponent.content);
+        this.content.file="";
+    }
+
+    this.changeAudioFile = function(){
+        // this.currentComponent.content.file = this.content.file;
+        // console.log(this.currentComponent.content.file);
+        // console.log('changeAudioFile');
+    } 
+
+    this.changePlayIcon = function(){
+        // console.log(this.currentComponent.content.playIcon);
+        // console.log('changeAudioFile');
+    }
+
+    this.changePauseIcon = function(){
+        // console.log(this.currentComponent.content.stopIcon);
+        // console.log('changePauseIcon');
+    }
+
+    this.changeAutoPlay = function(){
+        // console.log(this.currentComponent.content.autoPlay);
+        // console.log('changeAutoPlay');
+    }
+    this.changeLoopPlay = function(){
+        // console.log(this.currentComponent.content.loopPlay);
+        // console.log('changeLoopPlay');
+    }
 }
 
 AudioController.prototype = new InteractComponentController();

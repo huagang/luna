@@ -122,6 +122,22 @@ $(function() {
 
     });
 
+    //音频组件
+    $("#audioComponent").click(function() {
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+    
+        lunaPage.creatPageComponents(currentPageId, null, "audio");
+        currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
+        currentComponent["_id"] = currentComponentId;
+        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        componentPanel.init("audio");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("audio");
+
+    });
+
     //右键删除组件
     $("#layermain").contextmenu({
         target: '#context-menu',

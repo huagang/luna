@@ -108,21 +108,22 @@ right connector from last child*/
     text-overflow: ellipsis;
 }
 
-.luna-tree .item-title .poi_info{
+.poi_info{
 	display: none;
-    z-index: 1000;
-    position: absolute;
+	
+	position: absolute; 
     margin: 1px 0 0 -5px;
     background-color: #efefef;
-    left: 0;
     line-height: 21px;
     padding: 8px 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
     word-break: break-all;
     font-size: 12px;
+    z-index: 1000;
 }
-	
+
+.list-result-poi > label:hover .poi_info,
 .luna-tree .item-title:hover .poi_info{
 	display: block;	
 }
@@ -266,26 +267,29 @@ right connector from last child*/
 	margin:10px 15px;
 	min-height:100px;
 	max-height:300px;
-	overflow-y:auto;
 	border:1px solid #E5E5E5;
+	overflow-y: auto;
 }
 .list-result-poi{
-	
 }
 .list-result-poi label{
 	width:105px;
 	margin:5px;
 	display:inline-block;
-    overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
     padding-right:0;
+    cursor: pointer;
+    overflow: hidden;
+	text-overflow: ellipsis;
 }
 .list-result-poi label input{
 	display:inline-block;
 	margin-right:3px;
 }
 
+.list-result-poi .poi_info{
+	position: fixed;
+}
 
 
 

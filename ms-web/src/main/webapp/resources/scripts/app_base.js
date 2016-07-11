@@ -58,6 +58,47 @@ $(document).ready(function() {
         showNav(detailData);
     });
 
+    //音频播放点击事件
+    $(".app-wrap").on('click','.btn-playAudio',function(e){
+        console.log(123) ;
+       e.preventDefault();
+       e.stopPropagation();
+    
+       var playIcon = $(this).data('playicon'),
+           pauseIcon = $(this).data('pauseicon');
+    
+       //如果是播放状态
+       if ($(this).hasClass('pausing')) {
+           $(this).find('img').attr('src',pauseIcon);
+           $(this).find('audio')[0].play();
+       } else {
+           $(this).find('img').attr('src',playIcon);
+           $(this).find('audio')[0].pause();
+       }
+       $(this).toggleClass('pausing');
+       $(this).toggleClass('playing');
+    });
+
+    $(".app-wrap").on("click", ".navimg", function(e) {
+        //获取地理位置和导航等信息
+        // var myLongitude;
+        // var myLatitude;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var detailData = {
+            "navStartLat": $(this).attr("startPosition").split(",")[0],
+            "navStartLng": $(this).attr("startPosition").split(",")[1],
+            "navStartName": $(this).attr("startName").split(",")[0],
+            "navEndLat": $(this).attr("endPosition").split(",")[0],
+            "navEndLng": $(this).attr("endPosition").split(",")[1],
+            "navEndName": $(this).attr("endName").split(",")[0],
+            'navType': $(this).data('navtype')
+        };
+        console.log(detailData);
+        showNav(detailData);
+    });
+
     /*TODO：增加动画页面 Start*/
     if (pageData.code != "0") {
         // alert(pageData.msg);
@@ -76,28 +117,40 @@ $(document).ready(function() {
             if (item.page_code == "welcome") {
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
-                    var componentHtml = "";
-                    if (n.startsWith("canvas")) {
-                        var canvas = new Canvas(value);
-                        componentHtml = canvas.build();
-                        if (value.bgimg) { //欢迎页面是否有背景图片
-                            var welCanvas = new WelComeCanvas(value);
-                            var newComponentHtml = welCanvas.build();
-                            $comGroup.append(newComponentHtml);
-                        }
-                    } else if (n.startsWith("text")) {
-                        var text = new Text(value);
-                        componentHtml = text.build();
-                    } else if (n.startsWith("img")) {
-                        var img = new Img(value);
-                        componentHtml = img.build();
-                    } else if (n.startsWith("pano")) {
-                        var pano = new Pano(value);
-                        componentHtml = pano.build();
-                    } else if (n.startsWith("nav")) {
-                        var nav = new Nav(value);
-                        componentHtml = nav.build();
+                    var componentHtml = "",
+                        headName = n.match(/^[a-zA-Z]*/);
+                    switch (headName[0]) {
+                        case 'canvas':
+                            var canvas = new Canvas(value);
+                            componentHtml = canvas.build();
+                            if (value.bgimg) { //欢迎页面是否有背景图片
+                                var welCanvas = new WelComeCanvas(value);
+                                var newComponentHtml = welCanvas.build();
+                                $comGroup.append(newComponentHtml);
+                            }
+                            break;
+                        case 'text':
+                            var text = new Text(value);
+                            componentHtml = text.build();
+                            break;
+                        case 'img':
+                            var img = new Img(value);
+                            componentHtml = img.build();
+                            break;
+                        case 'pano':
+                            var pano = new Pano(value);
+                            componentHtml = pano.build();
+                            break;
+                        case 'nav':
+                            var nav = new Nav(value);
+                            componentHtml = nav.build();
+                            break;
+                        case 'audio':
+                            var audio = new Audio(value);
+                            componentHtml = audio.build();
+                            break;
                     }
+
                     $comGroup.append(componentHtml);
                 });
                 //设置首页滑动到第一页
@@ -110,22 +163,33 @@ $(document).ready(function() {
             } else {
                 $.each(item.page_content, function(n, value) {
                     // move canvas first
-                    var componentHtml = "";
-                    if (n.startsWith("canvas")) {
-                        var canvas = new Canvas(value);
-                        componentHtml = canvas.build();
-                    } else if (n.startsWith("text")) {
-                        var text = new Text(value);
-                        componentHtml = text.build();
-                    } else if (n.startsWith("img")) {
-                        var img = new Img(value);
-                        componentHtml = img.build();
-                    } else if (n.startsWith("pano")) {
-                        var pano = new Pano(value);
-                        componentHtml = pano.build();
-                    } else if (n.startsWith("nav")) {
-                        var nav = new Nav(value);
-                        componentHtml = nav.build();
+                    var componentHtml = "",
+                        headName = n.match(/^[a-zA-Z]*/);
+                    switch (headName[0]) {
+                        case 'canvas':
+                            var canvas = new Canvas(value);
+                            componentHtml = canvas.build();
+                            break;
+                        case 'text':
+                            var text = new Text(value);
+                            componentHtml = text.build();
+                            break;
+                        case 'img':
+                            var img = new Img(value);
+                            componentHtml = img.build();
+                            break;
+                        case 'pano':
+                            var pano = new Pano(value);
+                            componentHtml = pano.build();
+                            break;
+                        case 'nav':
+                            var nav = new Nav(value);
+                            componentHtml = nav.build();
+                            break;
+                        case 'audio':
+                            var audio = new Audio(value);
+                            componentHtml = audio.build();
+                            break;
                     }
                     $comGroup.append(componentHtml);
                 });
@@ -317,6 +381,40 @@ $(document).ready(function() {
             return this.html;
         }
     }
+
+    /* 音频组件 */
+    function Audio(data) {
+        this.value = data;
+        BaseComponent.call(this);
+
+        this.build = function() {
+            var loopPlay ='';
+
+            this.setPosition();
+
+            this.value.content.playIcon =  this.value.content.playIcon|| 'http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png';
+            this.value.content.pauseIcon =  this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
+            this.value.content.file =  this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+
+            if(this.value.content.loopPlay=='1'){
+                loopPlay='loopPlay="loopPlay"';
+            }
+
+            // 自动播放
+            if (this.value.content.autoPlay == "1") {
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio playing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.pauseIcon + '" /> <audio style="display:none;" src="'+this.value.content.file+'" autoplay="autoplay" controls '+loopPlay+'></audio></a> ');
+            } else {
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio pausing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.playIcon + '" />  <audio style="display:none;" src="'+this.value.content.file+'"  controls '+loopPlay+'></audio></a>');
+            }
+
+            this.setMoreInfo();
+
+            this.setAction();
+
+            return this.html;
+        }
+    }
+
 });
 
 /**

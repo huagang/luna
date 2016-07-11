@@ -67,5 +67,8 @@
 		<script src='<%=request.getContextPath()%>/resources/scripts/videoJs.js'></script>
 	  	<!-- 引入video的 js End -->
 		<script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showArticle.js'></script>
+		<!-- 腾讯统计 文章 -->
+		<script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="500149850" ></script>
+		<!-- End 腾讯统计  -->
 	</body>
 </html>

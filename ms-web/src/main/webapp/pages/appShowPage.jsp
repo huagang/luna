@@ -28,7 +28,7 @@
             link: window.location.href,
             imgUrl:"${share_info_pic}"
         };
-        alert(JSON.stringify( wechatOptions));
+        // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
