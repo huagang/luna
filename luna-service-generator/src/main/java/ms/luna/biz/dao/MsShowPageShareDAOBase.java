@@ -1,8 +1,9 @@
-package ms.biz.common.dao;
+package ms.luna.biz.dao;
 
 import java.util.List;
-import ms.biz.common.dao.model.MsShowPageShare;
-import ms.biz.common.dao.model.MsShowPageShareCriteria;
+
+import ms.luna.biz.dao.model.MsShowPageShare;
+import ms.luna.biz.dao.model.MsShowPageShareCriteria;
 
 public interface MsShowPageShareDAOBase {
     /**

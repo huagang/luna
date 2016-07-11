@@ -1,6 +1,6 @@
-package ms.biz.common.dao.custom;
+package ms.luna.biz.dao.custom;
 
-import ms.biz.common.dao.MsShowPageShareDAOBase;
+import ms.luna.biz.dao.MsShowPageShareDAOBase;
 
 public interface MsShowPageShareDAO extends MsShowPageShareDAOBase {
 }
