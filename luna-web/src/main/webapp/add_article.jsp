@@ -37,6 +37,10 @@
 		                    <p class="group-title">标题</p>
 		                    <input type="text" name="title" id='title' value="">
 		                </div>
+		                <div class="group article-short_title">
+		                    <p class="group-title">副标题</p>
+		                    <input type="text" name="short_title" id='title' value="">
+		                </div>
 		                <div class="group article-main">
 		                    <p class="group-title">正文</p>
 		                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>

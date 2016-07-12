@@ -264,7 +264,8 @@ var initPage = function() {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category
+                column_id: articleStore.category,
+                short_title:document.querySelector('input[name="short_title"]').value,
             };
             console.log(data);
             $.ajax({
