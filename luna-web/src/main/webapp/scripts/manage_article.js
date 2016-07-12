@@ -194,8 +194,8 @@ function ArticleController($scope, $rootScope, $http) {
 
     this.showCreateArticlePage = function() {
         if (this.businessId) {
-            window.location.href = host +
-                '/manage/article.do?method=create_article&business_id={0}'.format(this.businessId);
+            window.open( host +
+                '/manage/article.do?method=create_article&business_id={0}'.format(this.businessId));
         }
 
     };

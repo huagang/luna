@@ -814,6 +814,7 @@ function initEditor() {
                 'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
                 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
                 'simpleupload',
                 // 'music',
                 'insertvideo',
