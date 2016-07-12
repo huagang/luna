@@ -48,14 +48,14 @@
 			ms_poi_tag
 	</select>
 	
-	<resultMap id="MsTagFieldInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+	<resultMap id="MsFieldNames" class="ms.luna.biz.dao.custom.model.MsPoiFieldNameResult">
 		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
-		<result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+		<result column="field_alias" property="fieldAlias" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectFieldNames" resultMap="MsTagFieldInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+	<select id="selectFieldNames" resultMap="MsFieldNames">
 		SELECT
 			ms_poi_field.field_name as field_name,
-			ms_poi_field.field_show_name as field_show_name
+			ms_poi_field.field_alias as field_alias
 		FROM
 			ms_poi_field
 	</select>
