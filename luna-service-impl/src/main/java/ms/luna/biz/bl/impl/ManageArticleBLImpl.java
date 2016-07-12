@@ -118,10 +118,16 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         try {
             JSONObject articleObj = JSONObject.parseObject(json);
             MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
-            msArticleDAO.insertSelective(msArticle);
             MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
             msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
             List<MsArticle> msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
+            if(msArticles != null && msArticles.size() > 0) {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "文章标题已存在");
+            }
+            msArticleDAO.insertSelective(msArticle);
+            msArticleCriteria.clear();
+            msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
+            msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
             if(msArticles != null && msArticles.size() == 1) {
                 JSONObject ret = new JSONObject();
                 ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
