@@ -456,6 +456,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         JSONArray jsonArray = new JSONArray();
         for(MsArticleWithBLOBs msArticle : msArticleWithBLOBsList) {
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put(MsArticleTable.FIELD_ID, msArticle.getId());
             jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
