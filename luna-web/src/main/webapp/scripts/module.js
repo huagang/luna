@@ -137,7 +137,7 @@ $(function() {
         componentPanel.update("audio");
 
     });    
-    
+
     //视频组件
     $("#videoComponent").click(function() {
         lostFocus($(".componentbox-selected"));
@@ -474,6 +474,11 @@ $(function() {
                 componentPanel.update($target.attr("component-type"));
                 return false;
             }
+        });
+
+        //清空文件上传的值，解决同一文件不能重复上传问题
+        $('input[type=file]').on('click',function(e){
+            $(this).val('');
         });
     }
 })
