@@ -56,6 +56,10 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         if(StringUtils.isNotBlank(title)) {
             msArticle.setTitle(title);
         }
+        String shortTitle = articleObj.getString(MsArticleTable.FIELD_SHORT_TITLE);
+        if(StringUtils.isNotBlank(shortTitle)) {
+            msArticle.setShortTitle(shortTitle);
+        }
         String content = articleObj.getString(MsArticleTable.FIELD_CONTENT);
         if(StringUtils.isNotBlank(content)) {
             msArticle.setContent(content);
@@ -96,6 +100,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
     private JSONObject toJson(MsArticleWithBLOBs msArticle) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+        jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
         jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
@@ -458,6 +463,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(MsArticleTable.FIELD_ID, msArticle.getId());
             jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+            jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
             String columnName = columnInfoMap.get(msArticle.getColumnId());
@@ -475,6 +481,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+        jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
         jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());

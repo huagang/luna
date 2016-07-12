@@ -23,3 +23,5 @@ VALUES (147, '线路管理-function', 5, NULL, 2, 1, '2016-07-11 22:57:17', '201
 
 INSERT INTO ms_resource_uri(resource_id, resource_name, parent_id, resource_uri, level_type, `status`, regist_hhmmss, up_hhmmss)
 VALUES (148, '线路列表初始化', 147, '/manage_router.do?method=init', 3, 1, '2016-07-11 22:57:17', '2016-07-11 22:57:17');
+
+ALTER TABLE ms_article ADD COLUMN short_title VARCHAR(64) DEFAULT '' AFTER title;
