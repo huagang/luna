@@ -34,7 +34,7 @@ var initPage = function() {
         //         execCommand: function() {
         //             alert('execCommand:' + uiName);
         //         }
-        //     });
+        //     });q
 
         //     //创建一个button
         //     var btn = new UE.ui.Button({

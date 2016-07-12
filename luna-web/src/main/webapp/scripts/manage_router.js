@@ -1,8 +1,3 @@
-$(function(){
-	
-});
-
-
 
 
 var manageRouter = angular.module('manageRouter', []);
@@ -15,22 +10,25 @@ manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
 
 function routerController($rootScope, $scope, $http){
 	
-	this.costMapping = {
-		'little': '较少',
-		'fine': '中等',
-		'large': '较大'
-	}
-	
-	this.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
-	this.index = null;
 	this.data = {
 		id: '',
 		name: '',
 		description: '',
 		pic: '',
 		energyCost: '',
-		file: null,
+		file: null,	
 	};
+	
+	
+	this.costMapping = {
+		'little': '较少',
+		'fine': '中等',
+		'large': '较大'
+	}
+	
+	this.uploadPath = Inter.getApiUrl().uploadPath;
+	this.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
+	this.opId = null;
 	this.rowsData = [];
 	// 数据初始化
 	this.init = function(){
@@ -39,11 +37,16 @@ function routerController($rootScope, $scope, $http){
 	
 	// 改变状态
 	this.changeState = function(nextState, index){
+		this.state = nextState;
+		if(index){
+			this.opId = this.rowsData[index].id;
+		}
+		
 		if(nextState === 'new'){
 			this.resetNewDialog();
+		} else if(nextState !== 'init'){
+			$scope.$apply();
 		}
-		this.state = nextState;
-		this.index = index;
 	};
 	
 	// 拉取线路数据
@@ -52,21 +55,22 @@ function routerController($rootScope, $scope, $http){
 		this.rowsData = [{
 			id: 45,
 			name: '名称',
-			business_name: '暂无业务',
-			costEnergy: 'little',
+			businessName: '暂无业务',
+			energyCost: 'little',
+			
 			creator: 'wumengqiang',
 		},{
 			id: 45,
 			name: '名称',
-			business_name: '暂无业务',
-			costEnergy: 'little',
+			businessName: '暂无业务',
+			energyCost: 'little',
 			creator: 'wumengqiang'
 				
 		},{
 			id: 45,
 			name: '名称',
-			business_name: '暂无业务',
-			costEnergy: 'little',
+			businessName: '暂无业务',
+			energyCost: 'little',
 			creator: 'wumengqiang'
 		}];
 	}
@@ -89,37 +93,44 @@ function routerController($rootScope, $scope, $http){
 		data.append('file', file);
 		$http({
 			method: 'POST',
-			url: '/luna-web/uploadCtrl.do?method=uploadFile2Cloud',
+			url: this.uploadPath,
 			headers:{
 				'Content-Type': undefined, // 设置成undefined之后浏览器会自动增加boundary
 			},
 			data: data
 		}).then(function(data){
-			this.data.pic = data.data.access_url;
+			event.target.value = '';
+			if(data.data.code === '0'){
+				this.data.pic = data.data.data.access_url;
+			} else{
+				alert('上传文件出错');
+			}
 		}.bind(this), function(data){
 			alert('上传文件出错');
+			event.target.value = '';
 		});
-	}
+	}.bind(this)
 	
 	this.resetNewDialog = function(){
 		this.data = {
-				id: this.data.id,
-				name: '',
-				description: '',
-				pic: '',
-				energyCost: ''
+			id: this.data.id,
+			name: '',
+			description: '',
+			pic: '',
+			energyCost: ''
 		};
 	}
 	
 	
 	// 新建路线
 	this.handleCreateRouter = function(){
-		if(this.data.name && this.data.description && this.data.pic && this.data.energyCost){
+		var data = this.data;
+		if(data.name && data.description && data.pic && data.energyCost){
 			var data = new FormData();
-			data.append('id', this.data.id || null);
-			data.append('name', this.data.name);
-			data.append('description', this.data.description);
-			data.append('energyCost', this.data.energyCost);
+			data.append('id', data.id || null);
+			data.append('name', data.name);
+			data.append('description', data.description);
+			data.append('energyCost', data.energyCost);
 			
 			
 			
@@ -127,13 +138,15 @@ function routerController($rootScope, $scope, $http){
 				method: "POST",
 				url: 'xxxxxxxx',
 				data: data
-			}).then(function(){
+			}).then(function(res){
 				
-			}.bind(this), function(){
+			}.bind(this), function(res){
 				//
-				this.data.id = 233;
+				this.data.id = Date.now();
 				this.data.creator = 'wumengqiang';
+				this.data.businessName = '业务名称';
 				this.rowsData.push(this.data);
+				this.changeState('init');
 			}.bind(this));
 		}
 		else{
@@ -141,37 +154,69 @@ function routerController($rootScope, $scope, $http){
 		}
 	}
 	
+	// 删除路线
+	this.handleDeleteRouter = function(){
+		var data = new FormData();
+		data.append('id', this.opId);
+		$http({
+			method: 'POST',
+			url: 'xxx',
+			data: data,
+			header: {
+				"Content-Type": undefined,
+			},
+		}).then(function(res){
+			if(res.data.code === '0'){
+				
+			}
+		}.bind(this), function(res){
+			var index = -1, id = this.opId;
+			this.rowsData.forEach(function(item, itemIndex){
+				if(item.id === id){
+					index = itemIndex;
+					return;
+				}
+			});
+			if(index > -1){
+				this.rowsData.splice(index, 1);
+			}
+			this.changeState('init');
+		}.bind(this));
+	} 
 	
+	this.init();
+	window.s = $scope;
 }
 
 manageRouter.directive("bnRows", function(){
 	return ({
 		link: link,     //  通过代码修改DOM元素的实例，添加事件监听，建立数据绑定 
 		restrict: 'A',  // Attribute 表示作为元素的属性来声明的
-		controller: 'routerController'
 	});
+	
 	// 事件代理
-	function link($scope, element, attribute, controller){
-		element.on('click', '.router-update', function(){
-			controller.changeState('update', element.parent().attr('data-order'));
+	function link($scope, element, attribute){
+		element.on('click', '.router-update', function(event){
+			$scope.router.changeState('update', 
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
 		});
-		element.on('click', 'router-delete', function(){
-			controller.changeState('delete', element.parent().attr('data-order'));
+		element.on('click', '.router-delete', function(event){
+			$scope.router.changeState('delete', 
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
 		});
 	}
 });
 
 manageRouter.directive('customChange', function(){
+	
 	return ({
 		link: link,
 		restrict: 'A',
-		controller: 'routerController'
 	});
+	
 	function link($scope, element, attribute, controller){
 		element.on('change', function(event) {
-	        controller.uploadPic(event);
-	    });
-		
+	        $scope.router.uploadPic(event);
+	    });	
 	}
-	
-})
+});

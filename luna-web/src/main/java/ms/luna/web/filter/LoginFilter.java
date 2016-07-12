@@ -48,6 +48,7 @@ public class LoginFilter implements Filter {
 				webRoot + "/show_article.do",
 				webRoot + "/api_vodPlay.do",
 				webRoot + "/fileUpload.do",
+				webRoot + "/manage_router.do",
 				webRoot + "/menu.do"));
 
 		skipUris.addAll(Arrays.asList(

@@ -54,8 +54,8 @@
                 			</tr>
                 		</thead>
                 		<tbody bn-rows>
-                			<tr ng-repeat="rowData in router.rowsData" data-rowOrder={{$index}}>
-                				<td>{{rowData.routerName}}</td>
+                			<tr ng-repeat="rowData in router.rowsData" data-order={{$index}}>
+                				<td>{{rowData.name}}</td>
                 				<td>{{rowData.businessName}}</td>
                 				<td>{{router.costMapping[rowData.energyCost]}}</td>
                 				<td>{{rowData.creator}}</td>
@@ -70,7 +70,7 @@
                 </div>
                  <!--主题内容 end-->
                  <!-- 线路设置弹窗 start -->
-                 <div class='pop set_business ng-hide' ng-show="router.state==='new'">
+                 <div class='pop set_business ng-hide' ng-show="['new', 'update'].indexOf(router.state) > -1">
                  	<div class="pop-title">
 						<h4>线路设置</h4> 
 				        <a href="#" class="btn-close" ng-click='router.changeState("init")'><img src="${basePath}/img/close.png" /></a>
@@ -86,9 +86,9 @@
 						</div>
 						<div class='router-pic'>
 							<label for='pic'>线路封面图</label>
-							<input disabled='disabled' name='pic' id='pic' ng-bind='router.data.pic'/>
+							<input disabled='disabled' name='pic' id='pic' ng-model='router.data.pic'/>
 							<div class='uploader'>
-								<input type='file' ng-model='router.data.file' custom-change name='file' class='fileup-thumbnail'/>
+								<input type='file' ng-model='data.file' custom-change name='file' class='fileup-thumbnail'/>
 								<button class='button'>本地上传</button>
 							</div>
 						</div>
@@ -114,12 +114,17 @@
                  <!-- 线路删除弹窗 start -->
                  <div class='pop set_business ng-hide' ng-show="router.state==='delete'">
                  	<div class="pop-title">
-						<h4>关联业务</h4> 
+						<h4>删除</h4> 
 				        <a href="#" class="btn-close" ng-click='router.changeState("init")'><img src="${basePath}/img/close.png" /></a>
 					</div>
 					<div class="pop-cont">
+						<p>删除数据记录，将解除线路与业务之间的关联，您确定要进行此操作么？</p>
 					</div>
 					<div class="pop-fun">     
+						<div class='pull-right'>
+							<button class='button' ng-click='router.handleDeleteRouter()'>确认</button>
+							<button class='button-close' ng-click='router.changeState("init")'>取消</button>
+						</div>
     				</div>
                  </div>
                  <!-- 线路删除弹窗 end -->

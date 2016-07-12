@@ -22,7 +22,8 @@ import java.io.IOException;
 public class ManageRouterCtrl extends BasicCtrl {
 
     public static final String INIT = "method=init";
-
+    public static final String EDIT_ROUTER = "method=edit_router";
+    
     @RequestMapping(params = INIT)
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
@@ -30,6 +31,17 @@ public class ManageRouterCtrl extends BasicCtrl {
             session.setAttribute("menu_selected", "manage_router");
         }
         ModelAndView modelAndView = buildModelAndView("/manage_router");
+
+        return modelAndView;
+    }
+    
+    @RequestMapping(params = EDIT_ROUTER)
+    public ModelAndView editRouter(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute("menu_selected", "manage_router");
+        }
+        ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
 
         return modelAndView;
     }
