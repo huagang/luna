@@ -58,7 +58,7 @@
 			           	<select class="select" id="city" onchange="change_city()">
 			               	<option value="ALL">请选择市</option>
 			               	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
-			                   	<option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option>
+			                   	<%-- <option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option> --%>
 						  </c:forEach>
 			           	</select>
 			           <select class="select" id="county" onchange="change_county()">
