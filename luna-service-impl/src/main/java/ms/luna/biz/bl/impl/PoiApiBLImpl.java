@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,8 @@ import ms.luna.common.PoiCommon;
 @Transactional(rollbackFor = Exception.class)
 @Service("poiApiBL")
 public class PoiApiBLImpl implements PoiApiBL {
+
+	private final static Logger logger = Logger.getLogger(PoiApiBLImpl.class);
 
 	@Autowired
 	private MongoConnector mongoConnector;
@@ -314,6 +317,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 //		convertInputApiFields2DbFieldLst("", fieldLst);
 		fieldLst = convertInputApiFields2DbFieldLst("");
 		if (doc == null) {
+			logger.error("Failed to get doc, request json: " + json);
 			return returnSuccessData("success", lang, new JSONObject());
 		}
 		JSONObject result = getPoiInfoWithFields(doc, fieldLst, lang);
@@ -1180,6 +1184,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			if (poi != null) {
 				int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
 				List<String> fields = getFieldsByDefault(tag_id);// 获得默认的返回字段
+				logger.info("request fields: " + fields);
 				for (String field : fields) {
 					// 数据库存在字段信息
 					Map<Integer, String> poiTags = getPoiTagsLst();
