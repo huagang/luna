@@ -1215,7 +1215,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 								data2.put("sub_category_name", poiTags.get(sub_tag));
 								data2.put("sub_category_id", sub_tag);
 							}
-							result.put("sub_category", data);
+							result.put("sub_category", data2);
 							continue;
 						}
 						// 经纬度
