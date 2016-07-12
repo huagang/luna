@@ -45,14 +45,14 @@
 		            	<select class="select" id="province" onchange="change_province()">
 		            	  <option value="ALL">请选择省</option>
 			              <c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-			                   <c:choose>
+			                   <%-- <c:choose>
 			                   		<c:when test="${provinceId==varProvince['province_id']}">
 			                   			<option value="${varProvince['province_id']}" selected >${varProvince['province_nm_zh']}</option>
 			                   		</c:when>
-			                   		<c:otherwise>
+			                   		<c:otherwise> --%>
 			                   			<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-			                   		</c:otherwise>
-			                   </c:choose>
+			                   		<%-- </c:otherwise>
+			                   </c:choose> --%>
 						  </c:forEach>
 			           	</select>
 			           	<select class="select" id="city" onchange="change_city()">
