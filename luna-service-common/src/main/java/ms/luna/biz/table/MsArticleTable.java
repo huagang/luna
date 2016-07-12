@@ -12,6 +12,7 @@ public class MsArticleTable {
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_TITLE = "title";
+    public static final String FIELD_SHORT_TITLE = "short_title";
     public static final String FIELD_CONTENT = "content";
     public static final String FIELD_ABSTRACT_CONTENT = "abstract_content";
     public static final String FIELD_ABSTRACT_PIC = "abstract_pic";
