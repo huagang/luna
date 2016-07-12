@@ -32,6 +32,8 @@ window.onload = function() {
         // 更新文章标题信息
         document.querySelector('.title').innerHTML = data.title;
 
+        document.querySelector('#shortTitle').innerHTML = data.short_title;
+
         // 更新文章正文信息
         document.querySelector('.content').innerHTML = data.content;
 

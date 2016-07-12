@@ -33,9 +33,9 @@
                 </div>
             </div>
             <div class="title-wrapper">
-                <div class='title'>精品型的初始用户是城市中产和数码爱好者，他们熟悉品牌爱好折腾热爱</div>
+                <div class='title'></div>
 
-                <div class="short-title">重庆铜梁4A级国家优质景区</div>
+                <div id="shortTitle" class="short-title"></div>
 
             </div>
             <div class='content-wrapper'>
