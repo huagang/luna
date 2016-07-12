@@ -115,6 +115,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 
 			// 几个特殊的字段
+			api2db_nm.put("category", "tags");		   // 一级分类--拆分
 			api2db_nm.put("sub_category", "sub_tag");  // 二级分类--拆分
 			api2db_nm.put("panarama", "panarama"); 	   // 全景--聚合
 			api2db_nm.put("address", "zone_id");	   // 地址--聚合
