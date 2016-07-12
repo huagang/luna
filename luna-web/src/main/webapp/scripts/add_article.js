@@ -264,9 +264,9 @@ var initPage = function() {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category
+                column_id: articleStore.category,
+                short_title:document.querySelector('input[name="short_title"]').value,
             };
-            console.log(data);
             $.ajax({
                 url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
                 type: 'POST',
@@ -507,6 +507,7 @@ var initPage = function() {
                         { serverName: 'column_id', storeName: 'category' },
                         { serverName: 'abstract_pic', storeName: 'thumbnail' },
                         { serverName: 'abstract_content', storeName: 'summary' },
+                        { serverName: 'short_title', storeName: 'short_title' },
                     ];
                     data = data.data;
                     nameMapping.forEach(function(item) {
@@ -525,6 +526,7 @@ var initPage = function() {
 
     function insertArticleData() {
         $('#title').val(articleStore.title);
+        $('#shortTitle').val(articleStore.short_title);
         ue.ready(function() {
             ue.setContent(articleStore.content);
         });

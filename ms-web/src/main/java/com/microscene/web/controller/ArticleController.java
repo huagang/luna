@@ -41,7 +41,7 @@ public class ArticleController extends BaseController {
         } else {
             jsonObject = manageArticleService.getOnlineArticleById(id);
         }
-        ModelAndView modelAndView = buildModelAndView("showArticle");
+        ModelAndView modelAndView = buildModelAndView("article/article2");
         if(jsonObject.getIntValue("code") == 0) {
             JSONObject data = jsonObject.getJSONObject("data");
             modelAndView.addObject("title", data.getString(MsArticleTable.FIELD_TITLE));
@@ -54,6 +54,28 @@ public class ArticleController extends BaseController {
         return modelAndView;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/v1/{id}")
+    public ModelAndView showArticle2(@PathVariable int id,
+                                    @RequestParam(required = false, value = "preview") String preview) {
+
+        JSONObject jsonObject;
+        if(preview != null) {
+            jsonObject = manageArticleService.getArticleById(id);
+        } else {
+            jsonObject = manageArticleService.getOnlineArticleById(id);
+        }
+        ModelAndView modelAndView = buildModelAndView("showArticle");
+        if(jsonObject.getIntValue("code") == 0) {
+            JSONObject data = jsonObject.getJSONObject("data");
+            modelAndView.addObject("title", data.getString(MsArticleTable.FIELD_TITLE));
+            modelAndView.addObject("description", data.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT));
+            modelAndView.addObject("articleJson", jsonObject);
+        } else {
+            return buildModelAndView("404");
+        }
+
+        return modelAndView;
+    }
 
 
 }
