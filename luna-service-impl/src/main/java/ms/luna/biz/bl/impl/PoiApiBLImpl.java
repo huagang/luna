@@ -113,19 +113,13 @@ public class PoiApiBLImpl implements PoiApiBL {
 				db2api_nm.put(field_name, field_alias);
 				api2db_nm.put(field_alias, field_name); 
 			}
-//			
-//			// MySql有而Mongo没有的字段
-//			db2api_nm.put("sub_tag", "sub_category"); // 二级分类
-//			
-//			// 聚合字段名称
-//			db2api_nm.put("panarama", "panorama"); // 全景。包含全景标识，全景类型id，全景类型名称
-//			db2api_nm.put("address", "address"); // 地址。包含zone_id,省，市，县名称，detail_address
-//			
-//			// 拆分字段
-//			db2api_nm.put("tags", "tags");// tags：拆分成category_id和category_name
-//			
-//			// 修改字段
-//			db2api_nm.put("lnglat", "lnglat");// lnglat:将原格式修改为直接包含lat和lng两个字段（不再包含Point）
+
+			// 几个特殊的字段
+			api2db_nm.put("sub_category", "sub_tag");  // 二级分类--拆分
+			api2db_nm.put("panarama", "panarama"); 	   // 全景--聚合
+			api2db_nm.put("address", "zone_id");	   // 地址--聚合
+			api2db_nm.put("scene_types", "scene_type");// 标签--拆分
+			api2db_nm.put("hotel_types", "type");
 		}
 		
 		// ---------------一级类别与下属私有字段集合的映射关系---------------
@@ -1192,10 +1186,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// ----------拆分字段----------
 				// 一级类别
 				if ("tags".equals(field)) {
-					continue;
-				}
-				// 二级分类
-				if ("sub_tag".equals(field)) {
 					JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
 					JSONObject data = new JSONObject();
 					int tag = array.getIntValue(0);
@@ -1207,15 +1197,25 @@ public class PoiApiBLImpl implements PoiApiBL {
 						data.put("category_id", tag);
 					}
 					result.put("category", data);
-
+					continue;
+				}
+				// 二级分类
+				if ("sub_tag".equals(field)) {
+					// 获得一级分类id
+					JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
+					int tag = array.getIntValue(0);
+					if(tag == 0) {//未选择，默认为其他（兼容旧数据）
+						tag = 8;//TODO
+					}
+					
 					int sub_tag = poi.getInteger("sub_tag");
 					if(sub_tag == 0){
 						sub_tag = getTopTag2SubTagOthersCache().get(tag);
 					}
-					JSONObject data2 = new JSONObject();
+					JSONObject data = new JSONObject();
 					if (poiTags.containsKey(sub_tag)) {
-						data2.put("sub_category_name", poiTags.get(sub_tag));
-						data2.put("sub_category_id", sub_tag);
+						data.put("sub_category_name", poiTags.get(sub_tag));
+						data.put("sub_category_id", sub_tag);
 					}
 					result.put("sub_category", data);
 					continue;
