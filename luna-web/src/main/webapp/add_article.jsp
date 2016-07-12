@@ -39,7 +39,7 @@
 		                </div>
 		                <div class="group article-short_title">
 		                    <p class="group-title">副标题</p>
-		                    <input type="text" name="short_title" id='title' value="">
+		                    <input type="text" name="short_title" id='shortTitle' value="">
 		                </div>
 		                <div class="group article-main">
 		                    <p class="group-title">正文</p>
