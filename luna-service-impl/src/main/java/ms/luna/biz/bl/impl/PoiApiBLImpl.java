@@ -1175,16 +1175,17 @@ public class PoiApiBLImpl implements PoiApiBL {
 	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
 		JSONObject result = new JSONObject();
 		// 前端输入字段全部错误
+		logger.info("request fields: " + fieldLst);
 		if(fieldLst != null && fieldLst.isEmpty()){
 			return result;
 		}
-		
+
 		// 前端未输入字段参数
 		if(fieldLst == null) {
 			if (poi != null) {
 				int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
 				List<String> fields = getFieldsByDefault(tag_id);// 获得默认的返回字段
-				logger.info("request fields: " + fields);
+				logger.info("all valid fields: " + fields);
 				for (String field : fields) {
 					// 数据库存在字段信息
 					Map<Integer, String> poiTags = getPoiTagsLst();
