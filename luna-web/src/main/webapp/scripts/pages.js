@@ -10,7 +10,7 @@ var lunaPage = {},
     currentComponentId = "";
 var currentComponent = {};
 var currentPage = null;
-
+var currentBgPano = null ; //背景全景
 //定义组件属性模板
 componentCanvasModelTemplate = {
     "_id": "",
@@ -847,14 +847,17 @@ function showPanoBackground($container, componentData) {
         pano.setGravityEnable(componentData.gravity); //重力感应
 
         console.log('修改了panoid的数据');
-        lunaPage.pages[currentPageId].bgPano = pano;
+        currentBgPano = pano;
     } else if (componentData.panoId && panoObj.length > 0 ) {
-        lunaPage.pages[currentPageId].bgPano.setPanoId(componentData.panoId);
-        lunaPage.pages[currentPageId].bgPano.setGravityEnable(componentData.gravity);
+        currentBgPano.setPanoId(componentData.panoId);
+        currentBgPano.setHeading(180); //左右
+        currentBgPano.setPitch(0); //俯仰角
+        currentBgPano.setRoll(0); //未知
+        currentBgPano.setGravityEnable(componentData.gravity);
     } else {
         if (panoObj.length > 0) {
             panoObj.parent().parent().remove();
-            lunaPage.pages[currentPageId].bgPano = null;
+            currentBgPano = null;
         }
     }
 }
