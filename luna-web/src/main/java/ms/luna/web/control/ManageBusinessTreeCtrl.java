@@ -45,7 +45,8 @@ public class ManageBusinessTreeCtrl {
 				session.setAttribute("menu_selected", "manage_business_tree");
 			}
 			view.addObject("provinces", pulldownCtrl.loadProvinces());
-//			view.addObject("citys", pulldownCtrl.loadCitys("110000"));
+			view.addObject("citys", pulldownCtrl.loadCitys("110000"));
+			view.addObject("provinceId", "110000");
 			view.setViewName("/manage_business_tree.jsp");
 			return view;
 		} catch (Exception e) {

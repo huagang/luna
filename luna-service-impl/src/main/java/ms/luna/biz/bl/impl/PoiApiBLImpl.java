@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,8 @@ import ms.luna.common.PoiCommon;
 @Transactional(rollbackFor = Exception.class)
 @Service("poiApiBL")
 public class PoiApiBLImpl implements PoiApiBL {
+
+	private final static Logger logger = Logger.getLogger(PoiApiBLImpl.class);
 
 	@Autowired
 	private MongoConnector mongoConnector;
@@ -110,19 +113,14 @@ public class PoiApiBLImpl implements PoiApiBL {
 				db2api_nm.put(field_name, field_alias);
 				api2db_nm.put(field_alias, field_name); 
 			}
-//			
-//			// MySql有而Mongo没有的字段
-//			db2api_nm.put("sub_tag", "sub_category"); // 二级分类
-//			
-//			// 聚合字段名称
-//			db2api_nm.put("panarama", "panorama"); // 全景。包含全景标识，全景类型id，全景类型名称
-//			db2api_nm.put("address", "address"); // 地址。包含zone_id,省，市，县名称，detail_address
-//			
-//			// 拆分字段
-//			db2api_nm.put("tags", "tags");// tags：拆分成category_id和category_name
-//			
-//			// 修改字段
-//			db2api_nm.put("lnglat", "lnglat");// lnglat:将原格式修改为直接包含lat和lng两个字段（不再包含Point）
+
+			// 几个特殊的字段
+			api2db_nm.put("category", "tags");		   // 一级分类--拆分
+			api2db_nm.put("sub_category", "sub_tag");  // 二级分类--拆分
+			api2db_nm.put("panarama", "panarama"); 	   // 全景--聚合
+			api2db_nm.put("address", "zone_id");	   // 地址--聚合
+			api2db_nm.put("scene_types", "scene_type");// 标签--拆分
+			api2db_nm.put("hotel_types", "type");
 		}
 		
 		// ---------------一级类别与下属私有字段集合的映射关系---------------
@@ -312,8 +310,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 		Document doc = getPoiById(poi_id, lang);
 		List<String> fieldLst;
 //		convertInputApiFields2DbFieldLst("", fieldLst);
-		fieldLst = convertInputApiFields2DbFieldLst("");
+		fieldLst = new ArrayList<>();
 		if (doc == null) {
+			logger.debug("Failed to get doc, request json: " + json);
 			return returnSuccessData("success", lang, new JSONObject());
 		}
 		JSONObject result = getPoiInfoWithFields(doc, fieldLst, lang);
@@ -365,7 +364,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:" + biz_id + "）");
 		}
 	}
 
@@ -411,7 +410,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			return resultdata;
 		} else {
-			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:" + biz_id + "）");
 		}
 	}
 
@@ -656,7 +655,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * 将输入字段名称转化为数据库内部名称
 	 * 
 	 * @param fields 输入字段集。如fields=poi_name,lnglat
-	 * @param fieldLst
 	 */
 	private List<String> convertInputApiFields2DbFieldLst(String fields) {
 		// 存在输入字段
@@ -669,11 +667,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 					fieldLst.add(dbname);
 				}
 			}
-			return fieldLst;
-		// 不存在输入字段，则默认为所有字段
-		} else {
-			return null;
 		}
+		return fieldLst;
 	}
 	
 	/**
@@ -720,7 +715,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject aTree = JSONObject.parseObject(tree.toJson());
 		Object oldClist = aTree.get("c_list");
 		if(oldClist instanceof Map<?,?>) {
-			getPoisByParentId(pois, (Document)tree.get("c_list"), poi_id, level, order);
+			getPoisByParentId(pois, (Document) tree.get("c_list"), poi_id, level, order);
 		} else if(oldClist instanceof List<?>){
 			getPoisByParentId(pois, aTree.getJSONArray("c_list"), poi_id, level, order);
 		}
@@ -1171,159 +1166,167 @@ public class PoiApiBLImpl implements PoiApiBL {
 	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
 		JSONObject result = new JSONObject();
 		// 前端输入字段全部错误
-		if(fieldLst != null && fieldLst.isEmpty()){
+		if(fieldLst == null || fieldLst.isEmpty()){
+			int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
+			fieldLst = getFieldsByDefault(tag_id);// 获得默认的返回字段
+		}
+
+		// 前端未输入字段参数
+		if (poi == null) {
 			return result;
 		}
-		
-		// 前端未输入字段参数
-		if(fieldLst == null) {
-			if (poi != null) {
-				int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
-				List<String> fields = getFieldsByDefault(tag_id);// 获得默认的返回字段
-				for (String field : fields) {
-					// 数据库存在字段信息
-					Map<Integer, String> poiTags = getPoiTagsLst();
-					Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
-					Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
-					Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
-					if(poi.containsKey(field)) {
-						// ----------拆分字段----------
-						// 一级类别
-						if ("tags".equals(field)) {
-							continue;
-						}
-						// 二级分类
-						if ("sub_tag".equals(field)) {
-							JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
-							JSONObject data = new JSONObject();
-							int tag = array.getIntValue(0);
-							if(tag == 0) {//未选择，默认为其他（兼容旧数据）
-								tag = 8;//TODO
-							}
-							if (poiTags.containsKey(tag)) {
-								data.put("category_name", poiTags.get(tag));
-								data.put("category_id", tag);
-							}
-							result.put("category", data);
-							
-							int sub_tag = poi.getInteger("sub_tag");
-							if(sub_tag == 0){
-								sub_tag = getTopTag2SubTagOthersCache().get(tag);
-							}
-							JSONObject data2 = new JSONObject();
-							if (poiTags.containsKey(sub_tag)) {
-								data2.put("sub_category_name", poiTags.get(sub_tag));
-								data2.put("sub_category_id", sub_tag);
-							}
-							result.put("sub_category", data);
-							continue;
-						}
-						// 经纬度
-						if ("lnglat".equals(field)) {
-							Document lnglat = (Document) poi.get("lnglat");
-							JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
-							JSONObject data = new JSONObject();
-							data.put("lng", coordinates.getDoubleValue(0));
-							data.put("lat", coordinates.getDoubleValue(1));
-							result.put("lnglat", data);
-							continue;
-						}
-						// 标签--type
-						if ("type".equals(field)) {
-							JSONArray types = FastJsonUtil.parse2Array(poi.get("type"));
-							JSONArray array = new JSONArray();
-							for (int i = 0; i < types.size(); i++) {
-								if (poiTypes.containsKey(types.getIntValue(i))) {
-									JSONObject data = new JSONObject();
-									int id = types.getIntValue(i);
-									data.put("hotel_type_id", id);
-									data.put("hotel_type_name", poiTypes.get(id));
-									array.add(data);
-								}
-							}
-							result.put("hotel_types", array);
-							continue;
-						}
-						// 标签--scene_type
-						if ("scene_type".equals(field)) {
-							JSONArray types = FastJsonUtil.parse2Array(poi.get("scene_type"));
-							JSONArray array = new JSONArray();
-							for (int i = 0; i < types.size(); i++) {
-								if (poiSceneTypes.containsKey(types.getIntValue(i))) {
-									JSONObject data = new JSONObject();
-									int id = types.getIntValue(i);
-									data.put("scene_type_id", id);
-									data.put("scene_type_name", poiSceneTypes.get(id));
-									array.add(data);
-								}
-							}
-							result.put("scene_types", array);
-							continue;
-						}
-						
-						// ----------聚合字段----------
-						// 区域id
-						if ("zone_id".equals(field)) {
-							String zone_id = poi.getString("zone_id");
-							JSONObject data = new JSONObject();
-							
-							String country_id = "100000"; //默认为中国
-							String province_id = poi.getString("province_id");
-							String city_id = poi.getString("city_id");
-							String county_id = poi.getString("county_id");
-							String country = msZoneCacheBL.getZoneName(country_id, lang);
-							String province = msZoneCacheBL.getZoneName(province_id, lang);
-							String city = msZoneCacheBL.getZoneName(city_id, lang);
-							String county = msZoneCacheBL.getZoneName(county_id, lang);
-							String detail_address = poi.getString("detail_address");
-							data.put("country", country);
-							data.put("province", province);
-							data.put("city", city);
-							data.put("county", county);
-							data.put(convertDbField2ApiField("zone_id"), zone_id);
-							data.put(convertDbField2ApiField("detail_address"), detail_address);
-							result.put("address", data);
-							continue;
-						}
-						// 详细地址和聚合地址
-						if ("detail_address".equals(field) || "merger_name".equals(field)){
-							continue;
-						}
-						// 全景标识
-						if("panorama".equals(field)) {
-							String panorama_id = poi.getString("panorama");
-							Integer panorama_type_id = poi.getInteger("panorama_type");
-							if( panorama_type_id == null) { // 兼容之前没有全景类别的数据
-								panorama_type_id = 2;// 默认为2
-							}
-							String panorama_type_name = null;
-							if(poiPanoTypes.containsKey(panorama_type_id)){
-								panorama_type_name = poiPanoTypes.get(panorama_type_id);
-							}
-							
-							JSONObject data = new JSONObject();
-							data.put("panorama_id", panorama_id);
-							data.put("panorama_type_id", panorama_type_id);
-							data.put("panorama_type_name", panorama_type_name);
-							result.put("panorama", data);
-							continue;
-						}
-						// 全景类别
-						if("panorama_type".equals(field)) {
-							continue;
-						}
-						result.put(convertDbField2ApiField(field), poi.get(field));
-					// POI数据不存在字段信息
-					} else {
-						// 全景类别
-						if("panorama_type".equals(field)) {
-							continue;
-						}
-						result.put(convertDbField2ApiField(field), "");
+		int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
+		logger.debug("all valid fields: " + fieldLst);
+		for (String field : fieldLst) {
+			// 数据库存在字段信息
+			Map<Integer, String> poiTags = getPoiTagsLst();
+			Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
+			Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+			Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
+			if(poi.containsKey(field)) {
+				// ----------拆分字段----------
+				// 一级类别
+				if ("tags".equals(field)) {
+					JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
+					JSONObject data = new JSONObject();
+					int tag = array.getIntValue(0);
+					if(tag == 0) {//未选择，默认为其他（兼容旧数据）
+						tag = 8;//TODO
 					}
+					if (poiTags.containsKey(tag)) {
+						data.put("category_name", poiTags.get(tag));
+						data.put("category_id", tag);
+					}
+					result.put("category", data);
+					continue;
 				}
+				// 二级分类
+				if ("sub_tag".equals(field)) {
+					// 获得一级分类id
+					JSONArray array = FastJsonUtil.parse2Array(poi.get("tags"));
+					int tag = array.getIntValue(0);
+					if(tag == 0) {//未选择，默认为其他（兼容旧数据）
+						tag = 8;//TODO
+					}
+					
+					int sub_tag = poi.getInteger("sub_tag");
+					if(sub_tag == 0){
+						sub_tag = getTopTag2SubTagOthersCache().get(tag);
+					}
+					JSONObject data = new JSONObject();
+					if (poiTags.containsKey(sub_tag)) {
+						data.put("sub_category_name", poiTags.get(sub_tag));
+						data.put("sub_category_id", sub_tag);
+					}
+					result.put("sub_category", data);
+					continue;
+				}
+				// 经纬度
+				if ("lnglat".equals(field)) {
+					Document lnglat = (Document) poi.get("lnglat");
+					JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
+					JSONObject data = new JSONObject();
+					data.put("lng", coordinates.getDoubleValue(0));
+					data.put("lat", coordinates.getDoubleValue(1));
+					result.put("lnglat", data);
+					continue;
+				}
+				// 标签--type
+				if ("type".equals(field)) {
+					JSONArray types = FastJsonUtil.parse2Array(poi.get("type"));
+					JSONArray array = new JSONArray();
+					for (int i = 0; i < types.size(); i++) {
+						if (poiTypes.containsKey(types.getIntValue(i))) {
+							JSONObject data = new JSONObject();
+							int id = types.getIntValue(i);
+							data.put("hotel_type_id", id);
+							data.put("hotel_type_name", poiTypes.get(id));
+							array.add(data);
+						}
+					}
+					result.put("hotel_types", array);
+					continue;
+				}
+				// 标签--scene_type
+				if ("scene_type".equals(field)) {
+					JSONArray types = FastJsonUtil.parse2Array(poi.get("scene_type"));
+					JSONArray array = new JSONArray();
+					for (int i = 0; i < types.size(); i++) {
+						if (poiSceneTypes.containsKey(types.getIntValue(i))) {
+							JSONObject data = new JSONObject();
+							int id = types.getIntValue(i);
+							data.put("scene_type_id", id);
+							data.put("scene_type_name", poiSceneTypes.get(id));
+							array.add(data);
+						}
+					}
+					result.put("scene_types", array);
+					continue;
+				}
+
+				// ----------聚合字段----------
+				// 区域id
+				if ("zone_id".equals(field)) {
+					String zone_id = poi.getString("zone_id");
+					JSONObject data = new JSONObject();
+
+					String country_id = "100000"; //默认为中国
+					String province_id = poi.getString("province_id");
+					String city_id = poi.getString("city_id");
+					String county_id = poi.getString("county_id");
+					String country = msZoneCacheBL.getZoneName(country_id, lang);
+					String province = msZoneCacheBL.getZoneName(province_id, lang);
+					String city = msZoneCacheBL.getZoneName(city_id, lang);
+					String county = msZoneCacheBL.getZoneName(county_id, lang);
+					String detail_address = poi.getString("detail_address");
+					data.put("country", country);
+					data.put("province", province);
+					data.put("city", city);
+					data.put("county", county);
+					data.put(convertDbField2ApiField("zone_id"), zone_id);
+					data.put(convertDbField2ApiField("detail_address"), detail_address);
+					result.put("address", data);
+					continue;
+				}
+				// 详细地址和聚合地址
+				if ("detail_address".equals(field) || "merger_name".equals(field)){
+					continue;
+				}
+				// 全景标识
+				if("panorama".equals(field)) {
+					String panorama_id = poi.getString("panorama");
+					Integer panorama_type_id = poi.getInteger("panorama_type");
+					if( panorama_type_id == null) { // 兼容之前没有全景类别的数据
+						panorama_type_id = 2;// 默认为2
+					}
+					String panorama_type_name = null;
+					if(poiPanoTypes.containsKey(panorama_type_id)){
+						panorama_type_name = poiPanoTypes.get(panorama_type_id);
+					}
+
+					JSONObject data = new JSONObject();
+					data.put("panorama_id", panorama_id);
+					data.put("panorama_type_id", panorama_type_id);
+					data.put("panorama_type_name", panorama_type_name);
+					result.put("panorama", data);
+					continue;
+				}
+				// 全景类别
+				if("panorama_type".equals(field)) {
+					continue;
+				}
+				result.put(convertDbField2ApiField(field), poi.get(field));
+			// POI数据不存在字段信息
+			} else {
+				// 全景类别
+				if("panorama_type".equals(field)) {
+					continue;
+				}
+				result.put(convertDbField2ApiField(field), "");
 			}
 		}
+
+
 		return result;
 	}
 

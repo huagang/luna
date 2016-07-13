@@ -56,6 +56,10 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         if(StringUtils.isNotBlank(title)) {
             msArticle.setTitle(title);
         }
+        String shortTitle = articleObj.getString(MsArticleTable.FIELD_SHORT_TITLE);
+        if(StringUtils.isNotBlank(shortTitle)) {
+            msArticle.setShortTitle(shortTitle);
+        }
         String content = articleObj.getString(MsArticleTable.FIELD_CONTENT);
         if(StringUtils.isNotBlank(content)) {
             msArticle.setContent(content);
@@ -96,6 +100,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
     private JSONObject toJson(MsArticleWithBLOBs msArticle) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+        jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
         jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
@@ -113,10 +118,16 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         try {
             JSONObject articleObj = JSONObject.parseObject(json);
             MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
-            msArticleDAO.insertSelective(msArticle);
             MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
             msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
             List<MsArticle> msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
+            if(msArticles != null && msArticles.size() > 0) {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "文章标题已存在");
+            }
+            msArticleDAO.insertSelective(msArticle);
+            msArticleCriteria.clear();
+            msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
+            msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
             if(msArticles != null && msArticles.size() == 1) {
                 JSONObject ret = new JSONObject();
                 ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
@@ -456,7 +467,9 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         JSONArray jsonArray = new JSONArray();
         for(MsArticleWithBLOBs msArticle : msArticleWithBLOBsList) {
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put(MsArticleTable.FIELD_ID, msArticle.getId());
             jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+            jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
             String columnName = columnInfoMap.get(msArticle.getColumnId());
@@ -474,6 +487,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
+        jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
         jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
