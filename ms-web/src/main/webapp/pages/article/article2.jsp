@@ -51,7 +51,7 @@
                 <p class='video-title'>
                     <span>视频欣赏</span>
                 </p>
-                <video class='video' controls></video>
+                <video class='video' controls height="300px;"></video>
                 <p class='video-tip'>建议WIFI下观看</p>
             </div>
         </div>

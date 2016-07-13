@@ -114,7 +114,7 @@ html,body{
 
 .video-dialog{
 	position: absolute;
-	top: 26%;
+	top: 10%;
 	width: 80%;
 	margin-left: 10%;
 	background-color:white;
@@ -146,8 +146,7 @@ html,body{
     background-color: rgba(0,0,0,0.4);
 }
 .video{
-	height: auto;
-    width: 100%;
+	width: 100%;
 }
 .video-js{
 	margin:0 auto;
