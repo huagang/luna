@@ -61,7 +61,7 @@
                 				<td>{{rowData.creator}}</td>
                 				<td>
                 					<a href='javascript:void(0)' class='router-update'>属性</a>
-                					<a href={{'xxx' + rowData.routerId}}>编辑</a>
+                					<a href="{{'./manage_router?method=edit_router.do&id=' + rowData.id}}">编辑</a>
                 					<a href='javascript:void(0)' class='router-delete'>删除</a>
                 				</td>
                 			</tr>
