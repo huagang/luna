@@ -1,6 +1,10 @@
+/**
+ * 援藏文章显示页面
+ * Author： Victor Du
+ * @return {[type]} [description]
+ */
 window.onload = function() {
     var host = lunaConfig.host;
-    var content = "濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型代表，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。作为重庆旧城老街的典型，濯水古镇街巷格局保留较为完整典型，濯水古镇街巷格局保留较为完整濯水古镇兴起于唐代，兴盛于宋朝，明清以后逐渐衰落，是渝东南地区最富盛名的古镇之一。";
 
     var audio;
 
@@ -50,7 +54,6 @@ window.onload = function() {
                     } else {
                         banner.classList.remove('sm');
                     }
-
                 });
             }
 
@@ -70,15 +73,30 @@ window.onload = function() {
             if (!/^\d+$/.test(data.video)) {
                 document.querySelector('.video').src = data.video;
                 btnWraper.classList.remove('hidden');
-            } 
+            }
         }
 
         // 更新文章音频信息，音频信息可以为空
         if (data.audio) {
-            var audioBtnWraper = document.querySelector('.audio-btn-wrap');
-            audioBtnWraper.addEventListener('click', handleAudioControlClick);
-            audio = getAudio('.audio');
+            var audioBtnWraper = document.querySelector('.audio-btn-wrap'),
+                audio = document.querySelector('#audio'),
+                audioIcon = $('.audio-btn-wrap .icon-audio');
             audio.src = data.audio;
+            audioBtnWraper.classList.remove('hidden');
+
+            audioIcon.on('click', function(e) {
+                if (audioIcon.hasClass('playing')) {
+                    document.querySelector('.icon-audio').classList.remove('playing');
+                    audio.pause();
+                } else {
+                    document.querySelector('.icon-audio').classList.add('playing');
+                    audio.play();
+                }
+            });
+
+            // audio = getAudio('.audio');
+            // audio.src = data.audio;
+            // audioBtnWraper.classList.remove('hidden');
         }
     }
 
@@ -100,12 +118,12 @@ window.onload = function() {
 
     // 音频控制按钮点击后触发的方法  用于切换播放状态（播放状态有"播放", "停止"两个状态）
     function handleAudioControlClick() {
-        if (!audio) return;
-        var result = audio.toggle();
-        if (!result) {
-            return;
-        }
-        if (audio.isPlaying) {
+        // if (!audio) return;
+        // var result = audio.toggle();
+        // if (!result) {
+        //     return;
+        // }
+        if (audio._isPlaying) {
             document.querySelector('.icon-audio').classList.add('playing');
         } else {
             document.querySelector('.icon-audio').classList.remove('playing');

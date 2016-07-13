@@ -338,6 +338,8 @@ function CanvasController($scope, $rootScope) {
     this.init = function() {
         CanvasController.prototype.init(this);
         this.backgroundImg = this.currentComponent.bgimg;
+        this.panoId = this.currentComponent.panoId;
+        this.gravity = this.currentComponent.gravity;
     };
 
     this.changeBackgroundColor = function() {
@@ -363,6 +365,13 @@ function CanvasController($scope, $rootScope) {
         this.currentComponent.bgimg = this.backgroundImg;
     };
 
+    this.changePano = function($event) {
+        
+        this.currentComponent.panoId = this.panoId;
+        this.currentComponent.gravity = this.gravity;
+
+        updatePageComponentsHtml(currentPageId, currentComponentId);
+    }
 }
 
 CanvasController.prototype = new BaseComponentController();

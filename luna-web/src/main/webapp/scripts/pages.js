@@ -16,7 +16,9 @@ componentCanvasModelTemplate = {
     "_id": "",
     "bgc": "#FFFFFF",
     "bgimg": "",
-    "type": "canvas"
+    "type": "canvas",
+    'gravity': 'false',
+    'panoId': '',
 };
 
 componentTextModelTemplate = {
@@ -619,6 +621,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             newComponent.addClass("bg-canvas");
             newComponent.css("background-color", componentObj.bgc);
             newComponent.css("background-image", 'url({0})'.format(componentObj.bgimg));
+            // showPanoBackground(newComponent, componentObj);
             break;
         case "text":
             newComponent.attr("component-type", "text");
@@ -688,6 +691,8 @@ function setPageComponentsHtml(pageID, componentID, comType) {
     $("#layermain").append(newComponent);
     if (comType != "canvas") {
         initBind(componentID);
+    } else {
+        showPanoBackground(newComponent, componentObj);
     }
 
     lostFocus($("#" + componentID));
@@ -738,7 +743,7 @@ function updatePageComponents(pageID, componentID) {
             break;
         case "audio":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
-            break;        
+            break;
         case "video":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
@@ -778,6 +783,9 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             //comobj.children("div.con").html('<div class="canvas" style="width:100%;height:100%;"></div>');
             comobj.css("background-color", component.bgc);
             comobj.css("background-image", 'url({0})'.format(component.bgimg));
+
+            showPanoBackground(comobj, component);
+
             break;
         case "text":
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
@@ -817,5 +825,36 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     comobj.css("z-index", component.zindex);
     comobj.css("display", component.display);
     comobj.children("div").children().attr("style", component.style_other);
+}
 
+/**
+ * 显示全景背景
+ * @param  {[type]} $container    [全景背景存放容器]
+ * @param  {[type]} componentData [description]
+ * @return {[type]}               [description]
+ */
+function showPanoBackground($container, componentData) {
+    var pano = {},
+        panoObj = $container.find('canvas');
+
+    if (componentData.panoId && panoObj.length == 0 ) {
+        pano = new com.vbpano.Panorama($container.get(0));
+        pano.setPanoId(componentData.panoId); //panoId
+        pano.setHeading(180); //左右
+        pano.setPitch(0); //俯仰角
+        pano.setRoll(0); //未知
+        pano.setAutoplayEnable(false); //自动播放
+        pano.setGravityEnable(componentData.gravity); //重力感应
+
+        console.log('修改了panoid的数据');
+        lunaPage.pages[currentPageId].bgPano = pano;
+    } else if (componentData.panoId && panoObj.length > 0 ) {
+        lunaPage.pages[currentPageId].bgPano.setPanoId(componentData.panoId);
+        lunaPage.pages[currentPageId].bgPano.setGravityEnable(componentData.gravity);
+    } else {
+        if (panoObj.length > 0) {
+            panoObj.parent().parent().remove();
+            lunaPage.pages[currentPageId].bgPano = null;
+        }
+    }
 }

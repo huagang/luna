@@ -28,8 +28,8 @@ html,body{
 	flex-grow: 1;
 	flex-shrink: 1;
 	/* overflow: scroll; */
-	font-size: 16px;
-	line-height: 28px;
+	font-size: 14px;
+	line-height: 24px;
 	border-bottom: 1px solid #dee0e3;
 }
 .content img,.content video{
@@ -60,7 +60,7 @@ html,body{
 	border-bottom: 1px solid #dee0e3;
 }
 .title-wrapper .title{
-	color: #000;
+	color: #333;
 	font-size: 20px;
 	line-height: 1.5;
 	white-space: inherit;
@@ -69,6 +69,9 @@ html,body{
 	/* padding-right: 110px; */
 	overflow: hidden;
 	font-weight: 400;
+}
+.title-wrapper .short-title{
+	color: #666;
 }
 .btn-wrap:nth-child(2){
 	/* margin-right:5px; */

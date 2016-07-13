@@ -74,6 +74,10 @@
                   <i class="icon icon-comp-video"></i><br/>
                   <span>视频</span>
                 </div>
+                <div class="component-btn" id="menuComponent">
+                  <i class="icon icon-comp-video"></i><br/>
+                  <span>视频</span>
+                </div>
                 <div class="component-btn" id="moreComponents">
                   <i class="icon icon-comp-more"></i><br/>
                   <span>更多</span>
@@ -129,12 +133,12 @@
                   <div class="menu-control bg-title-wrap">
                     <span class="bg-title">背景</span>
                   </div>
-                  <div class="bg-set">
+                  <div class="bg-set clearfix">
                       <label for="bg-color" class="bg-color">背景颜色：
                         <br>
                         <input type="text" class="form-control color-set" id="bg-color" data-control="hue" value="#ffffff" ng-model="canvas.currentComponent.bgc" ng-change="canvas.changeBackgroundColor()"></label>
                   </div>
-                  <div class="bg-set">
+                  <div class="bg-set clearfix">
                       <label class="bg-img">背景图片：
                         <br>
                         <br>
@@ -144,7 +148,6 @@
                           	<span class="or hide">或</span>
                           	<input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()"/>
                           	<input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="pic" />
-
                         	<button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景</button>
                         </form>
                       </label>
@@ -157,7 +160,13 @@
                       </div>
                       <button class="btn btn-confirm" id="btn-bg" ng-click="saveBackgroundImg()">确定</button> -->
                   </div>
+                  <div class="bg-set clearfix">
+                    <label>全景背景：</label>
+                    <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
+                    <div class="form-group"><input type="checkbox" id="chkGsensor"  ng-model="canvas.gravity" ng-click="canvas.changePano()"><lable for="chkGsensor">开启重力感应</lable></div>
+                  </div>
                 </div>
+
                 <!-- canvas controller end -->
                 <!-- text controller begin -->
                 <div id="textDiv" ng-controller="textController as text">
@@ -939,6 +948,7 @@
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
+    <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>    
     <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
