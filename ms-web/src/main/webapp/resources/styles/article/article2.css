@@ -60,8 +60,8 @@ html,body{
 	border-bottom: 1px solid #dee0e3;
 }
 .title-wrapper .title{
-	color: #000;
-	font-size: 20px;
+	color: #333;
+	font-size: 14px;
 	line-height: 1.5;
 	white-space: inherit;
 	text-overflow: ellipsis;
@@ -69,6 +69,9 @@ html,body{
 	/* padding-right: 110px; */
 	overflow: hidden;
 	font-weight: 400;
+}
+.title-wrapper .short-title{
+	color: #666;
 }
 .btn-wrap:nth-child(2){
 	/* margin-right:5px; */

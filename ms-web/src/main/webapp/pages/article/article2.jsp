@@ -55,7 +55,7 @@
                 <p class='video-tip'>建议WIFI下观看</p>
             </div>
         </div>
-        <audio class='audio' src volume='1.0'></audio>
+        <audio id="audio" class='audio' src volume='1.0'></audio>
         <div class="goback hidden">
             <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
         </div>
