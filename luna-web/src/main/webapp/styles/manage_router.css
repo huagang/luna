@@ -5,6 +5,7 @@ input{
 .button-close{
 	height: 36px;
 }
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 .pop{   
     display: block;
     width: 40%;
@@ -50,4 +51,7 @@ input{
     width: 100%;
     height: 100%;
     opacity: 0;
+}
+.pagination-wrapper{
+	text-align: center;
 }

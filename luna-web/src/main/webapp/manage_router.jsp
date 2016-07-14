@@ -21,6 +21,8 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-1.3.3.js"></script>
+
 
 </head>
 <body ng-app="manageRouter" ng-controller="routerController as router">
@@ -61,13 +63,19 @@
                 				<td>{{rowData.creator}}</td>
                 				<td>
                 					<a href='javascript:void(0)' class='router-update'>属性</a>
-                					<a href="{{'./manage_router?method=edit_router.do&id=' + rowData.id}}">编辑</a>
+                					<a href="{{'./manage_router.do?method=edit_router&id=' + rowData.id}}">编辑</a>
                 					<a href='javascript:void(0)' class='router-delete'>删除</a>
                 				</td>
                 			</tr>
                 		</tbody>
                 	</table>
-                </div>
+					<div class="pagination-wrapper">
+						<uib-pagination total-items="router.pagination.totalItems" ng-model="router.pagination.curPage" ng-change="router.handlePageChanged()"
+										previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="router.pagination.maxRowNum" max-size="router.pagination.maxPageNum"
+										class="pagination-sm"  rotate="true"></uib-pagination>
+					</div>
+				</div>
+
                  <!--主题内容 end-->
                  <!-- 线路设置弹窗 start -->
                  <div class='pop set_business ng-hide' ng-show="['new', 'update'].indexOf(router.state) > -1">

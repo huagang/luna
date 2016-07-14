@@ -34,6 +34,11 @@ var Inter = function() {
 
                 // 上传路径
                 uploadPath: context+'/uploadCtrl.do?method=uploadFile2Cloud', //统一上传接口
+
+                loadProvinces: context + '/pulldown.do?method=load_provinces', // 获取省份列表
+                loadCities: context + '/pulldown.do?method=load_citys',        // 通过省份id获取市列表
+                loadCounties: context + '/pulldown.do?method=load_counties',     // 通过市id获取县列表
+                filterPois: context + '/business_tree.do?method=searchPoisForBizTree' //筛选poi
                 
             };
         }

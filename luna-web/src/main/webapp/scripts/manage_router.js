@@ -1,6 +1,6 @@
 
 
-var manageRouter = angular.module('manageRouter', []);
+var manageRouter = angular.module('manageRouter', ['ui.bootstrap']);
 manageRouter.controller('routerController', ['$rootScope', '$scope', '$http', routerController]);
 
 manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
@@ -30,11 +30,35 @@ function routerController($rootScope, $scope, $http){
 	this.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
 	this.opId = null;
 	this.rowsData = [];
+	this.pagination = {
+		curPage: 3, // from 0
+		totalPages: 20, //from 1
+		totalItems: 200,
+		maxPageNum: 5,  // 分页组件最多显示多少页
+		maxRowNum: 10, // 一页显示多少行
+
+		getPageList: function(){
+			var arr = [];
+			for(var i=0; i<this.maxPageNum; i++){
+				arr.push(this.curPage + i);
+			}
+			console.log(arr);
+			return arr;
+		},
+		setTotalPageByRowNum: function(rowNum){
+			this.totalPage = rowNum / this.maxRowNum;
+		}
+
+	};
+
 	// 数据初始化
 	this.init = function(){
 		this.fetchData();
 	};
-	
+
+	this.handlePageChanged = function(){
+		console.log("page changed");
+	}
 	// 改变状态
 	this.changeState = function(nextState, index){
 		this.state = nextState;
@@ -162,7 +186,7 @@ function routerController($rootScope, $scope, $http){
 			method: 'POST',
 			url: 'xxx',
 			data: data,
-			header: {
+			headers: {
 				"Content-Type": undefined,
 			},
 		}).then(function(res){

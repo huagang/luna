@@ -1,0 +1,157 @@
+.icon-tip{
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    background: url(../img/icon-tip.png) top left no-repeat ;
+    background-size: contain;
+}
+
+.blue{
+    color: #5CB8DF;
+}
+
+.button，
+.button-close{
+    height: 36px;
+}
+
+
+
+.btn-tags {
+    background-color: #fff;
+    border: 1px solid #E5E5E5;
+    color: #000;
+    padding: 4px 10px;
+}
+
+.btn-tags.current{
+    background-color: #4F6499;
+    border: 1px solid #4F6499;
+    color: #fff;
+}
+.pop-fun{
+    width: 100%;
+}
+
+.mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* ------------------------------------分割线 上面是可重用的样式-------------------------------------------------- */
+
+.empty-tip{
+    height: 360px;
+    line-height: 360px;
+    text-align: center;
+}
+
+.icon-tip{
+    margin: 0 20px -5px 0;
+}
+
+.breadcrumb button{
+    margin-top: -5px;
+}
+
+.pop{
+    display: block;
+    width: 50%;
+    left: 25%;
+    top: 0%;
+}
+.pop-cont > div{
+    margin-bottom: 15px;
+}
+.btn-tags + .btn-tags{
+    margin-left: 5px;
+}
+.poi-results{
+    border: 1px solid #ccc;
+    min-height: 100px;
+    height: 100px;
+    max-height: 200px;
+}
+
+.poi-results .empty{
+    line-height: 100px;
+    text-align: center;
+}
+
+.route-pois{
+    min-height: 450px;
+    width: 100%;
+    overflow: auto;
+
+}
+
+.poi-item{
+    width: 45px;
+    height: 90px;
+    overflow: visible;
+    position: relative;
+    margin: auto;
+}
+.poi-item .circle{
+    background: #303131 center center no-repeat;
+    height: 20px;
+    border-radius: 50%;
+    width: 20px;
+    margin: auto;
+}
+.poi-item .line{
+    height: 70px;
+    width: 20px;
+    margin: auto;
+}
+.line:before {
+    width: 12px;
+    height: 70px;
+    display: block;
+    content: ' ';
+    border-right: 4px solid #ccc;
+}
+.line.enter:before {
+    border-color: #303131;
+}
+
+.route-pois .poi-item:last-child .line{
+    display: none;
+}
+
+.left-side{
+    width: 200px;
+    direction: rtl;
+    position: absolute;
+    top: 0;
+    right: 100%;
+}
+.right-side{
+    width: 200px;
+    position: absolute;
+    top: 0;
+    left: 100%;
+}
+.info .edit,
+.info .delete{
+    display: none;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+.info:hover .edit,
+.info:hover .delete{
+    display: inline-block;
+}
+.info .edit{
+    background: url(../img/poi-edit.png) left top no-repeat;
+    background-size: contain;
+}
+.info .delete{
+     background: url(../img/poi-delete.png) left top no-repeat;
+     background-size: contain;
+ }
