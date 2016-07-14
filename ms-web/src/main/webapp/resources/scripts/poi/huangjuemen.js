@@ -85,8 +85,9 @@ var initHJMPoiPage = function() {
                     url = "http://data.pano.visualbusiness.cn/rest/album/view/" + data.panorama;
                     break;
             }
-            $('#panorama').closest('.tool-item').removeClass('hidden');
             $('#panorama').attr('href', url);
+        }else{
+            $('#panorama .icon').addClass('icon-wait-pano');
         }
 
         //更新导航信息
