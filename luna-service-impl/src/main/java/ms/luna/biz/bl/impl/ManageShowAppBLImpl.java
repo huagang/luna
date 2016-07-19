@@ -11,12 +11,12 @@ import ms.luna.biz.cons.VbConstant.MsShowAppConfig;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.MsShowAppDAO;
 import ms.luna.biz.dao.custom.MsShowPageDAO;
+import ms.luna.biz.dao.custom.MsShowPageShareDAO;
 import ms.luna.biz.dao.custom.model.*;
-import ms.luna.biz.dao.model.MsBusiness;
-import ms.luna.biz.dao.model.MsShowApp;
-import ms.luna.biz.dao.model.MsShowAppCriteria;
+import ms.luna.biz.dao.model.*;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.table.MsBusinessTable;
+import ms.luna.biz.table.MsShowPageShareTable;
 import ms.luna.biz.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,6 +46,8 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	private MsBusinessDAO msBusinessDAO;
 	@Autowired
 	private MsShowPageDAO msShowPageDAO;
+	@Autowired
+	private MsShowPageShareDAO msShowPageShareDAO;
 	
 	private String showPageUriTemplate = "/app/%d"; 
 	private String businessUriTemplate = "/business/%s";
@@ -117,8 +119,14 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			if(! createResult.getLeft()) {
 				return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
 			}
+
 			int appId = msShowAppDAO.selectIdByName(appName);
-			createInitalPage(appId, owner);
+			JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
+			createResult = createShareInfo(appId, jsonArray);
+			if(! createResult.getLeft()) {
+				return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+			}
+			createInitialPage(appId, owner);
 			JSONObject ret = new JSONObject();
 			ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
 			return FastJsonUtil.sucess("成功添加微景展", ret);
@@ -127,6 +135,56 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			logger.error("Failed to insert app: " + json, e);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
 		}
+	}
+
+	public Pair<Boolean, Pair<Integer, String>> createShareInfo(int appId, JSONArray jsonArray) {
+
+		if(jsonArray == null) {
+			logger.warn("share info is null");
+			return Pair.of(true, null);
+		}
+		if(jsonArray.size() > 5) {
+			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "分享设置多于5条"));
+		}
+
+		// if exist share info and use create interface, delete old ones
+		MsShowPageShareCriteria criteria = new MsShowPageShareCriteria();
+		criteria.createCriteria().andAppIdEqualTo(appId);
+		msShowPageShareDAO.deleteByCriteria(criteria);
+
+		for(int i = 0; i < jsonArray.size(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject == null) {
+				continue;
+			}
+			MsShowPageShare msShowPageShare = jsonObject.toJavaObject(MsShowPageShare.class);
+			msShowPageShare.setAppId(appId);
+			msShowPageShareDAO.insertSelective(msShowPageShare);
+		}
+
+		return Pair.of(true, null);
+	}
+
+	public Pair<Boolean, Pair<Integer, String>> updateShareInfo(int appId, JSONArray jsonArray) {
+
+		if(jsonArray == null) {
+			logger.warn("share info is null");
+			return Pair.of(true, null);
+		}
+		if(jsonArray.size() > 5) {
+			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "分享设置多于5条"));
+		}
+
+		for(int i = 0; i < jsonArray.size(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject == null) {
+				continue;
+			}
+			MsShowPageShare msShowPageShare = jsonObject.toJavaObject(MsShowPageShare.class);
+			msShowPageShareDAO.updateByPrimaryKeySelective(msShowPageShare);
+		}
+
+		return Pair.of(true, null);
 	}
 
 	private Pair<Boolean, Pair<Integer, String>> createAppInfo(JSONObject jsonObject) {
@@ -154,7 +212,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		return Pair.of(true, null);
 	}
 
-	private boolean createInitalPage(int appId, String owner) {
+	private boolean createInitialPage(int appId, String owner) {
 
 		// create index page for new app
 		try {
@@ -441,43 +499,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		
 		return FastJsonUtil.sucess("发布成功", data);
 	}
-	
-	@Deprecated
-	private void generateHtml2Cos(int appId) {
-		
-		MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
-		if(msShowApp == null) {
-			return;
-		}
-		List<MsShowPage> msShowPages = msShowPageDAO.readAllPageDetailByAppId(appId);
-		String appCode = msShowApp.getAppCode();
-		String indexFileName = "index.html";
-		String appDir = String.format("/%s/%s", COSUtil.getLunaH5RootPath(), appCode);
-		String indexFileFullPath = "";
-		Template template = VelocityUtil.getTemplate("page.vm");
-		for(MsShowPage page: msShowPages) {
-			JSONObject jsonPage = (JSONObject) JSON.toJSON(page);
-			VelocityContext context = new VelocityContext();
-			context.put("page", jsonPage.toString());
-			StringWriter sw = new StringWriter();
-			template.merge(context, sw);
-			String fileName = page.getPageCode() + ".html";
-			if(page.getPageOrder() == 1) {
-				fileName = indexFileName;
-			}			
-			com.alibaba.fastjson.JSONObject result = null;
-			try {
-				result = COSUtil.getInstance().upload2CloudDirect(sw.toString().getBytes(), appDir, fileName);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				logger.error("Failed to upload to cloud", e);
-			}
-			
-			if(page.getPageOrder() == 1) {
-				indexFileFullPath = result.getJSONObject("data").getString(COSUtil.ACCESS_URL);
-			}			
-		}
-	}
 
 	private String getAppCosDir(int appId) {
 		String appDir = String.format("/%s/app/%d", COSUtil.getLunaH5RootPath(), appId);
@@ -563,9 +584,20 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppDAO.FIELD_APP_NAME, msShowApp.getAppName());
 		data.put(MsShowAppDAO.FIELD_PIC_THUMB, msShowApp.getPicThumb());
 		data.put(MsShowAppDAO.FIELD_NOTE, msShowApp.getNote());
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
+
+		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
+		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
+		msShowPageShareCriteria.setOrderByClause("id asc");
+
+		List<MsShowPageShare> msShowPageShares = msShowPageShareDAO.selectByCriteria(msShowPageShareCriteria);
+
+		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
+		// TODO: new version will not use these share_info fields, delete me later
+//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
+//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
+//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
+
+		data.put("shareArray", jsonArray);
 		
 		return FastJsonUtil.sucess("", data);
 	}
@@ -584,20 +616,26 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		String appName = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_APP_NAME);
 		String picThumb = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_PIC_THUMB);
 		String note = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_NOTE);
-		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);
-		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_DES);
-		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_PIC);
+//		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);
+//		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_DES);
+//		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_PIC);
 		
 		MsShowApp msShowApp = new MsShowApp();
 		msShowApp.setAppId(appId);
 		msShowApp.setAppName(appName);
 		msShowApp.setPicThumb(picThumb);
 		msShowApp.setNote(note);
-		msShowApp.setShareInfoTitle(shareInfoTitle);
-		msShowApp.setShareInfoDes(shareInfoDes);
-		msShowApp.setShareInfoPic(shareInfoPic);
-		
+//		msShowApp.setShareInfoTitle(shareInfoTitle);
+//		msShowApp.setShareInfoDes(shareInfoDes);
+//		msShowApp.setShareInfoPic(shareInfoPic);
+
 		msShowAppDAO.updateByPrimaryKeySelective(msShowApp);
+
+		JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
+		Pair<Boolean,Pair<Integer,String>> createResult = updateShareInfo(appId, jsonArray);
+		if(! createResult.getLeft()) {
+			return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+		}
 		return FastJsonUtil.sucess("保存设置成功");
 		
 	}
