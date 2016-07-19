@@ -25,13 +25,11 @@ window.onload = function() {
             });
         }
 
-        //返回顶部
-        window.addEventListener('scroll', function(e) {
-            if($('.footer').hasClass('hidden')){
-                $('.footer').removeClass('hidden');
-                document.querySelector('.go-top').addEventListener('click', pageScroll);
-            }
-        });
+        ////返回顶部
+        if (document.body.scrollHeight > document.body.clientHeight) {
+            document.querySelector('.footer').classList.remove('hidden');
+            document.querySelector('.go-top').addEventListener('click', pageScroll);
+        }
     }
 
     /* 根据获取的文章数据进行更新文章内容 */
@@ -193,10 +191,27 @@ function filterImgInContent(content) {
     var clientWidth = document.querySelector('.content').clientWidth;
     content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
         var reg = /width="([0-9]*?)"/;
-        var widthNum = word.match(reg);
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
         if (widthNum[1] > clientWidth) {
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
-            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            word = word.replace(/width\s*:\s*[0-9]*.[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        }
+        return word;
+    });
+    content = content.replace(/width\s*:\s*[0-9.]*/g, function(word) {
+        var reg = /width\s*:\s*([0-9.]*)/;
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
+        if (Number( widthNum[1]) > clientWidth) {
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9.]*/, 'width:' + clientWidth);
             //word = word.replace(/height="[0-9]*"/, '');
             //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
         }

@@ -14,8 +14,8 @@ html,body{
 	background: #fff;
 }
 .wrapper{
-	display: flex;
-	flex-direction: column;
+	/* display: flex; */
+	/* flex-direction: column; */
 	max-width: 750px;
 	margin: 0 auto;
 	background-color: #fff;
@@ -179,5 +179,10 @@ html,body{
     background-position: 0px -56px;
 }
 .footer{
-		border-top: 1px solid #dee0e3;
+		bottom: 0;
+		width: 100%;
+		background-color: #fff;
+		overflow: hidden;
+		border-top: 1px solid #e5e5e5;
+		height: 45px;
 }
