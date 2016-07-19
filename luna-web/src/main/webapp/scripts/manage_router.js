@@ -59,43 +59,75 @@ function routerController($rootScope, $scope, $http){
 	this.handlePageChanged = function(){
 		console.log("page changed");
 	}
+
+
 	// 改变状态
-	this.changeState = function(nextState, index){
+	this.changeState = function(nextState, id){
 		this.state = nextState;
-		if(index){
-			this.opId = this.rowsData[index].id;
-		}
-		
+
+		this.opId = id || undefined;
+
 		if(nextState === 'new'){
 			this.resetNewDialog();
-		} else if(nextState !== 'init'){
+		} else if(nextState === 'update'){
+			if(id){
+				this.data = JSON.parse(JSON.stringify(this.getRowDataById(id)));
+			}
+			else{
+				console.error('点击属性时没有检查到父组件有id');
+			}
+		}
+
+		if(['init', 'new'].indexOf(nextState) === -1){
 			$scope.$apply();
 		}
 	};
-	
+
+	this.getRowDataById = function(id){
+		var data ;
+		this.rowsData.forEach(function(item){
+			if(!data && item.id === id){
+				data = item;
+			}
+		});
+		return data;
+
+	}
+
 	// 拉取线路数据
-	
 	this.fetchData = function(){
 		this.rowsData = [{
-			id: 45,
+			id: '45',
 			name: '名称',
 			businessName: '暂无业务',
 			energyCost: 'little',
-			
+			description: 'haha',
+			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
+			energyCost: 'middle',
+			file: null,
+
 			creator: 'wumengqiang',
 		},{
-			id: 45,
+			id: '46',
 			name: '名称',
 			businessName: '暂无业务',
 			energyCost: 'little',
-			creator: 'wumengqiang'
+			creator: 'wumengqiang',
+			description: 'haha',
+			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
+			energyCost: 'middle',
+			file: null,
 				
 		},{
-			id: 45,
+			id: '47',
 			name: '名称',
 			businessName: '暂无业务',
 			energyCost: 'little',
-			creator: 'wumengqiang'
+			creator: 'wumengqiang',
+			description: 'haha',
+			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
+			energyCost: 'middle',
+			file: null,
 		}];
 	}
 	
@@ -222,11 +254,11 @@ manageRouter.directive("bnRows", function(){
 	function link($scope, element, attribute){
 		element.on('click', '.router-update', function(event){
 			$scope.router.changeState('update', 
-				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
+				$(event.target).parentsUntil('tbody', 'tr').attr('data-id'));
 		});
 		element.on('click', '.router-delete', function(event){
 			$scope.router.changeState('delete', 
-				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
+				$(event.target).parentsUntil('tbody', 'tr').attr('data-id'));
 		});
 	}
 });

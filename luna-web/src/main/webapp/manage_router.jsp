@@ -56,7 +56,7 @@
                 			</tr>
                 		</thead>
                 		<tbody bn-rows>
-                			<tr ng-repeat="rowData in router.rowsData" data-order={{$index}}>
+                			<tr ng-repeat="rowData in router.rowsData" data-id={{rowData.id}}>
                 				<td>{{rowData.name}}</td>
                 				<td>{{rowData.businessName}}</td>
                 				<td>{{router.costMapping[rowData.energyCost]}}</td>
@@ -104,7 +104,7 @@
 							<label for='energyCost'>体力消耗</label>
 							<select name='energyCost' id='energyCost' ng-model='router.data.energyCost'>
 								<option value='little'>较小</option>
-								<option value='fine'>中等</option>
+								<option value='middle'>中等</option>
 								<option value='large'>较大</option>
 							</select>
 						</div>
