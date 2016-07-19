@@ -277,15 +277,29 @@ function editController($rootScope, $scope, $http){
 
     /******* Dom操作 *******/
     // 更新节点
-    this.updateNode = function(){
-
-    };
 
     // 渲染指定poi时间信息
     this.updatePoiInfo = function(){
 
     };
 
+    this.handleDrop = function(){
+        var dragData = this.dragData;
+        var routeData = [], dragedData ;
+        this.routeData = this.routeData.reduce(function(memo, item, index){
+            if(item.id === dragData.targetId){
+                dragedData = item;
+            } else if(item.id === dragData.enterId){
+                memo.push(item);
+                memo.push(dragedData);
+            } else{
+                memo.push(item);
+            }
+            return memo;
+
+        },[]);
+        this.dragData.targetId = this.dragData.enterId = '';
+    };
 
 
 
@@ -324,36 +338,46 @@ editRouter.directive('eventDelegate', function(){
         element.on('dragstart', '.circle', function(event){
             $scope.editor.dragData.targetId = event.target.parentElement.getAttribute('data-id');
             console.log('dragstart', $scope.editor.dragData.targetId)
-            event.originalEvent.dataTransfer.setData('text', '');
+            event.dataTransfer.setData('text', 'haha');
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.dropEffect = "move";
 
         });
-       element.on('dragenter', '.line', function(){
-            $scope.editor.dragData.enterId = event.target.parentElement.getAttribute('data-id');
-           event.preventDefault();
-           console.log('dragenter', $scope.editor.dragData.enterId)
-           $scope.$apply();
+       element.on('dragenter', '.line', function(event){
+           if($scope.editor.dragData.targetId){
+               $scope.editor.dragData.enterId = event.target.parentElement.getAttribute('data-id');
+               event.preventDefault();
+               console.log('dragenter', $scope.editor.dragData.enterId)
+               $scope.$apply();
+           }
        });
-       element.on('dragover', '.line', function(){
+       element.on('dragover', '.line', function(event){
            event.preventDefault();
        });
-       element.on('dragleave', '.line', function(){
-           $scope.editor.dragData.enterId = '';
-           event.preventDefault();
-           $scope.$apply();
+       element.on('dragleave', '.line', function(event){
+           if($scope.editor.dragData.targetId) {
+               $scope.editor.dragData.enterId = '';
+               event.preventDefault();
+               $scope.$apply();
+           }
        });
-       element.on('drop dragdrop', '.line', function(){
-           console.log('drop', $scope.editor.dragData.enterId);
-           $scope.$apply();
+       element.on('drop dragdrop', '.line', function(event){
+           if($scope.editor.dragData.targetId){
+               console.log('drop', $scope.editor.dragData.enterId);
+               $scope.editor.handleDrop();
+               $scope.$apply();
+           }
+
        });
 
         // 编辑线路点时间信息
-       element.on('click', '.edit', function(){
+       element.on('click', '.edit', function(event){
             $scope.editor.changeState('editTime');
            $scope.$apply();
        });
 
         // 删除
-       element.on('click', '.delete', function(){
+       element.on('click', '.delete', function(event){
            $scope.editor.changeState('deletePoi');
            $scope.$apply();
 

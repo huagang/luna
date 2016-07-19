@@ -75,7 +75,7 @@
 
 
                 <!--------------------------线路设置弹出框 start ------------------------------------->
-                <div class="mask" ng-show="['addPois', 'editTime', 'deletePoi'].indexOf(editor.state) > -1"></div>
+                <div class="mask ng-hide" ng-show="['addPois', 'editTime', 'deletePoi'].indexOf(editor.state) > -1"></div>
                 <div class="pop ng-hide" ng-show="editor.state==='addPois'">
                     <div class="pop-title">
                         <h4>线路设置</h4>
@@ -140,7 +140,7 @@
                 <!--------------------------线路设置弹出框 end ------------------------------------->
 
                 <!--------------------------线路点信息设置弹出框 start ------------------------------------->
-                <div class="pop" ng-show="editor.state === 'editTime'">
+                <div class="pop ng-hide" ng-show="editor.state === 'editTime'">
                     <div class="pop-title">
                         <h4>线路点信息设置</h4>
                         <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
