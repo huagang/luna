@@ -326,7 +326,7 @@ ol {
     height: 758px;
     border: 1px solid #DDDDDD;
     margin: 50px auto 0 auto;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #layermain {
@@ -842,3 +842,10 @@ a.wj-img-clc {
     font-weight: normal;
     margin-right: 10px;
 }
+/* 保存的后的提示 */
+.msgTips{
+    color: #666;
+    position: absolute;
+    top: -20px;
+}
+/* END 保存的后的提示 */

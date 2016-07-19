@@ -118,6 +118,7 @@
             <div class="container-mid">
               <div class="canvas" id="canvas">
                 <div class="inner-canvas" id="inner-canvas">
+                  <div class="msgTips"></div>
                   <div id="layermain"></div>
                 </div>
               </div>

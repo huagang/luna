@@ -34,7 +34,11 @@ html,body{
 	background-repeat: no-repeat;
 	background-size:cover;
 }
-
+/* 重力感应背景样式 */
+.layer,.img-wraper{
+    height: 100%;
+    width:100%;
+}
 .component-group{
     width: 100%;
     height: 100%;
@@ -116,6 +120,7 @@ html,body{
     height: auto;
     width: 100%;
 }
+
 /*@media screen and (min-width: 992px){
     div.video-dialog{
         width: 40%;

@@ -166,6 +166,10 @@ $(document).ready(function() {
 
 
     //初始化 欢迎页的视差效果
+    var paraScene = [];
+    $('.paraScene').each(function(n, item) {
+        paraScene[n] = new Parallax(item);
+    });
     // var scene = document.querySelector('.scene');
     // var parallax = new Parallax(scene);
     // $('.scene').find('.img-wraper').addClass('go-right');
@@ -237,34 +241,6 @@ $(document).ready(function() {
         };
     }
 
-    /**
-     * 欢迎界面canvas
-     */
-    function WelComeCanvas(data) {
-
-        this.value = data;
-        this.value.type = "scene";
-
-        BaseComponent.call(this);
-
-        this.build = function() {
-            var $scene = $('<ul id="scene" class="scene" data-scalar-x="10" data-scalar-y="2"></ul>');
-            if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
-            }
-            this.html.children("div").append($scene);
-            this.html.css("position", "absolute");
-            this.html.css("left", "0px");
-            this.html.css("top", "0px");
-            this.html.css("width", "100%");
-            this.html.css("height", "100%");
-            this.html.addClass("bg-canvas");
-            this.html.css("z-index", "0");
-
-            return this.html;
-        };
-    }
-
     /* 普通页面的画布 */
     function Canvas(data) {
 
@@ -273,7 +249,7 @@ $(document).ready(function() {
         BaseComponent.call(this);
 
         this.setCanvasBg = function() {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="' + this.value.gravity + '"></div>');
         };
 
         this.setPanoBg = function() {
@@ -281,7 +257,7 @@ $(document).ready(function() {
         };
 
         this.setParaBg = function() {
-            var $scene = $('<ul id="scene" class="scene" data-scalar-x="10" data-scalar-y="2"></ul>');
+            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
         }
@@ -294,7 +270,7 @@ $(document).ready(function() {
             console.log(this.value);
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "" && this.page_code == 'welcome') {
+            } else if (this.value.gravity && !this.value.panoId) {
                 this.setParaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);
@@ -467,6 +443,9 @@ $(document).ready(function() {
  * @return {[type]} [description]
  */
 function initPanoBg(panoBg) {
+    if (!panoBg) {
+        return;
+    }
     var pano = {},
         panoId = panoBg.dataset.panoid,
         gravity = panoBg.dataset.gravity;

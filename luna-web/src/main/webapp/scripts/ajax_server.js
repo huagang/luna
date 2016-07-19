@@ -193,15 +193,17 @@ function savePageData(pageID, isPrompt) {
         data: params,
         dataType: 'json',
         success: function(returndata) {
+            var nowtime = new Date();
+            var strnowtime = nowtime.getHours() + ":"+nowtime.getMinutes();
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
-                $.alert(returndata.msg);
+                $('.msgTips').text(strnowtime+" "+ returndata.msg);
                 console.log("保存" + (pageID ? "页面" + pageID : "全部页面") + "失败！");
                 return;
             } else {
                 //点击保存时，保存成功需要给出提示
                 if (isPrompt) {
-                    $.alert("保存页面成功");
+                    $('.msgTips').text(strnowtime+" 保存页面成功");
                 }
             }
         },
