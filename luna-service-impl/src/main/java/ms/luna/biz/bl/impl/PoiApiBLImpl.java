@@ -205,11 +205,13 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
-		int ctgr_id = param.getIntValue("ctgr_id");
+		String ctgr_id = param.getString("ctgr_id");
 		String fields = param.getString("fields");
 		String lang = param.getString("lang");
 		List<String> fieldLst;
+		List<Integer> ctgrlst;
 		fieldLst = convertInputApiFields2DbFieldLst(fields);
+		ctgrlst = getCtgrIdLst(ctgr_id);
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
@@ -222,12 +224,16 @@ public class PoiApiBLImpl implements PoiApiBL {
 			JSONArray poiArray = new JSONArray();
 			// 获取子结点中类型为ctgrId，且含有指定字段的集合
 			if (!poiIdLst.isEmpty()) {
-				poiArray = getPoiInfoByCtgrIdWithFields(poiIdLst, ctgr_id, fieldLst, lang);
+				poiArray = getPoiInfoByCtgrIdWithFields(poiIdLst, ctgrlst, fieldLst, lang);
 			}
 			data.put("pois", poiArray);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
-			resultdata.put("category_name", getPoiTagsLst().get(ctgr_id));
+			StringBuilder sbu = new StringBuilder();
+			for(int i = 0; i < ctgrlst.size(); i++) {
+				sbu.append(getPoiTagsLst().get(ctgrlst.get(i))).append(",");
+			}
+			resultdata.put("category_name", sbu.toString());
 			return resultdata;
 		} else {
 			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
@@ -240,11 +246,13 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		int biz_id = param.getIntValue("biz_id");
 		String poi_id = param.getString("poi_id");
-		int sub_ctgr_id = param.getIntValue("sub_ctgr_id");
+		String sub_ctgr_id = param.getString("sub_ctgr_id");
 		String fields = param.getString("fields");
 		String lang = param.getString("lang");
 		List<String> fieldLst;
+		List<Integer> subCtgrlst;
 		fieldLst = convertInputApiFields2DbFieldLst(fields);
+		subCtgrlst = getCtgrIdLst(sub_ctgr_id);
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
@@ -256,12 +264,16 @@ public class PoiApiBLImpl implements PoiApiBL {
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
 			if (!poiIdLst.isEmpty()) {
-				poiArray = getPoiInfoBySubCtgrIdWithFields(poiIdLst, sub_ctgr_id, fieldLst, lang);
+				poiArray = getPoiInfoBySubCtgrIdWithFields(poiIdLst, subCtgrlst, fieldLst, lang);
 			}
 			data.put("pois", poiArray);
 			JSONObject resultdata = returnSuccessData("success", lang, data);
+			StringBuilder sbu = new StringBuilder();
+			for(Integer id : subCtgrlst) {
+				sbu.append(getPoiTagsLst().get(id)).append(",");
+			}
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
-			resultdata.put("sub_category_name",  getPoiTagsLst().get(sub_ctgr_id));
+			resultdata.put("sub_category_name",  sbu.toString());
 			return resultdata;
 		} else {
 			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
@@ -1060,9 +1072,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 *            需要获取的字段
 	 * @return
 	 */
-	private JSONArray getPoiInfoByCtgrIdWithFields(List<String> poiIdLst, int ctgr_id, List<String> fields, String lang) {
-		int[] ctgrArr = new int[1];
-		ctgrArr[0] = ctgr_id;
+	private JSONArray getPoiInfoByCtgrIdWithFields(List<String> poiIdLst, List<Integer> ctgrlst, List<String> fields, String lang) {
 		MongoCollection<Document> poi_collection = null;
 		if (PoiCommon.POI.ZH.equals(lang)) {
 			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
@@ -1073,9 +1083,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (poi_collection != null) {
 			BasicDBList value = new BasicDBList();
 			for (String poi_id : poiIdLst) {
-				BasicDBObject condition = new BasicDBObject();
-				condition.append("_id", new ObjectId(poi_id)).append("tags", ctgrArr);
-				value.add(condition);
+				for(Integer ctgr_id : ctgrlst) {
+					BasicDBObject condition = new BasicDBObject();
+					condition.append("_id", new ObjectId(poi_id)).append("tags", new int[]{ctgr_id});
+					value.add(condition);
+				}
 			}
 			BasicDBObject or = new BasicDBObject("$or", value);
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
@@ -1104,7 +1116,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 *            需要获取的字段
 	 * @return
 	 */
-	private JSONArray getPoiInfoBySubCtgrIdWithFields(List<String> poiIdLst, int sub_ctgr_id, List<String> fields,
+	private JSONArray getPoiInfoBySubCtgrIdWithFields(List<String> poiIdLst, List<Integer> subCtgrlst, List<String> fields,
 			String lang) {
 		MongoCollection<Document> poi_collection = null;
 		if (PoiCommon.POI.ZH.equals(lang)) {
@@ -1116,9 +1128,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 		if (poi_collection != null) {
 			BasicDBList value = new BasicDBList();
 			for (String poi_id : poiIdLst) {
-				BasicDBObject condition = new BasicDBObject();
-				condition.append("_id", new ObjectId(poi_id)).append("sub_tag", sub_ctgr_id);
-				value.add(condition);
+				for(Integer sub_ctgr_id : subCtgrlst){
+					BasicDBObject condition = new BasicDBObject();
+					condition.append("_id", new ObjectId(poi_id)).append("sub_tag", sub_ctgr_id);
+					value.add(condition);
+				}
 			}
 			BasicDBObject or = new BasicDBObject("$or", value);
 			MongoCursor<Document> mongoCursor = poi_collection.find(or).iterator();
@@ -1378,5 +1392,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 		}
 		return topTag2SubTagOthersCache;
+	}
+	
+	/**
+	 * 将类别字符串转换为整数集合
+	 * 
+	 * @param ctgrIds 一级类别字符串。eg: 2,3,4
+	 * @return
+	 */
+	public List<Integer> getCtgrIdLst(String ctgrIds){
+		String[] ctgrArr = ctgrIds.split(",");
+		List<Integer> ctgrlst = new ArrayList<>();
+		for(int i = 0; i < ctgrArr.length; i++) {
+			ctgrlst.add(Integer.parseInt(ctgrArr[i]));
+		}
+		return ctgrlst;
 	}
 }

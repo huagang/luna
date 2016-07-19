@@ -225,7 +225,7 @@ public class PoiApiCtrl {
 	public JSONObject getPoisByBizIdAndPoiIdAndCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
-			@RequestParam(required = true, value = "category_id") int ctgr_id,
+			@RequestParam(required = true, value = "category_id") String ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -233,6 +233,12 @@ public class PoiApiCtrl {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html; charset=UTF-8");
 		try{
+			// category检查
+			boolean flag = checkTags(ctgr_id);//允许一级分类以字符串的形式输入多个。 和标签id字符串同样的检查方式
+			if(!flag){
+				return FastJsonUtil.error("-1", "一级分类:"+ctgr_id+"格式错误");
+			}
+			
 			if(fields == null){
 				fields = "";
 			} else {
@@ -287,12 +293,18 @@ public class PoiApiCtrl {
 	public JSONObject getPoisByBizIdAndPoiIdAndSubCtgrId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
 			@RequestParam(required = true, value = "poi_id") String poi_id, 
-			@RequestParam(required = true, value = "sub_category_id") int sub_ctgr_id,
+			@RequestParam(required = true, value = "sub_category_id") String sub_ctgr_id,
 			@RequestParam(required = false, value= "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		try{
+			// category检查
+			boolean flag = checkTags(sub_ctgr_id);//允许一级分类以字符串的形式输入多个。 和标签id字符串同样的检查方式
+			if(!flag){
+				return FastJsonUtil.error("-1", "二级分类:"+sub_ctgr_id+"格式错误");
+			}
+						
 			if(fields == null){
 				fields = "";
 			} else {
