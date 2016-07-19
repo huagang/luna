@@ -15,13 +15,15 @@ function AddUserController($rootScope, $scope, $http){
 
 
     this.init = function(){
+        this.loaded = true;
         this.data = {
             email: '',
             invalidEmail: false,
             emailList: [], //邮箱
             module: '', //模块选择
             role: '',
-            dataSrc: ''
+            dataSrc: '',
+            business: {}
         };
 
         this.emailFocus = false;
@@ -38,28 +40,112 @@ function AddUserController($rootScope, $scope, $http){
 
         this.moduleOption = [
             {id: 'luna', name:'皓月平台', roles:[
-                {id:'admin', name: '管理员1'},
+                {id:'admin', name: '管理员1',effect: 'all'},
                 {id:'Operations', name: '运营员1'},
                 {id:'lala', name: 'lala1'},
             ]},
-            {id: 'vb-pano', name:'全景',roles:[
-                {id:'admin', name: '管理员2'},
+            {id: 'basicData', name:'基础数据',roles:[
+                {id:'admin', name: '管理员2',effect: 'all'},
                 {id:'Operations', name: '运营员2'},
                 {id:'lala', name: 'lala2'},
             ]},
-            {id: 'activity', name:'活动',roles:[
-                {id:'admin', name: '管理员3'},
+            {id: 'businessService', name:'商家服务',roles:[
+                {id:'admin', name: '管理员3',effect: 'all'},
                 {id:'Operations', name: '运营员3'},
                 {id:'lala', name: 'lala3'},
             ]},
-            {id: 'info', name:'信息',roles:[
-                {id:'admin', name: '管理员4'},
+            {id: 'contentOperation', name:'内容运营',roles:[
+                {id:'admin', name: '管理员4', effect: 'all'},
+                {id:'Operations', name: '运营员4'},
+                {id:'lala', name: 'lala4'},
+            ]},{id: 'thirdPartyService', name:'第三方服务',roles:[
+                {id:'admin', name: '管理员4',effect: 'all'},
                 {id:'Operations', name: '运营员4'},
                 {id:'lala', name: 'lala4'},
             ]},
         ];
 
+        this.choiceType = 'checkbox'; // 'radio' or 'checkbox'
+        this.business = [
+            {
+                id: 'scenic',
+                name: '景区',
+                items: [
+                    {
+                        id: '1',
+                        name: '三台山'
+                    },{
+                        id: '2',
+                        name: '三台山'
+                    },{
+                        id: '3',
+                        name: '三台山'
+                    },{
+                        id: '4',
+                        name: '三台山'
+                    }
+                ]
+            },
+            {
+                id: 'hotel',
+                name: '酒店',
+                items: [
+                    {
+                        id: '5',
+                        name: '三台山'
+                    },{
+                        id: '6',
+                        name: '三台山'
+                    },{
+                        id: '7',
+                        name: '三台山'
+                    },{
+                        id: '8',
+                        name: '三台山'
+                    }
+                ]
+            }, {
+                id: 'cloudCard',
+                name: '云名片',
+                items: [
+                    {
+                        id: '9',
+                        name: '三台山'
+                    },{
+                        id: '10',
+                        name: '三台山'
+                    },{
+                        id: '11',
+                        name: '三台山'
+                    },{
+                        id: '12',
+                        name: '三台山'
+                    }
+                ]
+            },{
+                id: 'farmhouse',
+                name: '农家院',
+                items: [
+                    {
+                        id: '13',
+                        name: '三台山'
+                    },{
+                        id: '14',
+                        name: '三台山'
+                    },{
+                        id: '15',
+                        name: '三台山'
+                    },{
+                        id: '16',
+                        name: '三台山'
+                    }
+                ]
+            },
+        ];
+
+
         this.roles = [];
+
         this.postUrl = Inter.getApiUrl().addUser || '';
     };
 
@@ -169,5 +255,7 @@ function AddUserController($rootScope, $scope, $http){
             alert(res.msg);
         }
     };
+    window.s = $scope;
     this.init();
 }
+

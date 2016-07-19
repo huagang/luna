@@ -40,3 +40,46 @@
 .footer{
     margin: 50px 0 0 0;
 }
+
+.bussiness-container{
+    border: 1px solid #c3c3c3;
+    padding: 10px 25px;
+    width: 80%;
+}
+
+.business-group{
+    margin-bottom: 20px;
+}
+.business-group > label{
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.business{
+    cursor: pointer;
+
+}
+
+.business-group .business-wrapper{
+    display: inline-block;
+    width: 100px;
+    margin-top: 10px;
+}
+
+.business-name {
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    width: 80%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: normal;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.business-wrapper{
+    padding-left: 10px;
+
+}

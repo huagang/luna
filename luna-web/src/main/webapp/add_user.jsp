@@ -25,7 +25,7 @@
 <jsp:include page="/templete/header.jsp"/>
 <!--通用导航栏 end-->
 <!--中间业务内容 start-->
-<div class="content" ng-app="addUser" ng-controller="addUserController as user">
+<div class="content ng-hide" ng-app="addUser" ng-controller="addUserController as user" ng-show="user.loaded" >
     <div class="inner-wrap">
         <div class="main-content">
             <!--侧边菜单 start-->
@@ -51,27 +51,39 @@
                 <div class='form-input'>
                     <label>权限模块</label>
                     <div class="radio-wrapper">
-                        <span ng-repeat="module in user.moduleOption" >
+                        <span class='ng-hide' ng-repeat="module in user.moduleOption" ng-show="user.moduleOption.length > 1">
                             <input type="radio" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
                             <span>{{module.name}}</span>
                         </span>
+                        <span class="ng-hide" ng-show="user.moduleOption.length === 1">{{user.moduleOption[0].name}}</span>
                     </div>
-
-
-
                 </div>
                 <div class='form-input'>
                     <label>选择角色</label>
-                    <select ng-model="user.data.role">
+                    <select class="ng-hide" ng-model="user.data.role" ng-show="user.roles.length > 1">
                         <option ng-repeat="role in user.roles" value="{{role.id}}">{{role.name}}</option>
                     </select>
+                    <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
-                <div class='form-input'>
+                <div class='form-input ng-hide' ng-show="user.data.module === 'basicData'">
                     <label>数据来源</label>
-                    <select ng-model="user.data.dataSrc">
+                    <select class="ng-hide" ng-model="user.data.dataSrc" ng-show="user.dataSrcOption.length > 1">
                         <option ng-repeat="item in user.dataSrcOption" value="{{item.id}}">{{item.name}}</option>
                     </select>
+                    <span class="ng-hide" ng-show="user.dataSrcOption.length === 1">{{user.dataSrcOption[0].name}}</span>
                 </div>
+
+                <div class="form-input bussiness-container">
+                    <div class='business-group' ng-repeat="business in user.business">
+                        <label>{{business.name}}</label>
+                        <span class="business-wrapper" ng-repeat="item in business.items">
+                            <input class='business' type="{{user.choiceType}}" ng-model="user.data.business[user.choiceType==='radio'? 'id' : item.id]"
+                                  id="{{item.id}}" value="{{item.id}}"/>
+                            <label for="{{item.id}}" class="business-name" title="{{item.name}}">{{item.name}}</label>
+                        </span>
+                    </div>
+                </div>
+
                 <div class="footer">
                     <button class="button" ng-click="user.handleInviteUser()">邮箱邀请</button>
                 </div>
@@ -82,7 +94,7 @@
     </div>
 
 </div>
-                <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
