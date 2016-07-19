@@ -53,7 +53,7 @@
 	                        <table class="table">
 	                            <thead>
 	                                <tr>
-	                                    <th style="width: 140px;">业务模块</th>
+	                                    <th style="width: 140px;">权限模块</th>
 	                                    <th>权限选项</th>
 	                                </tr>
 	                            </thead>

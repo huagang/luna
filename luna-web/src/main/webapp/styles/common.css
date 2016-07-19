@@ -368,3 +368,8 @@ a:active{
     transform: rotate(360deg);
   }
 }
+
+.breadcrumb{
+    background-color: white;
+    padding-left: 0;
+}
