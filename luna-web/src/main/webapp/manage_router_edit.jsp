@@ -21,9 +21,12 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-2.0.0.js"></script>
+
 
 </head>
-<body ng-app="editRouter" ng-controller="editController as editor" ng-class="{'modal-open': ['addPois','editTime', 'deletePoi'].indexOf(editor.state) > -1}">
+<body ng-app="editRouter" ng-controller="editController as editor" class="ng-hide" ng-show="editor.loaded" ng-init="editor.loaded=true"
+      ng-class="{'modal-open': ['addPois','editTime', 'deletePoi'].indexOf(editor.state) > -1}">
 <div class="container-fluid">
     <!--通用导航栏 start-->
     <jsp:include page="/templete/header.jsp"/>
@@ -148,21 +151,21 @@
                     <div class="pop-cont">
                         <div>
                             <label>poi点</label>
-                            <span>{{editor.editingpoiInfo.name}}</span>
+                            <span>{{editor.editingPoiInfo.name}}</span>
                         </div>
                         <div>
                             <label>开始时间</label>
-                            <uib-timepicker arrowkeys='false' ng-model="editor.editingpoiInfo.startTime" hour-step="1" minute-step="10" show-meridian="ismeridian"></uib-timepicker>
-                        </div>
+                            <div class="timepicker" uib-timepicker minute-step="10" show-spinners='false' ng-model="editor.editingPoiInfo.startTime"  show-meridian="ismeridian"></div>
+                            </div>
                         <div>
                             <label>结束时间</label>
-                            <uib-timepicker arrowkeys='false' ng-model="editor.editingpoiInfo.endTime" hour-step="1" minute-step="10" show-meridian="ismeridian"></uib-timepicker>
+                            <div class="timepicker" uib-timepicker minute-step="10" show-spinners='false' ng-model="editor.editingPoiInfo.endTime"  show-meridian="ismeridian"></div>
                         </div>
                     </div>
                     <div class="pop-fun">
-                        <div class="'pull-right">
-                            <div class="button" ng-click="editor.postPoiInfo()">确定</div>
-                            <div class="button-close" ng-click="editor.changeState('init')">取消</div>
+                        <div class="pull-right">
+                            <button class="button" ng-click="editor.postPoiInfo()">确定</button>
+                            <button class="button-close" ng-click="editor.changeState('init')">取消</button>
                         </div>
                     </div>
                     <!--------------------------线路点信息设置弹出框 end ------------------------------------->
