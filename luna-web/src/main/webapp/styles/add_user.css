@@ -68,18 +68,25 @@
 }
 
 .business-name {
-    display: inline-block;
-    vertical-align: middle;
     overflow: hidden;
     width: 80%;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-weight: normal;
-    cursor: pointer;
-    margin-bottom: 0;
 }
 
 .business-wrapper{
     padding-left: 10px;
+
+}
+
+.business-name,
+.module-name{
+    display: inline-block;
+    vertical-align: middle;
+    color: #212121;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: normal;
+    margin-bottom: 0;
 
 }

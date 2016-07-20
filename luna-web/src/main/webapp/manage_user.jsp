@@ -49,7 +49,7 @@
                             </div>
                             <!--用户搜索 end-->
                             <!--   添加用户按钮 -->
-                            <button type="button" id="useradd" onclick="useradd('${module_code}')">添加用户</button>
+                            <a class="button" id='useradd' target="_blank" href="./manage_user.do?method=add_user">添加用户</a>
                             <!--用户列表 start-->
                             <div class="user-list">
 
@@ -92,111 +92,6 @@
 <!--弹出层 start-->
 <!--模态窗口 -->
 <div id="pop-overlay" class='pop-overlay'></div>
-<!-- 添加用户按钮弹出层 start -->
-<div class="pop" id="pop-adduser">
-    <div class="pop-title">
-        <h4>添加用户</h4>
-        <a id="title_add" href="#" class="btn-close" onclick="emailDel(this);"><img src="${basePath}/img/close.png" /></a>
-    </div>
-    <div class="pop-cont">
-    	<div id="user-message" class="warn" style="position: absolute;top: 60px;"></div>
-        <div id="useremail" style="border: 1px solid #c3c3c3; width: 430px; height: 100px;" data_fill="false">
-            <span id="info" style="position: absolute;">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
-            <input type="email" id="emailinput" style="border: none;outline: none;"/>
-        </div> 
-        <c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin', 'luna_admin', 'luna_operator')}">
-	        <div class="business">
-	            <span class="pop-label" style="margin-left: -2px;font-weight: 400;">所属业务：</span>
-	            <div id="business-radio" style="width: 330px; position:relative;top: -21px ;left: 70px;margin-left: 10px;" data_fill="false">
-	                <label class="radio-inline"><input type="radio" checked="checked" name="business" value="luna">皓月平台</label>
-	                <label class="radio-inline"><input type="radio" name="business" value="vbpano">VBpano</label>
-	                <label class="radio-inline"><input type="radio" name="business" value="merchant">商家服务</label>
-	                <label class="radio-inline"><input type="radio" name="business" value="poi">信息数据</label>
-	                <label class="radio-inline"><input type="radio" name="business" value="activity">运营活动</label>
-	            </div>
-	        </div>
-	        <div class="limit">
-	            <label class="pop-label" style="margin-left: 26px;padding-right: 10px;">权限：</label>
-	            <select class="select select-limit" id="roles">
-	            </select>
-	        </div>
-	    </c:if>    
-        <c:if test="${webHelper.hasRoles(msUser, 'merchant_admin', 'activity_admin','poi_admin', 'vbpano_admin')}">
-        	<div class="business">
-	        	<span class="pop-label" style="margin-left: -2px;font-weight: 400;">所属业务：</span>
-	        	<span style="display:none;" id="module_code_add">${module_code}</span>
-	        	<span class="pop-label" id="module_nm_edit">${module_nm}</span>
-	            <div id="business-radio" style="width: 330px; position:relative;top: -21px ;left: 70px;margin-left: 10px;">
-	            </div>
-		    </div>
-	        <div class="limit">
-	            <label class="pop-label" style="margin-left: 26px;padding-right: 10px;">权限：</label>
-	            <select class="select select-limit" id="roles">
-	            </select>
-	        </div>
-	    </c:if>
-    </div>
-    <!-- 底部功能区 -->
-    <div class="pop-fun">
-        <button type="button" id="btn-adduser" disabled="disabled">邮箱邀请</button>
-        <button class="button-close" onclick="emailDel(this);">取消</button>
-    </div>
-    <!-- 底部功能区 -->
-</div>
-<!-- 添加用户按钮弹出层 end -->
-<!-- 编辑按钮弹出层 start -->
-<div class="pop" id="pop-edit">
-    <div class="pop-title">
-        <h4>编辑用户</h4>
-        <a id="title_edit" href="#" class="btn-close" onclick="clcWindow(this);"><img src="${basePath}/img/close.png" /></a>
-    </div>
-    <div class="pop-cont">
-    	<div class="warn" id="pop-edit-warn"></div>
-        <div>
-            <label class="pop-label" style="margin-left: 26px;">账户：</label>
-            <span id="username"></span>  <!-- 需要用户名 -->
-        </div>
-        <c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin', 'luna_admin', 'luna_operator')}">
-	        <div class="business" style="padding-right: 40px;">
-	            <span class="pop-label" style="margin-left: -2px;font-weight: 400;">所属业务：</span>
-	            <div id="business-radio-edit" style="width: 330px; position:relative;top: -21px ;left: 70px;margin-left: 10px;">
-	            	<label class="radio-inline"><input type="radio" name="business-edit" value="luna">皓月平台</label>
-		        	<label class="radio-inline"><input type="radio" name="business-edit" value="vbpano">VBpano</label>
-		        	<label class="radio-inline"><input type="radio" name="business-edit" value="merchant">商家服务</label>
-		        	<label class="radio-inline"><input type="radio" name="business-edit" value="poi">信息数据</label>
-		        	<label class="radio-inline"><input type="radio" name="business-edit" value="activity">运营活动</label>
-	            </div>
-	        </div>
-	        <div class="limit">
-	            <label class="pop-label" style="margin-left: 26px;padding-right: 10px;">权限：</label>
-	            <select class="select select-limit" id="roles2">
-	            </select>
-	        </div>
-        </c:if>
-        <c:if test="${webHelper.hasRoles(msUser, 'merchant_admin', 'activity_admin','poi_admin', 'vbpano_admin')}">
-        	<div class="business">
-	        	<span class="pop-label" style="margin-left: -2px;font-weight: 400;" >所属业务：</span>
-	        	<span style="display:none;" id="module_code_edit">${module_code}</span>
-	        	<span class="pop-label" id="module_nm_edit">${module_nm}</span>
-	            <div id="business-radio-edit" style="width: 330px; position:relative;top: -21px ;left: 70px;margin-left: 10px;">
-	            </div>
-		    </div>
-	        <div class="limit">
-	            <label class="pop-label" style="margin-left: 26px;padding-right: 10px;">权限：</label>
-	            <select class="select select-limit" id="roles2">
-	            </select>
-	        </div>
-	    </c:if>
-    </div>
-    <!-- 底部功能区 -->
-    <input id="edit-row" msUserName='${sessionScope.msUser.nickName}'  style="display:none;"/>
-    <div class="pop-fun">
-        <button type="button" id="btn-edit">确定</button>
-        <button class="button-close" onclick="clcWindow(this)">取消</button>
-    </div>
-    <!-- 底部功能区 -->
-</div>
-<!-- 编辑按钮弹出层 end -->
 <!-- 删除按钮弹出层 start -->
 <div class="pop" id="pop-delete">
     <div class="pop-title">
@@ -241,7 +136,7 @@
 		var msUserName = '${sessionScope.msUser.nickName}';
 		var luna_name = row.luna_name;
 		if(msUserName != luna_name){
-			return '<a class="edit" href="#" onclick="editUser(\''+row.module_code+'\',\''+row.luna_name+'\',\''+row.role_code+'\',\''+msUserName+'\')">编辑</a>'
+			return '<a class="edit" href="./manage_user.do?method=edit_user&username=' + msUserName + '">编辑</a>'
         		+'<a class="delete" href="#" onclick="delUser(this,\''+row.luna_name+'\',\''+row.module_code+'\',\''+row.role_code+'\',\''+msUserName+'\')">删除</a>'
 		} else {
 			return '<a class="delete" href="#" onclick="editUser(\''+row.module_code+'\',\''+row.luna_name+'\',\''+row.role_code+'\',\''+msUserName+'\')">查看</a>'

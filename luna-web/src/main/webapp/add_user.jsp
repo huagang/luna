@@ -25,7 +25,7 @@
 <jsp:include page="/templete/header.jsp"/>
 <!--通用导航栏 end-->
 <!--中间业务内容 start-->
-<div class="content ng-hide" ng-app="addUser" ng-controller="addUserController as user" ng-show="user.loaded" >
+<div class="content ng-hide" ng-app="addUser" ng-controller="AddUserController as user" ng-show="user.loaded" ng-init="user.loaded=true">
     <div class="inner-wrap">
         <div class="main-content">
             <!--侧边菜单 start-->
@@ -33,14 +33,14 @@
             <!--侧边菜单 end-->
             <!--主题内容 start-->
             <div class="main">
-                <div class="main-hd"><h3>添加用户</h3></div>
+                <div class="main-hd"><h3>{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
                     <li><a href="/luna-web/manage_user.do?method=init">&lt;用户管理</a></li>
-                    <li class="active">添加用户</li>
+                    <li class="active">{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
                 <div class='form-input' id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
-                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
+                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
                     <span class="text-primary" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
                         <span>{{email}}</span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="user.handelDeleteEmail($index)" ></span>
@@ -52,19 +52,21 @@
                     <label>权限模块:</label>
                     <div class="radio-wrapper">
                         <span class='ng-hide' ng-repeat="module in user.moduleOption" ng-show="user.moduleOption.length > 1">
-                            <input type="radio" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
-                            <span>{{module.name}}</span>
+                            <input type="radio" id="{{module.id}}" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
+                            <label class="module-name" for="{{module.id}}">{{module.name}}</label>
                         </span>
                         <span class="ng-hide" ng-show="user.moduleOption.length === 1">{{user.moduleOption[0].name}}</span>
                     </div>
                 </div>
                 <div class='form-input'>
                     <label>选择角色:</label>
-                    <select class="ng-hide" ng-model="user.data.role" ng-show="user.roles.length > 1">
-                        <option ng-repeat="role in user.roles" value="{{role.id}}">{{role.name}}</option>
+                    <select class="ng-hide" ng-model="user.data.role" ng-change="user.handleRoleChange()" ng-show="user.roles.length !== 1">
+                        <option class="ng-hide" ng-show="user.roles.length === 0" disabled="disabled">无</option>
+                        <option class="ng-hide" ng-repeat="role in user.roles" value="{{role.id}}" ng-show="user.roles.length>0">{{role.name}}</option>
                     </select>
                     <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
+
                 <div class='form-input ng-hide' ng-show="user.data.module === 'basicData'">
                     <label>数据来源:</label>
                     <select class="ng-hide" ng-model="user.data.dataSrc" ng-show="user.dataSrcOption.length > 1">
