@@ -174,20 +174,32 @@ $(document).ready(function() {
     // var parallax = new Parallax(scene);
     // $('.scene').find('.img-wraper').addClass('go-right');
     //设置首页滑动到第一页
-    setTimeout(function() {
-        if ($('.welcome').next('.component-group').children().length > 0) {
-            $('.welcome').fadeOut(1000);
-            $('.welcome').next('.component-group').show(1000);
-            var panoBg = document.querySelectorAll('.panoBg')[1];
-            initPanoBg(panoBg);
-        } else {}
-    }, 4000);
+
+    if ($('.welcome').children().length > 0) {
+        var welcomePanoBg = document.querySelector('.welcome .panoBg');
+        if (welcomePanoBg) {
+            initPanoBg(welcomePanoBg);
+        }
+        setTimeout(function() {
+            $('.welcome').next('.component-group').fadeIn(2000, function() {
+
+            });
+            $('.welcome').fadeOut(3000, function() {});
+            var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
+            if (panoBg) {
+                initPanoBg(panoBg);
+            }
+        }, 4000);
+    } else {
+        var panoBg = document.querySelector('.panoBg');
+        initPanoBg(panoBg);
+    }
+
+
     /*TODO：增加动画页面 End*/
 
     /* 初始化全景背景 */
 
-    var panoBg = document.querySelector('.panoBg');
-    initPanoBg(panoBg);
 
     /* 初始化全景背景 */
 

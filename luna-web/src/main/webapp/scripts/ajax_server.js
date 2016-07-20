@@ -198,12 +198,18 @@ function savePageData(pageID, isPrompt) {
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 $('.msgTips').text(strnowtime+" "+ returndata.msg);
+                setTimeout(function(){
+                    $('.msgTips').text("");
+                },2000);
                 console.log("保存" + (pageID ? "页面" + pageID : "全部页面") + "失败！");
                 return;
             } else {
                 //点击保存时，保存成功需要给出提示
                 if (isPrompt) {
                     $('.msgTips').text(strnowtime+" 保存页面成功");
+                    setTimeout(function(){
+                        $('.msgTips').text("");
+                    },2000);
                 }
             }
         },
