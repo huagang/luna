@@ -26,10 +26,10 @@ var initHJMPoiPage = function() {
             panorama: poiData.data.panorama,
             panorama_type: poiData.data.panorama_type,
             category: '',
-            province: poiData.data.province || '河北省',
-            city: poiData.data.city || '保定市',
-            county: poiData.data.county || '白沟镇',
-            phone: poiData.data.contact_phone || '10086'
+            province: poiData.data.province ,
+            city: poiData.data.city,
+            county: poiData.data.county,
+            phone: poiData.data.contact_phone
         };
 
         // 更新文章头图
@@ -85,8 +85,9 @@ var initHJMPoiPage = function() {
                     url = "http://data.pano.visualbusiness.cn/rest/album/view/" + data.panorama;
                     break;
             }
-            $('#panorama').closest('.tool-item').removeClass('hidden');
             $('#panorama').attr('href', url);
+        }else{
+            $('#panorama .icon').addClass('icon-wait-pano');
         }
 
         //更新导航信息

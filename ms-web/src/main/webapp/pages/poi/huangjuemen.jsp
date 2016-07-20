@@ -37,7 +37,9 @@
         <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i></a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item hidden"><a id="panorama" href="javascript:;" data-type="pano"><i class="icon icon-pano"></i></a></div>
+        <div class="tool-item ">
+            <a id="panorama" href="javascript:;" data-type="pano" ><i class="icon icon-pano"></i></a>
+        </div>
     </div>
     <div class="content-wrapper">
        <div id="content" class='content'></div>
