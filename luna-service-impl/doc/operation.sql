@@ -28,3 +28,6 @@ INSERT INTO ms_poi_field (field_name, field_show_name, field_alias, display_orde
 
 INSERT INTO ms_r_tag_field (tag_id, field_name) VALUES (2, 'thermodynamic_diagram');
 ALTER TABLE ms_article ADD COLUMN short_title VARCHAR(64) DEFAULT '' AFTER title;
+
+# 将上传视频大小限制改为20M
+update ms_poi_field set field_size=20 where field_name='video';
