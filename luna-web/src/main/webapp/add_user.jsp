@@ -49,7 +49,7 @@
                 </div>
 
                 <div class='form-input'>
-                    <label>权限模块</label>
+                    <label>权限模块:</label>
                     <div class="radio-wrapper">
                         <span class='ng-hide' ng-repeat="module in user.moduleOption" ng-show="user.moduleOption.length > 1">
                             <input type="radio" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
@@ -59,14 +59,14 @@
                     </div>
                 </div>
                 <div class='form-input'>
-                    <label>选择角色</label>
+                    <label>选择角色:</label>
                     <select class="ng-hide" ng-model="user.data.role" ng-show="user.roles.length > 1">
                         <option ng-repeat="role in user.roles" value="{{role.id}}">{{role.name}}</option>
                     </select>
                     <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
                 <div class='form-input ng-hide' ng-show="user.data.module === 'basicData'">
-                    <label>数据来源</label>
+                    <label>数据来源:</label>
                     <select class="ng-hide" ng-model="user.data.dataSrc" ng-show="user.dataSrcOption.length > 1">
                         <option ng-repeat="item in user.dataSrcOption" value="{{item.id}}">{{item.name}}</option>
                     </select>
@@ -74,14 +74,21 @@
                 </div>
 
                 <div class="form-input bussiness-container">
-                    <div class='business-group' ng-repeat="business in user.business">
-                        <label>{{business.name}}</label>
+                    <label>选择业务:</label>
+                    <div class="ng-hide" ng-show="user.business.length > 1 || user.business[0].items.length > 1">
+                        <div class='business-group' ng-repeat="business in user.business">
+                            <label>{{business.name}}</label>
                         <span class="business-wrapper" ng-repeat="item in business.items">
                             <input class='business' type="{{user.choiceType}}" ng-model="user.data.business[user.choiceType==='radio'? 'id' : item.id]"
-                                  id="{{item.id}}" value="{{item.id}}"/>
+                                   id="{{item.id}}" value="{{item.id}}"/>
                             <label for="{{item.id}}" class="business-name" title="{{item.name}}">{{item.name}}</label>
                         </span>
+                        </div>
                     </div>
+                    <span class="ng-hide" ng-show="user.business.length === 1 && user.business[0].items.length === 1">
+                        {{user.business[0].items[0].name}}</span>
+
+
                 </div>
 
                 <div class="footer">

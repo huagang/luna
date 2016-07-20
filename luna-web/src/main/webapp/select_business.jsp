@@ -19,23 +19,34 @@
   <title>皓月平台</title>
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_user.css">
+  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/select_business.css">
 </head>
 <body>
 <!--通用导航栏 start-->
 <jsp:include page="/templete/header.jsp"/>
 <!--通用导航栏 end-->
 <!--中间业务内容 start-->
-<div class="content ng-hide" ng-app="addUser" ng-controller="addUserController as user" ng-show="user.loaded" >
-  <div class="inner-wrap">
-    <div class="main-content">
-      <!--侧边菜单 start-->
-      <jsp:include page="/templete/menu.jsp"></jsp:include>
-      <!--侧边菜单 end-->
-      <!--主题内容 start-->
-      <div class="main">
-        <div class="main-hd"><h3>添加用户</h3></div>
-      </div>
+<div class="content" >
+    <div class="inner-wrap">
+        <div class="title"><h3>请选择您要进入的商户业务</h3></div>
+        <div class="business-container ng-hide" ng-app="selectBusiness" ng-controller="selectBusinessController as business"
+            ng-show="business.show" ng-init="business.show=true">
+            <div class="business-list" ng-repeat="businessGroup in  business.businessData">
+                <label>{{businessGroup.name}}</label>
+                <div class="business-wrapper">
+                    <span class="business" ng-repeat="businessItem in businessGroup.businessList">
+                        <span class="business-name" ng-click="business.handleBusinessClick(businessItem.id, businessItem.name)">{{businessItem.name}}</span>
+                        <span class="hot ng-hide" ng-show="businessItem.hot"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+<script type="text/javascript" src="./plugins/angular/js/angular.min.js"></script>
+<script type="text/javascript" src="./scripts/common/interface.js"></script>
+
+<script type="text/javascript" src="./scripts/select_business.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+.inner-wrap{
+    background-color: white;
+    padding: 20px 30px;
+}
+
+.business-list{
+    margin-top: 30px;
+}
+
+.business{
+    position: relative;
+}
+
+.business-name{
+    cursor: pointer;
+    color: #707070;
+    white-space: pre;
+
+}
+
+.business:last-child > .business-name:after{
+    content: ' ';
+}
+
+.business + .business{
+    padding-left: 25px;
+}
+
+.business-name:hover{
+    color: #337ab7;
+}
+
+.hot{
+    position: absolute;
+    left: 100%;
+    top: -6px;
+    margin-left: -3px;
+    background: url(../img/hot-tip.png) top left no-repeat;
+    background-size: contain;
+    height: 16px;
+    width: 16px;
+}
