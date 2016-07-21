@@ -35,7 +35,7 @@
             <div class="main">
                 <div class="main-hd"><h3>{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="/luna-web/manage_user.do?method=init">&lt;用户管理</a></li>
+                    <li><a href="./manage_user.do?method=init">&lt;用户管理</a></li>
                     <li class="active">{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 

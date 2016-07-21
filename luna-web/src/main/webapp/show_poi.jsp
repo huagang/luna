@@ -78,9 +78,10 @@
 			  TODO 以公司的百度开发者密钥来替换下面的ak密钥-->
 		<script src="http://api.map.baidu.com/api?v=2.0&ak=E6NDub4ekUHkkGIDR9hFHCbXr7nCGcFT" type="text/javascript"></script>
 		<script src="http://api.map.baidu.com/library/MarkerTool/1.2/src/MarkerTool.js" type='text/javascript'></script>
+		<script src="../scripts/lunaweb.js" type='text/javascript'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/interface.js'></script>
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/common/weixin_config.js'></script>
 
 		<script type='text/javascript' src='<%=request.getContextPath()%>/scripts/show_poi.js'></script>
 	</body>
-	</html>
+</html>

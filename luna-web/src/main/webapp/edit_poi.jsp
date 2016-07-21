@@ -47,7 +47,7 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
                 	<c:if test="${lang == 'zh'}">
-                		<a href="/luna-web/edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+                		<a href="./edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
                 	</c:if>
                 </h3>
             </div>
@@ -382,7 +382,7 @@
 </body>
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-	window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+	window.UEDITOR_HOME_URL = window.host + "/plugins/ueditor/";
 </script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>

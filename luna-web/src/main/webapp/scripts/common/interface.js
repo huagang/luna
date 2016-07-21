@@ -8,7 +8,7 @@
  */
 
 var Inter = function() {
-    var context ="/luna-web";
+    var context ="";
     return {
         getApiUrl: function() {
             return {

@@ -80,6 +80,7 @@ span.fileinput-button:hover
 	margin: 2px 0 0 10px;
 	height: 36px;
 	width: 36px;
+    overflow:  hidden;
 }
 .load-container .loader{
 	width: 30px;
