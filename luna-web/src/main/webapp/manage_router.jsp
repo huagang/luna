@@ -103,9 +103,7 @@
 						<div>
 							<label for='energyCost'>体力消耗</label>
 							<select name='energyCost' id='energyCost' ng-model='router.data.energyCost'>
-								<option value='little'>较小</option>
-								<option value='middle'>中等</option>
-								<option value='large'>较大</option>
+								<option ng-repeat="cost in  router.costMapping" value='{{cost.id}}'>{{cost.name}}</option>
 							</select>
 						</div>
 							

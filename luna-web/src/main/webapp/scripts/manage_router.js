@@ -9,69 +9,73 @@ manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
 
 
 function routerController($rootScope, $scope, $http){
-	
-	this.data = {
-		id: '',
-		name: '',
-		description: '',
-		pic: '',
-		energyCost: '',
-		file: null,	
-	};
-	
-	
-	this.costMapping = {
-		'little': '较少',
-		'fine': '中等',
-		'large': '较大'
-	}
-	
-	this.uploadPath = Inter.getApiUrl().uploadPath;
-	this.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
-	this.opId = null;
-	this.rowsData = [];
-	this.pagination = {
-		curPage: 3, // from 0
-		totalPages: 20, //from 1
-		totalItems: 200,
-		maxPageNum: 5,  // 分页组件最多显示多少页
-		maxRowNum: 10, // 一页显示多少行
+	var vm = this;
 
-		getPageList: function(){
-			var arr = [];
-			for(var i=0; i<this.maxPageNum; i++){
-				arr.push(this.curPage + i);
-			}
-			console.log(arr);
-			return arr;
-		},
-		setTotalPageByRowNum: function(rowNum){
-			this.totalPage = rowNum / this.maxRowNum;
-		}
-
-	};
 
 	// 数据初始化
-	this.init = function(){
-		this.fetchData();
+	vm.init = function(){
+		vm.data = {
+			id: '',
+			name: '',
+			description: '',
+			pic: '',
+			energyCost: '',
+			file: null,
+			businessId: 45
+		};
+
+
+		vm.costMapping = [
+			{id: 1, name: '较少'},
+			{id: 2, name: '中等'},
+			{id: 3, name: '较大'}
+		]
+
+		vm.urls = Inter.getApiUrl();
+		vm.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
+		vm.opId = null;
+		vm.rowsData = [];
+		vm.pagination = {
+			curPage: 3, // from 0
+			totalPages: 20, //from 1
+			totalItems: 200,
+			maxPageNum: 5,  // 分页组件最多显示多少页
+			maxRowNum: 10, // 一页显示多少行
+
+			getPageList: function(){
+				var arr = [];
+				for(var i=0; i<vm.maxPageNum; i++){
+					arr.push(vm.curPage + i);
+				}
+				console.log(arr);
+				return arr;
+			},
+			setTotalPageByRowNum: function(rowNum){
+				vm.totalPage = rowNum / vm.maxRowNum;
+			}
+
+		};
+
+		vm.fetchData();
+
 	};
 
-	this.handlePageChanged = function(){
+	vm.handlePageChanged = function(){
 		console.log("page changed");
 	}
 
 
 	// 改变状态
-	this.changeState = function(nextState, id){
-		this.state = nextState;
+	vm.changeState = function(nextState, id){
+		vm.state = nextState;
 
-		this.opId = id || undefined;
+		vm.opId = id || undefined;
 
 		if(nextState === 'new'){
-			this.resetNewDialog();
+			vm.resetNewDialog();
 		} else if(nextState === 'update'){
 			if(id){
-				this.data = JSON.parse(JSON.stringify(this.getRowDataById(id)));
+				vm.data = JSON.parse(JSON.stringify(vm.getRowDataById(id)));
 			}
 			else{
 				console.error('点击属性时没有检查到父组件有id');
@@ -83,9 +87,9 @@ function routerController($rootScope, $scope, $http){
 		}
 	};
 
-	this.getRowDataById = function(id){
+	vm.getRowDataById = function(id){
 		var data ;
-		this.rowsData.forEach(function(item){
+		vm.rowsData.forEach(function(item){
 			if(!data && item.id === id){
 				data = item;
 			}
@@ -95,8 +99,8 @@ function routerController($rootScope, $scope, $http){
 	}
 
 	// 拉取线路数据
-	this.fetchData = function(){
-		this.rowsData = [{
+	vm.fetchData = function(){
+		vm.rowsData = [{
 			id: '45',
 			name: '名称',
 			businessName: '暂无业务',
@@ -131,7 +135,7 @@ function routerController($rootScope, $scope, $http){
 		}];
 	}
 	
-	this.uploadPic = function(event){
+	vm.uploadPic = function(event){
 		var file = event.target.files[0];
 		var type = file.name.substr(file.name.lastIndexOf('.')+1 );
 		
@@ -149,27 +153,27 @@ function routerController($rootScope, $scope, $http){
 		data.append('file', file);
 		$http({
 			method: 'POST',
-			url: this.uploadPath,
+			url: vm.urls.uploadPath,
 			headers:{
-				'Content-Type': undefined, // 设置成undefined之后浏览器会自动增加boundary
+				'Content-Type': undefined // 设置成undefined之后浏览器会自动增加boundary
 			},
 			data: data
 		}).then(function(data){
 			event.target.value = '';
 			if(data.data.code === '0'){
-				this.data.pic = data.data.data.access_url;
+				vm.data.pic = data.data.data.access_url;
 			} else{
 				alert('上传文件出错');
 			}
-		}.bind(this), function(data){
+		}, function(data){
 			alert('上传文件出错');
 			event.target.value = '';
 		});
-	}.bind(this)
+	}
 	
-	this.resetNewDialog = function(){
-		this.data = {
-			id: this.data.id,
+	vm.resetNewDialog = function(){
+		vm.data = {
+			id: vm.data.id,
 			name: '',
 			description: '',
 			pic: '',
@@ -179,31 +183,29 @@ function routerController($rootScope, $scope, $http){
 	
 	
 	// 新建路线
-	this.handleCreateRouter = function(){
-		var data = this.data;
-		if(data.name && data.description && data.pic && data.energyCost){
+	vm.handleCreateRouter = function(){
+		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
 			var data = new FormData();
-			data.append('id', data.id || null);
-			data.append('name', data.name);
-			data.append('description', data.description);
-			data.append('energyCost', data.energyCost);
-			
-			
+			data.append('id', vm.data.id || null);
+			data.append('name', vm.data.name);
+			data.append('description', vm.data.description);
+			data.append('cost_id', parseInt(vm.data.energyCost));
+			data.append('business_id',vm.data.businessId || 45);
+			data.append('cover', vm.data.pic);
 			
 			$http({
 				method: "POST",
-				url: 'xxxxxxxx',
-				data: data
+				url: vm.data.id ? vm.urls.editRoute : vm.urls.createRoute,
+				data: data,
+				header:{
+					"Content-Type": undefined
+				}
 			}).then(function(res){
-				
-			}.bind(this), function(res){
-				//
-				this.data.id = Date.now();
-				this.data.creator = 'wumengqiang';
-				this.data.businessName = '业务名称';
-				this.rowsData.push(this.data);
-				this.changeState('init');
-			}.bind(this));
+				vm.changeState('init');
+
+			}, function(res){
+				console.log(vm.data.id? '更新路线失败' : '创建路线失败');
+			});
 		}
 		else{
 			alert("部分信息为空，不能新建路线");
@@ -211,9 +213,9 @@ function routerController($rootScope, $scope, $http){
 	}
 	
 	// 删除路线
-	this.handleDeleteRouter = function(){
+	vm.handleDeleteRouter = function(){
 		var data = new FormData();
-		data.append('id', this.opId);
+		data.append('id', vm.opId);
 		$http({
 			method: 'POST',
 			url: 'xxx',
@@ -225,22 +227,22 @@ function routerController($rootScope, $scope, $http){
 			if(res.data.code === '0'){
 				
 			}
-		}.bind(this), function(res){
-			var index = -1, id = this.opId;
-			this.rowsData.forEach(function(item, itemIndex){
+		}, function(res){
+			var index = -1, id = vm.opId;
+			vm.rowsData.forEach(function(item, itemIndex){
 				if(item.id === id){
 					index = itemIndex;
 					return;
 				}
 			});
 			if(index > -1){
-				this.rowsData.splice(index, 1);
+				vm.rowsData.splice(index, 1);
 			}
-			this.changeState('init');
-		}.bind(this));
+			vm.changeState('init');
+		});
 	} 
 	
-	this.init();
+	vm.init();
 	window.s = $scope;
 }
 
