@@ -182,11 +182,16 @@ public class ManageRouterCtrl extends BasicCtrl {
     @RequestMapping(params = CHECK_ROUTE_NM)
     @ResponseBody  
     public JSONObject checkRouteNm(
-    		@RequestParam(required=false, value="name") String name,
+    		@RequestParam(required=true, value="name") String name,
+    		@RequestParam(required=false, value="id") Integer id,
+
     		HttpServletRequest request, HttpServletResponse response) {
     	try {
     		JSONObject param = new JSONObject();
     		param.put("name", name);
+			if(id != null) {
+				param.put("id" , id);
+			}
     		
     		JSONObject result = manageRouteService.loadRoutes(param.toString());
     		MsLogger.debug(result.toString());
