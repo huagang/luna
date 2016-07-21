@@ -19,7 +19,7 @@ $(function(){
 
 //上传图片
 function asyncUploadThumb(obj,fileElementId){
-	var host = '/luna-web';
+	var host = window.host || '';
 	var $thumb = $(obj); //当前触发事件的元素
 	var thumbId = $thumb.attr("id"),
 		globalId = thumbId.indexOf("_");

@@ -17,7 +17,7 @@
 
 // 以下划线开头的属性或者方法表示其为私有的，不对外开放
 var FileUploader = {
-	_host : '/luna-web',
+	_host : window.host || '',
 	
 	//上传文件的限制配置
 	_fileLimit : {

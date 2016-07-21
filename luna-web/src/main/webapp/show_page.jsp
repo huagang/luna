@@ -35,7 +35,6 @@
           <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
           <script>
 	        var appId = ${appId};
-	        var host="<%=request.getContextPath()%>";
       	  </script>
         </head>
 
