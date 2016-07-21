@@ -28,3 +28,32 @@ INSERT INTO ms_poi_field (field_name, field_show_name, field_alias, display_orde
 
 INSERT INTO ms_r_tag_field (tag_id, field_name) VALUES (2, 'thermodynamic_diagram');
 ALTER TABLE ms_article ADD COLUMN short_title VARCHAR(64) DEFAULT '' AFTER title;
+
+insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,status,regist_hhmmss,up_hhmmss) 
+values('搜索线路列表',147,'/manage_router.do?method=async_search_routes',3,1,now(),now());
+
+insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,status,regist_hhmmss,up_hhmmss) 
+values('创建线路',147,'/manage_router.do?method=create_route',3,1,now(),now());
+
+insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,status,regist_hhmmss,up_hhmmss) 
+values('属性编辑',147,'/manage_router.do?method=edit_route',3,1,now(),now());
+
+insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,status,regist_hhmmss,up_hhmmss) 
+values('线路删除',147,'/manage_router.do?method=del_route',3,1,now(),now());
+
+create table `ms_route` (
+	`id` int(11) not null auto_increment comment '线路id',
+	`name` varchar(64) not null comment '线路名称',
+	`business_id` int(11) not null comment '所属业务id',
+	`description` varchar(1024) default '' comment '线路介绍',
+	`cost_id` int(1) not null comment '体力消耗值',
+	`cover` varchar(255) default '' comment '封面图',
+	`unique_id` char(32) NOT NULL comment '创建人id',
+	`regist_hhmmss` timestamp NULL DEFAULT NULL,
+	`up_hhmmss` timestamp NULL DEFAULT NULL,
+	primary key (`id`),
+	key `business_id` (`business_id`)
+)ENGINE=InnoDB default charset=utf8 comment='线路表';
+
+alter table ms_route add unique(`name`);
+

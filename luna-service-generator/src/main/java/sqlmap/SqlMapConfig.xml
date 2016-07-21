@@ -56,4 +56,6 @@
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_article_ex_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_show_page_share_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_show_page_share_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_route_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_route_ex_SqlMap.xml" />
 </sqlMapConfig>
