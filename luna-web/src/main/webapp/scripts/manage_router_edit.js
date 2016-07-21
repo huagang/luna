@@ -1,6 +1,13 @@
 (function(){
     var editRouter = angular.module('editRouter',['ui.bootstrap']);
-    editRouter.controller('editController',['$rootScope', '$scope', '$http', editController]);
+    editRouter
+        .controller('editController',['$rootScope', '$scope', '$http', editController])
+        .directive('poiHoverDelegate', poiHoverDelegate)
+        .directive('routeEventDelegate',routeEventDelegate)
+
+
+
+
     function editController($rootScope, $scope, $http){
         var vm = this;
 
@@ -21,6 +28,15 @@
 
         // 事件 编辑poi时间信息
         vm.handleEditPoi = handleEditPoi;
+
+        // 事件 添加线路点到节点最下方
+        vm.handleAddPois = handleAddPois;
+
+        // 事件 添加线路点到当前节点上方
+        vm.handleAddRouteAbove = handleAddRouteAbove;
+
+        // 事件 添加线路点到当前节点下方
+        vm.handleAddRouteBelow = handleAddRouteBelow;
 
         // 事件 线路点拖拽事件dragstart
         vm.handleDragStart = handleDragStart;
@@ -52,14 +68,20 @@
         // 事件 当前县选项更改
         vm.handleCountyChange = handleCountyChange;
 
+        // 事件 全选或全不选poi
+        vm.toggleSelectAll = toggleSelectAll;
+
         // 请求 获取路线信息
         vm.fetchRouteData = fetchRouteData;
 
         // 请求 加载省份信息
         vm.loadProvinces = loadProvinces;
 
+        // 请求 删除一个poi节点
+        vm.requestDeletePoi = requestDeletePoi;
+
         // 请求 发送poi节点添加请求到后台
-        vm.handleAddPois = handleAddPois;
+        vm.requestAddPois = requestAddPois;
 
         // 请求 发送更新后的poi时间信息到后台
         vm.postPoiInfo = postPoiInfo;
@@ -69,6 +91,7 @@
 
         vm.init();// 初始化
 
+        window.s = $scope;
 
         function init(){
             vm.urls = Inter.getApiUrl();  //接口url信息
@@ -92,8 +115,9 @@
                     id:'8', name: '出入口'
                 }
             ]; // poi标签 缺少接口
-            vm.curTagId = 'ALL';
-            vm.state = 'init';   //页面状态  init 初始状态,不显示任何弹窗  addPois 显示添加poi弹窗  editTime  显示线路点信息设置弹窗
+
+            //页面状态  init 初始状态,不显示任何弹窗  addPois 显示添加poi弹窗  editTime  显示线路点信息设置弹窗 delPoi 显示删除线路点信息弹窗
+            vm.state = 'init';
             vm.targetPoiId = -1;
 
 
@@ -102,26 +126,29 @@
                 cityId: '',
                 countyId: '',
                 poiName: '',
-
+                curTagId: 'ALL',
                 provinceList: [],
                 cityList: [],
                 countyList: [],
-                poiData: [
-                ],
+                poiData: [],
+                selectedData: {},
                 searched: false,
+                selectAll: false
 
-            }
+            };
 
             vm.editingPoiInfo = {
                 id: -1,
                 name: '',
                 startTime : '',
                 endTime: ''
-            }
+            };
 
             vm.dragData = {
                 targetId : '',
-                enterId: ''
+                enterId: '',
+                insertId: '',
+                direction: '' // "above" or "below"
             };
 
 
@@ -138,8 +165,9 @@
         // 更改状态 用于控制弹出框的显示
         function changeState(nextState, targetPoiId){
             vm.state = nextState;
-            if(vm.targetPoiId){
-                vm.targetPoiId = targetPoiId;
+            vm.targetPoiId = targetPoiId;
+            if(nextState === 'init'){
+                vm.targetPoiId = undefined;
             }
 
         }
@@ -233,13 +261,25 @@
 
         }
 
+        function toggleSelectAll(){
+            if(vm.filterData.selectAll){
+                vm.filterData.poiData.forEach(function(item){
+                    if(vm.filterData.curTagId === 'ALL' || item.tags.indexOf(vm.filterData.curTagId) > -1){
+                        vm.filterData.selectedData[item._id] = true;
+                    }
+                });
+            } else{
+                vm.filterData.selectedData = {};
+            }
+        }
+
         // 搜索事件
         function handleSearch(){
             var data = new FormData();
-            data.append('province_id', vm.filterData.provinceId);
-            data.append('city_id', vm.filterData.cityId);
-            data.append('county_id', vm.filterData.countyId);
-            data.append('keyWord', vm.filterData.poiName);
+            data.append('province_id', vm.filterData.provinceId || 'ALL');
+            data.append('city_id', vm.filterData.cityId || 'ALL');
+            data.append('county_id', vm.filterData.countyId || 'ALL');
+            data.append('keyWord', vm.filterData.poiName || '');
             $http({
                 url: vm.urls.filterPois,
                 method:'POST',
@@ -262,8 +302,15 @@
         // 标签tag点击事件
         function handleTagChange(id){
             console.log(id);
-            if(vm.curTagId !== id){
-                vm.curTagId = id;
+
+            if(id !== 'ALL'){
+                id = parseInt(id);
+            }
+
+            if(id && vm.filterData.curTagId !== id){
+                vm.filterData.curTagId = id;
+                vm.filterData.selectAll = false;
+                vm.filterData.selectedData = {};
             }
         }
 
@@ -284,25 +331,92 @@
 
         /******** 数据请求 **********/
         // 发送poi节点添加请求到后台
-        function handleAddPois(){
 
-        }
 
         // 发送更新后的poi时间信息到后台
         function postPoiInfo(){
+            var i = -1;
+            vm.routeData.forEach(function(item, index){
+                if(item._id === vm.targetPoiId){ // vm.editingPoiInfo._id){
+                    i = index;
+                }
+            });
 
+            // 更新数据
+            if(i >= 0){
+                vm.routeData[i].startTime = vm.editingPoiInfo.startTime.toTimeString().substr(0,5);
+                vm.routeData[i].endTime = vm.editingPoiInfo.endTime.toTimeString().substr(0,5);
+                vm.changeState('init');
+            }
         }
 
         // 删除poi节点
         function handleDeletePoi(){
+            var id = event.target.parentElement.parentElement.parentElement.getAttribute('data-id');
+            $scope.editor.changeState('deletePoi', id);
+            $scope.$apply();
+        }
 
+
+        function requestDeletePoi(){
+            var i;
+            vm.routeData.forEach(function(item, index){
+                if(item._id === vm.targetPoiId){
+                    i = index;
+                }
+            });
+
+            //删除
+            vm.routeData.splice(i, 1);
+            vm.changeState('init');
+            vm.targetPoiId = '';
+
+        }
+
+        // 发送请求 fake
+        function requestAddPois(){
+
+            if(JSON.stringify(vm.filterData.selectedData) !== '{}'){
+                // 清除重复节点
+                vm.routeData.forEach(function(item){
+                    vm.filterData.selectedData[item._id] = undefined;
+                });
+
+                // 获取id list
+                var ids = [], data=[];
+                vm.filterData.poiData.forEach(function(item){
+                    if(vm.filterData.selectedData[item._id]){
+                        ids.push(item._id);
+                        data.push(JSON.parse(JSON.stringify(item)));
+                    }
+                });
+
+                if(vm.dragData.direction && vm.dragData.insertId){
+                    data = JSON.parse(JSON.stringify(data));
+                    var i;
+                    vm.routeData.forEach(function(item, index){
+                        if(item._id === vm.dragData.insertId){
+                            i = index;
+                        }
+                    });
+                    if(vm.dragData.direction === 'below'){
+                        i += 1;
+                    }
+                    vm.routeData.splice.apply(vm.routeData,[i, 0].concat(data));
+                } else{
+                    vm.routeData = vm.routeData.concat(data);
+                }
+                vm.filterData.selectedData = {};
+                vm.filterData.selectAll = false;
+                vm.changeState('init');
+            }
         }
 
         function fetchRouteData(){
             setTimeout(function(){
                 vm.routeData = [ //线路信息
                     {
-                        id: '1231',
+                        _id: '1231',
                         name: 'haha1',
                         order: 1,
                         startTime: "09:00",
@@ -310,56 +424,56 @@
                         tag:[2],
 
                     },{
-                        id: '1232',
+                        _id: '1232',
                         name: 'haha2',
                         order: 2,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1233',
+                        _id: '1233',
                         name: 'haha3',
                         order: 3,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1234',
+                        _id: '1234',
                         name: 'haha4',
                         order: 4,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1235',
+                        _id: '1235',
                         name: 'haha5',
                         order: 5,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1236',
+                        _id: '1236',
                         name: 'haha6',
                         order: 6,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1237',
+                        _id: '1237',
                         name: 'haha7',
                         order: 7,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1238',
+                        _id: '1238',
                         name: 'haha8',
                         order: 8,
                         startTime: "09:00",
                         endTime: "11:00",
                         tag:[2]
                     },{
-                        id: '1239',
+                        _id: '1239',
                         name: 'haha9',
                         order: 9,
                         startTime: "09:00",
@@ -374,11 +488,13 @@
         function handleEditPoi(){
             var id = event.target.parentElement.parentElement.parentElement.getAttribute('data-id');
             vm.routeData.forEach(function(item){
-                vm.editingPoiInfo = JSON.parse(JSON.stringify(item));
+                if(item._id === id){
+                    vm.editingPoiInfo = JSON.parse(JSON.stringify(item));
+                }
             });
             vm.editingPoiInfo.startTime = new Date('2016-07-20 ' + vm.editingPoiInfo.startTime);
             vm.editingPoiInfo.endTime = new Date('2016-07-20 ' + vm.editingPoiInfo.endTime);
-            vm.changeState('editTime');
+            vm.changeState('editTime', id);
             $scope.$apply();
         }
 
@@ -395,8 +511,6 @@
                 event.preventDefault();
                 $scope.$apply();
             }
-
-
         }
 
         function handleDragLeave(){
@@ -411,6 +525,7 @@
             event.preventDefault();
         }
 
+        // 事件 拖拽事件drop
         function handleDrop(){
             if(vm.dragData.targetId ){
 
@@ -418,9 +533,9 @@
                     var dragData = vm.dragData;
                     var routeData = [], dragedData ;
                     vm.routeData = vm.routeData.reduce(function(memo, item, index){
-                        if(item.id === dragData.targetId){
+                        if(item._id === dragData.targetId){
                             dragedData = item;
-                        } else if(item.id === dragData.enterId){
+                        } else if(item._id === dragData.enterId){
                             memo.push(item);
                             memo.push(dragedData);
                         } else{
@@ -436,9 +551,42 @@
             }
         }
 
+        // 事件 添加线路点到线路点最上方
+        function handleAddPois(){
+            vm.dragData.insertId = null;
+            vm.dragData.direction = null;
+            vm.changeState('addPois');
+        }
+
+        // 事件 添加线路点到当前线路点上方
+        function handleAddRouteAbove(){
+            vm.dragData.insertId = event.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+            vm.dragData.direction = 'above';
+            vm.changeState('addPois');
+            console.log(vm.dragData.insertId);
+            $scope.$apply();
+        }
+
+        // 事件 添加线路点到当前线路点下方
+        function handleAddRouteBelow(){
+            vm.dragData.insertId = event.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+            vm.dragData.direction = 'below';
+            vm.changeState('addPois');
+            console.log(vm.dragData.insertId);
+            $scope.$apply();
+
+        }
+
     }
 
-    editRouter.directive('eventDelegate', function(){
+
+    /* 路线显示中的事件委托,包括
+        1. 拖拽事件
+        2. 点击删除poi事件
+        3. 点击编辑poi事件
+
+     */
+    function routeEventDelegate(){
        return {
             link: link,
             restrict: 'A'
@@ -455,12 +603,28 @@
            element.on('click', '.edit', $scope.editor.handleEditPoi);
 
             // 删除
-           element.on('click', '.delete', function(event){
-               $scope.editor.changeState('deletePoi');
-               $scope.$apply();
+           element.on('click', '.delete', $scope.editor.handleDeletePoi);
 
-           });
+           element.on('click', '.add-up', $scope.editor.handleAddRouteAbove);
+           element.on('click', '.add-down', $scope.editor.handleAddRouteBelow);
+
        }
 
-    });
+    }
+
+    function poiHoverDelegate(){
+        return {
+            link: link,
+            restrict: 'A'
+        };
+        function link($scope, element){
+            element.on('mouseover', '.poi-name', function(){
+                var target = angular.element(event.target);
+                var offset = target.offset();
+                target.find('.poi_info').css('top', offset.top - angular.element(document).scrollTop() + 30 + 'px')
+                    .css('left', offset.left + 'px');
+            });
+        }
+    }
+
 })();

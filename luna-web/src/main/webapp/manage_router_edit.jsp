@@ -46,27 +46,32 @@
                     <ol class="breadcrumb">
                         <li><a href="./manage_router.do?method=init">线路管理</a></li>
                         <li class='active'>编辑线路</li>
-                        <button class='button pull-right' ng-click="editor.changeState('addPois')">添加线路点</button>
+                        <button class='button pull-right' ng-click="editor.handleAddPois()">添加线路点</button>
                     </ol>
                     <div class="router-op">
                         <div class="empty-tip" ng-show="editor.routeData.length === 0">
                             <p><span class="icon-tip"></span>该线路中还没有任何的POI点,点击右上角的"<span class="blue">添加线路点</span>"丰富线路信息吧</p>
                         </div>
-                        <div class="route-pois" event-delegate>
-                            <div class="poi-item" ng-repeat="item in editor.routeData" data-id="{{item.id}}">
+                        <div class="route-pois" route-event-delegate>
+                            <div class="poi-item" ng-repeat="item in editor.routeData" data-id="{{item._id}}">
                                 <div class="circle" draggable="draggable"></div>
-                                <div class="line" ng-class="{enter: item.id === editor.dragData.enterId}"></div>
+                                <div class="line"  ng-class="{enter: item._id === editor.dragData.enterId}"></div>
+                                <!--
+                                <button class="insert-poi button">插入线路点</button>
+                                -->
                                 <div class="info" ng-class-even="'right-side'" ng-class-odd="'left-side'">
                                     <p class="name">
                                         <span>{{item.name}}</span>
                                         <span class="edit" title="编辑"></span>
                                         <span class="delete" title="删除"></span>
+                                        <span class="add-up" title="添加线路点到该节点上方"></span>
+                                        <span class="add-down" title="添加线路点到该节点下方"></span>
                                     </p>
                                     <p>
-                                        <span>开始时间: {{item.startTime}}</span>
+                                        <span>开始时间: {{item.startTime || '未设置'}}</span>
                                     </p>
                                     <p>
-                                        <span>结束时间: {{item.endTime}}</span>
+                                        <span>结束时间: {{item.endTime || '未设置'}}</span>
                                     </p>
 
                                 </div>
@@ -79,7 +84,7 @@
 
                 <!--------------------------线路设置弹出框 start ------------------------------------->
                 <div class="mask ng-hide" ng-show="['addPois', 'editTime', 'deletePoi'].indexOf(editor.state) > -1"></div>
-                <div class="pop ng-hide" ng-show="editor.state==='addPois'">
+                <div class="pop route ng-hide" ng-show="editor.state==='addPois'">
                     <div class="pop-title">
                         <h4>线路设置</h4>
                         <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
@@ -110,24 +115,33 @@
 
                         <div class="labels">
                             <label>标签</label>
-                            <button type="button" ng-repeat="tag in  editor.tags" class="btn-tags" ng-class="{current: tag.id == editor.curTagId}"
-                                    ng-click ="editor.handleTagChange(tag.id)" tag_id="{{tag.id}}">{{tag.name}}</button>
+                            <div class="tags">
+                                <button type="button" ng-repeat="tag in  editor.tags" class="btn-tag" ng-class="{current: tag.id == editor.filterData.curTagId}"
+                                        ng-click ="editor.handleTagChange(tag.id)" tag_id="{{tag.id}}">{{tag.name}}</button>
+                            </div>
                         </div>
 
-                        <div class="selectAll">
+                        <div class="select-all">
                             <label>搜索结果</label>
-                            <input type='checkbox' ng-model='editor.selectAll' ng-change='editor.handleSelectAll' />全选
-
+                            <input type='checkbox' id="select-all" ng-model='editor.filterData.selectAll' ng-change='editor.toggleSelectAll()' />
+                            <label for="select-all">全选</label>
                         </div>
 
                         <div class="poi-results">
                             <p class='empty' ng-show="editor.filterData.searched && editor.filterData.poiData.length === 0 ">
                                 <span>未找到匹配的POI数据，<a href="./add_poi.do?method=init">马上添加</a></span>
                             </p>
-                            <div ng-show="editor.filterData.poiData.length > 0">
-                                <span ng-repeat="item in editor.filterData.poiData" ng-show="item.tag[0].indexOf(editor.curTagId)">
-                                    <input type="checkbox" ng-model="item.checked" id="item.id"/>{{item.name}}
-                                </span>
+                            <div ng-show="editor.filterData.poiData.length > 0" poi-hover-delegate>
+                                <label ng-repeat="item in editor.filterData.poiData" class='poi'
+                                        ng-show="editor.filterData.curTagId === 'ALL' || item.tags.indexOf(editor.filterData.curTagId) > -1">
+                                        <input type="checkbox" ng-model="editor.filterData.selectedData[item._id]"/>
+                                        <a target='_blank' class='poi-name' href='{{"./edit_poi.do?method=init&_id=" + item._id}}'>{{item.name}}</a>
+                                        <div class="poi_info">
+                                            <p>长标题：{{item.name}}</p>
+                                            <p>纬度：{{item.coordinates[1]}}</p>
+                                            <p>经度：{{item.coordinates[0]}}</p>
+                                        </div>
+                                </label>
                             </div>
                         </div>
 
@@ -135,12 +149,32 @@
                     </div>
                     <div class='pop-fun'>
                         <div class='pull-right'>
-                            <button class='button' ng-click='editor.handleAddPoi()'>确认</button>
+                            <button class='button' ng-click='editor.requestAddPois()'>确认</button>
                             <button class='button-close' ng-click='editor.changeState("init")'>取消</button>
                         </div>
                     </div>
                 </div>
                 <!--------------------------线路设置弹出框 end ------------------------------------->
+
+
+                <!--------------------------删除线路点弹出框 start ------------------------------------->
+                <div class="pop ng-hide" ng-show="editor.state==='deletePoi'">
+                    <div class="pop-title">
+                        <h4>线路点信息设置</h4>
+                        <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
+                    </div>
+                    <div class="pop-cont">
+                        <p>您确定要删除该线路点?</p>
+                    </div>
+                    <div class="pop-fun">
+                        <div class="pull-right">
+                            <button class="button" ng-click="editor.requestDeletePoi()">确定</button>
+                            <button class="button-close" ng-click="editor.changeState('init')">取消</button>
+                        </div>
+                    </div>
+                </div>
+                <!--------------------------删除线路点弹出框 end ------------------------------------->
+
 
                 <!--------------------------线路点信息设置弹出框 start ------------------------------------->
                 <div class="pop ng-hide" ng-show="editor.state === 'editTime'">

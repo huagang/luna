@@ -15,20 +15,28 @@
     height: 36px;
 }
 
+.tags{
+    display:inline-block;
+    width: 80%;
+    vertical-align: top;
+}
 
-
-.btn-tags {
+.btn-tag {
     background-color: #fff;
     border: 1px solid #E5E5E5;
     color: #000;
     padding: 4px 10px;
+    margin: 0 5px 10px 0;
 }
 
-.btn-tags.current{
+.btn-tag.current{
     background-color: #4F6499;
     border: 1px solid #4F6499;
     color: #fff;
 }
+
+
+
 .pop-fun{
     width: 100%;
 }
@@ -60,21 +68,25 @@
 
 .pop{
     display: block;
+    position: fixed;
     width: 50%;
     left: 25%;
-    top: 0%;
+    top: 10%;
 }
+.pop.route{
+    width: 690px;
+}
+
 .pop-cont > div{
     margin-bottom: 15px;
 }
-.btn-tags + .btn-tags{
-    margin-left: 5px;
-}
+
 .poi-results{
-    border: 1px solid #ccc;
     min-height: 100px;
-    height: 100px;
-    max-height: 200px;
+    max-height: 300px;
+    width: 610px;
+    border: 1px solid #E5E5E5;
+    overflow-y: auto;
 }
 
 .poi-results .empty{
@@ -82,11 +94,40 @@
     text-align: center;
 }
 
+.poi-results .poi{
+    width: 105px;
+    margin: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: ltr;
+}
+
 .route-pois{
     min-height: 450px;
     width: 100%;
     overflow: auto;
 
+}
+.poi_info{
+    display: none;
+    position: fixed;
+    margin: 1px 0 0 -5px;
+    background-color: #efefef;
+    line-height: 21px;
+    padding: 8px 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    word-break: break-all;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+.poi-name:hover + .poi_info{
+    display: block;
 }
 
 .poi-item{
@@ -124,27 +165,33 @@
 }
 
 .left-side{
-    width: 200px;
+    width: 400px;
     direction: rtl;
     position: absolute;
     top: 0;
     right: 100%;
 }
 .right-side{
-    width: 200px;
+    width: 400px;
     position: absolute;
     top: 0;
     left: 100%;
 }
+
 .info .edit,
-.info .delete{
+.info .delete,
+.info .add-up,
+.info .add-down{
     display: none;
     width: 16px;
     height: 16px;
     vertical-align: middle;
 }
+
 .info:hover .edit,
-.info:hover .delete{
+.info:hover .delete,
+.info:hover .add-down,
+.info:hover .add-up{
     display: inline-block;
 }
 .info .edit{
@@ -156,13 +203,48 @@
      background-size: contain;
  }
 
+.info .add-down{
+    background: url(../img/icon-route-add.png) left top no-repeat;
+    background-size: contain;
+
+}
+
+.info .add-up{
+    background: url(../img/icon-route-add.png) left top no-repeat;
+    background-size: contain;
+    transform: rotate(180deg);
+}
+
 .timepicker{
     display: inline-block;
     vertical-align: middle;
 }
 
-.pop-cont label{
-    width: 80px;
+.pop-cont > div > label:first-child{
+    width: 68px;
     direction: rtl;
     margin-right: 10px;
+}
+
+#select-all, #select-all + label{
+    cursor: pointer;
+}
+
+.insert-poi{
+    position: absolute;
+    bottom: 31%;
+    width: 80px;
+    left: -17px;
+    padding: 2px 4px;
+    z-index: 1000;
+    background-color: #444;
+    display: none;
+    border: none;
+}
+
+.line:hover + .insert-poi,
+.insert-poi:hover{
+    display: block;
+    background-color: #444;
+    border: none;
 }
