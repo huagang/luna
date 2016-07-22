@@ -193,7 +193,7 @@ public class ManageRouterCtrl extends BasicCtrl {
 				param.put("id" , id);
 			}
     		
-    		JSONObject result = manageRouteService.loadRoutes(param.toString());
+    		JSONObject result = manageRouteService.isRouteNmExist(param.toString());
     		MsLogger.debug(result.toString());
     		return result;
     	} catch (Exception e) {
