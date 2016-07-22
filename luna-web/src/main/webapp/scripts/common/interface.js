@@ -44,7 +44,8 @@ var Inter = function() {
                 createRoute: context + '/manage_router.do?method=create_route', //创建路线
                 editRoute: context + '/manage_router.do?method=edit_route', //编辑路线
                 getRouteList: context + '/manage_router.do?method=async_search_routes', //获取线路列表
-                delRoute: context + '/manage_router.do?method=del_route', //获取线路列表
+                delRoute: context + '/manage_router.do?method=del_route', // 删除线路
+                checkRoute: context + '/manage_router.do?method=check_route_nm', // 检查线路名称是否合法
 
             };
         }

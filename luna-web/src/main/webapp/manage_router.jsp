@@ -87,7 +87,9 @@
 					<div class="pop-cont">
 						<div class='router-name'>
 							<label for='name'>线路名称</label>
-							<input name='name' id='name' ng-model='router.data.name'/>
+							<input name='name' id='name' ng-model='router.data.name' ng-blur="router.checkRouteName()"/>
+							<div class="valid-name ng-hide" ng-show="router.data.nameValid === true"></div>
+							<div class="invalid-name text-danger ng-hide" ng-show="router.data.nameValid === false">名称重复</div>
 						</div>
 						<div class='router-description'>
 							<label for='description'>线路介绍</label>

@@ -22,6 +22,7 @@ function routerController($rootScope, $scope, $http){
 			energyCost: '',
 			file: null,
 			businessId: '',
+			nameValid: undefined
 		};
 
 
@@ -171,17 +172,23 @@ function routerController($rootScope, $scope, $http){
 	
 	vm.resetNewDialog = function(){
 		vm.data = {
-			id: vm.data.id,
+			id: '',
 			name: '',
 			description: '',
 			pic: '',
-			energyCost: ''
+			energyCost: '',
+			file: null,
+			businessId: '',
+			nameValid: undefined
 		};
 	}
 	
 	
 	// 新建路线
 	vm.handleCreateRouter = function(){
+		if(vm.data.nameValid === false){
+			alert('线路名称重复,请重新填写');
+		}
 		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
 			var data = new FormData();
 			data.append('id', vm.data.id || null);
@@ -199,8 +206,16 @@ function routerController($rootScope, $scope, $http){
 					"Content-Type": undefined
 				}
 			}).then(function(res){
-				vm.changeState('init');
-				vm.fetchData();
+				if(res.data.code === "0"){
+					vm.changeState('init');
+					vm.pagination.curPage = 1;
+					vm.fetchData();
+				} else if(res.data.code === "409"){
+					alert('线路名称重复,创建失败');
+				} else{
+					console.log(vm.data.id? '更新路线失败' : '创建路线失败');
+				}
+
 			}, function(res){
 				console.log(vm.data.id? '更新路线失败' : '创建路线失败');
 			});
@@ -229,7 +244,35 @@ function routerController($rootScope, $scope, $http){
 		}, function(res){
 			alert("删除失败");
 		});
-	} 
+	};
+
+	vm.checkRouteName =  function(){
+		var data = new FormData();
+		data.append('name', vm.data.name);
+		if(vm.data.id){
+			data.append('id', vm.data.id);
+		}
+		$http({
+			url: vm.urls.checkRoute,
+			method: 'POST',
+			data: data,
+			headers: {
+				"Content-Type": undefined,
+			}
+		}).then(function(res){
+			console.log(res);
+			if(res.data.code === "0"){
+				vm.data.nameValid = true;
+			} else if(res.data.code === "409"){
+				vm.data.nameValid = false;
+			} else{
+				vm.data.nameValid = undefined;
+			}
+
+		}, function(res){
+
+		});
+	};
 	
 	vm.init();
 	window.s = $scope;

@@ -8,9 +8,10 @@ input{
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 .pop{   
     display: block;
+	position: fixed;
     width: 40%;
     left: 30%;
-    top: 0%;
+    top: 10%;
 }
 .pop-cont > div > label{
 	width: 20%;
@@ -26,7 +27,7 @@ input{
 	vertical-align: top;
 }
 .pop-cont > div > input{
-	width: 75%;
+	width: 60%;
 	height: 36px;
 	vertical-align: top;
 }
@@ -52,9 +53,7 @@ input{
     height: 100%;
     opacity: 0;
 }
-.pagination-wrapper{
-	text-align: center;
-}
+
 
 tr{
 	height: 60px;
@@ -66,4 +65,66 @@ td{
 
 tbody > tr:last-child td{
 	border-bottom: 1px solid #ddd;
+}
+
+
+/* 分页组件 */
+.pagination-wrapper{
+	text-align: right;
+}
+
+.pagination-sm  li.pagination-prev,
+.pagination-sm  li.pagination-next{
+	margin: 20px 9px 20px 0;
+}
+
+.pagination-sm li.pagination-next.disabled a,
+.pagination-sm li.pagination-prev.disabled a{
+	color: #777;
+	cursor: not-allowed;
+	background-color: #fff;
+	border-color: #ddd;
+}
+
+.pagination-sm  li.pagination-prev a,
+.pagination-sm  li.pagination-next a,
+.pagination-sm  li.pagination-page a{
+	border-radius: 0;
+	padding: 0 14px;
+	line-height: 34px;
+	border: 1px solid #ddd;
+	color: #445FA8;
+	text-decoration: none;
+	background-color: #fff;
+	cursor: pointer;
+	text-align: center;
+}
+
+
+.pagination-sm  li.pagination-page.active a{
+	color: #fff;
+	cursor: default;
+	background-color: #445FA8;
+	border-color: #445FA8;
+}
+
+.pagination-sm li + li a{
+	margin-left: 10px;
+}
+
+.invalid-name{
+	line-height: 36px;
+	padding-left: 20px;
+	display: inline-block;
+	background: url(../img/error.png) left center no-repeat;
+	background-size: 18px;
+}
+
+.valid-name{
+	background: url(../img/success.png) left center no-repeat;
+	background-size: 18px;
+	display: inline-block;
+	vertical-align: middle;
+	width: 20px;
+	height: 36px;
 }
