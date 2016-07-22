@@ -45,5 +45,5 @@ public interface ManageRouteService {
 	 * @param name
 	 * @return
 	 */
-	JSONObject isRouteNmExist(String name);
+	JSONObject isRouteNmExist(String json);
 }

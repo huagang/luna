@@ -45,7 +45,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		Integer business_id = param.getInteger("business_id");
 		
 		// 检测名称是否存在
-		boolean flag = checkRouteNmExist(name);
+		boolean flag = checkRouteNmExist(name, null);
 		if(flag) {
 			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 		}
@@ -78,7 +78,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		String unique_id = param.getString("unique_id");
 		
 		// 检测名称是否存在
-		boolean flag = checkRouteNmExist(name);
+		boolean flag = checkRouteNmExist(name, id);
 		if(flag) {
 			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 		}
@@ -174,13 +174,19 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	}
 
 	@Override
-	public JSONObject isRouteNmExist(String name) {
+	public JSONObject isRouteNmExist(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String name = param.getString("name");
+		Integer id = null;
+		if(param.containsKey("id")) {
+			id = param.getInteger("id");
+		}
 		try {
-			boolean flag = checkRouteNmExist(name);
-			if(flag) {
-				return FastJsonUtil.sucess("route name exists");
+			boolean flag = checkRouteNmExist(name, id);
+			if(!flag) {
+				return FastJsonUtil.sucess("route name does not exist");
 			} else {
-				return FastJsonUtil.error(ErrorCode.NOT_FOUND, "route name does not exist");
+				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 			}
 			
 		} catch (Exception e) {
@@ -189,15 +195,27 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		
 	}
 	
-	private boolean checkRouteNmExist(String name) {
+	private boolean checkRouteNmExist(String name, Integer id) {
 		MsRouteCriteria msRouteCriteria = new MsRouteCriteria();
 		MsRouteCriteria.Criteria criteria = msRouteCriteria.createCriteria();
 		criteria.andNameEqualTo(name);
-		int count = msRouteDAO.countByCriteria(msRouteCriteria);
-		if(count == 1) {
+		List<MsRoute> lst = msRouteDAO.selectByCriteria(msRouteCriteria);
+
+		// 创建状态
+		if(id == null) {
+			if( lst== null || lst.size() == 0) {// 不存在
+				return false;
+			}
+			return true;	// 存在
+		} else {//  编辑状态
+			if(lst == null || lst.size() == 0) {// 不存在
+				return false;
+			}
+			if(id.equals(lst.get(0).getId())) {// id对应的name 未发生改变,
+				return false;
+			}
 			return true;
 		}
-		return false;
 	}
 
 }
