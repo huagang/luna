@@ -21,7 +21,7 @@ function routerController($rootScope, $scope, $http){
 			pic: '',
 			energyCost: '',
 			file: null,
-			businessId: 45
+			businessId: '',
 		};
 
 
@@ -36,9 +36,8 @@ function routerController($rootScope, $scope, $http){
 		vm.opId = null;
 		vm.rowsData = [];
 		vm.pagination = {
-			curPage: 3, // from 0
-			totalPages: 20, //from 1
-			totalItems: 200,
+			curPage: 1, // from 0
+			totalItems: 0,  // from 1
 			maxPageNum: 5,  // 分页组件最多显示多少页
 			maxRowNum: 10, // 一页显示多少行
 
@@ -62,6 +61,7 @@ function routerController($rootScope, $scope, $http){
 
 	vm.handlePageChanged = function(){
 		console.log("page changed");
+		vm.fetchData();
 	}
 
 
@@ -100,39 +100,37 @@ function routerController($rootScope, $scope, $http){
 
 	// 拉取线路数据
 	vm.fetchData = function(){
-		vm.rowsData = [{
-			id: '45',
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			description: 'haha',
-			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
-			energyCost: 'middle',
-			file: null,
+		$http({
+			url: vm.urls.getRouteList,
+			method: 'GET',
+			params: {offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1), limit: vm.pagination.maxRowNum},
+		}).then(function(res){
+			if(res.data.code === 0){
+				vm.rowsData = res.data.rows.map(function(item){
+					var costName;
+					vm.costMapping.forEach(function(cost){
+						if(cost.id === item.cost_id){
+							costName = cost.name;
+						}
+					});
+					return {
+						id: item.id,
+						businessId: item.business_id,
+						energyCost: item.cost_id + '',
+						costName: costName,
+						pic: item.cover,
+						description: item.description,
+						name: item.name,
+						creator: item.luna_name,
+						businessName: item.business_name
+					}
+				});
+				vm.pagination.totalItems = res.data.total;
 
-			creator: 'wumengqiang',
-		},{
-			id: '46',
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			creator: 'wumengqiang',
-			description: 'haha',
-			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
-			energyCost: 'middle',
-			file: null,
-				
-		},{
-			id: '47',
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			creator: 'wumengqiang',
-			description: 'haha',
-			pic: 'http://view.luna.visualbusiness.cn/dev/pic/poi/20160719085530_1704498985.png',
-			energyCost: 'middle',
-			file: null,
-		}];
+			}
+		}, function(res){
+
+		});
 	}
 	
 	vm.uploadPic = function(event){
@@ -197,12 +195,12 @@ function routerController($rootScope, $scope, $http){
 				method: "POST",
 				url: vm.data.id ? vm.urls.editRoute : vm.urls.createRoute,
 				data: data,
-				header:{
+				headers:{
 					"Content-Type": undefined
 				}
 			}).then(function(res){
 				vm.changeState('init');
-
+				vm.fetchData();
 			}, function(res){
 				console.log(vm.data.id? '更新路线失败' : '创建路线失败');
 			});
@@ -218,27 +216,18 @@ function routerController($rootScope, $scope, $http){
 		data.append('id', vm.opId);
 		$http({
 			method: 'POST',
-			url: 'xxx',
+			url: vm.urls.delRoute,
 			data: data,
 			headers: {
-				"Content-Type": undefined,
+				"Content-Type": undefined
 			},
 		}).then(function(res){
 			if(res.data.code === '0'){
-				
+				vm.changeState('init');
+				vm.fetchData();
 			}
 		}, function(res){
-			var index = -1, id = vm.opId;
-			vm.rowsData.forEach(function(item, itemIndex){
-				if(item.id === id){
-					index = itemIndex;
-					return;
-				}
-			});
-			if(index > -1){
-				vm.rowsData.splice(index, 1);
-			}
-			vm.changeState('init');
+			alert("删除失败");
 		});
 	} 
 	
@@ -256,11 +245,11 @@ manageRouter.directive("bnRows", function(){
 	function link($scope, element, attribute){
 		element.on('click', '.router-update', function(event){
 			$scope.router.changeState('update', 
-				$(event.target).parentsUntil('tbody', 'tr').attr('data-id'));
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-id')));
 		});
 		element.on('click', '.router-delete', function(event){
 			$scope.router.changeState('delete', 
-				$(event.target).parentsUntil('tbody', 'tr').attr('data-id'));
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-id')));
 		});
 	}
 });
