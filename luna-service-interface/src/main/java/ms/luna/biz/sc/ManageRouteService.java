@@ -42,7 +42,7 @@ public interface ManageRouteService {
 	/**
 	 * 判断线路名称是否存在
 	 * 
-	 * @param name
+	 * @param json
 	 * @return
 	 */
 	JSONObject isRouteNmExist(String json);

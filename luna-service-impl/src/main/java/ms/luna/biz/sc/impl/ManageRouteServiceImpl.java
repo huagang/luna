@@ -2,18 +2,14 @@ package ms.luna.biz.sc.impl;
 
 import java.util.List;
 
-import org.apache.commons.chain.web.faces.FacesSetLocaleCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
 
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.dao.custom.MsRoleDAO;
 import ms.luna.biz.dao.custom.MsRouteDAO;
 import ms.luna.biz.dao.custom.model.MsRouteParameter;
 import ms.luna.biz.dao.custom.model.MsRouteResult;
@@ -21,7 +17,6 @@ import ms.luna.biz.dao.model.MsRoute;
 import ms.luna.biz.dao.model.MsRouteCriteria;
 import ms.luna.biz.sc.ManageRouteService;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.MsLogger;
 
 /**
  * @author Greek
@@ -33,7 +28,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 
 	@Autowired
 	private MsRouteDAO msRouteDAO;
-	
+
 	@Override
 	public JSONObject createRoute(String json) {
 		JSONObject param = JSONObject.parseObject(json);
@@ -43,13 +38,13 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		String unique_id = param.getString("unique_id");
 		Integer cost_id = param.getInteger("cost_id");
 		Integer business_id = param.getInteger("business_id");
-		
+
 		// 检测名称是否存在
 		boolean flag = checkRouteNmExist(name, null);
 		if(flag) {
 			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 		}
-		
+
 		MsRoute msRoute = new MsRoute();
 		msRoute.setName(name);
 		msRoute.setCover(cover);
@@ -70,19 +65,19 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	public JSONObject editRoute(String json) {
 		JSONObject param = JSONObject.parseObject(json);
 		Integer id = param.getInteger("id");
-		
+
 		String name = param.getString("name");
 		String description = param.getString("description") ;
 		Integer cost_id = param.getInteger("cost_id");
-		String cover = param.getString("cover"); 
+		String cover = param.getString("cover");
 		String unique_id = param.getString("unique_id");
-		
+
 		// 检测名称是否存在
 		boolean flag = checkRouteNmExist(name, id);
 		if(flag) {
 			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 		}
-		
+
 		MsRoute msRoute = new MsRoute();
 		msRoute.setName(name);
 		msRoute.setDescription(description);
@@ -90,7 +85,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		msRoute.setCover(cover);
 		msRoute.setId(id);
 		msRoute.setUniqueId(unique_id);
-		
+
 		try {
 			Integer count = msRouteDAO.updateByPrimaryKeySelective(msRoute);
 			if(count <= 0) {
@@ -100,7 +95,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		} catch (Exception e) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to update route" + e.getMessage());
 		}
-		
+
 	}
 
 	@Override
@@ -142,8 +137,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		msRouteParameter.setLimit(limit);
 		msRouteParameter.setOffset(offset);
 		try{
-			Integer count = 0; 
-			count = msRouteDAO.countRoutes(msRouteParameter);
+			Integer count = msRouteDAO.countRoutes(msRouteParameter);
 			JSONArray rows = JSONArray.parseArray("[]");
 			if(count > 0) {
 				 List<MsRouteResult> lst = msRouteDAO.selectRoutes(msRouteParameter);
@@ -166,7 +160,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			result.put("rows", rows);
 			result.put("code", 0);
 			result.put("msg", "success");
-			
+
 			return result;
 		} catch (Exception e) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to load routes" + e.getMessage());
@@ -188,13 +182,13 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			} else {
 				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 			}
-			
+
 		} catch (Exception e) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to judge whether route is existed" + e.getMessage());
 		}
-		
+
 	}
-	
+
 	private boolean checkRouteNmExist(String name, Integer id) {
 		MsRouteCriteria msRouteCriteria = new MsRouteCriteria();
 		MsRouteCriteria.Criteria criteria = msRouteCriteria.createCriteria();
@@ -203,18 +197,10 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 
 		// 创建状态
 		if(id == null) {
-			if( lst== null || lst.size() == 0) {// 不存在
-				return false;
-			}
-			return true;	// 存在
+			return (lst != null && lst.size() !=0 );
 		} else {//  编辑状态
-			if(lst == null || lst.size() == 0) {// 不存在
-				return false;
-			}
-			if(id.equals(lst.get(0).getId())) {// id对应的name 未发生改变,
-				return false;
-			}
-			return true;
+			// 不存在或者id对应的name 未发生改变
+			return (lst != null && lst.size() != 0 && !id.equals(lst.get(0).getId()));
 		}
 	}
 
