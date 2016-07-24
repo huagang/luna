@@ -15,6 +15,7 @@
 
 	<context:component-scan base-package="ms.biz" />
 	<context:component-scan base-package="ms.luna.biz" />
+	<context:component-scan base-package="ms.luna.cache" />
 	<!-- <context:component-scan base-package="ms.luna.biz.bl"/> <context:component-scan 
 		base-package="ms.luna.biz.bl.impl"/> -->
 
@@ -23,9 +24,9 @@
 		<property name="url" value="${jdbc.url}${jdbc.urlParam}"/>
         <property name="username" value="${jdbc.user}"/>
         <property name="password" value="${jdbc.password}"/>
-        <property name="maxActive" value="10" />  
-        <property name="maxIdle" value="60000" />  
-        <property name="maxWait" value="28000" />  
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="5000" />
         <property name="defaultAutoCommit" value="true" />  
         <property name="defaultReadOnly" value="false" />    
         <property name="testOnBorrow" value="true"/>  

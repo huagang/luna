@@ -355,3 +355,49 @@ CREATE TABLE `ms_show_page_share`(
   PRIMARY KEY (id),
   KEY (app_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '微景展分享信息';
+
+create table luna_module(
+  id int(11) auto_increment,
+  name varchar(10) not null comment '模块名称',
+  code varchar(16) not null comment '模块编码，对应restful中模块路径',
+  extra text comment '模块下拉选项',
+  display_order int(11) not null comment '展示顺序',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  unique(name),
+  unique(code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块表';
+
+create table luna_menu(
+  id int(11) auto_increment,
+  name varchar(10) not null comment '菜单名称',
+  code varchar(16) not null comment '菜单编码，对应restful中菜单路径',
+  url varchar(256) default null comment '外部系统url，内部为空',
+  module_id int(11) not null comment '模块名称',
+  display_order int(11) not null comment '展示顺序',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  key(module_id),
+  unique(name),
+  unique(code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单表';
+
+create table luna_role(
+  id int(11) auto_increment,
+  name varchar(16) not null comment '角色名称',
+  code varchar(32) not null comment '角色编码',
+  is_admin tinyint(1) not null default 0 comment '是否管理员',
+  parent_id int not null comment '父角色',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  key(parent_id),
+  unique(name),
+  unique(code)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+
+create table luna_role_menu(
+  role_id int(11) not null,
+  menu_id int(11) not null,
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(role_id, menu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色菜单对应表';

@@ -87,7 +87,7 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="ms_show_page_share">
+		<table tableName="luna_menu">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
 		</table>
 	</context>
