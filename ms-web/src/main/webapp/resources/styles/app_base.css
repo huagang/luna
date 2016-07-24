@@ -121,6 +121,7 @@ html,body{
 }
 .mask{
     position: fixed;
+    z-index: 1000;
     top: 0;
     left: 0;
     height: 100%;
@@ -141,3 +142,140 @@ html,body{
     }
 }*/
 /*视频弹出框的样式 End*/
+
+
+
+/* 目录页口 start */
+.topmenu-bg{
+    height: 100%;
+}
+
+.topmenu-wrap{
+    height: 200px;
+}
+
+
+
+
+
+.menulist{
+    min-width: 20%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.menulist .icon{
+    height: 60px;
+    width: 60px;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 auto 5px;
+}
+
+.menulist .icon.current{
+    display: none;
+}
+
+.menulist.current .icon{
+    display: none;
+}
+
+.menulist.current .icon.current{
+    display: block;
+}
+
+.topmenu{
+    overflow: hidden;
+    position: relative;
+    height: 200px;
+}
+
+
+
+.menulist-wrap {
+    color: white;
+    font-size: 1.33rem;
+    color: white;
+    font-size: 1.33rem;
+    overflow-x: scroll;
+    width: 100vw;
+    height: 100px;
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0));
+
+}
+
+.menulist-wrap.flex {
+    display: flex;
+    align-content: space-around;
+}
+.menulist-wrap.flex .menulist{
+    flex-grow: 1;
+}
+.menulist-title{
+    text-align: center;
+
+}
+
+
+
+#poi .detail-title-wrap {
+    height: 45px;
+    line-height: 45px;
+    font-size: 18px;
+    background-color: #fff;
+    width: 100%;
+    color: #666;
+}
+
+#poi .detail-title {
+    padding-left: 20px;
+}
+
+#poi .detail-title:before{
+    display: inline-block;
+    content: ' ';
+    line-height: 45px;
+    border: 8px solid transparent;
+    border-left: 9px solid #FF4800;
+    position: relative;
+    top: 1px;
+}
+
+#poi .icon {
+    background: url(../images/icons-2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 504px;
+}
+
+#poi .icon-video, .icon-video-on {
+    width: 33px;
+    height: 33px;
+    background-position: -99px -100px;
+
+}
+
+#poi .btn-wrap{
+    float: right;
+    padding: 6px 6px 0 0 ;
+}
+
+#poi .icon-radio {
+    width: 33px;
+    height: 33px;
+    background-position: -132px -100px;
+}
+
+#poi .icon-radio.icon-radio-on {
+    width: 33px;
+    height: 33px;
+    background-position: -132px -133px;
+}
+
+#poi .content-details{
+    background-color: #F6F6F6;
+}
+/* 目录页口 end */

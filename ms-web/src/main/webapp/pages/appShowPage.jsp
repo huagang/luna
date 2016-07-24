@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿
+<!doctype html>
 <html>
 <head>
     <title>${share_info_title}</title>
@@ -9,7 +10,7 @@
     <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
 </head>
-<body>
+<body ng-app="app" ng-controller="AppController as app">
 	<div class="app-wrap">
         <!-- 视频弹出框 -->
         <div class='video-modal' style="display:none;">
