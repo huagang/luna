@@ -134,7 +134,9 @@ body {
 .icon-pano {
     background: url('../../images/hjm/pano.png') no-repeat;
 }
-
+.icon-wait-pano{
+    background: url('../../images/hjm/waitPano.png') no-repeat;
+}
 .footer {
     /* position: absolute; */
     bottom: 0;

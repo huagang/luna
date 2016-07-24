@@ -88,6 +88,15 @@ public class ManageArticleCtrl extends BasicCtrl {
         }
         jsonObject.put(MsArticleTable.FIELD_TITLE, title);
 
+        String shortTitle = RequestHelper.getString(request, MsArticleTable.FIELD_SHORT_TITLE);
+        if(StringUtils.isNotBlank(shortTitle)) {
+            if (shortTitle.length() > 64) {
+                errMsg = "标题长度不合法（0-64个字符）";
+                return Pair.of(jsonObject, errMsg);
+            }
+            jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, shortTitle);
+        }
+
         String content = RequestHelper.getString(request, MsArticleTable.FIELD_CONTENT);
         if(StringUtils.isBlank(content)) {
             errMsg = "正文不能为空";
