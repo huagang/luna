@@ -54,6 +54,7 @@ public class ManageArticleCtrl extends BasicCtrl {
     public static final String SEARCH_ARTICLE = "method=async_search_article";
     public static final String SEARCH_BUSINESS="method=search_business";
     public static final String PUBLISH_ARTICLE = "method=publish_article";
+    public static final String READ_COLUMN = "method=read_column";
 
     @RequestMapping(params = INIT)
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
@@ -154,6 +155,19 @@ public class ManageArticleCtrl extends BasicCtrl {
             modelAndView.addObject("columnMap", columnMap);
         }
         return modelAndView;
+    }
+
+    @RequestMapping(params = READ_COLUMN, method = RequestMethod.GET)
+    public void readColumnByBusinessId(@RequestParam(required = true, value = "business_id") int businessId,
+                                               HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("text/html; charset=UTF-8");
+        JSONObject columnJsonData = manageArticleService.getColumnByBusinessId(businessId);
+        if(columnJsonData.getString("code").equals("0")) {
+            response.getWriter().print(columnJsonData.toJSONString());
+        } else {
+            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败"));
+        }
     }
 
     @RequestMapping(params = READ_ARTICLE)
