@@ -10,7 +10,14 @@ var lunaPage = {},
     currentComponentId = "";
 var currentComponent = {};
 var currentPage = null;
-var currentBgPano = null ; //背景全景
+
+setCookie('businessId',50);
+var objdata = {
+    businessId:getCookie('businessId'),
+    articleListData:null,
+    articleData:null
+}
+
 //定义组件属性模板
 componentCanvasModelTemplate = {
     "_id": "",
@@ -117,6 +124,43 @@ componentVideoModelTemplate = {
         }
     }
 };
+//页签
+componentTabModelTemplate = {
+    "_id": "",
+    "type": "tab",
+    "content": {
+        list: [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
+    },
+    "action": {
+        "href": {
+            "type": "none",
+            "value": ""
+        }
+    }
+};
+/**
+ * 头部组件
+ * @type {Object}
+ */
+var componentViewTemplate = {
+    'tabMenu': '<div class="topmenu-wrapper">' +
+        '<div class="topmenu-bg">' +
+        '<img src="http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg">' +
+        '</div>' +
+        '<div class="topmenu">' +
+        '<div class="menulist-wrap">' +
+        '<ul class="menulist">' +
+        '<li class="menuitem current" item="default">' +
+        '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
+        '<div class="menuitem-title"><span>概况</span></div>' +
+        '</li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '</div>',
+}
+
+
 
 var $overlay;
 $(document).ready(function() {
@@ -587,6 +631,12 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
             newComponent.attr("component-type", "video");
             newComponent.children("div").append('<img src="' + imghost + '/img/samplevideo.png" />');
             break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
+            break;
         default:
             $.alert("未知的组件类型");
             return;
@@ -660,6 +710,14 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "video":
             newComponent.attr("component-type", "video");
+            var icon = imghost + "/img/sample.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
             var icon = imghost + "/img/sample.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
@@ -745,6 +803,9 @@ function updatePageComponents(pageID, componentID) {
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         case "video":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        case "tab":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         default:
@@ -837,7 +898,7 @@ function showPanoBackground($container, componentData) {
     var pano = {},
         panoObj = $container.find('canvas');
 
-    if (componentData.panoId && panoObj.length == 0 ) {
+    if (componentData.panoId && panoObj.length == 0) {
         pano = new com.vbpano.Panorama($container.get(0));
         pano.setPanoId(componentData.panoId); //panoId
         pano.setHeading(180); //左右

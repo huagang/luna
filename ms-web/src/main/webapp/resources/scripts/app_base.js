@@ -158,6 +158,10 @@ $(document).ready(function() {
                         var video = new Video(value);
                         componentHtml = video.build();
                         break;
+                    case 'menuTab':
+                        var menutab = new menuTab(value);
+                        componentHtml = menutab.build();
+                        break;
                 }
                 $comGroup.append(componentHtml);
             }
@@ -418,6 +422,38 @@ $(document).ready(function() {
     }
     /* 视频组件 */
     function Video(data) {
+        this.value = data;
+        BaseComponent.call(this);
+
+        this.build = function() {
+            var loopPlay = '',
+                videoWidth = this.value.width ? 'width = "' + this.value.width + this.value.unit + '"' : '',
+                videoHeight = this.value.height ? 'height = "' + this.value.height + this.value.unit + '"' : '',
+                videoIcon = this.value.content.videoIcon || this.value.content.icon,
+                showType = this.value.content.videoShowType = this.value.content.videoShowType || '1';
+
+            this.setPosition();
+
+            this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
+            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+
+            if (showType == '1') {
+                //弹框组件
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playVideo" data-videoicon = "' + videoIcon + '" data-videourl = "' + this.value.content.videoUrl + '"><img  src="' + videoIcon + '" /></a> ');
+            } else {
+                //内嵌组件
+                this.html.children("div").append('<video src="' + this.value.content.videoUrl + '" class="video-js" controls preload="auto"  ' + videoWidth + ' ' + videoHeight + ' data-setup="{}" ></video>');
+            }
+
+            this.setMoreInfo();
+
+            this.setAction();
+
+            return this.html;
+        }
+    }
+    /* 菜单页卡 */
+    function menuTab(data) {
         this.value = data;
         BaseComponent.call(this);
 

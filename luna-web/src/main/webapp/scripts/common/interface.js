@@ -8,7 +8,8 @@
  */
 
 var Inter = function() {
-    var context ="/luna-web";
+    var context ="/luna-web",
+    apiContext = '';
     return {
         getApiUrl: function() {
             return {
@@ -35,6 +36,12 @@ var Inter = function() {
                 // 上传路径
                 uploadPath: context+'/uploadCtrl.do?method=uploadFile2Cloud', //统一上传接口
                 
+                //文章列表接口
+                articleListApi:'http://luna.visualbusiness.cn/luna-api/article/businessId/{0}', 
+                
+                //文章栏目列表
+                articleColunmu:context+'/manage/article.do?method=read_column&business_id=',
+
             };
         }
     };

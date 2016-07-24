@@ -152,6 +152,21 @@ $(function() {
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("video");
     });
+    
+    //页签组件
+    $("#tabComponent").click(function() {
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+    
+        lunaPage.creatPageComponents(currentPageId, null, "tab");
+        currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
+        currentComponent["_id"] = currentComponentId;
+        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        componentPanel.init("tab");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("tab");
+    });
 
     //右键删除组件
     $("#layermain").contextmenu({

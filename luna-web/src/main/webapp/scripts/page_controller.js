@@ -47,6 +47,7 @@ showPage.controller('navController', ['$scope', '$rootScope', NavController]);
 showPage.controller('panoController', ['$scope', '$rootScope', PanoController]);
 showPage.controller('audioController', ['$scope', '$rootScope', AudioController]);
 showPage.controller('videoController', ['$scope', '$rootScope', VideoController]);
+showPage.controller('tabController', ['$scope', '$rootScope', '$http', TabController]);
 
 function MenuController($scope, $rootScope, $http) {
 
@@ -340,6 +341,9 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = this.currentComponent.bgimg;
         this.panoId = this.currentComponent.panoId;
         this.gravity = this.currentComponent.gravity;
+        if (!objdata.articleListData) {
+            getArticleListByBusinessId(objdata.businessId);
+        }
     };
 
     this.changeBackgroundColor = function() {
@@ -366,7 +370,7 @@ function CanvasController($scope, $rootScope) {
     };
 
     this.changePano = function($event) {
-        
+
         this.currentComponent.panoId = this.panoId;
         this.currentComponent.gravity = this.gravity;
 
@@ -555,3 +559,113 @@ function VideoController($scope, $rootScope) {
 
 VideoController.prototype = new InteractComponentController();
 /* Init Video Controller End */
+
+/* Init TabMenu Controller Start */
+function TabController($scope, $rootScope, $http) {
+
+    this.init = function() {
+        TabController.prototype.init.call(this);
+        var _self = this;
+        this.content = jQuery.extend(true, {}, this.currentComponent.content);
+        this.content.tabList = []; //tab标签列表
+        this.content.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
+        this.selectTabTypeStatus = false;
+        this.content.tabListCount = 0;
+        //根绝业务Id 获取栏目列表
+        
+        // $http.get(Inter.getApiUrl().articleColunmu+objdata.businessId).success( function(response) {
+        $http.get(Inter.getApiUrl().articleColunmu + '48').success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'columnName': '请选择', 'columnId': '' }];
+                    for (var key in response.data) {
+                        reArr.push({ 'columnName': key, 'columnId': response.data[key] });
+                    }
+                    _self.content.articleColunmuList = reArr;
+                }
+            } else {
+                alert('获取文章栏目失败');
+            }
+        });
+                
+        // $http.get(Inter.getApiUrl().articleColunmu+objdata.businessId).success( function(response) {
+        $http.get(Inter.getApiUrl().articleColunmu + '48').success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'columnName': '请选择', 'columnId': '' }];
+                    for (var key in response.data) {
+                        reArr.push({ 'columnName': key, 'columnId': response.data[key] });
+                    }
+                    _self.content.articleColunmuList = reArr;
+                }
+            } else {
+                alert('获取文章栏目失败');
+            }
+        });
+    }
+    this.changeTabUrl = function() {
+
+    }
+    this.changeTab = function($event, $index) {
+        console.log($event);
+        console.log('changeTab');
+    }
+    this.delTab = function($event, $index) {
+        $event.stopPropagation();
+        this.content.tabList.splice($index, 1);
+    }
+    this.createNewTab = function($event, type) {
+
+        //创建新的Tab
+        var defaultTab = {
+            id: 'menutab' + this.content.tabListCount,
+            name: '页卡' + this.content.tabListCount,
+            delCls: '',
+        };
+
+        this.content.tabList.push(defaultTab);
+
+        this.content.tabType = { code: type };
+        switch (type) {
+            case 'singleArtcle':
+                this.content.tabType.name = '单页文章';
+                break;
+            case 'artcleList':
+                this.content.tabType.name = '文章列表';
+                break;
+            case 'singlePoi':
+                this.content.tabType.name = '单点Poi';
+                break;
+            case 'poiList':
+                this.content.tabType.name = 'Poi列表';
+                break;
+        }
+        this.content.tabName = defaultTab.name;
+
+        this.content.tabList[this.content.tabList.length - 1].type = type;
+
+        console.log();
+
+        this.content.tabListCount++;
+        // this.content.tabContent
+    }
+    this.selectTabType = function($event, $index) {
+        if (this.selectTabTypeStatus) {
+            this.selectTabTypeStatus = false;
+        } else {
+            var tabsNum = $event.target.parentNode.parentNode.children.length;
+            if (tabsNum % 4 == 0) {
+                $event.target.parentNode.children[1].style.left = '-100%';
+            } else {
+                $event.target.parentNode.children[1].style.left = '100%';
+            }
+            this.selectTabTypeStatus = true;
+
+            console.log($event);
+        }
+    }
+
+}
+
+TabController.prototype = new InteractComponentController();
+/* Init TabMenu Controller End */

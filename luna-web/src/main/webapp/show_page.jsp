@@ -23,6 +23,7 @@
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/pages.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/components.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/topic.css">
+          <link rel="stylesheet" type="text/css" href="styles/fonts/iconfont.css">
           <!-- 脚本文件 -->
           <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
           <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
@@ -74,9 +75,9 @@
                   <i class="icon icon-comp-video"></i><br/>
                   <span>视频</span>
                 </div>
-                <div class="component-btn" id="menuComponent">
-                  <i class="icon icon-comp-video"></i><br/>
-                  <span>视频</span>
+                <div class="component-btn" id="tabComponent">
+                  <i class="icon icon-comp-tab"></i><br/>
+                  <span>页签</span>
                 </div>
                 <div class="component-btn" id="moreComponents">
                   <i class="icon icon-comp-more"></i><br/>
@@ -167,7 +168,6 @@
                     <div class="form-group"><input type="checkbox" id="chkGsensor"  ng-model="canvas.gravity" ng-click="canvas.changePano()"><lable for="chkGsensor">开启重力感应</lable></div>
                   </div>
                 </div>
-
                 <!-- canvas controller end -->
                 <!-- text controller begin -->
                 <div id="textDiv" ng-controller="textController as text">
@@ -833,9 +833,144 @@
                       </div>
                       <!-- 交互样式 -->
                   </div>
-                  <!-- audio controller end -->
+                <!-- video controller end -->
+
+                <!-- tab controller begin -->
+                 <div id="tabDiv" ng-controller="tabController as menuTab" class="menuTab-set">
+                    <button id="initTab" ng-click="menuTab.init()" class="ng-hide">Init</button>
+                    <button id="updateTab" ng-click="menuTab.update()" class="ng-hide">Update</button>
+                    <div>
+                        <div class="menu-control menu-control-wrap">
+                            <a href="#" class="style" ng-class="menuTab.tabs.style.tab" ng-click="menuTab.changeTab('style')">样式</a>
+                            <a href="#" class="interact" ng-class="menuTab.tabs.interact.tab" ng-click="menuTab.changeTab('interact')">交互</a>
+                        </div>
+                    </div>
+                    <div ng-show="menuTab.tabs.style.content">
+                        <!-- 模块大小位置 -->
+                        <div class="position">
+                            <h2><label>大小和位置</label></h2>
+                            <ul class="list-pos">
+                                <li>
+                                    <span>X</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.x" ng-blur="menuTab.changeX()" />px</li>
+                                <li>
+                                    <span>Y</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.y" ng-blur="menuTab.changeY()" />px</li>
+                                <li>
+                                    <span>宽</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.width" ng-blur="menuTab.changeWidth()" />px</li>
+                                <li>
+                                    <span>高</span>
+                                    <input ttype="number" ng-model="menuTab.currentComponent.height" ng-blur="menuTab.changeHeight()" />px</li></ul>
+                        </div>
+                        <!-- 模块大小位置-->
+                        <div class="bg-set">
+                            <h2><label>数据填充</label></h2>
+                            <form id="tabBanner" name="tabBanner" method="post" enctype="multipart/form-data" class="menuTab-upload">
+                                <span class="title">头图</span>
+                                <input class="menuTab-url" id="tabBannerUrl" placeholder="请上传头图" ng-model="menuTab.currentComponent.content.listIcon" ng-blur="" readonly="readonly" />
+                                <button class="btn btn-local">上传</button>
+                                <input type="file" onchange="async_upload_pic('tabBanner','',true,'',this,'tabBannerUrl');" class="file file-local" id="" name="pic" />
+                            </form>
+                            <h2><label>页卡管理：</label></h2>
+                            <div class="form-group clearfix">
+                                <ul class="menutab-list">
+                                    <li  ng-repeat="item in menuTab.content.tabList" ><a href="javascript:;" class="btn" id='{{item.id}}' ng-click="menuTab.changeTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
+                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn" id="createNewTab" >新建页卡</a>
+                                      <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArtcle')" readonly='readonly'>单页文章</a></li>
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'artcleList')" readonly='readonly'>文章列表</a></li>
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a></li>
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'poiList')" readonly='readonly'>POI列表</a></li>
+                                      </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <h2><label>页卡内容</label></h2>
+                            <div id="" class="form-group clearfix">
+                                <div class="menutab-set-wrapper">
+                                    <div>页卡名称 <input type="text" name="" ng-model="menuTab.content.tabName"></div>
+                                    <div>页卡类型 <input type="text" name="" ng-model="menuTab.content.tabType.name" readonly="readonly"></div>
+                                    <div>页卡图标 <select>
+                                        <option>我是图标一</option>
+                                        <option>我是图标二</option>
+                                        <option>我是图标三</option>
+                                    </select></div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'singleArtcle'">
+                                      <div>栏目名称 <select name="" id="">
+                                        <option ng-repeat='articleColunmu in menuTab.content.articleColunmuList' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option>
+                                      </select></div>
+                                      <div>文章名称 <select>
+                                        <option>我是文章一</option>
+                                        <option>我是文章二</option>
+                                        </select> </div>
+                                    </div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'poiList'">
+                                      <div>一级Poi <select name="" id="">
+                                        <option>Poi一</option>
+                                        <option>Poi二</option>
+                                        <option>Poi三</option>
+                                      </select></div>
+                                      <div>Poi类别 <select>
+                                        <option>旅游</option>
+                                        <option>酒店</option>
+                                        </select> </div>
+                                    </div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'singlePoi'">
+                                      <div>Poi Id <input type="text" name="" ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 交互样式 -->
+                    <div class="interaction" ng-show="menuTab.tabs.interact.content">
+                        <form name="listInteractForm">
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="none" ng-click="tab.clearHref()"/>无链接
+                                </label>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                <input type="url" class="txt" name="outerValue" ng-model="tab.action.href.outerValue" ng-change="tab.changeOuterHref()" ng-disabled="tab.currentComponent.action.href.type != 'outer'"/>
+                                <div role="alert">
+                                    <span class="error" ng-show="listInteractForm.outerValue.$error.url">url格式不合法</span>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="inner" ng-click="tab.loadPages()"/>微展页面：
+                                </label><br/>
+                                <select class="select" ng-model="tab.action.href.innerValue" ng-change="tab.changeInnerHref()" ng-disabled="tab.currentComponent.action.href.type != 'inner'">
+                                    <option ng-repeat="option in tab.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
+                                </select>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                <input type="email" class="txt" name="email" ng-model="tab.action.href.email" ng-change="tab.changeEmail()" ng-disabled="tab.currentComponent.action.href.type != 'email'"/>
+                                <div role="alert">
+                                    <span class="error" ng-show="listInteractForm.email.$error.email">email格式不合法</span>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                <input type="text" class="txt" ng-model="tab.action.href.phone" ng-change="tab.changePhone()" ng-disabled="tab.currentComponent.action.href.type != 'phone'"/>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="tab.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- 交互样式 -->
                 </div>
+                <!-- tab controller end -->
               </div>
+            </div>
             <!-- 控制面板管理 end-->
             <!--右键菜单 start-->
             <div id="context-menu">
@@ -852,7 +987,7 @@
           <div class="pop" id="pop-add">
             <div class="pop-title">
               <h4>页面设置</h4>
-        	<a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+              <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
             </div>
             <div class="pop-cont">
               <div class="item-wrap">
@@ -870,8 +1005,10 @@
             <!-- 弹出层底部功能区 -->
             <div class="pop-fun">
               <button type="button" class="" id="setup">确定</button>
-              <button type="reset" class="button-close" onclick="clcWindow(this)">取消</button></div>
-            <!-- 弹出层底部功能区 --></div>
+              <button type="reset" class="button-close" onclick="clcWindow(this)">取消</button>
+            </div>
+            <!-- 弹出层底部功能区 -->
+          </div>
           <!-- 添加页面弹出层 -->
           <!-- 微景展设置弹出层 -->
           <div class="pop" id="pop-set">
@@ -916,8 +1053,10 @@
             <!-- 弹出层底部功能区 -->
             <div class="pop-fun">
               <button type="button" class="" id="page-property">确定</button>
-              <button type="reset" class="button-close" onclick="clcWindow(this)">取消</button></div>
-            <!-- 弹出层底部功能区 --></div>
+              <button type="reset" class="button-close" onclick="clcWindow(this)">取消</button>
+            </div>
+            <!-- 弹出层底部功能区 -->
+          </div>
           <!-- 微景展设置弹出层 -->
           <!-- 删除页面弹出层 -->
           <div class="pop" id="pop-delete">

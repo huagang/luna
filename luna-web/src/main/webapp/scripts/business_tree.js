@@ -114,6 +114,7 @@ $(document).ready(function(){
     	$(this).siblings().removeClass("current");
     	$(this).addClass("current");
     	showSearchPois($(this).attr("tag_id"));
+        $('#chkbox-selcet-all').attr("checked",false);
 //    	searchPois();
     });
 
