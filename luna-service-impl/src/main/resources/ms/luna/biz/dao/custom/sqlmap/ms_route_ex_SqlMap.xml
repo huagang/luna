@@ -27,7 +27,7 @@
 		inner join ms_user_pw on ms_route.unique_id = ms_user_pw.unique_id
 		inner join ms_business on ms_route.business_id = ms_business.business_id
 		order by
-			ms_route.regist_hhmmss DESC 
+			ms_route.regist_hhmmss DESC
 		<isNotNull property="range">
 			Limit #offset#,#limit#
 		</isNotNull>
