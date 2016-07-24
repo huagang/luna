@@ -23,7 +23,9 @@
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/pages.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/components.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/topic.css">
-          <link rel="stylesheet" type="text/css" href="styles/fonts/iconfont.css">
+          <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select.css">
+          <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select2.css">
+          <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
           <!-- 脚本文件 -->
           <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
           <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
@@ -33,6 +35,8 @@
           <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
           <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
           <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+          <script src="<%=request.getContextPath()%>/plugins/angular/js/angular-sanitize-1.5.js"></script>
+          <script src="<%=request.getContextPath()%>/plugins/selectui/select.js"></script>
           <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
           <script>
 	        var appId = ${appId};
@@ -887,37 +891,41 @@
                                 </ul>
                             </div>
                             <h2><label>页卡内容</label></h2>
-                            <div id="" class="form-group clearfix">
+                            <div id="" class="form-group clearfix" ng-show="menuTab.content.tabList.length>0">
                                 <div class="menutab-set-wrapper">
-                                    <div>页卡名称 <input type="text" name="" ng-model="menuTab.content.tabName"></div>
-                                    <div>页卡类型 <input type="text" name="" ng-model="menuTab.content.tabType.name" readonly="readonly"></div>
-                                    <div>页卡图标 <select>
-                                        <option>我是图标一</option>
-                                        <option>我是图标二</option>
-                                        <option>我是图标三</option>
-                                    </select></div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'singleArtcle'">
-                                      <div>栏目名称 <select name="" id="">
-                                        <option ng-repeat='articleColunmu in menuTab.content.articleColunmuList' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option>
+                                    <div>页卡名称: <input type="text" name="" ng-model="menuTab.currentTab.name"></div>
+                                    <div>页卡类型: <input type="text" name="" ng-model="menuTab.currentTab.typeName" readonly="readonly"></div>
+                                    <div>页卡图标:
+                                    <div>
+                                      <ui-select ng-model="menuTab.currentTab.icon.selected" theme="select2" on-select="menuTab.onIconSelectCallback($item, $model)" search-enabled="false" ng-disabled="" style="width: 100%;" title="选择icon">
+                                        <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
+                                          <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
+                                        </ui-select-choices>
+                                      </ui-select>
+                                    </div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArtcle' || menuTab.currentTab.type == 'artcleList'">
+                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId">
+                                        <option ng-repeat='articleColunmu in menuTab.articleColunmuList' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
                                       </select></div>
-                                      <div>文章名称 <select>
-                                        <option>我是文章一</option>
-                                        <option>我是文章二</option>
+                                      <div ng-show="menuTab.currentTab.type == 'singleArtcle'">文章名称 <select ng-model="menuTab.currentTab.articleId" >
+                                          <option ng-repeat='article in menuTab.articleList' value='{{article.articleId}}'>{{article.articleName}}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList' || menuTab.currentTab.type == 'singlePoi' ">
+                                      <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firsPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
+                                          <option ng-repeat='poi in menuTab.firstPoiList' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                        </select>
+                                      </div>
+                                      <div>Poi类别 <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
+                                          <option ng-repeat='poiType in menuTab.poiTypeList' value='{{poiType.id}}'>{{poiType.name}}</option>
                                         </select> </div>
                                     </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'poiList'">
-                                      <div>一级Poi <select name="" id="">
-                                        <option>Poi一</option>
-                                        <option>Poi二</option>
-                                        <option>Poi三</option>
-                                      </select></div>
-                                      <div>Poi类别 <select>
-                                        <option>旅游</option>
-                                        <option>酒店</option>
-                                        </select> </div>
-                                    </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.content.tabType.code == 'singlePoi'">
-                                      <div>Poi Id <input type="text" name="" ></div>
+                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
+                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId">
+                                        <option ng-repeat='poi in menuTab.secondPoiList' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                      </select>
                                     </div>
                                 </div>
                             </div>
@@ -967,6 +975,7 @@
                         </form>
                     </div>
                     <!-- 交互样式 -->
+                    
                 </div>
                 <!-- tab controller end -->
               </div>
@@ -1010,6 +1019,40 @@
             <!-- 弹出层底部功能区 -->
           </div>
           <!-- 添加页面弹出层 -->
+          <!-- 菜单卡上传图标弹出层 -->
+          <div class="pop" id="pop-uploadMenuTabIcon" ng-controller="tabIconController as tabMenuIcon">
+              <div class="pop-title">
+                <h4>上传图标</h4>
+                <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+              </div>
+              <div class="pop-cont">
+                <div class="topic-set">
+                  <div class="item-wrap">
+                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                          <span class="title">默认图标</span>
+                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-blur="tabMenuIcon.chageDefaultIcon()" />
+                          <button class="btn btn-local">上传</button>
+                          <input type="file" onchange="async_upload_pic('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
+                      </form>
+                  </div>
+                  <div class="item-wrap">
+                     <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                          <span class="title">当前图标</span>
+                          <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-blur="tabMenuIcon.chageCurrentIcon()"/>
+                          <button class="btn btn-local">上传</button>
+                          <input type="file" onchange="async_upload_pic('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="pic" />
+                      </form>
+                  </div>
+                </div>
+              </div>
+              <!-- 弹出层底部功能区 -->
+              <div class="pop-fun">
+              <!--   <button type="button" class="" id="page-property">确定</button>
+                <button type="reset" class="button-close" onclick="clcWindow(this)">取消</button> -->
+              </div>
+              <!-- 弹出层底部功能区 -->
+            </div>
+          <!-- 菜单卡上传图标弹出层 -->
           <!-- 微景展设置弹出层 -->
           <div class="pop" id="pop-set">
             <div class="pop-title">

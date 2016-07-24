@@ -6,7 +6,6 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-
 var Inter = function() {
     var context ="/luna-web",
     apiContext = '';
@@ -40,8 +39,13 @@ var Inter = function() {
                 articleListApi:'http://luna.visualbusiness.cn/luna-api/article/businessId/{0}', 
                 
                 //文章栏目列表
-                articleColunmu:context+'/manage/article.do?method=read_column&business_id=',
-
+                articleColunmu:context+'/manage/article.do?method=read_column&business_id={0}',
+                articleListByBid:'http://luna.visualbusiness.cn/luna-api/article/businessId/{0}',//通过业务ID获取
+                articleListByBidAndCid:'http://luna.visualbusiness.cn/luna-api/article/businessId/{0}/columnIds/{1}',//通过业务ID和栏目Id获取
+                firstPoiByBid:'http://luna.visualbusiness.cn/luna-api/servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary',//通过业务ID
+                poiTypeListByBidAndFPoi:'http://luna.visualbusiness.cn/luna-api/servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
+                poiListByBidAndFPoi:'http://luna.visualbusiness.cn/luna-api/servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name',//获取业务关系树 一层结构下所有POI数据接口
+                poiListByBidAndFPoiAndPoiTyep:'http://luna.visualbusiness.cn/luna-api/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh',//获取业务关系树 多个一级类别下的数据接口
             };
         }
     };
