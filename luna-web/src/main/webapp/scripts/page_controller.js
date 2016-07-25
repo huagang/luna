@@ -1,33 +1,15 @@
 /* 
  * 微景展页面控件controller
  */
-var componentPanel = {
-
-    init: function(componentType) {
-        if (componentType) {
-            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
-        }
-        currentController = componentType + "Div";
-        var controllerManagerDiv = $("#controller-manager");
-        var children = controllerManagerDiv.children();
-        for (var i = 0; i < children.length; i++) {
-            if ($(children[i]).attr("id") == currentController) {
-                $(children[i]).show();
-            } else {
-                $(children[i]).hide();
-            }
-        }
-
-    },
-    update: function(componentType) {
-        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
-
-    }
-
-};
 
 //app初始化
-var showPage = angular.module('showPage', []);
+var showPage = angular.module('showPage', ['ngSanitize', 'ui.select']);
+showPage.factory('menuTabIcon', function() {
+    return {
+        defaultUrl: "",
+        currentUrl: "",
+    }
+});
 showPage.run(function($rootScope, $http) {
     $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function(obj) {
@@ -47,6 +29,8 @@ showPage.controller('navController', ['$scope', '$rootScope', NavController]);
 showPage.controller('panoController', ['$scope', '$rootScope', PanoController]);
 showPage.controller('audioController', ['$scope', '$rootScope', AudioController]);
 showPage.controller('videoController', ['$scope', '$rootScope', VideoController]);
+showPage.controller('menuTabController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabController]);
+showPage.controller('menuTabIconController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabIconController]);
 
 function MenuController($scope, $rootScope, $http) {
 
@@ -187,7 +171,6 @@ function BaseComponentController() {
     //改变属性值响应事件
     this.changeX = function() {
         updatePageComponentsHtml(currentPageId, currentComponentId);
-
     };
 
     this.changeY = function() {
@@ -340,6 +323,9 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = this.currentComponent.bgimg;
         this.panoId = this.currentComponent.panoId;
         this.gravity = this.currentComponent.gravity;
+        if (!objdata.articleListData) {
+            getArticleListByBusinessId(objdata.businessId);
+        }
     };
 
     this.changeBackgroundColor = function() {
@@ -366,7 +352,7 @@ function CanvasController($scope, $rootScope) {
     };
 
     this.changePano = function($event) {
-        
+
         this.currentComponent.panoId = this.panoId;
         this.currentComponent.gravity = this.gravity;
 
@@ -555,3 +541,304 @@ function VideoController($scope, $rootScope) {
 
 VideoController.prototype = new InteractComponentController();
 /* Init Video Controller End */
+
+/* Init TabMenu Controller Start */
+function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
+    //$scope.customerMenuTabIcon = customerMenuTabIcon;
+
+    this.init = function() {
+        MenuTabController.prototype.init.call(this);
+        var _self = this;
+        this.content = jQuery.extend(true, {}, this.currentComponent.content);
+
+        //初始化高宽的数据
+        // var comobj = $("#layermain #" + currentComponentId);
+        // this.currentComponent.width = comobj.width();
+        // this.currentComponent.height = comobj.height();
+
+
+        this.customerMenuTabIcon = customerMenuTabIcon; //关联上传的icon数据
+        this.currentTab = {}; // 当前操控的对象
+        this.content.tabList = []; //tab标签列表
+        this.selectTabTypeStatus = false;
+        this.content.tabListCount = 0;
+        //根绝业务Id 获取栏目列表
+
+        this.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
+        // $http.get(Inter.getApiUrl().articleColunmu+objdata.businessId).success( function(response) {
+        $http.get(apiUrlFormat(Inter.getApiUrl().articleColunmu, [objdata.businessId])).success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'columnName': '请选择', 'columnId': '' }];
+                    for (var key in response.data) {
+                        reArr.push({ 'columnName': key, 'columnId': response.data[key] });
+                    }
+                    _self.articleColunmuList = reArr;
+                }
+            } else {
+                alert('获取文章栏目失败');
+            }
+        });
+
+        this.articleList = [{ 'articleName': '请选择', 'articleId': '' }]; //栏目列表
+        $http.get(apiUrlFormat(Inter.getApiUrl().articleListByBid, [objdata.businessId])).success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'articleName': '请选择', 'articleId': '' }];
+                    for (var i = 0; i < response.data.length; i++) {
+                        reArr.push({ 'articleName': response.data[i].title, 'articleId': response.data[i].id });
+                    }
+                    _self.articleList = reArr;
+                }
+            } else {
+                alert('获取文章失败');
+            }
+        });
+
+        //获取Poi 一级数
+        $http.get(apiUrlFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId])).success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
+                    for (var i = 0; i < response.data.zh.pois.length; i++) {
+                        reArr.push({ 'poiName': response.data.zh.pois[i].poi_name, 'poiId': response.data.zh.pois[i].poi_id });
+                    }
+                    _self.firstPoiList = reArr;
+                }
+            } else {
+                alert('获取poi列表失败');
+            }
+        });
+
+        //图标选择初始化
+        this.iconList = [{
+            name: '概况',
+            code: 'profile',
+            type: 'defaul',
+            defaultStyle: { bgPositon: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
+            customer: {},
+        }, {
+            name: '交通',
+            code: 'traffic',
+            defaultStyle: { bgPositon: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '开发区',
+            code: 'area',
+            defaultStyle: { bgPositon: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '数博会',
+            code: 'activity',
+            defaultStyle: { bgPositon: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '名人',
+            code: 'celebrity',
+            defaultStyle: { bgPositon: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '文化',
+            code: 'culture',
+            defaultStyle: { bgPositon: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '运动',
+            code: 'spots',
+            defaultStyle: { bgPositon: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '食物',
+            code: 'food',
+            defaultStyle: { bgPositon: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '酒店',
+            code: 'hotel',
+            defaultStyle: { bgPositon: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPositon: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '自定义图标',
+            code: 'customer',
+        }];
+    }
+
+    //修改头图
+    this.changeBannerImg = function() {
+        this.currentComponent.content.bannerImg = this.content.bannerImg;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    }
+
+    this.changeMenuTab = function($event, $index) {
+        this.currentTab = this.content.tabList[$index];
+
+        if (this.currentTab.icon.customer.defaultUrl) {
+            $scope.customerMenuTabIcon.defaultUrl = this.currentTab.icon.customer.defaultUrl;
+        }
+        if (this.currentTab.icon.customer.currentUrl) {
+            $scope.customerMenuTabIcon.currentUrl = this.currentTab.icon.customer.currentUrl;
+        }
+    }
+
+    this.delTab = function($event, $index) {
+        $event.stopPropagation();
+        this.content.tabList.splice($index, 1);
+    }
+
+    //创建新的tab
+    this.createNewTab = function($event, type) {
+
+        //创建新的Tab
+        var defaultTab = {
+            id: 'menutab' + this.content.tabListCount,
+            name: '页卡' + this.content.tabListCount,
+            icon: { customer: '' },
+            type: '',
+            columnId: '',
+            articleId: '',
+            typeName: '',
+            delCls: '',
+        };
+
+        this.content.tabList.push(defaultTab);
+
+        this.currentTab = this.content.tabList[this.content.tabList.length - 1];
+        this.currentTab.type = type;
+        switch (type) {
+            case 'singleArticle':
+                this.currentTab.typeName = '单页文章';
+                break;
+            case 'articleList':
+                this.currentTab.typeName = '文章列表';
+                break;
+            case 'singlePoi':
+                this.currentTab.typeName = '单点Poi';
+                break;
+            case 'poiList':
+                this.currentTab.typeName = 'Poi列表';
+                break;
+        }
+
+        this.currentTab.icon.customer = this.customerMenuTabIcon;
+
+        this.content.tabListCount++;
+
+        this.currentComponent.content.tabList = this.content.tabList;
+
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+
+        // this.content.tabContent
+    }
+
+    //修改名称
+    this.changeCurrentTabName = function() {
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    }
+
+    this.selectTabType = function($event, $index) {
+        if (this.selectTabTypeStatus) {
+            this.selectTabTypeStatus = false;
+        } else {
+            var tabsNum = $event.target.parentNode.parentNode.children.length;
+            if (tabsNum % 4 == 0) {
+                $event.target.parentNode.children[1].style.left = '-100%';
+            } else {
+                $event.target.parentNode.children[1].style.left = '100%';
+            }
+            this.selectTabTypeStatus = true;
+        }
+    }
+
+    //icon选择回调函数
+    this.onIconSelectCallback = function(item, model) {
+        if (model == 'customer') {
+            popWindow($("#pop-uploadMenuTabIcon"));
+        } else {
+            this.currentTab.icon = angular.extend(this.currentTab.icon, item);
+        }
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    }
+
+    //第一级Poi选择事件
+    this.changeFirstPoi = function() {
+        //获取Poi类别
+        this.initPoiType(this.currentTab.firstPoiId);
+        if (!this.currentTab.poiTypeId) {
+            this.initSecondPoi(this.currentTab.firstPoiId);
+        }
+    }
+
+    //Poi类别选择事件
+    this.changePoiType = function() {
+        this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
+    }
+
+    //初始化Poi类别下拉
+    this.initPoiType = function(firstPoiID) {
+        var _self = this;
+        //获取Poi类别
+        $http.get(apiUrlFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [46, firstPoiID])).success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'name': '请选择', 'id': '' }];
+                    for (var i = 0; i < response.data.categorys.length; i++) {
+                        reArr.push({ 'name': response.data.categorys[i].category_name, 'id': response.data.categorys[i].category_id });
+                    }
+                    _self.poiTypeList = reArr;
+                }
+            } else {
+                alert('获取poi类别失败');
+            }
+        });
+    }
+
+    //初始化PoiId
+    this.initSecondPoi = function(firstPoiID, poiTypeId) {
+        var _self = this;
+        var url = '';
+        if (poiTypeId) {
+            url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [46, firstPoiID, poiTypeId]);
+        } else {
+            url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoi, [46, firstPoiID, poiTypeId]);
+        }
+        $http.get(apiUrlFormat(url, [46, firstPoiID])).success(function(response) {
+            if (response.code == '0') {
+                if (response.data) {
+                    var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
+                    for (var i = 0; i < response.data.zh.pois.length; i++) {
+                        reArr.push({ 'poiName': response.data.zh.pois[i].poi_name, 'poiId': response.data.zh.pois[i].poi_id });
+                    }
+                    _self.secondPoiList = reArr;
+                }
+            } else {
+                alert('获取poi类别失败');
+            }
+        });
+    }
+}
+
+MenuTabController.prototype = new InteractComponentController();
+/* Init TabMenu Controller End */
+
+/* Init TabMenuIcon Controller  */
+function MenuTabIconController($scope, $rootScope, $http, menuTabIcon) {
+    $scope.menuTabIcon = menuTabIcon;
+    this.init = function() {
+        this.menuTabIcon = {
+            defaultUrl: "",
+            currentUrl: "",
+        };
+    }
+    this.chageDefaultIcon = function() {
+        $scope.menuTabIcon.defaultUrl = this.menuTabIcon.defaultUrl;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    }
+    this.chageCurrentIcon = function() {
+        $scope.menuTabIcon.currentUrl = this.menuTabIcon.currentUrl;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    }
+
+    this.init();
+}
+/* Init TabMenuIcon Controller End */

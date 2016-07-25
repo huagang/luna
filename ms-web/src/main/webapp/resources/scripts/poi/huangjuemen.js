@@ -142,8 +142,13 @@ var initHJMPoiPage = function() {
      * 返回顶部功能
      */
     var initGoTop = function() {
-
-        document.querySelector('.go-top').addEventListener('click', pageScroll);
+        window.addEventListener('scroll', function(e) {
+            if($('.footer').hasClass('hidden')){
+                $('.footer').removeClass('hidden');
+                document.querySelector('.go-top').addEventListener('click', pageScroll);
+            }
+            
+        });
     };
 
     // HTML填充信息窗口内容

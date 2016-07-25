@@ -127,7 +127,7 @@ $(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-    
+
         lunaPage.creatPageComponents(currentPageId, null, "audio");
         currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
         currentComponent["_id"] = currentComponentId;
@@ -136,14 +136,14 @@ $(function() {
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("audio");
 
-    });    
+    });
 
     //视频组件
     $("#videoComponent").click(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-    
+
         lunaPage.creatPageComponents(currentPageId, null, "video");
         currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
         currentComponent["_id"] = currentComponentId;
@@ -151,6 +151,25 @@ $(function() {
         componentPanel.init("video");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("video");
+    });
+
+    //页签组件
+    $("#tabComponent").click(function() {
+        if (document.querySelector('.topmenu-wrapper')) {
+            alert('已经存在一个页签组件，不能重复添加');
+            return;
+        }
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+
+        lunaPage.creatPageComponents(currentPageId, null, "tab");
+        currentComponent = jQuery.extend(true, {}, componentTabModelTemplate);
+        currentComponent["_id"] = currentComponentId;
+        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        componentPanel.init("tab");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("tab");
     });
 
     //右键删除组件
@@ -206,7 +225,7 @@ $(function() {
 
     //按delete按钮删除组件
     $(document).bind('keydown', 'del', function(e) {
-        if(e.target.nodeName=="INPUT"){
+        if (e.target.nodeName == "INPUT") {
             //如果是文本框，删除文本框中的内容，不删除画布中的插件
             return true;
         }
@@ -396,7 +415,7 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-   
+
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
@@ -477,7 +496,7 @@ $(function() {
         });
 
         //清空文件上传的值，解决同一文件不能重复上传问题
-        $('input[type=file]').on('click',function(e){
+        $('input[type=file]').on('click', function(e) {
             $(this).val('');
         });
     }

@@ -11,6 +11,13 @@ var lunaPage = {},
 var currentComponent = {};
 var currentPage = null;
 
+setCookie('businessId', 48);
+var objdata = {
+    businessId: getCookie('businessId'),
+    articleListData: null,
+    articleData: null
+}
+
 //定义组件属性模板
 componentCanvasModelTemplate = {
     "_id": "",
@@ -117,6 +124,44 @@ componentVideoModelTemplate = {
         }
     }
 };
+//页签
+componentTabModelTemplate = {
+    "_id": "",
+    "type": "tab",
+    "content": {
+        'bannerImg': 'http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg',
+        tabList: [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
+    },
+    "action": {
+        "href": {
+            "type": "none",
+            "value": ""
+        }
+    }
+};
+/**
+ * 组件的样式
+ * @type {Object}
+ */
+var componentViewTemplate = {
+    'tabMenu': '<div class="menuTab-wrapper" >' +
+        '<div class="menuTab-bg">' +
+        '<img src="http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg">' +
+        '</div>' +
+        '<div class="menuTab">' +
+        '<div class="menulist-wrap">' +
+        '<ul class="menulist">' +
+        // '<li class="menuitem current" item="default" >' +
+        // '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
+        // '<div class="menuitem-title"><span>概况</span></div>' +
+        // '</li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '</div>',
+}
+
+
 
 var $overlay;
 $(document).ready(function() {
@@ -145,10 +190,12 @@ $(document).ready(function() {
     $("#new-built").click(function() {
         newPageDialog();
     });
-    //    修改
+
+    //修改
     $("#list-page").on('click', 'a.modify', function() {
         modify();
     });
+
     //创建或更新，根据弹窗是否存在modify_page_id确定
     $("#setup").click(function() {
         modifyPageId = $("#modify_page_id").val();
@@ -162,11 +209,13 @@ $(document).ready(function() {
     $("#page-property").click(function() {
         submitSetting();
     });
+
     /*页面级属性设置缩略图删除功能*/
     $("#wj-page-clc").click(function() {
-            $("#wj-page").remove();
-        })
-        /*页面级属性设置，分享缩略图删除功能*/
+        $("#wj-page").remove();
+    })
+
+    /*页面级属性设置，分享缩略图删除功能*/
     $("#wj-share-clc").click(function() {
         $("#wj-share").remove();
     })
@@ -180,6 +229,7 @@ $(document).ready(function() {
     $("#btn-delete").click(function() {
         deletePage($(this).attr("pageID"));
     });
+
     // 左侧点击页面
     $("#list-page").on("click", ".drop-item", function() {
         $(this).siblings(".drop-item").removeClass("current");
@@ -189,7 +239,6 @@ $(document).ready(function() {
             $('#canvas [component-type=canvas]').trigger('click');
         }, 5);
     });
-
 
     //    $(".copy").zclip({
     //      path: host+"/plugins/jquery.zclip/ZeroClipboard.swf",
@@ -379,7 +428,6 @@ function modify() {
 
     $.creatPage = function(pageID) {
         creatPageHtml(pageID);
-        //alert(pageComponents);
     }
 
     $.showPage = function(pageID) {
@@ -424,7 +472,10 @@ function modify() {
     }
 })(lunaPage);
 
-
+/**
+ * 调整顺序
+ * @return {[type]} [description]
+ */
 function reOrderPage() {
     var pageElements = $(".list-page .drop-item[page_id]");
     var pageOrder = {};
@@ -439,6 +490,7 @@ function reOrderPage() {
     updatePageOrder(pageOrder);
     return pageOrder;
 }
+
 // show page list
 function setPageListHtml(pageList) {
     $("#list-page").empty();
@@ -469,6 +521,7 @@ function createPageListItemHtml(page) {
 
 }
 
+
 function creatPageHtml(pageID) {
 
     var page = lunaPage.pages[pageID];
@@ -479,8 +532,11 @@ function creatPageHtml(pageID) {
     createCanvas();
 }
 
+/**
+ * 创建画布
+ * @return {[type]} [description]
+ */
 function createCanvas() {
-
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
     currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
     currentComponent["_id"] = currentComponentId;
@@ -504,23 +560,22 @@ function setPageHtml(pageID) {
         // 组件数据解析，对应jsonData
         // console.log(pageID);
         var componentArr = [];
-        $.each(
-            jsonData,
-            function(n, value) {
-                // move canvas first
-                if (n.startsWith("canvas")) {
-                    componentArr = [n].concat(componentArr);
-                } else {
-                    componentArr.push(n);
-                }
-            });
+        $.each(jsonData, function(n, value) {
+            // move canvas first
+            if (n.startsWith("canvas")) {
+                componentArr = [n].concat(componentArr);
+            } else {
+                componentArr.push(n);
+            }
+        });
         componentArr.forEach(function(element) {
             setPageComponentsHtml(pageID, element);
         });
     }
 }
 
-/**只管创建component，其他一切事务由调用者自行协调
+/**
+ * 只管创建component，其他一切事务由调用者自行协调
  * 此函数只创建component UI
  */
 function creatPageComponentsHtml(pageID, componentID, componentType) {
@@ -554,7 +609,6 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
     newComponent.css("top", newPosition + "px");
     newComponent.css("left", newPosition + "px");
 
-
     switch (comType) {
         case "canvas":
             //增加样式显示，增加绑定事件 click等
@@ -587,6 +641,12 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
             newComponent.attr("component-type", "video");
             newComponent.children("div").append('<img src="' + imghost + '/img/samplevideo.png" />');
             break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
+            break;
         default:
             $.alert("未知的组件类型");
             return;
@@ -601,7 +661,12 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
     }
 }
 
-//show component UI
+/**
+ * 显示一个页面中的组件
+ * @param {[type]} pageID      [description]
+ * @param {[type]} componentID [description]
+ * @param {[type]} comType     [description]
+ */
 function setPageComponentsHtml(pageID, componentID, comType) {
     var newComponent = $('<div class="componentbox"><div class="con"></div></div>');
 
@@ -666,6 +731,13 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
+            for(var i =0 ;i<)
+            break;
         default:
             $.alert("未知的组件类型");
             return;
@@ -698,7 +770,12 @@ function setPageComponentsHtml(pageID, componentID, comType) {
     lostFocus($("#" + componentID));
 }
 
-// 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
+/**
+ * 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @return {[type]}             [description]
+ */
 function updatePageComponents(pageID, componentID) {
     var $currenthtml = $("#layermain #" + componentID);
     if (!$currenthtml) {
@@ -747,13 +824,16 @@ function updatePageComponents(pageID, componentID) {
         case "video":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
+        case "tab":
+            // componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
         default:
             $.alert("未知的组件类型");
             return;
 
     }
 
-    if ($currenthtml.attr("component-type") != "canvas") {
+    if ($currenthtml.attr("component-type") != "canvas" && $currenthtml.attr("component-type") != "tab") {
         componentObj.x = parseInt($currenthtml.position().left);
         componentObj.y = parseInt($currenthtml.position().top);
         componentObj.width = parseInt($currenthtml.find("div.con").width());
@@ -766,7 +846,13 @@ function updatePageComponents(pageID, componentID) {
     componentObj.style_other = $currenthtml.children("div").children().attr("style");
 }
 
-// 根据当前id更新组件htmlstyle
+/**
+ * 根据当前id更新组件htmlstyle
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @param  {[type]} comType     [description]
+ * @return {[type]}             [description]
+ */
 function updatePageComponentsHtml(pageID, componentID, comType) {
     var comobj = $("#layermain #" + componentID);
 
@@ -783,9 +869,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             //comobj.children("div.con").html('<div class="canvas" style="width:100%;height:100%;"></div>');
             comobj.css("background-color", component.bgc);
             comobj.css("background-image", 'url({0})'.format(component.bgimg));
-
             showPanoBackground(comobj, component);
-
             break;
         case "text":
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
@@ -807,6 +891,19 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
                 var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
+            break;
+        case "tab":
+            var tabList = content.tabList,
+                innerHtml = [];
+            for (var i = 0; i < tabList.length; i++) {
+                if (tabList[i].icon.selected == "customer") {
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                } else {
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                }
+            }
+            comobj.find('.menulist').empty().append(innerHtml.join(''));
+            comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
             break;
         default:
             $.alert("未知的组件类型");
@@ -837,7 +934,7 @@ function showPanoBackground($container, componentData) {
     var pano = {},
         panoObj = $container.find('canvas');
 
-    if (componentData.panoId && panoObj.length == 0 ) {
+    if (componentData.panoId && panoObj.length == 0) {
         pano = new com.vbpano.Panorama($container.get(0));
         pano.setPanoId(componentData.panoId); //panoId
         pano.setHeading(180); //左右
@@ -847,14 +944,42 @@ function showPanoBackground($container, componentData) {
         pano.setGravityEnable(componentData.gravity); //重力感应
 
         console.log('修改了panoid的数据');
-        lunaPage.pages[currentPageId].bgPano = pano;
-    } else if (componentData.panoId && panoObj.length > 0 ) {
-        lunaPage.pages[currentPageId].bgPano.setPanoId(componentData.panoId);
-        lunaPage.pages[currentPageId].bgPano.setGravityEnable(componentData.gravity);
+        currentBgPano = pano;
+    } else if (componentData.panoId && panoObj.length > 0) {
+        currentBgPano.setPanoId(componentData.panoId);
+        currentBgPano.setHeading(180); //左右
+        currentBgPano.setPitch(0); //俯仰角
+        currentBgPano.setRoll(0); //未知
+        currentBgPano.setGravityEnable(componentData.gravity);
     } else {
         if (panoObj.length > 0) {
             panoObj.parent().parent().remove();
-            lunaPage.pages[currentPageId].bgPano = null;
+            currentBgPano = null;
         }
     }
 }
+
+/**
+ * 点击画布中的组件，渲染右边参数，在画布点击事件中调用
+ * @type {Object}
+ */
+var componentPanel = {
+    init: function(componentType) {
+        if (componentType) {
+            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
+        }
+        currentController = componentType + "Div";
+        var controllerManagerDiv = $("#controller-manager");
+        var children = controllerManagerDiv.children();
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
+                $(children[i]).show();
+            } else {
+                $(children[i]).hide();
+            }
+        }
+    },
+    update: function(componentType) {
+        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
+    }
+};

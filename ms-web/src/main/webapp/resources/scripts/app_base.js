@@ -123,105 +123,91 @@ $(document).ready(function() {
                 $comGroup.hide();
             }
             $(".app-wrap").append($comGroup);
-            console.log(item);
-            if (item.page_code == "welcome") {
-                $.each(item.page_content, function(n, value) {
-                    // move canvas first
-                    var componentHtml = "",
-                        headName = n.match(/^[a-zA-Z]*/);
-                    switch (headName[0]) {
-                        case 'canvas':
-                            var canvas = new Canvas(value);
-                            componentHtml = canvas.build();
-                            if (value.bgimg) { //欢迎页面是否有背景图片
-                                var welCanvas = new WelComeCanvas(value);
-                                var newComponentHtml = welCanvas.build();
-                                $comGroup.append(newComponentHtml);
-                            }
-                            break;
-                        case 'text':
-                            var text = new Text(value);
-                            componentHtml = text.build();
-                            break;
-                        case 'img':
-                            var img = new Img(value);
-                            componentHtml = img.build();
-                            break;
-                        case 'pano':
-                            var pano = new Pano(value);
-                            componentHtml = pano.build();
-                            break;
-                        case 'nav':
-                            var nav = new Nav(value);
-                            componentHtml = nav.build();
-                            break;
-                        case 'audio':
-                            var audio = new Audio(value);
-                            componentHtml = audio.build();
-                            break;
-                        case 'video':
-                            var video = new Video(value);
-                            componentHtml = video.build();
-                            break;
-                    }
 
-                    $comGroup.append(componentHtml);
-                });
-                //设置首页滑动到第一页
-                setTimeout(function() {
-                    if ($('.welcome').next('.component-group').children().length > 0) {
-                        $('.welcome').fadeOut(1000);
-                        $('.welcome').next('.component-group').show(1000);
-                    }
-                }, 4000);
-            } else {
-                $.each(item.page_content, function(n, value) {
-                    // move canvas first
-                    var componentHtml = "",
-                        headName = n.match(/^[a-zA-Z]*/);
-                    switch (headName[0]) {
-                        case 'canvas':
-                            var canvas = new Canvas(value);
-                            componentHtml = canvas.build();
-                            break;
-                        case 'text':
-                            var text = new Text(value);
-                            componentHtml = text.build();
-                            break;
-                        case 'img':
-                            var img = new Img(value);
-                            componentHtml = img.build();
-                            break;
-                        case 'pano':
-                            var pano = new Pano(value);
-                            componentHtml = pano.build();
-                            break;
-                        case 'nav':
-                            var nav = new Nav(value);
-                            componentHtml = nav.build();
-                            break;
-                        case 'audio':
-                            var audio = new Audio(value);
-                            componentHtml = audio.build();
-                            break;
-                        case 'video':
-                            var video = new Video(value);
-                            componentHtml = video.build();
-                            break;
-                    }
-                    $comGroup.append(componentHtml);
-                });
+            for (var n in item.page_content) {
+                var value = item.page_content[n];
+                var componentHtml = "",
+                    headName = n.match(/^[a-zA-Z]*/);
+                switch (headName[0]) {
+                    case 'canvas':
+                        var canvas = new Canvas(value);
+                        canvas.page_code = item.page_code;
+                        componentHtml = canvas.build();
+                        break;
+                    case 'text':
+                        var text = new Text(value);
+                        componentHtml = text.build();
+                        break;
+                    case 'img':
+                        var img = new Img(value);
+                        componentHtml = img.build();
+                        break;
+                    case 'pano':
+                        var pano = new Pano(value);
+                        componentHtml = pano.build();
+                        break;
+                    case 'nav':
+                        var nav = new Nav(value);
+                        componentHtml = nav.build();
+                        break;
+                    case 'audio':
+                        var audio = new Audio(value);
+                        componentHtml = audio.build();
+                        break;
+                    case 'video':
+                        var video = new Video(value);
+                        componentHtml = video.build();
+                        break;
+                    case 'menuTab':
+                        var menutab = new menuTab(value);
+                        componentHtml = menutab.build();
+                        break;
+                }
+                $comGroup.append(componentHtml);
             }
         }
     }
 
 
     //初始化 欢迎页的视差效果
-    var scene = document.querySelector('.scene');
-    var parallax = new Parallax(scene);
-    $('.scene').find('.img-wraper').addClass('go-right');
+    var paraScene = [];
+    $('.paraScene').each(function(n, item) {
+        paraScene[n] = new Parallax(item);
+    });
+    // var scene = document.querySelector('.scene');
+    // var parallax = new Parallax(scene);
+    // $('.scene').find('.img-wraper').addClass('go-right');
+    //设置首页滑动到第一页
+
+    if ($('.welcome').children().length > 0) {
+        var welcomePanoBg = document.querySelector('.welcome .panoBg');
+        if (welcomePanoBg) {
+            initPanoBg(welcomePanoBg);
+        }
+        setTimeout(function() {
+            $('.welcome').next('.component-group').fadeIn(2000, function() {
+
+            });
+            $('.welcome').fadeOut(3000, function() {});
+            var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
+            if (panoBg) {
+                initPanoBg(panoBg);
+            }
+        }, 4000);
+    } else {
+        var panoBg = document.querySelector('.panoBg');
+        initPanoBg(panoBg);
+    }
+
 
     /*TODO：增加动画页面 End*/
+
+    /* 初始化全景背景 */
+
+
+    /* 初始化全景背景 */
+
+
 
     //用videoJs 初始化
     $('.video-js').each(function(index, el) {
@@ -271,34 +257,6 @@ $(document).ready(function() {
         };
     }
 
-    /**
-     * 欢迎界面canvas
-     */
-    function WelComeCanvas(data) {
-
-        this.value = data;
-        this.value.type = "scene";
-
-        BaseComponent.call(this);
-
-        this.build = function() {
-            var $scene = $('<ul id="scene" class="scene" data-scalar-x="10" data-scalar-y="2"></ul>');
-            if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
-            }
-            this.html.children("div").append($scene);
-            this.html.css("position", "absolute");
-            this.html.css("left", "0px");
-            this.html.css("top", "0px");
-            this.html.css("width", "100%");
-            this.html.css("height", "100%");
-            this.html.addClass("bg-canvas");
-            this.html.css("z-index", "0");
-
-            return this.html;
-        };
-    }
-
     /* 普通页面的画布 */
     function Canvas(data) {
 
@@ -306,19 +264,41 @@ $(document).ready(function() {
 
         BaseComponent.call(this);
 
+        this.setCanvasBg = function() {
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="' + this.value.gravity + '"></div>');
+        };
+
+        this.setPanoBg = function() {
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+        };
+
+        this.setParaBg = function() {
+            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
+            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
+            this.html.children("div").append($scene);
+        }
+
         this.build = function() {
 
             //this.setPosition();
             // Canvas.prototype.setPosition.call();
 
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            console.log(this.value);
+            if (this.value.panoId) {
+                this.setPanoBg.call(this);
+            } else if (this.value.gravity && !this.value.panoId) {
+                this.setParaBg.call(this);
+            } else {
+                this.setCanvasBg.call(this);
+            }
+
             this.html.css("position", "absolute");
             this.html.css("left", "0px");
             this.html.css("top", "0px");
             this.html.css("width", "100%");
             this.html.css("height", "100%");
             this.html.addClass("bg-canvas");
-            this.html.css("z-index", "-1");
+            this.html.css("z-index", "0");
 
             this.setMoreInfo();
 
@@ -472,7 +452,59 @@ $(document).ready(function() {
             return this.html;
         }
     }
+    /* 菜单页卡 */
+    function menuTab(data) {
+        this.value = data;
+        BaseComponent.call(this);
+
+        this.build = function() {
+            var loopPlay = '',
+                videoWidth = this.value.width ? 'width = "' + this.value.width + this.value.unit + '"' : '',
+                videoHeight = this.value.height ? 'height = "' + this.value.height + this.value.unit + '"' : '',
+                videoIcon = this.value.content.videoIcon || this.value.content.icon,
+                showType = this.value.content.videoShowType = this.value.content.videoShowType || '1';
+
+            this.setPosition();
+
+            this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
+            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+
+            if (showType == '1') {
+                //弹框组件
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playVideo" data-videoicon = "' + videoIcon + '" data-videourl = "' + this.value.content.videoUrl + '"><img  src="' + videoIcon + '" /></a> ');
+            } else {
+                //内嵌组件
+                this.html.children("div").append('<video src="' + this.value.content.videoUrl + '" class="video-js" controls preload="auto"  ' + videoWidth + ' ' + videoHeight + ' data-setup="{}" ></video>');
+            }
+
+            this.setMoreInfo();
+
+            this.setAction();
+
+            return this.html;
+        }
+    }
 });
+
+/**
+ * 初始化全景背景
+ * @return {[type]} [description]
+ */
+function initPanoBg(panoBg) {
+    if (!panoBg) {
+        return;
+    }
+    var pano = {},
+        panoId = panoBg.dataset.panoid,
+        gravity = panoBg.dataset.gravity;
+    pano = new com.vbpano.Panorama(panoBg);
+    pano.setPanoId(panoId); //panoId
+    pano.setHeading(180); //左右
+    pano.setPitch(0); //俯仰角
+    pano.setRoll(0); //未知
+    pano.setAutoplayEnable(false); //自动播放
+    pano.setGravityEnable(eval(gravity)); //重力感应  
+}
 
 /**
  * 导航事件
