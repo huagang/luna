@@ -225,9 +225,8 @@ img{
 }
 .menulist-title{
     text-align: center;
-    line-height: 31px;
+    line-height: 43px;
     display: inline-block;
-    min-width: 70px;
 }
 
 .menulist.current .menulist-title{

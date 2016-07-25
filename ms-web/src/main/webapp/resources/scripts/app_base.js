@@ -463,7 +463,6 @@ $(document).ready(function() {
     /* 菜单页卡 */
     function menuTab(data) {
         // mock数据
-        console.log(data);
         var that = this;
 
         that.init = init;
@@ -603,7 +602,7 @@ $(document).ready(function() {
                                 }
                             }
 
-                        },
+                        }
                     });
                     break
                 case 'poiList':
@@ -626,7 +625,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId, // TODO business_id 应该是window.business_id
+                        url: '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
@@ -655,7 +654,7 @@ $(document).ready(function() {
                 +       '<i class="icon" style="' + defaultStyle +'"></i>'
                 +       '<i class="icon current" style="'+ currentStyle +'"></i>'
                 +   '</div>'
-                +   '<div class="menulist-title"><span>' + item.name + '</span></div>'
+                +   '<span class="menulist-title">' + item.name + '</span>'
                 + '</div>';
                 labsHtml += html;
             });
@@ -724,7 +723,6 @@ $(document).ready(function() {
                         +   '<div class="content-details clearboth">'+ (data.content)+'</div>'
                         +'</div>';
                     that.html.find("#content").html(html);
-                    console.log(html);
                     break;
                 case 'poiList':
                     html = '';
@@ -804,7 +802,6 @@ $(document).ready(function() {
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     that.html.find("#content").html(html);
-                    console.log(html);
                     break;
             }
         }
