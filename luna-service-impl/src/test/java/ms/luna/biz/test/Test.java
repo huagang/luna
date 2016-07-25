@@ -2,6 +2,7 @@ package ms.luna.biz.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
@@ -32,7 +33,9 @@ public class Test {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("name", "chenshangan");
 		jsonObject.put("age", 30);
-		Map<String, Object> map = jsonObject.toJavaObject(Map.class);
+//		Map<String, Object> map = JSON.toJavaObject(jsonObject, Map.class);
+		Map<String, Object> map = JSON.parseObject(jsonObject.toJSONString(),
+				new TypeReference<Map<String, Object>>(){});
 		System.out.println(map);
 	}
 
