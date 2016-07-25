@@ -34,5 +34,6 @@
 	<dubbo:service interface="ms.luna.biz.sc.ManageColumnService" ref="manageColumnService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageArticleService" ref="manageArticleService" />
 	<dubbo:service interface="ms.luna.biz.sc.PoiApiService" ref="poiApiService" />
+	<dubbo:service interface="ms.luna.biz.sc.FarmPageService" ref="farmPageService" />
 
 </beans>
