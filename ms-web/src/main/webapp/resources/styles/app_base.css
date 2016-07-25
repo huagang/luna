@@ -222,7 +222,7 @@ html,body{
 
 
 
-#poi .detail-title-wrap {
+ .detail-title-wrap {
     height: 45px;
     line-height: 45px;
     font-size: 18px;
@@ -231,11 +231,7 @@ html,body{
     color: #666;
 }
 
-#poi .detail-title {
-    padding-left: 20px;
-}
-
-#poi .detail-title:before{
+ .detail-title:before{
     display: inline-block;
     content: ' ';
     line-height: 45px;
@@ -245,37 +241,53 @@ html,body{
     top: 1px;
 }
 
-#poi .icon {
+.icon {
     background: url(../images/icons-2x.png) no-repeat;
     display: inline-block;
     background-size: 800px 504px;
 }
 
-#poi .icon-video, .icon-video-on {
+.icon-goback {
+    position: fixed;
+    left: 10px;
+    top: 88%;
+    z-index: 10;
+    width: 33px;
+    height: 33px;
+    background-position: 0px -133px;
+
+}
+
+ .icon-video, .icon-video-on {
     width: 33px;
     height: 33px;
     background-position: -99px -100px;
 
 }
 
-#poi .btn-wrap{
-    float: right;
-    padding: 6px 6px 0 0 ;
-}
-
-#poi .icon-radio {
+.icon-radio {
     width: 33px;
     height: 33px;
     background-position: -132px -100px;
 }
 
-#poi .icon-radio.icon-radio-on {
+.icon-radio.icon-radio-on {
     width: 33px;
     height: 33px;
     background-position: -132px -133px;
 }
 
-#poi .content-details{
+
+
+ .btn-wrap{
+    float: right;
+    padding: 6px 6px 0 0 ;
+}
+
+
+
+ .content-details{
     background-color: #F6F6F6;
+    padding:10px 5%;
 }
 /* 目录页口 end */

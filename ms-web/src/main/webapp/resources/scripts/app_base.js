@@ -130,13 +130,9 @@ $(document).ready(function() {
                 var componentHtml = "",
                     headName = n.match(/^[a-zA-Z]*/);
 
-                // 提交代码时需要删除 by wumengqiang
-                if(i === 1){
-                    headName[0] = 'menuTab';
-                }
-
                 switch (headName[0]) {
                     case 'canvas':
+                        break;
                         var canvas = new Canvas(value);
                         canvas.page_code = item.page_code;
                         componentHtml = canvas.build();
@@ -165,7 +161,7 @@ $(document).ready(function() {
                         var video = new Video(value);
                         componentHtml = video.build();
                         break;
-                    case 'menuTab':
+                    case 'tab':
                         var menutab = new menuTab(value);
                         componentHtml = menutab.build();
                         break;
@@ -467,6 +463,7 @@ $(document).ready(function() {
     /* 菜单页卡 */
     function menuTab(data) {
         // mock数据
+        console.log(data);
         data = undefined;
         var that = this;
 
@@ -474,9 +471,6 @@ $(document).ready(function() {
 
         // 测试数据
         that.getTestData = getTestData;
-
-        //获取相应的模板
-        that.getTemplateByType = getTemplateByType;
 
         // 渲染组件
         that.build = build;
@@ -533,8 +527,15 @@ $(document).ready(function() {
         }
 
         function bindEvent(){
-            $('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
-            $('#content').on('click', '#poi .icon-radio', function(event){
+            // clear event
+
+            that.html.find('.menulist-wrap').off('click', '.icon');
+            that.html.find('#content').off('click', '#poi .icon-radio');
+
+
+
+            that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
+            that.html.find('#content').on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
                     if(target.hasClass('icon-radio-on')){
@@ -550,16 +551,16 @@ $(document).ready(function() {
 
             });
 
-            $('#content').on('click', '#poi .icon-video', function(event){
+            that.html.find('#content').on('click', '.icon-video', function(event){
 
-                var radio = $("#poi .icon-radio");
+                var radio = that.html.find(".icon-radio");
                 if(radio.hasClass('icon-radio-on')){
                     radio.siblings('audio')[0].pause();
                     radio.removeClass('icon-radio-on');
                 }
                  var url = event.target.parentNode.getAttribute('data-srcurl');
-                 $('.video-modal').css('display', 'block');
-                 $('#diaVideo').attr('src', url);
+                $('.video-modal').css('display', 'block');
+                $('#diaVideo').attr('src', url);
 
             });
 
@@ -596,6 +597,29 @@ $(document).ready(function() {
                         }
                     });
                     break;
+                case 'article':
+                    $.ajax({
+                        url: 'http://luna-test.visualbusiness.cn/luna-api/article/' + item._id,
+                        type: 'GET',
+                        success:function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data;
+                                }
+                            } else{
+                                alert('数据请求失败');
+                            }
+
+                        },
+                        error: function(){
+                            alert('数据请求失败');
+                        }
+
+                    });
+                    break;
             }
 
         }
@@ -629,6 +653,7 @@ $(document).ready(function() {
             +       '</div>'
             + '</div>'
             + '<div id="content"></div>'
+            + '<i class="icon icon-goback" onclick="history.back()"></i>'
             + '</div>';
 
             return html;
@@ -637,7 +662,8 @@ $(document).ready(function() {
         function updateContent(){
             var data = that.data[that.menuIndex];
             var html = '';
-            switch(that.value.tabs[that.menuIndex].type){
+            var type = that.value.tabs[that.menuIndex].type;
+            switch(type){
                 case 'poi':
                     html =
                     '<div id="poi">'
@@ -648,27 +674,44 @@ $(document).ready(function() {
                     +       '<span class="btn-wrap video-btn-wrap" data-srcurl="http://200011112.vod.myqcloud.com/200011112_da9ee07a51a611e6963575943c151ece.f0.mp4">'
                     +           '<i class="icon icon-video"></i>'
                     +       '</span>'
-                    +       '<span class="btn-wrap radio-btn-wrap" data-srcurl="">'
+                    +       '<span class="btn-wrap radio-btn-wrap">'
                     +           '<i class="icon icon-radio"></i>'
                     +           '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
                     +       '</span>'
                     +   '</div>'
                     +   '<div class="content-details clearboth">'+ (data.brief_introduction || 'jjjjjj')+'</div>'
                     +'</div>';
-                    $("#content").html(html);
+                    that.html.find("#content").html(html);
+                    break;
+                case 'article':
+                    var videoClass = data.video ? '' : 'hidden',
+                        audioClass = data.audio ? '' : 'hidden';
+                    html =
+                        '<div id="article">'
+                        +   '<div class="detail-title-wrap">'
+                        +       '<span class="detail-title">'
+                        +            '<i class="icon icon-arr-right"></i>'+ data.title
+                        +       '</span>'
+                        +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
+                        +           '<i class="icon icon-video"></i>'
+                        +       '</span>'
+                        +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                        +           '<i class="icon icon-radio"></i>'
+                        +           '<audio src="' + data.audio + '"></audio>'
+                        +       '</span>'
+                        +   '</div>'
+                        +   '<div class="content-details clearboth">'+ (data.content)+'</div>'
+                        +'</div>';
+                    that.html.find("#content").html(html);
+                    console.log(html);
                     break;
             }
         }
 
-        function getTemplateByType(type){
-
-
-        }
-
         function handleMenuClick(event){
             var index = event.target.parentNode.parentNode.getAttribute('data-index');
-            $('.menulist').removeClass('current');
-            $($('.menulist')[index]).addClass('current');
+            that.html.find('.menulist').removeClass('current');
+            $(that.html.find('.menulist')[index]).addClass('current');
             that.menuIndex = index;
             // 填充数据
             if(that.data[index]){
@@ -683,19 +726,19 @@ $(document).ready(function() {
                 type: 'menuTab',
                 bgUrl: "http://material-10002033.file.myqcloud.com/guiyang/city/29e5dc501b5c11e6be71525400a216a4.jpg",
                 tabs: [
-                    {name: '概况', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
+                    {name: 'poi', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
                         pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
                         audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
                         defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
                         currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
                     },
-                    {name: '概况', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
+                    {name: '文章', type:'article', _id:'23', video:'14651978969261888745',
                         pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
                         audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
                         defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
                         currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
                     },
-                    {name: '概况', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
+                    {name: '文章列表', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
                         pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
                         audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
                         defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
