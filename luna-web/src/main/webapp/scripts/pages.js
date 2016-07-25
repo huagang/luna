@@ -11,11 +11,11 @@ var lunaPage = {},
 var currentComponent = {};
 var currentPage = null;
 
-setCookie('businessId',50);
+setCookie('businessId', 50);
 var objdata = {
-    businessId:getCookie('businessId'),
-    articleListData:null,
-    articleData:null
+    businessId: getCookie('businessId'),
+    articleListData: null,
+    articleData: null
 }
 
 //定义组件属性模板
@@ -129,7 +129,8 @@ componentTabModelTemplate = {
     "_id": "",
     "type": "tab",
     "content": {
-        list: [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
+        'bannerImg': 'http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg',
+        tabList: [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
     },
     "action": {
         "href": {
@@ -139,21 +140,21 @@ componentTabModelTemplate = {
     }
 };
 /**
- * 头部组件
+ * 组件的样式
  * @type {Object}
  */
 var componentViewTemplate = {
-    'tabMenu': '<div class="topmenu-wrapper">' +
-        '<div class="topmenu-bg">' +
+    'tabMenu': '<div class="menuTab-wrapper" >' +
+        '<div class="menuTab-bg">' +
         '<img src="http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg">' +
         '</div>' +
-        '<div class="topmenu">' +
+        '<div class="menuTab">' +
         '<div class="menulist-wrap">' +
         '<ul class="menulist">' +
-        '<li class="menuitem current" item="default">' +
-        '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
-        '<div class="menuitem-title"><span>概况</span></div>' +
-        '</li>' +
+        // '<li class="menuitem current" item="default" >' +
+        // '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
+        // '<div class="menuitem-title"><span>概况</span></div>' +
+        // '</li>' +
         '</ul>' +
         '</div>' +
         '</div>' +
@@ -844,9 +845,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             //comobj.children("div.con").html('<div class="canvas" style="width:100%;height:100%;"></div>');
             comobj.css("background-color", component.bgc);
             comobj.css("background-image", 'url({0})'.format(component.bgimg));
-
             showPanoBackground(comobj, component);
-
             break;
         case "text":
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
@@ -868,6 +867,12 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
                 var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
+            break;
+        case "tab":
+            // if (content != undefined && content.hasOwnProperty("icon")) {
+            //     var icon = content.icon;
+            //     comobj.children("div.con").html('<img src="' + icon + '"/>');
+            // }
             break;
         default:
             $.alert("未知的组件类型");
@@ -909,7 +914,7 @@ function showPanoBackground($container, componentData) {
 
         console.log('修改了panoid的数据');
         currentBgPano = pano;
-    } else if (componentData.panoId && panoObj.length > 0 ) {
+    } else if (componentData.panoId && panoObj.length > 0) {
         currentBgPano.setPanoId(componentData.panoId);
         currentBgPano.setHeading(180); //左右
         currentBgPano.setPitch(0); //俯仰角

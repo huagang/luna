@@ -849,7 +849,7 @@ a.wj-img-clc {
 
 /* 页签组件 Start*/
 
-.topmenu-wrapper {
+.menuTab-wrapper {
     position: relative;
     height: 200px;
 }
@@ -858,18 +858,18 @@ a.wj-img-clc {
     width: 25%;
     position: relative;
 }
-.topmenu-bg {
+.menuTab-bg {
     height: 100%;
     /* background: url('http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg') no-repeat; */
     /* background-size: 100% 100%; */
 }
 
-.topmenu-bg img {
+.menuTab-bg img {
     width: 100%;
     height: 200px;
 }
 
-.topmenu-filter {
+.menuTab-filter {
     /* position: absolute; */
     /* bottom: 0; */
     /* width: 100%; */
@@ -878,7 +878,7 @@ a.wj-img-clc {
     /* background: linear-gradient(to top, rgba(0, 0, 0, .3) 0, rgba(0, 0, 0, .3) 30%, rgba(0, 0, 0, 0) 40%); */
 }
 
-.topmenu {
+.menuTab {
     position: absolute;
     color: #fff;
     /* overflow-x: scroll; */

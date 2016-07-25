@@ -872,18 +872,18 @@
                             <h2><label>数据填充</label></h2>
                             <form id="tabBanner" name="tabBanner" method="post" enctype="multipart/form-data" class="menuTab-upload">
                                 <span class="title">头图</span>
-                                <input class="menuTab-url" id="tabBannerUrl" placeholder="请上传头图" ng-model="menuTab.currentComponent.content.listIcon" ng-blur="" readonly="readonly" />
+                                <input class="menuTab-url" id="tabBannerUrl" placeholder="请上传头图" ng-model="menuTab.currentComponent.content.bannerImg" ng-blur="" readonly="readonly" />
                                 <button class="btn btn-local">上传</button>
                                 <input type="file" onchange="async_upload_pic('tabBanner','',true,'',this,'tabBannerUrl');" class="file file-local" id="" name="pic" />
                             </form>
                             <h2><label>页卡管理：</label></h2>
                             <div class="form-group clearfix">
                                 <ul class="menutab-list">
-                                    <li  ng-repeat="item in menuTab.content.tabList" ><a href="javascript:;" class="btn" id='{{item.id}}' ng-click="menuTab.changeTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
+                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn" id='{{item.id}}' ng-click="menuTab.changeTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
                                     <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn" id="createNewTab" >新建页卡</a>
                                       <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArtcle')" readonly='readonly'>单页文章</a></li>
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'artcleList')" readonly='readonly'>文章列表</a></li>
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
+                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a></li>
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'poiList')" readonly='readonly'>POI列表</a></li>
                                       </ul>
@@ -904,27 +904,27 @@
                                         </ui-select-choices>
                                       </ui-select>
                                     </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArtcle' || menuTab.currentTab.type == 'artcleList'">
+                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
                                       <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId">
-                                        <option ng-repeat='articleColunmu in menuTab.articleColunmuList' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
+                                        <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
                                       </select></div>
-                                      <div ng-show="menuTab.currentTab.type == 'singleArtcle'">文章名称 <select ng-model="menuTab.currentTab.articleId" >
-                                          <option ng-repeat='article in menuTab.articleList' value='{{article.articleId}}'>{{article.articleName}}</option>
+                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" >
+                                          <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
                                         </select>
                                       </div>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList' || menuTab.currentTab.type == 'singlePoi' ">
-                                      <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firsPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
-                                          <option ng-repeat='poi in menuTab.firstPoiList' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                      <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
+                                          <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}</option>
                                         </select>
                                       </div>
                                       <div>Poi类别 <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
-                                          <option ng-repeat='poiType in menuTab.poiTypeList' value='{{poiType.id}}'>{{poiType.name}}</option>
+                                          <option ng-repeat='poiType in menuTab.poiTypeList track by poiType.id' value='{{poiType.id}}'>{{poiType.name}}</option>
                                         </select> </div>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
                                       <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId">
-                                        <option ng-repeat='poi in menuTab.secondPoiList' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                        <option ng-repeat='poi in menuTab.secondPoiList track by poi.poiId' value='{{poi.poiId}}'>{{poi.poiName}}</option>
                                       </select>
                                     </div>
                                 </div>

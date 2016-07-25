@@ -717,10 +717,10 @@ function TabController($scope, $rootScope, $http, custoemrMenuTabIcon) {
         this.currentTab = this.content.tabList[this.content.tabList.length - 1];
         this.currentTab.type = type;
         switch (type) {
-            case 'singleArtcle':
+            case 'singleArticle':
                 this.currentTab.typeName = '单页文章';
                 break;
-            case 'artcleList':
+            case 'articleList':
                 this.currentTab.typeName = '文章列表';
                 break;
             case 'singlePoi':
@@ -734,6 +734,11 @@ function TabController($scope, $rootScope, $http, custoemrMenuTabIcon) {
         this.currentTab.icon.customer = this.custoemrMenuTabIcon;
 
         this.content.tabListCount++;
+
+        this.currentComponent.content.tabList = this.content.tabList;
+
+        updatePageComponentsHtml(currentPageId, currentComponentId,'tab');
+
         // this.content.tabContent
     }
     this.selectTabType = function($event, $index) {
@@ -747,8 +752,6 @@ function TabController($scope, $rootScope, $http, custoemrMenuTabIcon) {
                 $event.target.parentNode.children[1].style.left = '100%';
             }
             this.selectTabTypeStatus = true;
-
-            console.log($event);
         }
     }
 
@@ -763,17 +766,16 @@ function TabController($scope, $rootScope, $http, custoemrMenuTabIcon) {
 
     //第一级Poi选择事件
     this.changeFirstPoi = function() {
-            //获取Poi类别
-            this.initPoiType(this.currentTab.firsPoiId);
-            if(!this.currentTab.poiTypeId){
-                this.initSecondPoi(this.currentTab.firsPoiId);
-            }
-            console.log(this.currentTab.firsPoiId);
+        //获取Poi类别
+        this.initPoiType(this.currentTab.firstPoiId);
+        if (!this.currentTab.poiTypeId) {
+            this.initSecondPoi(this.currentTab.firstPoiId);
         }
-        //Poi类别选择事件
+    }
+
+    //Poi类别选择事件
     this.changePoiType = function() {
-        this.initSecondPoi(this.currentTab.firsPoiId, this.currentTab.poiTypeId);
-        console.log(this.currentTab.poiTypeId);
+        this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
     }
 
     //初始化Poi类别下拉
