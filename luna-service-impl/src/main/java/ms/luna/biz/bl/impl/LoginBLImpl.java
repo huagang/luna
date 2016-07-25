@@ -257,4 +257,8 @@ public class LoginBLImpl implements LoginBL {
 		return null;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(VbMD5.convertFixMD5Code("niubihaoyue"));
+	}
+
 }

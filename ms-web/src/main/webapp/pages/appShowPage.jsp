@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿
+<!doctype html>
 <html>
 <head>
     <title>${share_info_title}</title>
@@ -37,6 +38,7 @@
         // var shareInfo={"title":"${share_info_title}","desc":"${share_info_des}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
         // getShareInfo(window.document.location.href,shareInfo);
         var pageData = ${pageData};
+        var business_id = ${business_id};
         var host = "<%=request.getContextPath() %>";
         var wechatOptions = {
             title: "${share_info_title}",
