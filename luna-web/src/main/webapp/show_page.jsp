@@ -880,8 +880,8 @@
                             <h2><label>页卡管理：</label></h2>
                             <div class="form-group clearfix">
                                 <ul class="menutab-list">
-                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
-                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn" id="createNewTab" >新建页卡</a>
+                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn btn-menutab" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
+                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn btn-createtab" id="createNewTab" >新建页卡</a>
                                       <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
