@@ -13,7 +13,7 @@ var currentPage = null;
 
 setCookie('businessId', 48);
 var objdata = {
-    businessId: Util.location().business_id||0,
+    businessId: Util.location().business_id || 0,
     articleListData: null,
     articleData: null
 }
@@ -130,7 +130,7 @@ componentTabModelTemplate = {
     "type": "tab",
     "content": {
         'bannerImg': 'http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg',
-        tabList: [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
+        'tabList': [] //[{'icon':{default:'url1',current:'url2'},'tabName':'itemName',type:'singleArticle/articleList/singlePOI/POIList',dataSource:articleId/PoiId,categoryId:CategoryId,businessId:businessId}]
     },
     "action": {
         "href": {
@@ -752,10 +752,13 @@ function setPageComponentsHtml(pageID, componentID, comType) {
         case "tab":
             newComponent.attr("component-type", "tab");
             var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            $topMenu.find('.enuTab-bg img').attr('src',content.bannerImg);
+            $topMenu.find('.enuTab-bg img').attr('src', content.bannerImg);
             newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
             newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
             newComponent.addClass("tabmenu");
+
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
+            newComponent.find('.menulist').empty().append(innerHtml);
             break;
         default:
             $.alert("未知的组件类型");
@@ -901,16 +904,8 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             }
             break;
         case "tab":
-            var tabList = content.tabList,
-                innerHtml = [];
-            for (var i = 0; i < tabList.length; i++) {
-                if (tabList[i].icon.selected == "customer") {
-                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
-                } else {
-                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
-                }
-            }
-            comobj.find('.menulist').empty().append(innerHtml.join(''));
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
+            comobj.find('.menulist').empty().append(innerHtml);
             comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
             break;
         default:
@@ -990,3 +985,17 @@ var componentPanel = {
         $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
     }
 };
+
+var initMenuTab = {
+    getTabListHtmlInCavas : function(tabList) {
+        var innerHtml = [];
+        for (var i = 0; i < tabList.length; i++) {
+            if (tabList[i].icon.selected == "customer") {
+                innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+            } else {
+                innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+            }
+        }
+        return innerHtml.join('');
+    }
+}

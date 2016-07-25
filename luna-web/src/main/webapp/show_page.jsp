@@ -906,10 +906,10 @@
                                       </ui-select>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
-                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId">
+                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
                                         <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
                                       </select></div>
-                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" >
+                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
                                           <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
                                         </select>
                                       </div>
@@ -925,7 +925,7 @@
                                       </div>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
-                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId">
+                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId" ng-change="menuTab.changeSecondPoi($evnet)">
                                           <option ng-repeat='poi in menuTab.secondPoiList track by poi.poiId' value='{{poi.poiId}}'>{{poi.poiName}}</option>
                                         </select>
                                       </div>

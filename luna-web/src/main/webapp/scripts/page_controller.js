@@ -551,22 +551,20 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         MenuTabController.prototype.init.call(this);
         var _self = this;
         this.content = jQuery.extend(true, {}, this.currentComponent.content);
-
-        //初始化高宽的数据
-        // var comobj = $("#layermain #" + currentComponentId);
-        // this.currentComponent.width = comobj.width();
-        // this.currentComponent.height = comobj.height();
-
+        // this.content.tabList = []; //tab标签列表
 
         this.customerMenuTabIcon = customerMenuTabIcon; //关联上传的icon数据
         this.currentTab = {}; // 当前操控的对象
-        this.content.tabList = []; //tab标签列表
         this.selectTabTypeStatus = false;
-        this.content.tabListCount = 0;
-        //根绝业务Id 获取栏目列表
+        this.content.tabListCount = this.content.tabList.length;
 
+        if (this.content.tabList.length > 0) {
+            //如果有值，默认点击第一个；
+            this.changeMenuTab('', 0);
+        }
+
+        //根绝业务Id 获取栏目列表
         this.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
-        // $http.get(Inter.getApiUrl().articleColunmu+objdata.businessId).success( function(response) {
         $http.get(apiUrlFormat(Inter.getApiUrl().articleColunmu, [objdata.businessId])).success(function(response) {
             if (response.code == '0') {
                 if (response.data) {
@@ -671,6 +669,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
+    //tab列表点击事件
     this.changeMenuTab = function($event, $index) {
         this.currentTab = this.content.tabList[$index];
 
@@ -682,9 +681,11 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         }
     }
 
+    //删除tab
     this.delTab = function($event, $index) {
         $event.stopPropagation();
         this.content.tabList.splice($index, 1);
+        this.currentComponent.content.tabList = this.content.tabList;
     }
 
     //创建新的tab
@@ -703,6 +704,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         };
 
         this.content.tabList.push(defaultTab);
+        this.content.tabListCount++;
 
         this.currentTab = this.content.tabList[this.content.tabList.length - 1];
         this.currentTab.type = type;
@@ -723,20 +725,27 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
         this.currentTab.icon.customer = this.customerMenuTabIcon;
 
-        this.content.tabListCount++;
-
         this.currentComponent.content.tabList = this.content.tabList;
 
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
-
-        // this.content.tabContent
     }
 
     //修改名称
     this.changeCurrentTabName = function() {
+        this.currentComponent.content.tabList = this.content.tabList;
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
+    //修改栏目
+    this.changeColumn = function() {
+            this.currentComponent.content.tabList = this.content.tabList;
+        }
+        //修改文章
+    this.changeArticle = function() {
+        this.currentComponent.content.tabList = this.content.tabList;
+    }
+
+    //选择类型
     this.selectTabType = function($event, $index) {
         if (this.selectTabTypeStatus) {
             this.selectTabTypeStatus = false;
@@ -758,6 +767,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         } else {
             this.currentTab.icon = angular.extend(this.currentTab.icon, item);
         }
+        this.currentComponent.content.tabList = this.content.tabList;
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
@@ -768,11 +778,18 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         if (!this.currentTab.poiTypeId) {
             this.initSecondPoi(this.currentTab.firstPoiId);
         }
+        this.currentComponent.content.tabList = this.content.tabList;
     }
 
     //Poi类别选择事件
     this.changePoiType = function() {
         this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
+        this.currentComponent.content.tabList = this.content.tabList;
+    }
+
+    //二级Poi选择事件
+    this.changeSecondPoi = function() {
+        this.currentComponent.content.tabList = this.content.tabList;
     }
 
     //初始化Poi类别下拉
