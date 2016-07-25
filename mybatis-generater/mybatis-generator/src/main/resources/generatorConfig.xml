@@ -87,8 +87,8 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="ms_show_page_share">
-			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		<table tableName="ms_farm_field">
+			<!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 		</table>
 	</context>
 </generatorConfiguration>

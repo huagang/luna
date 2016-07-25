@@ -1,10 +1,17 @@
 package ms.luna.biz.sc.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.VbConstant.fieldType;
+import ms.luna.biz.dao.custom.MsFarmFieldDAO;
+import ms.luna.biz.dao.model.MsFarmField;
+import ms.luna.biz.dao.model.MsFarmFieldCriteria;
 import ms.luna.biz.sc.FarmPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by greek on 16/7/25.
@@ -14,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FarmPageServiceImpl implements FarmPageService {
 
     @Autowired
-    private Ms
+    private MsFarmFieldDAO msFarmFieldDAO;
 
     @Override
     public JSONObject initPage(String json) {
@@ -51,10 +58,24 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     // 获得农+字段定义和初始数值
     private JSONObject getFarmFields(){
-        // 思路:先取字段后取初始数值
+        // 先取字段后取初始数值
+        List<MsFarmField> fieldLst = msFarmFieldDAO.selectByCriteria(new MsFarmFieldCriteria());
+        for(MsFarmField field : fieldLst) {
+            JSONObject field_def = (JSONObject) JSON.toJSON(field);
+            String field_limit = field.getFieldLimit();
+            String extension_attrs = field.getExtensionAttrs();
+            field_def.put("field_limit", JSONObject.parseObject(field_limit));
+            JSONObject extension = convertExtensionAttrs2Json(extension_attrs, field.getFieldType());
+            field_def.put("extension_attrs", extension);
 
+        }
 
+    }
 
+    private JSONObject convertExtensionAttrs2Json(String extension_attrs, String type) {
+        if(fieldType.RADIO_TEXT.equals(type)) { // eg:全景
+
+        }
     }
 
 
