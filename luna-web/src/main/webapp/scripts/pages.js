@@ -11,7 +11,7 @@ var lunaPage = {},
 var currentComponent = {};
 var currentPage = null;
 
-setCookie('businessId', 50);
+setCookie('businessId', 48);
 var objdata = {
     businessId: getCookie('businessId'),
     articleListData: null,
@@ -146,7 +146,7 @@ componentTabModelTemplate = {
 var componentViewTemplate = {
     'tabMenu': '<div class="menuTab-wrapper" >' +
         '<div class="menuTab-bg">' +
-        '<img src="http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg">' +
+        '<img src="http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg">' +
         '</div>' +
         '<div class="menuTab">' +
         '<div class="menulist-wrap">' +
@@ -718,12 +718,9 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "tab":
-            newComponent.attr("component-type", "tab");
-            var icon = imghost + "/img/sample.png";
-            if (content != undefined && content.hasOwnProperty("icon")) {
-                icon = content.icon;
-            }
-            newComponent.children("div").append('<img src="' + icon + '"/>');
+            
+
+            
             break;
         default:
             $.alert("未知的组件类型");
@@ -807,7 +804,7 @@ function updatePageComponents(pageID, componentID) {
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         case "tab":
-            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            // componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
         default:
             $.alert("未知的组件类型");
@@ -815,7 +812,7 @@ function updatePageComponents(pageID, componentID) {
 
     }
 
-    if ($currenthtml.attr("component-type") != "canvas") {
+    if ($currenthtml.attr("component-type") != "canvas"&&$currenthtml.attr("component-type") != "tab") {
         componentObj.x = parseInt($currenthtml.position().left);
         componentObj.y = parseInt($currenthtml.position().top);
         componentObj.width = parseInt($currenthtml.find("div.con").width());
@@ -869,10 +866,17 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             }
             break;
         case "tab":
-            // if (content != undefined && content.hasOwnProperty("icon")) {
-            //     var icon = content.icon;
-            //     comobj.children("div.con").html('<img src="' + icon + '"/>');
-            // }
+            var tabList = content.tabList,
+                innerHtml = [];
+            for (var i = 0; i < tabList.length; i++) {
+                if (tabList[i].icon.selected == "customer") {
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url('+tabList[i].icon.customer.defaultUrl||tabList[i].icon.customer.currentUrl+') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                } else {
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                }
+            }
+            comobj.find('.menulist').empty().append(innerHtml.join(''));
+            comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
             break;
         default:
             $.alert("未知的组件类型");
@@ -927,3 +931,6 @@ function showPanoBackground($container, componentData) {
         }
     }
 }
+
+
+
