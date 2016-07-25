@@ -13,7 +13,7 @@ var currentPage = null;
 
 setCookie('businessId', 48);
 var objdata = {
-    businessId: getCookie('businessId'),
+    businessId: Util.location().business_id||0,
     articleListData: null,
     articleData: null
 }
@@ -140,7 +140,7 @@ componentTabModelTemplate = {
     }
 };
 /**
- * 组件的样式
+ * 组件的样式模板
  * @type {Object}
  */
 var componentViewTemplate = {
@@ -254,6 +254,7 @@ $(document).ready(function() {
     lunaPage.init();
 
 });
+
 
 function copy_code(copyText) {
     if (window.clipboardData) {
@@ -386,7 +387,9 @@ function modify() {
     $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
 }
 
-
+/**
+ * 界面的初始化状态
+ */
 (function($) {
     $.init = function() {
         getAppData(getUrlParam("app_id"));
@@ -469,7 +472,10 @@ function modify() {
     }
 })(lunaPage);
 
-
+/**
+ * 左侧调整顺序
+ * @return {[type]} [description]
+ */
 function reOrderPage() {
     var pageElements = $(".list-page .drop-item[page_id]");
     var pageOrder = {};
@@ -484,7 +490,11 @@ function reOrderPage() {
     updatePageOrder(pageOrder);
     return pageOrder;
 }
-// show page list
+
+/**
+ * 左侧显示
+ * @param {[type]} pageList [description]
+ */
 function setPageListHtml(pageList) {
     $("#list-page").empty();
     var orderedPages = [];
@@ -500,7 +510,11 @@ function setPageListHtml(pageList) {
     }
 }
 
-
+/**
+ * 创建左侧缩略图
+ * @param  {[type]} page [description]
+ * @return {[type]}      [description]
+ */
 function createPageListItemHtml(page) {
     var pageHtml = [];
     pageHtml.push('<li class="drop-item" page_id="{0}"><div class="mod">'.format(page.page_id));
@@ -514,6 +528,11 @@ function createPageListItemHtml(page) {
 
 }
 
+/**
+ * 创建页面
+ * @param  {[type]} pageID [description]
+ * @return {[type]}        [description]
+ */
 function creatPageHtml(pageID) {
 
     var page = lunaPage.pages[pageID];
@@ -524,6 +543,10 @@ function creatPageHtml(pageID) {
     createCanvas();
 }
 
+/**
+ * 创建页面画布
+ * @return {[type]} [description]
+ */
 function createCanvas() {
 
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
@@ -535,7 +558,10 @@ function createCanvas() {
     componentPanel.update("canvas");
 }
 
-// 切换页面加载新页面内容
+/**
+ * 切换页面加载新页面内容
+ * @param {[type]} pageID [description]
+ */
 function setPageHtml(pageID) {
     var $root = $('#layermain');
     $('#layermain').html("");
@@ -565,7 +591,8 @@ function setPageHtml(pageID) {
     }
 }
 
-/**只管创建component，其他一切事务由调用者自行协调
+/**
+ * 只管创建component，其他一切事务由调用者自行协调
  * 此函数只创建component UI
  */
 function creatPageComponentsHtml(pageID, componentID, componentType) {
@@ -652,7 +679,12 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
     }
 }
 
-//show component UI
+/**
+ * 编辑时，初始化画布中的内容
+ * @param {[type]} pageID      [description]
+ * @param {[type]} componentID [description]
+ * @param {[type]} comType     [description]
+ */
 function setPageComponentsHtml(pageID, componentID, comType) {
     var newComponent = $('<div class="componentbox"><div class="con"></div></div>');
 
@@ -718,9 +750,12 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "tab":
-            
-
-            
+            newComponent.attr("component-type", "tab");
+            var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            $topMenu.find('.enuTab-bg img').attr('src',content.bannerImg);
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
             break;
         default:
             $.alert("未知的组件类型");
@@ -812,7 +847,7 @@ function updatePageComponents(pageID, componentID) {
 
     }
 
-    if ($currenthtml.attr("component-type") != "canvas"&&$currenthtml.attr("component-type") != "tab") {
+    if ($currenthtml.attr("component-type") != "canvas" && $currenthtml.attr("component-type") != "tab") {
         componentObj.x = parseInt($currenthtml.position().left);
         componentObj.y = parseInt($currenthtml.position().top);
         componentObj.width = parseInt($currenthtml.find("div.con").width());
@@ -870,7 +905,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
                 innerHtml = [];
             for (var i = 0; i < tabList.length; i++) {
                 if (tabList[i].icon.selected == "customer") {
-                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url('+tabList[i].icon.customer.defaultUrl||tabList[i].icon.customer.currentUrl+') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
                 } else {
                     innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
                 }
@@ -931,6 +966,27 @@ function showPanoBackground($container, componentData) {
         }
     }
 }
-
-
-
+/**
+ * 画布中的点击事件
+ * @type {Object}
+ */
+var componentPanel = {
+    init: function(componentType) {
+        if (componentType) {
+            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
+        }
+        currentController = componentType + "Div";
+        var controllerManagerDiv = $("#controller-manager");
+        var children = controllerManagerDiv.children();
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
+                $(children[i]).show();
+            } else {
+                $(children[i]).hide();
+            }
+        }
+    },
+    update: function(componentType) {
+        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
+    }
+};

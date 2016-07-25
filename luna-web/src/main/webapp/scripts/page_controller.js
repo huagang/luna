@@ -1,30 +1,7 @@
 /* 
  * 微景展页面控件controller
  */
-var componentPanel = {
 
-    init: function(componentType) {
-        if (componentType) {
-            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
-        }
-        currentController = componentType + "Div";
-        var controllerManagerDiv = $("#controller-manager");
-        var children = controllerManagerDiv.children();
-        for (var i = 0; i < children.length; i++) {
-            if ($(children[i]).attr("id") == currentController) {
-                $(children[i]).show();
-            } else {
-                $(children[i]).hide();
-            }
-        }
-
-    },
-    update: function(componentType) {
-        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
-
-    }
-
-};
 
 //app初始化
 var showPage = angular.module('showPage', ['ngSanitize', 'ui.select']);
@@ -638,50 +615,50 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         this.iconList = [{
             name: '概况',
             code: 'profile',
-            type: 'defaul',
-            defaultStyle: { bgPositon: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
+            type: 'default',
+            defaultStyle: { bgPosition: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
             customer: {},
         }, {
             name: '交通',
             code: 'traffic',
-            defaultStyle: { bgPositon: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '开发区',
             code: 'area',
-            defaultStyle: { bgPositon: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '数博会',
             code: 'activity',
-            defaultStyle: { bgPositon: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '名人',
             code: 'celebrity',
-            defaultStyle: { bgPositon: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '文化',
             code: 'culture',
-            defaultStyle: { bgPositon: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '运动',
             code: 'spots',
-            defaultStyle: { bgPositon: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '食物',
             code: 'food',
-            defaultStyle: { bgPositon: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '酒店',
             code: 'hotel',
-            defaultStyle: { bgPositon: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPositon: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
+            defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
         }, {
             name: '自定义图标',
             code: 'customer',

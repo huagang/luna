@@ -1137,6 +1137,7 @@
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>    
     <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
