@@ -468,9 +468,6 @@ $(document).ready(function() {
 
         that.init = init;
 
-        // 测试数据
-        that.getTestData = getTestData;
-
         // 渲染组件
         that.build = build;
 
@@ -823,50 +820,6 @@ $(document).ready(function() {
             } else{
                 that.fetchSingleData(that.value.content.tabList[that.menuIndex], that.menuIndex);
             }
-        }
-
-        function getTestData(){
-            return {
-                type: 'menuTab',
-                bgUrl: "http://material-10002033.file.myqcloud.com/guiyang/city/29e5dc501b5c11e6be71525400a216a4.jpg",
-                tabs: [
-                    {name: 'poi', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
-                        pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
-                        audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-                    {name: '文章', type:'article', _id:'12', video:'14651978969261888745',
-                        pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
-                        audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-                    {name: 'poi', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
-                        pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
-                        audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-                   {name: 'poi列表', type:'poiList', _id:'575e8f0226d67f19ce07d6a9',
-                        business_id: 39, poi_id: '576cd37c5971a163400a5291',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-                    {name: '文章列表', type:'articleList', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
-                        business_id: 39, columnId: 'CATE000000000000',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-                    {name: '概况', type:'poi', _id:'575e8f0226d67f19ce07d6a9', video:'14651978969261888745',
-                        pic: 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3p012K1W1t1E3A0J0n3Q3p3V0Y3b2C0P.png',
-                        audio:'http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/3K0u1H2V2g1K1S0n013P3K3Y023s0f1_.mp3',
-                        defaultUrl: 'http://material-10002033.file.myqcloud.com/guiyang/city/38a7e92017d511e6b2b6a28789c2f031.png',
-                        currentUrl:'http://material-10002033.file.myqcloud.com/guiyang/city/42009fe01bd511e6be71525400a216a4.jpg'
-                    },
-
-                ]
-            };
         }
     }
 });
