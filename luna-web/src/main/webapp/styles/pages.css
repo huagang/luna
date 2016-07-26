@@ -909,7 +909,7 @@ a.wj-img-clc {
     text-align: center;
     margin: 0 auto;
     width: 90%;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     outline: none;
 }
 
@@ -1066,6 +1066,10 @@ a.wj-img-clc {
 }
 .tabMenuIcon-upload .btn-local{
     width: 80px;
+}
+.tabMenuIcon-upload .file-local{
+    width: 90px;
+    left: 300px;
 }
 /* 保存的后的提示 */
 

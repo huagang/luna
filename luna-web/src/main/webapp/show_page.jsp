@@ -1026,18 +1026,9 @@
           <div class="pop pop-uploadMenuTabIcon" id="pop-uploadMenuTabIcon" ng-controller="menuTabIconController as tabMenuIcon">
               <div class="pop-title">
                 <h4>上传图标</h4>
-                <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+                <a href="#" class="btn-close" onclick="clcWindow(this,false)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
               </div>
               <div class="pop-cont">
-                <div class="topic-set">
-                  <div class="item-wrap">
-                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
-                          <span class="title">默认图标</span>
-                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" title="{{tabMenuIcon.menuTabIcon.defaultUrl}}"  ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-change="tabMenuIcon.chageDefaultIcon()" />
-                          <button class="btn btn-local">上传</button>
-                          <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
-                      </form>
-                  </div>
                   <div class="item-wrap">
                      <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
                           <span class="title">当前图标</span>
@@ -1046,7 +1037,14 @@
                           <input type="file" onchange="async_upload_picForMenuTab('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="pic" />
                       </form>
                   </div>
-                </div>
+                  <div class="item-wrap">
+                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
+                          <span class="title">默认图标</span>
+                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" title="{{tabMenuIcon.menuTabIcon.defaultUrl}}"  ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-change="tabMenuIcon.chageDefaultIcon()" />
+                          <button class="btn btn-local">上传</button>
+                          <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
+                      </form>
+                  </div>
               </div>
               <!-- 弹出层底部功能区 -->
               <div class="pop-fun">
