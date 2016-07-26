@@ -132,7 +132,6 @@ $(document).ready(function() {
 
                 switch (headName[0]) {
                     case 'canvas':
-                        break;
                         var canvas = new Canvas(value);
                         canvas.page_code = item.page_code;
                         componentHtml = canvas.build();
@@ -502,16 +501,11 @@ $(document).ready(function() {
 
 
         function build() {
-            /* 该组件不需要setPosition
-                that.setPosition();
-            */
-            // 设置dom元素内容
 
+            that.setPosition();
+            that.setMoreInfo();
+            that.setAction();
 
-
-            // that.setMoreInfo();
-
-            // that.setAction();
             var html = that.getTabsHtml();
             that.html.children('div').append(html);
             if(that.hasBuild === false){
@@ -519,6 +513,7 @@ $(document).ready(function() {
                 setTimeout(that.bindEvent, 600);
             }
             that.fetchData();
+
             return that.html;
         }
 
