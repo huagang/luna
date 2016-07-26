@@ -115,6 +115,9 @@ $(document).ready(function() {
         // alert(pageData.msg);
         return;
     } else {
+        if(toString.call(pageData.data) === '[object Object]'){
+            pageData.data = [pageData.data];
+        }
         var arrPageDatas = pageData.data,
             curPageGroup = {};
         for (var i = 0; i < arrPageDatas.length; i++) {
@@ -254,11 +257,40 @@ $(document).ready(function() {
         // 设置组件行为
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
-                if (this.value.action.href.type == "inner") {
-                    this.html.attr("hrefurl", host + "/app/" + pageData.data.app_id + "/page/" + this.value.action.href.value);
-                } else if (this.value.action.href.type == "outer") {
-                    this.html.attr("hrefurl", this.value.action.href.value);
+                var link, value = this.value.action.href.value;
+                switch(this.value.action.href.type){
+
+                    case "inner":
+                        link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
+                        break;
+
+                    case 'outer':
+                        link = value;
+                        break;
+
+                    case 'email':
+                        link = 'mailto:' + value;
+                        break;
+
+                    case 'phone':
+                        link = 'tel:' + value;
+                        break;
+
+                    case 'return':
+                        link = 'return';
+                        break;
                 }
+                if(link){
+                    this.html.attr('data-href', link);
+                    this.html.on('click',function(event){
+
+                        var link = event.currentTarget.getAttribute('data-href');
+                        if(link === 'return'){
+                            history.back(-1);
+                        }
+                    });
+                }
+
             }
         };
     }
@@ -497,6 +529,7 @@ $(document).ready(function() {
             that.data = [];
             that.menuIndex = 0;
             that.content = '';
+
         }
 
 
@@ -513,7 +546,8 @@ $(document).ready(function() {
                 setTimeout(that.bindEvent, 600);
             }
             that.fetchData();
-
+            that.html.css('width','100%');
+            that.html.css('height','100%');
             return that.html;
         }
 
@@ -582,7 +616,7 @@ $(document).ready(function() {
             switch(item.type){
                 case 'singlePoi':
                     $.ajax({
-                        url: '../servicepoi.do?method=getPoiById',
+                        url: host + '/servicepoi.do?method=getPoiById',
                         type: 'GET',
                         data:{poi_id: item.firstPoiId, lang:'zh'},
                         success:function(data){
@@ -600,7 +634,7 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: '../article/data/' + item.articleId,
+                        url: host + '/article/data/' + item.articleId,
                         type: 'GET',
                         success:function(data){
                             if(data.code === '0'){
@@ -617,7 +651,7 @@ $(document).ready(function() {
                     break
                 case 'poiList':
                     $.ajax({
-                        url: '../servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiId',
                         type: 'GET',
                         data: {business_id: window.business_id,
                                 poi_id: item.firstPoiId},
@@ -635,7 +669,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: '../article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        url: host +  '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
