@@ -1050,6 +1050,14 @@ a.wj-img-clc {
     background-position: -480px 0px;
 }
 
+.pop-uploadMenuTabIcon .item-wrap{
+    width: 400px;
+}
+
+.pop-uploadMenuTabIcon .item-wrap .title{
+    width: 50px;
+}
+
 .tabMenuIcon-upload .fileurl {
     height: 30px;
     padding: 0 5px;

@@ -337,9 +337,6 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = this.currentComponent.bgimg;
         this.panoId = this.currentComponent.panoId;
         this.gravity = this.currentComponent.gravity;
-        if (!objdata.articleListData) {
-            getArticleListByBusinessId(objdata.businessId);
-        }
     };
 
     this.changeBackgroundColor = function() {
