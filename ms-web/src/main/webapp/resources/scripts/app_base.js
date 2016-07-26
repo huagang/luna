@@ -659,7 +659,7 @@ $(document).ready(function() {
 
         function getTabsHtml(){
             var labsHtml = '';
-            var className = that.value.content.tabList.length < 4 ? 'flex' : '';
+
             that.value.content.tabList.forEach(function(item, index){
                 var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
                 var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
@@ -679,9 +679,9 @@ $(document).ready(function() {
             +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
             +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover">'
             +            '<div class="topmenu">'
-            +                '<div class="menulist-wrap ' + className + '">'
+            +                '<div class="menulist-wrap"><div class="menulist-container">'
             +                   labsHtml
-            +                 '</div>'
+            +                 '</div></div>'
             +             '</div>'
             +       '</div>'
             + '</div>'
