@@ -1,9 +1,6 @@
 /* 
  * 微景展页面控件controller
  */
-<<<<<<< HEAD
-=======
-
 
 //app初始化
 var showPage = angular.module('showPage', ['ngSanitize', 'ui.select']);
@@ -19,7 +16,6 @@ showPage.factory('menuTabIcon', function($rootScope) {
         this.iconGroup = iconGroup;
         this.broadcastItem();
     };
->>>>>>> duyutao-dev
 
     menuTabIcon.broadcastItem = function() {
         $rootScope.$broadcast('handleBroadcast');

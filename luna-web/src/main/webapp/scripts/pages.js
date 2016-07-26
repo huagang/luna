@@ -476,11 +476,7 @@ function modify() {
 })(lunaPage);
 
 /**
-<<<<<<< HEAD
- * 调整顺序
-=======
  * 左侧调整顺序
->>>>>>> duyutao-dev
  * @return {[type]} [description]
  */
 function reOrderPage() {
@@ -498,14 +494,11 @@ function reOrderPage() {
     return pageOrder;
 }
 
-<<<<<<< HEAD
-// show page list
-=======
 /**
  * 左侧显示
  * @param {[type]} pageList [description]
  */
->>>>>>> duyutao-dev
+
 function setPageListHtml(pageList) {
     $("#list-page").empty();
     var orderedPages = [];
@@ -539,15 +532,12 @@ function createPageListItemHtml(page) {
 
 }
 
-<<<<<<< HEAD
-
-=======
 /**
  * 创建页面
  * @param  {[type]} pageID [description]
  * @return {[type]}        [description]
  */
->>>>>>> duyutao-dev
+
 function creatPageHtml(pageID) {
 
     var page = lunaPage.pages[pageID];
@@ -559,11 +549,8 @@ function creatPageHtml(pageID) {
 }
 
 /**
-<<<<<<< HEAD
  * 创建画布
-=======
  * 创建页面画布
->>>>>>> duyutao-dev
  * @return {[type]} [description]
  */
 function createCanvas() {
@@ -695,11 +682,8 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
 }
 
 /**
-<<<<<<< HEAD
- * 显示一个页面中的组件
-=======
+
  * 编辑时，初始化画布中的内容
->>>>>>> duyutao-dev
  * @param {[type]} pageID      [description]
  * @param {[type]} componentID [description]
  * @param {[type]} comType     [description]
@@ -770,12 +754,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "tab":
             newComponent.attr("component-type", "tab");
-<<<<<<< HEAD
-            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            newComponent.addClass("tabmenu");
-            for(var i =0 ;i<)
-=======
+
             var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
             $topMenu.find('.enuTab-bg img').attr('src', content.bannerImg);
             newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
@@ -784,7 +763,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             newComponent.find('.menulist').empty().append(innerHtml);
->>>>>>> duyutao-dev
+
             break;
         default:
             $.alert("未知的组件类型");
@@ -941,21 +920,10 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             }
             break;
         case "tab":
-<<<<<<< HEAD
-            var tabList = content.tabList,
-                innerHtml = [];
-            for (var i = 0; i < tabList.length; i++) {
-                if (tabList[i].icon.selected == "customer") {
-                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
-                } else {
-                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
-                }
-            }
-            comobj.find('.menulist').empty().append(innerHtml.join(''));
-=======
+
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             comobj.find('.menulist').empty().append(innerHtml);
->>>>>>> duyutao-dev
+
             comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
             break;
         default:
@@ -1036,7 +1004,7 @@ var componentPanel = {
     }
 };
 
-<<<<<<< HEAD
+
 /**
  * 点击画布中的组件，渲染右边参数，在画布点击事件中调用
  * @type {Object}
@@ -1061,7 +1029,7 @@ var componentPanel = {
         $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
     }
 };
-=======
+
 var initMenuTab = {
     getTabListHtmlInCavas : function(tabList) {
         var innerHtml = [];
@@ -1075,4 +1043,4 @@ var initMenuTab = {
         return innerHtml.join('');
     }
 }
->>>>>>> duyutao-dev
+
