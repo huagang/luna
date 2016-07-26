@@ -1031,17 +1031,17 @@
               <div class="pop-cont">
                 <div class="topic-set">
                   <div class="item-wrap">
-                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
                           <span class="title">默认图标</span>
-                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-blur="tabMenuIcon.chageDefaultIcon()" />
+                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" title="{{tabMenuIcon.menuTabIcon.defaultUrl}}"  ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-change="tabMenuIcon.chageDefaultIcon()" />
                           <button class="btn btn-local">上传</button>
                           <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
                       </form>
                   </div>
                   <div class="item-wrap">
-                     <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                     <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
                           <span class="title">当前图标</span>
-                          <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-blur="tabMenuIcon.chageCurrentIcon()"/>
+                          <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" title={{tabMenuIcon.menuTabIcon.currentUrl}} ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-change="tabMenuIcon.chageCurrentIcon()"/>
                           <button class="btn btn-local">上传</button>
                           <input type="file" onchange="async_upload_picForMenuTab('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="pic" />
                       </form>

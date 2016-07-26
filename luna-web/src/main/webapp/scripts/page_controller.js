@@ -5,11 +5,24 @@
 
 //app初始化
 var showPage = angular.module('showPage', ['ngSanitize', 'ui.select']);
-showPage.factory('menuTabIcon', function() {
-    return {
-        defaultUrl: "",
-        currentUrl: "",
-    }
+showPage.factory('menuTabIcon', function($rootScope) {
+    var menuTabIcon = {};
+
+    menuTabIcon.iconGroup = {
+        defaultUrl: '',
+        currentUrl: '',
+    };
+
+    menuTabIcon.prepForBroadcast = function(iconGroup) {
+        this.iconGroup = iconGroup;
+        this.broadcastItem();
+    };
+
+    menuTabIcon.broadcastItem = function() {
+        $rootScope.$broadcast('handleBroadcast');
+    };
+
+    return menuTabIcon;
 });
 showPage.run(function($rootScope, $http) {
     $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
@@ -545,15 +558,16 @@ VideoController.prototype = new InteractComponentController();
 
 /* Init TabMenu Controller Start */
 function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
-    //$scope.customerMenuTabIcon = customerMenuTabIcon;
+
+    var $scope = $scope;
+    var _self = this;
 
     this.init = function() {
-        MenuTabController.prototype.init.call(this);
-        var _self = this;
-        this.content = jQuery.extend(true, {}, this.currentComponent.content);
-        // this.content.tabList = []; //tab标签列表
+        console.log(customerMenuTabIcon.iconGroup);
 
-        this.customerMenuTabIcon = customerMenuTabIcon; //关联上传的icon数据
+        MenuTabController.prototype.init.call(this);
+        this.content = jQuery.extend(true, {}, this.currentComponent.content);
+
         this.currentTab = {}; // 当前操控的对象
         this.selectTabTypeStatus = false;
         this.content.tabListCount = this.content.tabList.length;
@@ -562,6 +576,11 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             //如果有值，默认点击第一个；
             this.changeMenuTab('', 0);
         }
+
+        $scope.$on('handleBroadcast', function() {
+            _self.currentTab.icon.customer = customerMenuTabIcon.iconGroup;
+            updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        });
 
         //根绝业务Id 获取栏目列表
         this.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
@@ -692,61 +711,49 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             //初始化二级POI
             this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
         }
-
-        if (this.currentTab.icon.customer.defaultUrl) {
-            this.customerMenuTabIcon.defaultUrl = this.currentTab.icon.customer.defaultUrl;
-        }
-        if (this.currentTab.icon.customer.currentUrl) {
-            this.customerMenuTabIcon.currentUrl = this.currentTab.icon.customer.currentUrl;
-        }
     }
 
     //删除tab
     this.delTab = function($event, $index) {
         $event.stopPropagation();
         this.content.tabList.splice($index, 1);
+
         this.currentComponent.content.tabList = this.content.tabList;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
     //创建新的tab
     this.createNewTab = function($event, type) {
+        var tabTypeNames = {
+            'singleArticle': '单页文章',
+            'articleList': '文章列表',
+            'singlePoi': '单点Poi',
+            'poiList': 'Poi列表',
+        }
 
         //创建新的Tab
         var defaultTab = {
             id: 'menutab' + (this.content.tabListCount + 1),
             name: '页卡' + (this.content.tabListCount + 1),
-            icon: { customer: '' },
-            type: '',
+            icon: {
+                customer: {
+                    defaultUrl: "",
+                    currentUrl: "",
+                }
+            },
+            type: type,
             columnId: '',
             articleId: '',
-            typeName: '',
+            typeName: tabTypeNames[type],
             delCls: '',
         };
 
         this.content.tabList.push(defaultTab);
         this.content.tabListCount++;
-
         this.currentTab = this.content.tabList[this.content.tabList.length - 1];
-        this.currentTab.type = type;
-        switch (type) {
-            case 'singleArticle':
-                this.currentTab.typeName = '单页文章';
-                break;
-            case 'articleList':
-                this.currentTab.typeName = '文章列表';
-                break;
-            case 'singlePoi':
-                this.currentTab.typeName = '单点Poi';
-                break;
-            case 'poiList':
-                this.currentTab.typeName = 'Poi列表';
-                break;
-        }
-
-        this.currentTab.icon.customer = this.customerMenuTabIcon;
+        console.log(customerMenuTabIcon.iconGroup);
 
         this.currentComponent.content.tabList = this.content.tabList;
-
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
@@ -771,7 +778,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         if (this.selectTabTypeStatus) {
             this.selectTabTypeStatus = false;
         } else {
-            var liTarget = $event.target.nodeName =='LI'?  $event.target :$event.target.parentNode ;
+            var liTarget = $event.target.nodeName == 'LI' ? $event.target : $event.target.parentNode;
             var tabsNum = liTarget.parentNode.children.length;
             if (tabsNum % 3 == 0) {
                 liTarget.children[1].style.left = '-100%';
@@ -784,10 +791,20 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
     //icon选择回调函数
     this.onIconSelectCallback = function(item, model) {
+        console.log(customerMenuTabIcon.iconGroup);
+
         if (model == 'customer') {
+            console.log(this.customerMenuTabIcon);
+            // this.customerMenuTabIcon.defaultUrl = "";
+            // this.customerMenuTabIcon.currentUrl = "";
+
+            customerMenuTabIcon.prepForBroadcast(this.currentTab.icon.customer);
+            // this.currentTab.icon.customer = this.customerMenuTabIcon;
             popWindow($("#pop-uploadMenuTabIcon"));
         } else {
             this.currentTab.icon = angular.extend(this.currentTab.icon, item);
+            this.currentTab.icon.customer.defaultUrl = "";
+            this.currentTab.icon.customer.currentUrl = "";
         }
         this.currentComponent.content.tabList = this.content.tabList;
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
@@ -862,23 +879,23 @@ MenuTabController.prototype = new InteractComponentController();
 /* Init TabMenu Controller End */
 
 /* Init TabMenuIcon Controller  */
-function MenuTabIconController($scope, $rootScope, $http, menuTabIcon) {
-    $scope.menuTabIcon = menuTabIcon;
-    this.init = function() {
-        this.menuTabIcon = {
-            defaultUrl: "",
-            currentUrl: "",
-        };
+function MenuTabIconController($scope, $rootScope, $http, customerMenuTabIcon) {
+
+    this.init = function($scope) {
+        var _self = this;
+        $scope.$on('handleBroadcast', function() {
+            _self.menuTabIcon = customerMenuTabIcon.iconGroup;
+        });
+        // this.menuTabIcon = menuTabIcon;
     }
     this.chageDefaultIcon = function() {
-        $scope.menuTabIcon.defaultUrl = this.menuTabIcon.defaultUrl;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        customerMenuTabIcon.prepForBroadcast(this.menuTabIcon);
     }
     this.chageCurrentIcon = function() {
-        $scope.menuTabIcon.currentUrl = this.menuTabIcon.currentUrl;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        customerMenuTabIcon.prepForBroadcast(this.menuTabIcon);
+        // updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     }
 
-    this.init();
+    this.init($scope);
 }
 /* Init TabMenuIcon Controller End */
