@@ -27,5 +27,3 @@ VALUES (148, '线路列表初始化', 147, '/manage_router.do?method=init', 3, 1
 
 INSERT INTO ms_resource_uri(resource_id, resource_name, parent_id, resource_uri, level_type, `status`, regist_hhmmss, up_hhmmss)
 
-VALUES (157, '获取文章栏目', 132, '/manage/article.do?method=read_column', 3, 1, '2016-07-24 22:57:17', '2016-07-24 22:57:17');
-INSERT INTO ms_poi_field (field_name, field_show_name, field_alias, display_order, field_type, field_size, field_tips_for_templete) VALUES ('thermodynamic_diagram', '热力图ID', 'thermodynamic_diagram', 25, 1, 255, '');
