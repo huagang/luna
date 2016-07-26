@@ -49,12 +49,7 @@
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
-        var business_id;
-        try{
-            business_id = ${business_id};
-        } catch(e){
-            console.error('获取业务id失败');
-        }
+        var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>

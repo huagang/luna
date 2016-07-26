@@ -108,6 +108,25 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	}
 
 	@Override
+	public JSONObject getAppInfo(int appId) {
+		try {
+			MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+			if(msShowApp == null) {
+				return FastJsonUtil.error(ErrorCode.NOT_FOUND, "内容不存在");
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put(MsShowAppDAO.FIELD_APP_ID, msShowApp.getAppId());
+			jsonObject.put(MsShowAppDAO.FIELD_APP_NAME, msShowApp.getAppName());
+			jsonObject.put(MsShowAppDAO.FIELD_BUSINESS_ID, msShowApp.getBusinessId());
+			return FastJsonUtil.sucess("", jsonObject);
+		} catch (Exception ex) {
+			logger.error("Failed to get appInfo", ex);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+		}
+
+	}
+
+	@Override
 	public JSONObject createApp(String json) {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = JSONObject.parseObject(json);

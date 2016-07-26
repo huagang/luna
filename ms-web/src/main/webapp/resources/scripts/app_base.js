@@ -497,6 +497,7 @@ $(document).ready(function() {
             that.hasBuild = false;
             that.data = [];
             that.menuIndex = 0;
+            that.content = '';
         }
 
 
@@ -530,7 +531,9 @@ $(document).ready(function() {
 
 
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
-            that.html.find('#content').on('click', '.icon-radio', function(event){
+
+            var content = that.html.find('#content');
+            content.on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
                     if(target.hasClass('icon-radio-on')){
@@ -546,7 +549,19 @@ $(document).ready(function() {
 
             });
 
-            that.html.find('#content').on('click', '.icon-video', function(event){
+            content.on('transitionend', function(event){
+                if(content.hasClass('transparent')){
+                    content.removeClass('transparent');
+                    content.html(that.content);
+                    that.content = ''
+                } else{ // opaque
+                    if(that.content){
+                        content.addClass('transparent');
+                    }
+                }
+
+            });
+            content.on('click', '.icon-video', function(event){
 
                 var radio = that.html.find(".icon-radio");
                 if(radio.hasClass('icon-radio-on')){
@@ -701,7 +716,6 @@ $(document).ready(function() {
                     +   '</div>'
                     +   '<div class="content-details clearboth">'+ data.brief_introduction +'</div>'
                     +'</div>';
-                    that.html.find("#content").html(html);
                     break;
                 case 'singleArticle':
                     var videoClass = data.video ? '' : 'hidden',
@@ -722,7 +736,6 @@ $(document).ready(function() {
                         +   '</div>'
                         +   '<div class="content-details clearboth">'+ (data.content)+'</div>'
                         +'</div>';
-                    that.html.find("#content").html(html);
                     break;
                 case 'poiList':
                     html = '';
@@ -769,7 +782,7 @@ $(document).ready(function() {
                             +           '<br><span class="profile">' + panoTip + '</span>'
                             +       '</p>'
                             +    '</a>'
-                            +   '<a class="poi-detail" href="../poi/'+ item.poi_id +'">'
+                            +   '<a target="_blank" class="poi-detail" href="../poi/'+ item.poi_id +'">'
                             +       '点击查看详情'
                             +   '</a>'
                             +'</div>';
@@ -777,7 +790,6 @@ $(document).ready(function() {
                     });
 
                     html = '<div id="poiList">' + poiList + '</div>';
-                    that.html.find("#content").html(html);
                     break;
                 case 'articleList':
                     html = '';
@@ -789,7 +801,7 @@ $(document).ready(function() {
                             bg = "background:url(../resources/images/default.png) center center no-repeat;";
                         }
                         articleList +=
-                            '<a class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
+                            '<a target="_blank"  class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
                             +   '<div class="content">'
                             +       '<div class="detail-left">'
                             +           '<span>' + item.title +'</span>'
@@ -801,8 +813,16 @@ $(document).ready(function() {
                             +'</a>';
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
-                    that.html.find("#content").html(html);
                     break;
+            }
+
+            var content = that.html.find("#content");
+            if(content.html()){
+                content.addClass('transparent');
+                that.content = html;
+            } else{
+                that.content = '';
+                content.html(html);
             }
         }
 
