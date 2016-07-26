@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.cons.ErrorCode;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -409,8 +410,10 @@ public class PoiApiCtrl {
 			@RequestParam(required = false, value = "fields") String fields,
 			@RequestParam(required = false, value = "lang") String lang,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
-		tags = string2ChineseChar(tags);
-		MsLogger.debug(tags);
+		MsLogger.debug("before decoding:" + tags);
+		//tags = string2ChineseChar(tags);
+		tags = URLDecoder.decode(tags,"utf-8");
+		MsLogger.debug("after decoding utf-8:" + tags);
 		try{
 			JSONObject param = new JSONObject();
 			if(fields == null){
@@ -506,6 +509,8 @@ public class PoiApiCtrl {
 //		for(String aa : a){
 //			System.out.println(aa);
 //		}
+		//String s = "特色,其他";
+		//System.out.print(string2ChineseChar(s));
 	}
 	
     public static String string2ChineseChar(String string) throws UnsupportedEncodingException {

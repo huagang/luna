@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -121,6 +122,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 			api2db_nm.put("address", "zone_id");	   // 地址--聚合
 			api2db_nm.put("scene_types", "scene_type");// 标签--拆分
 			api2db_nm.put("hotel_types", "type");
+
+			// 兼容性代码--type
+			api2db_nm.put("types", "types");
 		}
 		
 		// ---------------一级类别与下属私有字段集合的映射关系---------------
@@ -172,11 +176,13 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String lang = param.getString("lang");
 		List<String> fieldLst;
 		fieldLst = convertInputApiFields2DbFieldLst(fields);
+		MsLogger.debug("field list:" + fieldLst.toString());
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
-			List<String> poiIdLst = null;
+			List<String> poiIdLst;
 			poiIdLst = getPoisWithLevelInBizTree(tree, 1);
+			MsLogger.debug("poi list:" + poiIdLst.toString());
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
@@ -320,6 +326,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String poi_id = param.getString("poi_id");
 		String lang = param.getString("lang");
 		Document doc = getPoiById(poi_id, lang);
+		MsLogger.debug("mongodb poi data:" + doc.toString());
 		List<String> fieldLst;
 //		convertInputApiFields2DbFieldLst("", fieldLst);
 		fieldLst = new ArrayList<>();
@@ -342,6 +349,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String type = param.getString("type");
 		List<String> fieldLst;
 		fieldLst = convertInputApiFields2DbFieldLst(fields);
+		MsLogger.debug("field list:" + fieldLst.toString());
         String[] tagArr = tags.split(",");
 		List<String> tagLst = new ArrayList<>();
 		for(int i = 0; i < tagArr.length; i++){
@@ -351,16 +359,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 		
 		if (!"".equals(type)) {// web端传入的是标签id
 			type = this.convertApiField2DbField(type);// 名称映射转换
+			MsLogger.debug("convertApiField2DbField:" + type);
 		} else {// web端传入的是标签的名称
 			typesAndIds = getTypesAndIdsByTypeNms(tags);// 返回的type值已经经过名称映射
+			MsLogger.debug("hotel_type:" + typesAndIds.get("type").toString() + " scene_type:" + typesAndIds.get("scene_type").toString());
 		}
 		
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
+		MsLogger.debug("business tree:"+tree.toString());
 	    if (tree != null) {
 	    	// 获取子POI id集合
 	    	Set<String> poiIdLst = new HashSet<>();
 	    	getPoisFromBizTree(tree, poiIdLst);
+			MsLogger.debug("poi list:" + poiIdLst.toString());
 	        // 根据标签和字段返回满足要求的poi
 	    	JSONObject data = new JSONObject();
 	        JSONArray poiArray = new JSONArray();
@@ -388,6 +400,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String poi_id = param.getString("poi_id");
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
+		MsLogger.debug("business tree:" + tree.toString());
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
@@ -403,6 +416,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					ctgrIdSet.add(tags.getInteger(0));
 				}
 			}
+			MsLogger.debug("category list:" + ctgrIdSet.toString());
 			// 根据类别id获取类别名称
 			JSONArray array = new JSONArray();
 			if (!ctgrIdSet.isEmpty()) {
@@ -435,6 +449,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		int ctgr_id = param.getInteger("ctgr_id");
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
+		MsLogger.debug("business tree:" + tree.toString());
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
@@ -454,6 +469,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					}
 				}
 			}
+			MsLogger.debug("sub_catgory list:" + subCtgrIdSet.toString());
 
 			// 根据类别id获取类别名称
 			JSONArray array = new JSONArray();
@@ -1190,13 +1206,41 @@ public class PoiApiBLImpl implements PoiApiBL {
 			return result;
 		}
 		int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
-		logger.debug("all valid fields: " + fieldLst);
+		// 数据库存在字段信息
+		Map<Integer, String> poiTags = getPoiTagsLst();
+		Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
+		Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+		Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
+
+		// 兼容性代码--type
+		// 如果需要返回标签字段,则为了保证兼容性,将"types"字段一同输出.
+		if(fieldLst.contains("scene_type") || fieldLst.contains("type")) { // 根据一级分类判断拿的是scene_type还是type
+			fieldLst.add("types");
+		}
+		if(fieldLst.contains("types")) {
+			String type;
+			if(tag_id == 2) {
+				type = "scene_type";
+			} else {
+				type = "type";
+			}
+			JSONArray types = FastJsonUtil.parse2Array(poi.get(type));
+			JSONArray array = new JSONArray();
+			for (int i = 0; i < types.size(); i++) {
+				if (poiTypes.containsKey(types.getIntValue(i))) {
+					JSONObject data = new JSONObject();
+					int id = types.getIntValue(i);
+					data.put("type_id", id);
+					data.put("type_name", poiTypes.get(id));
+					array.add(data);
+				}
+			}
+			result.put("types", array);
+		}
+		fieldLst.remove("types");
+
 		for (String field : fieldLst) {
-			// 数据库存在字段信息
-			Map<Integer, String> poiTags = getPoiTagsLst();
-			Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
-			Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
-			Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
+
 			if(poi.containsKey(field)) {
 				// ----------拆分字段----------
 				// 一级类别
@@ -1248,6 +1292,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// 标签--type
 				if ("type".equals(field)) {
 					JSONArray types = FastJsonUtil.parse2Array(poi.get("type"));
+
 					JSONArray array = new JSONArray();
 					for (int i = 0; i < types.size(); i++) {
 						if (poiTypes.containsKey(types.getIntValue(i))) {
@@ -1264,6 +1309,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				// 标签--scene_type
 				if ("scene_type".equals(field)) {
 					JSONArray types = FastJsonUtil.parse2Array(poi.get("scene_type"));
+
 					JSONArray array = new JSONArray();
 					for (int i = 0; i < types.size(); i++) {
 						if (poiSceneTypes.containsKey(types.getIntValue(i))) {
@@ -1330,7 +1376,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					continue;
 				}
 				result.put(convertDbField2ApiField(field), poi.get(field));
-			// POI数据不存在字段信息
+			// POI数据不存在字段信息(早期POI缺字段)
 			} else {
 				// 全景类别
 				if("panorama_type".equals(field)) {
