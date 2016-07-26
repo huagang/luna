@@ -6,16 +6,52 @@ selectBusiness.run(function($rootScope, $http){
 });
 
 function SelectBusinessController($scope, $http){
-    this.init = function(){
 
-        this.fetchData();
-    };
+    var vm = this;
 
-    this.businessData = [];
+    vm.init = init;
 
     // 获取业务数据信息
-    this.fetchData = function(){
-        this.businessData = [
+    vm.fetchData = fetchData;
+
+    // 选择业务
+    vm.handleBusinessClick = handleBusinessClick;
+
+    // 发送选择的业务信息
+    vm.postBusinessInfo = postBusinessInfo;
+
+    vm.init();
+    window.s = $scope;
+
+    function init(){
+        vm.businessData = [];
+        vm.urls = Inter.getApiUrl();
+        vm.fetched = true;
+        vm.fetchData();
+    };
+
+
+
+    // 获取业务数据信息
+    function fetchData(){
+        $http({
+            url: vm.urls.getBusinessList,
+            method: 'GET',
+        }).then(function(res){
+            if(res.data.code === '0'){
+                vm.businessData = res.data.data;
+                vm.fetched = true;
+            } else{
+                alert('获取业务数据信息失败,请刷新页面重试');
+            }
+        }, function(res){
+            alert('获取业务数据信息失败,请刷新页面重试');
+        });
+
+
+        /*
+
+        vm.businessData = [
             {
                 id: 'scenic',
                 name: '景区',
@@ -24,87 +60,22 @@ function SelectBusinessController($scope, $http){
                         id: '1',
                         name: '三清山景区',
                         hot: true
-                    },{
-                        id: '2',
-                        name: '黑古山景区',
-                    },{
-                        id: '3',
-                        hot: true,
-                        name: '三清山景区',
-                    },{
-                        id: '4',
-                        name: '三清山景区'
-                    },{
-                        id: '5',
-                        name: '三清山景区'
-                    },
-                ]
-            },{
-                id: 'hotel',
-                name: '酒店',
-                businessList:[
-                    {
-                        id: '6',
-                        hot: true,
-                        name: '三清山景区',
-                    },{
-                        id: '7',
-                        name: '黑古山景区',
-                    },{
-                        id: '8',
-                        hot: true,
-                        name: '三清山景区'
-                    },{
-                        id: '9',
-                        name: '三清山景区',
-                    },{
-                        id: '10',
-                        name: '三清山景区',
-                        hot: true
-                    },
-                ]
-            },{
-                id: 'cloudCard',
-                name: '云名片',
-                businessList:[
-                    {
-                        id: '11',
-                        hot: true,
-                        name: '三清山景区'
-                    },{
-                        id: '12',
-                        name: '黑古山景区'
-                    },{
-                        id: '13',
-                        name: '三清山景区',
-                        hot: true
-                    },{
-                        id: '14',
-                        name: '三清山景区'
-                    },{
-                        id: '15',
-                        hot: true,
-                        name: '三清山景区'
-                    },
-                ]
-            },
-        ]
+                    }},];*/
     };
 
-    // 推出业务数据信息
-    this.postBusinessInfo = function(){
+    // 发送选择的业务信息
+    function postBusinessInfo(){
 
     };
 
     // 业务点击事件
-    this.handleBusinessClick = function(id, name){
+    function handleBusinessClick(id, name){
         console.log('clicked', id);
         localStorage.setItem('business', {id: id, name: name});
         console.log('businessId', localStorage.getItem('businessId'));
         location.href = './menu.do?method=goHome';
     };
 
-    this.init();
-    window.s = $scope;
+
 
 }

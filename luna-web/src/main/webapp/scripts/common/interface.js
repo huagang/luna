@@ -12,6 +12,11 @@ var Inter = function() {
     return {
         getApiUrl: function() {
             return {
+                // 权限控制
+                getBusinessList: context + '/common/business', // 获取该用户能够选择的业务列表
+
+
+
             	//文章操作
                 createArticle: context+'/manage/article.do?method=create_article', //保存文章
                 updateArticle: context+'/manage/article.do?method=update_article',
