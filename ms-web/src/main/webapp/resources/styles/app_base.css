@@ -177,9 +177,14 @@ img{
 
 
 
+.menulist-container {
+    display: inline-block;
+    width: auto;
+}
+
 
 .menulist{
-    min-width: 25%;
+    min-width: 20vw;
     text-align: center;
     display: inline-block;
     vertical-align: bottom;
@@ -218,21 +223,16 @@ img{
     font-size: 1.5rem;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
-    width: 100vw;
+    width: 100%;
     height: 85px;
     white-space: nowrap;
     position: absolute;
     bottom: 0;
     background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0));
+    text-align: center;
 }
 
-.menulist-wrap.flex {
-    display: flex;
-    align-content: space-around;
-}
-.menulist-wrap.flex .menulist{
-    flex-grow: 1;
-}
+
 .menulist-title{
     text-align: center;
     line-height: 23px;
