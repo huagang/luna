@@ -30,3 +30,13 @@ values(157, '获取文章栏目', 132, '/manage/article.do?method=read_column', 
 
 # 将上传视频大小限制改为20M
 update ms_poi_field set field_size=20 where field_name='video';
+
+
+INSERT INTO ms_poi_field (field_name, field_show_name, field_alias, display_order, field_type, field_size, placeholder, field_tips_for_templete, extension_attrs, field_introduction, regist_hhmmss, up_hhmmss) VALUES('activity_id','活动ID’,'activity_id', 26, 1, 255, '请输入活动ID', '可为空', null, null, '2016-07-26 17:00:00', '2016-07-26 17:00:00');
+
+INSERT INTO ms_r_tag_field(tag_id,field_name,regist_hhmmss,up_hhmmss) VALUES(2,'activity_id','2016-07-26 17:00:00','2016-07-26 17:00:00');
+INSERT INTO ms_r_tag_field(tag_id,field_name,regist_hhmmss,up_hhmmss) VALUES(3,'activity_id','2016-07-26 17:00:00','2016-07-26 17:00:00');
+INSERT INTO ms_r_tag_field(tag_id,field_name,regist_hhmmss,up_hhmmss) VALUES(4,'activity_id','2016-07-26 17:00:00','2016-07-26 17:00:00');
+INSERT INTO ms_r_tag_field(tag_id,field_name,regist_hhmmss,up_hhmmss) VALUES(5,'activity_id','2016-07-26 17:00:00','2016-07-26 17:00:00');
+INSERT INTO ms_r_tag_field(tag_id,field_name,regist_hhmmss,up_hhmmss) VALUES(6,'activity_id','2016-07-26 17:00:00','2016-07-26 17:00:00');
+

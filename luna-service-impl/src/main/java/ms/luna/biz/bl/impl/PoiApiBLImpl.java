@@ -180,6 +180,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
+			MsLogger.debug(tree.toString());
 			List<String> poiIdLst;
 			poiIdLst = getPoisWithLevelInBizTree(tree, 1);
 			MsLogger.debug("poi list:" + poiIdLst.toString());
@@ -221,6 +222,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
+			MsLogger.debug(tree.toString());
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
 			// 注：目前仅获得第一层下的poi结点
@@ -262,6 +264,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
+			MsLogger.debug(tree.toString());
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
 			// 注：目前仅获得第一层下的poi结点
@@ -299,6 +302,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
+			MsLogger.debug(tree.toString());
 			// 获取给定poi结点下的子结点
 			List<String> poiIdLst = new ArrayList<>();
 			// 注：目前仅获得第一层下的poi结点
@@ -367,8 +371,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 		
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
-		MsLogger.debug("business tree:"+tree.toString());
 	    if (tree != null) {
+			MsLogger.debug("business tree:"+tree.toString());
 	    	// 获取子POI id集合
 	    	Set<String> poiIdLst = new HashSet<>();
 	    	getPoisFromBizTree(tree, poiIdLst);
@@ -400,9 +404,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String poi_id = param.getString("poi_id");
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
-		MsLogger.debug("business tree:" + tree.toString());
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
+			MsLogger.debug("business tree:" + tree.toString());
 			List<String> poiIdLst = new ArrayList<>();
 			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
@@ -449,9 +453,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 		int ctgr_id = param.getInteger("ctgr_id");
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
-		MsLogger.debug("business tree:" + tree.toString());
 		if (tree != null) {
 			// 获取给定poi结点下的子结点
+			MsLogger.debug("business tree:" + tree.toString());
 			List<String> poiIdLst = new ArrayList<>();
 			getPoisByParentId(poiIdLst, tree, poi_id, 0, 0, Boolean.FALSE);
 
