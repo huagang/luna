@@ -587,7 +587,7 @@ $(document).ready(function() {
             switch(item.type){
                 case 'singlePoi':
                     $.ajax({
-                        url: '/servicepoi.do?method=getPoiById',
+                        url: '../servicepoi.do?method=getPoiById',
                         type: 'GET',
                         data:{poi_id: item.firstPoiId, lang:'zh'},
                         success:function(data){
@@ -605,7 +605,7 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: '/article/data/' + item.articleId,
+                        url: '../article/data/' + item.articleId,
                         type: 'GET',
                         success:function(data){
                             if(data.code === '0'){
@@ -622,7 +622,7 @@ $(document).ready(function() {
                     break
                 case 'poiList':
                     $.ajax({
-                        url: '/servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        url: '../servicepoi.do?method=getPoisByBizIdAndPoiId',
                         type: 'GET',
                         data: {business_id: window.business_id,
                                 poi_id: item.firstPoiId},
@@ -640,7 +640,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        url: '../article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
