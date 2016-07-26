@@ -144,7 +144,10 @@ body {
     background-color: #fff;
     overflow: hidden;
     border-top: 1px solid #e5e5e5;
+<<<<<<< HEAD
+=======
     height: 45px;
+>>>>>>> release-160713-03
 }
 
 .go-top {

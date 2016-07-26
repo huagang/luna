@@ -25,9 +25,11 @@ window.onload = function() {
             });
         }
 
-        //返回顶部
-        document.querySelector('.go-top').addEventListener('click', pageScroll);
-
+        ////返回顶部
+        if (document.body.scrollHeight > document.body.clientHeight) {
+            document.querySelector('.footer').classList.remove('hidden');
+            document.querySelector('.go-top').addEventListener('click', pageScroll);
+        }
     }
 
     /* 根据获取的文章数据进行更新文章内容 */
@@ -36,27 +38,31 @@ window.onload = function() {
         // 更新文章标题信息
         document.querySelector('.title').innerHTML = data.title;
 
-        document.querySelector('#shortTitle').innerHTML = data.short_title;
-
+        if (data.short_title) {
+            document.querySelector('#shortTitle').innerHTML = data.short_title;
+        }
         // 更新文章正文信息
         document.querySelector('.content').innerHTML = data.content;
 
         // 更新文章头图
-        var img = document.querySelector('.banner img');
-        img.src = data.abstract_pic;
-        img.onload = function() {
-            var banner = document.querySelector('.banner');
-            if (banner.clientHeight > 100) {
-                var wrapper = document.querySelector('.content-wrapper');
-                wrapper.addEventListener('scroll', function() {
-                    if (wrapper.scrollTop > 0) {
-                        banner.classList.add('sm');
-                    } else {
-                        banner.classList.remove('sm');
-                    }
-                });
+        if (data.abstract_pic) {
+            var img = document.querySelector('.banner img');
+            img.src = data.abstract_pic;
+            img.onload = function() {
+                var banner = document.querySelector('.banner');
+                if (banner.clientHeight > 100) {
+                    var wrapper = document.querySelector('.content-wrapper');
+                    wrapper.addEventListener('scroll', function() {
+                        if (wrapper.scrollTop > 0) {
+                            banner.classList.add('sm');
+                        } else {
+                            banner.classList.remove('sm');
+                        }
+                    });
+                }
             }
-
+        } else {
+            document.querySelector('.banner').classList.add('hidden');
         }
 
         // 更新文章视频信息，视频信息可以为空        
@@ -185,10 +191,27 @@ function filterImgInContent(content) {
     var clientWidth = document.querySelector('.content').clientWidth;
     content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
         var reg = /width="([0-9]*?)"/;
-        var widthNum = word.match(reg);
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
         if (widthNum[1] > clientWidth) {
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
-            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            word = word.replace(/width\s*:\s*[0-9]*.[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        }
+        return word;
+    });
+    content = content.replace(/width\s*:\s*[0-9.]*/g, function(word) {
+        var reg = /width\s*:\s*([0-9.]*)/;
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
+        if (Number( widthNum[1]) > clientWidth) {
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9.]*/, 'width:' + clientWidth);
             //word = word.replace(/height="[0-9]*"/, '');
             //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
         }
