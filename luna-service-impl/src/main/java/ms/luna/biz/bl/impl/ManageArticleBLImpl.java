@@ -159,7 +159,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             int id = articleObj.getIntValue(MsArticleTable.FIELD_ID);
             if(id > 0) {
                 msArticle.setId(id);
-                msArticleDAO.updateByPrimaryKeySelective(msArticle);
+                msArticleDAO.updateByPrimaryKey(msArticle);
             }
         } catch (Exception ex) {
             logger.error("Failed to update article", ex);
