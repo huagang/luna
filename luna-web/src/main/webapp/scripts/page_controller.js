@@ -2,6 +2,7 @@
  * 微景展页面控件controller
  */
 
+
 /**
  * 初始化App
  * @type {[type]}

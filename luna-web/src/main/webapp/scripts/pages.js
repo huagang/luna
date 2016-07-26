@@ -190,10 +190,12 @@ $(document).ready(function() {
     $("#new-built").click(function() {
         newPageDialog();
     });
-    //    修改
+
+    //修改
     $("#list-page").on('click', 'a.modify', function() {
         modify();
     });
+
     //创建或更新，根据弹窗是否存在modify_page_id确定
     $("#setup").click(function() {
         modifyPageId = $("#modify_page_id").val();
@@ -207,11 +209,13 @@ $(document).ready(function() {
     $("#page-property").click(function() {
         submitSetting();
     });
+
     /*页面级属性设置缩略图删除功能*/
     $("#wj-page-clc").click(function() {
-            $("#wj-page").remove();
-        })
-        /*页面级属性设置，分享缩略图删除功能*/
+        $("#wj-page").remove();
+    })
+
+    /*页面级属性设置，分享缩略图删除功能*/
     $("#wj-share-clc").click(function() {
         $("#wj-share").remove();
     })
@@ -225,6 +229,7 @@ $(document).ready(function() {
     $("#btn-delete").click(function() {
         deletePage($(this).attr("pageID"));
     });
+
     // 左侧点击页面
     $("#list-page").on("click", ".drop-item", function() {
         $(this).siblings(".drop-item").removeClass("current");
@@ -234,7 +239,6 @@ $(document).ready(function() {
             $('#canvas [component-type=canvas]').trigger('click');
         }, 5);
     });
-
 
     //    $(".copy").zclip({
     //      path: host+"/plugins/jquery.zclip/ZeroClipboard.swf",
@@ -427,7 +431,6 @@ function modify() {
 
     $.creatPage = function(pageID) {
         creatPageHtml(pageID);
-        //alert(pageComponents);
     }
 
     $.showPage = function(pageID) {
@@ -495,6 +498,7 @@ function reOrderPage() {
  * 左侧显示
  * @param {[type]} pageList [description]
  */
+
 function setPageListHtml(pageList) {
     $("#list-page").empty();
     var orderedPages = [];
@@ -533,6 +537,7 @@ function createPageListItemHtml(page) {
  * @param  {[type]} pageID [description]
  * @return {[type]}        [description]
  */
+
 function creatPageHtml(pageID) {
 
     var page = lunaPage.pages[pageID];
@@ -544,11 +549,11 @@ function creatPageHtml(pageID) {
 }
 
 /**
+ * 创建画布
  * 创建页面画布
  * @return {[type]} [description]
  */
 function createCanvas() {
-
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
     currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
     currentComponent["_id"] = currentComponentId;
@@ -575,16 +580,14 @@ function setPageHtml(pageID) {
         // 组件数据解析，对应jsonData
         // console.log(pageID);
         var componentArr = [];
-        $.each(
-            jsonData,
-            function(n, value) {
-                // move canvas first
-                if (n.startsWith("canvas")) {
-                    componentArr = [n].concat(componentArr);
-                } else {
-                    componentArr.push(n);
-                }
-            });
+        $.each(jsonData, function(n, value) {
+            // move canvas first
+            if (n.startsWith("canvas")) {
+                componentArr = [n].concat(componentArr);
+            } else {
+                componentArr.push(n);
+            }
+        });
         componentArr.forEach(function(element) {
             setPageComponentsHtml(pageID, element);
         });
@@ -625,7 +628,6 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
 
     newComponent.css("top", newPosition + "px");
     newComponent.css("left", newPosition + "px");
-
 
     switch (comType) {
         case "canvas":
@@ -680,6 +682,7 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
 }
 
 /**
+
  * 编辑时，初始化画布中的内容
  * @param {[type]} pageID      [description]
  * @param {[type]} componentID [description]
@@ -751,6 +754,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "tab":
             newComponent.attr("component-type", "tab");
+
             var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
             $topMenu.find('.enuTab-bg img').attr('src', content.bannerImg);
             newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
@@ -759,6 +763,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             newComponent.find('.menulist').empty().append(innerHtml);
+
             break;
         default:
             $.alert("未知的组件类型");
@@ -792,7 +797,12 @@ function setPageComponentsHtml(pageID, componentID, comType) {
     lostFocus($("#" + componentID));
 }
 
-// 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
+/**
+ * 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @return {[type]}             [description]
+ */
 function updatePageComponents(pageID, componentID) {
     var $currenthtml = $("#layermain #" + componentID);
     if (!$currenthtml) {
@@ -863,7 +873,13 @@ function updatePageComponents(pageID, componentID) {
     componentObj.style_other = $currenthtml.children("div").children().attr("style");
 }
 
-// 根据当前id更新组件htmlstyle
+/**
+ * 根据当前id更新组件htmlstyle
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @param  {[type]} comType     [description]
+ * @return {[type]}             [description]
+ */
 function updatePageComponentsHtml(pageID, componentID, comType) {
     var comobj = $("#layermain #" + componentID);
 
@@ -904,8 +920,10 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             }
             break;
         case "tab":
+
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             comobj.find('.menulist').empty().append(innerHtml);
+
             comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
             break;
         default:
@@ -986,6 +1004,32 @@ var componentPanel = {
     }
 };
 
+
+/**
+ * 点击画布中的组件，渲染右边参数，在画布点击事件中调用
+ * @type {Object}
+ */
+var componentPanel = {
+    init: function(componentType) {
+        if (componentType) {
+            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
+        }
+        currentController = componentType + "Div";
+        var controllerManagerDiv = $("#controller-manager");
+        var children = controllerManagerDiv.children();
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
+                $(children[i]).show();
+            } else {
+                $(children[i]).hide();
+            }
+        }
+    },
+    update: function(componentType) {
+        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
+    }
+};
+
 var initMenuTab = {
     getTabListHtmlInCavas : function(tabList) {
         var innerHtml = [];
@@ -999,3 +1043,4 @@ var initMenuTab = {
         return innerHtml.join('');
     }
 }
+

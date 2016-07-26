@@ -501,16 +501,11 @@ $(document).ready(function() {
 
 
         function build() {
-            /* 该组件不需要setPosition
-                that.setPosition();
-            */
-            // 设置dom元素内容
 
+            that.setPosition();
+            that.setMoreInfo();
+            that.setAction();
 
-
-            // that.setMoreInfo();
-
-            // that.setAction();
             var html = that.getTabsHtml();
             that.html.children('div').append(html);
             if(that.hasBuild === false){
@@ -518,6 +513,7 @@ $(document).ready(function() {
                 setTimeout(that.bindEvent, 600);
             }
             that.fetchData();
+
             return that.html;
         }
 
@@ -586,7 +582,7 @@ $(document).ready(function() {
             switch(item.type){
                 case 'singlePoi':
                     $.ajax({
-                        url: '/servicepoi.do?method=getPoiById',
+                        url: '../servicepoi.do?method=getPoiById',
                         type: 'GET',
                         data:{poi_id: item.firstPoiId, lang:'zh'},
                         success:function(data){
@@ -604,7 +600,7 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: '/article/data/' + item.articleId,
+                        url: '../article/data/' + item.articleId,
                         type: 'GET',
                         success:function(data){
                             if(data.code === '0'){
@@ -621,7 +617,7 @@ $(document).ready(function() {
                     break
                 case 'poiList':
                     $.ajax({
-                        url: '/servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        url: '../servicepoi.do?method=getPoisByBizIdAndPoiId',
                         type: 'GET',
                         data: {business_id: window.business_id,
                                 poi_id: item.firstPoiId},
@@ -639,7 +635,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        url: '../article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
@@ -658,7 +654,7 @@ $(document).ready(function() {
 
         function getTabsHtml(){
             var labsHtml = '';
-            var className = that.value.content.tabList.length < 4 ? 'flex' : '';
+
             that.value.content.tabList.forEach(function(item, index){
                 var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
                 var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
@@ -678,9 +674,9 @@ $(document).ready(function() {
             +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
             +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover">'
             +            '<div class="topmenu">'
-            +                '<div class="menulist-wrap ' + className + '">'
+            +                '<div class="menulist-wrap"><div class="menulist-container">'
             +                   labsHtml
-            +                 '</div>'
+            +                 '</div></div>'
             +             '</div>'
             +       '</div>'
             + '</div>'

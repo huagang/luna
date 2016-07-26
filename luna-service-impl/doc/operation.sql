@@ -25,9 +25,8 @@ VALUES (147, '线路管理-function', 5, NULL, 2, 1, '2016-07-11 22:57:17', '201
 INSERT INTO ms_resource_uri(resource_id, resource_name, parent_id, resource_uri, level_type, `status`, regist_hhmmss, up_hhmmss)
 VALUES (148, '线路列表初始化', 147, '/manage_router.do?method=init', 3, 1, '2016-07-11 22:57:17', '2016-07-11 22:57:17');
 
-INSERT INTO ms_resource_uri(resource_id, resource_name, parent_id, resource_uri, level_type, `status`, regist_hhmmss, up_hhmmss)
-VALUES (157, '获取文章栏目', 132, '/manage/article.do?method=read_column', 3, 1, '2016-07-24 22:57:17', '2016-07-24 22:57:17');
-INSERT INTO ms_poi_field (field_name, field_show_name, field_alias, display_order, field_type, field_size, field_tips_for_templete) VALUES ('thermodynamic_diagram', '热力图ID', 'thermodynamic_diagram', 25, 1, 255, '');
+insert into ms_resource_uri(resource_id, resource_name, parent_id, resource_uri, level_type, status, regist_hhmmss, up_hhmmss)
+values(157, '获取文章栏目', 132, '/manage/article.do?method=read_column', 3,1,'2016-07-24 22:57:17', '2016-07-24 22:57:17');
 
-INSERT INTO ms_r_tag_field (tag_id, field_name) VALUES (2, 'thermodynamic_diagram');
-ALTER TABLE ms_article ADD COLUMN short_title VARCHAR(64) DEFAULT '' AFTER title;
+# 将上传视频大小限制改为20M
+update ms_poi_field set field_size=20 where field_name='video';
