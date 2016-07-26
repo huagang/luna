@@ -74,7 +74,12 @@ public class AppController extends BaseController {
         JSONObject businessJson = manageBusinessService.getBusinessByAppId(appId);
         if(businessJson.getString("code").equals("0")) {
             modelAndView.addObject("stat_id", businessJson.getJSONObject("data").getInteger("stat_id"));
+        }
+        JSONObject appInfoJson = manageShowAppService.getAppInfo(appId);
+        if(appInfoJson.getString("code").equals("0")) {
             modelAndView.addObject("business_id", businessJson.getJSONObject("data").getInteger("business_id"));
+        } else {
+            modelAndView.addObject("business_id", 0);
         }
     }
 }
