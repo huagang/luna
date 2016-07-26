@@ -1,18 +1,26 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
+import ms.luna.biz.table.LunaRoleTable;
+
 import java.io.Serializable;
 import java.util.Date;
-
+@JSONType(includes = {LunaRoleTable.FIELD_ID, LunaRoleTable.FIELD_NAME,
+        LunaRoleTable.FIELD_CODE, LunaRoleTable.FIELD_IS_ADMIN})
 public class LunaRole implements Serializable {
+    @JSONField(name = LunaRoleTable.FIELD_ID)
     private Integer id;
-
+    @JSONField(name = LunaRoleTable.FIELD_NAME)
     private String name;
-
+    @JSONField(name = LunaRoleTable.FIELD_CODE)
     private String code;
-
+    @JSONField(name = LunaRoleTable.FIELD_IS_ADMIN)
     private Boolean isAdmin;
 
     private Integer parentId;
+
+    private Integer categoryId;
 
     private Date updateTime;
 
@@ -58,6 +66,14 @@ public class LunaRole implements Serializable {
         this.parentId = parentId;
     }
 
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -83,6 +99,7 @@ public class LunaRole implements Serializable {
             && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
             && (this.getIsAdmin() == null ? other.getIsAdmin() == null : this.getIsAdmin().equals(other.getIsAdmin()))
             && (this.getParentId() == null ? other.getParentId() == null : this.getParentId().equals(other.getParentId()))
+            && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
@@ -95,12 +112,13 @@ public class LunaRole implements Serializable {
         result = prime * result + ((getCode() == null) ? 0 : getCode().hashCode());
         result = prime * result + ((getIsAdmin() == null) ? 0 : getIsAdmin().hashCode());
         result = prime * result + ((getParentId() == null) ? 0 : getParentId().hashCode());
+        result = prime * result + ((getCategoryId() == null) ? 0 : getCategoryId().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "LunaRole [id=" + id + ",name=" + name + ",code=" + code + ",isAdmin=" + isAdmin + ",parentId=" + parentId + ",updateTime=" + updateTime + "]";
+        return "LunaRole [id=" + id + ",name=" + name + ",code=" + code + ",isAdmin=" + isAdmin + ",parentId=" + parentId + ",categoryId=" + categoryId + ",updateTime=" + updateTime + "]";
     }
 }

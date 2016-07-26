@@ -16,7 +16,8 @@
 	<context:component-scan base-package="ms.biz" />
 	<context:component-scan base-package="ms.luna.biz" />
 	<context:component-scan base-package="ms.luna.cache" />
-	<!-- <context:component-scan base-package="ms.luna.biz.bl"/> <context:component-scan 
+	<context:component-scan base-package="ms.luna.schedule.service" />
+	<!-- <context:component-scan base-package="ms.luna.biz.bl"/> <context:component-scan
 		base-package="ms.luna.biz.bl.impl"/> -->
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">

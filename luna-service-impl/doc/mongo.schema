@@ -1,5 +1,6 @@
 create table luna_user_role(
 _id char(32) not null comment '用户id',
+nick_name string comment '用户昵称',
 role_ids JSONArray comment '角色数组，允许多个角色',
 extra string comment '模块相关额外选项',
 update_time timestamp

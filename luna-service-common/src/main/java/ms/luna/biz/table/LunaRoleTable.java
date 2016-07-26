@@ -15,5 +15,6 @@ public class LunaRoleTable {
     public static final String FIELD_CODE = "code";
     public static final String FIELD_IS_ADMIN = "is_admin";
     public static final String FIELD_PARENT_ID = "parent_id";
+    public static final String FIELD_CATEGORY_ID = "category_id";
     public static final String FIELD_UPDATE_TIME = "update_time";
 }

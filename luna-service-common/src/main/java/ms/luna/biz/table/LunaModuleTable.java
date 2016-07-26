@@ -12,7 +12,6 @@ public class LunaModuleTable {
     public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
     public static final String FIELD_CODE = "code";
-    public static final String FIELD_extra = "extra";
     public static final String FIELD_DISPLAY_ORDER = "display_order";
     public static final String FIELD_UPDATE_TIME = "update_time";
 }

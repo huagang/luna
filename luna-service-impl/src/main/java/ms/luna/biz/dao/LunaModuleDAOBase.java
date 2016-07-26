@@ -15,21 +15,15 @@ public interface LunaModuleDAOBase {
 
     Integer insertSelective(LunaModule record);
 
-    List<LunaModule> selectByCriteriaWithBLOBs(LunaModuleCriteria example);
-
-    List<LunaModule> selectByCriteriaWithoutBLOBs(LunaModuleCriteria example);
+    List<LunaModule> selectByCriteria(LunaModuleCriteria example);
 
     LunaModule selectByPrimaryKey(Integer id);
 
     int updateByCriteriaSelective(LunaModule record, LunaModuleCriteria example);
 
-    int updateByCriteriaWithBLOBs(LunaModule record, LunaModuleCriteria example);
-
-    int updateByCriteriaWithoutBLOBs(LunaModule record, LunaModuleCriteria example);
+    int updateByCriteria(LunaModule record, LunaModuleCriteria example);
 
     int updateByPrimaryKeySelective(LunaModule record);
 
-    int updateByPrimaryKeyWithBLOBs(LunaModule record);
-
-    int updateByPrimaryKeyWithoutBLOBs(LunaModule record);
+    int updateByPrimaryKey(LunaModule record);
 }

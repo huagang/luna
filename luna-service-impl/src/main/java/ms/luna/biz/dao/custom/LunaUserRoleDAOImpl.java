@@ -6,6 +6,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.table.LunaUserRoleTable;
+import org.apache.commons.lang.StringUtils;
 import org.bson.BsonDateTime;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,22 +50,16 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
 
     @Override
     public void createUserRoleInfo(LunaUserRole lunaUserRole) {
-        Document document = new Document();
+        Document document = userRole2Document(lunaUserRole);
         document.put(LunaUserRoleTable.FIELD_USER_ID, lunaUserRole.getUserId());
-        document.put(LunaUserRoleTable.FIELD_ROLE_IDS, lunaUserRole.getRoleIds());
-        document.put(LunaUserRoleTable.FIELD_EXTRA, lunaUserRole.getExtra());
-        document.put(LunaUserRoleTable.FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
         lunaUserRoleCollection.insertOne(document);
     }
 
     @Override
     public void updateUserRoleInfo(LunaUserRole lunaUserRole) {
-        Document document = new Document();
-        document.put(LunaUserRoleTable.FIELD_ROLE_IDS, lunaUserRole.getRoleIds());
-        document.put(LunaUserRoleTable.FIELD_EXTRA, lunaUserRole.getExtra());
-        document.put(LunaUserRoleTable.FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
+
         Bson query = Filters.eq(LunaUserRoleTable.FIELD_USER_ID, lunaUserRole.getUserId());
-        lunaUserRoleCollection.updateOne(query, document);
+        lunaUserRoleCollection.updateOne(query, userRole2Document(lunaUserRole));
     }
 
     @Override
@@ -72,6 +68,33 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
         lunaUserRoleCollection.deleteOne(query);
     }
 
+    @Override
+    public List<LunaUserRole> readUserInfoByRole(List<Integer> roleIdList, String query, int start, int limit) {
+        List<Bson> queryBsonList = new ArrayList<>();
+        queryBsonList.add(Filters.in(LunaUserRoleTable.FIELD_ROLE_IDS, roleIdList));
+        Document sort = new Document(LunaUserRoleTable.FIELD_UPDATE_TIME, 1);
+        if(StringUtils.isNotBlank(query)) {
+            queryBsonList.add(Filters.text(query));
+        }
+        MongoIterable<LunaUserRole> res = lunaUserRoleCollection.find(Filters.and(queryBsonList))
+                                                                .sort(sort)
+                                                                .skip(start)
+                                                                .limit(limit)
+                                                                .map(new Document2UserRole());
+        List<LunaUserRole> lunaUserRoleList = new ArrayList<>();
+        return res.into(lunaUserRoleList);
+
+    }
+
+    private Document userRole2Document(LunaUserRole lunaUserRole) {
+        Document document = new Document();
+        document.put(LunaUserRoleTable.FIELD_NICK_NAME, lunaUserRole.getNickName());
+        document.put(LunaUserRoleTable.FIELD_ROLE_IDS, lunaUserRole.getRoleIds());
+        document.put(LunaUserRoleTable.FIELD_EXTRA, lunaUserRole.getExtra());
+        document.put(LunaUserRoleTable.FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
+        return document;
+
+    }
 
     class Document2UserRole implements Function<Document, LunaUserRole> {
 
@@ -79,6 +102,7 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
         public LunaUserRole apply(Document document) {
             LunaUserRole lunaUserRole = new LunaUserRole();
             lunaUserRole.setUserId(document.getString(LunaUserRoleTable.FIELD_USER_ID));
+            lunaUserRole.setNickName(document.getString(LunaUserRoleTable.FIELD_NICK_NAME));
             lunaUserRole.setRoleIds(document.get(LunaUserRoleTable.FIELD_ROLE_IDS, List.class));
             lunaUserRole.setExtra(document.get(LunaUserRoleTable.FIELD_EXTRA, Document.class));
             return lunaUserRole;

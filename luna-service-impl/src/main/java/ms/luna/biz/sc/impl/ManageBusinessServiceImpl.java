@@ -1,5 +1,10 @@
 package ms.luna.biz.sc.impl;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSON;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.LunaUserRoleDAO;
+import ms.luna.biz.dao.custom.model.LunaUserRole;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +16,8 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.util.FastJsonUtil;
+
+import java.util.Map;
 
 /**
  * 
@@ -28,6 +35,8 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 
 	@Autowired 
 	private ManageBusinessBL manageBusinessBL;
+	@Autowired
+	private LunaUserRoleDAO lunaUserRoleDAO;
 	
 	@Override
 	public JSONObject createBusiness(String json) {
@@ -71,6 +80,52 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			logger.error("Failed to delete business", th);
 			return FastJsonUtil.error("-1", "删除业务失败");
 		}
+	}
+
+	@Override
+	public JSONObject getBusinessForEdit(JSONObject jsonObject) {
+		String loginUserId = jsonObject.getString("loginUserId");
+		String slaveUserId = jsonObject.getString("slaveUserId");
+		if(StringUtils.isBlank(loginUserId) || StringUtils.isBlank(slaveUserId)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
+		}
+
+		LunaUserRole loginUserRole = lunaUserRoleDAO.readUserRoleInfo(loginUserId);
+		LunaUserRole slaveUserRole = lunaUserRoleDAO.readUserRoleInfo(slaveUserId);
+		if(loginUserRole == null || slaveUserRole == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户不存在");
+		}
+
+		Map<String, Object> extra = loginUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", loginUserId, type));
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "当前用户没有业务权限");
+		}
+
+		return FastJsonUtil.sucess("", JSON.toJSON(extra));
+	}
+
+	@Override
+	public JSONObject getBusinessForSelect(JSONObject jsonObject) {
+		String userId = jsonObject.getString("userId");
+		if(StringUtils.isBlank(userId)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
+		}
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+		if(lunaUserRole == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户不存在");
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", userId, type));
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "当前用户没有业务权限");
+		}
+
+		return FastJsonUtil.sucess("", JSON.toJSON(extra));
 	}
 
 	@Override

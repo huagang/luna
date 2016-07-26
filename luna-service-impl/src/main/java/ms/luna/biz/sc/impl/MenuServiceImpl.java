@@ -3,6 +3,7 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.biz.common.MenuHelper;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaRoleMenuDAO;
 import ms.luna.biz.dao.custom.LunaUserRoleDAO;
@@ -104,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
                     JSONObject menuJson = (JSONObject) JSON.toJSON(menu);
                     if (menu.getUrl() == null) {
                         menuJson.put(LunaMenuTable.FIELD_IS_OUTER, 0);
-                        menuJson.put(LunaMenuTable.FIELD_URL, formatMenuUrl(module, menu));
+                        menuJson.put(LunaMenuTable.FIELD_URL, MenuHelper.formatMenuUrl(module, menu));
                     } else {
                         menuJson.put(LunaMenuTable.FIELD_IS_OUTER, 1);
                     }
@@ -125,9 +126,4 @@ public class MenuServiceImpl implements MenuService {
         return FastJsonUtil.sucess("success", jsonArray);
     }
 
-    private String formatMenuUrl(LunaModule module, LunaMenu menu) {
-
-        return String.format("/%s/%s", module.getCode(), menu.getCode());
-
-    }
 }

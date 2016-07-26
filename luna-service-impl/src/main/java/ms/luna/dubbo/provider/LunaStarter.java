@@ -5,6 +5,7 @@ import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.bl.PoiApiBL;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.schedule.service.CacheService;
+import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ public class LunaStarter {
     private static final Logger logger = Logger.getLogger(LunaStarter.class);
 
     private String contextFile;
+    private EmailService emailService;
     private CountDownLatch shutdownLatch = new CountDownLatch(1);
 
     public LunaStarter(String contextFile) {
@@ -53,6 +55,9 @@ public class LunaStarter {
             CacheService cacheService = new CacheService(context);
             cacheService.start();
 
+            emailService = (EmailService) context.getBean("emailService");
+            emailService.start();
+
             System.out.println("LunaProvider Service is started!");
             shutdownLatch.await();
         } catch (InterruptedException e) {
@@ -63,9 +68,8 @@ public class LunaStarter {
     }
 
     public void shutdown() {
-
-
+        emailService.shutdown();
         shutdownLatch.countDown();
-        logger.info("shut down luna starter");
+        logger.info("shutdown luna starter");
     }
 }

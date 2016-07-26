@@ -8,9 +8,6 @@
     <result column="display_order" jdbcType="INTEGER" property="displayOrder" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <resultMap class="ms.luna.biz.dao.model.LunaModule" extends="luna_module.BaseResultMap" id="ResultMapWithBLOBs">
-    <result column="extra" jdbcType="LONGVARCHAR" property="extra" />
-  </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
       <isEqual compareValue="true" property="oredCriteria[].valid">
@@ -39,27 +36,6 @@
   <sql id="Base_Column_List">
     id, name, code, display_order, update_time
   </sql>
-  <sql id="Blob_Column_List">
-    extra
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterClass="ms.luna.biz.dao.model.LunaModuleCriteria" resultMap="ResultMapWithBLOBs">
-    select
-    <isParameterPresent>
-      <isEqual compareValue="true" property="distinct">
-        distinct
-      </isEqual>
-    </isParameterPresent>
-    <include refid="luna_module.Base_Column_List" />
-    ,
-    <include refid="luna_module.Blob_Column_List" />
-    from luna_module
-    <isParameterPresent>
-      <include refid="luna_module.Example_Where_Clause" />
-      <isNotNull property="orderByClause">
-        order by $orderByClause$
-      </isNotNull>
-    </isParameterPresent>
-  </select>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaModuleCriteria" resultMap="BaseResultMap">
     select
     <isParameterPresent>
@@ -76,11 +52,9 @@
       </isNotNull>
     </isParameterPresent>
   </select>
-  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaModule" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaModule" resultMap="BaseResultMap">
     select 
     <include refid="luna_module.Base_Column_List" />
-    ,
-    <include refid="luna_module.Blob_Column_List" />
     from luna_module
     where id = #id:INTEGER#
   </select>
@@ -93,10 +67,10 @@
     <include refid="luna_module.Example_Where_Clause" />
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaModule">
-    insert into luna_module (name, code, display_order, update_time, 
-      extra)
-    values (#name:VARCHAR#, #code:VARCHAR#, #displayOrder:INTEGER#, #updateTime:TIMESTAMP#, 
-      #extra:LONGVARCHAR#)
+    insert into luna_module (name, code, display_order, update_time
+      )
+    values (#name:VARCHAR#, #code:VARCHAR#, #displayOrder:INTEGER#, #updateTime:TIMESTAMP#
+      )
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -116,9 +90,6 @@
       <isNotNull prepend="," property="updateTime">
         update_time
       </isNotNull>
-      <isNotNull prepend="," property="extra">
-        extra
-      </isNotNull>
       )
     </dynamic>
     values
@@ -134,9 +105,6 @@
       </isNotNull>
       <isNotNull prepend="," property="updateTime">
         #updateTime:TIMESTAMP#
-      </isNotNull>
-      <isNotNull prepend="," property="extra">
-        #extra:LONGVARCHAR#
       </isNotNull>
       )
     </dynamic>
@@ -166,22 +134,7 @@
       <isNotNull prepend="," property="record.updateTime">
         update_time = #record.updateTime:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="record.extra">
-        extra = #record.extra:LONGVARCHAR#
-      </isNotNull>
     </dynamic>
-    <isParameterPresent>
-      <include refid="luna_module.Example_Where_Clause" />
-    </isParameterPresent>
-  </update>
-  <update id="updateByExampleWithBLOBs">
-    update luna_module
-    set id = #record.id:INTEGER#,
-      name = #record.name:VARCHAR#,
-      code = #record.code:VARCHAR#,
-      display_order = #record.displayOrder:INTEGER#,
-      update_time = #record.updateTime:TIMESTAMP#,
-      extra = #record.extra:LONGVARCHAR#
     <isParameterPresent>
       <include refid="luna_module.Example_Where_Clause" />
     </isParameterPresent>
@@ -212,19 +165,7 @@
       <isNotNull prepend="," property="updateTime">
         update_time = #updateTime:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="extra">
-        extra = #extra:LONGVARCHAR#
-      </isNotNull>
     </dynamic>
-    where id = #id:INTEGER#
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterClass="ms.luna.biz.dao.model.LunaModule">
-    update luna_module
-    set name = #name:VARCHAR#,
-      code = #code:VARCHAR#,
-      display_order = #displayOrder:INTEGER#,
-      update_time = #updateTime:TIMESTAMP#,
-      extra = #extra:LONGVARCHAR#
     where id = #id:INTEGER#
   </update>
   <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaModule">

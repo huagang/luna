@@ -54,7 +54,7 @@ public class ModuleMenuCache extends MsBaseDAO {
 
         LunaModuleCriteria lunaModuleCriteria = new LunaModuleCriteria();
         lunaModuleCriteria.setOrderByClause("display_order asc");
-        List<LunaModule> newLunaModuleList = lunaModuleDAO.selectByCriteriaWithBLOBs(lunaModuleCriteria);
+        List<LunaModule> newLunaModuleList = lunaModuleDAO.selectByCriteria(lunaModuleCriteria);
 
         if(newLunaModuleList != null) {
             for(LunaModule lunaModule : newLunaModuleList) {
@@ -105,6 +105,22 @@ public class ModuleMenuCache extends MsBaseDAO {
         }
 
         return moduleAndMenuInfoList;
+    }
+
+    public List<LunaModule> getAllModule() {
+        return Collections.unmodifiableList(lunaModuleList);
+    }
+
+    public List<LunaMenu> getAllMenu() {
+        return Collections.unmodifiableList(lunaMenuList);
+    }
+
+    public LunaModule getModule(int moduleId) {
+        return moduleMap.get(moduleId);
+    }
+
+    public LunaMenu getMenu(int menuId) {
+        return menuMap.get(menuId);
     }
 
     public List<LunaModule> getModuleByMenuIds(Collection<Integer> menuIds) {

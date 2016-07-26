@@ -1,5 +1,6 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
 import ms.luna.biz.table.LunaMenuTable;
@@ -7,7 +8,8 @@ import ms.luna.biz.table.LunaMenuTable;
 import java.io.Serializable;
 import java.util.Date;
 
-@JSONType(ignores={})
+@JSONType(ignores={}, includes = {LunaMenuTable.FIELD_ID, LunaMenuTable.FIELD_NAME,
+        LunaMenuTable.FIELD_CODE, LunaMenuTable.FIELD_URL})
 public class LunaMenu implements Serializable {
     @JSONField(name = LunaMenuTable.FIELD_ID)
     private Integer id;
@@ -120,5 +122,13 @@ public class LunaMenu implements Serializable {
     @Override
     public String toString() {
         return "LunaMenu [id=" + id + ",name=" + name + ",code=" + code + ",url=" + url + ",moduleId=" + moduleId + ",displayOrder=" + displayOrder + ",updateTime=" + updateTime + "]";
+    }
+
+    public static void main(String[] args) {
+        LunaMenu lunaMenu = new LunaMenu();
+        lunaMenu.setId(1);
+        lunaMenu.setName("data");
+        lunaMenu.setModuleId(2);
+        System.out.println(JSON.toJSON(lunaMenu));
     }
 }

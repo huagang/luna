@@ -64,4 +64,10 @@
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_ex_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_role_menu_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_menu_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_user_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_user_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_reg_email_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_reg_email_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_role_category_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_category_ex_SqlMap.xml" />
 </sqlMapConfig>

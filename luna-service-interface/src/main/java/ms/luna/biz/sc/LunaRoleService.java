@@ -1,5 +1,6 @@
 package ms.luna.biz.sc;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -14,5 +15,7 @@ public interface LunaRoleService {
 
     public JSONObject getEditableModuleAndMenu(int loginRoleId, int slaveRoleId);
 
-    public JSONObject updateMenuForRole(int roleId);
+    public JSONObject updateMenuForRole(int loginRoleId, int slaveRoleId, JSONArray menuArray);
+
+    public JSONObject getAllRoleList(int roleId);
 }

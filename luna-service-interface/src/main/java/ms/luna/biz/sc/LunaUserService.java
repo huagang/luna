@@ -10,22 +10,26 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface LunaUserService {
 
-    JSONObject getUserList(JSONObject jsonObject);
+    JSONObject getUserList(int roleId, String query, int start, int limit);
 
-    JSONObject inviteUser(JSONObject jsonObject);
+    JSONObject inviteUser(String loginUserId, JSONObject jsonObject);
 
-    JSONObject getUserInfo(String userId);
+    JSONObject getUserRoleForEdit(int loginRole, String slaveUserId);
 
     JSONObject getChildRoleAndModuleByUserId(String userId);
 
     JSONObject getChildRoleAndModuleByRoleId(int roleId);
 
-    JSONObject createUser(JSONObject jsonObject);
+    JSONObject registerUser(JSONObject jsonObject);
+
+    JSONObject loginUser(JSONObject jsonObject);
 
     JSONObject deleteUser(String userId);
 
     JSONObject updateUserRole(JSONObject jsonObject);
 
     JSONObject updateUserInfo(JSONObject jsonObject);
+
+    JSONObject isTokenValid(String token);
 
 }

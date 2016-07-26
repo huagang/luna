@@ -39,13 +39,7 @@ public abstract class LunaModuleDAOBaseImpl extends MsBaseDAO implements LunaMod
     }
 
     @SuppressWarnings("unchecked")
-    public List<LunaModule> selectByCriteriaWithBLOBs(LunaModuleCriteria example) {
-        List<LunaModule> list = getSqlMapClientTemplate().queryForList("luna_module.selectByExampleWithBLOBs", example);
-        return list;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<LunaModule> selectByCriteriaWithoutBLOBs(LunaModuleCriteria example) {
+    public List<LunaModule> selectByCriteria(LunaModuleCriteria example) {
         List<LunaModule> list = getSqlMapClientTemplate().queryForList("luna_module.selectByExample", example);
         return list;
     }
@@ -63,13 +57,7 @@ public abstract class LunaModuleDAOBaseImpl extends MsBaseDAO implements LunaMod
         return rows;
     }
 
-    public int updateByCriteriaWithBLOBs(LunaModule record, LunaModuleCriteria example) {
-        UpdateByExampleParms parms = new UpdateByExampleParms(record, example);
-        int rows = getSqlMapClientTemplate().update("luna_module.updateByExampleWithBLOBs", parms);
-        return rows;
-    }
-
-    public int updateByCriteriaWithoutBLOBs(LunaModule record, LunaModuleCriteria example) {
+    public int updateByCriteria(LunaModule record, LunaModuleCriteria example) {
         UpdateByExampleParms parms = new UpdateByExampleParms(record, example);
         int rows = getSqlMapClientTemplate().update("luna_module.updateByExample", parms);
         return rows;
@@ -80,12 +68,7 @@ public abstract class LunaModuleDAOBaseImpl extends MsBaseDAO implements LunaMod
         return rows;
     }
 
-    public int updateByPrimaryKeyWithBLOBs(LunaModule record) {
-        int rows = getSqlMapClientTemplate().update("luna_module.updateByPrimaryKeyWithBLOBs", record);
-        return rows;
-    }
-
-    public int updateByPrimaryKeyWithoutBLOBs(LunaModule record) {
+    public int updateByPrimaryKey(LunaModule record) {
         int rows = getSqlMapClientTemplate().update("luna_module.updateByPrimaryKey", record);
         return rows;
     }

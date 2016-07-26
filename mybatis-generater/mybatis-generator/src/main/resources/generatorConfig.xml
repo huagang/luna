@@ -87,8 +87,11 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="luna_menu">
-			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		<table tableName="luna_role_category">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		</table>
+		<table tableName="luna_module">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
 		</table>
 	</context>
 </generatorConfiguration>
