@@ -1237,7 +1237,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			}
 			result.put("types", array);
 		}
-		fieldLst.remove("types");
+		//fieldLst.remove("types");
 
 		for (String field : fieldLst) {
 
@@ -1380,6 +1380,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 			} else {
 				// 全景类别
 				if("panorama_type".equals(field)) {
+					continue;
+				}
+				if("types".equals(field)) {
 					continue;
 				}
 				result.put(convertDbField2ApiField(field), "");
