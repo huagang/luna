@@ -539,18 +539,6 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceTyp
 }
 
 /**
- * 通过业务ID获取文章列表
- * @return {[type]} [description]
- */
-function getArticleListByBusinessId(businessId) {
-    $.get(apiUrlFormat(Inter.getApiUrl().articleListApi,[businessId]),function(json){
-        console.log(json);
-    });
-
-
-}
-
-/**
      异步提交图片:
      form_id form表单
      thumbnail预览div
@@ -639,15 +627,3 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
         }
     });
 }
-
-
-
-/**
- * 通过业务ID获取文章列表
- * @return {[type]} [description]
- */
-// function getArticleListByBusinessId(businessId) {
-//     $.get(apiUrlFormat(Inter.getApiUrl().articleListApi,[businessId]),function(json){
-//         console.log(json);
-//     });
-// }

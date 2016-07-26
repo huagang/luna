@@ -1023,7 +1023,7 @@
           </div>
           <!-- 添加页面弹出层 -->
           <!-- 菜单卡上传图标弹出层 -->
-          <div class="pop" id="pop-uploadMenuTabIcon" ng-controller="menuTabIconController as tabMenuIcon">
+          <div class="pop pop-uploadMenuTabIcon" id="pop-uploadMenuTabIcon" ng-controller="menuTabIconController as tabMenuIcon">
               <div class="pop-title">
                 <h4>上传图标</h4>
                 <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
