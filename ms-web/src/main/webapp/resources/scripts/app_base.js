@@ -254,15 +254,43 @@ $(document).ready(function() {
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
-        // 设置组件行为 在父组件之下设置一个<a>标签,用于链接跳转
+        // 设置组件行为
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
-                var link = '';
-                if (this.value.action.href.type == "inner") {
-                    link = host + "/app/" + pageData.data.app_id + "/page/" + this.value.action.href.value;
-                } else if (this.value.action.href.type == "outer") {
-                    this.html.attr("hrefurl", this.value.action.href.value);
+                var link, value = this.value.action.href.value;
+                switch(this.value.action.href.type){
+
+                    case "inner":
+                        link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
+                        break;
+
+                    case 'outer':
+                        link = value;
+                        break;
+
+                    case 'email':
+                        link = 'mailto:' + value;
+                        break;
+
+                    case 'phone':
+                        link = 'tel:' + value;
+                        break;
+
+                    case 'return':
+                        link = 'return';
+                        break;
                 }
+                if(link){
+                    this.html.attr('data-href', link);
+                    this.html.on('click',function(event){
+
+                        var link = event.currentTarget.getAttribute('data-href');
+                        if(link === 'return'){
+                            history.back(-1);
+                        }
+                    });
+                }
+
             }
         };
     }
