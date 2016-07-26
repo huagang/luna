@@ -132,7 +132,6 @@ $(document).ready(function() {
 
                 switch (headName[0]) {
                     case 'canvas':
-                        break;
                         var canvas = new Canvas(value);
                         canvas.page_code = item.page_code;
                         componentHtml = canvas.build();

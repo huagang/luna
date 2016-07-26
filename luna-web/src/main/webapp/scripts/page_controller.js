@@ -238,6 +238,9 @@ function BaseComponentController() {
     }
 }
 
+/**
+ * 交互面板
+ */
 function InteractComponentController() {
 
     this.action = {
