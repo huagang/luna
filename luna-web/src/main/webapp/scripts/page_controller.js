@@ -2,8 +2,18 @@
  * 微景展页面控件controller
  */
 
-//app初始化
+
+/**
+ * 初始化App
+ * @type {[type]}
+ */
 var showPage = angular.module('showPage', ['ngSanitize', 'ui.select']);
+
+/**
+ * 上传图标的地方
+ * @param  {Object} $rootScope) {               var menuTabIcon [description]
+ * @return {[type]}             [description]
+ */
 showPage.factory('menuTabIcon', function($rootScope) {
     var menuTabIcon = {};
 
@@ -23,6 +33,13 @@ showPage.factory('menuTabIcon', function($rootScope) {
 
     return menuTabIcon;
 });
+
+/**
+ * 启用APP 设置$http的默认属性
+ * @param  {[type]} $rootScope [description]
+ * @param  {Object} $http)     {               $http.defaults.headers.post [description]
+ * @return {[type]}            [description]
+ */
 showPage.run(function($rootScope, $http) {
     $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function(obj) {
@@ -32,8 +49,8 @@ showPage.run(function($rootScope, $http) {
         }
         return str.join("&");
     };
-
 });
+
 showPage.controller('menuController', ['$scope', '$rootScope', '$http', MenuController]);
 showPage.controller('canvasController', ['$scope', '$rootScope', CanvasController]);
 showPage.controller('textController', ['$scope', '$rootScope', TextController]);
@@ -45,6 +62,12 @@ showPage.controller('videoController', ['$scope', '$rootScope', VideoController]
 showPage.controller('menuTabController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabController]);
 showPage.controller('menuTabIconController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabIconController]);
 
+/**
+ * 
+ * @param {[type]} $scope     [description]
+ * @param {[type]} $rootScope [description]
+ * @param {[type]} $http      [description]
+ */
 function MenuController($scope, $rootScope, $http) {
 
     this.QRShow = false;
@@ -55,11 +78,14 @@ function MenuController($scope, $rootScope, $http) {
         return;
     };
 
+    //保存数据的事件
     this.savePage = function() {
         if (currentPageId) {
             lunaPage.savePage(currentPageId, true);
         }
     };
+
+    //预览数据，生成二维码
     this.previewQR = function() {
         var request = {
             method: 'POST',
@@ -78,9 +104,9 @@ function MenuController($scope, $rootScope, $http) {
             function error(response) {
                 $.alert(response.data.msg);
             });
-
     };
 
+    //关闭二维码
     this.closeQR = function() {
         this.QRShow = false;
     };
@@ -160,6 +186,7 @@ function MenuController($scope, $rootScope, $http) {
 
     };
 
+    
     this.appSetting = function() {
         popWindow($("#pop-set"));
         //初始化已经加载过，防止初始化失败，此处再请求一次

@@ -35,7 +35,7 @@ html,body{
 	/* border-bottom: 1px solid #dee0e3; */
 }
 .content img,.content video{
-	width: 100%;
+	max-width: 100%;
 }
 
 .banner{
