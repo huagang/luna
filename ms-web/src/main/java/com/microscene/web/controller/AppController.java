@@ -37,11 +37,13 @@ public class AppController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{appId}")
     public ModelAndView indexPage(@PathVariable int appId, HttpServletRequest request) {
+        logger.info("begin request for app: " + appId);
         ModelAndView modelAndView = buildModelAndView("appShowPage");
         JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
         modelAndView.addObject("pageData", indexPageJson.toJSONString());
         fillAppShareInfo(appId, modelAndView);
         modelAndView.addObject("share_info_link", request.getRequestURL());
+        logger.info("end request for app: " + appId);
         return modelAndView;
     }
 
@@ -77,7 +79,7 @@ public class AppController extends BaseController {
         }
         JSONObject appInfoJson = manageShowAppService.getAppInfo(appId);
         if(appInfoJson.getString("code").equals("0")) {
-            modelAndView.addObject("business_id", businessJson.getJSONObject("data").getInteger("business_id"));
+            modelAndView.addObject("business_id", appInfoJson.getJSONObject("data").getInteger("business_id"));
         } else {
             modelAndView.addObject("business_id", 0);
         }
