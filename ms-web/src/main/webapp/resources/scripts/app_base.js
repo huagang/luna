@@ -182,7 +182,7 @@ $(document).ready(function() {
     // $('.scene').find('.img-wraper').addClass('go-right');
     //设置首页滑动到第一页
 
-    if ($('.welcome').children().length > 0) {
+    if ($('.welcome').length > 0) {
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             initPanoBg(welcomePanoBg);
