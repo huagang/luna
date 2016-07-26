@@ -880,8 +880,8 @@
                             <h2><label>页卡管理：</label></h2>
                             <div class="form-group clearfix">
                                 <ul class="menutab-list">
-                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
-                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn" id="createNewTab" >新建页卡</a>
+                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn btn-menutab" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
+                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn btn-createtab" id="createNewTab" >新建页卡</a>
                                       <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
                                         <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
@@ -906,10 +906,10 @@
                                       </ui-select>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
-                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId">
+                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
                                         <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
                                       </select></div>
-                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" >
+                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
                                           <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
                                         </select>
                                       </div>
@@ -925,7 +925,7 @@
                                       </div>
                                     </div>
                                     <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
-                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId">
+                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId" ng-change="menuTab.changeSecondPoi($evnet)">
                                           <option ng-repeat='poi in menuTab.secondPoiList track by poi.poiId' value='{{poi.poiId}}'>{{poi.poiName}}</option>
                                         </select>
                                       </div>
@@ -1031,17 +1031,17 @@
               <div class="pop-cont">
                 <div class="topic-set">
                   <div class="item-wrap">
-                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                     <form id="menuTabDefaultIcon" name="menuTabDefaultIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
                           <span class="title">默认图标</span>
-                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-blur="tabMenuIcon.chageDefaultIcon()" />
+                          <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" title="{{tabMenuIcon.menuTabIcon.defaultUrl}}"  ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-change="tabMenuIcon.chageDefaultIcon()" />
                           <button class="btn btn-local">上传</button>
                           <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
                       </form>
                   </div>
                   <div class="item-wrap">
-                     <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="audio-upload">
+                     <form id="menuTabCurrentIcon" name="menuTabCurrentIcon" method="post" enctype="multipart/form-data" class="tabMenuIcon-upload">
                           <span class="title">当前图标</span>
-                          <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-blur="tabMenuIcon.chageCurrentIcon()"/>
+                          <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" title={{tabMenuIcon.menuTabIcon.currentUrl}} ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-change="tabMenuIcon.chageCurrentIcon()"/>
                           <button class="btn btn-local">上传</button>
                           <input type="file" onchange="async_upload_picForMenuTab('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="pic" />
                       </form>
@@ -1137,6 +1137,7 @@
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>    
     <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>

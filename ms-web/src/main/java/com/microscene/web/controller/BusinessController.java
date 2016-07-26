@@ -84,6 +84,7 @@ public class BusinessController extends BaseController {
         JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
         modelAndView.addObject("pageData", indexPageJson.toJSONString());
         modelAndView.addObject("stat_id", statId);
+        modelAndView.addObject("business_id", businessInfoJson.getInteger("business_id"));
         return modelAndView;
     }
 

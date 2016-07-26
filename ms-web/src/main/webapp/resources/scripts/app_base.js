@@ -7,7 +7,7 @@ time:20160504
 var objdata = {
     myPosition: {
         "lat": "39.964758",
-        "lng": "116.355246",
+        "lng": "116.355246"
     },
     destPosition: {
 
@@ -102,6 +102,7 @@ $(document).ready(function() {
         $('#diaVideo').attr('src', videourl);
         $('.video-modal').show();
     });
+
     $('.app-wrap').on('click', '.video-modal', function(e) {
         $(this).hide();
         $(this).find('video')[0].pause();
@@ -128,8 +129,10 @@ $(document).ready(function() {
                 var value = item.page_content[n];
                 var componentHtml = "",
                     headName = n.match(/^[a-zA-Z]*/);
+
                 switch (headName[0]) {
                     case 'canvas':
+                        break;
                         var canvas = new Canvas(value);
                         canvas.page_code = item.page_code;
                         componentHtml = canvas.build();
@@ -158,7 +161,7 @@ $(document).ready(function() {
                         var video = new Video(value);
                         componentHtml = video.build();
                         break;
-                    case 'menuTab':
+                    case 'tab':
                         var menutab = new menuTab(value);
                         componentHtml = menutab.build();
                         break;
@@ -179,7 +182,7 @@ $(document).ready(function() {
     // $('.scene').find('.img-wraper').addClass('go-right');
     //设置首页滑动到第一页
 
-    if ($('.welcome').children().length > 0) {
+    if ($('.welcome').length > 0) {
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             initPanoBg(welcomePanoBg);
@@ -222,6 +225,7 @@ $(document).ready(function() {
 
         this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
 
+        // 组件位置设置
         this.setPosition = function() {
 
             this.html.css("position", "absolute");
@@ -232,6 +236,8 @@ $(document).ready(function() {
             this.html.css("z-index", this.value.zindex);
             this.html.css("display", this.value.display);
         };
+
+        // 设置组件基本信息
         this.setMoreInfo = function() {
 
             this.html.attr("component-type", this.value.type);
@@ -246,6 +252,7 @@ $(document).ready(function() {
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
+        // 设置组件行为
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
                 if (this.value.action.href.type == "inner") {
@@ -452,36 +459,384 @@ $(document).ready(function() {
             return this.html;
         }
     }
+
     /* 菜单页卡 */
     function menuTab(data) {
-        this.value = data;
-        BaseComponent.call(this);
+        // mock数据
+        var that = this;
 
-        this.build = function() {
-            var loopPlay = '',
-                videoWidth = this.value.width ? 'width = "' + this.value.width + this.value.unit + '"' : '',
-                videoHeight = this.value.height ? 'height = "' + this.value.height + this.value.unit + '"' : '',
-                videoIcon = this.value.content.videoIcon || this.value.content.icon,
-                showType = this.value.content.videoShowType = this.value.content.videoShowType || '1';
+        that.init = init;
 
-            this.setPosition();
+        // 渲染组件
+        that.build = build;
 
-            this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+        // 渲染tab dom
+        that.getTabsHtml = getTabsHtml;
 
-            if (showType == '1') {
-                //弹框组件
-                this.html.children("div").append('<a href="javascript:;" class="btn btn-playVideo" data-videoicon = "' + videoIcon + '" data-videourl = "' + this.value.content.videoUrl + '"><img  src="' + videoIcon + '" /></a> ');
-            } else {
-                //内嵌组件
-                this.html.children("div").append('<video src="' + this.value.content.videoUrl + '" class="video-js" controls preload="auto"  ' + videoWidth + ' ' + videoHeight + ' data-setup="{}" ></video>');
+        // 菜单页卡点击事件
+        that.handleMenuClick = handleMenuClick;
+
+        // 绑定事件
+        that.bindEvent = bindEvent;
+
+        // 获取所有数据
+        that.fetchData = fetchData;
+
+        // 获取某一项数据
+        that.fetchSingleData = fetchSingleData;
+
+        // 更新内容区域数据
+        that.updateContent = updateContent;
+
+        that.init();
+
+        BaseComponent.call(that);
+
+        function init(){
+            that.value = data;
+            that.hasBuild = false;
+            that.data = [];
+            that.menuIndex = 0;
+            that.content = '';
+        }
+
+
+        function build() {
+            /* 该组件不需要setPosition
+                that.setPosition();
+            */
+            // 设置dom元素内容
+
+
+
+            // that.setMoreInfo();
+
+            // that.setAction();
+            var html = that.getTabsHtml();
+            that.html.children('div').append(html);
+            if(that.hasBuild === false){
+                that.hasBuild = true;
+                setTimeout(that.bindEvent, 600);
+            }
+            that.fetchData();
+            return that.html;
+        }
+
+        function bindEvent(){
+            // clear event
+
+            that.html.find('.menulist-wrap').off('click', '.icon');
+            that.html.find('#content').off('click', '#poi .icon-radio');
+
+
+
+            that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
+
+            var content = that.html.find('#content');
+            content.on('click', '.icon-radio', function(event){
+                var target = $(event.target);
+                try{
+                    if(target.hasClass('icon-radio-on')){
+                        target.siblings('audio')[0].pause()
+                        target.removeClass('icon-radio-on');
+                    } else{
+                        target.addClass('icon-radio-on');
+                        target.siblings('audio')[0].play();
+                    }
+                } catch(e){
+
+                }
+
+            });
+
+            content.on('transitionend', function(event){
+                if(content.hasClass('transparent')){
+                    content.removeClass('transparent');
+                    content.html(that.content);
+                    that.content = ''
+                } else{ // opaque
+                    if(that.content){
+                        content.addClass('transparent');
+                    }
+                }
+
+            });
+            content.on('click', '.icon-video', function(event){
+
+                var radio = that.html.find(".icon-radio");
+                if(radio.hasClass('icon-radio-on')){
+                    radio.siblings('audio')[0].pause();
+                    radio.removeClass('icon-radio-on');
+                }
+                 var url = event.target.parentNode.getAttribute('data-srcurl');
+                $('.video-modal').css('display', 'block');
+                $('#diaVideo').attr('src', url);
+
+            });
+
+
+        }
+
+        function fetchData(){
+            that.value.content.tabList.forEach(function(item, index){
+                that.fetchSingleData(item, index);
+            });
+        }
+
+        function fetchSingleData(item, index){
+            switch(item.type){
+                case 'singlePoi':
+                    $.ajax({
+                        url: '/servicepoi.do?method=getPoiById',
+                        type: 'GET',
+                        data:{poi_id: item.firstPoiId, lang:'zh'},
+                        success:function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data.zh;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data.zh;
+                                }
+
+                            }
+                        },
+                    });
+                    break;
+                case 'singleArticle':
+                    $.ajax({
+                        url: '/article/data/' + item.articleId,
+                        type: 'GET',
+                        success:function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data;
+                                }
+                            }
+
+                        }
+                    });
+                    break
+                case 'poiList':
+                    $.ajax({
+                        url: '/servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        type: 'GET',
+                        data: {business_id: window.business_id,
+                                poi_id: item.firstPoiId},
+                        success: function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data.zh || data.data.en;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data.zh || data.data.en;
+                                }
+                            }
+                        },
+                    });
+                    break;
+                case 'articleList':
+                    $.ajax({
+                        url: '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        type: 'GET',
+                        success: function(res){
+                            if(res.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = res.data;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = res.data;
+                                }
+                            }
+                        }
+                    });
             }
 
-            this.setMoreInfo();
+        }
 
-            this.setAction();
+        function getTabsHtml(){
+            var labsHtml = '';
+            var className = that.value.content.tabList.length < 4 ? 'flex' : '';
+            that.value.content.tabList.forEach(function(item, index){
+                var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
+                var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
+                var html =
+                '<div class="menulist ' + (that.menuIndex === index ? 'current':'') + '" item="profile" data-index="'+ index +'">'
+                +   '<div class="menulist-img" >'
+                +       '<i class="icon" style="' + defaultStyle +'"></i>'
+                +       '<i class="icon current" style="'+ currentStyle +'"></i>'
+                +   '</div>'
+                +   '<span class="menulist-title">' + item.name + '</span>'
+                + '</div>';
+                labsHtml += html;
+            });
+            var html =
+            '<div id="container" class="container">'
+            + '<div class="topmenu-wrap">'
+            +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
+            +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover">'
+            +            '<div class="topmenu">'
+            +                '<div class="menulist-wrap ' + className + '">'
+            +                   labsHtml
+            +                 '</div>'
+            +             '</div>'
+            +       '</div>'
+            + '</div>'
+            + '<div id="content"></div>'
+            //+ '<i class="icon icon-goback" onclick="history.back()"></i>'
+            + '</div>';
 
-            return this.html;
+            return html;
+        }
+
+        function updateContent(){
+            var data = that.data[that.menuIndex];
+            var html = '';
+            var type = that.value.content.tabList[that.menuIndex].type;
+            switch(type){
+                case 'singlePoi':
+                    var videoClass = data.video ? '' : 'hidden',
+                        audioClass = data.audio ? '' : 'hidden';
+                    html =
+                    '<div id="poi">'
+                    +   '<div class="detail-title-wrap">'
+                    +       '<span class="detail-title">'
+                    +            '<i class="icon icon-arr-right"></i>'+ data.poi_name
+                    +       '</span>'
+                    +       '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl="http://200011112.vod.myqcloud.com/200011112_da9ee07a51a611e6963575943c151ece.f0.mp4">'
+                    +           '<i class="icon icon-video"></i>'
+                    +       '</span>'
+                    +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                    +           '<i class="icon icon-radio"></i>'
+                    +           '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
+                    +       '</span>'
+                    +   '</div>'
+                    +   '<div class="content-details clearboth">'+ data.brief_introduction +'</div>'
+                    +'</div>';
+                    break;
+                case 'singleArticle':
+                    var videoClass = data.video ? '' : 'hidden',
+                        audioClass = data.audio ? '' : 'hidden';
+                    html =
+                        '<div id="article">'
+                        +   '<div class="detail-title-wrap">'
+                        +       '<span class="detail-title">'
+                        +            '<i class="icon icon-arr-right"></i>'+ data.title
+                        +       '</span>'
+                        +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
+                        +           '<i class="icon icon-video"></i>'
+                        +       '</span>'
+                        +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                        +           '<i class="icon icon-radio"></i>'
+                        +           '<audio src="' + data.audio + '"></audio>'
+                        +       '</span>'
+                        +   '</div>'
+                        +   '<div class="content-details clearboth">'+ (data.content)+'</div>'
+                        +'</div>';
+                    break;
+                case 'poiList':
+                    html = '';
+                    var poiList = '',panoTip, panoLink;
+
+
+                    data.pois.forEach(function(item, index){
+                        if(item.panorama.panorama_id){
+                            panoTip = '点击看全景';
+                            switch(item.panorama.panorama_type_id){
+                                case 1: // 单点全景
+                                    panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                        + item.panorama.panorama_id;
+                                    break;
+                                case 2: // 相册全景
+                                    panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
+                                        + item.panorama.panorama_id;
+
+                                    break;
+                                case 3: // 自定义全景
+                                    panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
+                                        + item.panorama.panorama_id;
+                                    break;
+                            }
+                        } else{
+                            panoTip = '暂无全景';
+                            panoLink = 'javascript:void(0)';
+                        }
+
+                        //  设置背景图片样式
+                        var bg = '';
+                        if(item.thumbnail ){
+                            bg = "background:url(" + item.thumbnail + "\) center center no-repeat; background-size:cover;";
+
+                        } else{
+                            bg = "background:url(../resources/images/default.png) center center no-repeat;";
+                        }
+
+                        poiList +=
+                            '<div class="poi-item" style="' + bg +'">'
+                            +   '<a class="poi-bg" target="_blank" href="' + panoLink  + '" >'
+                            +       '<p class="pano-nav">'
+                            +           '<span class="title">' + item.poi_name + '</span>'
+                            +           '<br><span class="profile">' + panoTip + '</span>'
+                            +       '</p>'
+                            +    '</a>'
+                            +   '<a target="_blank" class="poi-detail" href="../poi/'+ item.poi_id +'">'
+                            +       '点击查看详情'
+                            +   '</a>'
+                            +'</div>';
+
+                    });
+
+                    html = '<div id="poiList">' + poiList + '</div>';
+                    break;
+                case 'articleList':
+                    html = '';
+                    var articleList = '',bg;
+                    data.forEach(function(item, index){
+                        if(item.abstract_pic ){
+                            bg = "background:url(" + item.abstract_pic + ") center center no-repeat; background-size:cover;";
+                        } else{
+                            bg = "background:url(../resources/images/default.png) center center no-repeat;";
+                        }
+                        articleList +=
+                            '<a target="_blank"  class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
+                            +   '<div class="content">'
+                            +       '<div class="detail-left">'
+                            +           '<span>' + item.title +'</span>'
+                            +       '</div>'
+                            +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
+                            +           (item.short_title || '暂无简介')
+                            +       '</span></p></div>'
+                            +   '</div>'
+                            +'</a>';
+                    });
+                    html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
+                    break;
+            }
+
+            var content = that.html.find("#content");
+            if(content.html()){
+                content.addClass('transparent');
+                that.content = html;
+            } else{
+                that.content = '';
+                content.html(html);
+            }
+        }
+
+        function handleMenuClick(event){
+            var index = event.target.parentNode.parentNode.getAttribute('data-index');
+            that.html.find('.menulist').removeClass('current');
+            $(that.html.find('.menulist')[index]).addClass('current');
+            that.menuIndex = index;
+            // 填充数据
+            if(that.data[index]){
+                that.updateContent();
+            } else{
+                that.fetchSingleData(that.value.content.tabList[that.menuIndex], that.menuIndex);
+            }
         }
     }
 });
