@@ -57,33 +57,28 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             msArticle.setTitle(title);
         }
         String shortTitle = articleObj.getString(MsArticleTable.FIELD_SHORT_TITLE);
-        if(StringUtils.isNotBlank(shortTitle)) {
-            msArticle.setShortTitle(shortTitle);
-        }
+        msArticle.setShortTitle(shortTitle);
         String content = articleObj.getString(MsArticleTable.FIELD_CONTENT);
         if(StringUtils.isNotBlank(content)) {
             msArticle.setContent(content);
+        } else {
+            msArticle.setContent("");
         }
         String abstractContent = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT);
-        if(StringUtils.isNotBlank(abstractContent)) {
-            msArticle.setAbstractContent(abstractContent);
-        }
+        msArticle.setAbstractContent(abstractContent);
+
         String abstractPic = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_PIC);
-        if(StringUtils.isNotBlank(abstractPic)) {
-            msArticle.setAbstractPic(abstractPic);
-        }
+        msArticle.setAbstractPic(abstractPic);
+
         String audio = articleObj.getString(MsArticleTable.FIELD_AUDIO);
-        if(StringUtils.isNotBlank(audio)) {
-            msArticle.setAudio(audio);
-        }
+        msArticle.setAudio(audio);
+
         String video = articleObj.getString(MsArticleTable.FIELD_VIDEO);
-        if(StringUtils.isNotBlank(video)) {
-            msArticle.setVideo(video);
-        }
+        msArticle.setVideo(video);
+
         String author = articleObj.getString(MsArticleTable.FIELD_AUTHOR);
-        if(StringUtils.isNotBlank(author)) {
-            msArticle.setAuthor(author);
-        }
+        msArticle.setAuthor(author);
+
         int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
         if(column > 0) {
             msArticle.setColumnId(column);
@@ -159,7 +154,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             int id = articleObj.getIntValue(MsArticleTable.FIELD_ID);
             if(id > 0) {
                 msArticle.setId(id);
-                msArticleDAO.updateByPrimaryKey(msArticle);
+                msArticleDAO.updateByPrimaryKeySelective(msArticle);
             }
         } catch (Exception ex) {
             logger.error("Failed to update article", ex);
