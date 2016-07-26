@@ -849,15 +849,27 @@ a.wj-img-clc {
 
 /* 页签组件 Start*/
 
+.menuTab-url {
+    display: inline-block;
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    margin: 0 5px;
+    padding: 0 5px;
+}
+
 .menuTab-wrapper {
     position: relative;
     height: 200px;
 }
-.menuTab-set .menutab-list > li{
+
+.menuTab-set .menutab-list > li {
     float: left;
-    width: 25%;
+    width: 33%;
     position: relative;
 }
+
 .menuTab-bg {
     height: 100%;
     /* background: url('http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg') no-repeat; */
@@ -914,20 +926,36 @@ a.wj-img-clc {
     float: left;
     height: 100%;
 }
-.dropdown{
+
+.dropdown {
     position: absolute;
     width: 100%;
     top: 0;
     left: -100%;
+    z-index: 2000;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
 }
 
+.btn-menutab {
+    background-color: #e3e3e3;
+    padding: 5px;
+    margin: 5px;
+}
+
+.btn-createtab {
+    padding: 5px;
+    margin: 5px;
+    background-color: grue;
+}
 
 .icon-list {
     width: 48px;
     height: 48px;
 }
 
-.current .icon-itembg,.current.icon-itembg {
+.current .icon-itembg,
+.current.icon-itembg {
     background-position: 0px 0px;
     color: #fff;
 }
@@ -936,7 +964,8 @@ a.wj-img-clc {
     background-position: -48px -48px;
 }
 
-.current .icon-profile,.current.icon-profile {
+.current .icon-profile,
+.current.icon-profile {
     background-position: -48px 0px;
 }
 
@@ -944,7 +973,8 @@ a.wj-img-clc {
     background-position: -96px -48px;
 }
 
-.current .icon-traffic,.current.icon-traffic {
+.current .icon-traffic,
+.current.icon-traffic {
     background-position: -96px 0px;
 }
 
@@ -952,7 +982,8 @@ a.wj-img-clc {
     background-position: -288px -48px;
 }
 
-.current .icon-celebrity,.current.icon-celebrity {
+.current .icon-celebrity,
+.current.icon-celebrity {
     background-position: -288px 0px;
 }
 
@@ -960,7 +991,8 @@ a.wj-img-clc {
     background-position: -240px -48px;
 }
 
-.current .icon-nation,.current.icon-nation {
+.current .icon-nation,
+.current.icon-nation {
     background-position: -240px 0px;
 }
 
@@ -968,7 +1000,8 @@ a.wj-img-clc {
     background-position: -336px -48px;
 }
 
-.current .icon-culture,.current.icon-culture {
+.current .icon-culture,
+.current.icon-culture {
     background-position: -336px 0px;
 }
 
@@ -976,7 +1009,8 @@ a.wj-img-clc {
     background-position: -144px -48px;
 }
 
-.current .icon-spots,.current.icon-spots {
+.current .icon-spots,
+.current.icon-spots {
     background-position: -144px 0px;
 }
 
@@ -984,7 +1018,8 @@ a.wj-img-clc {
     background-position: -192px -48px;
 }
 
-.current .icon-food,.current.icon-food {
+.current .icon-food,
+.current.icon-food {
     background-position: -192px 0px;
 }
 
@@ -992,7 +1027,8 @@ a.wj-img-clc {
     background-position: -384px -48px;
 }
 
-.current .icon-hotel,.current.icon-hotel {
+.current .icon-hotel,
+.current.icon-hotel {
     background-position: -384px 0px;
 }
 
@@ -1000,7 +1036,8 @@ a.wj-img-clc {
     background-position: -432px -48px;
 }
 
-.current .icon-activity,.current.icon-activity {
+.current .icon-activity,
+.current.icon-activity {
     background-position: -432px 0px;
 }
 
@@ -1008,15 +1045,22 @@ a.wj-img-clc {
     background-position: -480px -48px;
 }
 
-.current .icon-area,.current.icon-area {
+.current .icon-area,
+.current.icon-area {
     background-position: -480px 0px;
 }
+
+
 /* 保存的后的提示 */
-.msgTips{
+
+.msgTips {
     color: #666;
     position: absolute;
     top: -20px;
 }
+
+
 /* END 保存的后的提示 */
+
 
 /*页签组件End*/
