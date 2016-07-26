@@ -37,8 +37,9 @@
     <script type="text/javascript">
         // var shareInfo={"title":"${share_info_title}","desc":"${share_info_des}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
         // getShareInfo(window.document.location.href,shareInfo);
+
         var pageData = ${pageData};
-        var business_id = ${business_id};
+
         var host = "<%=request.getContextPath() %>";
         var wechatOptions = {
             title: "${share_info_title}",
@@ -48,6 +49,12 @@
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
+        var business_id;
+        try{
+            business_id = ${business_id};
+        } catch(e){
+            console.error('获取业务id失败');
+        }
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>

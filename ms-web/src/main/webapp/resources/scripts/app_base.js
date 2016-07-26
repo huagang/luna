@@ -646,8 +646,8 @@ $(document).ready(function() {
             var labsHtml = '';
             var className = that.value.content.tabList.length < 4 ? 'flex' : '';
             that.value.content.tabList.forEach(function(item, index){
-                var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPositon[0] + ' ' + item.icon.defaultStyle.bgPositon[1];
-                var currentStyle = 'background-position:' + item.icon.currentStyle.bgPositon[0] + ' ' + item.icon.currentStyle.bgPositon[1];
+                var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPositon[1];
+                var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPositon[1];
                 var html =
                 '<div class="menulist ' + (that.menuIndex === index ? 'current':'') + '" item="profile" data-index="'+ index +'">'
                 +   '<div class="menulist-img" >'
