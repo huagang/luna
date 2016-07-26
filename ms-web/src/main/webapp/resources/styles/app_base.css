@@ -205,11 +205,11 @@ img{
 
 .menulist-wrap {
     color: white;
-    font-size: 1.67rem;
+    font-size: 1.5rem;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
     width: 100vw;
-    height: 100px;
+    height: 85px;
     white-space: nowrap;
     position: absolute;
     bottom: 0;
@@ -225,8 +225,9 @@ img{
 }
 .menulist-title{
     text-align: center;
-    line-height: 43px;
+    line-height: 23px;
     display: inline-block;
+    padding-bottom: 5px;
 }
 
 .menulist.current .menulist-title{
