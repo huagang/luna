@@ -239,6 +239,9 @@ function BaseComponentController() {
     }
 }
 
+/**
+ * 交互面板
+ */
 function InteractComponentController() {
 
     this.action = {
@@ -717,6 +720,18 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         }, {
             name: '酒店',
             code: 'hotel',
+            type: 'default',
+            defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '古代',
+            code: 'ancient',
+            type: 'default',
+            defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
+        }, {
+            name: '近代',
+            code: 'modern',
             type: 'default',
             defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
             currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },

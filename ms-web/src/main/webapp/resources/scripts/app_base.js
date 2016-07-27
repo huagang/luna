@@ -21,9 +21,9 @@ $(document).ready(function() {
         var m = w.width();
         var z = w.height();
         var x, n, o = 1;
-        o = m / 480;
+        o = m / 375;
         $("#vb_viewport").attr({
-            content: "width=480,initial-scale=" + o + ",user-scalable=no"
+            content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
     init();
@@ -49,29 +49,9 @@ $(document).ready(function() {
         window.location.href = $(this).attr("hrefurl");
     });
 
-    //导航绑定点击事件
-    $(".app-wrap").on("click", ".navimg", function(e) {
-        //获取地理位置和导航等信息
-        // var myLongitude;
-        // var myLatitude;
-        e.preventDefault();
-        e.stopPropagation();
-
-        var detailData = {
-            "navStartLat": $(this).attr("startPosition").split(",")[0],
-            "navStartLng": $(this).attr("startPosition").split(",")[1],
-            "navStartName": $(this).attr("startName").split(",")[0],
-            "navEndLat": $(this).attr("endPosition").split(",")[0],
-            "navEndLng": $(this).attr("endPosition").split(",")[1],
-            "navEndName": $(this).attr("endName").split(",")[0],
-            'navType': $(this).data('navtype')
-        };
-        showNav(detailData);
-    });
 
     //音频播放点击事件
     $(".app-wrap").on('click', '.btn-playAudio', function(e) {
-        console.log(123);
         e.preventDefault();
         e.stopPropagation();
 
@@ -97,18 +77,40 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
+        var startPosition = $(this).attr("startPosition"), startLng, startLat, navType, error;
+        if(!startPosition){ //没有设定当前位置 因而获取之
+            var that = this;
+            getMyLocation(function(position){
+                var options = {
+                    startLng : position.coords.longitude,
+                    //纬度
+                    startLat : position.coords.latitude,
+                    navType : 0,
+                    startName : '当前位置'
+                };
+                handleNav.call(that, e, options);
+            });
+        }
+        else{
+            handleNav.call(this,e);
+        }
+
+    });
+
+    function handleNav(e,options){
+        options = options || {};
         var detailData = {
-            "navStartLat": $(this).attr("startPosition").split(",")[0],
-            "navStartLng": $(this).attr("startPosition").split(",")[1],
-            "navStartName": $(this).attr("startName").split(",")[0],
+            "navStartLat": options.startLat || $(this).attr("startPosition").split(",")[0],
+            "navStartLng": options.startLng || $(this).attr("startPosition").split(",")[1],
+            "navStartName": options.startName || $(this).attr("startName").split(",")[0],
             "navEndLat": $(this).attr("endPosition").split(",")[0],
             "navEndLng": $(this).attr("endPosition").split(",")[1],
             "navEndName": $(this).attr("endName").split(",")[0],
-            'navType': $(this).data('navtype')
+            'navType': options.navType || $(this).data('navtype')
         };
-        console.log(detailData);
         showNav(detailData);
-    });
+    }
+
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function(e) {
         var videourl = $(this).data('videourl');
@@ -212,6 +214,7 @@ $(document).ready(function() {
                 initPanoBg(panoBg);
             }
         }, 4000);
+
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -248,7 +251,7 @@ $(document).ready(function() {
             this.html.css("top", this.value.y + this.value.unit);
             this.html.css("width", this.value.width + this.value.unit);
             this.html.css("height", this.value.height + this.value.unit);
-            this.html.css("z-index", this.value.zindex);
+            this.html.css("z-index", this.value.zindex || 1);
             this.html.css("display", this.value.display);
         };
 
@@ -336,7 +339,6 @@ $(document).ready(function() {
             //this.setPosition();
             // Canvas.prototype.setPosition.call();
 
-            console.log(this.value);
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
             } else if (this.value.gravity && !this.value.panoId) {
@@ -573,8 +575,6 @@ $(document).ready(function() {
             that.html.find('.menulist-wrap').off('click', '.icon');
             that.html.find('#content').off('click', '#poi .icon-radio');
 
-
-
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
 
             var content = that.html.find('#content');
@@ -623,9 +623,11 @@ $(document).ready(function() {
         }
 
         function fetchData(){
+
             that.value.content.tabList.forEach(function(item, index){
                 that.fetchSingleData(item, index);
             });
+
         }
 
         function fetchSingleData(item, index){
@@ -664,7 +666,7 @@ $(document).ready(function() {
 
                         }
                     });
-                    break
+                    break;
                 case 'poiList':
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
@@ -716,6 +718,7 @@ $(document).ready(function() {
                 +       '<i class="icon current" style="'+ currentStyle +'"></i>'
                 +   '</div>'
                 +   '<span class="menulist-title">' + item.name + '</span>'
+                +   '<span class="border"></span>'
                 + '</div>';
                 labsHtml += html;
             });
@@ -766,11 +769,12 @@ $(document).ready(function() {
                 case 'singleArticle':
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
+                    var title = (data.title || '').split(/[,，]/).join('');
                     html =
                         '<div id="article">'
                         +   '<div class="detail-title-wrap">'
                         +       '<span class="detail-title">'
-                        +            '<i class="icon icon-arr-right"></i>'+ data.title
+                        +            '<i class="icon icon-arr-right"></i>'+ title
                         +       '</span>'
                         +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
                         +           '<i class="icon icon-video"></i>'
@@ -784,58 +788,138 @@ $(document).ready(function() {
                         +'</div>';
                     break;
                 case 'poiList':
-                    html = '';
-                    var poiList = '',panoTip, panoLink;
+                    var typeInfo = {
+                        '2': 'tour', //旅游
+                        '3': 'hotel', //住宿
+                        '4': 'restaurant', //餐饮
+                        '5': 'entertainment', // 娱乐
+                        '6': 'shopping', //购物
+                        '7': 'basicstation',
+                        '8': 'others'
+                    }, type = '';
 
+                    try{
+                        type = typeInfo[that.value.content.tabList[that.menuIndex].poiTypeId];
+                    } catch(e){
 
-                    data.pois.forEach(function(item, index){
-                        if(item.panorama.panorama_id){
-                            panoTip = '点击看全景';
-                            switch(item.panorama.panorama_type_id){
-                                case 1: // 单点全景
-                                    panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
-                                        + item.panorama.panorama_id;
-                                    break;
-                                case 2: // 相册全景
-                                    panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
-                                        + item.panorama.panorama_id;
+                    }
 
-                                    break;
-                                case 3: // 自定义全景
-                                    panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
-                                        + item.panorama.panorama_id;
-                                    break;
-                            }
-                        } else{
-                            panoTip = '';
-                            panoLink = 'javascript:void(0)';
-                        }
+                    switch(type) {
 
-                        //  设置背景图片样式
-                        var bg = '';
-                        if(item.thumbnail ){
-                            bg = "background:url(" + item.thumbnail + "\) center center no-repeat; background-size:cover;";
+                        case 'hotel':
+                            //html = '';
+                            var hotelList = '', panoLink;
+                            data.pois.forEach(function (item, index) {
+                                if (item.panorama.panorama_id) {
+                                    switch (item.panorama.panorama_type_id) {
+                                        case 1: // 单点全景
+                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                            + item.panorama.panorama_id;
+                                            break;
+                                        case 2: // 相册全景
+                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
+                                            + item.panorama.panorama_id;
 
-                        } else{
-                            bg = "background:url(../resources/images/default.png) center center no-repeat;";
-                        }
+                                            break;
+                                        case 3: // 自定义全景
+                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
+                                            + item.panorama.panorama_id;
+                                            break;
+                                    }
+                                }
 
-                        poiList +=
-                            '<div class="poi-item" style="' + bg +'">'
-                            +   '<a class="poi-bg" target="_blank" href="' + panoLink  + '" >'
-                            +       '<p class="pano-nav">'
-                            +           '<span class="title">' + item.poi_name + '</span>'
-                            +           '<br><span class="profile">' + panoTip + '</span>'
-                            +       '</p>'
-                            +    '</a>'
-                            +   '<a target="_blank" class="poi-detail" href="../poi/'+ item.poi_id +'">'
-                            +       '点击查看详情'
-                            +   '</a>'
-                            +'</div>';
+                                var navClass = '', navAttr = '';
+                                if(! item.lnglat.lng || ! item.lnglat.lat){
+                                    navClass='hidden';
+                                } else{
+                                    navAttr = ' endName="' + item.poi_name + '" endPosition=' + item.lnglat.lat + ',' + item.lnglat.lng;
 
-                    });
+                                }
+                                hotelList +=
+                                    '<div class="hotel-item">'
+                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
+                                    + 'background-size: cover;">'
+                                    +    '<div class="nav">'
+                                    +       '<a class="nav-item navimg nav-location ' + navClass +'" '+navAttr+'>'
+                                    +           '<img class="img" src="'+ host + '/resources/images/navigation-white.png"/>'
+                                    +           '<span>导航</span>'
+                                    +       '</a>'
+                                    +       '<a class="nav-item '+ (panoLink ? '': "hidden") +'" href="' + panoLink + '">'
+                                    +           '<img class="img" src="' + host + '../resources/images/pano-white.png"/>'
+                                    +           '<span>全景</span>'
+                                    +       '</a>'
+                                    +   '</div>'
+                                    +   '<div class="footer">'
+                                    +       '<div class="content">'
+                                    +           '<span class="poi-name">' + item.poi_name + '</span>'
+                                    +           '<span class="pull-right price">' + (item.price ? item.price + '起' : '') + '</span>'
+                                    +       '</div>'
+                                    +   '</div>'
+                                    + '</div>'
+                                    + '<div class="hotel-info">'
+                                    +       '<p>' + item.brief_introduction + '</p>'
+                                    +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
+                                    +           '<i class="icon-phone">'+ item.contact_phone +'</i>'
+                                    +           item.brief_introduction
+                                    +       '</p>'
+                                    + '</div>'
+                                    +'</div>';
+                            });
+                            html = '<div id="poiList-hotel">' + hotelList + '</div>';
+                            break;
 
-                    html = '<div id="poiList">' + poiList + '</div>';
+                        default:
+                            html = '';
+                            var poiList = '',panoTip, panoLink;
+                            data.pois.forEach(function (item, index) {
+                                if (item.panorama.panorama_id) {
+                                    panoTip = '点击看全景';
+                                    switch (item.panorama.panorama_type_id) {
+                                        case 1: // 单点全景
+                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                            + item.panorama.panorama_id;
+                                            break;
+                                        case 2: // 相册全景
+                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
+                                            + item.panorama.panorama_id;
+
+                                            break;
+                                        case 3: // 自定义全景
+                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
+                                            + item.panorama.panorama_id;
+                                            break;
+                                    }
+                                } else {
+                                    panoTip = '';
+                                    panoLink = 'javascript:void(0)';
+                                }
+
+                                //  设置背景图片样式
+                                var bg = '';
+                                if (item.thumbnail) {
+                                    bg = "background:url(" + item.thumbnail + "\) center center no-repeat; background-size:cover;";
+
+                                } else {
+                                    bg = "background:url(" + host + "/resources/images/default.png) center center no-repeat;";
+                                }
+
+                                poiList +=
+                                    '<div class="poi-item" style="' + bg + '">'
+                                    + '<a class="poi-bg" target="_blank" href="' + panoLink + '" >'
+                                    + '<p class="pano-nav">'
+                                    + '<span class="title">' + item.poi_name + '</span>'
+                                    + '<br><span class="profile">' + panoTip + '</span>'
+                                    + '</p>'
+                                    + '</a>'
+                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
+                                    + '点击查看详情'
+                                    + '</a>'
+                                    + '</div>';
+
+                            });
+                            html = '<div id="poiList">' + poiList + '</div>';
+                            break;
+                    }
                     break;
                 case 'articleList':
                     html = '';
@@ -844,17 +928,17 @@ $(document).ready(function() {
                         if(item.abstract_pic ){
                             bg = "background:url(" + item.abstract_pic + ") center center no-repeat; background-size:cover;";
                         } else{
-                            bg = "background:url(../resources/images/default.png) center center no-repeat;";
+                            bg = "background:url(" + host +"/resources/images/default.png) center center no-repeat;";
                         }
                         if(item.title && item.title.length > 3){
                             titleClass = 'title-sm'
                         }
-
+                        var title = (item.title || '').split(/[,，]/).join('<br/>');
                         articleList +=
-                            '<a target="_blank"  class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
+                            '<a target="_blank"  class="article-item" style="' + bg + '" href="'+ host + '/article/' + item.id +'">'
                             +   '<div class="content">'
                             +       '<div class="detail-left ' + titleClass + '">'
-                            +           '<span class="title">' + item.title +'</span>'
+                            +           '<span class="title">' + title +'</span>'
                             +       '</div>'
                             +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
                             +           item.short_title
@@ -864,6 +948,10 @@ $(document).ready(function() {
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     break;
+
+
+
+
             }
 
             var content = that.html.find("#content");
@@ -946,17 +1034,18 @@ function showNav(posiData) {
 }
 
 // HTML填充信息窗口内容
-function getMyLocation() {
+function getMyLocation(successCallback, errorCallback) {
 
     var options = {
         enableHighAccuracy: true,
         maximumAge: 1000,
+    };
 
-    }
     if (navigator.geolocation) {
         //浏览器支持geolocation
         // alert("before");
-        navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
+        navigator.geolocation.getCurrentPosition(successCallback || getMyLocationOnSuccess,
+            errorCallback || getMyLocationOnError, options);
         // alert("end");
     } else {
         //浏览器不支持geolocation
