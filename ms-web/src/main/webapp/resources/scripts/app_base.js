@@ -755,11 +755,12 @@ $(document).ready(function() {
                 case 'singleArticle':
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
+                    var title = (data.title || '').split(/[,，]/).join('');
                     html =
                         '<div id="article">'
                         +   '<div class="detail-title-wrap">'
                         +       '<span class="detail-title">'
-                        +            '<i class="icon icon-arr-right"></i>'+ data.title
+                        +            '<i class="icon icon-arr-right"></i>'+ title
                         +       '</span>'
                         +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
                         +           '<i class="icon icon-video"></i>'
