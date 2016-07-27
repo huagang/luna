@@ -215,7 +215,9 @@ function BaseComponentController() {
 
     this.changeY = function() {
         updatePageComponentsHtml(currentPageId, currentComponentId);
-
+    };
+    this.changeZ = function() {
+        updatePageComponentsHtml(currentPageId, currentComponentId);
     };
 
     this.changeWidth = function() {

@@ -724,7 +724,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "nav":
             newComponent.attr("component-type", "nav");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplenav.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -732,7 +732,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "pano":
             newComponent.attr("component-type", "pano");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplepano.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -740,7 +740,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "audio":
             newComponent.attr("component-type", "audio");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplevideo.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -748,7 +748,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "video":
             newComponent.attr("component-type", "video");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplevideo.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -920,6 +920,21 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
                 var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
+
+            break;
+        case "audio":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
+            break;
+        case "video":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
             break;
         case "tab":
 

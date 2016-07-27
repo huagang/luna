@@ -201,6 +201,9 @@
                           <span>Y</span>
                           <input type="number" ng-model="text.currentComponent.y" ng-blur="text.changeY()" />px</li>
                         <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="text.currentComponent.zindex" ng-blur="text.changeZ()" /></li>
+                        <li>
                           <span>宽</span>
                           <input type="number" ng-model="text.currentComponent.width" ng-blur="text.changeWidth()" />px</li>
                         <li>
@@ -331,6 +334,9 @@
                         <li>
                           <span>Y</span>
                           <input type="number" ng-model="img.currentComponent.y" ng-blur="img.changeY()" />px</li>
+                       <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="img.currentComponent.zindex" ng-blur="img.changeZ()" /></li>
                         <li>
                           <span>宽</span>
                           <input type="number" ng-model="img.currentComponent.width" ng-blur="img.changeWidth()" />px</li>
@@ -423,6 +429,9 @@
                         <li>
                           <span>Y</span>
                           <input type="number" ng-model="nav.currentComponent.y" ng-blur="nav.changeY()" />px</li>
+                        <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="nav.currentComponent.zindex" ng-blur="nav.changeZ()" /></li>
                         <li>
                           <span>宽</span>
                           <input type="number" ng-model="nav.currentComponent.width" ng-blur="nav.changeWidth()" />px</li>
@@ -554,6 +563,9 @@
                                     <span>Y</span>
                                     <input type="number" ng-model="pano.currentComponent.y" ng-blur="pano.changeY()" />px</li>
                                 <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="pano.currentComponent.zindex" ng-blur="pano.changeZ()" /></li>
+                                <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="pano.currentComponent.width" ng-blur="pano.changeWidth()" />px</li>
                                 <li>
@@ -646,6 +658,9 @@
                                 <li>
                                     <span>Y</span>
                                     <input type="number" ng-model="audio.currentComponent.y" ng-blur="audio.changeY()" />px</li>
+                                <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="audio.currentComponent.zindex" ng-blur="audio.changeZ()" /></li>
                                 <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="audio.currentComponent.width" ng-blur="audio.changeWidth()" />px</li>
@@ -763,6 +778,9 @@
                                       <span>Y</span>
                                       <input type="number" ng-model="video.currentComponent.y" ng-blur="video.changeY()" />px</li>
                                   <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="video.currentComponent.zindex" ng-blur="video.changeZ()" /></li>
+                                  <li>
                                       <span>宽</span>
                                       <input type="number" ng-model="video.currentComponent.width" ng-blur="video.changeWidth()" />px</li>
                                   <li>
@@ -865,6 +883,9 @@
                                 <li>
                                     <span>Y</span>
                                     <input type="number" ng-model="menuTab.currentComponent.y" ng-blur="menuTab.changeY()" />px</li>
+                                <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.zindex" ng-blur="menuTab.changeZ()" /></li>
                                 <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="menuTab.currentComponent.width" ng-blur="menuTab.changeWidth()" />px</li>
