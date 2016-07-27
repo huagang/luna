@@ -39,7 +39,6 @@ $(document).ready(function() {
 
     //音频播放点击事件
     $(".app-wrap").on('click', '.btn-playAudio', function(e) {
-        console.log(123);
         e.preventDefault();
         e.stopPropagation();
 
@@ -96,7 +95,6 @@ $(document).ready(function() {
             "navEndName": $(this).attr("endName").split(",")[0],
             'navType': options.navType || $(this).data('navtype')
         };
-        console.log(detailData);
         showNav(detailData);
     }
 
@@ -197,14 +195,13 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(200, function() {});
+            $('.welcome').fadeOut(3000, function() {});
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 100);
+        }, 4000);
 
-        //TODO 将100 改成 4000 将 200改成3000
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -241,7 +238,7 @@ $(document).ready(function() {
             this.html.css("top", this.value.y + this.value.unit);
             this.html.css("width", this.value.width + this.value.unit);
             this.html.css("height", this.value.height + this.value.unit);
-            this.html.css("z-index", this.value.zindex);
+            this.html.css("z-index", this.value.zindex || 1);
             this.html.css("display", this.value.display);
         };
 
@@ -329,7 +326,6 @@ $(document).ready(function() {
             //this.setPosition();
             // Canvas.prototype.setPosition.call();
 
-            console.log(this.value);
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
             } else if (this.value.gravity && !this.value.panoId) {
@@ -855,7 +851,6 @@ $(document).ready(function() {
                                     +'</div>';
                             });
                             html = '<div id="poiList-hotel">' + hotelList + '</div>';
-                            console.log(html);
                             break;
 
                         default:
