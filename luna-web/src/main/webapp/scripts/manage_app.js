@@ -250,7 +250,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		            	}
 		            }
 		            else{
-		            	res(data.msg);
+		            	alert(data.msg);
 		            }
 		        }.bind(this),
 		        error: function (data) {
