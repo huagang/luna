@@ -608,7 +608,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
 		msShowPageShareCriteria.setOrderByClause("id asc");
 
-		List<MsShowPageShare> msShowPageShares = msShowPageShareDAO.selectByCritegit ria(msShowPageShareCriteria);
+		List<MsShowPageShare> msShowPageShares = msShowPageShareDAO.selectByCriteria(msShowPageShareCriteria);
 
 		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
 		// TODO: new version will not use these share_info fields, delete me later
