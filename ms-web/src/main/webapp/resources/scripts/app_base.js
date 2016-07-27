@@ -31,6 +31,19 @@ $(document).ready(function() {
         // window.location.reload();
     });
 
+    $('body').on('touchmove', function (event) {
+        var canscroll=$(event.target).parents(".canscroll");
+        if(canscroll.length>0){
+
+        }else {
+            event.preventDefault();
+        }
+    });
+
+    $('.welcome').on('touchstart', function (event) {
+        event.preventDefault();
+    });
+
     $(".app-wrap").on("click", "[hrefurl]", function(e) {
         e.stopPropagation();
         window.location.href = $(this).attr("hrefurl");
@@ -550,6 +563,7 @@ $(document).ready(function() {
             that.fetchData();
             that.html.css('width','100%');
             that.html.css('height','100%');
+            that.html.addClass("canscroll");
             return that.html;
         }
 
@@ -711,13 +725,13 @@ $(document).ready(function() {
             +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
             +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover">'
             +            '<div class="topmenu">'
-            +                '<div class="menulist-wrap"><div class="menulist-container">'
+            +                '<div class="menulist-wrap canscroll"><div class="menulist-container">'
             +                   labsHtml
             +                 '</div></div>'
             +             '</div>'
             +       '</div>'
             + '</div>'
-            + '<div id="content"></div>'
+            + '<div id="content canscroll"></div>'
             //+ '<i class="icon icon-goback" onclick="history.back()"></i>'
             + '</div>';
 

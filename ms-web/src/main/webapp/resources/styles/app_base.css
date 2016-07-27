@@ -39,6 +39,9 @@ img{
     min-height: 756px;
     margin: 0 auto;
 }
+.component-group.welcome,.component-group.index .bg-canvas{
+    pointer-events:none;
+}
 .bg-canvas{
 	background-position: top center;
 	background-repeat: no-repeat;
