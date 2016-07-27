@@ -918,12 +918,12 @@ $(document).ready(function() {
                         if(item.title && item.title.length > 3){
                             titleClass = 'title-sm'
                         }
-
+                        var title = (item.title || '').split(/[,，]/).join('<br/>');
                         articleList +=
                             '<a target="_blank"  class="article-item" style="' + bg + '" href="'+ host + '/article/' + item.id +'">'
                             +   '<div class="content">'
                             +       '<div class="detail-left ' + titleClass + '">'
-                            +           '<span class="title">' + item.title +'</span>'
+                            +           '<span class="title">' + title +'</span>'
                             +       '</div>'
                             +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
                             +           item.short_title
