@@ -174,11 +174,12 @@ $(document).ready(function() {
         drop: function(e, ui) {
             var $el = $('<li class="drop-item">' + ui.draggable.html() + '</li>');
             $(this).append($el);
-        }
+        },
     }).sortable({
-        items: '.drop-item',
+        items: '.drop-item:not(.welcome)',
         sort: function() {
             $(this).removeClass("active");
+            console.log('sort');
         },
         delay: 500,
         stop: function() {
@@ -520,8 +521,9 @@ function setPageListHtml(pageList) {
  * @return {[type]}      [description]
  */
 function createPageListItemHtml(page) {
+    console.log(page);
     var pageHtml = [];
-    pageHtml.push('<li class="drop-item" page_id="{0}"><div class="mod">'.format(page.page_id));
+    pageHtml.push('<li class="drop-item {1}" page_id="{0}" data-pagecode="{1}"><div class="mod">'.format(page.page_id, page.page_code));
     pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
     pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
     pageHtml.push('<div class="fun-page">');
@@ -1031,7 +1033,7 @@ var componentPanel = {
 };
 
 var initMenuTab = {
-    getTabListHtmlInCavas : function(tabList) {
+    getTabListHtmlInCavas: function(tabList) {
         var innerHtml = [];
         for (var i = 0; i < tabList.length; i++) {
             if (tabList[i].icon.selected == "customer") {
@@ -1043,4 +1045,3 @@ var initMenuTab = {
         return innerHtml.join('');
     }
 }
-
