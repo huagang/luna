@@ -896,42 +896,45 @@
                                 <div class="menutab-set-wrapper">
                                     <div>页卡名称: <input type="text" name="" ng-model="menuTab.currentTab.name" ng-blur='menuTab.changeCurrentTabName()' ></div>
                                     <div>页卡类型: <input type="text" name="" ng-model="menuTab.currentTab.typeName" readonly="readonly"></div>
-                                    <div>页卡图标:
                                     <div>
-                                      <ui-select ng-model="menuTab.currentTab.icon.selected" theme="select2" on-select="menuTab.onIconSelectCallback($item, $model)" search-enabled="false" ng-disabled="" style="width: 100%;" title="选择icon">
-                                        <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}</ui-select-match>
-                                        <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
-                                          <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
-                                        </ui-select-choices>
-                                      </ui-select>
-                                    </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
-                                      <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
-                                        <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
-                                      </select></div>
-                                      <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
-                                          <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
-                                        </select>
+                                      <div>页卡图标:
+                                        <ui-select ng-model="menuTab.currentTab.icon.selected" theme="select2" on-select="menuTab.onIconSelectCallback($item, $model)" search-enabled="false" ng-disabled="" style="width: 70%;" title="选择icon">
+                                          <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}</ui-select-match>
+                                          <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
+                                            <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
+                                          </ui-select-choices>
+                                        </ui-select>
                                       </div>
-                                    </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList' || menuTab.currentTab.type == 'singlePoi' ">
-                                      <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
-                                          <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}</option>
-                                        </select>
-                                      </div>
-                                      <div>Poi类别 <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
-                                          <option ng-repeat='poiType in menuTab.poiTypeList track by poiType.id' value='{{poiType.id}}'>{{poiType.name}}</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
-                                      <div>二级Poi <select ng-model="menuTab.currentTab.secondPoiId" ng-change="menuTab.changeSecondPoi($evnet)">
-                                          <option ng-repeat='poi in menuTab.secondPoiList track by poi.poiId' value='{{poi.poiId}}'>{{poi.poiName}}</option>
-                                        </select>
-                                      </div>
-                                    </div>
+                                    <div><span>图标默认颜色:</span> <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.defaultColor" ng-change="menuTab.changeIconColor('default')"></div>
+                                    <div><span>图标当前颜色:</span> <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.currentColor" ng-change="menuTab.changeIconColor('current')"></div>
                                 </div>
                             </div>
+                            </div>
+                            <h2><label>数据源</label></h2>
+                            <div class="form-group clearfix">
+                                <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
+                                  <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
+                                    <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
+                                  </select></div>
+                                  <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
+                                      <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
+                                  <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
+                                      <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                    </select>
+                                  </div>
+                                  <div>Poi类别 <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
+                                      <option ng-repeat='poiType in menuTab.poiTypeList track by poiType.id' value='{{poiType.id}}'>{{poiType.name}}</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
+                                  <div>PoiId <input type="text" name="" ng-model="menuTab.currentTab.singlePoiId" ng-blur='menuTab.changeSinglePoiId()'
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -946,7 +949,7 @@
                               <div class="item">
                                   <label>
                                       <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                                  <input type="url" class="txt" name="outerValue" ng-model="menuTab.action.href.outerValue" ng-change="menuTab.changeOuterHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'outer'"/>
+                                      <input type="url" class="txt" name="outerValue" ng-model="menuTab.action.href.outerValue" ng-change="menuTab.changeOuterHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'outer'"/>
                                   <div role="alert">
                                       <span class="error" ng-show="audioInteractForm.outerValue.$error.url">url格式不合法</span>
                                   </div>
