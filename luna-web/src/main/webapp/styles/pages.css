@@ -322,8 +322,8 @@ ol {
 .canvas .inner-canvas {
     position: relative;
     display: block;
-    width: 482px;
-    height: 758px;
+    width: 377px;
+    height: 619px;
     border: 1px solid #DDDDDD;
     margin: 50px auto 0 auto;
     /* overflow: hidden; */

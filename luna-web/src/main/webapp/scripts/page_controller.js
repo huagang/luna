@@ -360,9 +360,15 @@ function CanvasController($scope, $rootScope) {
 
     this.init = function() {
         CanvasController.prototype.init(this);
+        var defaultPano = {
+            heading: 180,
+            pitch: 0,
+            roll: 0
+        };
         this.backgroundImg = this.currentComponent.bgimg;
-        this.panoId = this.currentComponent.panoId;
-        this.gravity = this.currentComponent.gravity;
+        this.panoId = this.currentComponent.panoId || '';
+        this.gravity = this.currentComponent.gravity || false;
+        this.pano = angular.extend(defaultPano, this.currentComponent.pano);
     };
 
     this.changeBackgroundColor = function() {
@@ -390,11 +396,16 @@ function CanvasController($scope, $rootScope) {
 
     this.changePano = function($event) {
 
+        if (!this.panoId) {
+            this.gravity = false;
+        }
         this.currentComponent.panoId = this.panoId;
+        this.currentComponent.pano = this.pano;
         this.currentComponent.gravity = this.gravity;
 
         updatePageComponentsHtml(currentPageId, currentComponentId);
     }
+
 }
 
 CanvasController.prototype = new BaseComponentController();
@@ -730,10 +741,6 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             //初始化POI类别
             this.initPoiType(this.currentTab.firstPoiId);
         }
-        // if (this.currentTab.firstPoiId && this.currentTab.poiTypeId) {
-        //     //初始化二级POI
-        //     this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
-        // }
     }
 
     //删除tab

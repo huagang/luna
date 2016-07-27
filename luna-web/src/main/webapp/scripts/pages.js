@@ -960,19 +960,42 @@ function showPanoBackground($container, componentData) {
     if (componentData.panoId && panoObj.length == 0) {
         pano = new com.vbpano.Panorama($container.get(0));
         pano.setPanoId(componentData.panoId); //panoId
-        pano.setHeading(180); //左右
-        pano.setPitch(0); //俯仰角
-        pano.setRoll(0); //未知
+        pano.setHeading(componentData.pano.heading); //左右
+        pano.setPitch(componentData.pano.pitch); //俯仰角
+        pano.setRoll(componentData.pano.roll); //未知
         pano.setAutoplayEnable(false); //自动播放
         pano.setGravityEnable(componentData.gravity); //重力感应
 
-        console.log('修改了panoid的数据');
+        //heading方向滚动的时候回调函数
+        pano.panoView.onHeadingChangeCallback = function(heading) {
+            heading = heading % 360;
+            if (heading < 0) {
+                heading += 360;
+            }
+            $('#panoHead').val(Number(heading).toFixed(0) * 1);
+            // var scope = angular.element('#panoHead').scope(); //jquery+angular实现
+            // scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
+            // scope.$apply();
+        }
+
+        //pitch方向滚动的时候回调函数
+        pano.panoView.onPitchChangeCallback = function(pitch) {
+            pitch = pitch % 360;
+            if (pitch < 0) {
+                pitch += 360;
+            }
+            $('#panoPitch').val(Number(pitch).toFixed(0) * 1);
+
+            // var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
+            // scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
+            // scope.$apply();
+        }
         currentBgPano = pano;
     } else if (componentData.panoId && panoObj.length > 0) {
         currentBgPano.setPanoId(componentData.panoId);
-        currentBgPano.setHeading(180); //左右
-        currentBgPano.setPitch(0); //俯仰角
-        currentBgPano.setRoll(0); //未知
+        currentBgPano.setHeading(componentData.pano.heading); //左右
+        currentBgPano.setPitch(componentData.pano.pitch); //俯仰角
+        currentBgPano.setRoll(componentData.pano.roll); //未知
         currentBgPano.setGravityEnable(componentData.gravity);
     } else {
         if (panoObj.length > 0) {
