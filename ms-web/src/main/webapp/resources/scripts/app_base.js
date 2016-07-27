@@ -309,7 +309,7 @@ $(document).ready(function() {
         };
 
         this.setPanoBg = function() {
-            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
         };
 
         this.setParaBg = function() {
