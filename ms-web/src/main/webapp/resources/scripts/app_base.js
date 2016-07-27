@@ -288,7 +288,7 @@ $(document).ready(function() {
                         if(link === 'return'){
                             history.back(-1);
                         } else{
-                            location.href=link;
+                            location.href = link;
                         }
                     });
                 }
