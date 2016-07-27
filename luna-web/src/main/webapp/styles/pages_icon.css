@@ -145,5 +145,120 @@
     background-size: 100% 100%;
 }
 
+.icon-list {
+    width: 48px;
+    height: 48px;
+}
 
+.current .icon-itembg,
+.current.icon-itembg {
+    background-position: 0px 0px;
+    color: #fff;
+}
+
+.icon-profile {
+    background-position: -48px -48px;
+}
+
+.current .icon-profile,
+.current.icon-profile {
+    background-position: -48px 0px;
+}
+
+.icon-traffic {
+    background-position: -96px -48px;
+}
+
+.current .icon-traffic,
+.current.icon-traffic {
+    background-position: -96px 0px;
+}
+
+.icon-celebrity {
+    background-position: -288px -48px;
+}
+
+.current .icon-celebrity,
+.current.icon-celebrity {
+    background-position: -288px 0px;
+}
+
+.icon-nation {
+    background-position: -240px -48px;
+}
+
+.current .icon-nation,
+.current.icon-nation {
+    background-position: -240px 0px;
+}
+
+.icon-culture {
+    background-position: -336px -48px;
+}
+
+.current .icon-culture,
+.current.icon-culture {
+    background-position: -336px 0px;
+}
+
+.icon-spots {
+    background-position: -144px -48px;
+}
+
+.current .icon-spots,
+.current.icon-spots {
+    background-position: -144px 0px;
+}
+
+.icon-food {
+    background-position: -192px -48px;
+}
+
+.current .icon-food,
+.current.icon-food {
+    background-position: -192px 0px;
+}
+
+.icon-hotel {
+    background-position: -384px -48px;
+}
+
+.current .icon-hotel,
+.current.icon-hotel {
+    background-position: -384px 0px;
+}
+
+.icon-activity {
+    background-position: -432px -48px;
+}
+
+.current .icon-activity,
+.current.icon-activity {
+    background-position: -432px 0px;
+}
+
+.icon-area {
+    background-position: -480px -48px;
+}
+
+.current .icon-area,
+.current.icon-area {
+    background-position: -480px 0px;
+}
+.icon-ancient {
+    background-position: -528px -48px;
+}
+
+.current .icon-ancient,
+.current.icon-ancient {
+    background-position: -528px 0px;
+}
+.icon-modern {
+    background-position: -576px -48px;
+}
+
+.current .icon-modern,
+.current.icon-modern {
+    background-position: -576px 0px;
+}
 /* Tab Icon End*/
