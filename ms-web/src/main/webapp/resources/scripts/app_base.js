@@ -287,6 +287,8 @@ $(document).ready(function() {
                         var link = event.currentTarget.getAttribute('data-href');
                         if(link === 'return'){
                             history.back(-1);
+                        } else{
+                            location.href = link;
                         }
                     });
                 }
