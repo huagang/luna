@@ -115,6 +115,9 @@ $(document).ready(function() {
         // alert(pageData.msg);
         return;
     } else {
+        if(toString.call(pageData.data) === '[object Object]'){
+            pageData.data = [pageData.data];
+        }
         var arrPageDatas = pageData.data,
             curPageGroup = {};
         for (var i = 0; i < arrPageDatas.length; i++) {
@@ -254,11 +257,42 @@ $(document).ready(function() {
         // 设置组件行为
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
-                if (this.value.action.href.type == "inner") {
-                    this.html.attr("hrefurl", host + "/app/" + pageData.data.app_id + "/page/" + this.value.action.href.value);
-                } else if (this.value.action.href.type == "outer") {
-                    this.html.attr("hrefurl", this.value.action.href.value);
+                var link, value = this.value.action.href.value;
+                switch(this.value.action.href.type){
+
+                    case "inner":
+                        link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
+                        break;
+
+                    case 'outer':
+                        link = value;
+                        break;
+
+                    case 'email':
+                        link = 'mailto:' + value;
+                        break;
+
+                    case 'phone':
+                        link = 'tel:' + value;
+                        break;
+
+                    case 'return':
+                        link = 'return';
+                        break;
                 }
+                if(link){
+                    this.html.attr('data-href', link);
+                    this.html.on('click',function(event){
+
+                        var link = event.currentTarget.getAttribute('data-href');
+                        if(link === 'return'){
+                            history.back(-1);
+                        } else{
+                            location.href = link;
+                        }
+                    });
+                }
+
             }
         };
     }
@@ -275,7 +309,7 @@ $(document).ready(function() {
         };
 
         this.setPanoBg = function() {
-            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
         };
 
         this.setParaBg = function() {
@@ -497,6 +531,7 @@ $(document).ready(function() {
             that.data = [];
             that.menuIndex = 0;
             that.content = '';
+
         }
 
 
@@ -513,7 +548,8 @@ $(document).ready(function() {
                 setTimeout(that.bindEvent, 600);
             }
             that.fetchData();
-
+            that.html.css('width','100%');
+            that.html.css('height','100%');
             return that.html;
         }
 
@@ -582,7 +618,7 @@ $(document).ready(function() {
             switch(item.type){
                 case 'singlePoi':
                     $.ajax({
-                        url: '../servicepoi.do?method=getPoiById',
+                        url: host + '/servicepoi.do?method=getPoiById',
                         type: 'GET',
                         data:{poi_id: item.firstPoiId, lang:'zh'},
                         success:function(data){
@@ -600,7 +636,7 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: '../article/data/' + item.articleId,
+                        url: [host , '/article/data/' , item.articleId].join('') ,
                         type: 'GET',
                         success:function(data){
                             if(data.code === '0'){
@@ -617,10 +653,11 @@ $(document).ready(function() {
                     break
                 case 'poiList':
                     $.ajax({
-                        url: '../servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
                         type: 'GET',
                         data: {business_id: window.business_id,
-                                poi_id: item.firstPoiId},
+                                poi_id: item.firstPoiId,
+                                category_id: item.poiTypeId},
                         success: function(data){
                             if(data.code === '0'){
                                 if(!that.data[index] && that.menuIndex === index){
@@ -635,7 +672,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: '../article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        url: [host ,  '/article/businessId/' ,  window.business_id , '/columnIds/' , item.columnId].join(''),
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
@@ -756,7 +793,7 @@ $(document).ready(function() {
                                     break;
                             }
                         } else{
-                            panoTip = '暂无全景';
+                            panoTip = '';
                             panoLink = 'javascript:void(0)';
                         }
 
@@ -795,14 +832,18 @@ $(document).ready(function() {
                         } else{
                             bg = "background:url(../resources/images/default.png) center center no-repeat;";
                         }
+                        if(item.title && item.title.length > 3){
+                            titleClass = 'title-sm'
+                        }
+
                         articleList +=
                             '<a target="_blank"  class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
                             +   '<div class="content">'
-                            +       '<div class="detail-left">'
-                            +           '<span>' + item.title +'</span>'
+                            +       '<div class="detail-left ' + titleClass + '">'
+                            +           '<span class="title">' + item.title +'</span>'
                             +       '</div>'
                             +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
-                            +           (item.short_title || '暂无简介')
+                            +           item.short_title
                             +       '</span></p></div>'
                             +   '</div>'
                             +'</a>';

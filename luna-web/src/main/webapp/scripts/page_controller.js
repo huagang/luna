@@ -186,7 +186,7 @@ function MenuController($scope, $rootScope, $http) {
 
     };
 
-    
+
     this.appSetting = function() {
         popWindow($("#pop-set"));
         //初始化已经加载过，防止初始化失败，此处再请求一次
@@ -363,9 +363,15 @@ function CanvasController($scope, $rootScope) {
 
     this.init = function() {
         CanvasController.prototype.init(this);
+        var defaultPano = {
+            heading: 180,
+            pitch: 0,
+            roll: 0
+        };
         this.backgroundImg = this.currentComponent.bgimg;
-        this.panoId = this.currentComponent.panoId;
-        this.gravity = this.currentComponent.gravity;
+        this.panoId = this.currentComponent.panoId || '';
+        this.gravity = this.currentComponent.gravity || false;
+        this.pano = angular.extend(defaultPano, this.currentComponent.pano);
     };
 
     this.changeBackgroundColor = function() {
@@ -393,11 +399,16 @@ function CanvasController($scope, $rootScope) {
 
     this.changePano = function($event) {
 
+        if (!this.panoId) {
+            this.gravity = false;
+        }
         this.currentComponent.panoId = this.panoId;
+        this.currentComponent.pano = this.pano;
         this.currentComponent.gravity = this.gravity;
 
         updatePageComponentsHtml(currentPageId, currentComponentId);
     }
+
 }
 
 CanvasController.prototype = new BaseComponentController();
@@ -733,10 +744,6 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             //初始化POI类别
             this.initPoiType(this.currentTab.firstPoiId);
         }
-        if (this.currentTab.firstPoiId && this.currentTab.poiTypeId) {
-            //初始化二级POI
-            this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
-        }
     }
 
     //删除tab
@@ -765,6 +772,10 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                 customer: {
                     defaultUrl: "",
                     currentUrl: "",
+                },
+                color: {
+                    defaultColor: '#fff',
+                    currentColor: '#ff4800',
                 }
             },
             type: type,
@@ -815,6 +826,11 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         }
     }
 
+    //选择Icon的颜色
+    this.changeIconColor = function(type) {
+        this.currentComponent.content.tabList = this.content.tabList;
+    }
+
     //icon选择回调函数
     this.onIconSelectCallback = function(item, model) {
         console.log(customerMenuTabIcon.iconGroup);
@@ -840,20 +856,20 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
     this.changeFirstPoi = function() {
         //获取Poi类别
         this.initPoiType(this.currentTab.firstPoiId);
-        if (!this.currentTab.poiTypeId) {
-            this.initSecondPoi(this.currentTab.firstPoiId);
-        }
+        // if (!this.currentTab.poiTypeId) {
+        //     this.initSecondPoi(this.currentTab.firstPoiId);
+        // }
         this.currentComponent.content.tabList = this.content.tabList;
     }
 
     //Poi类别选择事件
     this.changePoiType = function() {
-        this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
+        // this.initSecondPoi(this.currentTab.firstPoiId, this.currentTab.poiTypeId);
         this.currentComponent.content.tabList = this.content.tabList;
     }
 
-    //二级Poi选择事件
-    this.changeSecondPoi = function() {
+    //单点POi修改PoiID
+    this.changeSinglePoiId = function() {
         this.currentComponent.content.tabList = this.content.tabList;
     }
 
@@ -877,28 +893,28 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
     }
 
     //初始化PoiId
-    this.initSecondPoi = function(firstPoiId, poiTypeId) {
-        var _self = this;
-        var url = '';
-        if (poiTypeId) {
-            url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [46, firstPoiId, poiTypeId]);
-        } else {
-            url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoi, [46, firstPoiId, poiTypeId]);
-        }
-        $http.get(apiUrlFormat(url, [46, firstPoiId])).success(function(response) {
-            if (response.code == '0') {
-                if (response.data) {
-                    var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
-                    for (var i = 0; i < response.data.zh.pois.length; i++) {
-                        reArr.push({ 'poiName': response.data.zh.pois[i].poi_name, 'poiId': response.data.zh.pois[i].poi_id });
-                    }
-                    _self.secondPoiList = reArr;
-                }
-            } else {
-                alert('获取poi类别失败');
-            }
-        });
-    }
+    // this.initSecondPoi = function(firstPoiId, poiTypeId) {
+    //     var _self = this;
+    //     var url = '';
+    //     if (poiTypeId) {
+    //         url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [46, firstPoiId, poiTypeId]);
+    //     } else {
+    //         url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoi, [46, firstPoiId, poiTypeId]);
+    //     }
+    //     $http.get(apiUrlFormat(url, [46, firstPoiId])).success(function(response) {
+    //         if (response.code == '0') {
+    //             if (response.data) {
+    //                 var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
+    //                 for (var i = 0; i < response.data.zh.pois.length; i++) {
+    //                     reArr.push({ 'poiName': response.data.zh.pois[i].poi_name, 'poiId': response.data.zh.pois[i].poi_id });
+    //                 }
+    //                 _self.secondPoiList = reArr;
+    //             }
+    //         } else {
+    //             alert('获取poi类别失败');
+    //         }
+    //     });
+    // }
 }
 
 MenuTabController.prototype = new InteractComponentController();

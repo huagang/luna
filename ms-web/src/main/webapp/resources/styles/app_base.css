@@ -418,6 +418,24 @@ img{
     word-break: break-all;
     margin: 3px 30px 0 0;
 }
+
+#articleList .detail-left.title-sm {
+    font-size: 1.5rem;
+    word-wrap: break-word;
+    line-height: 24px;
+}
+
+#articleList .detail-left.title-sm .title{
+    vertical-align: middle;
+    width: 63px;
+    height: 63px;
+    margin: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 #articleList .detail-right{
     display: inline-block;
     height: 70px;
