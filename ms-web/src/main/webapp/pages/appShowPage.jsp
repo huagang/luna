@@ -3,15 +3,28 @@
 <html>
 <head>
     <title>${share_info_title}</title>
+
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta id="vb_viewport" name="viewport" content="width=device-width,initial-scale=1,minimum-scale=0.1,maximum-scale=10,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
 </head>
 <body>
-	<div class="app-wrap">
+    <div class="landscape">
+        <div class="iphone">
+        </div>
+        <div class="iphone_text">
+            请将屏幕竖向浏览</div>
+    </div>
+	<div class="app-wrap main-wrap">
         <!-- 视频弹出框 -->
         <div class='video-modal' style="display:none;">
             <div class='mask'></div>

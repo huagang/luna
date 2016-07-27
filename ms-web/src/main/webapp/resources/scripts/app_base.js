@@ -309,7 +309,7 @@ $(document).ready(function() {
         };
 
         this.setPanoBg = function() {
-            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
         };
 
         this.setParaBg = function() {
@@ -636,7 +636,7 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: host + '/article/data/' + item.articleId,
+                        url: [host , '/article/data/' , item.articleId].join('') ,
                         type: 'GET',
                         success:function(data){
                             if(data.code === '0'){
@@ -653,10 +653,11 @@ $(document).ready(function() {
                     break
                 case 'poiList':
                     $.ajax({
-                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiId',
+                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
                         type: 'GET',
                         data: {business_id: window.business_id,
-                                poi_id: item.firstPoiId},
+                                poi_id: item.firstPoiId,
+                                category_id: item.poiTypeId},
                         success: function(data){
                             if(data.code === '0'){
                                 if(!that.data[index] && that.menuIndex === index){
@@ -671,7 +672,7 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: host +  '/article/businessId/' +  window.business_id + '/columnIds/' + item.columnId,
+                        url: [host ,  '/article/businessId/' ,  window.business_id , '/columnIds/' , item.columnId].join(''),
                         type: 'GET',
                         success: function(res){
                             if(res.code === '0'){
@@ -792,7 +793,7 @@ $(document).ready(function() {
                                     break;
                             }
                         } else{
-                            panoTip = '暂无全景';
+                            panoTip = '';
                             panoLink = 'javascript:void(0)';
                         }
 
@@ -831,14 +832,18 @@ $(document).ready(function() {
                         } else{
                             bg = "background:url(../resources/images/default.png) center center no-repeat;";
                         }
+                        if(item.title && item.title.length > 3){
+                            titleClass = 'title-sm'
+                        }
+
                         articleList +=
                             '<a target="_blank"  class="article-item" style="' + bg + '" href="../article/' + item.id +'">'
                             +   '<div class="content">'
-                            +       '<div class="detail-left">'
-                            +           '<span>' + item.title +'</span>'
+                            +       '<div class="detail-left ' + titleClass + '">'
+                            +           '<span class="title">' + item.title +'</span>'
                             +       '</div>'
                             +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
-                            +           (item.short_title || '暂无简介')
+                            +           item.short_title
                             +       '</span></p></div>'
                             +   '</div>'
                             +'</a>';
