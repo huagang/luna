@@ -584,4 +584,24 @@ img{
     padding-right: 10px;
 }
 
+#poiList-hotel .hotel-info {
+    padding: 10px 10px 15px;
+    color: #333;
+}
+
+#poiList-hotel .contact {
+    margin: 5px 0 0 3px;
+    line-height: 15px;
+}
+
+#poiList-hotel .icon-phone {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+
+    background: url(../images/microvisual/phone.png) center center no-repeat;
+    background-size: 15px;
+    vertical-align: sub;
+    margin-right: 8px;
+}
 /* 目录页口 end */

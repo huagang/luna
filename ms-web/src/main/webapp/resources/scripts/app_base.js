@@ -208,18 +208,18 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(3000, function() {});
+            $('.welcome').fadeOut(30, function() {});
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
+        }, 40);     // TODO 将 40改为4000 将30 改为3000
+
 
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
     }
-
 
     /*TODO：增加动画页面 End*/
 
@@ -852,15 +852,15 @@ $(document).ready(function() {
                                     +   '<div class="footer">'
                                     +       '<div class="content">'
                                     +           '<span class="poi-name">' + item.poi_name + '</span>'
-                                    +           '<span class="pull-right price">' + (item.price ? item.price + '起' : '') + '</span>'
+                                    +           '<span class="pull-right price">' + (item.price || '') + '</span>'
                                     +       '</div>'
                                     +   '</div>'
                                     + '</div>'
                                     + '<div class="hotel-info">'
                                     +       '<p>' + item.brief_introduction + '</p>'
                                     +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
-                                    +           '<i class="icon-phone">'+ item.contact_phone +'</i>'
-                                    +           item.brief_introduction
+                                    +           '<i class="icon-phone"></i>'
+                                    +           '<span>' + item.contact_phone + '</span>'
                                     +       '</p>'
                                     + '</div>'
                                     +'</div>';
