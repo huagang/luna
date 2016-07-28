@@ -679,6 +679,12 @@ $(document).ready(function() {
                 }
 
             });
+
+            that.html.find('.topmenu-wrap').on('transitionend', function(event){
+                content.removeClass('overflow-hidden');
+            });
+
+
             content.on('click', '.icon-video', function(event){
 
                 var radio = that.html.find(".icon-radio");

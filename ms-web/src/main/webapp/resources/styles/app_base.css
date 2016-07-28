@@ -29,7 +29,7 @@ img, video{
     max-width: 100%;
 }
 .overflow-hidden{
-    overflow: hidden;
+    overflow: hidden !important;
 }
 .pull-right{
     float: right;
