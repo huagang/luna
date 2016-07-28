@@ -40,6 +40,8 @@ img, video{
     background-color: #f6f6f6;
 }
 
+
+
 .welcome{
     position: fixed;
     height: 100%;
@@ -345,10 +347,15 @@ img, video{
     background-size: 800px 504px;
 }
 
+.component-group.index .icon-goback,
+.component-group.welcome .icon-goback{
+    display: none;
+}
+
 .icon-goback {
     position: fixed;
     left: 10px;
-    top: 88%;
+    bottom: 30px;
     z-index: 10;
     width: 33px;
     height: 33px;

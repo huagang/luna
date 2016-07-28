@@ -258,7 +258,7 @@ $(document).ready(function() {
     /* 基础组件 */
     function BaseComponent() {
 
-        this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
+        this.html = $('<div class="componentbox"><i class="icon icon-goback" onclick="history.back()"></i><div class="con con_' + this.value.type + '"></div></div>');
 
         // 组件位置设置
         this.setPosition = function() {
@@ -771,7 +771,6 @@ $(document).ready(function() {
             +        '</div>'
             + '</div>'
             + '<div id="content" class="canscroll"></div>'
-            //+ '<i class="icon icon-goback" onclick="history.back()"></i>'
             + '</div>';
 
             return html;
