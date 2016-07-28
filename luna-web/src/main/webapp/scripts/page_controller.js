@@ -410,9 +410,9 @@ function CanvasController($scope, $rootScope) {
         }
 
         if (this.pano.pitch > 90) {
-            this.pano.pitch = this.pano.pitch % 180 - 90;
+            this.pano.pitch = 90;
         } else if (this.pano.pitch < -90) {
-            this.pano.pitch = this.pano.pitch % 180 + 90;
+            this.pano.pitch = -90;
         }
 
         this.currentComponent.panoId = this.panoId;
@@ -567,13 +567,14 @@ function AudioController($scope, $rootScope) {
     }
 
     this.changePlayIcon = function() {
-        // console.log(this.currentComponent.content.playIcon);
-        // console.log('changeAudioFile');
+        this.currentComponent.content.icon = this.currentComponent.content.playIcon;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'audio');
     }
 
     this.changePauseIcon = function() {
-        // console.log(this.currentComponent.content.stopIcon);
-        // console.log('changePauseIcon');
+        this.currentComponent.content.icon = this.currentComponent.content.pauseIcon;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'audio');
+
     }
 
     this.changeAutoPlay = function() {
@@ -597,10 +598,11 @@ function VideoController($scope, $rootScope) {
         this.content = jQuery.extend(true, {}, this.currentComponent.content);
     }
 
-    this.changeVideoUrl = function() {
-
+    //播放图标
+    this.changeVideoIcon = function() {
+        this.currentComponent.content.icon = this.currentComponent.content.videoIcon;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'video');
     }
-
 }
 
 VideoController.prototype = new InteractComponentController();
