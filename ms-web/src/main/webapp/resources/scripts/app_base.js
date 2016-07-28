@@ -734,7 +734,7 @@ $(document).ready(function() {
             +             '</div>'
             +       '</div>'
             + '</div>'
-            + '<div id="content canscroll"></div>'
+            + '<div id="content" class="canscroll"></div>'
             //+ '<i class="icon icon-goback" onclick="history.back()"></i>'
             + '</div>';
 

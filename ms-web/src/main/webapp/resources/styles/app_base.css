@@ -323,20 +323,24 @@ img{
  .icon-video, .icon-video-on {
     width: 33px;
     height: 33px;
-    background-position: -99px -100px;
+    background-position: -99px -133px;
 
 }
 
 .icon-radio {
     width: 33px;
     height: 33px;
-    background-position: -132px -100px;
+    background: url(../images/microvisual/icon-radio.png) top left no-repeat;
+    background-size: contain;
+    /*background-position: -132px -100px;*/
 }
 
 .icon-radio.icon-radio-on {
     width: 33px;
     height: 33px;
-    background-position: -132px -133px;
+    background: url(../images/microvisual/icon-radio-on.png) top left no-repeat;
+    background-size: contain;
+    /*background-position: -132px -133px;*/
 }
 
 
