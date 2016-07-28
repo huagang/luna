@@ -26,7 +26,20 @@ $(document).ready(function() {
             content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-    init();
+
+    var iftab = false;
+    if (pageData.data.length>0) {
+        for (var plist in pageData.data) {
+            for (var con in pageData.data[plist].page_content){
+                if(pageData.data[plist].page_content[con].type=="tab"){
+                    iftab=true;
+                }
+            }
+        }
+    }
+    if(!iftab){
+        init();
+    }
     $(window).resize(function() {
         // window.location.reload();
     });
