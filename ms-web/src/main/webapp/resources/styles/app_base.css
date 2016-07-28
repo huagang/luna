@@ -21,8 +21,9 @@ html,body{
     height: 100%;
 }
 
-
-
+a{
+    text-decoration: none !important;
+}
 
 img{
     max-width: 100%;
@@ -48,7 +49,7 @@ img{
     width: 100%;
     max-width: 750px;
     height: 100%;
-    min-height: 756px;
+    /* min-height: 756px; 756px可能会大于屏幕高度因而引发滚动,从而先行注释掉 by wumengqiang 16.7.8 13:42*/
     margin: 0 auto;
 }
 .component-group.welcome,.component-group.index .bg-canvas{
@@ -172,8 +173,10 @@ img{
 
 /* 目录页口 start */
 #content{
+    position: relative;
     transition: opacity .5s ease-in-out;
     color: #666;
+    padding-top: 202px;
 }
 
 .transparent{
@@ -187,6 +190,9 @@ img{
 
 .topmenu-wrap{
     height: 200px;
+    position: fixed;
+    width: 100%;
+    z-index: 2000;
 }
 
 
@@ -243,9 +249,9 @@ img{
     white-space: nowrap;
     position: absolute;
     bottom: -2px;
-    background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0));
+    background: linear-gradient(0deg,white 0, white 2px, rgba(0,0,0,0.6) 2px,rgba(0,0,0,0));
     text-align: center;
-    background-size: 100% 75px;
+    background-size: 100% 77px;
     background-position: top left;
 }
 
@@ -273,7 +279,9 @@ img{
     display: block
 }
 
- .detail-title-wrap {
+#article  .detail-title-wrap {
+    position: fixed;
+    top: 201px;
     height: 53px;
     line-height: 53px;
     font-size: 1.42rem;
@@ -358,6 +366,7 @@ img{
 
 
  .content-details{
+     margin-top: 53px;
      background-color: #F6F6F6;
      padding:15px 20px;
      font-size: 1.17rem;
@@ -572,7 +581,11 @@ img{
     height: 45px;
     width: 100%;
     background: linear-gradient(0deg, rgba(0,0,0,0.6),rgba(0,0,0,0));
-    line-height: 45px;
+    line-height: 30px;
+}
+
+#poiList-hotel .footer .content{
+    margin-top: 15px;
 }
 
 #poiList-hotel .poi-name{
