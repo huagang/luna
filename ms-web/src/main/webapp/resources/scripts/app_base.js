@@ -634,12 +634,22 @@ $(document).ready(function() {
             var menu = that.html.find('.topmenu-wrap');
 
             content.on('scroll', function(event){
-                if(content.scrollTop() === 0){
+                if(that.scrollId){
+                    clearTimeout(that.scrollId);
+                }
+
+                that.scrollId = setTimeout(scrollCheck, 100);
+            });
+
+            function scrollCheck() {
+                that.scroll = false;
+                if (content.scrollTop() === 0) {
                     menu.removeClass('sm');
-                } else if(! menu.hasClass('sm')){
+                } else if (!menu.hasClass('sm')) {
                     menu.addClass('sm');
                 }
-            });
+            }
+
 
             content.on('transitionend', function(event){
                 if(content.hasClass('transparent')){
