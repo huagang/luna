@@ -316,8 +316,9 @@ function InteractComponentController() {
         this.currentComponent.action.href.value = this.action.href.innerValue;
     };
 
-    this.clearHref = function() {
+    this.changeHrefType = function() {
         this.currentComponent.action.href.value = '';
+        this.clearHrefInfo(this.currentComponent.action.href.type);
     };
 
     this.changeEmail = function() {
@@ -328,6 +329,21 @@ function InteractComponentController() {
     this.changePhone = function() {
         // validate phone
         this.currentComponent.action.href.value = this.action.href.phone;
+    }
+
+    this.clearHrefInfo = function(hrefType) {
+        if (hrefType != 'outer') {
+            this.action.href.outerValue = '';
+        }
+        if (hrefType != 'inner') {
+            this.action.href.innerValue = '';
+        }
+        if (hrefType != 'email') {
+            this.action.href.email = '';
+        }
+        if (hrefType != 'phone') {
+            this.action.href.phone = '';
+        }
     }
 
     this.loadPages = function() {
@@ -343,6 +359,7 @@ function InteractComponentController() {
             }, this);
         }
         this.action.href.innerValue = this.currentComponent.action.href.value;
+        this.clearHrefInfo(this.currentComponent.action.href.type);
         //console.log(this.currentComponent.action.href.type);
     };
 

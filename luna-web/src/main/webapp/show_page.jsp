@@ -281,11 +281,11 @@
                     <form name="textInteractForm">
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="none" ng-click="text.clearHref()"/>无链接</label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="none" ng-click="text.changeHrefType()"/>无链接</label>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="outer" ng-click="text.changeHrefType()">网站地址：</label><br/>
                           <input type="url" class="txt" name="outerValue" ng-model="text.action.href.outerValue" ng-change="text.changeOuterHref()" ng-disabled="text.currentComponent.action.href.type != 'outer'"/>
                         <div role="alert">
                           <span class="error" ng-show="textInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -301,7 +301,7 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="email"  ng-click="text.changeHrefType()">邮件跳转：</label><br/>
                           <input type="email" class="txt" name="email" ng-model="text.action.href.email" ng-change="text.changeEmail()" ng-disabled="text.currentComponent.action.href.type != 'email'"/>
                         <div role="alert">
                           <span class="error" ng-show="textInteractForm.email.$error.email">email格式不合法</span>
@@ -309,12 +309,12 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="phone"  ng-click="text.changeHrefType()">电话号码：</label><br/>
                           <input type="text" class="txt" ng-model="text.action.href.phone" ng-change="text.changePhone()" ng-disabled="text.currentComponent.action.href.type != 'phone'"/>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                          <input type="radio" name="link" ng-model="text.currentComponent.action.href.type" class="radio" value="return" ng-click="text.changeHrefType()">返回上一页：</label>
                       </div>
                     </form>
                   </div>
@@ -384,11 +384,11 @@
                     <form name="imgInteractForm">
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="none" ng-click="img.clearHref()"/>无链接</label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="none" ng-click="img.changeHrefType()"/>无链接</label>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="outer" ng-click="img.changeHrefType()">网站地址：</label><br/>
                         <input type="url" class="txt" name="outerValue" ng-model="img.action.href.outerValue" ng-change="img.changeOuterHref()" ng-disabled="img.currentComponent.action.href.type != 'outer'"/>
                         <div role="alert">
                           <span class="error" ng-show="imgInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -404,7 +404,7 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="email" ng-click="img.changeHrefType()">邮件跳转：</label><br/>
                         <input type="email" class="txt" name="email" ng-model="img.action.href.email" ng-change="img.changeEmail()" ng-disabled="img.currentComponent.action.href.type != 'email'"/>
                         <div role="alert">
                           <span class="error" ng-show="imgInteractForm.email.$error.email">email格式不合法</span>
@@ -412,12 +412,12 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="phone" ng-click="img.changeHrefType()">电话号码：</label><br/>
                         <input type="text" class="txt" ng-model="img.action.href.phone" ng-change="img.changePhone()" ng-disabled="img.currentComponent.action.href.type != 'phone'"/>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                          <input type="radio" name="link" ng-model="img.currentComponent.action.href.type" class="radio" value="return" ng-click="img.changeHrefType()">返回上一页：</label>
                       </div>
                     </form>
                   </div>
@@ -526,11 +526,11 @@
                     <form name="navInteractForm">
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="none" ng-click="nav.clearHref()"/>无链接</label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="none" ng-click="nav.changeHrefType()"/>无链接</label>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="outer" ng-click="nav.changeHrefType()">网站地址：</label><br/>
                         <input type="url" class="txt" name="outerValue" ng-model="nav.action.href.outerValue" ng-change="nav.changeOuterHref()" ng-disabled="nav.currentComponent.action.href.type != 'outer'"/>
                         <div role="alert">
                           <span class="error" ng-show="navInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -546,7 +546,7 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="email"  ng-click="nav.changeHrefType()">邮件跳转：</label><br/>
                         <input type="email" class="txt" name="email" ng-model="nav.action.href.email" ng-change="nav.changeEmail()" ng-disabled="nav.currentComponent.action.href.type != 'email'"/>
                         <div role="alert">
                           <span class="error" ng-show="navInteractForm.email.$error.email">email格式不合法</span>
@@ -554,12 +554,12 @@
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="phone"  ng-click="nav.changeHrefType()">电话号码：</label><br/>
                         <input type="text" class="txt" ng-model="nav.action.href.phone" ng-change="nav.changePhone()" ng-disabled="nav.currentComponent.action.href.type != 'phone'"/>
                       </div>
                       <div class="item">
                         <label>
-                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                          <input type="radio" name="link" ng-model="nav.currentComponent.action.href.type" class="radio" value="return"  ng-click="nav.changeHrefType()">返回上一页：</label>
                       </div>
                     </form>
                   </div>
@@ -630,11 +630,11 @@
                         <form name="panoInteractForm">
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="none" ng-click="pano.clearHref()"/>无链接</label>
+                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="none" ng-click="pano.changeHrefType()"/>无链接</label>
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="outer" ng-click="pano.changeHrefType()">网站地址：</label><br/>
                                 <input type="url" class="txt" name="outerValue" ng-model="pano.action.href.outerValue" ng-change="pano.changeOuterHref()" ng-disabled="pano.currentComponent.action.href.type != 'outer'"/>
                                 <div role="alert">
                                     <span class="error" ng-show="panoInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -650,7 +650,7 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="email" ng-click="pano.changeHrefType()">邮件跳转：</label><br/>
                                 <input type="email" class="txt" name="email" ng-model="pano.action.href.email" ng-change="pano.changeEmail()" ng-disabled="pano.currentComponent.action.href.type != 'email'"/>
                                 <div role="alert">
                                     <span class="error" ng-show="panoInteractForm.email.$error.email">email格式不合法</span>
@@ -658,12 +658,12 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="phone" ng-click="pano.changeHrefType()">电话号码：</label><br/>
                                 <input type="text" class="txt" ng-model="pano.action.href.phone" ng-change="pano.changePhone()" ng-disabled="pano.currentComponent.action.href.type != 'phone'"/>
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                                    <input type="radio" name="link" ng-model="pano.currentComponent.action.href.type" class="radio" value="return" ng-click="pano.changeHrefType()">返回上一页：</label>
                             </div>
                         </form>
                     </div>
@@ -756,12 +756,12 @@
                         <form name="audioInteractForm">
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="none" ng-click="audio.clearHref()"/>无链接
+                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="none" ng-click="audio.changeHrefType()"/>无链接
                                 </label>
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="outer" ng-click="audio.changeHrefType()">网站地址：</label><br/>
                                 <input type="url" class="txt" name="outerValue" ng-model="audio.action.href.outerValue" ng-change="audio.changeOuterHref()" ng-disabled="audio.currentComponent.action.href.type != 'outer'"/>
                                 <div role="alert">
                                     <span class="error" ng-show="audioInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -777,7 +777,7 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="email" ng-click="audio.changeHrefType()">邮件跳转：</label><br/>
                                 <input type="email" class="txt" name="email" ng-model="audio.action.href.email" ng-change="audio.changeEmail()" ng-disabled="audio.currentComponent.action.href.type != 'email'"/>
                                 <div role="alert">
                                     <span class="error" ng-show="audioInteractForm.email.$error.email">email格式不合法</span>
@@ -785,12 +785,12 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="phone" ng-click="audio.changeHrefType()">电话号码：</label><br/>
                                 <input type="text" class="txt" ng-model="audio.action.href.phone" ng-change="audio.changePhone()" ng-disabled="audio.currentComponent.action.href.type != 'phone'"/>
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                                    <input type="radio" name="link" ng-model="audio.currentComponent.action.href.type" class="radio" value="return" ng-click="audio.changeHrefType()">返回上一页：</label>
                             </div>
                         </form>
                     </div>
@@ -870,12 +870,12 @@
                           <form name="videoInteractForm">
                               <div class="item">
                                   <label>
-                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="none" ng-click="video.clearHref()"/>无链接
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="none" ng-click="video.changeHrefType()"/>无链接
                                   </label>
                               </div>
                               <div class="item">
                                   <label>
-                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="outer" ng-click="video.changeHrefType()">网站地址：</label><br/>
                                   <input type="url" class="txt" name="outerValue" ng-model="video.action.href.outerValue" ng-change="video.changeOuterHref()" ng-disabled="video.currentComponent.action.href.type != 'outer'"/>
                                   <div role="alert">
                                       <span class="error" ng-show="videoInteractForm.outerValue.$error.url">url格式不合法</span>
@@ -891,7 +891,7 @@
                               </div>
                               <div class="item">
                                   <label>
-                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="email" ng-click="video.changeHrefType()">邮件跳转：</label><br/>
                                   <input type="email" class="txt" name="email" ng-model="video.action.href.email" ng-change="video.changeEmail()" ng-disabled="video.currentComponent.action.href.type != 'email'"/>
                                   <div role="alert">
                                       <span class="error" ng-show="videoInteractForm.email.$error.email">email格式不合法</span>
@@ -899,12 +899,12 @@
                               </div>
                               <div class="item">
                                   <label>
-                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="phone" ng-click="video.changeHrefType()">电话号码：</label><br/>
                                   <input type="text" class="txt" ng-model="video.action.href.phone" ng-change="video.changePhone()" ng-disabled="video.currentComponent.action.href.type != 'phone'"/>
                               </div>
                               <div class="item">
                                   <label>
-                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                                      <input type="radio" name="link" ng-model="video.currentComponent.action.href.type" class="radio" value="return" ng-click="video.changeHrefType()">返回上一页：</label>
                               </div>
                           </form>
                       </div>
@@ -1040,12 +1040,12 @@
                         <form name="audioInteractForm">
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="none" ng-click="menuTab.clearHref()" />无链接
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="none" ng-click="menuTab.changeHrefType()" />无链接
                                 </label>
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="outer" ng-click="menuTab.changeHrefType()">网站地址：</label>
                                 <br/>
                                 <input type="url" class="txt" name="outerValue" ng-model="menuTab.action.href.outerValue" ng-change="menuTab.changeOuterHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'outer'" />
                                 <div role="alert">
@@ -1063,7 +1063,7 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="email" ng-click="menuTab.changeHrefType()">邮件跳转：</label>
                                 <br/>
                                 <input type="email" class="txt" name="email" ng-model="menuTab.action.href.email" ng-change="menuTab.changeEmail()" ng-disabled="menuTab.currentComponent.action.href.type != 'email'" />
                                 <div role="alert">
@@ -1072,13 +1072,13 @@
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="phone" ng-click="menuTab.changeHrefType()">电话号码：</label>
                                 <br/>
                                 <input type="text" class="txt" ng-model="menuTab.action.href.phone" ng-change="menuTab.changePhone()" ng-disabled="menuTab.currentComponent.action.href.type != 'phone'" />
                             </div>
                             <div class="item">
                                 <label>
-                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="return" ng-click="menuTab.changeHrefType()">返回上一页：</label>
                             </div>
                         </form>
                     </div>

@@ -16,9 +16,9 @@ var objdata = {
     businessId: Util.location().business_id || 0,
     articleListData: null,
     articleData: null,
-    canvas:{ 
-        width:375,  //画布的宽
-        height:617  //画布的高
+    canvas: {
+        width: 375, //画布的宽
+        height: 617 //画布的高
     }
 }
 
@@ -30,6 +30,11 @@ componentCanvasModelTemplate = {
     "type": "canvas",
     'gravity': 'false',
     'panoId': '',
+    'pano': {
+        heading: 180,
+        pitch: 0,
+        roll: 0
+    }
 };
 
 componentTextModelTemplate = {
@@ -1019,17 +1024,22 @@ function showPanoBackground($container, componentData) {
             var scope = angular.element('#panoHead').scope(); //jquery+angular实现
             if (scope.canvas.pano.heading != Number(heading).toFixed(0) * 1) {
                 scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.heading = scope.canvas.pano.heading;
                 scope.$apply();
+                // $('#panoHead').trigger('blur');
             }
         }
 
         //pitch方向滚动的时候回调函数
         pano.panoView.onPitchChangeCallback = function(pitch) {
-       
+
             var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
             if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
                 scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.pitch = scope.canvas.pano.pitch;
                 scope.$apply();
+                // $('#panoPitch').trigger('blur');
+
             }
         }
         currentBgPano = pano;
