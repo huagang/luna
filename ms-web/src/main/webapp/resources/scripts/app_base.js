@@ -156,7 +156,7 @@ $(document).ready(function() {
             curPageGroup = {};
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                $comGroup = $('<div class="component-group ' + item.page_code + '"></div>');
+                $comGroup = $('<div class="component-group ' + item.page_code + '"><i class="icon icon-goback goback"></i></div>');
             if (document.querySelector('.component-group')) {
                 $comGroup.hide();
             }
@@ -254,11 +254,21 @@ $(document).ready(function() {
             console.log('视频初始化完成');
         });
     });
+    $(document).on('click','.goback', function(){
+        if(document.referrer === '' || ! document.referrer.match(location.host)){
+            try{
+                location.href = location.href.match(/^(.*app\/\w+)/)[1];
+            } catch(e){
 
+            }
+        } else{
+            location.href = document.referrer || location.href.match(/^(.*app\/\w+)/)[1];
+        }
+    });
     /* 基础组件 */
     function BaseComponent() {
 
-        this.html = $('<div class="componentbox"><i class="icon icon-goback" onclick="history.back()"></i><div class="con con_' + this.value.type + '"></div></div>');
+        this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
 
         // 组件位置设置
         this.setPosition = function() {
@@ -999,9 +1009,9 @@ $(document).ready(function() {
             }
 
             if(type === 'singleArticle'){
-                content.addClass('gray-bg');
+                content.addClass('no-padding-bottom');
             } else{
-                content.removeClass('gray-bg');
+                content.removeClass('no-padding-bottom');
             }
 
         }
