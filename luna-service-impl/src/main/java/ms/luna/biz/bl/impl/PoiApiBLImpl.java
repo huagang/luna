@@ -330,7 +330,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String poi_id = param.getString("poi_id");
 		String lang = param.getString("lang");
 		Document doc = getPoiById(poi_id, lang);
-		MsLogger.debug("mongodb poi data:" + doc.toString());
 		List<String> fieldLst;
 //		convertInputApiFields2DbFieldLst("", fieldLst);
 		fieldLst = new ArrayList<>();
@@ -338,6 +337,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			logger.debug("Failed to get doc, request json: " + json);
 			return returnSuccessData("success", lang, new JSONObject());
 		}
+		MsLogger.debug("mongodb poi data:" + doc.toString());
 		JSONObject result = getPoiInfoWithFields(doc, fieldLst, lang);
 		return returnSuccessData("success", lang, result);
 	}
@@ -1215,6 +1215,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
 		Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
 		Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
+		Map<Integer, String> typesLst;
 
 		// 兼容性代码--type
 		// 如果需要返回标签字段,则为了保证兼容性,将"types"字段一同输出.
@@ -1225,17 +1226,19 @@ public class PoiApiBLImpl implements PoiApiBL {
 			String type;
 			if(tag_id == 2) {
 				type = "scene_type";
+				typesLst = poiSceneTypes;
 			} else {
 				type = "type";
+				typesLst = poiTypes;
 			}
 			JSONArray types = FastJsonUtil.parse2Array(poi.get(type));
 			JSONArray array = new JSONArray();
 			for (int i = 0; i < types.size(); i++) {
-				if (poiTypes.containsKey(types.getIntValue(i))) {
+				if (typesLst.containsKey(types.getIntValue(i))) {
 					JSONObject data = new JSONObject();
 					int id = types.getIntValue(i);
 					data.put("type_id", id);
-					data.put("type_name", poiTypes.get(id));
+					data.put("type_name", typesLst.get(id));
 					array.add(data);
 				}
 			}
