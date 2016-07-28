@@ -15,7 +15,11 @@ setCookie('businessId', 48);
 var objdata = {
     businessId: Util.location().business_id || 0,
     articleListData: null,
-    articleData: null
+    articleData: null,
+    canvas:{ 
+        width:375,  //画布的宽
+        height:617  //画布的高
+    }
 }
 
 //定义组件属性模板
@@ -1021,10 +1025,7 @@ function showPanoBackground($container, componentData) {
 
         //pitch方向滚动的时候回调函数
         pano.panoView.onPitchChangeCallback = function(pitch) {
-            pitch = pitch % 360;
-            if (pitch < 0) {
-                pitch += 360;
-            }
+       
             var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
             if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
                 scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;

@@ -170,8 +170,8 @@
                     <label>全景背景：</label>
                     <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
                     <div class="bgPano-set" ng-show="canvas.panoId">
-                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字" min="0" max="360"></div>
-                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字" min="0" max="360"></div>
+                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字" min="0" max="360"></div>
+                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入-90 - 90的数字" min="-90" max="90"></div>
                       <div class="bgPano-set-item" ng-hide="true">Roll: <input class="form-control" type="number" name="" ng-model="canvas.pano.roll" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字"></div>
                     </div>
                     <div class="form-group"><input type="checkbox" id="chkGsensor"  ng-model="canvas.gravity" ng-click="canvas.changePano()"><lable for="chkGsensor">开启重力感应</lable></div>
