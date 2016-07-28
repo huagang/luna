@@ -656,6 +656,11 @@ $(document).ready(function() {
                     } else if (!menu.hasClass('sm')) {
                         menu.addClass('sm');
                     }
+
+                    content.addClass('overflow-hidden');
+                    setTimeout(function(){
+                        content.removeClass('overflow-hidden');
+                    }, 550);
                 }
 
 

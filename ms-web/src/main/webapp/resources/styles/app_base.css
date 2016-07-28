@@ -28,7 +28,9 @@ a{
 img, video{
     max-width: 100%;
 }
-
+.overflow-hidden{
+    overflow: hidden;
+}
 .pull-right{
     float: right;
 }
