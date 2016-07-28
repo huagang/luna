@@ -1,6 +1,7 @@
 package ms.luna.web.control;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
@@ -21,13 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
- *
- * @Author: shawn@visualbusiness.com
- * @Date: 2016-07-11
- */
 
+/**
+ * Created by greek on 16/7/25.
+ */
 @Controller("FarmPageCtrl")
 @RequestMapping("/farm.do")
 public class FarmPageCtrl extends BasicCtrl {
@@ -53,47 +51,45 @@ public class FarmPageCtrl extends BasicCtrl {
     public ModelAndView init(
             @RequestParam(required = true, value = "app_name") String app_name,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        HttpSession session = request.getSession(false);
-//        if (session != null) {
-//            session.setAttribute("menu_selected", "manage_router");
-//        }
 
         // TODO 初始化页面
         ModelAndView modelAndView = buildModelAndView("/manage_router");
 
         try {
-            // 名称检查
+            // TODO 名称检查--基础版,开发版和数据版需要名称检查,应写成同一个.
             boolean flag = checkAppName();
             if(!flag) {
                 return buildModelAndView("/error");
             }
 
-            // TODO 获取业务id
+            // TODO 获取业务id--get from session
             Integer business_id = 46;
 
             // TODO 获取创建人信息;
+            HttpSession session = request.getSession(false);
             if (session == null) {
                 throw new RuntimeException("session is null");
             }
             MsUser msUser = (MsUser) session.getAttribute("msUser");
-            String unique_id = msUser.getUniqueId();
+            String owner = msUser.getNickName();
 
             JSONObject param = new JSONObject();
             param.put("business_id", business_id);
-            param.put("unique_id", unique_id);
+            param.put("owner", owner);
             param.put("app_name", app_name);
 
             JSONObject result = farmPageService.initPage(param.toString());
             MsLogger.debug(result.toString());
 
-            // TODO POI字段定义和初始化数值 fields
-
-
-            return modelAndView;
+            if ("0".equals(result.get("code"))) {
+                JSONObject data = result.getJSONObject("data");
+                modelAndView.addObject("fields", data.getJSONObject("fields"));
+                return modelAndView;
+            }
         } catch (Exception e) {
-            MsLogger.error("Failed to init." + e.getMessage());
-            return buildModelAndView("/error");
+            MsLogger.error("Failed to init MsShow" + e.getMessage());
         }
+        return buildModelAndView("/error");
     }
 
 
@@ -103,20 +99,20 @@ public class FarmPageCtrl extends BasicCtrl {
             @RequestParam(required = true, value = "app_id") String app_id,
             HttpServletRequest request, HttpServletResponse response) {
          try{
-             // 获取字段定义
-             JSONObject fields = getField();
 
              // 获取具体字段数值
-             JSONObject data = convertParams2Json(request, fields);
+             JSONObject param = params2Json(request);
 
-             data.put("app_id", app_id);
-             JSONObject result = farmPageService.editPage(data.toString());
+
+             param.put("_id", app_id);
+             JSONObject result = farmPageService.editPage(param.toString());
              MsLogger.debug(result.toString());
 
              return result;
 
          } catch (Exception e) {
-             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Falied to save page." + e.getMessage());
+             MsLogger.error("Falied to save page." + e.getMessage());
+             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Falied to save page");
          }
 
     }
@@ -141,5 +137,19 @@ public class FarmPageCtrl extends BasicCtrl {
 
     )
 
+    private boolean checkAppName() {
+        return true;
+    }
+
+    private JSONObject params2Json(HttpServletRequest request) {
+        JSONObject result = farmPageService.getFarmFields();
+        MsLogger.debug(result.toString());
+        if (!"0".equals(result.get("code"))) {
+            return result;
+        }
+        JSONObject data = result.getJSONObject("data");
+        JSONArray fields = data.getJSONArray("fields");
+        return FarmCommon.getInstance()
+    }
 
 }

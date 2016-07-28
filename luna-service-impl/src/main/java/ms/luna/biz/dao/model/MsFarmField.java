@@ -1,32 +1,34 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
-import ms.luna.biz.dao.custom.MsFarmFieldDAO;
+import ms.luna.biz.table.MsFarmFieldTable;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@JSONType(ignores = {MsFarmFieldDAO.REGIST_HHMMSS, MsFarmFieldDAO.UP_HHMMSS,MsFarmFieldDAO.FIELD_LIMIT,MsFarmFieldDAO.EXTENSION_ATTRS})
+@JSONType(ignores = {"extensionAttrs","registHhmmss","upHhmmss","fieldLimit"})
 public class MsFarmField implements Serializable {
 
-    @JSONField(name = MsFarmFieldDAO.FIELD_NAME)
+    @JSONField(name = MsFarmFieldTable.FIELD_NAME)
     private String fieldName;
-    @JSONField(name = MsFarmFieldDAO.FIELD_SHOW_NAME)
+    @JSONField(name = MsFarmFieldTable.FIELD_SHOW_NAME)
     private String fieldShowName;
-    @JSONField(name = MsFarmFieldDAO.DISPLAY_ORDER)
+    @JSONField(name = MsFarmFieldTable.DISPLAY_ORDER)
     private Integer displayOrder;
-    @JSONField(name = MsFarmFieldDAO.FIELD_TYPE)
+    @JSONField(name = MsFarmFieldTable.FIELD_TYPE)
     private String fieldType;
-    @JSONField(name = MsFarmFieldDAO.FIELD_LIMIT)
+    @JSONField(name = MsFarmFieldTable.FIELD_LIMIT)
     private String fieldLimit;
-    @JSONField(name = MsFarmFieldDAO.PLACEHOLDER)
+    @JSONField(name = MsFarmFieldTable.PLACEHOLDER)
     private String placeholder;
-    @JSONField(name = MsFarmFieldDAO.EXTENSION_ATTRS)
+    @JSONField(name = MsFarmFieldTable.EXTENSION_ATTRS)
     private String extensionAttrs;
-    @JSONField(name = MsFarmFieldDAO.REGIST_HHMMSS)
+    @JSONField(name = MsFarmFieldTable.REGIST_HHMMSS)
     private Date registHhmmss;
-    @JSONField(name = MsFarmFieldDAO.UP_HHMMSS)
+    @JSONField(name = MsFarmFieldTable.UP_HHMMSS)
     private Date upHhmmss;
 
     private static final long serialVersionUID = 1L;
@@ -116,14 +118,14 @@ public class MsFarmField implements Serializable {
         }
         MsFarmField other = (MsFarmField) that;
         return (this.getFieldName() == null ? other.getFieldName() == null : this.getFieldName().equals(other.getFieldName()))
-            && (this.getFieldShowName() == null ? other.getFieldShowName() == null : this.getFieldShowName().equals(other.getFieldShowName()))
-            && (this.getDisplayOrder() == null ? other.getDisplayOrder() == null : this.getDisplayOrder().equals(other.getDisplayOrder()))
-            && (this.getFieldType() == null ? other.getFieldType() == null : this.getFieldType().equals(other.getFieldType()))
-            && (this.getFieldLimit() == null ? other.getFieldLimit() == null : this.getFieldLimit().equals(other.getFieldLimit()))
-            && (this.getPlaceholder() == null ? other.getPlaceholder() == null : this.getPlaceholder().equals(other.getPlaceholder()))
-            && (this.getExtensionAttrs() == null ? other.getExtensionAttrs() == null : this.getExtensionAttrs().equals(other.getExtensionAttrs()))
-            && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
-            && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()));
+                && (this.getFieldShowName() == null ? other.getFieldShowName() == null : this.getFieldShowName().equals(other.getFieldShowName()))
+                && (this.getDisplayOrder() == null ? other.getDisplayOrder() == null : this.getDisplayOrder().equals(other.getDisplayOrder()))
+                && (this.getFieldType() == null ? other.getFieldType() == null : this.getFieldType().equals(other.getFieldType()))
+                && (this.getFieldLimit() == null ? other.getFieldLimit() == null : this.getFieldLimit().equals(other.getFieldLimit()))
+                && (this.getPlaceholder() == null ? other.getPlaceholder() == null : this.getPlaceholder().equals(other.getPlaceholder()))
+                && (this.getExtensionAttrs() == null ? other.getExtensionAttrs() == null : this.getExtensionAttrs().equals(other.getExtensionAttrs()))
+                && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
+                && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()));
     }
 
     @Override
@@ -146,4 +148,23 @@ public class MsFarmField implements Serializable {
     public String toString() {
         return "MsFarmField [fieldName=" + fieldName + ",fieldShowName=" + fieldShowName + ",displayOrder=" + displayOrder + ",fieldType=" + fieldType + ",fieldLimit=" + fieldLimit + ",placeholder=" + placeholder + ",extensionAttrs=" + extensionAttrs + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + "]";
     }
+
+//    public static void main(String[] args) {
+//
+//        MsFarmField msFarmField = new MsFarmField();
+//        msFarmField.setRegistHhmmss(new Date());
+//        msFarmField.setFieldName("abc");
+//        msFarmField.setFieldType("type");
+//
+//        System.out.println(JSON.toJSON(msFarmField));
+//
+//        JSONObject json = new JSONObject();
+//        json.put("field_name", "name");
+//        json.put("regist_hhmmss", new Date());
+//        MsFarmField MS = JSONObject.parseObject(json.toString(), MsFarmField.class);
+//        System.out.println(MS.toString());
+//
+//
+//
+//    }
 }

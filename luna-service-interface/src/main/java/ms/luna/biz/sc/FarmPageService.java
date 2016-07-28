@@ -13,6 +13,8 @@ public interface FarmPageService {
 
     JSONObject delPage(Integer app_id);
 
+    JSONObject getFarmFields();
+
     JSONObject loadPage(String json);
 
     JSONObject previewPage(String json);
