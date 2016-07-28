@@ -155,7 +155,7 @@ $(function() {
 
     //页签组件
     $("#tabComponent").click(function() {
-        if (document.querySelector('.topmenu-wrapper')) {
+        if (document.querySelector('.con_tab')) {
             alert('已经存在一个页签组件，不能重复添加');
             return;
         }
