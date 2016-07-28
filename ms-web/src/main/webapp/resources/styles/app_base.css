@@ -195,6 +195,8 @@ img, video{
 #content{
     position: relative;
     transition: opacity .5s ease-in-out;
+    -webkit-transform-style: preserve-3d;
+
     color: #666;
     padding-bottom: 40px;
     flex-grow: 1;
@@ -221,6 +223,8 @@ img, video{
     height: 201px;
     width: 100%;
     transition: height .5s ease-out;
+    -webkit-transform-style: preserve-3d;
+
     overflow: hidden;
     flex-grow: 0;
     flex-shrink: 0;
@@ -327,6 +331,7 @@ img, video{
     color: #666;
     border-bottom: 1px solid #eee;
     transition: top .5s ease-out;
+    -webkit-transform-style: preserve-3d;
 }
 
  .detail-title{
