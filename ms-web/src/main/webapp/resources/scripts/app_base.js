@@ -26,7 +26,20 @@ $(document).ready(function() {
             content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-    init();
+
+    var iftab = false;
+    if (pageData.data.length>0) {
+        for (var plist in pageData.data) {
+            for (var con in pageData.data[plist].page_content){
+                if(pageData.data[plist].page_content[con].type=="tab"){
+                    iftab=true;
+                }
+            }
+        }
+    }
+    if(!iftab){
+        init();
+    }
     $(window).resize(function() {
         // window.location.reload();
     });
@@ -208,12 +221,12 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(30, function() {});
+            $('.welcome').fadeOut(3000, function() {});
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 40);     // TODO 将 40改为4000 将30 改为3000
+        }, 4000);
 
 
     } else {
@@ -247,11 +260,15 @@ $(document).ready(function() {
         this.setPosition = function() {
 
             this.html.css("position", "absolute");
-            this.html.css("left", this.value.x + this.value.unit);
             if(this.value.bottom === 0){
                 this.html.css("bottom", 0);
             } else{
                 this.html.css("top", this.value.y + this.value.unit);
+            }
+            if(this.value.right === 0){
+                this.html.css("right", 0);
+            } else{
+                this.html.css("left", this.value.x + this.value.unit);
             }
             this.html.css("width", this.value.width + this.value.unit);
             this.html.css("height", this.value.height + this.value.unit);
@@ -325,11 +342,14 @@ $(document).ready(function() {
         BaseComponent.call(this);
 
         this.setCanvasBg = function() {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
+                    + this.value.gravity + '"></div>');
         };
 
         this.setPanoBg = function() {
-            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
+            + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+            + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll +  '"></div>');
         };
 
         this.setParaBg = function() {
@@ -996,11 +1016,11 @@ function initPanoBg(panoBg) {
         gravity = panoBg.dataset.gravity;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
-    pano.setHeading(180); //左右
-    pano.setPitch(0); //俯仰角
-    pano.setRoll(0); //未知
+    pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
+    pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
+    pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
     pano.setAutoplayEnable(false); //自动播放
-    pano.setGravityEnable(eval(gravity)); //重力感应  
+    pano.setGravityEnable(gravity === "true"); //重力感应
 }
 
 /**

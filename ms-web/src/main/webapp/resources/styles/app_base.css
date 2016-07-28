@@ -84,6 +84,9 @@ img{
 	width: 100%;
 	height: 100%;
 }
+.componentbox .con img{
+    height: auto;
+}
 .componentbox .con.con_text{
     overflow-y: auto;
 }
@@ -240,9 +243,11 @@ img{
 
 
 .menulist-wrap {
+    overflow-y: hidden;
     color: white;
     font-size: 1rem;
-    overflow-x: scroll;
+    overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     width: 100%;
     height: 77px;
@@ -270,7 +275,7 @@ img{
     height: 2px;
     left: 50%;
     margin-left: -25px;
-    background-color: #FF4800;
+    background-color: #e5383a;
     box-sizing: border-box;
     display: none;
 }
@@ -284,10 +289,11 @@ img{
     top: 201px;
     height: 53px;
     line-height: 53px;
-    font-size: 1.42rem;
+    font-size: 1.5rem;
     background-color: #fff;
     width: 100%;
     color: #666;
+    border-bottom: 1px solid #eee;
 }
 
  .detail-title{
@@ -300,15 +306,13 @@ img{
  
  .detail-title:before{
      position: relative;
-     top: 2px;
+     top: -1px;
+     left: 0px;
      display: inline-block;
      content: ' ';
      line-height: 45px;
-     border: 8px solid transparent;
-     border-left: 9px solid #FF4800;
-     padding-right: 15px;
-
-
+     border: 6px solid transparent;
+     border-left: 7px solid #e5383a;
  }
 
 .icon {
@@ -368,15 +372,15 @@ img{
  .content-details{
      margin-top: 53px;
      background-color: #F6F6F6;
-     padding:15px 20px;
+     padding:15px;
      font-size: 1.17rem;
-     line-height: 1.5;
+     line-height: 1.72;
 }
 
 
  #poiList,
  #articleList{
-     padding: 15px 5% 0;
+     padding: 15px 15px 0;
  }
 
 
@@ -524,23 +528,25 @@ img{
 
 .detail-more{
     text-align: center;
-    padding: 15px 20px 0;
+    padding: 15px 15px 0;
     font-size: 1.1rem;
 }
 
 
 #poiList-hotel{
-    padding: 15px 20px;
+    padding: 15px 15px;
 }
 
 .hotel-item {
-    box-shadow: 0 1px 1px 0 #666;
+    box-shadow: 0 1px 1px 0 #aaa;
     margin-bottom: 15px;
+    border-radius: 3px;
 }
 
 .house-header {
     position: relative;
     height: 210px;
+    border-radius: 3px 3px 0 0;
 }
 
 #poiList-hotel .nav {
@@ -600,6 +606,7 @@ img{
 #poiList-hotel .hotel-info {
     padding: 10px 10px 15px;
     color: #333;
+    line-height: 21px;
 }
 
 #poiList-hotel .contact {
