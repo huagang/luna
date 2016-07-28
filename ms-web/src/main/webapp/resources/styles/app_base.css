@@ -199,6 +199,7 @@ img, video{
     padding-bottom: 40px;
     flex-grow: 1;
     overflow: scroll;
+    -webkit-overflow-scrolling: touch;
     flex-shrink: 1;
 }
 
