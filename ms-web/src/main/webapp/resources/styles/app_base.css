@@ -180,6 +180,7 @@ img{
     transition: opacity .5s ease-in-out;
     color: #666;
     padding-top: 202px;
+    margin-bottom: 40px;
 }
 
 .transparent{
@@ -196,11 +197,15 @@ img{
     position: fixed;
     width: 100%;
     z-index: 2000;
+    transition: height 1s ease-in-out;
 }
 
-
-
-
+.topmenu-wrap.sm{
+    height: 100px;
+}
+.topmenu-wrap.sm + #content .detail-title-wrap{
+    top: 102px;
+}
 .menulist-container {
     display: inline-block;
     width: auto;
@@ -237,7 +242,7 @@ img{
 
 .topmenu{
     position: relative;
-    height: 200px;
+    height: 100%;
 }
 
 
@@ -293,6 +298,7 @@ img{
     width: 100%;
     color: #666;
     border-bottom: 1px solid #eee;
+    transition: top 1s ease-in-out;
 }
 
  .detail-title{
@@ -527,7 +533,7 @@ img{
 
 .detail-more{
     text-align: center;
-    padding: 15px 15px 0;
+    padding: 0 15px 0;
     font-size: 1.1rem;
 }
 
