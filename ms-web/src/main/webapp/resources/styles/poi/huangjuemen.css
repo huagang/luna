@@ -67,6 +67,11 @@ body {
     /* justify-content: center; */
     text-align: center;
     height: 75px;
+    color: #333;
+}
+.tool-item a:link,.tool-item a:visited,.tool-item a:hover,.tool-item a:active{
+    color:#333;
+    font-size: 12px;
 }
 .content-wrapper {
     /* border-bottom: 1px solid #e5e5e5; */
@@ -115,10 +120,10 @@ body {
 }
 
 .tool-item i {
-    height: 45px;
-    width: 55px;
+    height: 30px;
     display: inline-block;
-    margin: 15px auto;
+    margin: 12px auto 0;
+    width: 45px;
 }
 .tool-item .icon{
     background-size: 100%;

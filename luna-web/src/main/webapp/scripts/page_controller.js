@@ -401,9 +401,6 @@ function CanvasController($scope, $rootScope) {
 
     this.changePano = function($event) {
 
-        if (!this.panoId) {
-            this.gravity = false;
-        }
         this.pano.heading = this.pano.heading % 360;
         if (this.pano.heading < 0) {
             this.pano.heading += 360;
