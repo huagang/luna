@@ -211,3 +211,7 @@ input[type='text'] {
 	width: 104px;
 	height:36px;
 }
+.cleanInput{
+	position: absolute;
+	right: 0px;
+}

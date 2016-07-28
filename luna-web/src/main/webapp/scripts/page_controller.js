@@ -710,32 +710,36 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             type: 'default',
             defaultStyle: { bgPosition: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
             currentStyle: { bgPosition: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '开发区',
-            code: 'area',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '数博会',
-            code: 'activity',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
+        }, 
+        // {
+        //     name: '开发区',
+        //     code: 'area',
+        //     type: 'default',
+        //     defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
+        //     currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
+        // }, {
+        //     name: '数博会',
+        //     code: 'activity',
+        //     type: 'default',
+        //     defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
+        //     currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
+        // }, 
+        {
             name: '名人',
             code: 'celebrity',
             type: 'default',
             defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
             currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '文化',
-            code: 'culture',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '运动',
+        }, 
+        // {
+        //     name: '文化',
+        //     code: 'culture',
+        //     type: 'default',
+        //     defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
+        //     currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
+        // }, 
+        {
+            name: '景点',
             code: 'spots',
             type: 'default',
             defaultStyle: { bgPosition: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
@@ -764,11 +768,12 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             type: 'default',
             defaultStyle: { bgPosition: ['-576px', '-48px'], bgSize: ['800px', '504px'] },
             currentStyle: { bgPosition: ['-576px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '自定义图标',
-            code: 'customer',
-            type: 'customer',
-        }];
+        } ];
+        // {
+        //     name: '自定义图标',
+        //     code: 'customer',
+        //     type: 'customer',
+        // }
     }
 
     //修改头图

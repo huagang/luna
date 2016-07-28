@@ -229,7 +229,7 @@ var initPage = function() {
                 ['fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent','|',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
                     'simpleupload',
@@ -265,7 +265,7 @@ var initPage = function() {
                 audio: articleStore.audio,
                 video: articleStore.video,
                 column_id: articleStore.category,
-                short_title:document.querySelector('input[name="short_title"]').value,
+                short_title: document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
                 url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
@@ -542,8 +542,30 @@ var initPage = function() {
         $("#video").val(articleStore.video);
         $("#category option[value='" + articleStore.category + "']").attr("selected", "selected")
     }
+
     return {
         init: function() {
+            $('.cleanInput').on('click', 'a', function(e) {
+                e.preventDefault();
+                var dataFor = $(this).data('for');
+                switch (dataFor) {
+                    case 'img':
+                        $('#thumbnail_show').attr('src','');
+                        $('[name=thumbnail_fileup]').val('');
+                        articleStore.thumbnail='';
+                        break;
+                    case 'audio':
+                        $('[name=audioName]').val('');
+                        $('[name=audio_fileup]').val('');
+                        articleStore.audio='';
+                        break;
+                    case 'video':
+                        $('[name=videoName]').val('');
+                        $('[name=video_fileup]').val('');
+                        articleStore.video='';
+                        break;
+                }
+            });
             initEditor();
             initEvent();
             if (articleStore.id) {
@@ -557,4 +579,5 @@ var initPage = function() {
 
 $(document).ready(function() {
     initPage.init();
+
 });

@@ -65,7 +65,7 @@
 		                                     
 		                            <!-- <img src="img/preview.jpeg"> -->
 		                        </div>
-
+								<div class="cleanInput"><a href="" data-for="img">删除</a></div>
 		                        <p id='pic_warn' class='warn'></p>
 		                    </div>
 		                </div>
@@ -87,6 +87,7 @@
 		                            	<div class="loader">Loading...</div>
 		                            </div> 
 		                        </span>
+								<div class="cleanInput"><a href="" data-for="audio">删除</a></div>
 		                        <p id='audio_warn' class='warn'></p>
 		                    </div>
 		                </div>
@@ -102,6 +103,7 @@
 		                            	<div class="loader">Loading...</div>
 		                            </div> 
 		                        </span>
+		                        <div class="cleanInput"><a href="" data-for="video">删除</a></div>
 		                        <p id='video_warn' class='warn'></p>
 		                    </div>
 		                </div>
