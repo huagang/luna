@@ -1000,6 +1000,13 @@ $(document).ready(function() {
                 that.content = '';
                 content.html(html);
             }
+
+            if(type === 'singleArticle'){
+                content.addClass('gray-bg');
+            } else{
+                content.removeClass('gray-bg');
+            }
+
         }
 
         function handleMenuClick(event){

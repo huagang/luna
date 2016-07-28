@@ -36,6 +36,10 @@ img, video{
     display: none !important;
 }
 
+.gray-bg{
+    background-color: #f6f6f6;
+}
+
 .welcome{
     position: fixed;
     height: 100%;
