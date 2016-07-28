@@ -731,6 +731,13 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
             currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
         }, 
+        {
+            name: '民族',
+            code: 'nation',
+            type: 'default',
+            defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
+            currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
+        },        
         // {
         //     name: '文化',
         //     code: 'culture',
