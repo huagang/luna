@@ -656,6 +656,11 @@ $(document).ready(function() {
                     } else if (!menu.hasClass('sm')) {
                         menu.addClass('sm');
                     }
+
+                   /* content.addClass('overflow-hidden');
+                    setTimeout(function(){
+                        content.removeClass('overflow-hidden');
+                    }, 450);*/
                 }
 
 
@@ -674,6 +679,12 @@ $(document).ready(function() {
                 }
 
             });
+
+           /* that.html.find('.topmenu-wrap').on('transitionend', function(event){
+                content.removeClass('overflow-hidden');
+            });*/
+
+
             content.on('click', '.icon-video', function(event){
 
                 var radio = that.html.find(".icon-radio");
