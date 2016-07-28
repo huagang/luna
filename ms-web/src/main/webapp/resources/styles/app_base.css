@@ -25,7 +25,7 @@ a{
     text-decoration: none !important;
 }
 
-img{
+img, video{
     max-width: 100%;
 }
 
@@ -35,6 +35,12 @@ img{
 .hidden{
     display: none !important;
 }
+
+.gray-bg{
+    background-color: #f6f6f6;
+}
+
+
 
 .welcome{
     position: fixed;
@@ -341,10 +347,15 @@ img{
     background-size: 800px 504px;
 }
 
+.component-group.index .icon-goback,
+.component-group.welcome .icon-goback{
+    display: none;
+}
+
 .icon-goback {
     position: fixed;
     left: 10px;
-    top: 88%;
+    bottom: 30px;
     z-index: 10;
     width: 33px;
     height: 33px;
