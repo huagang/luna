@@ -404,6 +404,17 @@ function CanvasController($scope, $rootScope) {
         if (!this.panoId) {
             this.gravity = false;
         }
+        this.pano.heading = this.pano.heading % 360;
+        if (this.pano.heading < 0) {
+            this.pano.heading += 360;
+        }
+
+        if (this.pano.pitch > 90) {
+            this.pano.pitch = this.pano.pitch % 180 - 90;
+        } else if (this.pano.pitch < -90) {
+            this.pano.pitch = this.pano.pitch % 180 + 90;
+        }
+
         this.currentComponent.panoId = this.panoId;
         this.currentComponent.pano = this.pano;
         this.currentComponent.gravity = this.gravity;

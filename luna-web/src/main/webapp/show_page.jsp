@@ -59,7 +59,7 @@
                   <i class="icon icon-comp-img"></i><br/>
                   <span>图片</span>
                 </div>
-                <div class="component-btn" id="shapeComponentGroup">
+                <div class="component-btn hide" id="shapeComponentGroup">
                   <i class="icon icon-comp-shape"></i><br/>
                   <span>形状</span>
                 </div>
@@ -170,8 +170,8 @@
                     <label>全景背景：</label>
                     <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
                     <div class="bgPano-set" ng-show="canvas.panoId">
-                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字" min="0" max="360"></div>
-                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字"></div>
+                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字" min="0" max="360"></div>
+                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入-90 - 90的数字" min="-90" max="90"></div>
                       <div class="bgPano-set-item" ng-hide="true">Roll: <input class="form-control" type="number" name="" ng-model="canvas.pano.roll" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字"></div>
                     </div>
                     <div class="form-group"><input type="checkbox" id="chkGsensor"  ng-model="canvas.gravity" ng-click="canvas.changePano()"><lable for="chkGsensor">开启重力感应</lable></div>
@@ -203,6 +203,10 @@
                         <li>
                           <span>Z</span>
                           <input type="number" ng-model="text.currentComponent.zindex" ng-blur="text.changeZ()" /></li>
+                        <li>
+                          <span>右</span>
+                          <input type="number" ng-model="text.currentComponent.right" ng-blur="text.changeRight()" ng-required="true" readonly="readonly" />
+                        </li>
                         <li>
                           <span>底</span>
                           <input type="number" ng-model="text.currentComponent.bottom" ng-blur="text.changeBottom()" ng-required="true" readonly="readonly" />
@@ -341,7 +345,12 @@
                        <li>
                           <span>Z</span>
                           <input type="number" ng-model="img.currentComponent.zindex" ng-blur="img.changeZ()" /></li>
-                       <li>
+                       <li></li>
+                      <li>
+                        <span>右</span>
+                        <input type="number" ng-model="img.currentComponent.right" ng-blur="img.changeRight()" ng-required="true" readonly="readonly" />
+                      </li>
+                      <li>
                         <span>底</span>
                         <input type="number" ng-model="img.currentComponent.bottom" ng-blur="img.changeBottom()" ng-required="true" readonly="readonly" />
                       </li>
@@ -440,6 +449,11 @@
                         <li>
                           <span>Z</span>
                           <input type="number" ng-model="nav.currentComponent.zindex" ng-blur="nav.changeZ()" /></li>
+                        <li></li>
+                        <li>
+                          <span>右</span>
+                          <input type="number" ng-model="nav.currentComponent.right" ng-blur="nav.changeRight()" ng-required="true" readonly="readonly" />
+                        </li>
                         <li>
                           <span>底</span>
                           <input type="number" ng-model="nav.currentComponent.bottom" ng-blur="nav.changeBottom()" ng-required="true" readonly="readonly" />
@@ -578,6 +592,10 @@
                                     <span>Z</span>
                                     <input type="number" ng-model="pano.currentComponent.zindex" ng-blur="pano.changeZ()" /></li>
                                 <li>
+                                  <span>右</span>
+                                  <input type="number" ng-model="pano.currentComponent.right" ng-blur="pano.changeRight()" ng-required="true" readonly="readonly" />
+                                </li>
+                                <li>
                                   <span>底</span>
                                   <input type="number" ng-model="pano.currentComponent.bottom" ng-blur="pano.changeBottom()" ng-required="true" readonly="readonly" />
                                 </li>
@@ -677,6 +695,10 @@
                                 <li>
                                     <span>Z</span>
                                     <input type="number" ng-model="audio.currentComponent.zindex" ng-blur="audio.changeZ()" /></li>
+                                <li>
+                                  <span>右</span>
+                                  <input type="number" ng-model="audio.currentComponent.right" ng-blur="audio.changeRight()" ng-required="true" readonly="readonly" />
+                                </li>
                                 <li>
                                   <span>底</span>
                                   <input type="number" ng-model="audio.currentComponent.bottom" ng-blur="audio.changeBottom()" ng-required="true" readonly="readonly" />
@@ -801,6 +823,10 @@
                                     <span>Z</span>
                                     <input type="number" ng-model="video.currentComponent.zindex" ng-blur="video.changeZ()" /></li>
                                   <li>
+                                    <span>右</span>
+                                    <input type="number" ng-model="video.currentComponent.right" ng-blur="video.changeRight()" ng-required="true" readonly="readonly" />
+                                  </li>
+                                  <li>
                                     <span>底</span>
                                     <input type="number" ng-model="video.currentComponent.bottom" ng-blur="video.changeBottom()" ng-required="true" readonly="readonly" />
                                   </li>
@@ -911,6 +937,10 @@
                                     <span>Z</span>
                                     <input type="number" ng-model="menuTab.currentComponent.zindex" ng-blur="menuTab.changeZ()" ng-required="true" /></li>
                                 <li>
+                                    <span>右</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.right" ng-blur="menuTab.changeRight()" ng-required="true" readonly="readonly" />
+                                </li>
+                                <li>
                                     <span>底</span>
                                     <input type="number" ng-model="menuTab.currentComponent.bottom" ng-blur="menuTab.changeBottom()" ng-required="true" readonly="readonly" /></li>
                                 <li>
@@ -962,10 +992,10 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                         </div>
-                                        <div><span>图标默认颜色:</span>
+                                        <div class="hide"><span>图标默认颜色:</span>
                                             <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.defaultColor" ng-change="menuTab.changeIconColor('default')">
                                         </div>
-                                        <div><span>图标当前颜色:</span>
+                                        <div class="hide"><span>图标当前颜色:</span>
                                             <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.currentColor" ng-change="menuTab.changeIconColor('current')">
                                         </div>
                                     </div>

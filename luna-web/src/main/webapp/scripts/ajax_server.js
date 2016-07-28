@@ -194,22 +194,22 @@ function savePageData(pageID, isPrompt) {
         dataType: 'json',
         success: function(returndata) {
             var nowtime = new Date();
-            var strnowtime = nowtime.getHours() + ":"+nowtime.getMinutes();
+            var strnowtime = nowtime.getHours() + ":" + nowtime.getMinutes();
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
-                $('.msgTips').text(strnowtime+" "+ returndata.msg);
-                setTimeout(function(){
+                $('.msgTips').text(strnowtime + " " + returndata.msg);
+                setTimeout(function() {
                     $('.msgTips').text("");
-                },2000);
+                }, 2000);
                 console.log("保存" + (pageID ? "页面" + pageID : "全部页面") + "失败！");
                 return;
             } else {
                 //点击保存时，保存成功需要给出提示
                 if (isPrompt) {
-                    $('.msgTips').text(strnowtime+" 保存页面成功");
-                    setTimeout(function(){
+                    $('.msgTips').text(strnowtime + " 保存页面成功");
+                    setTimeout(function() {
                         $('.msgTips').text("");
-                    },2000);
+                    }, 2000);
                 }
             }
         },
@@ -394,22 +394,29 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
             if (flag) {
                 currentComponent.width = returndata.data.width;
                 currentComponent.height = returndata.data.height;
-                if (returndata.data.width >= 480) {
-                    currentComponent.width = 480;
+                if (returndata.data.width >= objdata.canvas.width) {
+                    currentComponent.width = objdata.canvas.width;
                     currentComponent.x = 0;
-                    currentComponent.height = returndata.data.height * 480 / returndata.data.width;
+                    currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
                 }
-                if (currentComponent.width >= 480 && currentComponent.height > 756) {
-                    currentComponent.height = 756;
-                    currentComponent.width = currentComponent.width * 756 / currentComponent.height;
-                    currentComponent.y = 0;
-                    currentComponent.x = (480 - currentComponent.width) / 2;
+                if (currentComponent.width >= objdata.canvas.width && currentComponent.height > objdata.canvas.height) {
+                    if ((currentComponent.width / currentComponent.height) > (objdata.canvas.width / objdata.canvas.height)) {
+                        //图片的宽高比 大于 画布的宽高比
+                        currentComponent.width = objdata.canvas.width;
+                        currentComponent.x = 0;
+                        currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
+                    } else {
+                        currentComponent.height = objdata.canvas.height;
+                        currentComponent.width = currentComponent.width * objdata.canvas.height / currentComponent.height;
+                        currentComponent.x = (currentComponent.width - currentComponent.width) / 2;
+                        currentComponent.y = 0;
+                    }
                 }
-                if (currentComponent.width < 480 && returndata.data.height > 756) {
-                    currentComponent.height = 756;
-                    currentComponent.width = currentComponent.width * 756 / returndata.data.height;
+                if (currentComponent.width < objdata.canvas.width && returndata.data.height > objdata.canvas.height) {
+                    currentComponent.height = objdata.canvas.height;
+                    currentComponent.width = currentComponent.width * objdata.canvas.height / returndata.data.height;
                     currentComponent.y = 0;
-                    currentComponent.x = (480 - currentComponent.width) / 2;
+                    currentComponent.x = (objdata.canvas.width - currentComponent.width) / 2;
                 }
                 currentComponent.width = parseInt(currentComponent.width);
                 currentComponent.height = parseInt(currentComponent.height);
@@ -453,7 +460,7 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
      url_id 图片地址输入框
      author:Victor Du
 */
-function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceType, flag) {
+function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceType, flag) {
     var formobj = document.getElementById(form_id),
         urlElement;
     if (url_id) {
@@ -461,9 +468,9 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceTyp
     }
 
     var formdata = new FormData(formobj);
-    formdata.append('type',fileType);
-    formdata.append('resource_type',resourceType);
-    formdata.append('resource_id','');
+    formdata.append('type', fileType);
+    formdata.append('resource_type', resourceType);
+    formdata.append('resource_id', '');
 
     // var fileType2Method = {
     //     'audio': 'upload_audio',
