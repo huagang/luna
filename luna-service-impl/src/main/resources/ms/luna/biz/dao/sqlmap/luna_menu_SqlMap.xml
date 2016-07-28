@@ -6,6 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="auth" jdbcType="VARCHAR" property="auth" />
     <result column="module_id" jdbcType="INTEGER" property="moduleId" />
     <result column="display_order" jdbcType="INTEGER" property="displayOrder" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -36,7 +37,7 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    id, name, code, url, module_id, display_order, update_time
+    id, name, code, url, auth, module_id, display_order, update_time
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaMenuCriteria" resultMap="BaseResultMap">
     select
@@ -69,10 +70,10 @@
     <include refid="luna_menu.Example_Where_Clause" />
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaMenu">
-    insert into luna_menu (name, code, url, module_id, display_order, 
-      update_time)
-    values (#name:VARCHAR#, #code:VARCHAR#, #url:VARCHAR#, #moduleId:INTEGER#, #displayOrder:INTEGER#, 
-      #updateTime:TIMESTAMP#)
+    insert into luna_menu (name, code, url, auth, module_id, 
+      display_order, update_time)
+    values (#name:VARCHAR#, #code:VARCHAR#, #url:VARCHAR#, #auth:VARCHAR#, #moduleId:INTEGER#, 
+      #displayOrder:INTEGER#, #updateTime:TIMESTAMP#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -88,6 +89,9 @@
       </isNotNull>
       <isNotNull prepend="," property="url">
         url
+      </isNotNull>
+      <isNotNull prepend="," property="auth">
+        auth
       </isNotNull>
       <isNotNull prepend="," property="moduleId">
         module_id
@@ -110,6 +114,9 @@
       </isNotNull>
       <isNotNull prepend="," property="url">
         #url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auth">
+        #auth:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="moduleId">
         #moduleId:INTEGER#
@@ -145,6 +152,9 @@
       <isNotNull prepend="," property="record.url">
         url = #record.url:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.auth">
+        auth = #record.auth:VARCHAR#
+      </isNotNull>
       <isNotNull prepend="," property="record.moduleId">
         module_id = #record.moduleId:INTEGER#
       </isNotNull>
@@ -165,6 +175,7 @@
       name = #record.name:VARCHAR#,
       code = #record.code:VARCHAR#,
       url = #record.url:VARCHAR#,
+      auth = #record.auth:VARCHAR#,
       module_id = #record.moduleId:INTEGER#,
       display_order = #record.displayOrder:INTEGER#,
       update_time = #record.updateTime:TIMESTAMP#
@@ -184,6 +195,9 @@
       <isNotNull prepend="," property="url">
         url = #url:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="auth">
+        auth = #auth:VARCHAR#
+      </isNotNull>
       <isNotNull prepend="," property="moduleId">
         module_id = #moduleId:INTEGER#
       </isNotNull>
@@ -201,6 +215,7 @@
     set name = #name:VARCHAR#,
       code = #code:VARCHAR#,
       url = #url:VARCHAR#,
+      auth = #auth:VARCHAR#,
       module_id = #moduleId:INTEGER#,
       display_order = #displayOrder:INTEGER#,
       update_time = #updateTime:TIMESTAMP#

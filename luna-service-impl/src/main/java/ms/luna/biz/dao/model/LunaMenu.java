@@ -1,6 +1,5 @@
 package ms.luna.biz.dao.model;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
 import ms.luna.biz.table.LunaMenuTable;
@@ -9,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @JSONType(ignores={}, includes = {LunaMenuTable.FIELD_ID, LunaMenuTable.FIELD_NAME,
-        LunaMenuTable.FIELD_CODE, LunaMenuTable.FIELD_URL})
+        LunaMenuTable.FIELD_CODE, LunaMenuTable.FIELD_URL, LunaMenuTable.FIELD_AUTH})
 public class LunaMenu implements Serializable {
     @JSONField(name = LunaMenuTable.FIELD_ID)
     private Integer id;
@@ -19,6 +18,8 @@ public class LunaMenu implements Serializable {
     private String code;
     @JSONField(name = LunaMenuTable.FIELD_URL)
     private String url;
+    @JSONField(name = LunaMenuTable.FIELD_AUTH)
+    private String auth;
 
     private Integer moduleId;
 
@@ -58,6 +59,14 @@ public class LunaMenu implements Serializable {
 
     public void setUrl(String url) {
         this.url = url == null ? null : url.trim();
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth == null ? null : auth.trim();
     }
 
     public Integer getModuleId() {
@@ -100,6 +109,7 @@ public class LunaMenu implements Serializable {
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
             && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
+            && (this.getAuth() == null ? other.getAuth() == null : this.getAuth().equals(other.getAuth()))
             && (this.getModuleId() == null ? other.getModuleId() == null : this.getModuleId().equals(other.getModuleId()))
             && (this.getDisplayOrder() == null ? other.getDisplayOrder() == null : this.getDisplayOrder().equals(other.getDisplayOrder()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
@@ -113,6 +123,7 @@ public class LunaMenu implements Serializable {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getCode() == null) ? 0 : getCode().hashCode());
         result = prime * result + ((getUrl() == null) ? 0 : getUrl().hashCode());
+        result = prime * result + ((getAuth() == null) ? 0 : getAuth().hashCode());
         result = prime * result + ((getModuleId() == null) ? 0 : getModuleId().hashCode());
         result = prime * result + ((getDisplayOrder() == null) ? 0 : getDisplayOrder().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
@@ -121,14 +132,6 @@ public class LunaMenu implements Serializable {
 
     @Override
     public String toString() {
-        return "LunaMenu [id=" + id + ",name=" + name + ",code=" + code + ",url=" + url + ",moduleId=" + moduleId + ",displayOrder=" + displayOrder + ",updateTime=" + updateTime + "]";
-    }
-
-    public static void main(String[] args) {
-        LunaMenu lunaMenu = new LunaMenu();
-        lunaMenu.setId(1);
-        lunaMenu.setName("data");
-        lunaMenu.setModuleId(2);
-        System.out.println(JSON.toJSON(lunaMenu));
+        return "LunaMenu [id=" + id + ",name=" + name + ",code=" + code + ",url=" + url + ",auth=" + auth + ",moduleId=" + moduleId + ",displayOrder=" + displayOrder + ",updateTime=" + updateTime + "]";
     }
 }

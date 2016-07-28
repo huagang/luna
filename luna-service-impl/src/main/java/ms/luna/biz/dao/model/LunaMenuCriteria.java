@@ -473,6 +473,88 @@ public class LunaMenuCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andAuthIsNull() {
+            addCriterion("auth is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthIsNotNull() {
+            addCriterion("auth is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth =", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth <>", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth >", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth >=", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth <", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth <=", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth like", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("auth not like", value, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("auth in", values, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("auth not in", values, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("auth between", value1, value2, "auth");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("auth not between", value1, value2, "auth");
+            return (Criteria) this;
+        }
+
         public Criteria andModuleIdIsNull() {
             addCriterion("module_id is null");
             return (Criteria) this;
@@ -698,6 +780,12 @@ public class LunaMenuCriteria {
         public Criteria andUrlLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(url) like", value.toUpperCase(), "url");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(auth) like", value.toUpperCase(), "auth");
             return (Criteria) this;
         }
 

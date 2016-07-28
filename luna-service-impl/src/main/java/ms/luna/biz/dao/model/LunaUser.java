@@ -1,11 +1,16 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.dubbo.common.json.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import ms.luna.biz.table.LunaUserTable;
 
 import java.io.Serializable;
 import java.util.Date;
-
+@JSONType(ignores = {"createTime"})
 public class LunaUser implements Serializable {
     @JSONField(name = LunaUserTable.FIELD_ID)
     private String uniqueId;
@@ -19,7 +24,7 @@ public class LunaUser implements Serializable {
     private String headImgUrl;
 
     private String email;
-
+    @JSONField(name = LunaUserTable.FIELD_CREATE_TIME)
     private Date createTime;
 
     private Date updateTime;
@@ -130,5 +135,18 @@ public class LunaUser implements Serializable {
     @Override
     public String toString() {
         return "LunaUser [uniqueId=" + uniqueId + ",lunaName=" + lunaName + ",nickName=" + nickName + ",password=" + password + ",headImgUrl=" + headImgUrl + ",email=" + email + ",createTime=" + createTime + ",updateTime=" + updateTime + "]";
+    }
+
+    public static void main(String[] args) {
+        LunaUser lunaUser = new LunaUser();
+        String[] arr = { LunaUserTable.FIELD_LUNA_NAME, LunaUserTable.FIELD_NICK_NAME};
+        SimplePropertyPreFilter simplePropertyPreFilter = new SimplePropertyPreFilter(LunaUser.class, arr);
+        lunaUser.setLunaName("shawn");
+        lunaUser.setNickName("shawn");
+        lunaUser.setCreateTime(new Date());
+//        System.out.println(JSON.toJSONString(lunaUser, simplePropertyPreFilter));
+        System.out.println(JSON.toJSONString(lunaUser));
+        SerializeConfig.globalInstance.addFilter(LunaUser.class, simplePropertyPreFilter);
+        System.out.println(JSON.toJSON(lunaUser));
     }
 }

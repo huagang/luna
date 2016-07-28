@@ -15,6 +15,7 @@ public class LunaMenuTable {
     public static final String FIELD_CODE = "code";
     public static final String FIELD_MODULE_ID = "module_id";
     public static final String FIELD_URL = "url";
+    public static final String FIELD_AUTH = "auth";
     public static final String FIELD_DISPLAY_ORDER = "display_order";
     public static final String FIELD_UPDATE_TIME = "update_time";
 

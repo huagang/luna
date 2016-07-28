@@ -43,9 +43,9 @@ public class LunaStarter {
                 properties.load(resource.getInputStream());
                 ServiceConfig.setConfig(properties);
                 COSUtil.cosBaseDir = ServiceConfig.getString(ServiceConfig.COS_BASE_DIR);
-            } catch (IOException e1) {
+            } catch (IOException e) {
                 // TODO Auto-generated catch block
-                logger.error("Failed to load config");
+                logger.error("Failed to load config", e);
             }
             MsZoneCacheBL msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
             msZoneCacheBL.init();
@@ -55,7 +55,7 @@ public class LunaStarter {
             CacheService cacheService = new CacheService(context);
             cacheService.start();
 
-            emailService = (EmailService) context.getBean("emailService");
+            emailService = (EmailService) context.getBean("emailScheduler");
             emailService.start();
 
             System.out.println("LunaProvider Service is started!");

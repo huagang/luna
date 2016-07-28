@@ -385,6 +385,7 @@ create table luna_menu(
   name varchar(10) not null comment '菜单名称',
   code varchar(16) not null comment '菜单编码，对应restful中菜单路径',
   url varchar(256) default null comment '外部系统url，内部为空',
+  auth varchar(256) default null comment '权限描述',
   module_id int(11) not null comment '模块名称',
   display_order int(11) not null comment '展示顺序',
   update_time timestamp default current_timestamp on update current_timestamp,

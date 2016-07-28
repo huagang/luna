@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Repository("moduleMenuCache")
-public class ModuleMenuCache extends MsBaseDAO {
+public class ModuleMenuCache {
 
     private final static Logger logger = Logger.getLogger(ModuleMenuCache.class);
 

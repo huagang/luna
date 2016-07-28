@@ -12,7 +12,7 @@ import java.util.concurrent.*;
  * @Date: 2016-07-21
  */
 
-@Service("emailService")
+@Service("emailScheduler")
 public class EmailService extends Thread {
 
     private final static Logger logger = Logger.getLogger(EmailService.class);

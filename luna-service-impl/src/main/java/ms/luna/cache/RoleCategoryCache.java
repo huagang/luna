@@ -39,7 +39,7 @@ public class RoleCategoryCache {
 
     public List<LunaRoleCategory> getAllRoleCategoryList() {
 
-        return lunaRoleCategoryDAO.selectByCriteria(new LunaRoleCategoryCriteria());
+        return lunaRoleCategoryDAO.selectByCriteriaWithBLOBs(new LunaRoleCategoryCriteria());
     }
 
 }
