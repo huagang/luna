@@ -208,12 +208,12 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(30, function() {});
+            $('.welcome').fadeOut(3000, function() {});
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 40);     // TODO 将 40改为4000 将30 改为3000
+        }, 4000);
 
 
     } else {
@@ -329,7 +329,9 @@ $(document).ready(function() {
         BaseComponent.call(this);
 
         this.setCanvasBg = function() {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
+                    + this.value.gravity + '" data-heading="' + this.value.pano.heading
+                    + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
         };
 
         this.setPanoBg = function() {
@@ -1000,11 +1002,11 @@ function initPanoBg(panoBg) {
         gravity = panoBg.dataset.gravity;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
-    pano.setHeading(180); //左右
-    pano.setPitch(0); //俯仰角
-    pano.setRoll(0); //未知
+    pano.setHeading(panoBg.dataset.heading || 180); //左右
+    pano.setPitch(panoBg.dataset.pitch || 0); //俯仰角
+    pano.setRoll(panoBg.dataset.roll || 0); //未知
     pano.setAutoplayEnable(false); //自动播放
-    pano.setGravityEnable(eval(gravity)); //重力感应  
+    pano.setGravityEnable(gravity === "true"); //重力感应
 }
 
 /**
