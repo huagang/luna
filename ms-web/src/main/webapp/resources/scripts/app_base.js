@@ -582,7 +582,6 @@ $(document).ready(function() {
 
         function bindEvent(){
             // clear event
-
             that.html.find('.menulist-wrap').off('click', '.icon');
             that.html.find('#content').off('click', '#poi .icon-radio');
 
@@ -603,6 +602,16 @@ $(document).ready(function() {
 
                 }
 
+            });
+
+            var menu = that.html.find('.topmenu-wrap');
+
+            content.on('scroll', function(event){
+                if(content.scrollTop() === 0){
+                    menu.removeClass('sm');
+                } else if(! menu.hasClass('sm')){
+                    menu.addClass('sm');
+                }
             });
 
             content.on('transitionend', function(event){
@@ -737,13 +746,12 @@ $(document).ready(function() {
             '<div id="container" class="container">'
             + '<div class="topmenu-wrap">'
             +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
-            +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover">'
-            +            '<div class="topmenu">'
-            +                '<div class="menulist-wrap canscroll"><div class="menulist-container">'
-            +                   labsHtml
-            +                 '</div></div>'
-            +             '</div>'
-            +       '</div>'
+            +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
+            +        '<div class="topmenu">'
+            +            '<div class="menulist-wrap canscroll"><div class="menulist-container">'
+            +               labsHtml
+            +            '</div></div>'
+            +        '</div>'
             + '</div>'
             + '<div id="content" class="canscroll"></div>'
             //+ '<i class="icon icon-goback" onclick="history.back()"></i>'
@@ -816,7 +824,7 @@ $(document).ready(function() {
                     }
 
                     switch(type) {
-
+                        case 'restaurant':
                         case 'hotel':
                             //html = '';
                             var hotelList = '', panoLink;
@@ -979,6 +987,7 @@ $(document).ready(function() {
             var index = event.target.parentNode.parentNode.getAttribute('data-index');
             that.html.find('.menulist').removeClass('current');
             $(that.html.find('.menulist')[index]).addClass('current');
+            that.html.find(".topmenu-wrap").removeClass('sm');
             that.menuIndex = index;
             // 填充数据
             if(that.data[index]){
