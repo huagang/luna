@@ -232,9 +232,7 @@ $(document).ready(function() {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
-
-
+        }, 3000);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
