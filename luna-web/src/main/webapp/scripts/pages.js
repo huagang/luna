@@ -1024,6 +1024,7 @@ function showPanoBackground($container, componentData) {
             var scope = angular.element('#panoHead').scope(); //jquery+angular实现
             if (scope.canvas.pano.heading != Number(heading).toFixed(0) * 1) {
                 scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.heading = scope.canvas.pano.heading;
                 scope.$apply();
                 // $('#panoHead').trigger('blur');
             }
@@ -1034,6 +1035,7 @@ function showPanoBackground($container, componentData) {
             var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
             if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
                 scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.pitch = scope.canvas.pano.pitch;
                 scope.$apply();
                 // $('#panoPitch').trigger('blur');
             }

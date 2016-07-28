@@ -122,13 +122,12 @@ var initHJMPoiPage = function() {
      * 初始化回退控件
      */
     var initGoBack = function() {
-        var refUrl = Util.location('ref');
         /**
          * 判断是否有url 中是否有ref,如果有则显示返回按钮
          * @param  {[type]} refUrl [description]
          * @return {[type]}        [description]
          */
-        if (refUrl) {
+        if (document.referrer) {
             document.querySelector('.goback').classList.remove('hidden');
             document.querySelector('.goback a').addEventListener('click', function(e) {
                 e.preventDefault();
