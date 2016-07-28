@@ -330,12 +330,13 @@ $(document).ready(function() {
 
         this.setCanvasBg = function() {
             this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                    + this.value.gravity + '" data-heading="' + this.value.pano.heading
-                    + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
+                    + this.value.gravity + '"></div>');
         };
 
         this.setPanoBg = function() {
-            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="' + this.value.panoId + '" data-gravity="' + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
+            + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+            + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll +  '"></div>');
         };
 
         this.setParaBg = function() {
@@ -1002,9 +1003,9 @@ function initPanoBg(panoBg) {
         gravity = panoBg.dataset.gravity;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
-    pano.setHeading(panoBg.dataset.heading || 180); //左右
-    pano.setPitch(panoBg.dataset.pitch || 0); //俯仰角
-    pano.setRoll(panoBg.dataset.roll || 0); //未知
+    pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
+    pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
+    pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
     pano.setAutoplayEnable(false); //自动播放
     pano.setGravityEnable(gravity === "true"); //重力感应
 }
