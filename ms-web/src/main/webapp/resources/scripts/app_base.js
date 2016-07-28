@@ -769,7 +769,7 @@ $(document).ready(function() {
                 case 'singleArticle':
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
-                    var title = (data.title || '').split(/[,，]/).join('');
+                    var title = data.title || '';
                     html =
                         '<div id="article">'
                         +   '<div class="detail-title-wrap">'
