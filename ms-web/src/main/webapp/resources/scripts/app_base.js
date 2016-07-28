@@ -247,11 +247,15 @@ $(document).ready(function() {
         this.setPosition = function() {
 
             this.html.css("position", "absolute");
-            this.html.css("left", this.value.x + this.value.unit);
             if(this.value.bottom === 0){
                 this.html.css("bottom", 0);
             } else{
                 this.html.css("top", this.value.y + this.value.unit);
+            }
+            if(this.value.right === 0){
+                this.html.css("right", 0);
+            } else{
+                this.html.css("left", this.value.x + this.value.unit);
             }
             this.html.css("width", this.value.width + this.value.unit);
             this.html.css("height", this.value.height + this.value.unit);
