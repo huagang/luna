@@ -231,6 +231,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 				return;
 			}
 			var data = {
+		            "app_id": this._app_id || null,
 		            "source_app_id": this._app_id || null,
 		            "app_name":this._app_name,
 		            "business_id": this._business_id
@@ -250,7 +251,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		            	}
 		            }
 		            else{
-		            	alert(data.msg);
+		            	alert(res.data.msg);
 		            }
 		        }.bind(this),
 		        error: function (data) {
