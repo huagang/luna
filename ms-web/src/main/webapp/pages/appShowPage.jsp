@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>${share_info_title}</title>
+    <title>${appName}</title>
 
     <!-- uc强制竖屏 -->
     <meta name="screen-orientation" content="portrait">

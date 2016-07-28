@@ -77,6 +77,7 @@ public class BusinessController extends BaseController {
             String shareInfoTitle = data.getString("share_info_title");
             String shareInfoDes = data.getString("share_info_des");
             String shareInfoPic = data.getString("share_info_pic");
+            modelAndView.addObject("appName", appName);
             modelAndView.addObject("share_info_title", StringUtils.isBlank(shareInfoTitle) ? appName : shareInfoTitle);
             modelAndView.addObject("share_info_des", StringUtils.isBlank(shareInfoDes) ? note : shareInfoDes);
             modelAndView.addObject("share_info_pic", StringUtils.isBlank(shareInfoPic) ? picThumb : shareInfoPic);
