@@ -28,12 +28,18 @@ $(document).ready(function() {
     }
 
     var iftab = false;
-    if (pageData.data.length>0) {
+    if (pageData.data instanceof Array && pageData.data.length>0) {
         for (var plist in pageData.data) {
             for (var con in pageData.data[plist].page_content){
                 if(pageData.data[plist].page_content[con].type=="tab"){
                     iftab=true;
                 }
+            }
+        }
+    }else if(typeof pageData.data.page_content == "object"){
+        for (var con in pageData.data.page_content){
+            if(pageData.data.page_content[con].type=="tab"){
+                iftab=true;
             }
         }
     }
