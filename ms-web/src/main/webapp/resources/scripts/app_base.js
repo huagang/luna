@@ -657,10 +657,10 @@ $(document).ready(function() {
                         menu.addClass('sm');
                     }
 
-                    content.addClass('overflow-hidden');
+                   /* content.addClass('overflow-hidden');
                     setTimeout(function(){
                         content.removeClass('overflow-hidden');
-                    }, 550);
+                    }, 450);*/
                 }
 
 
@@ -680,9 +680,9 @@ $(document).ready(function() {
 
             });
 
-            that.html.find('.topmenu-wrap').on('transitionend', function(event){
+           /* that.html.find('.topmenu-wrap').on('transitionend', function(event){
                 content.removeClass('overflow-hidden');
-            });
+            });*/
 
 
             content.on('click', '.icon-video', function(event){
