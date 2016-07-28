@@ -15,7 +15,11 @@ setCookie('businessId', 48);
 var objdata = {
     businessId: Util.location().business_id || 0,
     articleListData: null,
-    articleData: null
+    articleData: null,
+    canvas:{ 
+        width:375,  //画布的宽
+        height:617  //画布的高
+    }
 }
 
 //定义组件属性模板
@@ -788,6 +792,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             newComponent.css("top", componentObj.y + unit);
             newComponent.css("width", componentObj.width + unit);
             newComponent.css("height", componentObj.height + unit);
+            newComponent.css("right", componentObj.right + unit);
             newComponent.css("bottom", componentObj.bottom + unit);
             break;
     }
@@ -876,6 +881,7 @@ function updatePageComponents(pageID, componentID) {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.width());
             componentObj.height = parseInt($currenthtml.height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
             componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
             componentObj.unit = "px";
             break;
@@ -884,6 +890,7 @@ function updatePageComponents(pageID, componentID) {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.find("div.con").width());
             componentObj.height = parseInt($currenthtml.find("div.con").height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
             componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
             componentObj.unit = "px";
             break;
@@ -977,6 +984,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     comobj.css("top", component.y + unit);
     comobj.css("width", component.width + unit);
     comobj.css("height", component.height + unit);
+    comobj.css("right", component.right + unit);
     comobj.css("bottom", component.bottom + unit);
     comobj.css("z-index", component.zindex);
     comobj.css("display", component.display);
@@ -1008,23 +1016,21 @@ function showPanoBackground($container, componentData) {
             if (heading < 0) {
                 heading += 360;
             }
-            $('#panoHead').val(Number(heading).toFixed(0) * 1);
-            // var scope = angular.element('#panoHead').scope(); //jquery+angular实现
-            // scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
-            // scope.$apply();
+            var scope = angular.element('#panoHead').scope(); //jquery+angular实现
+            if (scope.canvas.pano.heading != Number(heading).toFixed(0) * 1) {
+                scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
+                scope.$apply();
+            }
         }
 
         //pitch方向滚动的时候回调函数
         pano.panoView.onPitchChangeCallback = function(pitch) {
-            pitch = pitch % 360;
-            if (pitch < 0) {
-                pitch += 360;
+       
+            var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
+            if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
+                scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
+                scope.$apply();
             }
-            $('#panoPitch').val(Number(pitch).toFixed(0) * 1);
-
-            // var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
-            // scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
-            // scope.$apply();
         }
         currentBgPano = pano;
     } else if (componentData.panoId && panoObj.length > 0) {
