@@ -28,7 +28,9 @@ a{
 img, video{
     max-width: 100%;
 }
-
+.overflow-hidden{
+    overflow: hidden !important;
+}
 .pull-right{
     float: right;
 }
@@ -39,8 +41,6 @@ img, video{
 .gray-bg{
     background-color: #f6f6f6;
 }
-
-
 
 .welcome{
     position: fixed;
@@ -196,6 +196,7 @@ img, video{
     position: relative;
     transition: opacity .5s ease-in-out;
     -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 
     color: #666;
     padding-bottom: 40px;
@@ -224,6 +225,7 @@ img, video{
     width: 100%;
     transition: height .5s ease-out;
     -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 
     overflow: hidden;
     flex-grow: 0;
@@ -332,6 +334,7 @@ img, video{
     border-bottom: 1px solid #eee;
     transition: top .5s ease-out;
     -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 }
 
  .detail-title{

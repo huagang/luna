@@ -395,11 +395,13 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             for(MsArticleWithBLOBs msArticleWithBLOBs : msArticleWithBLOBses) {
                 columnIdSet.add(msArticleWithBLOBs.getColumnId());
             }
-            MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-            msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
-            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
-            for (MsColumn msColumn : msColumns) {
-                columnInfoMap.put(msColumn.getId(), msColumn.getName());
+            if(columnIdSet.size() != 0) {
+                MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+                msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+                List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+                for (MsColumn msColumn : msColumns) {
+                    columnInfoMap.put(msColumn.getId(), msColumn.getName());
+                }
             }
         }
         if(msArticleWithBLOBses == null) {
@@ -443,7 +445,9 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         }
 
         MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-        msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+        if(columnIdSet.size() > 0) {
+            msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+        }
         List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
         for (MsColumn msColumn : msColumns) {
             columnInfoMap.put(msColumn.getId(), msColumn.getName());
