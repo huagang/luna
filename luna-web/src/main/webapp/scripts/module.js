@@ -555,6 +555,14 @@ function initBind(comid) {
                     });
                 }
             }
+
+            //TODO: 为右部吸边做准备
+            if (parseFloat($(this).css('left')) + $(this).width() == $('#layermain').width()) {
+                $(this).css({
+                    left: 'auto',
+                    right: '0px'
+                });
+            }
             $(this).removeClass("newcomponentbox");
             // drag允许组件处于未点击选中状态，模拟选中，并切换当前组件为活动组件
             getEleFocus($(this));

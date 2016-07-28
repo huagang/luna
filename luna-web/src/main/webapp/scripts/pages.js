@@ -724,7 +724,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "nav":
             newComponent.attr("component-type", "nav");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplenav.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -732,7 +732,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "pano":
             newComponent.attr("component-type", "pano");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplepano.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -740,7 +740,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "audio":
             newComponent.attr("component-type", "audio");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplevideo.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -748,7 +748,7 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "video":
             newComponent.attr("component-type", "video");
-            var icon = imghost + "/img/sample.png";
+            var icon = imghost + "/img/samplevideo.png";
             if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
@@ -779,13 +779,19 @@ function setPageComponentsHtml(pageID, componentID, comType) {
     newComponent.attr("component-id", componentID); // id
     newComponent.attr("id", componentID);
     newComponent.css("position", "absolute");
-    if (comType != "canvas") {
-        var unit = componentObj.unit;
-        newComponent.css("left", componentObj.x + unit);
-        newComponent.css("top", componentObj.y + unit);
-        newComponent.css("width", componentObj.width + unit);
-        newComponent.css("height", componentObj.height + unit);
+    switch (comType) {
+        case "canvas":
+            break;
+        default:
+            var unit = componentObj.unit;
+            newComponent.css("left", componentObj.x + unit);
+            newComponent.css("top", componentObj.y + unit);
+            newComponent.css("width", componentObj.width + unit);
+            newComponent.css("height", componentObj.height + unit);
+            newComponent.css("bottom", componentObj.bottom + unit);
+            break;
     }
+
     newComponent.css("z-index", componentObj.zindex);
     newComponent.css("display", componentObj.display);
     newComponent.children("div").children().attr("style", componentObj.style_other);
@@ -862,13 +868,27 @@ function updatePageComponents(pageID, componentID) {
 
     }
 
-    if ($currenthtml.attr("component-type") != "canvas" && $currenthtml.attr("component-type") != "tab") {
-        componentObj.x = parseInt($currenthtml.position().left);
-        componentObj.y = parseInt($currenthtml.position().top);
-        componentObj.width = parseInt($currenthtml.find("div.con").width());
-        componentObj.height = parseInt($currenthtml.find("div.con").height());
-        componentObj.unit = "px";
+    switch ($currenthtml.attr("component-type")) {
+        case 'canvas':
+            break;
+        case 'tab':
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.width());
+            componentObj.height = parseInt($currenthtml.height());
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
+            break;
+        default:
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.find("div.con").width());
+            componentObj.height = parseInt($currenthtml.find("div.con").height());
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
+            break;
     }
+
     componentObj.zindex = $currenthtml.zIndex();
     componentObj.display = $currenthtml.css('display');
 
@@ -920,6 +940,21 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
                 var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
+
+            break;
+        case "audio":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
+            break;
+        case "video":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
             break;
         case "tab":
 
@@ -942,6 +977,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     comobj.css("top", component.y + unit);
     comobj.css("width", component.width + unit);
     comobj.css("height", component.height + unit);
+    comobj.css("bottom", component.bottom + unit);
     comobj.css("z-index", component.zindex);
     comobj.css("display", component.display);
     comobj.children("div").children().attr("style", component.style_other);

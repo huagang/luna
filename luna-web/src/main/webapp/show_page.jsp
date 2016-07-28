@@ -201,6 +201,13 @@
                           <span>Y</span>
                           <input type="number" ng-model="text.currentComponent.y" ng-blur="text.changeY()" />px</li>
                         <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="text.currentComponent.zindex" ng-blur="text.changeZ()" /></li>
+                        <li>
+                          <span>底</span>
+                          <input type="number" ng-model="text.currentComponent.bottom" ng-blur="text.changeBottom()" ng-required="true" readonly="readonly" />
+                        </li>
+                        <li>
                           <span>宽</span>
                           <input type="number" ng-model="text.currentComponent.width" ng-blur="text.changeWidth()" />px</li>
                         <li>
@@ -331,6 +338,13 @@
                         <li>
                           <span>Y</span>
                           <input type="number" ng-model="img.currentComponent.y" ng-blur="img.changeY()" />px</li>
+                       <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="img.currentComponent.zindex" ng-blur="img.changeZ()" /></li>
+                       <li>
+                        <span>底</span>
+                        <input type="number" ng-model="img.currentComponent.bottom" ng-blur="img.changeBottom()" ng-required="true" readonly="readonly" />
+                      </li>
                         <li>
                           <span>宽</span>
                           <input type="number" ng-model="img.currentComponent.width" ng-blur="img.changeWidth()" />px</li>
@@ -423,6 +437,13 @@
                         <li>
                           <span>Y</span>
                           <input type="number" ng-model="nav.currentComponent.y" ng-blur="nav.changeY()" />px</li>
+                        <li>
+                          <span>Z</span>
+                          <input type="number" ng-model="nav.currentComponent.zindex" ng-blur="nav.changeZ()" /></li>
+                        <li>
+                          <span>底</span>
+                          <input type="number" ng-model="nav.currentComponent.bottom" ng-blur="nav.changeBottom()" ng-required="true" readonly="readonly" />
+                        </li>
                         <li>
                           <span>宽</span>
                           <input type="number" ng-model="nav.currentComponent.width" ng-blur="nav.changeWidth()" />px</li>
@@ -554,6 +575,13 @@
                                     <span>Y</span>
                                     <input type="number" ng-model="pano.currentComponent.y" ng-blur="pano.changeY()" />px</li>
                                 <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="pano.currentComponent.zindex" ng-blur="pano.changeZ()" /></li>
+                                <li>
+                                  <span>底</span>
+                                  <input type="number" ng-model="pano.currentComponent.bottom" ng-blur="pano.changeBottom()" ng-required="true" readonly="readonly" />
+                                </li>
+                                <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="pano.currentComponent.width" ng-blur="pano.changeWidth()" />px</li>
                                 <li>
@@ -646,6 +674,13 @@
                                 <li>
                                     <span>Y</span>
                                     <input type="number" ng-model="audio.currentComponent.y" ng-blur="audio.changeY()" />px</li>
+                                <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="audio.currentComponent.zindex" ng-blur="audio.changeZ()" /></li>
+                                <li>
+                                  <span>底</span>
+                                  <input type="number" ng-model="audio.currentComponent.bottom" ng-blur="audio.changeBottom()" ng-required="true" readonly="readonly" />
+                                </li>
                                 <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="audio.currentComponent.width" ng-blur="audio.changeWidth()" />px</li>
@@ -763,6 +798,13 @@
                                       <span>Y</span>
                                       <input type="number" ng-model="video.currentComponent.y" ng-blur="video.changeY()" />px</li>
                                   <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="video.currentComponent.zindex" ng-blur="video.changeZ()" /></li>
+                                  <li>
+                                    <span>底</span>
+                                    <input type="number" ng-model="video.currentComponent.bottom" ng-blur="video.changeBottom()" ng-required="true" readonly="readonly" />
+                                  </li>
+                                  <li>
                                       <span>宽</span>
                                       <input type="number" ng-model="video.currentComponent.width" ng-blur="video.changeWidth()" />px</li>
                                   <li>
@@ -845,7 +887,7 @@
                 <!-- video controller end -->
 
                 <!-- tab controller begin -->
-                 <div id="tabDiv" ng-controller="menuTabController as menuTab" class="menuTab-set">
+                <div id="tabDiv" ng-controller="menuTabController as menuTab" class="menuTab-set">
                     <button id="initTab" ng-click="menuTab.init()" class="ng-hide">Init</button>
                     <button id="updateTab" ng-click="menuTab.update()" class="ng-hide">Update</button>
                     <div>
@@ -866,6 +908,12 @@
                                     <span>Y</span>
                                     <input type="number" ng-model="menuTab.currentComponent.y" ng-blur="menuTab.changeY()" />px</li>
                                 <li>
+                                    <span>Z</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.zindex" ng-blur="menuTab.changeZ()" ng-required="true" /></li>
+                                <li>
+                                    <span>底</span>
+                                    <input type="number" ng-model="menuTab.currentComponent.bottom" ng-blur="menuTab.changeBottom()" ng-required="true" readonly="readonly" /></li>
+                                <li>
                                     <span>宽</span>
                                     <input type="number" ng-model="menuTab.currentComponent.width" ng-blur="menuTab.changeWidth()" />px</li>
                                 <li>
@@ -885,106 +933,124 @@
                             <h2><label>页卡管理：</label></h2>
                             <div class="form-group clearfix">
                                 <ul class="menutab-list">
-                                    <li  ng-repeat="item in menuTab.content.tabList track by item.id" ><a href="javascript:;" class="btn btn-menutab" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)" >{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
-                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)" ><a href="javascript:;" class="btn btn-createtab" id="createNewTab" >新建页卡</a>
-                                      <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a></li>
-                                        <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'poiList')" readonly='readonly'>POI列表</a></li>
-                                      </ul>
+                                    <li ng-repeat="item in menuTab.content.tabList track by item.id"><a href="javascript:;" class="btn btn-menutab" id='{{item.id}}' ng-click="menuTab.changeMenuTab($event,$index)">{{item.name}}<i class="iconfont icon-lunadelete1 {{item.delCls}}" ng-click="menuTab.delTab($event,$index)"></i></a></li>
+                                    <li ng-mouseenter="menuTab.selectTabType($event,$index)" ng-mouseleave="menuTab.selectTabType($event,$index)"><a href="javascript:;" class="btn btn-createtab" id="createNewTab">新建页卡</a>
+                                        <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
+                                            <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
+                                            <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
+                                            <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a></li>
+                                            <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'poiList')" readonly='readonly'>POI列表</a></li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>
                             <h2><label>页卡内容</label></h2>
                             <div id="" class="form-group clearfix" ng-show="menuTab.content.tabList.length>0">
                                 <div class="menutab-set-wrapper">
-                                    <div>页卡名称: <input type="text" name="" ng-model="menuTab.currentTab.name" ng-blur='menuTab.changeCurrentTabName()' ></div>
-                                    <div>页卡类型: <input type="text" name="" ng-model="menuTab.currentTab.typeName" readonly="readonly"></div>
+                                    <div>页卡名称:
+                                        <input type="text" name="" ng-model="menuTab.currentTab.name" ng-blur='menuTab.changeCurrentTabName()'>
+                                    </div>
+                                    <div>页卡类型:
+                                        <input type="text" name="" ng-model="menuTab.currentTab.typeName" readonly="readonly">
+                                    </div>
                                     <div>
-                                      <div>页卡图标:
-                                        <ui-select ng-model="menuTab.currentTab.icon.selected" theme="select2" on-select="menuTab.onIconSelectCallback($item, $model)" search-enabled="false" ng-disabled="" style="width: 70%;" title="选择icon">
-                                          <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}</ui-select-match>
-                                          <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
-                                            <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
-                                          </ui-select-choices>
-                                        </ui-select>
-                                      </div>
-                                    <div><span>图标默认颜色:</span> <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.defaultColor" ng-change="menuTab.changeIconColor('default')"></div>
-                                    <div><span>图标当前颜色:</span> <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.currentColor" ng-change="menuTab.changeIconColor('current')"></div>
+                                        <div>页卡图标:
+                                            <ui-select ng-model="menuTab.currentTab.icon.selected" theme="select2" on-select="menuTab.onIconSelectCallback($item, $model)" search-enabled="false" ng-disabled="" style="width: 70%;" title="选择icon">
+                                                <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
+                                                    <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div><span>图标默认颜色:</span>
+                                            <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.defaultColor" ng-change="menuTab.changeIconColor('default')">
+                                        </div>
+                                        <div><span>图标当前颜色:</span>
+                                            <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.color.currentColor" ng-change="menuTab.changeIconColor('current')">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <h2><label>数据源</label></h2>
                             <div class="form-group clearfix">
                                 <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
-                                  <div>栏目名称 <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
-                                    <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option> 
-                                  </select></div>
-                                  <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称 <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
-                                      <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
-                                    </select>
-                                  </div>
+                                    <div>栏目名称
+                                        <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
+                                            <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}</option>
+                                        </select>
+                                    </div>
+                                    <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称
+                                        <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
+                                            <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
-                                  <div>一级Poi <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
-                                      <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}</option>
-                                    </select>
-                                  </div>
-                                  <div>Poi类别 <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
-                                      <option ng-repeat='poiType in menuTab.poiTypeList track by poiType.id' value='{{poiType.id}}'>{{poiType.name}}</option>
-                                    </select>
-                                  </div>
+                                    <div>一级Poi
+                                        <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
+                                            <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}</option>
+                                        </select>
+                                    </div>
+                                    <div>Poi类别
+                                        <select ng-model="menuTab.currentTab.poiTypeId" ng-change="menuTab.changePoiType($evnet)">
+                                            <option ng-repeat='poiType in menuTab.poiTypeList track by poiType.id' value='{{poiType.id}}'>{{poiType.name}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singlePoi'">
-                                  <div>PoiId <input type="text" name="" ng-model="menuTab.currentTab.singlePoiId" ng-blur='menuTab.changeSinglePoiId()'
-                                  </div>
+                                    <div>PoiId
+                                        <input type="text" name="" ng-model="menuTab.currentTab.singlePoiId" ng-blur='menuTab.changeSinglePoiId()' </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- 交互样式 -->
                     <div class="interaction" ng-show="menuTab.tabs.interact.content">
-                          <form name="audioInteractForm">
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="none" ng-click="menuTab.clearHref()"/>无链接
-                                  </label>
-                              </div>
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label><br/>
-                                      <input type="url" class="txt" name="outerValue" ng-model="menuTab.action.href.outerValue" ng-change="menuTab.changeOuterHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'outer'"/>
-                                  <div role="alert">
-                                      <span class="error" ng-show="audioInteractForm.outerValue.$error.url">url格式不合法</span>
-                                  </div>
-                              </div>
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="inner" ng-click="menuTab.loadPages()"/>微展页面：
-                                  </label><br/>
-                                  <select class="select" ng-model="menuTab.action.href.innerValue" ng-change="menuTab.changeInnerHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'inner'">
-                                      <option ng-repeat="option in menuTab.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
-                                  </select>
-                              </div>
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label><br/>
-                                  <input type="email" class="txt" name="email" ng-model="menuTab.action.href.email" ng-change="menuTab.changeEmail()" ng-disabled="menuTab.currentComponent.action.href.type != 'email'"/>
-                                  <div role="alert">
-                                      <span class="error" ng-show="audioInteractForm.email.$error.email">email格式不合法</span>
-                                  </div>
-                              </div>
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label><br/>
-                                  <input type="text" class="txt" ng-model="menuTab.action.href.phone" ng-change="menuTab.changePhone()" ng-disabled="menuTab.currentComponent.action.href.type != 'phone'"/>
-                              </div>
-                              <div class="item">
-                                  <label>
-                                      <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
-                              </div>
-                          </form>
+                        <form name="audioInteractForm">
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="none" ng-click="menuTab.clearHref()" />无链接
+                                </label>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="outer">网站地址：</label>
+                                <br/>
+                                <input type="url" class="txt" name="outerValue" ng-model="menuTab.action.href.outerValue" ng-change="menuTab.changeOuterHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'outer'" />
+                                <div role="alert">
+                                    <span class="error" ng-show="audioInteractForm.outerValue.$error.url">url格式不合法</span>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="inner" ng-click="menuTab.loadPages()" />微展页面：
+                                </label>
+                                <br/>
+                                <select class="select" ng-model="menuTab.action.href.innerValue" ng-change="menuTab.changeInnerHref()" ng-disabled="menuTab.currentComponent.action.href.type != 'inner'">
+                                    <option ng-repeat="option in menuTab.action.href.pageOptions" value="{{option.id}}">{{option.name}}</option>
+                                </select>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="email">邮件跳转：</label>
+                                <br/>
+                                <input type="email" class="txt" name="email" ng-model="menuTab.action.href.email" ng-change="menuTab.changeEmail()" ng-disabled="menuTab.currentComponent.action.href.type != 'email'" />
+                                <div role="alert">
+                                    <span class="error" ng-show="audioInteractForm.email.$error.email">email格式不合法</span>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="phone">电话号码：</label>
+                                <br/>
+                                <input type="text" class="txt" ng-model="menuTab.action.href.phone" ng-change="menuTab.changePhone()" ng-disabled="menuTab.currentComponent.action.href.type != 'phone'" />
+                            </div>
+                            <div class="item">
+                                <label>
+                                    <input type="radio" name="link" ng-model="menuTab.currentComponent.action.href.type" class="radio" value="return">返回上一页：</label>
+                            </div>
+                        </form>
                     </div>
                     <!-- 交互样式 -->
                 </div>
