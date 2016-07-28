@@ -361,6 +361,10 @@ $(function() {
             var y = $('#elementy').val();
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 1;
                 $target.css("top", position.top + 'px');
@@ -378,6 +382,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 1;
                 $target.css("top", position.top + 'px');
@@ -394,12 +402,15 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 1;
                 $target.css("left", position.left + 'px');
@@ -421,6 +432,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 1;
                 $target.css("left", position.left + 'px');
@@ -437,6 +452,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 10;
                 $target.css("top", position.top + 'px');
@@ -453,6 +472,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 10;
                 $target.css("top", position.top + 'px');
@@ -469,6 +492,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 10;
                 $target.css("left", position.left + 'px');
@@ -485,6 +512,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 10;
                 $target.css("left", position.left + 'px');

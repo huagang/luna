@@ -170,8 +170,8 @@
                     <label>全景背景：</label>
                     <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
                     <div class="bgPano-set" ng-show="canvas.panoId">
-                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字" min="0" max="360"></div>
-                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入-90 - 90的数字" min="-90" max="90"></div>
+                      <div class="bgPano-set-item">Heading: <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字" ></div>
+                      <div class="bgPano-set-item">Pitch: <input id="panoPitch" class="form-control" type="number" name="" ng-model="canvas.pano.pitch" ng-blur="canvas.changePano()" placeholder="请输入-90 - 90的数字" ></div>
                       <div class="bgPano-set-item" ng-hide="true">Roll: <input class="form-control" type="number" name="" ng-model="canvas.pano.roll" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字"></div>
                     </div>
                     <div class="form-group"><input type="checkbox" id="chkGsensor"  ng-model="canvas.gravity" ng-click="canvas.changePano()"><lable for="chkGsensor">开启重力感应</lable></div>
@@ -851,14 +851,14 @@
 
                               <form id="videoIconForm" name="videoIconForm" method="post" enctype="multipart/form-data" class="video-upload">
                                   <span class="title">视频图标</span>
-                                  <input class="fileurl video-url" id="videoIconUrl" placeholder="请上传视频图标" ng-model="video.currentComponent.content.videoIcon" ng-blur="" readonly="readonly" />
+                                  <input class="fileurl video-url" id="videoIconUrl" placeholder="请上传视频图标" ng-model="video.currentComponent.content.videoIcon" ng-blur="video.changeVideoIcon()" readonly="readonly" />
                                   <button class="btn btn-local">上传</button>
                                   <input type="file" onchange="async_upload_pic('videoIconForm','',true,'',this,'videoIconUrl');" class="file file-local" id="" name="pic" />
                               </form>
 
                               <form id="videoFileForm" name="videoFileForm" method="post" enctype="multipart/form-data" class="video-upload">
                                   <span class="title">视频文件</span>
-                                  <input class="fileurl play-icon-url" id="videoFileUrl" placeholder="请上传视频频文件" ng-model="video.currentComponent.content.videoUrl" ng-blur="changeVideoUrl" />
+                                  <input class="fileurl play-icon-url" id="videoFileUrl" placeholder="请上传视频频文件" ng-model="video.currentComponent.content.videoUrl" ng-blur="" />
                                   <button class="btn btn-local">上传</button>
                                   <input type="file" onchange="async_upload_audioVideo('videoFileForm',this,'videoFileUrl','video','app',true);" class="file file-local" id="" name="file" />
                               </form>
