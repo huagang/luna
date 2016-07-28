@@ -605,6 +605,7 @@ img{
 #poiList-hotel .hotel-info {
     padding: 10px 10px 15px;
     color: #333;
+    line-height: 21px;
 }
 
 #poiList-hotel .contact {
