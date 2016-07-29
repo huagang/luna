@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import ms.luna.biz.dao.custom.model.MsShowPage;
 import org.bson.Document;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 /**
  * Created by greek on 16/7/28.
  */
+@Repository("MsFarmPageDAO")
 public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
 
     MongoCollection<Document> greektestCollection;
