@@ -194,6 +194,7 @@ img, video{
 
 #container{
     height: 100vh;
+    -webkit-overflow-scrolling: touch;
     overflow: scroll;
 }
 

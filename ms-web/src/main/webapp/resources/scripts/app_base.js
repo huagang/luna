@@ -227,7 +227,7 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(30, function() {
+            $('.welcome').fadeOut(3000, function() {
      //           $('.welcome').remove();
        //         delete paraScene;
             });
@@ -235,7 +235,7 @@ $(document).ready(function() {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 40);
+        }, 4000);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -921,6 +921,17 @@ $(document).ready(function() {
                                     navAttr = ' endName="' + item.poi_name + '" endPosition=' + item.lnglat.lat + ',' + item.lnglat.lng;
 
                                 }
+                                if(item.contact_phone){
+                                    var phonesList = item.contact_phone.split(/[,，]/),
+                                        phones = '';
+
+                                    phonesList.forEach(function(item){
+                                        if(item){
+                                            phones += '<a href="tel:' + item +'">' + item + '</a>  ';
+                                        }
+                                    });
+                                    console.log(phones);
+                                }
                                 hotelList +=
                                     '<div class="hotel-item">'
                                     + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
@@ -946,7 +957,7 @@ $(document).ready(function() {
                                     +       '<p>' + item.share_desc + '</p>'
                                     +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
                                     +           '<i class="icon-phone"></i>'
-                                    +           '<span>' + item.contact_phone + '</span>'
+                                    +           '<span>' + phones + '</span>'
                                     +       '</p>'
                                     + '</div>'
                                     +'</div>';
