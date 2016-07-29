@@ -636,11 +636,13 @@ $(document).ready(function() {
 
 
             $(document).on('scroll', function(event){
-                if(that.scrollId){
-                    clearTimeout(that.scrollId);
+                var menu = that.html.find('.topmenu-wrap');
+                var content = that.html.find('#content');
+                if (that.scrollTarget.scrollTop() === 0 ) {
+                    menu.removeClass('sm');
+                } else if (!menu.hasClass('sm')) {
+                    menu.addClass('sm');
                 }
-                that.scrollTarget = $(document);
-                that.scrollId = setTimeout(handleScroll, 100);
             });
 
 
@@ -679,20 +681,6 @@ $(document).ready(function() {
 
 
         }
-
-
-        function handleScroll() {
-            var menu = that.html.find('.topmenu-wrap');
-            that.scrollId = undefined;
-            that.scrollTop = undefined;
-            var content = that.html.find('#content');
-            if (that.scrollTarget.scrollTop() === 0 ) {
-                menu.removeClass('sm');
-            } else if (!menu.hasClass('sm')) {
-                menu.addClass('sm');
-            }
-        }
-
         function fetchData(){
 
             that.value.content.tabList.forEach(function(item, index){
