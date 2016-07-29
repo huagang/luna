@@ -227,7 +227,7 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(3000, function() {
+            $('.welcome').fadeOut(30, function() {
                 $('.welcome').remove();
                 delete paraScene;
             });
@@ -235,7 +235,7 @@ $(document).ready(function() {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
+        }, 40);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -587,7 +587,7 @@ $(document).ready(function() {
             that.data = [];
             that.menuIndex = 0;
             that.content = '';
-
+            that.toolbar = '';
         }
 
 
@@ -617,7 +617,7 @@ $(document).ready(function() {
 
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
 
-            var content = that.html.find('#content');
+            var content = that.html.find('#content'), toolbar = that.html.find('#toolbar');
             content.on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
@@ -635,12 +635,12 @@ $(document).ready(function() {
             });
 
 
-            content.on('scroll', function(event){
+            $(document).on('scroll', function(event){
                 if(that.scrollId){
                     clearTimeout(that.scrollId);
                 }
-                that.scrollTarget = event.target;
-                that.scrollId = setTimeout(scrollCheck, 100);
+                that.scrollTarget = $(document);
+                that.scrollId = setTimeout(handleScroll, 100);
             });
 
 
@@ -652,17 +652,8 @@ $(document).ready(function() {
                 if(content.hasClass('transparent')){
                     content.removeClass('transparent');
                     content.html(that.content);
-                    if(that.value.content.tabList[that.menuIndex].type === 'singleArticle'){
-                        setTimeout(function(){
-                            content.find('.content-details').on('scroll', function(event){
-                                if(that.scrollId){
-                                    clearTimeout(that.scrollId);
-                                }
-                                that.scrollTarget = $('.content-details');
-                                that.scrollId = setTimeout(scrollCheck, 100);
-                            });
-                        }, 100);
-                    }
+                    toolbar.html(that.toolbar);
+                    that.toolbar = '';
                     that.content = ''
                 } else{ // opaque
                     if(that.content){
@@ -690,13 +681,12 @@ $(document).ready(function() {
         }
 
 
-        function scrollCheck() {
+        function handleScroll() {
             var menu = that.html.find('.topmenu-wrap');
             that.scrollId = undefined;
             that.scrollTop = undefined;
-            if (that.scrollTarget.scrollTop() === 0) {
+            if (that.scrollTarget.scrollTop() === 0 ) {
                 menu.removeClass('sm');
-
             } else if (!menu.hasClass('sm')) {
                 menu.addClass('sm');
             }
@@ -727,7 +717,7 @@ $(document).ready(function() {
                                 }
 
                             }
-                        },
+                        }
                     });
                     break;
                 case 'singleArticle':
@@ -804,15 +794,18 @@ $(document).ready(function() {
             });
             var html =
             '<div id="container" class="container">'
-            + '<div class="topmenu-wrap">'
-            +        '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
-            +            that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
-            +        '<div class="topmenu">'
-            +            '<div class="menulist-wrap canscroll"><div class="menulist-container">'
-            +               labsHtml
-            +            '</div></div>'
-            +        '</div>'
-            + '</div>'
+            + '<div class="header">'
+            +   '<div class="topmenu-wrap">'
+            +           '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
+            +                that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
+            +           '<div class="topmenu">'
+            +             '<div class="menulist-wrap canscroll"><div class="menulist-container">'
+            +                labsHtml
+            +             '</div></div>'
+            +         '</div>'
+            +   '</div>'
+            +   '<div id="toolbar"></div>'
+            +  '</div>'
             + '<div id="content" class="canscroll"></div>'
             + '</div>';
 
@@ -848,7 +841,7 @@ $(document).ready(function() {
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
-                    html =
+                    that.toolbar =
                         //'<div id="article">'
                           '<div class="detail-title-wrap">'
                         +       '<span class="detail-title">'
@@ -862,8 +855,7 @@ $(document).ready(function() {
                         +           '<audio src="' + data.audio + '"></audio>'
                         +       '</span>'
                         +   '</div>'
-                        +   '<div class="content-details canscroll clearboth">'+ (data.content)+'</div>';
-                    //    +'</div>';
+                       html = '<div class="content-details canscroll clearboth">'+ (data.content)+'</div>';
                     break;
                 case 'poiList':
                     var typeInfo = {
@@ -1038,21 +1030,15 @@ $(document).ready(function() {
                 content.addClass('transparent');
                 that.content = html;
             } else{
-                that.content = '';
                 content.html(html);
+                that.html.find('#toolbar').html(that.toolbar || '');
+                that.content = '';
+                that.toolbar = '';
+
             }
 
             if(type === 'singleArticle'){
                 content.addClass('no-padding-bottom');
-                setTimeout(function(){
-                    content.find('.content-details').on('scroll', function(event){
-                        if(that.scrollId){
-                            clearTimeout(that.scrollId);
-                        }
-                        that.scrollTarget = $('.content-details');
-                        that.scrollId = setTimeout(scrollCheck, 100);
-                    });
-                }, 100);
             } else{
                 content.removeClass('no-padding-bottom');
             }
@@ -1135,7 +1121,7 @@ function getMyLocation(successCallback, errorCallback) {
 
     var options = {
         enableHighAccuracy: true,
-        maximumAge: 1000,
+        maximumAge: 1000
     };
 
     if (navigator.geolocation) {
