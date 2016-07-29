@@ -11,14 +11,16 @@
 }
 html,body{
 	height: 100%;
+	background: #fff;
 }
 .wrapper{
-	display: flex;
-	flex-direction: column;
+	/* display: flex; */
+	/* flex-direction: column; */
 	max-width: 750px;
 	margin: 0 auto;
 	background-color: #fff;
 	position: relative;
+	height: 100%;
 }
 .wrapper > div{
 	flex-shrink: 0;
@@ -30,10 +32,10 @@ html,body{
 	/* overflow: scroll; */
 	font-size: 14px;
 	line-height: 24px;
-	border-bottom: 1px solid #dee0e3;
+	/* border-bottom: 1px solid #dee0e3; */
 }
 .content img,.content video{
-	width: 100%;
+	max-width: 100%;
 }
 
 .banner{
@@ -175,4 +177,12 @@ html,body{
     display: inline-block;
     background-size: 675px 443px;
     background-position: 0px -56px;
+}
+.footer{
+		bottom: 0;
+		width: 100%;
+		background-color: #fff;
+		overflow: hidden;
+		border-top: 1px solid #e5e5e5;
+		height: 45px;
 }

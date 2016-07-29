@@ -31,7 +31,7 @@ public class VODUtil {
 	private static final String REGION = "bj"; // 区域参数
 	private static final String URL = "/api_vodPlayApi.do?method=getVideoUrlsFromCallbackInfo&token="; // 转码回调地址
 	private static final int DATASIZE = 1024 * 1024 * 5;// 视屏上传切片大小，默认5M
-	private static final long MAX_VIDEO_SIZE = 1024 * 1024 * 5;// 最大上传大小，设置5M
+	private static final long MAX_VIDEO_SIZE = 1024 * 1024 * 20;// 最大上传大小，设置20M
 
 	public static final String LUNA_BUCKET = "luna";
 	public static String vodBaseDir = ""; // 在ApplicationListener中初始化

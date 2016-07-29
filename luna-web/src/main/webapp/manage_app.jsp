@@ -224,8 +224,8 @@
 	function operationFormatter(value, row, index) {
 		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
 		var editOp = '<a class="property">属性</a>';
-		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}">编辑</a>'
-				.format('${basePath}', row.app_id);
+		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}&business_id={2}">编辑</a>'
+				.format('${basePath}', row.app_id, row.business_id);
 		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
 		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';

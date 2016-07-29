@@ -41,7 +41,7 @@
             <div class='content-wrapper'>
                 <div class='content'></div> 
             </div>
-            <div class="footer">
+            <div class="footer hidden">
                 <div class="go-top"></div>
             </div>
         </div>

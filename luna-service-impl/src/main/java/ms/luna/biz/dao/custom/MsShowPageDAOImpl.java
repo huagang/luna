@@ -99,7 +99,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 	 */
 	public String createOnePage(MsShowPage page) {
 		Document document = insertPage2Document(page);
-		showPageCollection.insertOne(insertPage2Document(page));
+		showPageCollection.insertOne(document);
 		return document.getString(FIELD_PAGE_ID);
 	}
 	

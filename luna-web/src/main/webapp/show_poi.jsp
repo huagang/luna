@@ -50,10 +50,10 @@
 				</span>
 				<span class="btn-wrap audio-btn-wrap hidden">
 					<i class="icon icon-audio"></i>
-				</span>				
+				</span>
 			</div>
 			<div class='content-wrapper'>
-				<div class='content'></div>	
+				<div class='content'></div>
 			</div>
 		</div>
 		<div class='video-modal hidden'>

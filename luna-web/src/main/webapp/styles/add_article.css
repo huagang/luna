@@ -94,7 +94,7 @@ span.fileinput-button:hover
 
 
 .pic-upload{
-	overflow: hidden;
+	overflow: visible;
 	position:relative;
 }
 .pic-upload-left, 
@@ -210,4 +210,15 @@ input[type='text'] {
 	margin: 20px 0 0 20px;	
 	width: 104px;
 	height:36px;
+}
+.article-head-pic{
+	overflow: visible;
+}
+.article-audio>div,.article-video>div,.article-head-pic>div{
+	position:relative;
+}
+.cleanInput{
+	position: absolute;
+	right: -40px;
+	top: 7px;
 }
