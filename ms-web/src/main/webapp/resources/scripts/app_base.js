@@ -1040,9 +1040,9 @@ $(document).ready(function() {
             }
 
             if(type === 'singleArticle'){
-                content.addClass('no-padding-bottom');
+                content.addClass('no-padding-bottom').addClass('gray-bg');
             } else{
-                content.removeClass('no-padding-bottom');
+                content.removeClass('no-padding-bottom').removeClass('gray-bg');
             }
 
 
