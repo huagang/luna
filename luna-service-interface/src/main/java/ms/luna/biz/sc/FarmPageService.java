@@ -15,7 +15,7 @@ public interface FarmPageService {
 
     JSONObject getFarmFields();
 
-    JSONObject loadPage(String json);
+    JSONObject loadPage(Integer app_id);
 
     JSONObject previewPage(String json);
 

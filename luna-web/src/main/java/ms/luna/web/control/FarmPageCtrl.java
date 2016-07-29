@@ -137,6 +137,22 @@ public class FarmPageCtrl extends BasicCtrl {
         }
     }
 
+    @RequestMapping(params = LOADPAGE)
+    @ResponseBody
+    public JSONObject loadPage(
+        @RequestParam(required = true, value = "app_id") Integer app_id,
+        HttpServletRequest request, HttpServletResponse response) {
+        try {
+            JSONObject result = farmPageService.loadPage(app_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Fail to load page." + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to load page.");
+        }
+
+    }
+
     @RequestMapping(params = PREVIEW)
     @ResponseBody
     public JSONObject previewPage(

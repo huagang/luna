@@ -21,22 +21,9 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
         greektestCollection = mongoConnector.getDBCollection(COLLECTION_NAME);
     }
 
-
-    @Override
-    public boolean isPageExist(Integer app_id) {
-        Document doc = new Document();
-        doc.append(MsShowPageDAO.FIELD_APP_ID, app_id);
-
-        Document result = greektestCollection.find(doc).limit(1).first();
-        if(result == null) {
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public void insertPage(JSONObject data) {
-        greektestCollection.insertOne(convertJson2Document(data));
+        greektestCollection.insertOne(convertJson2Document(null, data));
     }
 
     @Override
@@ -44,16 +31,23 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
         Integer app_id = data.getInteger(MsShowPageDAO.FIELD_APP_ID);
         Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, app_id);
         Document document = greektestCollection.find(filter).limit(1).first();
-        greektestCollection.updateOne(filter, new Document().append("$set", convertJson2Document(data, document));
+        greektestCollection.updateOne(filter, new Document().append("$set", convertJson2Document(document, data)));
+    }
+
+    @Override
+    public Document selectPageByAppId(Integer app_id) {
+        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, app_id);
+        return greektestCollection.find(filter).limit(1).first();
     }
 
     /**
      * JSON数据转化为Document
      *
-     * @param data json数据
+     * @param document 需要更新的数据ß
+     * @param data 更新数据
      * @return Document
      */
-    private Document convertJson2Document(JSONObject data, Document document) {
+    private Document convertJson2Document(Document document, JSONObject data) {
         if(document == null) {
             document = new Document();
         }

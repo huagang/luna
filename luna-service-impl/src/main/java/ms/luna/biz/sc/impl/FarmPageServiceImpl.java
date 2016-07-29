@@ -10,11 +10,13 @@ import ms.luna.biz.cons.VbConstant.fieldType;
 import ms.luna.biz.dao.custom.MsFarmFieldDAO;
 import ms.luna.biz.dao.custom.MsFarmPageDAO;
 import ms.luna.biz.dao.custom.MsShowAppDAO;
+import ms.luna.biz.dao.custom.MsShowPageDAO;
 import ms.luna.biz.dao.model.MsFarmField;
 import ms.luna.biz.dao.model.MsFarmFieldCriteria;
 import ms.luna.biz.dao.model.MsShowApp;
 import ms.luna.biz.dao.model.MsShowAppCriteria;
 import ms.luna.biz.sc.FarmPageService;
+import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang3.tuple.Pair;
@@ -62,14 +64,14 @@ public class FarmPageServiceImpl implements FarmPageService {
 
             JSONObject data = new JSONObject();
             data.put(MsShowAppDAO.FIELD_APP_ID, appId);
-            data.put("fields", fields.getJSONArray("fields"));
-            return FastJsonUtil.sucess("成功添加微景展", data);
+            data.put(MsFarmFieldTable.FIELDS, fields.getJSONArray(MsFarmFieldTable.FIELDS));
+            MsLogger.debug("Init app page. " + data.toString());
+            return FastJsonUtil.sucess("success", data);
         } catch (Exception e) {
             MsLogger.error("Failed to create app: " + e.getMessage());
-
             // 手动添加回滚设置
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to create app");
         }
 
     }
@@ -77,17 +79,16 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Override
     public JSONObject editPage(String json) {
         try {
-
             JSONObject param = JSONObject.parseObject(json);
             Integer app_id = param.getInteger("app_id");
 
             // 检查app_id是否创建
-            if (isAppIdExist(app_id)) {
+            if (!this.isAppIdExist(app_id)) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
             }
 
-            // 检查数据库是否存在
-            if (msFarmPageDAO.isPageExist(app_id)) { // --exist
+            // 检查mongo数据是否存在
+            if (this.isPageExist(app_id)) { // --exist
                 msFarmPageDAO.updatePage(param);
             } else { // --not exit
                 msFarmPageDAO.insertPage(param);
@@ -111,8 +112,28 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
-    public JSONObject loadPage(String json) {
-        return null;
+    public JSONObject loadPage(Integer app_id) {
+        try{
+            // 检查app_id是否存在
+            if (!this.isAppIdExist(app_id)) {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
+            }
+            // 获取mongo数据
+            Document document = msFarmPageDAO.selectPageByAppId(app_id);
+
+            // 获取页面字段定义和数值
+            JSONObject fields = getFarmFields(document);
+
+            JSONObject data = new JSONObject();
+            data.put(MsShowPageDAO.FIELD_APP_ID, app_id);
+            data.put(MsFarmFieldTable.FIELDS, fields.getJSONArray("fields"));
+            MsLogger.debug("load page info." + data.toString());
+            return FastJsonUtil.sucess("success", data);
+        } catch (Exception e) {
+            MsLogger.error("Fail to load page. " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to load page");
+        }
+
     }
 
     @Override
@@ -142,18 +163,18 @@ public class FarmPageServiceImpl implements FarmPageService {
             String field_type = field.getFieldType();
             String field_limit = field.getFieldLimit();
             String extension_attrs = field.getExtensionAttrs();
-            field_def.put("field_limit", JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
-            field_def.put("extension_attrs", convertExtensionAttrs2Json(extension_attrs, field_type));
+            field_def.put(MsFarmFieldTable.FIELD_LIMIT, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
+            field_def.put(MsFarmFieldTable.EXTENSION_ATTRS, convertExtensionAttrs2Json(extension_attrs, field_type));
 
             // 添加字段值
             Object field_val = getFieldValFromDoc(document, field_name, field_type);
 
             JSONObject json = new JSONObject();
-            json.put("field_def", field_def);
-            json.put("field_val", field_val);
+            json.put(MsFarmFieldTable.FIELD_DEF, field_def);
+            json.put(MsFarmFieldTable.FIELD_VAL, field_val);
             array.add(json);
         }
-        fieldArray.put("fields", array);
+        fieldArray.put(MsFarmFieldTable.FIELDS, array);
         return fieldArray;
     }
 
@@ -214,8 +235,21 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @return Boolean
      */
     private boolean isAppIdExist(Integer app_id) {
-        // TODO
-        return true;
+        return msShowAppDAO.selectByPrimaryKey(app_id) == null;
+    }
+
+    /**
+     * 检查mongoDB微景展ID是否存在
+     *
+     * @param app_id 微景展ID
+     * @return boolean
+     */
+    private boolean isPageExist(Integer app_id) {
+        Document doc = new Document();
+        doc.append(MsShowPageDAO.FIELD_APP_ID, app_id);
+
+        Document result = msFarmPageDAO.selectPageByAppId(app_id);
+        return result != null;
     }
 
     // --------------------------------------------------------------------------------------------
