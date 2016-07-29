@@ -86,9 +86,10 @@ img, video{
     width: 100%;
     height: 100%;
 }
-.componentbox .con,{
+.componentbox .con{
 	width: 100%;
 	height: 100%;
+    height: 100vh;
 }
 .componentbox .con img{
     width: 100%;
@@ -521,7 +522,7 @@ img, video{
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 100px;
+    line-height: 77px;
     font-size: 1.67rem;
     word-break: break-all;
     margin: 3px 12px 0 0;

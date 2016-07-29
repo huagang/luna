@@ -228,8 +228,8 @@ $(document).ready(function() {
 
             });
             $('.welcome').fadeOut(3000, function() {
-                $('.welcome').remove();
-                delete paraScene;
+     //           $('.welcome').remove();
+       //         delete paraScene;
             });
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
