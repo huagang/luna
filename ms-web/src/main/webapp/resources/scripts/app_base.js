@@ -227,7 +227,7 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(30, function() {
+            $('.welcome').fadeOut(3000, function() {
                 $('.welcome').remove();
                 delete paraScene;
             });
@@ -235,7 +235,7 @@ $(document).ready(function() {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 40);
+        }, 4000);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
