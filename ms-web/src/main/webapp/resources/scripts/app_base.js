@@ -685,6 +685,7 @@ $(document).ready(function() {
             var menu = that.html.find('.topmenu-wrap');
             that.scrollId = undefined;
             that.scrollTop = undefined;
+            var content = that.html.find('#content');
             if (that.scrollTarget.scrollTop() === 0 ) {
                 menu.removeClass('sm');
             } else if (!menu.hasClass('sm')) {
