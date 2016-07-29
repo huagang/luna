@@ -101,7 +101,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         msArticle.setAuthor(author);
 
         int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
-        if(column > 0) {
+        if(column >= 0) {
             msArticle.setColumnId(column);
         }
 
@@ -395,7 +395,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             for(MsArticleWithBLOBs msArticleWithBLOBs : msArticleWithBLOBses) {
                 columnIdSet.add(msArticleWithBLOBs.getColumnId());
             }
-            if(columnIdSet.size() != 0) {
+            if(columnIdSet.size() > 0) {
                 MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
                 msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
                 List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
