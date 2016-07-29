@@ -638,7 +638,7 @@ $(document).ready(function() {
             $(document).on('scroll', function(event){
                 var menu = that.html.find('.topmenu-wrap');
                 var content = that.html.find('#content');
-                if (that.scrollTarget.scrollTop() === 0 ) {
+                if (document.body.scrollTop === 0 ) {
                     menu.removeClass('sm');
                 } else if (!menu.hasClass('sm')) {
                     menu.addClass('sm');
@@ -656,7 +656,8 @@ $(document).ready(function() {
                     content.html(that.content);
                     toolbar.html(that.toolbar);
                     that.toolbar = '';
-                    that.content = ''
+                    that.content = '';
+                    document.body.scrollTop = 0;
                 } else{ // opaque
                     if(that.content){
                         content.addClass('transparent');

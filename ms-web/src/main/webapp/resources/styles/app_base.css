@@ -237,8 +237,8 @@ img, video{
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: height .5s ease-out;
-
     overflow: hidden;
+    background-color: white;
 }
 
 .topmenu-wrap.sm{
