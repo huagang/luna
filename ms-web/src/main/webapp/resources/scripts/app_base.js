@@ -622,7 +622,7 @@ $(document).ready(function() {
                 header = that.html.find('.header'),
                 menu = that.html.find('.topmenu-wrap');
 
-            content.on('click', '.icon-radio', function(event){
+            that.html.on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
                     if(target.hasClass('icon-radio-on')){
@@ -695,7 +695,7 @@ $(document).ready(function() {
 
 
 
-            content.on('click', '.icon-video', function(event){
+            that.html.on('click', '.icon-video', function(event){
                 var radio = that.html.find(".icon-radio");
                 if(radio.hasClass('icon-radio-on')){
                     radio.siblings('audio')[0].pause();
