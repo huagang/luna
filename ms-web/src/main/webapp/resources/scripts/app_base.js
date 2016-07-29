@@ -815,7 +815,7 @@ $(document).ready(function() {
 
         function updateContent(){
             var data = that.data[that.menuIndex];
-            var html = '';
+            var html = '', toolbar = '';
             var type = that.value.content.tabList[that.menuIndex].type;
             switch(type){
                 case 'singlePoi':
@@ -842,7 +842,7 @@ $(document).ready(function() {
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
-                    that.toolbar =
+                    toolbar =
                         //'<div id="article">'
                           '<div class="detail-title-wrap">'
                         +       '<span class="detail-title">'
@@ -1030,9 +1030,10 @@ $(document).ready(function() {
             if(content.html()){
                 content.addClass('transparent');
                 that.content = html;
+                that.toolbar = toolbar;
             } else{
                 content.html(html);
-                that.html.find('#toolbar').html(that.toolbar || '');
+                that.html.find('#toolbar').html(toolbar || '');
                 that.content = '';
                 that.toolbar = '';
 

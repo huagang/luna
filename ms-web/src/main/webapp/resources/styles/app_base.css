@@ -203,7 +203,7 @@ img, video{
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    transition: opacity,margin-top .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
 
     color: #666;
     padding-bottom: 40px;
@@ -212,11 +212,6 @@ img, video{
     -webkit-overflow-scrolling: touch;
 
     margin-top: 201px;
-}
-
-#content.half-margin{
-    margin-top: 101px;
-    transition: opacity .5s ease-in-out;
 }
 
 #content.no-padding-bottom{
