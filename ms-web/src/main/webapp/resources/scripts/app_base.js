@@ -227,7 +227,7 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(3000, function() {
+            $('.welcome').fadeOut(30, function() {
      //           $('.welcome').remove();
        //         delete paraScene;
             });
@@ -235,7 +235,7 @@ $(document).ready(function() {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
+        }, 40);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -617,7 +617,11 @@ $(document).ready(function() {
 
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
 
-            var content = that.html.find('#content'), toolbar = that.html.find('#toolbar');
+            var content = that.html.find('#content'),
+                toolbar = that.html.find('#toolbar'),
+                header = that.html.find('.header'),
+                menu = that.html.find('.topmenu-wrap');
+
             content.on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
@@ -635,16 +639,37 @@ $(document).ready(function() {
             });
 
 
-            $(document).on('scroll', function(event){
-                var menu = that.html.find('.topmenu-wrap');
-                var content = that.html.find('#content');
-                if (document.body.scrollTop === 0 ) {
-                    menu.removeClass('sm');
-                } else if (!menu.hasClass('sm')) {
-                    menu.addClass('sm');
+            that.html.find('#container').on('scroll', function(event){
+                that.scrollTarget = that.html.find('#container');
+
+                checkScroll();
+               if(that.scrollId){
+                    clearTimeout(that.scrollId);
                 }
+                that.scrollId = setTimeout(checkScroll, 200);
             });
 
+            function checkScroll(){
+                console.log(that.scrollTarget.scrollTop());
+                if(that.scrollTarget.scrollTop() > 100){
+                    if(! header.hasClass('absolute')){
+                        header.addClass('absolute')
+                        menu.addClass('sm');
+                        var type = that.value.content.tabList[that.menuIndex].type
+                        if(type === 'singleArticle'){
+                            content.addClass('padding-top-255');
+                        } else{
+                            content.addClass('padding-top-201');
+                        }
+                    }
+                } else{
+                    if(header.hasClass('absolute')){
+                        header.removeClass('absolute')
+                        menu.removeClass('sm');
+                        content.removeClass('padding-top-201').removeClass('padding-top-255');
+                    }
+                }
+            }
 
 
 

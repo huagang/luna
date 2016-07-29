@@ -38,6 +38,13 @@ img, video{
     display: none !important;
 }
 
+.absolute{
+    position:absolute !important;
+    top: 0;
+    left:0;
+    z-index: 1;
+}
+
 .gray-bg{
     background-color: #f6f6f6;
 }
@@ -187,11 +194,10 @@ img, video{
 
 #container{
     height: 100vh;
+    overflow: scroll;
 }
 
 #container .header{
-    position: fixed;
-    z-index: 100;
     width: 100%;
 }
 
@@ -204,14 +210,13 @@ img, video{
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: opacity .5s ease-in-out;
-
     color: #666;
     padding-bottom: 40px;
     overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 
-    padding-top: 201px;
+  /*  padding-top: 201px;*/
 }
 
 #content.no-padding-bottom{
@@ -236,7 +241,7 @@ img, video{
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    transition: height .5s ease-out;
+   /* transition: height .5s ease-out;*/
     overflow: hidden;
     background-color: white;
 }
@@ -334,11 +339,6 @@ img, video{
     width: 100%;
     color: #666;
     border-bottom: 1px solid #eee;
-    -webkit-transform-style: preserve-3d;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: top .5s ease-out;
 }
 
  .detail-title{
@@ -426,7 +426,7 @@ img, video{
      padding: 15px 15px 15px;
      font-size: 1.17rem;
      line-height: 1.72;
-     margin-top: 53px;
+     /*margin-top: 53px;*/
  }
 
 
@@ -674,5 +674,12 @@ img, video{
     background-size: 15px;
     vertical-align: sub;
     margin-right: 8px;
+}
+
+.padding-top-201{
+    padding-top: 201px
+}
+.padding-top-255{
+    padding-top: 255px
 }
 /* 目录页口 end */
