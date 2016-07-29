@@ -26,7 +26,7 @@ a{
 }
 
 img, video{
-    max-width: 100%;
+    max-width: 100% !important;
 }
 .overflow-hidden{
     overflow: hidden !important;
@@ -186,7 +186,7 @@ img, video{
 #container{
     display: -webkit-flex;
     display: flex;
-    height: 100%;
+    height: 100vh;
     flex-direction: column;
 }
 
@@ -197,17 +197,20 @@ img, video{
     transition: opacity .5s ease-in-out;
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
-
     color: #666;
     padding-bottom: 40px;
     flex-grow: 1;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     flex-shrink: 1;
 }
 
 #content.no-padding-bottom{
     padding-bottom: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .transparent{
@@ -321,9 +324,10 @@ img, video{
     display: block
 }
 
-#article  .detail-title-wrap {
-    position: fixed;
-    top: 200px;
+  .detail-title-wrap {
+      flex-shrink: 0;
+      flex-grow: 0;
+
     z-index: 100;
     height: 53px;
     line-height: 53px;
@@ -417,10 +421,13 @@ img, video{
 
 
  .content-details{
+     overflow: scroll;
      background-color: #F6F6F6;
-     padding:68px 15px 15px;
+     padding: 15px 15px 15px;
      font-size: 1.17rem;
      line-height: 1.72;
+     flex-grow: 1;
+     flex-shrink: 1;
  }
 
 

@@ -631,40 +631,18 @@ $(document).ready(function() {
 
             });
 
-            var menu = that.html.find('.topmenu-wrap');
 
             content.on('scroll', function(event){
                 if(that.scrollId){
                     clearTimeout(that.scrollId);
                 }
-
+                that.scrollTarget = event.target;
                 that.scrollId = setTimeout(scrollCheck, 100);
             });
 
-            function scrollCheck() {
-                that.scroll = false;
-                console.log(content.scrollTop());
-                if(that.scrollTop === undefined || content.scrollTop() !== that.scrollTop){
-                    that.scrollId = setTimeout(scrollCheck, 100)
-                    that.scrollTop = content.scrollTop();
-                    return;
-                } else {
-                    this.scrollId = undefined;
-                    that.scrollTop = undefined;
-                    if (content.scrollTop() === 0) {
-                        menu.removeClass('sm');
-                    } else if (!menu.hasClass('sm')) {
-                        menu.addClass('sm');
-                    }
-
-                   /* content.addClass('overflow-hidden');
-                    setTimeout(function(){
-                        content.removeClass('overflow-hidden');
-                    }, 450);*/
-                }
 
 
-            }
+
 
 
             content.on('transitionend', function(event){
@@ -680,9 +658,7 @@ $(document).ready(function() {
 
             });
 
-           /* that.html.find('.topmenu-wrap').on('transitionend', function(event){
-                content.removeClass('overflow-hidden');
-            });*/
+
 
 
             content.on('click', '.icon-video', function(event){
@@ -698,7 +674,55 @@ $(document).ready(function() {
 
             });
 
+            var menu = that.html.find('.topmenu-wrap');
+            menu.on('transitionend', function(){
+                that.upTransition = false;
+            });
 
+        }
+
+        function stableAnimateForSingleArticle(){
+            var requestAnimationFrame = window.requestAnimationFrame
+            || window.mozRequestAnimationFrame
+            || window.webkitRequestAnimationFrame
+            || window.msRequestAnimationFrame
+            || window.oRequestAnimationFrame;
+
+            function stableAnimation(){
+                if(that.upTransition && that.scrollTarget.hasClass('content-details')){
+                    var scrollTop = that.scrollTarget[0].scrollHeight - that.scrollHeight + that.scrollTop;
+                    console.log('scrollTop',scrollTop);
+                    that.scrollTarget.scrollTop(scrollTop);
+                    requestAnimationFrame(stableAnimation);
+                }
+            }
+            requestAnimationFrame(stableAnimation);
+
+        }
+
+
+        function scrollCheck() {
+            var menu = that.html.find('.topmenu-wrap');
+            that.scroll = false;
+            console.log(that.scrollTarget.scrollTop());
+            if(that.scrollTop === undefined || that.scrollTarget.scrollTop() !== that.scrollTop){
+                that.scrollId = setTimeout(scrollCheck, 100)
+                that.scrollTop = that.scrollTarget.scrollTop();
+                return;
+            } else {
+                that.scrollId = undefined;
+                that.scrollTop = undefined;
+                if (that.scrollTarget.scrollTop() === 0) {
+                    menu.removeClass('sm');
+
+                } else if (!menu.hasClass('sm')) {
+                    menu.addClass('sm');
+                    that.upTransition = true; // 向上的动画
+                    that.scrollHeight = that.scrollTarget[0].scrollHeight;
+                    that.scrollTop = that.scrollTarget.scrollTop();
+                    stableAnimateForSingleArticle();
+                }
+            }
         }
 
         function fetchData(){
@@ -840,7 +864,7 @@ $(document).ready(function() {
                     +           '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
                     +       '</span>'
                     +   '</div>'
-                    +   '<div class="content-details clearboth">'+ data.brief_introduction +'</div>'
+                    +   '<div class="content-details canscroll clearboth">'+ data.brief_introduction +'</div>'
                     +'</div>';
                     break;
                 case 'singleArticle':
@@ -848,8 +872,8 @@ $(document).ready(function() {
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
                     html =
-                        '<div id="article">'
-                        +   '<div class="detail-title-wrap">'
+                        //'<div id="article">'
+                          '<div class="detail-title-wrap">'
                         +       '<span class="detail-title">'
                         +            '<i class="icon icon-arr-right"></i>'+ title
                         +       '</span>'
@@ -861,8 +885,8 @@ $(document).ready(function() {
                         +           '<audio src="' + data.audio + '"></audio>'
                         +       '</span>'
                         +   '</div>'
-                        +   '<div class="content-details clearboth">'+ (data.content)+'</div>'
-                        +'</div>';
+                        +   '<div class="content-details canscroll clearboth">'+ (data.content)+'</div>';
+                    //    +'</div>';
                     break;
                 case 'poiList':
                     var typeInfo = {
@@ -934,7 +958,7 @@ $(document).ready(function() {
                                     +   '</div>'
                                     + '</div>'
                                     + '<div class="hotel-info">'
-                                    +       '<p>' + item.brief_introduction + '</p>'
+                                    +       '<p>' + item.share_desc + '</p>'
                                     +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
                                     +           '<i class="icon-phone"></i>'
                                     +           '<span>' + item.contact_phone + '</span>'
@@ -1007,6 +1031,7 @@ $(document).ready(function() {
                         } else{
                             bg = "background:url(" + host +"/resources/images/default.png) center center no-repeat;";
                         }
+                        var titleClass = '';
                         if(item.title && item.title.length > 3){
                             titleClass = 'title-sm'
                         }
@@ -1042,9 +1067,17 @@ $(document).ready(function() {
 
             if(type === 'singleArticle'){
                 content.addClass('no-padding-bottom');
+                content.find('.content-details').on('scroll', function(event){
+                    if(that.scrollId){
+                        clearTimeout(that.scrollId);
+                    }
+                    that.scrollTarget = $('.content-details');
+                    that.scrollId = setTimeout(scrollCheck, 100);
+                });
             } else{
                 content.removeClass('no-padding-bottom');
             }
+
 
         }
 
