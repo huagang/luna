@@ -227,12 +227,15 @@ $(document).ready(function() {
             $('.welcome').next('.component-group').fadeIn(2000, function() {
 
             });
-            $('.welcome').fadeOut(3000, function() {});
+            $('.welcome').fadeOut(3000, function() {
+                $('.welcome').remove();
+                delete paraScene;
+            });
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 3000);
+        }, 4000);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -649,6 +652,17 @@ $(document).ready(function() {
                 if(content.hasClass('transparent')){
                     content.removeClass('transparent');
                     content.html(that.content);
+                    if(that.value.content.tabList[that.menuIndex].type === 'singleArticle'){
+                        setTimeout(function(){
+                            content.find('.content-details').on('scroll', function(event){
+                                if(that.scrollId){
+                                    clearTimeout(that.scrollId);
+                                }
+                                that.scrollTarget = $('.content-details');
+                                that.scrollId = setTimeout(scrollCheck, 100);
+                            });
+                        }, 100);
+                    }
                     that.content = ''
                 } else{ // opaque
                     if(that.content){
@@ -662,7 +676,6 @@ $(document).ready(function() {
 
 
             content.on('click', '.icon-video', function(event){
-
                 var radio = that.html.find(".icon-radio");
                 if(radio.hasClass('icon-radio-on')){
                     radio.siblings('audio')[0].pause();
@@ -671,57 +684,21 @@ $(document).ready(function() {
                  var url = event.target.parentNode.getAttribute('data-srcurl');
                 $('.video-modal').css('display', 'block');
                 $('#diaVideo').attr('src', url);
-
             });
 
-            var menu = that.html.find('.topmenu-wrap');
-            menu.on('transitionend', function(){
-                that.upTransition = false;
-            });
-
-        }
-
-        function stableAnimateForSingleArticle(){
-            var requestAnimationFrame = window.requestAnimationFrame
-            || window.mozRequestAnimationFrame
-            || window.webkitRequestAnimationFrame
-            || window.msRequestAnimationFrame
-            || window.oRequestAnimationFrame;
-
-            function stableAnimation(){
-                if(that.upTransition && that.scrollTarget.hasClass('content-details')){
-                    var scrollTop = that.scrollTarget[0].scrollHeight - that.scrollHeight + that.scrollTop;
-                    console.log('scrollTop',scrollTop);
-                    that.scrollTarget.scrollTop(scrollTop);
-                    requestAnimationFrame(stableAnimation);
-                }
-            }
-            requestAnimationFrame(stableAnimation);
 
         }
 
 
         function scrollCheck() {
             var menu = that.html.find('.topmenu-wrap');
-            that.scroll = false;
-            console.log(that.scrollTarget.scrollTop());
-            if(that.scrollTop === undefined || that.scrollTarget.scrollTop() !== that.scrollTop){
-                that.scrollId = setTimeout(scrollCheck, 100)
-                that.scrollTop = that.scrollTarget.scrollTop();
-                return;
-            } else {
-                that.scrollId = undefined;
-                that.scrollTop = undefined;
-                if (that.scrollTarget.scrollTop() === 0) {
-                    menu.removeClass('sm');
+            that.scrollId = undefined;
+            that.scrollTop = undefined;
+            if (that.scrollTarget.scrollTop() === 0) {
+                menu.removeClass('sm');
 
-                } else if (!menu.hasClass('sm')) {
-                    menu.addClass('sm');
-                    that.upTransition = true; // 向上的动画
-                    that.scrollHeight = that.scrollTarget[0].scrollHeight;
-                    that.scrollTop = that.scrollTarget.scrollTop();
-                    stableAnimateForSingleArticle();
-                }
+            } else if (!menu.hasClass('sm')) {
+                menu.addClass('sm');
             }
         }
 
@@ -1067,13 +1044,15 @@ $(document).ready(function() {
 
             if(type === 'singleArticle'){
                 content.addClass('no-padding-bottom');
-                content.find('.content-details').on('scroll', function(event){
-                    if(that.scrollId){
-                        clearTimeout(that.scrollId);
-                    }
-                    that.scrollTarget = $('.content-details');
-                    that.scrollId = setTimeout(scrollCheck, 100);
-                });
+                setTimeout(function(){
+                    content.find('.content-details').on('scroll', function(event){
+                        if(that.scrollId){
+                            clearTimeout(that.scrollId);
+                        }
+                        that.scrollTarget = $('.content-details');
+                        that.scrollId = setTimeout(scrollCheck, 100);
+                    });
+                }, 100);
             } else{
                 content.removeClass('no-padding-bottom');
             }

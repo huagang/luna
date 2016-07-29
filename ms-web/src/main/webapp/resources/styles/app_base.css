@@ -194,9 +194,13 @@ img, video{
 
 #content{
     position: relative;
-    transition: opacity .5s ease-in-out;
+
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: opacity .5s ease-in-out;
+
     color: #666;
     padding-bottom: 40px;
     flex-grow: 1;
@@ -223,12 +227,15 @@ img, video{
 }
 
 .topmenu-wrap{
+    will-change: height;
     position: relative;
     height: 201px;
     width: 100%;
-    transition: height .5s ease-out;
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: height .5s ease-out;
 
     overflow: hidden;
     flex-grow: 0;
@@ -238,11 +245,6 @@ img, video{
 .topmenu-wrap.sm{
     height: 101px;
 }
-.topmenu-wrap.sm + #content .detail-title-wrap{
-    top: 100px;
-}
-
-
 .menulist{
     position: relative;
     min-width: 20vw;
@@ -324,7 +326,7 @@ img, video{
     display: block
 }
 
-  .detail-title-wrap {
+.detail-title-wrap {
       flex-shrink: 0;
       flex-grow: 0;
 
@@ -336,9 +338,11 @@ img, video{
     width: 100%;
     color: #666;
     border-bottom: 1px solid #eee;
-    transition: top .5s ease-out;
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: top .5s ease-out;
 }
 
  .detail-title{
@@ -421,6 +425,7 @@ img, video{
 
 
  .content-details{
+     will-change: height;
      overflow: scroll;
      background-color: #F6F6F6;
      padding: 15px 15px 15px;
@@ -431,8 +436,8 @@ img, video{
  }
 
 
- #poiList,
- #articleList{
+#poiList,
+#articleList{
      padding: 15px 15px 0;
  }
 
