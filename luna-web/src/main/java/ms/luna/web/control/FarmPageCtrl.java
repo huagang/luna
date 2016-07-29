@@ -8,6 +8,7 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.common.FarmCommon;
 import ms.luna.web.common.BasicCtrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,7 +66,7 @@ public class FarmPageCtrl extends BasicCtrl {
             // TODO 获取业务id--get from session
             Integer business_id = 46;
 
-            // TODO 获取创建人信息;
+            // TODO 获取创建人信息--get from session
             HttpSession session = request.getSession(false);
             if (session == null) {
                 throw new RuntimeException("session is null");
@@ -96,20 +97,24 @@ public class FarmPageCtrl extends BasicCtrl {
     @RequestMapping(params = SAVEPAGE)
     @ResponseBody
     public JSONObject savePage(
-            @RequestParam(required = true, value = "app_id") String app_id,
+            @RequestParam(required = true, value = "fieldsVal") String fieldsVal,
             HttpServletRequest request, HttpServletResponse response) {
          try{
+             // 获取字段定义
+             JSONObject result1 = farmPageService.getFarmFields();
+             if (!"0".equals(result1)) {
+                 return result1;
+             }
+             JSONObject data = result1.getJSONObject("data");
+             JSONArray fields = data.getJSONArray("fields");
 
-             // 获取具体字段数值
-             JSONObject param = params2Json(request);
+             // 检查字段数值
+             FarmCommon.getInStance().checkFieldsVal(JSONObject.parseObject(fieldsVal), fields);
 
-
-             param.put("_id", app_id);
-             JSONObject result = farmPageService.editPage(param.toString());
+             // 保存
+             JSONObject result = farmPageService.editPage(fieldsVal);
              MsLogger.debug(result.toString());
-
              return result;
-
          } catch (Exception e) {
              MsLogger.error("Falied to save page." + e.getMessage());
              return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Falied to save page");
@@ -125,31 +130,28 @@ public class FarmPageCtrl extends BasicCtrl {
         try{
             JSONObject result = farmPageService.delPage(app_id);
             MsLogger.debug(result.toString());
-
             return result;
-
         } catch (Exception e) {
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Falied to del page." + e.getMessage());
+            MsLogger.error("Failed to del page." + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Falied to del page.");
         }
     }
 
+    @RequestMapping(params = PREVIEW)
+    @ResponseBody
     public JSONObject previewPage(
-
-    )
-
-    private boolean checkAppName() {
-        return true;
+            HttpServletRequest request, HttpServletResponse response) {
+        return null;
     }
 
-    private JSONObject params2Json(HttpServletRequest request) {
-        JSONObject result = farmPageService.getFarmFields();
-        MsLogger.debug(result.toString());
-        if (!"0".equals(result.get("code"))) {
-            return result;
-        }
-        JSONObject data = result.getJSONObject("data");
-        JSONArray fields = data.getJSONArray("fields");
-        return FarmCommon.getInstance()
+    /**
+     * 检查微景展名称
+     *
+     * @return Boolean
+     */
+    private boolean checkAppName() {
+        // TODO
+        return true;
     }
 
 }

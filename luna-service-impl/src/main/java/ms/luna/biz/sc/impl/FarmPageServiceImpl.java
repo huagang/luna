@@ -8,6 +8,7 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.cons.VbConstant.fieldType;
 import ms.luna.biz.dao.custom.MsFarmFieldDAO;
+import ms.luna.biz.dao.custom.MsFarmPageDAO;
 import ms.luna.biz.dao.custom.MsShowAppDAO;
 import ms.luna.biz.dao.model.MsFarmField;
 import ms.luna.biz.dao.model.MsFarmFieldCriteria;
@@ -38,6 +39,9 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Autowired
     private MsShowAppDAO msShowAppDAO;
 
+    @Autowired
+    private MsFarmPageDAO msFarmPageDAO;
+
     @Override
     public JSONObject initPage(String json) {
 
@@ -46,24 +50,24 @@ public class FarmPageServiceImpl implements FarmPageService {
 
         JSONObject jsonObject = JSONObject.parseObject(json);
         try {
-            // 创建微景展(ms_show_app)
+            // 创建微景展(ms_show_app),获取app_id
             Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
             if (!createResult.getLeft()) {
                 return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
             }
-
             int appId = msShowAppDAO.selectIdByName(FastJsonUtil.getString(jsonObject, "app_name"));
 
             // 获取页面字段定义和初始值
             JSONObject fields = getFarmFields(null);
 
-            JSONObject ret = new JSONObject();
-            ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
-            ret.put("fields", fields.getJSONArray("fields"));
-            return FastJsonUtil.sucess("成功添加微景展", ret);
-
+            JSONObject data = new JSONObject();
+            data.put(MsShowAppDAO.FIELD_APP_ID, appId);
+            data.put("fields", fields.getJSONArray("fields"));
+            return FastJsonUtil.sucess("成功添加微景展", data);
         } catch (Exception e) {
             MsLogger.error("Failed to create app: " + e.getMessage());
+
+            // 手动添加回滚设置
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
         }
@@ -72,12 +76,38 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     @Override
     public JSONObject editPage(String json) {
-        return null;
+        try {
+
+            JSONObject param = JSONObject.parseObject(json);
+            Integer app_id = param.getInteger("app_id");
+
+            // 检查app_id是否创建
+            if (isAppIdExist(app_id)) {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
+            }
+
+            // 检查数据库是否存在
+            if (msFarmPageDAO.isPageExist(app_id)) { // --exist
+                msFarmPageDAO.updatePage(param);
+            } else { // --not exit
+                msFarmPageDAO.insertPage(param);
+            }
+            return FastJsonUtil.sucess("success");
+        } catch (Exception e) {
+            MsLogger.debug("Fail to edit page." + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to edit page");
+        }
+
     }
 
     @Override
     public JSONObject delPage(Integer app_id) {
         return null;
+    }
+
+    @Override
+    public JSONObject getFarmFields() {
+        return getFarmFields(null);
     }
 
     @Override
@@ -94,9 +124,9 @@ public class FarmPageServiceImpl implements FarmPageService {
     //-----------------------------------------------------------------------------------------------
 
     /**
-     * 获得农+字段定义和初始数值
+     * 获得农+字段定义和数值
      *
-     * @param document mongodb信息
+     * @param document mongodb信息.当参数为null时返回初始值
      * @return JSONObject
      */
     private JSONObject getFarmFields(Document document) {
@@ -121,7 +151,6 @@ public class FarmPageServiceImpl implements FarmPageService {
             JSONObject json = new JSONObject();
             json.put("field_def", field_def);
             json.put("field_val", field_val);
-
             array.add(json);
         }
         fieldArray.put("fields", array);
@@ -176,6 +205,17 @@ public class FarmPageServiceImpl implements FarmPageService {
         } else {
             return "";
         }
+    }
+
+    /**
+     * 检查微景展是否创建
+     *
+     * @param app_id 微景展ID
+     * @return Boolean
+     */
+    private boolean isAppIdExist(Integer app_id) {
+        // TODO
+        return true;
     }
 
     // --------------------------------------------------------------------------------------------
