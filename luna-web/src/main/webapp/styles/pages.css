@@ -361,6 +361,10 @@ ol {
     margin: 10px;
     font-size: 14px;
 }
+.bg-set .form-control{
+    margin-bottom: 5px;
+}
+
 
 #text-set,
 #bg-set-img {
@@ -548,7 +552,7 @@ a.img-clc:hover {
 
 .control-manage .position .list-pos li {
     display: inline-block;
-    margin: 0 20px 19px 0;
+    margin: 0 20px 10px 0;
 }
 
 .control-manage .position .list-pos li .txt {
@@ -822,7 +826,7 @@ a.wj-img-clc {
 /*音频控制样式 */
 
 .audio-upload .fileurl,
-.video-upload .fileurl{
+.video-upload .fileurl {
     height: 30px;
     padding: 0 5px;
     margin: 0 5px;
@@ -934,7 +938,7 @@ a.wj-img-clc {
     left: -100%;
     z-index: 2000;
     background-color: #fff;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid rgba(0, 0, 0, .15);
 }
 
 .btn-menutab {
@@ -949,12 +953,11 @@ a.wj-img-clc {
     background-color: grue;
 }
 
-
-.pop-uploadMenuTabIcon .item-wrap{
+.pop-uploadMenuTabIcon .item-wrap {
     width: 400px;
 }
 
-.pop-uploadMenuTabIcon .item-wrap .title{
+.pop-uploadMenuTabIcon .item-wrap .title {
     width: 50px;
 }
 
@@ -964,13 +967,26 @@ a.wj-img-clc {
     margin: 0 5px;
     width: 60%;
 }
-.tabMenuIcon-upload .btn-local{
+
+.tabMenuIcon-upload .btn-local {
     width: 80px;
 }
-.tabMenuIcon-upload .file-local{
+
+.tabMenuIcon-upload .file-local {
     width: 90px;
     left: 300px;
 }
+
+.menuTab-set .minicolors {
+    display: inline-block;
+    width: 70%;
+}
+
+.menuTab-set .color-set {
+    width: 100%;
+}
+/*页签组件End*/
+
 /* 保存的后的提示 */
 
 .msgTips {
@@ -983,4 +999,4 @@ a.wj-img-clc {
 /* END 保存的后的提示 */
 
 
-/*页签组件End*/
+

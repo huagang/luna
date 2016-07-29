@@ -210,29 +210,40 @@ function BaseComponentController() {
 
     //改变属性值响应事件
     this.changeX = function() {
+        this.currentComponent.position.changeTrigger.horizontal = "left";
         updatePageComponentsHtml(currentPageId, currentComponentId);
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
     };
 
     this.changeY = function() {
+        this.currentComponent.position.changeTrigger.vertial = "top";
         updatePageComponentsHtml(currentPageId, currentComponentId);
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
     };
     this.changeZ = function() {
         updatePageComponentsHtml(currentPageId, currentComponentId);
     };
-
+    this.changeBottom = function() {
+        this.currentComponent.position.changeTrigger.vertial = "bottom";
+        updatePageComponentsHtml(currentPageId, currentComponentId);
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+    };
+    this.changeRight = function() {
+        this.currentComponent.position.changeTrigger.horizontal = "right";
+        updatePageComponentsHtml(currentPageId, currentComponentId);
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+    };
     this.changeWidth = function() {
         updatePageComponentsHtml(currentPageId, currentComponentId);
-
     };
-
     this.changeHeight = function() {
         updatePageComponentsHtml(currentPageId, currentComponentId);
-
     };
 
     //点击某个组件触发初始化
     this.init = function() {
         this.currentComponent = currentComponent;
+        this.currentComponent.position = jQuery.extend(true, componentBaseModelTemplate.position, this.currentComponent.position);
     };
 
     //响应事件: 移动组件时改变属性框的值
@@ -543,6 +554,7 @@ function PanoController($scope, $rootScope) {
     this.init = function() {
         PanoController.prototype.init.call(this);
         this.content = jQuery.extend(true, {}, this.currentComponent.content);
+        this.content.panoTypeList = [{ id: 1, name: '单点全景' }, { id: 2, name: '相册全景' }, { id: 3, name: '自定义全景' }];
     };
 
     this.changeIcon = function() {
@@ -558,6 +570,10 @@ function PanoController($scope, $rootScope) {
             this.currentComponent.content.panoId = this.content.panoId;
             console.log("change panoId");
         }
+    }
+    this.changePanoType = function() {
+        this.currentComponent.content.panoType = this.content.panoType;
+        console.log('change panotype');
     }
 
 }
@@ -698,84 +714,84 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
         //图标选择初始化
         this.iconList = [{
-            name: '概况',
-            code: 'profile',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
-            customer: {},
-        }, {
-            name: '交通',
-            code: 'traffic',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
-        }, 
-        // {
-        //     name: '开发区',
-        //     code: 'area',
-        //     type: 'default',
-        //     defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
-        //     currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
-        // }, {
-        //     name: '数博会',
-        //     code: 'activity',
-        //     type: 'default',
-        //     defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
-        //     currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
-        // }, 
-        {
-            name: '名人',
-            code: 'celebrity',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
-        }, 
-        {
-            name: '民族',
-            code: 'nation',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-240px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-240px', '-0px'], bgSize: ['800px', '504px'] },
-        },        
-        // {
-        //     name: '文化',
-        //     code: 'culture',
-        //     type: 'default',
-        //     defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
-        //     currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
-        // }, 
-        {
-            name: '景点',
-            code: 'spots',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '食物',
-            code: 'food',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '酒店',
-            code: 'hotel',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '古代',
-            code: 'ancient',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-528px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-528px', '-0px'], bgSize: ['800px', '504px'] },
-        }, {
-            name: '近代',
-            code: 'modern',
-            type: 'default',
-            defaultStyle: { bgPosition: ['-576px', '-48px'], bgSize: ['800px', '504px'] },
-            currentStyle: { bgPosition: ['-576px', '-0px'], bgSize: ['800px', '504px'] },
-        } ];
+                name: '概况',
+                code: 'profile',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
+                customer: {},
+            }, {
+                name: '交通',
+                code: 'traffic',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
+            },
+            // {
+            //     name: '开发区',
+            //     code: 'area',
+            //     type: 'default',
+            //     defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
+            //     currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
+            // }, {
+            //     name: '数博会',
+            //     code: 'activity',
+            //     type: 'default',
+            //     defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
+            //     currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
+            // }, 
+            {
+                name: '名人',
+                code: 'celebrity',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
+            }, {
+                name: '民族',
+                code: 'nation',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-240px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-240px', '-0px'], bgSize: ['800px', '504px'] },
+            },
+            // {
+            //     name: '文化',
+            //     code: 'culture',
+            //     type: 'default',
+            //     defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
+            //     currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
+            // }, 
+            {
+                name: '景点',
+                code: 'spots',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
+            }, {
+                name: '食物',
+                code: 'food',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
+            }, {
+                name: '酒店',
+                code: 'hotel',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
+            }, {
+                name: '古代',
+                code: 'ancient',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-528px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-528px', '-0px'], bgSize: ['800px', '504px'] },
+            }, {
+                name: '近代',
+                code: 'modern',
+                type: 'default',
+                defaultStyle: { bgPosition: ['-576px', '-48px'], bgSize: ['800px', '504px'] },
+                currentStyle: { bgPosition: ['-576px', '-0px'], bgSize: ['800px', '504px'] },
+            }
+        ];
         // {
         //     name: '自定义图标',
         //     code: 'customer',

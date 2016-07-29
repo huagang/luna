@@ -22,6 +22,23 @@ var objdata = {
     }
 }
 
+//BaseComponet
+componentBaseModelTemplate = {
+    x: '',
+    y: '',
+    left: '',
+    right: '',
+    width: '',
+    height: '',
+    unit: '',
+    position: {
+        changeTrigger: {
+            vertial: '',    //纵向方向
+            horizontal: '', //横向方向   
+        }
+    }
+}
+
 //定义组件属性模板
 componentCanvasModelTemplate = {
     "_id": "",
@@ -969,7 +986,6 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
 
             break;
         case "tab":
-
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             comobj.find('.menulist').empty().append(innerHtml);
 
@@ -985,12 +1001,23 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
-    comobj.css("left", component.x + unit);
-    comobj.css("top", component.y + unit);
+    if (component.position.changeTrigger.horizontal == 'left') {
+        comobj.css("left", component.x + unit);
+        comobj.css("right", 'auto');
+    } else {
+        comobj.css("left", 'auto');
+        comobj.css("right", component.right + unit);
+    }
+    if (component.position.changeTrigger.vertial == 'top') {
+        comobj.css("top", component.y + unit);
+        comobj.css("bottom", 'auto');
+    } else {
+        comobj.css("top", 'auto');
+        comobj.css("bottom", component.bottom + unit);
+    }
     comobj.css("width", component.width + unit);
     comobj.css("height", component.height + unit);
-    comobj.css("right", component.right + unit);
-    comobj.css("bottom", component.bottom + unit);
+
     comobj.css("z-index", component.zindex);
     comobj.css("display", component.display);
     comobj.children("div").children().attr("style", component.style_other);

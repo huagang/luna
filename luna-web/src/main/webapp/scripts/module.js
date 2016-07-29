@@ -42,7 +42,7 @@ $(function() {
         //     }    
         // });
         lunaPage.creatPageComponents(currentPageId, null, "text");
-        currentComponent = jQuery.extend(true, {}, componentTextModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentTextModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("text");
@@ -67,7 +67,7 @@ $(function() {
         //     }    
         // });
         lunaPage.creatPageComponents(currentPageId, null, "img");
-        currentComponent = jQuery.extend(true, {}, componentImgModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentImgModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("img");
@@ -90,7 +90,7 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "nav");
-        currentComponent = jQuery.extend(true, {}, componentNavModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentNavModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("nav");
@@ -113,7 +113,7 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "pano");
-        currentComponent = jQuery.extend(true, {}, componentPanoModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentPanoModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("pano");
@@ -129,7 +129,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "audio");
-        currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentAudioModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("audio");
@@ -145,7 +145,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "video");
-        currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentVideoModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("video");
@@ -164,7 +164,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "tab");
-        currentComponent = jQuery.extend(true, {}, componentTabModelTemplate);
+        currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentTabModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("tab");
