@@ -653,6 +653,7 @@ $(document).ready(function() {
             content.on('transitionend', function(event){
                 if(content.hasClass('transparent')){
                     content.removeClass('transparent');
+                    toolbar.removeClass('transparent');
                     content.html(that.content);
                     toolbar.html(that.toolbar);
                     that.toolbar = '';
@@ -873,7 +874,7 @@ $(document).ready(function() {
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
-                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                            panoLink = 'http://pano.visualbusiness.cn/single/index.html?panoId='
                                             + item.panorama.panorama_id;
                                             break;
                                         case 2: // 相册全景
@@ -1018,6 +1019,7 @@ $(document).ready(function() {
             var content = that.html.find("#content");
             if(content.html()){
                 content.addClass('transparent');
+                that.html.find('#toolbar').addClass('transparent');
                 that.content = html;
                 that.toolbar = toolbar;
             } else{
