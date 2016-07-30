@@ -269,7 +269,7 @@ $(document).ready(function() {
             console.log('视频初始化完成');
         });
     });
-    $(document).on('click','.goback');
+    $(document).on('click','.goback', goback);
 
     function goback(){
         //返回逻辑
