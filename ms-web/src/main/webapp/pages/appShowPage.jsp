@@ -64,6 +64,7 @@
         var wechat = new weChat(wx,wechatOptions);
         var business_id = ${business_id};
     </script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>
 </html>
