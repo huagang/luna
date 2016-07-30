@@ -613,7 +613,6 @@ $(document).ready(function() {
             that.toolbarInfo = '';
         }
 
-
         function build() {
 
             that.setPosition();
@@ -622,6 +621,10 @@ $(document).ready(function() {
 
             var html = that.getTabsHtml();
             that.html.children('div').append(html);
+            that.content = that.html.find('#content');
+            that.toolbar = that.html.find('#toolbar');
+            that.header = that.html.find('.header');
+            that.menu = that.html.find('.topmenu-wrap');
             if(that.hasBuild === false){
                 that.hasBuild = true;
                 setTimeout(that.bindEvent, 1);
@@ -635,13 +638,6 @@ $(document).ready(function() {
 
         function bindEvent(){
             // clear event
-
-            that.content = that.html.find('#content');
-
-            that.toolbar = that.html.find('#toolbar');
-            that.header = that.html.find('.header');
-            that.menu = that.html.find('.topmenu-wrap');
-
 
             that.html.find('.menulist-wrap').off('click', '.icon');
 
@@ -1076,14 +1072,6 @@ $(document).ready(function() {
 
 
 
-            }
-
-            if(! that.content){
-                that.content = that.html.find('#content');
-            }
-
-            if(! that.toolbar){
-                that.toolbar = that.html.find('#toolbar');
             }
 
             if(that.content.html()){
