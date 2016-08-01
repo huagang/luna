@@ -62,6 +62,15 @@ a:active {
     text-decoration: underline;
 }
 
+.icon-right{
+    float: right;
+}
+.btn-slide{
+    cursor: pointer;
+}
+
+
+
 ol li,
 ul li {
     list-style: none;
@@ -971,6 +980,8 @@ a.wj-img-clc {
     width: 90px;
     left: 300px;
 }
+/*页签组件End*/
+
 /* 保存的后的提示 */
 
 .msgTips {
@@ -983,4 +994,4 @@ a.wj-img-clc {
 /* END 保存的后的提示 */
 
 
-/*页签组件End*/
+
