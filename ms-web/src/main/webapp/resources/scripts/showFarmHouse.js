@@ -41,27 +41,30 @@
             vm.farmData = {};
             // 获取农家id
             vm.id = location.pathname.split('/')[2]
-            vm.curPanoIndex = 0;
 
 
             // 数据请求
             vm.fetchPoiData();
             vm.fetchFarmHouseData();
+
+            // 全景相关
+            vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            vm.curPanoIndex = 0;
+
         }
 
         // 初始化全景
-        function setPano(){
-            var id = vm.farmData.panorama.panorama_id;
+        function setPano(index){
+            vm.curPanoIndex = index || vm.curPanoIndex;
+            var data = vm.farmData.panorama.panoList[vm.curPanoIndex];
             if(id){
-                var pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
-                pano.setPanoId(id);
-                pano.setHeading(33);
-                pano.setPitch(30);
-                pano.setRoll(0);
-                pano.setAutoplayEnable(false);
-                pano.setGravityEnable(true);
+                vm.pano.setPanoId(data.id);
+                vm.pano.setHeading(data.panoHeading);
+                vm.pano.setPitch(panoPitch);
+                vm.pano.setRoll(0);
+                vm.pano.setAutoplayEnable(false);
+                vm.pano.setGravityEnable(true);
             }
-
         }
 
         // 初始化轮播组件

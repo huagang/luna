@@ -73,7 +73,7 @@
             <div id="panoContainer"></div>
             <footer class="ng-hide" ng-show="farm.farmData.panorama.panorama_type_id === 2">
                 <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
-                     ng-class="{active: $index===farm.curPanoIndex}"
+                     ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
                      style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
                 </div>
             </footer>

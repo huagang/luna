@@ -149,15 +149,19 @@ body{
     height: 100%;
     width: 100%;
     opacity:0;
+
 }
 .room-info footer{
     width: 100%;
     overflow-x: auto;
     margin: 8px 0 15px 0 ;
     height: 70px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
 .room-info .pano-thumbnail{
+    display: inline-block;
     height: 18.6vw;
     width: 26.6vw;
     margin-right: 5px;
