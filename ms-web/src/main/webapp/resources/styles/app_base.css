@@ -28,6 +28,11 @@ a{
 img, video{
     max-width: 100% !important;
 }
+
+.transparent{
+    opacity: 0 !important;
+}
+
 .overflow-hidden{
     overflow: hidden !important;
 }
@@ -36,6 +41,13 @@ img, video{
 }
 .hidden{
     display: none !important;
+}
+
+.absolute{
+    position:absolute !important;
+    top: 0;
+    left:0;
+    z-index: 1;
 }
 
 .gray-bg{
@@ -86,9 +98,9 @@ img, video{
     width: 100%;
     height: 100%;
 }
-.componentbox .con,{
+.componentbox .con{
 	width: 100%;
-	height: 100%;
+    height: 100%;
 }
 .componentbox .con img{
     width: 100%;
@@ -185,33 +197,31 @@ img, video{
 
 /* 目录页口 start */
 
-#container{
-    height: 100vh;
+#scroll-wrapper{
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
 }
 
+
 #container .header{
-    position: fixed;
-    z-index: 100;
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index:2;
     width: 100%;
 }
 
 
 #content{
-    position: relative;
-
-    -webkit-transform-style: preserve-3d;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
+    padding-top: 202px;
     transition: opacity .5s ease-in-out;
-
+    transition-duration: 500ms !important;
     color: #666;
     padding-bottom: 40px;
-    overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-
-    padding-top: 201px;
 }
 
 #content.no-padding-bottom{
@@ -228,15 +238,9 @@ img, video{
 }
 
 .topmenu-wrap{
-    will-change: height;
     position: relative;
     height: 201px;
     width: 100%;
-    -webkit-transform-style: preserve-3d;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: height .5s ease-out;
     overflow: hidden;
     background-color: white;
 }
@@ -271,16 +275,6 @@ img, video{
 .menulist.current .icon.current{
     display: inline-block;
 }
-
-.topmenu{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-
 
 .menulist-wrap {
     overflow-y: hidden;
@@ -334,11 +328,6 @@ img, video{
     width: 100%;
     color: #666;
     border-bottom: 1px solid #eee;
-    -webkit-transform-style: preserve-3d;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: top .5s ease-out;
 }
 
  .detail-title{
@@ -420,13 +409,10 @@ img, video{
 
 
  .content-details{
-     will-change: height;
-     overflow: scroll;
      background-color: #F6F6F6;
-     padding: 15px 15px 15px;
+     padding: 68px 15px 15px;
      font-size: 1.17rem;
      line-height: 1.72;
-     margin-top: 53px;
  }
 
 
@@ -521,7 +507,7 @@ img, video{
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 100px;
+    line-height: 77px;
     font-size: 1.67rem;
     word-break: break-all;
     margin: 3px 12px 0 0;
@@ -674,5 +660,12 @@ img, video{
     background-size: 15px;
     vertical-align: sub;
     margin-right: 8px;
+}
+
+.padding-top-201{
+    padding-top: 201px
+}
+.padding-top-255{
+    padding-top: 255px
 }
 /* 目录页口 end */

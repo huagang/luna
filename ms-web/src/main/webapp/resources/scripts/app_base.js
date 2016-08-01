@@ -152,13 +152,22 @@ $(document).ready(function() {
         if(toString.call(pageData.data) === '[object Object]'){
             pageData.data = [pageData.data];
         }
-        var arrPageDatas = pageData.data,
+        var arrPageDatas = pageData.data || [],
             curPageGroup = {};
+
+
+        if(location.href.match(/\?disableWelcome=true/)){
+            if(arrPageDatas.length > 0 && arrPageDatas[0].page_code === 'welcome'){
+                // 过滤welcome页面
+                arrPageDatas.splice(0,1);
+            }
+        }
+
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
                 $comGroup = $('<div class="component-group ' + item.page_code + '"><i class="icon icon-goback goback"></i></div>');
             if (document.querySelector('.component-group')) {
-                $comGroup.hide();
+                $comGroup.css('opacity', 0);
             }
             $(".app-wrap").append($comGroup);
 
@@ -224,12 +233,15 @@ $(document).ready(function() {
             initPanoBg(welcomePanoBg);
         }
         setTimeout(function() {
-            $('.welcome').next('.component-group').fadeIn(2000, function() {
+            $('.welcome').next('.component-group').animate({opacity: 1}, 2000, function() {
 
             });
-            $('.welcome').fadeOut(3000, function() {
-                $('.welcome').remove();
-                delete paraScene;
+            $('.welcome').animate({opacity: 0},3000, function() {
+                $('.welcome').css('display','none');
+                // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
+
+                //$('.welcome').remove();
+                // delete paraScene;
             });
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
@@ -257,17 +269,24 @@ $(document).ready(function() {
             console.log('视频初始化完成');
         });
     });
-    $(document).on('click','.goback', function(){
+    $(document).on('click','.goback', goback);
+
+    function goback(){
+        //返回逻辑
         if(document.referrer === '' || ! document.referrer.match(location.host)){
             try{
-                location.href = location.href.match(/^(.*app\/\w+)/)[1];
+                location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1];
             } catch(e){
-
             }
         } else{
-            location.href = document.referrer || location.href.match(/^(.*app\/\w+)/)[1];
+            if(document.referrer){
+                location.href = document.referrer + '?disableWelcome=true';
+            } else{
+                location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1] + '?disableWelcome=true';
+            }
         }
-    });
+    }
+
     /* 基础组件 */
     function BaseComponent() {
 
@@ -340,7 +359,7 @@ $(document).ready(function() {
 
                         var link = event.currentTarget.getAttribute('data-href');
                         if(link === 'return'){
-                            history.back(-1);
+                            goback();
                         } else{
                             location.href = link;
                         }
@@ -553,7 +572,6 @@ $(document).ready(function() {
     function menuTab(data) {
         // mock数据
         var that = this;
-
         that.init = init;
 
         // 渲染组件
@@ -577,6 +595,11 @@ $(document).ready(function() {
         // 更新内容区域数据
         that.updateContent = updateContent;
 
+        // 检查内容滚动并做相关处理
+        that.checkScroll = checkScroll;
+
+        // 切换目录时刷新IScroll
+        that.refreshScroll = refreshScroll;
         that.init();
 
         BaseComponent.call(that);
@@ -586,10 +609,9 @@ $(document).ready(function() {
             that.hasBuild = false;
             that.data = [];
             that.menuIndex = 0;
-            that.content = '';
-            that.toolbar = '';
+            that.contentInfo = '';
+            that.toolbarInfo = '';
         }
-
 
         function build() {
 
@@ -599,9 +621,13 @@ $(document).ready(function() {
 
             var html = that.getTabsHtml();
             that.html.children('div').append(html);
+            that.content = that.html.find('#content');
+            that.toolbar = that.html.find('#toolbar');
+            that.header = that.html.find('.header');
+            that.menu = that.html.find('.topmenu-wrap');
             if(that.hasBuild === false){
                 that.hasBuild = true;
-                setTimeout(that.bindEvent, 600);
+                setTimeout(that.bindEvent, 1);
             }
             that.fetchData();
             that.html.css('width','100%');
@@ -612,13 +638,19 @@ $(document).ready(function() {
 
         function bindEvent(){
             // clear event
+
             that.html.find('.menulist-wrap').off('click', '.icon');
-            that.html.find('#content').off('click', '#poi .icon-radio');
+
+            that.content.off('click', '#poi .icon-radio');
 
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
 
-            var content = that.html.find('#content'), toolbar = that.html.find('#toolbar');
-            content.on('click', '.icon-radio', function(event){
+
+
+                //scroll = that.html.find('#scroll-wrapper');
+
+
+            that.html.on('click', '.icon-radio', function(event){
                 var target = $(event.target);
                 try{
                     if(target.hasClass('icon-radio-on')){
@@ -629,38 +661,39 @@ $(document).ready(function() {
                         target.siblings('audio')[0].play();
                     }
                 } catch(e){
-
-                }
-
-            });
-
-
-            $(document).on('scroll', function(event){
-                var menu = that.html.find('.topmenu-wrap');
-                var content = that.html.find('#content');
-                if (document.body.scrollTop === 0 ) {
-                    menu.removeClass('sm');
-                } else if (!menu.hasClass('sm')) {
-                    menu.addClass('sm');
                 }
             });
 
 
+            that.myScroll = new IScroll('#scroll-wrapper',{
+                probeType: 3,
+                mouseWheel: true,
+                click:true,
+                momentum: true
+            });
 
+            that.myScroll.on('scroll', that.checkScroll);
+            that.myScroll.on('scrollEnd', that.checkScroll);
 
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
-
-            content.on('transitionend', function(event){
-                if(content.hasClass('transparent')){
-                    content.removeClass('transparent');
-                    content.html(that.content);
-                    toolbar.html(that.toolbar);
-                    that.toolbar = '';
-                    that.content = '';
-                    document.body.scrollTop = 0;
+            that.content.on('transitionend', function(event){
+                if(that.content.hasClass('transparent')){
+                    that.content.removeClass('transparent');
+                    that.toolbar.removeClass('transparent');
+                    that.content.html(that.contentInfo);
+                    that.toolbar.html(that.toolbarInfo);
+                    that.toolbarInfo = '';
+                    that.contentInfo = '';
+                    that.myScroll.scrollTo(0,0,0);
+                    that.refreshScroll();
+                    that.header.css('transform', "translate(0px, 0px)").css('transition', 'transform .2s');
+                    setTimeout(function(){
+                        that.header.css('transition','');
+                    }, 200)
                 } else{ // opaque
-                    if(that.content){
-                        content.addClass('transparent');
+                    if(that.contentInfo){
+                        that.content.addClass('transparent');
                     }
                 }
 
@@ -669,7 +702,7 @@ $(document).ready(function() {
 
 
 
-            content.on('click', '.icon-video', function(event){
+            that.html.on('click', '.icon-video', function(event){
                 var radio = that.html.find(".icon-radio");
                 if(radio.hasClass('icon-radio-on')){
                     radio.siblings('audio')[0].pause();
@@ -680,14 +713,28 @@ $(document).ready(function() {
                 $('#diaVideo').attr('src', url);
             });
 
-
         }
         function fetchData(){
-
             that.value.content.tabList.forEach(function(item, index){
                 that.fetchSingleData(item, index);
             });
+        }
 
+        function checkScroll(changePosition){
+            changePosition = changePosition || -100;  //
+            var scrollTop = this.y;
+            that.header.css('transform', "translate(0px, "+ (this.y > -100 ? this.y : changePosition) +"px) translateZ(0px)");
+        }
+
+        function refreshScroll(){
+            setTimeout(function(){
+                that.myScroll.refresh();
+            }, 900);
+            if(that.menuType === 'singleArticle'){  // 当图片加载后 内容块会增加高度 因而需要刷新
+                that.content.find('#article img').on('load',function(){
+                    that.myScroll.refresh();
+                });
+            }
         }
 
         function fetchSingleData(item, index){
@@ -783,7 +830,7 @@ $(document).ready(function() {
                 labsHtml += html;
             });
             var html =
-            '<div id="container" class="container">'
+             '<div id="container" class="container">'
             + '<div class="header">'
             +   '<div class="topmenu-wrap">'
             +           '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
@@ -796,8 +843,12 @@ $(document).ready(function() {
             +   '</div>'
             +   '<div id="toolbar"></div>'
             +  '</div>'
-            + '<div id="content" class="canscroll"></div>'
-            + '</div>';
+            +   '<div id="scroll-wrapper">'
+       //     +        '<div class="content-wrapper">'
+            +           '<div id="content" class="canscroll"></div>'
+      //      +        '</div>'
+             +   '</div>'
+            + '</div>'    ;
 
             return html;
         }
@@ -806,6 +857,7 @@ $(document).ready(function() {
             var data = that.data[that.menuIndex];
             var html = '', toolbar = '';
             var type = that.value.content.tabList[that.menuIndex].type;
+            that.menuType = type;
             switch(type){
                 case 'singlePoi':
                     var videoClass = data.video ? '' : 'hidden',
@@ -845,7 +897,7 @@ $(document).ready(function() {
                         +           '<audio src="' + data.audio + '"></audio>'
                         +       '</span>'
                         +   '</div>'
-                       html = '<div class="content-details canscroll clearboth">'+ (data.content)+'</div>';
+                       html = '<div id="article" class="content-details canscroll clearboth">'+ (data.content)+'</div>';
                     break;
                 case 'poiList':
                     var typeInfo = {
@@ -873,7 +925,7 @@ $(document).ready(function() {
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
-                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                            panoLink = 'http://pano.visualbusiness.cn/single/index.html?panoId='
                                             + item.panorama.panorama_id;
                                             break;
                                         case 2: // 相册全景
@@ -894,6 +946,17 @@ $(document).ready(function() {
                                 } else{
                                     navAttr = ' endName="' + item.poi_name + '" endPosition=' + item.lnglat.lat + ',' + item.lnglat.lng;
 
+                                }
+                                if(item.contact_phone){
+                                    var phonesList = item.contact_phone.split(/[,，]/),
+                                        phones = '';
+
+                                    phonesList.forEach(function(item){
+                                        if(item){
+                                            phones += '<a href="tel:' + item +'">' + item + '</a>  ';
+                                        }
+                                    });
+                                    console.log(phones);
                                 }
                                 hotelList +=
                                     '<div class="hotel-item">'
@@ -920,7 +983,7 @@ $(document).ready(function() {
                                     +       '<p>' + item.share_desc + '</p>'
                                     +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
                                     +           '<i class="icon-phone"></i>'
-                                    +           '<span>' + item.contact_phone + '</span>'
+                                    +           '<span>' + phones + '</span>'
                                     +       '</p>'
                                     + '</div>'
                                     +'</div>';
@@ -1015,33 +1078,35 @@ $(document).ready(function() {
 
             }
 
-            var content = that.html.find("#content");
-            if(content.html()){
-                content.addClass('transparent');
-                that.content = html;
-                that.toolbar = toolbar;
+            if(that.content.html()){
+                that.content.addClass('transparent');
+                that.toolbar.addClass('transparent');
+                that.contentInfo = html;
+                that.toolbarInfo = toolbar;
             } else{
-                content.html(html);
-                that.html.find('#toolbar').html(toolbar || '');
-                that.content = '';
-                that.toolbar = '';
-
+                that.content.html(html);
+                that.toolbar.html(toolbar || '');
+                that.contentInfo = '';
+                that.toolbarInfo = '';
+                that.refreshScroll();
             }
 
             if(type === 'singleArticle'){
-                content.addClass('no-padding-bottom').addClass('gray-bg');
+                that.content.addClass('no-padding-bottom').addClass('gray-bg');
             } else{
-                content.removeClass('no-padding-bottom').removeClass('gray-bg');
+                that.content.removeClass('no-padding-bottom').removeClass('gray-bg');
             }
 
 
         }
 
         function handleMenuClick(event){
-            var index = event.target.parentNode.parentNode.getAttribute('data-index');
+            var index = parseInt(event.target.parentNode.parentNode.getAttribute('data-index'));
+            if(index === that.menuIndex){
+                return;
+            }
             that.html.find('.menulist').removeClass('current');
             $(that.html.find('.menulist')[index]).addClass('current');
-            that.html.find(".topmenu-wrap").removeClass('sm');
             that.menuIndex = index;
             // 填充数据
             if(that.data[index]){
