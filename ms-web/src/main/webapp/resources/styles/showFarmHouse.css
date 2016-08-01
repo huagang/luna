@@ -1,9 +1,8 @@
 html{
-    font-size: 16px;
+    font-size: 14px;
 }
 body{
     font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
-    font-size: 0.875rem;
 }
 
 .icon-location{
@@ -54,7 +53,7 @@ body{
 }
 
 .info-wrapper{
-    font-size: 1rem;
+    font-size: 16px;
     margin-bottom: 3px;
 
 }
@@ -62,7 +61,7 @@ body{
 
 
 .location{
-    font-size: 0.75rem;
+    font-size: 12px;
 }
 
 .farmhouse-info header{
@@ -73,7 +72,7 @@ body{
 .farmhouse-info nav{
     display: table;
     width: 100%;
-    font-size: 0.75rem;
+    font-size: 12px;
     border-bottom: 1px solid #dee0e3;
 }
 
@@ -120,13 +119,13 @@ body{
     border-top: 1px solid #d8d7dc;
     border-bottom: 1px solid #d8d7dc;
     line-height: 40px;
-    font-size: 1rem;
+    font-size: 16px;
     padding: 0 16px;
 }
 
 .room-info header .room-all{
     color: #6f6f6f;
-    font-size: 0.8125rem;
+    font-size: 13px;
     float: right;
 
 }
@@ -159,8 +158,8 @@ body{
 }
 
 .room-info .pano-thumbnail{
-    height: 9.3vw;
-    width: 12vw;
+    height: 18.6vw;
+    width: 26.6vw;
     margin-right: 5px;
 
 }
