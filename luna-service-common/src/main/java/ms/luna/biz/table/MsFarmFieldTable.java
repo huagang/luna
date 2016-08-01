@@ -19,7 +19,7 @@ public class MsFarmFieldTable {
 
     public static final String FIELD_TYPE = "field_type";
 
-    public static final String FIELD_LIMIT = "public static final String";
+    public static final String FIELD_LIMIT = "field_limit";
 
     public static final String PLACEHOLDER = "placeholder";
 
