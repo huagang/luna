@@ -29,8 +29,11 @@
         // 设置全景
         vm.setPano = setPano;
 
-        // 获取fake数据集
+        // 获取mock数据集
         vm.getTestData = getTestData;
+
+        // 点击全景变为全屏
+        vm.handleFullScreen = handleFullScreen;
 
         vm.init();
 
@@ -54,16 +57,16 @@
         }
 
         // 初始化全景
-        function setPano(index){
-            vm.curPanoIndex = index || vm.curPanoIndex;
+        function setPano(index, isFullScreen){
+            vm.curPanoIndex = index > -1 ? index : vm.curPanoIndex;
             var data = vm.farmData.panorama.panoList[vm.curPanoIndex];
-            if(id){
-                vm.pano.setPanoId(data.id);
+            if(data){
+                vm.pano.setPanoId(data.panoId);
                 vm.pano.setHeading(data.panoHeading);
-                vm.pano.setPitch(panoPitch);
+                vm.pano.setPitch(data.panoPitch);
                 vm.pano.setRoll(0);
                 vm.pano.setAutoplayEnable(false);
-                vm.pano.setGravityEnable(true);
+                vm.pano.setGravityEnable(isFullScreen ? true : false);
             }
         }
 
