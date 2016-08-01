@@ -685,6 +685,7 @@ $(document).ready(function() {
                     that.toolbar.html(that.toolbarInfo);
                     that.toolbarInfo = '';
                     that.contentInfo = '';
+                    that.myScroll.scrollTo(0,0,0);
                     that.refreshScroll();
                 } else{ // opaque
                     if(that.contentInfo){
