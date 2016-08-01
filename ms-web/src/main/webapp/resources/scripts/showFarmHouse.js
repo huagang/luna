@@ -35,6 +35,8 @@
         // 点击全景变为全屏
         vm.handleFullScreen = handleFullScreen;
 
+        // 退出全屏
+        vm.handleQuitFullScreen = handleQuitFullScreen;
         vm.init();
 
         // 数据初始化
@@ -52,23 +54,36 @@
 
             // 全景相关
             vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            vm.fullpano = new com.vbpano.Panorama(document.getElementById("fullscreen-panoContainer"));
+
             vm.curPanoIndex = 0;
+            vm.isFullScreen = false;
 
         }
+
+        window.vm = vm;
 
         // 初始化全景
-        function setPano(index, isFullScreen){
-            vm.curPanoIndex = index > -1 ? index : vm.curPanoIndex;
+        function setPano(index){
+            var pano = vm.isFullScreen ? vm.fullpano : vm.pano;
+            if(vm.isFullScreen){
+                vm.fullPanoIndex = index > -1 ? index : vm.curPanoIndex;
+
+            } else{
+                vm.curPanoIndex = index > -1 ? index : vm.curPanoIndex;
+            }
             var data = vm.farmData.panorama.panoList[vm.curPanoIndex];
             if(data){
-                vm.pano.setPanoId(data.panoId);
-                vm.pano.setHeading(data.panoHeading);
-                vm.pano.setPitch(data.panoPitch);
-                vm.pano.setRoll(0);
-                vm.pano.setAutoplayEnable(false);
-                vm.pano.setGravityEnable(isFullScreen ? true : false);
+                pano.setPanoId(data.panoId);
+                pano.setHeading(data.panoHeading);
+                pano.setPitch(data.panoPitch);
+                pano.setRoll(0);
+                pano.setAutoplayEnable(false);
+                pano.setGravityEnable(false);
             }
         }
+
+
 
         // 初始化轮播组件
         function initSlideshow(){
@@ -78,6 +93,15 @@
         // 初始化地图
         function initMap(){
 
+        }
+
+        function handleFullScreen(){
+            vm.isFullScreen = true;
+            vm.setPano();
+        }
+
+        function handleQuitFullScreen(){
+            vm.isFullScreen = false;
         }
 
         // 请求 获取poi数据信息
@@ -185,7 +209,46 @@
                             }
                         ],
                     },
+                    food:[
+                        {
+                            "name": "大数据广场",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+                        },{
+                            "name": "高新区鸟瞰",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
 
+                        },{
+                            "name": "大数据综合试验区",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+
+                        },{
+                            "name": "贵阳高新区",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+                        }
+                    ],funny:[
+                        {
+                            "name": "采摘",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+                        },{
+                            "name": "高新区鸟瞰",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+
+                        },{
+                            "name": "烧烤",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+
+                        },{
+                            "name": "赶绵羊",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+                        },{
+                            "name": "烧烤",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+
+                        },{
+                            "name": "赶绵羊",
+                            "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160724/0M3r1l0z281n122n0m1q0R2w0o1t0411.jpg"
+                        }
+                    ]
 
                 },
 

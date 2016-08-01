@@ -61,7 +61,7 @@
         </main>
     </div>
     <div class="block-split"></div>
-    <div class="room-info">
+    <div class="room-info" >
         <header>
             <span>房间</span>
             <a class='room-all' href="">
@@ -84,15 +84,69 @@
             <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
                  ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
                  style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
+                <div class="pano-name">
+                    <span>{{pano.panoName}}</span>
+                </div>
             </div>
         </footer>
+        <div id='fullscreen-pano' ng-class="{'full-show':farm.isFullScreen}">
+            <main>
+                <div id="fullscreen-panoContainer"></div>
+                <div class="operation">
+                    <div class="icon-scale-wrapper">
+                        <img src="<%=request.getContextPath()%>/resources/images/farmhouse/scale.png"
+                             class="icon-scale" ng-click="farm.handleQuitFullScreen()"/>
+                    </div>
+                </div>
+            </main>
+            <footer class="ng-hide" ng-show="farm.farmData.panorama.panorama_type_id === 2">
+                <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
+                     ng-class="{active: $index===farm.fullPanoIndex}" ng-click="farm.setPano($index)"
+                     style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
+                    <div class="pano-name">
+                        <span>{{pano.panoName}}</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
+    <div class="block-split"></div>
+    <div class="food-info">
+        <header>
+            <span>美食</span>
+        </header>
+        <main>
+            <div class="food-item" ng-repeat="food in farm.farmData.food"
+                 style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
+                <div class="name-wrapper">
+                    <p class="food-name">{{food.name}}</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div class="block-split"></div>
+    <div class="funny-info">
+        <header>
+            <span>乡村野趣</span>
+        </header>
+        <main>
+            <div class="funny-item" ng-repeat="funny in farm.farmData.funny"
+                 style="background:url({{funny.pic}}) center center no-repeat;background-size: cover">
+                <div class="funny-name-wrapper">
+                    <div class="shadow-circle">
+                        <p class="funny-name">{{funny.name}}</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
 
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
     <script>
-        window.context = <%=request.getContextPath()%>;
+        window.context = [<%=request.getContextPath()%>] || [''];
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>
 

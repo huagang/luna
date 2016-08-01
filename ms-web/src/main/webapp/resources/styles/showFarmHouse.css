@@ -22,6 +22,24 @@ body{
     display: inline-block;
 }
 
+.food-info,
+.room-info,
+.funny-info{
+    border-top: 1px solid #d8d7dc;
+    border-bottom: 1px solid #d8d7dc;
+}
+
+.room-info header,
+.food-info header,
+.funny-info header
+{
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    padding: 0 16px;
+}
+
+
 .block-split{
     height: 13px;
     width: 100%;
@@ -34,6 +52,7 @@ body{
 }
 
 .farmhouse-info header{
+    position: relative;
     width: 100vw;
     height: 53vw;
     overflow: hidden;
@@ -58,15 +77,8 @@ body{
 
 }
 
-
-
 .location{
     font-size: 12px;
-}
-
-.farmhouse-info header{
-    position: relative;
-
 }
 
 .farmhouse-info nav{
@@ -114,14 +126,6 @@ body{
 
 
 /* 房间 start */
-.room-info header{
-    height: 40px;
-    border-top: 1px solid #d8d7dc;
-    border-bottom: 1px solid #d8d7dc;
-    line-height: 40px;
-    font-size: 16px;
-    padding: 0 16px;
-}
 
 .room-info header .room-all{
     color: #6f6f6f;
@@ -139,6 +143,7 @@ body{
     width: 100%;
     height: 60vh;
     pointer-events: none;
+    transition: height 1s;
 }
 
 #panoContainer:before{
@@ -189,19 +194,35 @@ body{
 .room-info footer{
     width: 100%;
     overflow-x: auto;
-    margin-bottom: 15px;
-    height: 70px;
+    overflow-y: hidden;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
 }
 
 
 .room-info .pano-thumbnail{
+    position: relative;
     display: inline-block;
     height: 18.6vw;
     width: 26.6vw;
-    margin: 8px 5px 0 0 ;
+    margin: 8px 5px 8px 0 ;
 
+}
+
+.room-info .pano-thumbnail .pano-name{
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-size: 10px;
+    background-color: rgba(0,0,0,0.4);
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .room-info .pano-thumbnail:last-child{
@@ -212,7 +233,7 @@ body{
     position: relative;
     border: 2px solid #0068b7;
     box-sizing: content-box;
-    margin-bottom: -2px;
+    margin-bottom: 6px;
     border-radius: 2px;
 }
 
@@ -226,4 +247,133 @@ body{
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
 }
+
+
+#fullscreen-pano{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0;
+    background-color: white;
+
+}
+
+#fullscreen-pano.full-show {
+    z-index: 100;
+    opacity:1;
+    
+}
+
+#fullscreen-pano main{
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+}
+
+#fullscreen-pano footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.4);
+}
+
+#fullscreen-panoContainer{
+    height: 100%;
+    width:100%
+}
+
+
 /* 房间 end */
+
+
+/* 美食 start */
+
+
+
+.food-info main{
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.food-info .food-item{
+    position: relative;
+    display: inline-block;
+    height: 48vw;
+    width: 80vw;
+    margin-right: 5px;
+}
+
+.food-info .food-item:last-child{
+    margin-right: 15px;
+}
+
+.food-info .name-wrapper{
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0));
+}
+
+.food-info .food-name{
+    margin-top: 30px;
+    width: 100%;
+    line-height: 30px;
+    font-size: 15px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 美食 end */
+
+/* 乡村野趣 start */
+
+.funny-info main{
+    margin: 0 3vw 20px 5vw;
+}
+
+.funny-info .funny-item{
+    position: relative;
+    display: inline-block;
+    width: 21vw;
+    height: 21vw;
+    border-radius: 50%;
+    margin-right: 2vw;
+    overflow: hidden;
+}
+.funny-name-wrapper{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 8vw;
+    width: 100%;
+    line-height: 8vw;
+    font-size: 13px;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.shadow-circle{
+    width: 21vw;
+    height: 21vw;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,.4);
+    margin-top: -13vw;
+}
+.funny-name{
+    padding-top: 13vw;
+    width: 13vw;
+    margin: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+/* 乡村野趣 end */
