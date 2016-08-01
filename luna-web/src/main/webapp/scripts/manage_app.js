@@ -231,6 +231,7 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 				return;
 			}
 			var data = {
+		            "app_id": this._app_id || null,
 		            "source_app_id": this._app_id || null,
 		            "app_name":this._app_name,
 		            "business_id": this._business_id
@@ -241,16 +242,16 @@ function getAppController(business_dialog_selector, app_dialog_selector){
 		        async:true,
 		        data: data,
 		        dataType:"json",
-		        success:function(data){
-		            if(data.code === "0"){
+		        success:function(res){
+		            if(res.code === "0"){
 		            	this._app_dialog.removeClass('pop-show');
 		            	this.freshAppList();
 		            	if(this._type === 'create' || this._type === 'reuse'){
-		            		location.href = '../app.do?method=init&app_id=' + data.data.app_id;
+		            		location.href = '../app.do?method=init&app_id=' + res.data.app_id +'&business_id=' + data.business_id;
 		            	}
 		            }
 		            else{
-		            	alert(data.msg);
+		            	alert(res.data.msg);
 		            }
 		        }.bind(this),
 		        error: function (data) {

@@ -322,11 +322,11 @@ ol {
 .canvas .inner-canvas {
     position: relative;
     display: block;
-    width: 482px;
-    height: 758px;
+    width: 375px;
+    height: 617px;
     border: 1px solid #DDDDDD;
     margin: 50px auto 0 auto;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #layermain {
@@ -372,7 +372,8 @@ ol {
     margin-top: 10px;
 }
 
-#bg-color,.form-control {
+#bg-color,
+.form-control {
     margin: 8px 0 20px 0;
     font-weight: 400;
     width: 252px;
@@ -820,14 +821,16 @@ a.wj-img-clc {
 
 /*音频控制样式 */
 
-.audio-upload .fileurl,.video-upload .fileurl {
+.audio-upload .fileurl,
+.video-upload .fileurl{
     height: 30px;
     padding: 0 5px;
     margin: 0 5px;
     width: 60%;
 }
 
-.audio-upload .btn-local,.video-upload .btn-local {
+.audio-upload .btn-local,
+.video-upload .btn-local {
     margin-top: 10px;
     width: 85%;
 }
@@ -842,3 +845,142 @@ a.wj-img-clc {
     font-weight: normal;
     margin-right: 10px;
 }
+
+
+/* 页签组件 Start*/
+
+.menuTab-url {
+    display: inline-block;
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    margin: 0 5px;
+    padding: 0 5px;
+}
+
+.menuTab-wrapper {
+    position: relative;
+    height: 200px;
+}
+
+.menuTab-set .menutab-list > li {
+    float: left;
+    width: 33%;
+    position: relative;
+}
+
+.menuTab-bg {
+    height: 100%;
+    /* background: url('http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg') no-repeat; */
+    /* background-size: 100% 100%; */
+}
+
+.menuTab-bg img {
+    width: 100%;
+    height: 200px;
+}
+
+.menuTab-filter {
+    /* position: absolute; */
+    /* bottom: 0; */
+    /* width: 100%; */
+    /* height: 100%; */
+    /* opacity: .5; */
+    /* background: linear-gradient(to top, rgba(0, 0, 0, .3) 0, rgba(0, 0, 0, .3) 30%, rgba(0, 0, 0, 0) 40%); */
+}
+
+.menuTab {
+    position: absolute;
+    color: #fff;
+    /* overflow-x: scroll; */
+    overflow-y: hidden;
+    width: 100%;
+    height: 80px;
+    margin: 0;
+    text-align: center;
+    background-size: 100% 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, .3) 0, rgba(0, 0, 0, .3) 30%, rgba(0, 0, 0, 0) 100%);
+    bottom: 0;
+}
+
+.menulist-wrap {
+    height: 100%;
+    text-align: center;
+    margin: 0 auto;
+    width: 90%;
+    /* overflow-x: hidden; */
+    outline: none;
+}
+
+.menulist {
+    width: 2000px;
+    height: 100%;
+    list-style: none;
+    position: relative;
+}
+
+.menuitem {
+    width: 82px;
+    list-style: none;
+    float: left;
+    height: 100%;
+}
+
+.dropdown {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: -100%;
+    z-index: 2000;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+}
+
+.btn-menutab {
+    background-color: #e3e3e3;
+    padding: 5px;
+    margin: 5px;
+}
+
+.btn-createtab {
+    padding: 5px;
+    margin: 5px;
+    background-color: grue;
+}
+
+
+.pop-uploadMenuTabIcon .item-wrap{
+    width: 400px;
+}
+
+.pop-uploadMenuTabIcon .item-wrap .title{
+    width: 50px;
+}
+
+.tabMenuIcon-upload .fileurl {
+    height: 30px;
+    padding: 0 5px;
+    margin: 0 5px;
+    width: 60%;
+}
+.tabMenuIcon-upload .btn-local{
+    width: 80px;
+}
+.tabMenuIcon-upload .file-local{
+    width: 90px;
+    left: 300px;
+}
+/* 保存的后的提示 */
+
+.msgTips {
+    color: #666;
+    position: absolute;
+    top: -20px;
+}
+
+
+/* END 保存的后的提示 */
+
+
+/*页签组件End*/

@@ -1,11 +1,11 @@
 package ms.luna.biz.dao;
 
 import java.util.List;
-import ms.biz.common;
+import ms.biz.common.MsBaseDAO;
 import ms.luna.biz.dao.model.MsShowPageShare;
 import ms.luna.biz.dao.model.MsShowPageShareCriteria;
 
-public abstract class MsShowPageShareDAOBaseImpl extends common implements MsShowPageShareDAOBase {
+public abstract class MsShowPageShareDAOBaseImpl extends MsBaseDAO implements MsShowPageShareDAOBase {
 
     public MsShowPageShareDAOBaseImpl() {
         super();

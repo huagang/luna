@@ -127,7 +127,7 @@ $(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-    
+
         lunaPage.creatPageComponents(currentPageId, null, "audio");
         currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
         currentComponent["_id"] = currentComponentId;
@@ -136,14 +136,14 @@ $(function() {
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("audio");
 
-    });    
+    });
 
     //视频组件
     $("#videoComponent").click(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-    
+
         lunaPage.creatPageComponents(currentPageId, null, "video");
         currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
         currentComponent["_id"] = currentComponentId;
@@ -151,6 +151,25 @@ $(function() {
         componentPanel.init("video");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("video");
+    });
+
+    //页签组件
+    $("#tabComponent").click(function() {
+        if (document.querySelector('.con_tab')) {
+            alert('已经存在一个页签组件，不能重复添加');
+            return;
+        }
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+
+        lunaPage.creatPageComponents(currentPageId, null, "tab");
+        currentComponent = jQuery.extend(true, {}, componentTabModelTemplate);
+        currentComponent["_id"] = currentComponentId;
+        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        componentPanel.init("tab");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("tab");
     });
 
     //右键删除组件
@@ -206,7 +225,7 @@ $(function() {
 
     //按delete按钮删除组件
     $(document).bind('keydown', 'del', function(e) {
-        if(e.target.nodeName=="INPUT"){
+        if (e.target.nodeName == "INPUT") {
             //如果是文本框，删除文本框中的内容，不删除画布中的插件
             return true;
         }
@@ -342,6 +361,10 @@ $(function() {
             var y = $('#elementy').val();
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 1;
                 $target.css("top", position.top + 'px');
@@ -359,6 +382,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 1;
                 $target.css("top", position.top + 'px');
@@ -375,12 +402,15 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 1;
                 $target.css("left", position.left + 'px');
@@ -396,12 +426,16 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-   
+
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 1;
                 $target.css("left", position.left + 'px');
@@ -418,6 +452,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 10;
                 $target.css("top", position.top + 'px');
@@ -434,6 +472,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 10;
                 $target.css("top", position.top + 'px');
@@ -450,6 +492,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 10;
                 $target.css("left", position.left + 'px');
@@ -466,6 +512,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 10;
                 $target.css("left", position.left + 'px');
@@ -477,7 +527,7 @@ $(function() {
         });
 
         //清空文件上传的值，解决同一文件不能重复上传问题
-        $('input[type=file]').on('click',function(e){
+        $('input[type=file]').on('click', function(e) {
             $(this).val('');
         });
     }
@@ -535,6 +585,14 @@ function initBind(comid) {
                         bottom: '0px'
                     });
                 }
+            }
+
+            //TODO: 为右部吸边做准备
+            if (parseFloat($(this).css('left')) + $(this).width() == $('#layermain').width()) {
+                $(this).css({
+                    left: 'auto',
+                    right: '0px'
+                });
             }
             $(this).removeClass("newcomponentbox");
             // drag允许组件处于未点击选中状态，模拟选中，并切换当前组件为活动组件

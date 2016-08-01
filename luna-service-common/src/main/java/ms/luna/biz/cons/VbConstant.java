@@ -334,7 +334,7 @@ public final class VbConstant {
 			// file format should
 			fileRule.put(TYPE_PIC, new FileOption(1024 * 1024 * 1l, ".png,.bmp,.jpg,.jpeg"));
 			fileRule.put(TYPE_AUDIO, new FileOption(1024 * 1024 * 5l, ".mp3,.wav,.wma,.ogg,.ape,.acc"));
-			fileRule.put(TYPE_VIDEO, new FileOption(1024 * 1024 * 5l, ".rm,.rmvb,.avi,.mp4,.3gp"));
+			fileRule.put(TYPE_VIDEO, new FileOption(1024 * 1024 * 20l, ".rm,.rmvb,.avi,.mp4,.3gp"));
 			fileRule.put(TYPE_ZIP, new FileOption(1024 * 1024 * 5l, ".zip"));
 
 //			pathSet.add("crm");

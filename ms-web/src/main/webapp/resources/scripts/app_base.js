@@ -7,7 +7,7 @@ time:20160504
 var objdata = {
     myPosition: {
         "lat": "39.964758",
-        "lng": "116.355246",
+        "lng": "116.355246"
     },
     destPosition: {
 
@@ -21,14 +21,46 @@ $(document).ready(function() {
         var m = w.width();
         var z = w.height();
         var x, n, o = 1;
-        o = m / 480;
+        o = m / 375;
         $("#vb_viewport").attr({
-            content: "width=480,initial-scale=" + o + ",user-scalable=no"
+            content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-    init();
+
+    var iftab = false;
+    if (pageData.data instanceof Array && pageData.data.length>0) {
+        for (var plist in pageData.data) {
+            for (var con in pageData.data[plist].page_content){
+                if(pageData.data[plist].page_content[con].type=="tab"){
+                    iftab=true;
+                }
+            }
+        }
+    }else if(typeof pageData.data.page_content == "object"){
+        for (var con in pageData.data.page_content){
+            if(pageData.data.page_content[con].type=="tab"){
+                iftab=true;
+            }
+        }
+    }
+    if(!iftab){
+        init();
+    }
     $(window).resize(function() {
         // window.location.reload();
+    });
+
+    $('body').on('touchmove', function (event) {
+        var canscroll=$(event.target).parents(".canscroll");
+        if(canscroll.length>0){
+
+        }else {
+            event.preventDefault();
+        }
+    });
+
+    $('.welcome').on('touchstart', function (event) {
+        event.preventDefault();
     });
 
     $(".app-wrap").on("click", "[hrefurl]", function(e) {
@@ -36,29 +68,9 @@ $(document).ready(function() {
         window.location.href = $(this).attr("hrefurl");
     });
 
-    //导航绑定点击事件
-    $(".app-wrap").on("click", ".navimg", function(e) {
-        //获取地理位置和导航等信息
-        // var myLongitude;
-        // var myLatitude;
-        e.preventDefault();
-        e.stopPropagation();
-
-        var detailData = {
-            "navStartLat": $(this).attr("startPosition").split(",")[0],
-            "navStartLng": $(this).attr("startPosition").split(",")[1],
-            "navStartName": $(this).attr("startName").split(",")[0],
-            "navEndLat": $(this).attr("endPosition").split(",")[0],
-            "navEndLng": $(this).attr("endPosition").split(",")[1],
-            "navEndName": $(this).attr("endName").split(",")[0],
-            'navType': $(this).data('navtype')
-        };
-        showNav(detailData);
-    });
 
     //音频播放点击事件
     $(".app-wrap").on('click', '.btn-playAudio', function(e) {
-        console.log(123);
         e.preventDefault();
         e.stopPropagation();
 
@@ -84,24 +96,47 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
 
+        var startPosition = $(this).attr("startPosition"), startLng, startLat, navType, error;
+        if(!startPosition){ //没有设定当前位置 因而获取之
+            var that = this;
+            getMyLocation(function(position){
+                var options = {
+                    startLng : position.coords.longitude,
+                    //纬度
+                    startLat : position.coords.latitude,
+                    navType : 0,
+                    startName : '当前位置'
+                };
+                handleNav.call(that, e, options);
+            });
+        }
+        else{
+            handleNav.call(this,e);
+        }
+
+    });
+
+    function handleNav(e,options){
+        options = options || {};
         var detailData = {
-            "navStartLat": $(this).attr("startPosition").split(",")[0],
-            "navStartLng": $(this).attr("startPosition").split(",")[1],
-            "navStartName": $(this).attr("startName").split(",")[0],
+            "navStartLat": options.startLat || $(this).attr("startPosition").split(",")[0],
+            "navStartLng": options.startLng || $(this).attr("startPosition").split(",")[1],
+            "navStartName": options.startName || $(this).attr("startName").split(",")[0],
             "navEndLat": $(this).attr("endPosition").split(",")[0],
             "navEndLng": $(this).attr("endPosition").split(",")[1],
             "navEndName": $(this).attr("endName").split(",")[0],
-            'navType': $(this).data('navtype')
+            'navType': options.navType || $(this).data('navtype')
         };
-        console.log(detailData);
         showNav(detailData);
-    });
+    }
+
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function(e) {
         var videourl = $(this).data('videourl');
         $('#diaVideo').attr('src', videourl);
         $('.video-modal').show();
     });
+
     $('.app-wrap').on('click', '.video-modal', function(e) {
         $(this).hide();
         $(this).find('video')[0].pause();
@@ -114,114 +149,118 @@ $(document).ready(function() {
         // alert(pageData.msg);
         return;
     } else {
-        var arrPageDatas = pageData.data,
+        if(toString.call(pageData.data) === '[object Object]'){
+            pageData.data = [pageData.data];
+        }
+        var arrPageDatas = pageData.data || [],
             curPageGroup = {};
+
+
+        if(location.href.match(/\?disableWelcome=true/)){
+            if(arrPageDatas.length > 0 && arrPageDatas[0].page_code === 'welcome'){
+                // 过滤welcome页面
+                arrPageDatas.splice(0,1);
+            }
+        }
+
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                $comGroup = $('<div class="component-group ' + item.page_code + '"></div>');
+                $comGroup = $('<div class="component-group ' + item.page_code + '"><i class="icon icon-goback goback"></i></div>');
             if (document.querySelector('.component-group')) {
-                $comGroup.hide();
+                $comGroup.css('opacity', 0);
             }
             $(".app-wrap").append($comGroup);
-            console.log(item);
-            if (item.page_code == "welcome") {
-                $.each(item.page_content, function(n, value) {
-                    // move canvas first
-                    var componentHtml = "",
-                        headName = n.match(/^[a-zA-Z]*/);
-                    switch (headName[0]) {
-                        case 'canvas':
-                            var canvas = new Canvas(value);
-                            componentHtml = canvas.build();
-                            if (value.bgimg) { //欢迎页面是否有背景图片
-                                var welCanvas = new WelComeCanvas(value);
-                                var newComponentHtml = welCanvas.build();
-                                $comGroup.append(newComponentHtml);
-                            }
-                            break;
-                        case 'text':
-                            var text = new Text(value);
-                            componentHtml = text.build();
-                            break;
-                        case 'img':
-                            var img = new Img(value);
-                            componentHtml = img.build();
-                            break;
-                        case 'pano':
-                            var pano = new Pano(value);
-                            componentHtml = pano.build();
-                            break;
-                        case 'nav':
-                            var nav = new Nav(value);
-                            componentHtml = nav.build();
-                            break;
-                        case 'audio':
-                            var audio = new Audio(value);
-                            componentHtml = audio.build();
-                            break;
-                        case 'video':
-                            var video = new Video(value);
-                            componentHtml = video.build();
-                            break;
-                    }
 
-                    $comGroup.append(componentHtml);
-                });
-                //设置首页滑动到第一页
-                setTimeout(function() {
-                    if ($('.welcome').next('.component-group').children().length > 0) {
-                        $('.welcome').fadeOut(1000);
-                        $('.welcome').next('.component-group').show(1000);
-                    }
-                }, 4000);
-            } else {
-                $.each(item.page_content, function(n, value) {
-                    // move canvas first
-                    var componentHtml = "",
-                        headName = n.match(/^[a-zA-Z]*/);
-                    switch (headName[0]) {
-                        case 'canvas':
-                            var canvas = new Canvas(value);
-                            componentHtml = canvas.build();
-                            break;
-                        case 'text':
-                            var text = new Text(value);
-                            componentHtml = text.build();
-                            break;
-                        case 'img':
-                            var img = new Img(value);
-                            componentHtml = img.build();
-                            break;
-                        case 'pano':
-                            var pano = new Pano(value);
-                            componentHtml = pano.build();
-                            break;
-                        case 'nav':
-                            var nav = new Nav(value);
-                            componentHtml = nav.build();
-                            break;
-                        case 'audio':
-                            var audio = new Audio(value);
-                            componentHtml = audio.build();
-                            break;
-                        case 'video':
-                            var video = new Video(value);
-                            componentHtml = video.build();
-                            break;
-                    }
-                    $comGroup.append(componentHtml);
-                });
+            for (var n in item.page_content) {
+                var value = item.page_content[n];
+                var componentHtml = "",
+                    headName = n.match(/^[a-zA-Z]*/);
+
+                switch (headName[0]) {
+                    case 'canvas':
+                        var canvas = new Canvas(value);
+                        canvas.page_code = item.page_code;
+                        componentHtml = canvas.build();
+                        break;
+                    case 'text':
+                        var text = new Text(value);
+                        componentHtml = text.build();
+                        break;
+                    case 'img':
+                        var img = new Img(value);
+                        componentHtml = img.build();
+                        break;
+                    case 'pano':
+                        var pano = new Pano(value);
+                        componentHtml = pano.build();
+                        break;
+                    case 'nav':
+                        var nav = new Nav(value);
+                        componentHtml = nav.build();
+                        break;
+                    case 'audio':
+                        var audio = new Audio(value);
+                        componentHtml = audio.build();
+                        break;
+                    case 'video':
+                        var video = new Video(value);
+                        componentHtml = video.build();
+                        break;
+                    case 'tab':
+                        var menutab = new menuTab(value);
+                        componentHtml = menutab.build();
+                        break;
+                }
+                $comGroup.append(componentHtml);
             }
         }
     }
 
 
     //初始化 欢迎页的视差效果
-    var scene = document.querySelector('.scene');
-    var parallax = new Parallax(scene);
-    $('.scene').find('.img-wraper').addClass('go-right');
+    var paraScene = [];
+    $('.paraScene').each(function(n, item) {
+        paraScene[n] = new Parallax(item);
+    });
+    // var scene = document.querySelector('.scene');
+    // var parallax = new Parallax(scene);
+    // $('.scene').find('.img-wraper').addClass('go-right');
+    //设置首页滑动到第一页
+
+    if ($('.welcome').length > 0) {
+        var welcomePanoBg = document.querySelector('.welcome .panoBg');
+        if (welcomePanoBg) {
+            initPanoBg(welcomePanoBg);
+        }
+        setTimeout(function() {
+            $('.welcome').next('.component-group').animate({opacity: 1}, 2000, function() {
+
+            });
+            $('.welcome').animate({opacity: 0},3000, function() {
+                $('.welcome').css('display','none');
+                // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
+
+                //$('.welcome').remove();
+                // delete paraScene;
+            });
+            var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
+            if (panoBg) {
+                initPanoBg(panoBg);
+            }
+        }, 4000);
+    } else {
+        var panoBg = document.querySelector('.panoBg');
+        initPanoBg(panoBg);
+    }
 
     /*TODO：增加动画页面 End*/
+
+    /* 初始化全景背景 */
+
+
+    /* 初始化全景背景 */
+
+
 
     //用videoJs 初始化
     $('.video-js').each(function(index, el) {
@@ -230,22 +269,50 @@ $(document).ready(function() {
             console.log('视频初始化完成');
         });
     });
+    $(document).on('click','.goback', goback);
+
+    function goback(){
+        //返回逻辑
+        if(document.referrer === '' || ! document.referrer.match(location.host)){
+            try{
+                location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1];
+            } catch(e){
+            }
+        } else{
+            if(document.referrer){
+                location.href = document.referrer + '?disableWelcome=true';
+            } else{
+                location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1] + '?disableWelcome=true';
+            }
+        }
+    }
 
     /* 基础组件 */
     function BaseComponent() {
 
         this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
 
+        // 组件位置设置
         this.setPosition = function() {
 
             this.html.css("position", "absolute");
-            this.html.css("left", this.value.x + this.value.unit);
-            this.html.css("top", this.value.y + this.value.unit);
+            if(this.value.bottom === 0){
+                this.html.css("bottom", 0);
+            } else{
+                this.html.css("top", this.value.y + this.value.unit);
+            }
+            if(this.value.right === 0){
+                this.html.css("right", 0);
+            } else{
+                this.html.css("left", this.value.x + this.value.unit);
+            }
             this.html.css("width", this.value.width + this.value.unit);
             this.html.css("height", this.value.height + this.value.unit);
-            this.html.css("z-index", this.value.zindex);
+            this.html.css("z-index", this.value.zindex || 1);
             this.html.css("display", this.value.display);
         };
+
+        // 设置组件基本信息
         this.setMoreInfo = function() {
 
             this.html.attr("component-type", this.value.type);
@@ -260,42 +327,46 @@ $(document).ready(function() {
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
+        // 设置组件行为
         this.setAction = function() {
             if (typeof(this.value.action) != "undefined") {
-                if (this.value.action.href.type == "inner") {
-                    this.html.attr("hrefurl", host + "/app/" + pageData.data.app_id + "/page/" + this.value.action.href.value);
-                } else if (this.value.action.href.type == "outer") {
-                    this.html.attr("hrefurl", this.value.action.href.value);
+                var link, value = this.value.action.href.value;
+                switch(this.value.action.href.type){
+
+                    case "inner":
+                        link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
+                        break;
+
+                    case 'outer':
+                        link = value;
+                        break;
+
+                    case 'email':
+                        link = 'mailto:' + value;
+                        break;
+
+                    case 'phone':
+                        link = 'tel:' + value;
+                        break;
+
+                    case 'return':
+                        link = 'return';
+                        break;
                 }
+                if(link){
+                    this.html.attr('data-href', link);
+                    this.html.on('click',function(event){
+
+                        var link = event.currentTarget.getAttribute('data-href');
+                        if(link === 'return'){
+                            goback();
+                        } else{
+                            location.href = link;
+                        }
+                    });
+                }
+
             }
-        };
-    }
-
-    /**
-     * 欢迎界面canvas
-     */
-    function WelComeCanvas(data) {
-
-        this.value = data;
-        this.value.type = "scene";
-
-        BaseComponent.call(this);
-
-        this.build = function() {
-            var $scene = $('<ul id="scene" class="scene" data-scalar-x="10" data-scalar-y="2"></ul>');
-            if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
-            }
-            this.html.children("div").append($scene);
-            this.html.css("position", "absolute");
-            this.html.css("left", "0px");
-            this.html.css("top", "0px");
-            this.html.css("width", "100%");
-            this.html.css("height", "100%");
-            this.html.addClass("bg-canvas");
-            this.html.css("z-index", "0");
-
-            return this.html;
         };
     }
 
@@ -306,19 +377,43 @@ $(document).ready(function() {
 
         BaseComponent.call(this);
 
+        this.setCanvasBg = function() {
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
+                    + this.value.gravity + '"></div>');
+        };
+
+        this.setPanoBg = function() {
+            this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
+            + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+            + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll +  '"></div>');
+        };
+
+        this.setParaBg = function() {
+            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
+            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
+            this.html.children("div").append($scene);
+        }
+
         this.build = function() {
 
             //this.setPosition();
             // Canvas.prototype.setPosition.call();
 
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            if (this.value.panoId) {
+                this.setPanoBg.call(this);
+            } else if (this.value.gravity && !this.value.panoId) {
+                this.setParaBg.call(this);
+            } else {
+                this.setCanvasBg.call(this);
+            }
+
             this.html.css("position", "absolute");
             this.html.css("left", "0px");
             this.html.css("top", "0px");
             this.html.css("width", "100%");
             this.html.css("height", "100%");
             this.html.addClass("bg-canvas");
-            this.html.css("z-index", "-1");
+            this.html.css("z-index", "0");
 
             this.setMoreInfo();
 
@@ -472,7 +567,572 @@ $(document).ready(function() {
             return this.html;
         }
     }
+
+    /* 菜单页卡 */
+    function menuTab(data) {
+        // mock数据
+        var that = this;
+        that.init = init;
+
+        // 渲染组件
+        that.build = build;
+
+        // 渲染tab dom
+        that.getTabsHtml = getTabsHtml;
+
+        // 菜单页卡点击事件
+        that.handleMenuClick = handleMenuClick;
+
+        // 绑定事件
+        that.bindEvent = bindEvent;
+
+        // 获取所有数据
+        that.fetchData = fetchData;
+
+        // 获取某一项数据
+        that.fetchSingleData = fetchSingleData;
+
+        // 更新内容区域数据
+        that.updateContent = updateContent;
+
+        // 检查内容滚动并做相关处理
+        that.checkScroll = checkScroll;
+
+        // 切换目录时刷新IScroll
+        that.refreshScroll = refreshScroll;
+        that.init();
+
+        BaseComponent.call(that);
+
+        function init(){
+            that.value = data;
+            that.hasBuild = false;
+            that.data = [];
+            that.menuIndex = 0;
+            that.contentInfo = '';
+            that.toolbarInfo = '';
+        }
+
+        function build() {
+
+            that.setPosition();
+            that.setMoreInfo();
+            that.setAction();
+
+            var html = that.getTabsHtml();
+            that.html.children('div').append(html);
+            that.content = that.html.find('#content');
+            that.toolbar = that.html.find('#toolbar');
+            that.header = that.html.find('.header');
+            that.menu = that.html.find('.topmenu-wrap');
+            if(that.hasBuild === false){
+                that.hasBuild = true;
+                setTimeout(that.bindEvent, 1);
+            }
+            that.fetchData();
+            that.html.css('width','100%');
+            that.html.css('height','100%');
+            that.html.addClass("canscroll");
+            return that.html;
+        }
+
+        function bindEvent(){
+            // clear event
+
+            that.html.find('.menulist-wrap').off('click', '.icon');
+
+            that.content.off('click', '#poi .icon-radio');
+
+            that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
+
+
+
+                //scroll = that.html.find('#scroll-wrapper');
+
+
+            that.html.on('click', '.icon-radio', function(event){
+                var target = $(event.target);
+                try{
+                    if(target.hasClass('icon-radio-on')){
+                        target.siblings('audio')[0].pause()
+                        target.removeClass('icon-radio-on');
+                    } else{
+                        target.addClass('icon-radio-on');
+                        target.siblings('audio')[0].play();
+                    }
+                } catch(e){
+                }
+            });
+
+
+            that.myScroll = new IScroll('#scroll-wrapper',{
+                probeType: 3,
+                mouseWheel: true,
+                click:true,
+                momentum: true
+            });
+
+            that.myScroll.on('scroll', that.checkScroll);
+            that.myScroll.on('scrollEnd', that.checkScroll);
+
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+            that.content.on('transitionend', function(event){
+                if(that.content.hasClass('transparent')){
+                    that.content.removeClass('transparent');
+                    that.toolbar.removeClass('transparent');
+                    that.content.html(that.contentInfo);
+                    that.toolbar.html(that.toolbarInfo);
+                    that.toolbarInfo = '';
+                    that.contentInfo = '';
+                    that.refreshScroll();
+                } else{ // opaque
+                    if(that.contentInfo){
+                        that.content.addClass('transparent');
+                    }
+                }
+
+            });
+
+
+
+
+            that.html.on('click', '.icon-video', function(event){
+                var radio = that.html.find(".icon-radio");
+                if(radio.hasClass('icon-radio-on')){
+                    radio.siblings('audio')[0].pause();
+                    radio.removeClass('icon-radio-on');
+                }
+                 var url = event.target.parentNode.getAttribute('data-srcurl');
+                $('.video-modal').css('display', 'block');
+                $('#diaVideo').attr('src', url);
+            });
+
+        }
+        function fetchData(){
+            that.value.content.tabList.forEach(function(item, index){
+                that.fetchSingleData(item, index);
+            });
+        }
+
+        function checkScroll(changePosition){
+            changePosition = changePosition || -100;  //
+            var scrollTop = this.y;
+            that.header.css('transform', "translate(0px, "+ (this.y > -100 ? this.y : changePosition) +"px) translateZ(0px)");
+        }
+
+        function refreshScroll(){
+            that.header.css('transform', "translate(0px, 0px) translateZ(0px)");
+            setTimeout(function(){
+                that.myScroll.refresh();
+            }, 900);
+            if(that.menuType === 'singleArticle'){  // 当图片加载后 内容块会增加高度 因而需要刷新
+                that.content.find('#article img').on('load',function(){
+                    that.myScroll.refresh();
+                });
+            }
+        }
+
+        function fetchSingleData(item, index){
+            switch(item.type){
+                case 'singlePoi':
+                    $.ajax({
+                        url: host + '/servicepoi.do?method=getPoiById',
+                        type: 'GET',
+                        data:{poi_id: item.firstPoiId, lang:'zh'},
+                        success:function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data.zh;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data.zh;
+                                }
+
+                            }
+                        }
+                    });
+                    break;
+                case 'singleArticle':
+                    $.ajax({
+                        url: [host , '/article/data/' , item.articleId].join('') ,
+                        type: 'GET',
+                        success:function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data;
+                                }
+                            }
+
+                        }
+                    });
+                    break;
+                case 'poiList':
+                    $.ajax({
+                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
+                        type: 'GET',
+                        data: {business_id: window.business_id,
+                                poi_id: item.firstPoiId,
+                                category_id: item.poiTypeId},
+                        success: function(data){
+                            if(data.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = data.data.zh || data.data.en;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = data.data.zh || data.data.en;
+                                }
+                            }
+                        },
+                    });
+                    break;
+                case 'articleList':
+                    $.ajax({
+                        url: [host ,  '/article/businessId/' ,  window.business_id , '/columnIds/' , item.columnId].join(''),
+                        type: 'GET',
+                        success: function(res){
+                            if(res.code === '0'){
+                                if(!that.data[index] && that.menuIndex === index){
+                                    that.data[index] = res.data;
+                                    that.updateContent();
+                                } else{
+                                    that.data[index] = res.data;
+                                }
+                            }
+                        }
+                    });
+            }
+
+        }
+
+        function getTabsHtml(){
+            var labsHtml = '';
+
+            that.value.content.tabList.forEach(function(item, index){
+                var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
+                var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
+                var html =
+                '<div class="menulist ' + (that.menuIndex === index ? 'current':'') + '" item="profile" data-index="'+ index +'">'
+                +   '<div class="menulist-img" >'
+                +       '<i class="icon" style="' + defaultStyle +'"></i>'
+                +       '<i class="icon current" style="'+ currentStyle +'"></i>'
+                +   '</div>'
+                +   '<span class="menulist-title">' + item.name + '</span>'
+                +   '<span class="border"></span>'
+                + '</div>';
+                labsHtml += html;
+            });
+            var html =
+             '<div id="container" class="container">'
+            + '<div class="header">'
+            +   '<div class="topmenu-wrap">'
+            +           '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
+            +                that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
+            +           '<div class="topmenu">'
+            +             '<div class="menulist-wrap canscroll"><div class="menulist-container">'
+            +                labsHtml
+            +             '</div></div>'
+            +         '</div>'
+            +   '</div>'
+            +   '<div id="toolbar"></div>'
+            +  '</div>'
+            +   '<div id="scroll-wrapper">'
+       //     +        '<div class="content-wrapper">'
+            +           '<div id="content" class="canscroll"></div>'
+      //      +        '</div>'
+             +   '</div>'
+            + '</div>'    ;
+
+            return html;
+        }
+
+        function updateContent(){
+            var data = that.data[that.menuIndex];
+            var html = '', toolbar = '';
+            var type = that.value.content.tabList[that.menuIndex].type;
+            that.menuType = type;
+            switch(type){
+                case 'singlePoi':
+                    var videoClass = data.video ? '' : 'hidden',
+                        audioClass = data.audio ? '' : 'hidden';
+                    html =
+                    '<div id="poi">'
+                    +   '<div class="detail-title-wrap">'
+                    +       '<span class="detail-title">'
+                    +            '<i class="icon icon-arr-right"></i>'+ data.poi_name
+                    +       '</span>'
+                    +       '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl="http://200011112.vod.myqcloud.com/200011112_da9ee07a51a611e6963575943c151ece.f0.mp4">'
+                    +           '<i class="icon icon-video"></i>'
+                    +       '</span>'
+                    +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                    +           '<i class="icon icon-radio"></i>'
+                    +           '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
+                    +       '</span>'
+                    +   '</div>'
+                    +   '<div class="content-details canscroll clearboth">'+ data.brief_introduction +'</div>'
+                    +'</div>';
+                    break;
+                case 'singleArticle':
+                    var videoClass = data.video ? '' : 'hidden',
+                        audioClass = data.audio ? '' : 'hidden';
+                    var title = data.title || '';
+                    toolbar =
+                        //'<div id="article">'
+                          '<div class="detail-title-wrap">'
+                        +       '<span class="detail-title">'
+                        +            '<i class="icon icon-arr-right"></i>'+ title
+                        +       '</span>'
+                        +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
+                        +           '<i class="icon icon-video"></i>'
+                        +       '</span>'
+                        +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                        +           '<i class="icon icon-radio"></i>'
+                        +           '<audio src="' + data.audio + '"></audio>'
+                        +       '</span>'
+                        +   '</div>'
+                       html = '<div id="article" class="content-details canscroll clearboth">'+ (data.content)+'</div>';
+                    break;
+                case 'poiList':
+                    var typeInfo = {
+                        '2': 'tour', //旅游
+                        '3': 'hotel', //住宿
+                        '4': 'restaurant', //餐饮
+                        '5': 'entertainment', // 娱乐
+                        '6': 'shopping', //购物
+                        '7': 'basicstation',
+                        '8': 'others'
+                    }, type = '';
+
+                    try{
+                        type = typeInfo[that.value.content.tabList[that.menuIndex].poiTypeId];
+                    } catch(e){
+
+                    }
+
+                    switch(type) {
+                        case 'restaurant':
+                        case 'hotel':
+                            //html = '';
+                            var hotelList = '', panoLink;
+                            data.pois.forEach(function (item, index) {
+                                if (item.panorama.panorama_id) {
+                                    switch (item.panorama.panorama_type_id) {
+                                        case 1: // 单点全景
+                                            panoLink = 'http://pano.visualbusiness.cn/single/index.html?panoId='
+                                            + item.panorama.panorama_id;
+                                            break;
+                                        case 2: // 相册全景
+                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
+                                            + item.panorama.panorama_id;
+
+                                            break;
+                                        case 3: // 自定义全景
+                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
+                                            + item.panorama.panorama_id;
+                                            break;
+                                    }
+                                }
+
+                                var navClass = '', navAttr = '';
+                                if(! item.lnglat.lng || ! item.lnglat.lat){
+                                    navClass='hidden';
+                                } else{
+                                    navAttr = ' endName="' + item.poi_name + '" endPosition=' + item.lnglat.lat + ',' + item.lnglat.lng;
+
+                                }
+                                if(item.contact_phone){
+                                    var phonesList = item.contact_phone.split(/[,，]/),
+                                        phones = '';
+
+                                    phonesList.forEach(function(item){
+                                        if(item){
+                                            phones += '<a href="tel:' + item +'">' + item + '</a>  ';
+                                        }
+                                    });
+                                    console.log(phones);
+                                }
+                                hotelList +=
+                                    '<div class="hotel-item">'
+                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
+                                    + 'background-size: cover;">'
+                                    +    '<div class="nav">'
+                                    +       '<a class="nav-item navimg nav-location ' + navClass +'" '+navAttr+'>'
+                                    +           '<img class="img" src="'+ host + '/resources/images/navigation-white.png"/>'
+                                    +           '<span>导航</span>'
+                                    +       '</a>'
+                                    +       '<a class="nav-item '+ (panoLink ? '': "hidden") +'" href="' + panoLink + '">'
+                                    +           '<img class="img" src="' + host + '../resources/images/pano-white.png"/>'
+                                    +           '<span>全景</span>'
+                                    +       '</a>'
+                                    +   '</div>'
+                                    +   '<div class="footer">'
+                                    +       '<div class="content">'
+                                    +           '<span class="poi-name">' + item.poi_name + '</span>'
+                                    +           '<span class="pull-right price">' + (item.price || '') + '</span>'
+                                    +       '</div>'
+                                    +   '</div>'
+                                    + '</div>'
+                                    + '<div class="hotel-info">'
+                                    +       '<p>' + item.share_desc + '</p>'
+                                    +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
+                                    +           '<i class="icon-phone"></i>'
+                                    +           '<span>' + phones + '</span>'
+                                    +       '</p>'
+                                    + '</div>'
+                                    +'</div>';
+                            });
+                            html = '<div id="poiList-hotel">' + hotelList + '</div>';
+                            break;
+
+                        default:
+                            html = '';
+                            var poiList = '',panoTip, panoLink;
+                            data.pois.forEach(function (item, index) {
+                                if (item.panorama.panorama_id) {
+                                    panoTip = '点击看全景';
+                                    switch (item.panorama.panorama_type_id) {
+                                        case 1: // 单点全景
+                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
+                                            + item.panorama.panorama_id;
+                                            break;
+                                        case 2: // 相册全景
+                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
+                                            + item.panorama.panorama_id;
+
+                                            break;
+                                        case 3: // 自定义全景
+                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
+                                            + item.panorama.panorama_id;
+                                            break;
+                                    }
+                                } else {
+                                    panoTip = '';
+                                    panoLink = 'javascript:void(0)';
+                                }
+
+                                //  设置背景图片样式
+                                var bg = '';
+                                if (item.thumbnail) {
+                                    bg = "background:url(" + item.thumbnail + "\) center center no-repeat; background-size:cover;";
+
+                                } else {
+                                    bg = "background:url(" + host + "/resources/images/default.png) center center no-repeat;";
+                                }
+
+                                poiList +=
+                                    '<div class="poi-item" style="' + bg + '">'
+                                    + '<a class="poi-bg" target="_blank" href="' + panoLink + '" >'
+                                    + '<p class="pano-nav">'
+                                    + '<span class="title">' + item.poi_name + '</span>'
+                                    + '<br><span class="profile">' + panoTip + '</span>'
+                                    + '</p>'
+                                    + '</a>'
+                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
+                                    + '点击查看详情'
+                                    + '</a>'
+                                    + '</div>';
+
+                            });
+                            html = '<div id="poiList">' + poiList + '</div>';
+                            break;
+                    }
+                    break;
+                case 'articleList':
+                    html = '';
+                    var articleList = '',bg;
+                    data.forEach(function(item, index){
+                        if(item.abstract_pic ){
+                            bg = "background:url(" + item.abstract_pic + ") center center no-repeat; background-size:cover;";
+                        } else{
+                            bg = "background:url(" + host +"/resources/images/default.png) center center no-repeat;";
+                        }
+                        var titleClass = '';
+                        if(item.title && item.title.length > 3){
+                            titleClass = 'title-sm'
+                        }
+                        var title = (item.title || '').split(/[,，]/).join('<br/>');
+                        articleList +=
+                            '<a target="_blank"  class="article-item" style="' + bg + '" href="'+ host + '/article/' + item.id +'">'
+                            +   '<div class="content">'
+                            +       '<div class="detail-left ' + titleClass + '">'
+                            +           '<span class="title">' + title +'</span>'
+                            +       '</div>'
+                            +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
+                            +           item.short_title
+                            +       '</span></p></div>'
+                            +   '</div>'
+                            +'</a>';
+                    });
+                    html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
+                    break;
+
+
+
+
+            }
+
+            if(that.content.html()){
+                that.content.addClass('transparent');
+                that.toolbar.addClass('transparent');
+                that.contentInfo = html;
+                that.toolbarInfo = toolbar;
+            } else{
+                that.content.html(html);
+                that.toolbar.html(toolbar || '');
+                that.contentInfo = '';
+                that.toolbarInfo = '';
+                that.refreshScroll();
+            }
+
+            if(type === 'singleArticle'){
+                that.content.addClass('no-padding-bottom').addClass('gray-bg');
+            } else{
+                that.content.removeClass('no-padding-bottom').removeClass('gray-bg');
+            }
+
+
+        }
+
+        function handleMenuClick(event){
+            var index = parseInt(event.target.parentNode.parentNode.getAttribute('data-index'));
+            if(index === that.menuIndex){
+                return;
+            }
+            that.html.find('.menulist').removeClass('current');
+            $(that.html.find('.menulist')[index]).addClass('current');
+            that.menuIndex = index;
+            // 填充数据
+            if(that.data[index]){
+                that.updateContent();
+            } else{
+                that.fetchSingleData(that.value.content.tabList[that.menuIndex], that.menuIndex);
+            }
+        }
+    }
 });
+
+/**
+ * 初始化全景背景
+ * @return {[type]} [description]
+ */
+function initPanoBg(panoBg) {
+    if (!panoBg) {
+        return;
+    }
+    var pano = {},
+        panoId = panoBg.dataset.panoid,
+        gravity = panoBg.dataset.gravity;
+    pano = new com.vbpano.Panorama(panoBg);
+    pano.setPanoId(panoId); //panoId
+    pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
+    pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
+    pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
+    pano.setAutoplayEnable(false); //自动播放
+    pano.setGravityEnable(gravity === "true"); //重力感应
+}
 
 /**
  * 导航事件
@@ -509,17 +1169,18 @@ function showNav(posiData) {
 }
 
 // HTML填充信息窗口内容
-function getMyLocation() {
+function getMyLocation(successCallback, errorCallback) {
 
     var options = {
         enableHighAccuracy: true,
-        maximumAge: 1000,
+        maximumAge: 1000
+    };
 
-    }
     if (navigator.geolocation) {
         //浏览器支持geolocation
         // alert("before");
-        navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
+        navigator.geolocation.getCurrentPosition(successCallback || getMyLocationOnSuccess,
+            errorCallback || getMyLocationOnError, options);
         // alert("end");
     } else {
         //浏览器不支持geolocation

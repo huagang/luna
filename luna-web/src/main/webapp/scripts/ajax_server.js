@@ -193,15 +193,23 @@ function savePageData(pageID, isPrompt) {
         data: params,
         dataType: 'json',
         success: function(returndata) {
+            var nowtime = new Date();
+            var strnowtime = nowtime.getHours() + ":" + nowtime.getMinutes();
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
-                $.alert(returndata.msg);
+                $('.msgTips').text(strnowtime + " " + returndata.msg);
+                setTimeout(function() {
+                    $('.msgTips').text("");
+                }, 2000);
                 console.log("保存" + (pageID ? "页面" + pageID : "全部页面") + "失败！");
                 return;
             } else {
                 //点击保存时，保存成功需要给出提示
                 if (isPrompt) {
-                    $.alert("保存页面成功");
+                    $('.msgTips').text(strnowtime + " 保存页面成功");
+                    setTimeout(function() {
+                        $('.msgTips').text("");
+                    }, 2000);
                 }
             }
         },
@@ -386,22 +394,29 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
             if (flag) {
                 currentComponent.width = returndata.data.width;
                 currentComponent.height = returndata.data.height;
-                if (returndata.data.width >= 480) {
-                    currentComponent.width = 480;
+                if (returndata.data.width >= objdata.canvas.width) {
+                    currentComponent.width = objdata.canvas.width;
                     currentComponent.x = 0;
-                    currentComponent.height = returndata.data.height * 480 / returndata.data.width;
+                    currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
                 }
-                if (currentComponent.width >= 480 && currentComponent.height > 756) {
-                    currentComponent.height = 756;
-                    currentComponent.width = currentComponent.width * 756 / currentComponent.height;
-                    currentComponent.y = 0;
-                    currentComponent.x = (480 - currentComponent.width) / 2;
+                if (currentComponent.width >= objdata.canvas.width && currentComponent.height > objdata.canvas.height) {
+                    if ((currentComponent.width / currentComponent.height) > (objdata.canvas.width / objdata.canvas.height)) {
+                        //图片的宽高比 大于 画布的宽高比
+                        currentComponent.width = objdata.canvas.width;
+                        currentComponent.x = 0;
+                        currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
+                    } else {
+                        currentComponent.height = objdata.canvas.height;
+                        currentComponent.width = currentComponent.width * objdata.canvas.height / currentComponent.height;
+                        currentComponent.x = (currentComponent.width - currentComponent.width) / 2;
+                        currentComponent.y = 0;
+                    }
                 }
-                if (currentComponent.width < 480 && returndata.data.height > 756) {
-                    currentComponent.height = 756;
-                    currentComponent.width = currentComponent.width * 756 / returndata.data.height;
+                if (currentComponent.width < objdata.canvas.width && returndata.data.height > objdata.canvas.height) {
+                    currentComponent.height = objdata.canvas.height;
+                    currentComponent.width = currentComponent.width * objdata.canvas.height / returndata.data.height;
                     currentComponent.y = 0;
-                    currentComponent.x = (480 - currentComponent.width) / 2;
+                    currentComponent.x = (objdata.canvas.width - currentComponent.width) / 2;
                 }
                 currentComponent.width = parseInt(currentComponent.width);
                 currentComponent.height = parseInt(currentComponent.height);
@@ -445,7 +460,7 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
      url_id 图片地址输入框
      author:Victor Du
 */
-function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceType, flag) {
+function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceType, flag) {
     var formobj = document.getElementById(form_id),
         urlElement;
     if (url_id) {
@@ -453,9 +468,9 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceTyp
     }
 
     var formdata = new FormData(formobj);
-    formdata.append('type',fileType);
-    formdata.append('resource_type',resourceType);
-    formdata.append('resource_id','');
+    formdata.append('type', fileType);
+    formdata.append('resource_type', resourceType);
+    formdata.append('resource_id', '');
 
     // var fileType2Method = {
     //     'audio': 'upload_audio',
@@ -523,6 +538,96 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType,resourceTyp
             // if (clc) {
             //     $(clc).show();
             // }
+        },
+        error: function(returndata) {
+            $.alert(returndata);
+        }
+    });
+}
+
+/**
+     异步提交图片:
+     form_id form表单
+     thumbnail预览div
+     flag url_id是否显示img url
+     clc_id 预览div中的删除链接
+     file_obj 文件表单本身
+     url_id 图片地址输入框
+*/
+function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_obj, url_id) {
+    var formobj = document.getElementById(form_id);
+    if (thumbnail_id) {
+        var thumbnail = $("#" + thumbnail_id);
+    }
+    if (clc_id) {
+        var clc = document.getElementById(clc_id);
+    }
+    if (url_id) {
+        var urlElement = document.getElementById(url_id);
+    }
+    var formdata = new FormData(formobj);
+    formdata.append("app_id", appId);
+
+    $.ajax({
+        url: host + '/uploadCtrl.do?method=aync_upload_pic',
+        type: 'POST',
+        cache: false,
+        async: false,
+        data: formdata,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        success: function(returndata) {
+            if (returndata.code != "0") {
+                $.alert(returndata.msg);
+                return;
+            }
+            if (flag) {
+                // currentComponent.width = returndata.data.width;
+                // currentComponent.height = returndata.data.height;
+                // if (returndata.data.width >= 480) {
+                //     currentComponent.width = 480;
+                //     currentComponent.x = 0;
+                //     currentComponent.height = returndata.data.height * 480 / returndata.data.width;
+                // }
+                // if (currentComponent.width >= 480 && currentComponent.height > 756) {
+                //     currentComponent.height = 756;
+                //     currentComponent.width = currentComponent.width * 756 / currentComponent.height;
+                //     currentComponent.y = 0;
+                //     currentComponent.x = (480 - currentComponent.width) / 2;
+                // }
+                // if (currentComponent.width < 480 && returndata.data.height > 756) {
+                //     currentComponent.height = 756;
+                //     currentComponent.width = currentComponent.width * 756 / returndata.data.height;
+                //     currentComponent.y = 0;
+                //     currentComponent.x = (480 - currentComponent.width) / 2;
+                // }
+                // currentComponent.width = parseInt(currentComponent.width);
+                // currentComponent.height = parseInt(currentComponent.height);
+                urlElement.value = returndata.data.access_url;
+                var urlObj = $("#" + url_id);
+                urlObj.trigger("focus");
+                urlObj.trigger("change");
+                urlObj.trigger("blur");
+            }
+            switch (thumbnail_id) {
+                case 'wj-page-set':
+                    $("#wj-page").remove();
+                    var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
+                    thumbnail.append(img_up);
+                    break;
+                case 'wj-share-set':
+                    $("#wj-share").remove();
+                    var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
+                    thumbnail.append(img_up);
+                    break;
+                default:
+                    break;
+            }
+            if (clc) {
+                $(clc).show();
+            }
+
         },
         error: function(returndata) {
             $.alert(returndata);
