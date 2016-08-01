@@ -19,7 +19,11 @@ $(document).ready(function() {
         });
 
     });
-
+    $('.btn-slide').on('click',function(e){
+        $(this).closest('.slide-panel').find('.slide-content').toggle();
+        $(this).toggleClass('icon-slideup');
+        $(this).toggleClass('icon-slidedown');
+    });
 });
 
 //组件

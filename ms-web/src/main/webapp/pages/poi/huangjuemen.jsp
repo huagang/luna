@@ -65,7 +65,14 @@
         title: "${title}",
         desc: "${description}",
         link: window.location.href,
-        imgUrl:poiData.data.thumbnail
+        imgUrl:poiData.data.thumbnail,
+        dest:{
+            lat:poiData.data.lat,
+            lng:poiData.data.lng,//经度
+            name:poiData.data.long_title,//名字
+            address:poiData.data.city+poiData.data.city.county, // 地址
+            debug:true,
+        }
     };
 </script>
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
