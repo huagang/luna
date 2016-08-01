@@ -191,9 +191,9 @@
                   </div>
                   <div id="bg-control" ng-show="text.tabs.style.content">
                     <!-- 模块大小位置 -->
-                    <div class="position">
-                      <h2>大小和位置</h2>
-                      <ul class="list-pos">
+                    <div class="position slide-panel">
+                    <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                        <ul class="list-pos slide-content">
                         <li>
                           <span>X</span>
                           <input type="number" ng-model="text.currentComponent.x" ng-blur="text.changeX()" />px</li>
