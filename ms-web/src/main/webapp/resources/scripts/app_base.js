@@ -687,6 +687,10 @@ $(document).ready(function() {
                     that.contentInfo = '';
                     that.myScroll.scrollTo(0,0,0);
                     that.refreshScroll();
+                    that.header.css('transform', "translate(0px, 0px)").css('transition', 'transform .2s');
+                    setTimeout(function(){
+                        that.header.css('transition','');
+                    }, 200)
                 } else{ // opaque
                     if(that.contentInfo){
                         that.content.addClass('transparent');
@@ -723,7 +727,6 @@ $(document).ready(function() {
         }
 
         function refreshScroll(){
-            that.header.css('transform', "translate(0px, 0px) translateZ(0px)");
             setTimeout(function(){
                 that.myScroll.refresh();
             }, 900);
