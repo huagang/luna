@@ -41,6 +41,7 @@ public class PoiController extends BaseController {
             JSONObject data = ret.getJSONObject("data");
             modelAndView.addObject("title", data.getString("long_title"));
             modelAndView.addObject("description", data.getString("share_desc"));
+            modelAndView.addObject("detail_address", data.getShortValue("detail_address"));
             modelAndView.addObject("poiJson", ret);
         } else {
             return buildModelAndView("404");
