@@ -714,84 +714,38 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
         //图标选择初始化
         this.iconList = [{
-                name: '概况',
-                code: 'profile',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-48px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-48px', '-0px'], bgSize: ['800px', '504px'] },
-                customer: {},
-            }, {
-                name: '交通',
-                code: 'traffic',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-96px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-96px', '-0px'], bgSize: ['800px', '504px'] },
-            },
-            // {
-            //     name: '开发区',
-            //     code: 'area',
-            //     type: 'default',
-            //     defaultStyle: { bgPosition: ['-480px', '-48px'], bgSize: ['800px', '504px'] },
-            //     currentStyle: { bgPosition: ['-480px', '-0px'], bgSize: ['800px', '504px'] },
-            // }, {
-            //     name: '数博会',
-            //     code: 'activity',
-            //     type: 'default',
-            //     defaultStyle: { bgPosition: ['-432px', '-48px'], bgSize: ['800px', '504px'] },
-            //     currentStyle: { bgPosition: ['-432px', '-0px'], bgSize: ['800px', '504px'] },
-            // }, 
-            {
-                name: '名人',
-                code: 'celebrity',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-288px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-288px', '-0px'], bgSize: ['800px', '504px'] },
-            }, {
-                name: '民族',
-                code: 'nation',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-240px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-240px', '-0px'], bgSize: ['800px', '504px'] },
-            },
-            // {
-            //     name: '文化',
-            //     code: 'culture',
-            //     type: 'default',
-            //     defaultStyle: { bgPosition: ['-336px', '-48px'], bgSize: ['800px', '504px'] },
-            //     currentStyle: { bgPosition: ['-336px', '-0px'], bgSize: ['800px', '504px'] },
-            // }, 
-            {
-                name: '景点',
-                code: 'spots',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-144px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-144px', '-0px'], bgSize: ['800px', '504px'] },
-            }, {
-                name: '食物',
-                code: 'food',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-192px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-192px', '-0px'], bgSize: ['800px', '504px'] },
-            }, {
-                name: '酒店',
-                code: 'hotel',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-384px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-384px', '-0px'], bgSize: ['800px', '504px'] },
-            }, {
-                name: '古代',
-                code: 'ancient',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-528px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-528px', '-0px'], bgSize: ['800px', '504px'] },
-            }, {
-                name: '近代',
-                code: 'modern',
-                type: 'default',
-                defaultStyle: { bgPosition: ['-576px', '-48px'], bgSize: ['800px', '504px'] },
-                currentStyle: { bgPosition: ['-576px', '-0px'], bgSize: ['800px', '504px'] },
-            }
-        ];
+            name: '概况',
+            code: 'profile',
+            type: 'default',
+        }, {
+            name: '交通',
+            code: 'traffic',
+            type: 'default',
+        }, {
+            name: '名人',
+            code: 'celebrity',
+            type: 'default',
+        }, {
+            name: '民族',
+            code: 'nation',
+            type: 'default',
+        }, {
+            name: '景点',
+            code: 'attraction',
+            type: 'default',
+        }, {
+            name: '食物',
+            code: 'delicacy',
+            type: 'default',
+        }, {
+            name: '酒店',
+            code: 'lodge',
+            type: 'default',
+        }, {
+            name: '文字',
+            code: 'text',
+            type: 'text',
+        }];
         // {
         //     name: '自定义图标',
         //     code: 'customer',
@@ -871,9 +825,10 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
     //修改栏目
     this.changeColumn = function() {
-            this.currentComponent.content.tabList = this.content.tabList;
-        }
-        //修改文章
+        this.currentComponent.content.tabList = this.content.tabList;
+    }
+
+    //修改文章
     this.changeArticle = function() {
         this.currentComponent.content.tabList = this.content.tabList;
     }
@@ -912,6 +867,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             customerMenuTabIcon.prepForBroadcast(this.currentTab.icon.customer);
             // this.currentTab.icon.customer = this.customerMenuTabIcon;
             popWindow($("#pop-uploadMenuTabIcon"));
+
         } else {
             this.currentTab.icon = angular.extend(this.currentTab.icon, item);
             this.currentTab.icon.customer.defaultUrl = "";

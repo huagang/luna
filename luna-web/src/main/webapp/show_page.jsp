@@ -1320,19 +1320,25 @@
                                          title="选择icon">
                                   <ui-select-match placeholder="选择一个Icon">{{$select.selected.name}}
                                   </ui-select-match>
-                                  <ui-select-choices repeat="icon.code as icon in menuTab.iconList ">
-                                      <i class="tabicon icon-list current icon-{{icon.code}}"></i>{{icon.name}}
+                                  <ui-select-choices repeat="icon.code as icon in menuTab.iconList" class="selectIconList">
+                                      <i class="iconfont icon-list  icon-{{icon.code}}"></i>{{icon.name}}
                                   </ui-select-choices>
                               </ui-select>
                           </div>
-                          <div class=""><span>默认颜色:</span>
+                          <div class=""><span>背景颜色:</span>
                               <input type="text" class="color-set icon-color" data-control="hue"
-                                     value="#ffffff" ng-model="menuTab.currentTab.icon.color.defaultColor"
-                                     ng-change="menuTab.changeIconColor('default')">
+                                     value="#ffffff" ng-model="menuTab.currentTab.icon.bgColor.defaultColor"
+                                     ng-change="menuTab.changeIconColor('default')"> 
+                              <input type="text" class="color-set icon-color" data-control="hue"
+                                     value="#ffffff" ng-model="menuTab.currentTab.icon.bgColor.currentColor"
+                                     ng-change="menuTab.changeIconColor('current')">
                           </div>
-                          <div class=""><span>当前颜色:</span>
+                          <div class=""><span>图标颜色:</span>
                               <input type="text" class="color-set icon-color" data-control="hue"
-                                     value="#ffffff" ng-model="menuTab.currentTab.icon.color.currentColor"
+                                     value="#ffffff" ng-model="menuTab.currentTab.icon.iconColor.defaultColor"
+                                     ng-change="menuTab.changeIconColor('default')"> 
+                              <input type="text" class="color-set icon-color" data-control="hue"
+                                     value="#ffffff" ng-model="menuTab.currentTab.icon.iconColor.currentColor"
                                      ng-change="menuTab.changeIconColor('current')">
                           </div>
                         </div>

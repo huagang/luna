@@ -361,10 +361,10 @@ ol {
     margin: 10px;
     font-size: 14px;
 }
-.bg-set .form-control{
+
+.bg-set .form-control {
     margin-bottom: 5px;
 }
-
 
 #text-set,
 #bg-set-img {
@@ -931,6 +931,28 @@ a.wj-img-clc {
     height: 100%;
 }
 
+.menuitem-img-bg {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fff;
+    margin:0 auto;
+}
+
+.menuitem-img .iconfont {
+    font-size: 24px;
+    line-height: 48px;
+    color: #e5383a;
+}
+.menuitem-img .icontext {
+    max-width:48px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 48px;
+    color: #e5383a;
+}
+
 .dropdown {
     position: absolute;
     width: 100%;
@@ -979,13 +1001,21 @@ a.wj-img-clc {
 
 .menuTab-set .minicolors {
     display: inline-block;
-    width: 70%;
+    width: 35%;
 }
 
 .menuTab-set .color-set {
     width: 100%;
+    padding-left: 35px;
 }
+
+.selectIconList .iconfont {
+    margin-right: 5px;
+    color: #e5383a;
+}
+
 /*页签组件End*/
+
 
 /* 保存的后的提示 */
 
@@ -997,6 +1027,3 @@ a.wj-img-clc {
 
 
 /* END 保存的后的提示 */
-
-
-

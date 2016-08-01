@@ -33,8 +33,8 @@ componentBaseModelTemplate = {
     unit: '',
     position: {
         changeTrigger: {
-            vertial: '',    //纵向方向
-            horizontal: '', //横向方向   
+            vertial: '', //纵向方向
+            horizontal: '', //横向方向
         }
     }
 }
@@ -1136,10 +1136,17 @@ var initMenuTab = {
     getTabListHtmlInCavas: function(tabList) {
         var innerHtml = [];
         for (var i = 0; i < tabList.length; i++) {
-            if (tabList[i].icon.selected == "customer") {
-                innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + (tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl) + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
-            } else {
-                innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="tabicon icon-list icon-' + tabList[i].icon.code + '"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+            console.log(tabList[i].icon.type);
+            switch (tabList[i].icon.type) {
+                case 'customer':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + (tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl) + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                    break;
+                case 'default':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><div class="menuitem-img-bg"><i class="iconfont icon-list icon-' + tabList[i].icon.code + '"></i></div></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                    break;
+                case 'text':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><div class="menuitem-img-bg"><i class="icontext">' + tabList[i].name + '</i></div></div><div class="menuitem-title"><span></span></div></li>');
+                    break;
             }
         }
         return innerHtml.join('');
