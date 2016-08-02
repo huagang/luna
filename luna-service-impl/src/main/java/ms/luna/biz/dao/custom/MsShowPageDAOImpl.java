@@ -202,7 +202,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 			msShowPage.setSharePic(document.getString(FIELD_SHARE_PIC));
 			msShowPage.setShareDesc(document.getString(FIELD_SHARE_DESC));
 			msShowPage.setPageType(document.getString(FIELD_PAGE_TYPE));
-			msShowPage.setPageType(document.getString(FIELD_PAGE_HEIGHT));
+			msShowPage.setPageHeight(document.getString(FIELD_PAGE_HEIGHT));
 			
 			return msShowPage;
 		}
