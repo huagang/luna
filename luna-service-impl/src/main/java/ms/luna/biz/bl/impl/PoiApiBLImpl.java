@@ -558,7 +558,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 		// 获取详细POI信息
 		JSONObject data = new JSONObject();
-		if(!"All".equals(lang)) { // 指定语言版本
+		if(!"ALL".equals(lang)) { // 指定语言版本
 			JSONArray poiArray = getPoisLstByIds(poiIdLst, fieldLst, lang);
 			JSONObject pois = new JSONObject();
 			pois.put("pois", poiArray);
@@ -1647,7 +1647,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		Set<String> sets = new HashSet<>();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			sets.add(doc.getString("_id"));
+			sets.add(doc.getObjectId("_id").toString());
 		}
 
 		// -- 英文
@@ -1655,7 +1655,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		cursor= collection.find(or).projection(Projections.include(returnFields)).iterator();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			sets.add(doc.getString("_id"));
+			sets.add(doc.getObjectId("_id").toString());
 		}
 		return sets;
 	}

@@ -71,4 +71,17 @@ public class TestPoiApiBL {
 
 	}
 
+	@Test
+	public void getPoisByActivityId(){
+		JSONObject param = new JSONObject();
+		String activity_id = "111111,222222";
+		String lang = "ALL";
+		String fields = "poi_name";
+		param.put("activity_id", activity_id);
+		param.put("lang", lang);
+		param.put("fields", fields);
+		JSONObject result = poiApiBL.getPoisByActivityId(param.toString());
+		System.out.println(result.toString());
+	}
+
 }

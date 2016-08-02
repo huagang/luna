@@ -31,7 +31,7 @@ public class PoiApiCtrl {
 	@Autowired
 	private PoiApiService poiApiService;
 
-	private static String[] LANG = {"zh", "en"}; // 语言
+	private static String[] LANG = {PoiCommon.POI.ZH, PoiCommon.POI.EN}; // 语言
 
 	/**
 	 * 根据业务获取一个层级的poi数据列表
@@ -514,6 +514,71 @@ public class PoiApiCtrl {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to get pois around");
 		}
 
+	}
+
+
+	/**
+	 * 根据活动id获取POI列表信息
+	 *
+	 * @param activity_id 活动id
+	 * @param fields 字段
+	 * @param lang language
+	 * @throws IOException
+	 */
+	@RequestMapping(params = "method=getPoisByActivityId")
+	@ResponseBody
+	public JSONObject getPoisByActivityId(
+			@RequestParam(required = true, value = "activity_id") String activity_id,
+			@RequestParam(required = false, value = "fields") String fields,
+			@RequestParam(required = false, value = "lang") String lang,
+			HttpServletRequest request, HttpServletResponse response) throws IOException{
+		/*
+		  需求: 只要POI的中文版或英文版中含有活动id,则返回该poi数据
+		  如果POI只有中文版或者只有英文版含有该id, 例如, poi 英文版含有该id,而中文版含有另一个id, lang=zh时也需要将该poi中文版数据输出.反之亦然
+		 */
+		try{
+			if(!checkActivityId(activity_id)) {
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, activity_id);
+			}
+			activity_id = activity_id.trim();
+			fields = getValidFields(fields);
+			if(lang == null) {
+				lang = "ALL";
+			}
+			JSONObject param = new JSONObject();
+			param.put("activity_id", activity_id);
+			param.put("fields", fields);
+			param.put("lang", lang);
+
+			JSONObject result = poiApiService.getPoisByActivityId(param.toString());
+			MsLogger.debug(result.toString());
+			return result;
+		} catch (Exception e) {
+			MsLogger.debug("Fail to get pois by activity id." + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to get pois by activity id");
+		}
+
+	}
+
+	/**
+	 * 获取符合要求的字段
+	 *
+	 * @param fields 字段
+	 * @return String
+	 */
+	private String getValidFields(String fields) {
+		return (fields == null) ? "":fields.trim();
+	}
+
+	/**
+	 * 判断活动id合法性
+	 *
+	 * @param activity_id 活动id
+	 * @return boolean
+	 */
+	private boolean checkActivityId(String activity_id) {
+		activity_id = activity_id.trim();
+		return activity_id.length() != 0;
 	}
 
 	/**
