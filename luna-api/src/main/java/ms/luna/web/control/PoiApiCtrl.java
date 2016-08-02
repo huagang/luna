@@ -9,15 +9,10 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.util.DateUtil;
 import ms.luna.common.PoiCommon;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,17 +60,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoisInFirstLevel(param.toString());
 					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -95,8 +89,6 @@ public class PoiApiCtrl {
 	 * 根据业务和POI获取下一层的一级类别列表
 	 * @param biz_id 业务id
 	 * @param poi_id poi ID数据
-	 * @param request
-	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getCtgrsByBizIdAndPoiId")
@@ -122,11 +114,9 @@ public class PoiApiCtrl {
 	
 	/**
 	 * 根据业务和POI获取下一层的二级类别列表
-	 * @param biz_id
-	 * @param poi_id
-	 * @param ctgr_id
-	 * @param request
-	 * @param response
+	 * @param biz_id 业务id
+	 * @param poi_id poi i
+	 * @param ctgr_id 一级分类id
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getSubCtgrsByBizIdAndPoiIdAndCtgrId")
@@ -157,12 +147,10 @@ public class PoiApiCtrl {
 	/**
 	 * 根据业务和poi获取下一层的POI列表
 	 * 
-	 * @param biz_id
-	 * @param poi_id
-	 * @param fields
-	 * @param lang
-	 * @param request
-	 * @param response
+	 * @param biz_id 业务id
+	 * @param poi_id poi id
+	 * @param fields 返回字段
+	 * @param lang language
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiId")
@@ -187,17 +175,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoisByBizIdAndPoiId(param.toString());
 					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -220,8 +207,6 @@ public class PoiApiCtrl {
 	 * @param ctgr_id 一级类别id
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
 	 * @param lang 语言
-	 * @param request
-	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndCtgrId")
@@ -256,17 +241,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoisByBizIdAndPoiIdAndCtgrId(param.toString());
 					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -288,8 +272,6 @@ public class PoiApiCtrl {
 	 * @param sub_ctgr_id 一级类别id
 	 * @param fields 字段（eg: "longNm,shortNm,title"）
 	 * @param lang 语言
-	 * @param request
-	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndPoiIdAndSubCtgrId")
@@ -322,17 +304,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoisByBizIdAndPoiIdAndSubCtgrId(param.toString());
-					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					MsLogger.debug("获取lang:" + language + "数据" + result.toString());
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -351,8 +332,6 @@ public class PoiApiCtrl {
 	 * 获取具体POI数据信息
 	 * @param poi_id poi id
 	 * @param lang 语言
-	 * @param request
-	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoiById")
@@ -370,17 +349,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoiInfoById(param.toString());
 					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -400,8 +378,6 @@ public class PoiApiCtrl {
 	 * @param biz_id 业务id
 	 * @param tags 标签（eg:"1,2,3"）
 	 * @param lang 语言
-	 * @param request
-	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(params = "method=getPoisByBizIdAndTags")
@@ -445,17 +421,16 @@ public class PoiApiCtrl {
 			
 			if(lang == null){
 				JSONObject datas = new JSONObject();
-				JSONObject result = null;
+				JSONObject result = new JSONObject();
 				for(String language : LANG){
 					param.put("lang", language);
 					result = poiApiService.getPoisByBizIdAndTags(param.toString());
 					MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-					if("0".equals(result.getString("code"))){
-						JSONObject data = result.getJSONObject("data");
-						datas.put(language, data.getJSONObject(language));
-					} else {
+					if(!"0".equals(result.getString("code"))) {
 						return result;
 					}
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
 				}
 				result.put("data", datas);
 				return result;
@@ -471,6 +446,17 @@ public class PoiApiCtrl {
 
 	}
 
+	/**
+	 * 获取周边poi数据
+	 *
+	 * @param longitude 经度
+	 * @param latitude 纬度
+	 * @param radius 半径范围
+	 * @param number 返回列表最大长度
+	 * @param fields 返回字段
+	 * @param lang language
+	 * @throws IOException
+	 */
 	@RequestMapping(params = "method=getPoisAround")
 	@ResponseBody
 	public JSONObject getPoisAroundById(
@@ -484,7 +470,7 @@ public class PoiApiCtrl {
 		try{
 			JSONObject param = new JSONObject();
 			if(radius == null) {
-				radius = new Double(PoiCommon.POI.RADIUS_AROUND_DEFAULT);
+				radius = (double) PoiCommon.POI.RADIUS_AROUND_DEFAULT;
 			}
 			if(number == null) {
 				number = PoiCommon.POI.NUM_AROUND_DEFAULT;
@@ -510,17 +496,16 @@ public class PoiApiCtrl {
 
 			// 未指定语言
 			JSONObject datas = new JSONObject();
-			JSONObject result = null;
+			JSONObject result = new JSONObject();
 			for(String language : LANG){
 				param.put("lang", language);
 				result = poiApiService.getPoisAround(param.toString());
 				MsLogger.debug("获取lang:"+language+"数据"+result.toString());
-				if("0".equals(result.getString("code"))){
-					JSONObject data = result.getJSONObject("data");
-					datas.put(language, data.getJSONObject(language));
-				} else {
+				if(!"0".equals(result.getString("code"))) {
 					return result;
 				}
+				JSONObject data = result.getJSONObject("data");
+				datas.put(language, data.getJSONObject(language));
 			}
 			result.put("data", datas);
 			return result;
@@ -535,15 +520,12 @@ public class PoiApiCtrl {
 	/**
 	 * 检测标签是否传入正确
 	 * @param tags 标签
-	 * @return
+	 * @return boolean
 	 */
 	static public boolean checkTags(String tags){
 		Pattern pattern = Pattern.compile("((\\d+),)*(\\d+)");
 		Matcher matcher = pattern.matcher(tags);
-		if(matcher.matches()){
-			return true;
-		}
-		return false;
+		return matcher.matches();
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
@@ -579,12 +561,12 @@ public class PoiApiCtrl {
 	
     public static String string2ChineseChar(String string) throws UnsupportedEncodingException {
           
-        StringBuffer unicode = new StringBuffer();
+        StringBuilder unicode = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
             // 取出每一个字符
             char c = string.charAt(i);
             // 转换为unicode(用于解码)
-            unicode.append("%" + Integer.toHexString(c));
+            unicode.append("%").append(Integer.toHexString(c));
         }
         // 16进制数据
         String result = unicode.toString();
