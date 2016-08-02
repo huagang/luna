@@ -799,7 +799,10 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                 iconColor: {
                     defaultColor: '#ff4800',
                     currentColor: '#fff',
-                }
+                },
+                type: 'default',
+                code: 'default',
+                name: '默认',
             },
             type: type,
             columnId: '',
@@ -917,29 +920,11 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         });
     };
 
-    //初始化PoiId
-    // this.initSecondPoi = function(firstPoiId, poiTypeId) {
-    //     var _self = this;
-    //     var url = '';
-    //     if (poiTypeId) {
-    //         url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [46, firstPoiId, poiTypeId]);
-    //     } else {
-    //         url = apiUrlFormat(Inter.getApiUrl().poiListByBidAndFPoi, [46, firstPoiId, poiTypeId]);
-    //     }
-    //     $http.get(apiUrlFormat(url, [46, firstPoiId])).success(function(response) {
-    //         if (response.code == '0') {
-    //             if (response.data) {
-    //                 var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
-    //                 for (var i = 0; i < response.data.zh.pois.length; i++) {
-    //                     reArr.push({ 'poiName': response.data.zh.pois[i].poi_name, 'poiId': response.data.zh.pois[i].poi_id });
-    //                 }
-    //                 _self.secondPoiList = reArr;
-    //             }
-    //         } else {
-    //             alert('获取poi类别失败');
-    //         }
-    //     });
-    // }
+    //改变图标的背景颜色
+    this.changeIconColor = function(colorType,colorStatus){
+        this.currentComponent.content.tabList = this.content.tabList;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    };
 }
 
 MenuTabController.prototype = new InteractComponentController();

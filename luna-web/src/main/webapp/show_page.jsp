@@ -1104,12 +1104,12 @@
                         </ui-select>
                       </div>
                       <div class=""><span>背景颜色:</span>
-                        <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.bgColor.defaultColor" ng-change="menuTab.changeIconColor('default')">
-                        <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.bgColor.currentColor" ng-change="menuTab.changeIconColor('current')">
+                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.bgColor.defaultColor" ng-change="menuTab.changeIconColor('bgColor', 'defaultColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.bgColor.currentColor" ng-change="menuTab.changeIconColor('bgColor', 'currentColor')">
                       </div>
                       <div class=""><span>图标颜色:</span>
-                        <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.iconColor.defaultColor" ng-change="menuTab.changeIconColor('default')">
-                        <input type="text" class="color-set icon-color" data-control="hue" value="#ffffff" ng-model="menuTab.currentTab.icon.iconColor.currentColor" ng-change="menuTab.changeIconColor('current')">
+                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.iconColor.defaultColor" ng-change="menuTab.changeIconColor('iconColor','defaultColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.iconColor.currentColor" ng-change="menuTab.changeIconColor('iconColor','currentColor')">
                       </div>
                     </div>
                     <h2><label>数据源</label></h2>
