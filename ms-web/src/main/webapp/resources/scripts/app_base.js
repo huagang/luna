@@ -14,6 +14,16 @@ var objdata = {
     }
 }
 
+String.prototype.format= function() {
+    var s = this,
+        i = arguments.length;
+
+    while (i--) {
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+    }
+    return s;
+};
+
 $(document).ready(function() {
 
     function init() {
@@ -125,10 +135,11 @@ $(document).ready(function() {
             "navEndLat": $(this).attr("endPosition").split(",")[0],
             "navEndLng": $(this).attr("endPosition").split(",")[1],
             "navEndName": $(this).attr("endName").split(",")[0],
-            'navType': options.navType || $(this).data('navtype')
+            'navType': options.navType || $(this).data('navtype'),
+            'address': $(this).attr('address') || ''
         };
         showNav(detailData);
-    }
+    };
 
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function(e) {
@@ -687,6 +698,10 @@ $(document).ready(function() {
                     that.contentInfo = '';
                     that.myScroll.scrollTo(0,0,0);
                     that.refreshScroll();
+                    that.header.css('transform', "translate(0px, 0px)").css('transition', 'transform .2s');
+                    setTimeout(function(){
+                        that.header.css('transition','');
+                    }, 200)
                 } else{ // opaque
                     if(that.contentInfo){
                         that.content.addClass('transparent');
@@ -723,7 +738,6 @@ $(document).ready(function() {
         }
 
         function refreshScroll(){
-            that.header.css('transform', "translate(0px, 0px) translateZ(0px)");
             setTimeout(function(){
                 that.myScroll.refresh();
             }, 900);
@@ -941,7 +955,10 @@ $(document).ready(function() {
                                 if(! item.lnglat.lng || ! item.lnglat.lat){
                                     navClass='hidden';
                                 } else{
-                                    navAttr = ' endName="' + item.poi_name + '" endPosition=' + item.lnglat.lat + ',' + item.lnglat.lng;
+                                    var address = item.address.city + item.address.county + item.address.detail_address;
+                                    navAttr = ' endName="{0}" endPosition="{1},{2}" address="{3}" data-navtype="{4}"'.format(
+                                        item.poi_name, item.lnglat.lat, item.lnglat.lng, address, 0);
+                                    console.log(navAttr);
 
                                 }
                                 if(item.contact_phone){
@@ -1143,11 +1160,11 @@ function initPanoBg(panoBg) {
 function showNav(posiData) {
     if (!is_weixn()) {
         var url;
-        if (posiData.navType == 0) { //+"&ref=mobilemap&referer=";
+        if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
             getMyLocation();
         } else {
-            url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLat + "%2C" + posiData.navStartLng + "&dest=" + posiData.navEndLat + "%2C" + posiData.navEndLng + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+            url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng  + "%2C"+ posiData.navStartLat + "&dest="+ posiData.navEndLng + "%2C" + posiData.navEndLat   + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
             window.location.href = url;
         }
     } else {
@@ -1157,7 +1174,7 @@ function showNav(posiData) {
                     latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
                     longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
                     name: posiData.navEndName, // 位置名
-                    address: '', // 地址详情说明
+                    address: posiData.address || '', // 地址详情说明
                     scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                     infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                 }
@@ -1201,7 +1218,7 @@ function getMyLocationOnSuccess(position) {
     qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
         //取出经纬度并且赋值
         latlng = res[0];
-        var url = "http://map.qq.com/nav/drive?start=" + latlng.lat + "%2C" + latlng.lng + "&dest=" + objdata.destPosition.navEndLat + "%2C" + objdata.destPosition.navEndLng + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
+        var url = "http://map.qq.com/nav/drive?start=" + latlng.lng  + "%2C" + latlng.lat + "&dest=" + objdata.destPosition.navEndLng  + "%2C" + objdata.destPosition.navEndLat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
         // alert(url);
         window.location.href = url;
     });
