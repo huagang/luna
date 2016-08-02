@@ -1,4 +1,4 @@
-package ms.luna.web.control;
+package com.microscene.web.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -9,15 +9,10 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.util.DateUtil;
 import ms.luna.common.PoiCommon;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +22,6 @@ import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 
-@CrossOrigin(origins = {"*"}, methods={RequestMethod.GET})
 @Controller
 @RequestMapping("/servicepoi.do")
 public class PoiApiCtrl {
