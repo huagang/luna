@@ -24,14 +24,18 @@ body{
 
 .food-info,
 .room-info,
-.funny-info{
+.funny-info,
+.facilities-info,
+.neighborhood-info{
     border-top: 1px solid #d8d7dc;
     border-bottom: 1px solid #d8d7dc;
 }
 
 .room-info header,
 .food-info header,
-.funny-info header
+.funny-info header,
+.facilities-info header,
+.neighborhood-info header
 {
     height: 40px;
     line-height: 40px;
@@ -347,15 +351,16 @@ body{
     height: 21vw;
     border-radius: 50%;
     margin-right: 2vw;
+    margin-top: 3.5vw;
     overflow: hidden;
 }
 .funny-name-wrapper{
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 8vw;
+    height: 7vw;
     width: 100%;
-    line-height: 8vw;
+    line-height: 7vw;
     font-size: 13px;
     color: white;
     text-align: center;
@@ -366,14 +371,55 @@ body{
     width: 21vw;
     height: 21vw;
     border-radius: 50%;
-    background-color: rgba(0,0,0,.4);
-    margin-top: -13vw;
+    background-color: rgba(0,0,0,.3);
+    margin-top: -14vw;
 }
 .funny-name{
-    padding-top: 13vw;
+    padding-top: 13.5vw;
     width: 13vw;
     margin: auto;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 /* 乡村野趣 end */
+
+/* 场地设施 start */
+.facilities-info main{
+    margin: 5px 30px 15px;
+}
+
+.facility-item {
+    display: inline-block;
+    width: 50%;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+.facility-item .list-style {
+    display: inline-block;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background-color: #aaa;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+/* 场地设施 end */
+
+/* 周边 start */
+#map-container{
+    width: 100%;
+    height: 72vw;
+}
+
+
+/* 周边 end */
+
+.to-top {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #d8d7dc;
+    background-color: white;
+}
