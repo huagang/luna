@@ -87,8 +87,9 @@ var initHJMPoiPage = function() {
                     break;
             }
             $('#panorama').attr('href', url);
+            document.querySelector('#panorama').classList.remove('hide');
         }else{
-            $('#panorama .icon').addClass('icon-wait-pano');
+            document.querySelector('#waitPanorama').classList.remove('hide');
         }
 
         //更新导航信息
