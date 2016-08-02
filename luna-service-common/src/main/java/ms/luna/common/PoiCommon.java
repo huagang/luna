@@ -172,7 +172,11 @@ public class PoiCommon {
 		public static final Integer TOPTAG_DEFAULT = 8; // 一级分类id默认值为8--其他
 		
 		public static final Integer PANORAMA_TYPE_DEFAULT = 2; // 全景类型id默认为2
-		
+
+		public static final Integer RADIUS_AROUND_DEFAULT = 1000; // 周边,默认范围
+
+		public static final Integer NUM_AROUND_DEFAULT = 20; // 周边POI数据(由近到远),默认20条
+
 		/*
 		 *公共部分 
 		 */

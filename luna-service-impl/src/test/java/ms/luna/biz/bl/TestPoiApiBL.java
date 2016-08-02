@@ -3,6 +3,7 @@ package ms.luna.biz.bl;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.alibaba.dubbo.common.json.JSON;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,125 +49,26 @@ public class TestPoiApiBL {
 		poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
 		poiApiBL.init();
 	}
-	
-//	@Test
-//	public void getPoisInFirstLevel(){// okay
-//		try {
-//			int biz_id = 46;
-//			String poi_id = "5760bc073fc92303d8d2255a";
-//			String fields = "";
-//			String lang = "zh";
-//			JSONObject param = new JSONObject();
-//			param.put("biz_id", biz_id);
-//			param.put("poi_id", poi_id);
-//			param.put("lang", lang);
-//			param.put("fields", fields);
-//			System.out.println("getPoisInFirstLevel:"+poiApiBL.getPoisInFirstLevel(param.toString()));
-//		} catch (Exception e) {
-//			MsLogger.debug(e);
-//		} 
-//	}
-	
-//	@Test
-//	public void getPoisByBizIdAndPoiIdAndCtgrId(){//okay
-//		int biz_id = 46;
-//		String poi_id = "5760bc073fc92303d8d2255a";
-//		String fields = ""; 
-//		String lang = "zh";
-//		int ctgr_id = 2;
-//		JSONObject param = new JSONObject();
-//		param.put("biz_id", biz_id);
-//		param.put("poi_id", poi_id);
-//		param.put("lang", lang);
-//		param.put("fields", fields);
-//		param.put("ctgr_id", ctgr_id);
-//		System.out.println("getPoisByBizIdAndPoiIdAndCtgrId:"+poiApiBL.getPoisByBizIdAndPoiIdAndCtgrId(param.toString()));
-//	}
-	
-//	@Test
-//	public void getPoisByBizIdAndPoiIdAndSubCtgrId(){// okay
-//		int biz_id = 46;
-//		String poi_id = "5760bc073fc92303d8d2255a";
-//		String fields = ""; 
-//		String lang = "zh";
-//		int sub_ctgr_id = 9;
-//		JSONObject param = new JSONObject();
-//		param.put("biz_id", biz_id);
-//		param.put("poi_id", poi_id);
-//		param.put("lang", lang);
-//		param.put("fields", fields);
-//		param.put("ctgr_id", sub_ctgr_id);
-//		System.out.println("getPoisByBizIdAndPoiIdAndSubCtgrId:"+poiApiBL.getPoisByBizIdAndPoiIdAndSubCtgrId(param.toString()));
-//	}
-	
+
 	@Test
-	public void getPoisByBizIdAndTags(){
-		int biz_id = 46;
-		String fields = ""; 
+	public void getPoisAround(){
+		JSONObject param = new JSONObject();
+		Double lng = 116.3568879999999979;
+		Double lat = 39.9633070000000004;
+		Double radius = Double.parseDouble("100000");
 		String lang = "zh";
-		String tags = "1,2";
-		String type = "scene_type";
-		JSONObject param = new JSONObject();
-		param.put("biz_id", biz_id);
-		param.put("fields", fields);
-		param.put("tags", tags);
+		String fields = "poi_name,lnglat,address";
+		Integer number = 20;
+		param.put("lng", lng);
+		param.put("lat", lat);
 		param.put("lang", lang);
-		System.out.println("getPoisByBizIdAndTags:"+poiApiBL.getPoisByBizIdAndTags(param.toString()));
-	}
-	
-	@Test
-	public void getPoisByBizIdAndTags2(){//有问题sub_category
-		int biz_id = 46;
-		String fields = ""; 
-		String lang = "zh";
-		String tags = "1,2";
-		String type = "scene_type";
-		JSONObject param = new JSONObject();
-		param.put("biz_id", biz_id);
 		param.put("fields", fields);
-		param.put("tags", tags);
-		param.put("lang", lang);
-		System.out.println("getPoisByBizIdAndTags2:"+poiApiBL.getPoisByBizIdAndTags(param.toString()));
+		param.put("radius", radius);
+		param.put("number", number);
+		JSONObject result = poiApiBL.getPoisAround(param.toString());
+		MsLogger.debug(result.toString());
+		System.out.println(result.toString());
+
 	}
-	/**/
-//	@Test
-//	public void getPoiInfoById(){//okay
-//		try{
-//			String poi_id = "5760bc073fc92303d8d2255a";
-//			String lang = "zh";
-//			int biz_id = 46;
-//			String fields = "";
-//			JSONObject param = new JSONObject();
-//			param.put("poi_id", poi_id);
-//			param.put("lang", lang);
-//			param.put("biz_id", biz_id);
-//			param.put("fields", fields);
-//			System.out.println("getPoiInfoById:"+poiApiBL.getPoiInfoById(param.toString()));
-//		}catch(Exception e){
-//			MsLogger.debug(e.toString());
-//		}
-//	}
-	
-//	@Test	
-//	public void getCtgrsByBizIdAndPoiId(){// okay
-//		String poi_id = "5760bc073fc92303d8d2255a";
-//		int biz_id = 46;
-//		JSONObject param = new JSONObject();
-//		param.put("poi_id", poi_id);
-//		param.put("biz_id", biz_id);
-//		System.out.println("getCtgrsByBizIdAndPoiId:"+poiApiBL.getCtgrsByBizIdAndPoiId(param.toString()));
-//	}
-	
-	@Test
-	public void getSubCtgrsByBizIdAndPoiIdAndCtgrId(){//sub_category_id有问题
-		int biz_id = 46;
-		String poi_id = "5760bc073fc92303d8d2255a";
-		int ctgr_id = 2;
-		JSONObject param = new JSONObject();
-		param.put("poi_id", poi_id);
-		param.put("biz_id", biz_id);
-		param.put("ctgr_id", ctgr_id);
-		System.out.println("getSubCtgrsByBizIdAndPoiIdAndCtgrId:"+poiApiBL.getSubCtgrsByBizIdAndPoiId(param.toString()));
-	}
-	/**/
+
 }

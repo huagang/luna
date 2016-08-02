@@ -13,9 +13,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.mongodb.client.model.Filters;
 import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ import ms.luna.biz.dao.model.MsRTagField;
 import ms.luna.biz.dao.model.MsRTagFieldCriteria;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.PoiCommon;
+import ms.luna.common.PoiCommon.*;
 
 /**
  * @author greek
@@ -82,15 +85,19 @@ public class PoiApiBLImpl implements PoiApiBL {
 	
 //	private static Map<String, String> fieldNamesLst = new LinkedHashMap<>();// (key：字段名称，value:字段显示名称)
 
-	private static Map<Integer, String> poiTagsLst = new LinkedHashMap<>();// (key:类型id, value:类型名称)
+	private static Map<Integer, Map<String, String>> poiTagsLst = new LinkedHashMap<>();// (key:类型id, value:类型名称)
 
-	private static Map<Integer, String> poiTypeId2NmLst = new LinkedHashMap<>();// (key:type的id,value:type值)
+	private static Map<Integer, Map<String, String>> poiTypeId2NmLst = new LinkedHashMap<>();// (key:type的id,value:type值)
 
-	private static Map<Integer, String> poiSceneTypeId2NmLst = new LinkedHashMap<>();// (key:sub_type的id,value:sub_type值)
+	private static Map<Integer, Map<String, String>> poiSceneTypeId2NmLst = new LinkedHashMap<>();// (key:sub_type的id,value:sub_type值)
 
 	private static Map<String, Integer> poiTypeNm2IdLst = new LinkedHashMap<>();// (key:type值,value:type的id)
 
 	private static Map<String, Integer> poiSceneTypeNm2IdLst = new LinkedHashMap<>();// (key:type值,value:type的id)
+
+//	private static Map<String, Integer> poiTypeNmEn2IdLst = new LinkedHashMap<>();// (key:type值,value:type的id)
+
+//	private static Map<String, Integer> poiSceneTypeNmEn2IdLst = new LinkedHashMap<>();// (key:type值,value:type的id)
 
 	private static Map<Integer, String> poiPanoramaTypeId2NmLst = new LinkedHashMap<>(); // (key:全景类别id，value: 全景类别名称)
 
@@ -239,7 +246,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			StringBuilder sbu = new StringBuilder();
 			for(int i = 0; i < ctgrlst.size(); i++) {
-				sbu.append(getPoiTagsLst().get(ctgrlst.get(i))).append(",");
+				sbu.append(getPoiTagsLst().get(ctgrlst.get(i)).get(PoiCommon.POI.ZH)).append(",");
 			}
 			resultdata.put("category_name", sbu.toString());
 			return resultdata;
@@ -279,7 +286,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			JSONObject resultdata = returnSuccessData("success", lang, data);
 			StringBuilder sbu = new StringBuilder();
 			for(Integer id : subCtgrlst) {
-				sbu.append(getPoiTagsLst().get(id)).append(",");
+				sbu.append(getPoiTagsLst().get(id).get(PoiCommon.POI.ZH)).append(",");
 			}
 			resultdata.put("businessTree_name", getBizTreeNmById(biz_id));
 			resultdata.put("sub_category_name",  sbu.toString());
@@ -365,7 +372,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			type = this.convertApiField2DbField(type);// 名称映射转换
 			MsLogger.debug("convertApiField2DbField:" + type);
 		} else {// web端传入的是标签的名称
-			typesAndIds = getTypesAndIdsByTypeNms(tags);// 返回的type值已经经过名称映射
+			typesAndIds = getTypesAndIdsByTypeNms(tags, lang);// 返回的type值已经经过名称映射
 			MsLogger.debug("hotel_type:" + typesAndIds.get("type").toString() + " scene_type:" + typesAndIds.get("scene_type").toString());
 		}
 		
@@ -424,14 +431,14 @@ public class PoiApiBLImpl implements PoiApiBL {
 			// 根据类别id获取类别名称
 			JSONArray array = new JSONArray();
 			if (!ctgrIdSet.isEmpty()) {
-				Map<Integer, String> map = getPoiTagsLst();
+				Map<Integer, Map<String, String>> map = getPoiTagsLst();
 				for (Integer ctgrId : ctgrIdSet) {
 					if(!map.containsKey(ctgrId)){
 						continue;
 					}
 					JSONObject ctgr = new JSONObject();
 					ctgr.put("category_id", ctgrId);
-					ctgr.put("category_name", map.get(ctgrId));
+					ctgr.put("category_name", map.get(ctgrId).get(PoiCommon.POI.ZH));
 					array.add(ctgr);
 				}
 			}
@@ -478,14 +485,14 @@ public class PoiApiBLImpl implements PoiApiBL {
 			// 根据类别id获取类别名称
 			JSONArray array = new JSONArray();
 			if (!subCtgrIdSet.isEmpty()) {
-				Map<Integer, String> map = getPoiTagsLst();
+				Map<Integer, Map<String, String>> map = getPoiTagsLst();
 				for (Integer subCtgrId : subCtgrIdSet) {
 					if(!map.containsKey(subCtgrId)){
 						continue;
 					}
 					JSONObject subctgr = new JSONObject();
 					subctgr.put("sub_category_id", subCtgrId);
-					subctgr.put("sub_category_name", map.get(subCtgrId));
+					subctgr.put("sub_category_name", map.get(subCtgrId).get(PoiCommon.POI.ZH));
 					array.add(subctgr);
 				}
 			}
@@ -496,6 +503,47 @@ public class PoiApiBLImpl implements PoiApiBL {
 		} else {
 			return FastJsonUtil.error("1", "biz_id:" + biz_id + "biz_id:" + biz_id + "业务关系树不存在");
 		}
+	}
+
+
+	// 获取poi周边数据
+	@Override
+	public JSONObject getPoisAround(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		Double lng = param.getDouble("lng");
+		Double lat = param.getDouble("lat");
+		Integer radius = param.getInteger("radius");
+		Integer poiNum = param.getInteger("number");
+		String fields = param.getString("fields");
+		String lang = param.getString("lang");
+		List<String> fieldLst= convertInputApiFields2DbFieldLst(fields);
+		MsLogger.debug("field list:" + fieldLst.toString());
+
+		// 取出POI数据的经纬度值
+//		Document doc = getPoiById(poi_id, PoiCommon.POI.ZH);
+//		if (doc == null) {
+//			MsLogger.debug("invalid poi id. " + poi_id);
+//			FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid poi id");
+//		}
+//		Document lnglat = (Document) doc.get("lnglat");
+//		JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
+//		double lng = coordinates.getDoubleValue(0);
+//		double lat = coordinates.getDoubleValue(1);
+		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
+//		Bson filter = Filters.geoWithinCenter("lnglat", lng, lat, radius*0.621/3963192);
+		Bson filter = Filters.nearSphere("lnglat.coordinates", lng, lat, radius * 0.621 / 3963192, 0.0);
+		MongoCursor<Document> mongoCursor = poi_collection.find(filter).limit(poiNum).iterator();
+		JSONObject data = new JSONObject();
+		JSONArray poiArray = new JSONArray();
+		while(mongoCursor.hasNext()) {
+			Document poi = mongoCursor.next();
+			JSONObject poiInfo = getPoiInfoWithFields(poi, fieldLst, lang);
+			poiArray.add(poiInfo);
+		}
+		data.put("pois", poiArray);
+		JSONObject resultdata = returnSuccessData("success", lang, data);
+		return resultdata;
+
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------
@@ -511,9 +559,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 缓存数据(key:类型id ,value:类型名称)
 	 * 
-	 * @return
+	 * @return Map
 	 */
-	private Map<Integer, String> getPoiTagsLst() {
+	private Map<Integer, Map<String, String>> getPoiTagsLst() {
 		if (!poiTagsLst.isEmpty()) {
 			return poiTagsLst;
 		}
@@ -523,7 +571,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 				for (MsTagFieldResult msTagFieldResult : msTagFieldResults) {
 					int tagId = msTagFieldResult.getTagId();
 					String tagName = msTagFieldResult.getTagName();
-					poiTagsLst.put(tagId, tagName);
+					String tagName_en = msTagFieldResult.getTagNameEn();
+					Map<String, String> tagNames = new LinkedHashMap<>();
+					tagNames.put(PoiCommon.POI.ZH, tagName);
+					tagNames.put(PoiCommon.POI.EN, tagName_en);
+					poiTagsLst.put(tagId, tagNames);
 				}
 			}
 		}
@@ -532,10 +584,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 	/**
 	 * 缓存数据(key:type的id,value:type值)
-	 * 
-	 * @return
+	 *
+	 * @return Map
 	 */
-	private Map<Integer, String> getPoiTypeId2NmLst() {
+	private Map<Integer, Map<String, String>> getPoiTypeId2NmLst() {
 		if (!poiTypeId2NmLst.isEmpty()) {
 			return poiTypeId2NmLst;
 		}
@@ -551,14 +603,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 					if (extensionAttrs == null) {
 						return poiTypeId2NmLst;
 					}
-					JSONArray array = JSONArray.parseArray(extensionAttrs);
-					for (int i = 0; i < array.size(); i++) {
-						JSONObject type = array.getJSONObject(i);
-						Set<Entry<String, Object>> entrySet = type.entrySet();
+					JSONArray array_zh = JSONObject.parseObject(extensionAttrs).getJSONArray(POI.ZH);
+					JSONArray array_en = JSONObject.parseObject(extensionAttrs).getJSONArray(POI.EN);
+					for (int i = 0; i < array_zh.size(); i++) {
+						JSONObject type_zh = array_zh.getJSONObject(i);
+						JSONObject type_en = array_en.getJSONObject(i);
+						Set<Entry<String, Object>> entrySet = type_zh.entrySet();
 						for (Entry<String, Object> entry : entrySet) {
-							String key = entry.getKey();
-							String value = (String) entry.getValue();
-							poiTypeId2NmLst.put(Integer.parseInt(key), value);
+							Map<String, String> typeNm = new LinkedHashMap<>();
+							String key = entry.getKey();// 中英文对应的key一致
+							String value_zh = type_zh.getString(key);
+							String value_en = type_en.getString(key);
+							typeNm.put(POI.ZH, value_zh);
+							typeNm.put(POI.EN, value_en);
+							poiTypeId2NmLst.put(Integer.parseInt(key), typeNm);
 						}
 					}
 				}
@@ -570,9 +628,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 缓存数据(key:sub_type的id,value:sub_type值)
 	 * 
-	 * @return
+	 * @return Map
 	 */
-	private Map<Integer, String> getPoiSceneTypeId2NmLst() {
+	private Map<Integer, Map<String, String>> getPoiSceneTypeId2NmLst() {
 		if (!poiSceneTypeId2NmLst.isEmpty()) {
 			return poiSceneTypeId2NmLst;
 		}
@@ -588,14 +646,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 					if (extensionAttrs == null) {
 						return poiSceneTypeId2NmLst;
 					}
-					JSONArray array = JSONArray.parseArray(extensionAttrs);
-					for (int i = 0; i < array.size(); i++) {
-						JSONObject type = array.getJSONObject(i);
-						Set<Entry<String, Object>> entrySet = type.entrySet();
+					JSONArray array_zh = JSONObject.parseObject(extensionAttrs).getJSONArray(POI.ZH);
+					JSONArray array_en = JSONObject.parseObject(extensionAttrs).getJSONArray(POI.EN);
+					for (int i = 0; i < array_zh.size(); i++) {
+						JSONObject type_zh = array_zh.getJSONObject(i);
+						JSONObject type_en = array_en.getJSONObject(i);
+						Set<Entry<String, Object>> entrySet = type_zh.entrySet();
 						for (Entry<String, Object> entry : entrySet) {
+							Map<String, String> sceneTypeNm = new LinkedHashMap<>();
 							String key = entry.getKey();
-							String value = (String) entry.getValue();
-							poiSceneTypeId2NmLst.put(Integer.parseInt(key), value);
+							String value_zh = type_zh.getString(key);
+							String value_en = type_en.getString(key);
+							sceneTypeNm.put(POI.ZH, value_zh);
+							sceneTypeNm.put(POI.EN, value_en);
+							poiSceneTypeId2NmLst.put(Integer.parseInt(key), sceneTypeNm);
 						}
 					}
 				}
@@ -607,7 +671,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 缓存数据(key:type值,value:type的id)
 	 * 
-	 * @return
+	 * @return Map
 	 */
 	private Map<String, Integer> getPoiTypeNm2IdLst() {
 		if (!poiTypeNm2IdLst.isEmpty()) {
@@ -615,12 +679,13 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		synchronized (PoiApiBLImpl.class) {
 			if (poiTypeNm2IdLst.isEmpty()) {
-				Map<Integer, String> typeId2Nms = getPoiTypeId2NmLst();
-				Set<Entry<Integer, String>> entrys = typeId2Nms.entrySet();
-				for (Entry<Integer, String> entry : entrys) {
+				Map<Integer, Map<String, String>> typeId2Nms = getPoiTypeId2NmLst();
+				Set<Entry<Integer, Map<String, String>>> entrys = typeId2Nms.entrySet();
+				for (Entry<Integer, Map<String, String>> entry : entrys) {
 					int id = entry.getKey();
-					String nm = entry.getValue();
-					poiTypeNm2IdLst.put(nm, id);
+					Map<String, String> nm = entry.getValue();
+					poiTypeNm2IdLst.put(nm.get(POI.ZH), id);
+					poiTypeNm2IdLst.put(nm.get(POI.EN), id);
 				}
 			}
 		}
@@ -630,7 +695,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 缓存数据(key:scene_type值,value:scene_type的id)
 	 * 
-	 * @return
+	 * @return Map
 	 */
 	private Map<String, Integer> getPoiSceneTypeNm2IdLst() {
 		if (!poiSceneTypeNm2IdLst.isEmpty()) {
@@ -638,17 +703,64 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		synchronized (PoiApiBLImpl.class) {
 			if (poiSceneTypeNm2IdLst.isEmpty()) {
-				Map<Integer, String> sceneTypeId2Nms = getPoiSceneTypeId2NmLst();
-				Set<Entry<Integer, String>> entrys = sceneTypeId2Nms.entrySet();
-				for (Entry<Integer, String> entry : entrys) {
+				Map<Integer, Map<String, String>> sceneTypeId2Nms = getPoiSceneTypeId2NmLst();
+				Set<Entry<Integer, Map<String, String>>> entrys = sceneTypeId2Nms.entrySet();
+				for (Entry<Integer, Map<String, String>> entry : entrys) {
 					int id = entry.getKey();
-					String nm = entry.getValue();
-					poiSceneTypeNm2IdLst.put(nm, id);
+					Map<String, String> nm = entry.getValue();
+					poiSceneTypeNm2IdLst.put(nm.get(POI.ZH), id);
+					poiSceneTypeNm2IdLst.put(nm.get(POI.EN), id);
 				}
 			}
 		}
 		return poiSceneTypeNm2IdLst;
 	}
+
+//	/**
+//	 * 缓存数据(key:type值,value:type的id)
+//	 *
+//	 * @return Map
+//	 */
+//	private Map<String, Integer> getPoiTypeNmEn2IdLst() {
+//		if (!poiTypeNmEn2IdLst.isEmpty()) {
+//			return poiTypeNmEn2IdLst;
+//		}
+//		synchronized (PoiApiBLImpl.class) {
+//			if (poiTypeNmEn2IdLst.isEmpty()) {
+//				Map<Integer, Map<String, String>> typeId2Nms = getPoiTypeId2NmLst();
+//				Set<Entry<Integer, Map<String, String>>> entrys = typeId2Nms.entrySet();
+//				for (Entry<Integer, Map<String, String>> entry : entrys) {
+//					int id = entry.getKey();
+//					Map<String, String> nm = entry.getValue();
+//					poiTypeNmEn2IdLst.put(nm.get(POI.EN), id);
+//				}
+//			}
+//		}
+//		return poiTypeNmEn2IdLst;
+//	}
+//
+//	/**
+//	 * 缓存数据(key:scene_type值,value:scene_type的id)
+//	 *
+//	 * @return Map
+//	 */
+//	private Map<String, Integer> getPoiSceneTypeNmEn2IdLst() {
+//		if (!poiSceneTypeNmEn2IdLst.isEmpty()) {
+//			return poiSceneTypeNmEn2IdLst;
+//		}
+//		synchronized (PoiApiBLImpl.class) {
+//			if (poiSceneTypeNmEn2IdLst.isEmpty()) {
+//				Map<Integer, Map<String, String>> sceneTypeId2Nms = getPoiSceneTypeId2NmLst();
+//				Set<Entry<Integer, Map<String, String>>> entrys = sceneTypeId2Nms.entrySet();
+//				for (Entry<Integer, Map<String, String>> entry : entrys) {
+//					int id = entry.getKey();
+//					Map<String, String> nm = entry.getValue();
+//					poiSceneTypeNmEn2IdLst.put(nm.get(POI.EN), id);
+//				}
+//			}
+//		}
+//		return poiSceneTypeNmEn2IdLst;
+//	}
 
 	private Map<Integer, String> getPoiPanoramaTypeId2NmLst() {
 		if (!poiPanoramaTypeId2NmLst.isEmpty()) {
@@ -706,8 +818,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 根据id获得业务关系树的名称
 	 * 
-	 * @param biz_id
-	 * @return
+	 * @param biz_id 业务id
+	 * @return String
 	 */
 	private String getBizTreeNmById(int biz_id) {
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(biz_id);
@@ -721,8 +833,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 根据poi 的id值获取poi信息
 	 * 
-	 * @param _id
-	 * @return
+	 * @param _id poi id
+	 * @return Document
 	 */
 	private Document getPoiById(String _id, String lang) {
 		MongoCollection<Document> poi_collection = null;
@@ -817,8 +929,8 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * mongodb数据库business_tree表，递归查找Poi集合
 	 * 
-	 * @param set
-	 * @param jsoncList
+	 * @param docTree 业务树数据
+	 * @param set Set
 	 */
 	private void getPoisFromBizTree(Document docTree, Set<String> set ) {
 		JSONObject tree = JSONObject.parseObject(docTree.toJson());
@@ -870,19 +982,16 @@ public class PoiApiBLImpl implements PoiApiBL {
 		MongoCollection<Document> business_tree = mongoConnector.getDBCollection("business_tree");
 		BasicDBObject condition = new BasicDBObject();
 		condition.put("business_id", biz_id);
-		Document tree = null;
-		tree = business_tree.find(condition).first();
+		Document tree = business_tree.find(condition).first();
 		return tree;
 	}
 
 	/**
 	 * 获取树的同一层poi结点的id
 	 * 
-	 * @param biz_id
-	 *            业务树id
-	 * @param level
-	 *            树的层级
-	 * @return
+	 * @param doctree 业务树
+	 * @param level 树的层级
+	 * @return List
 	 */
 	List<String> getPoisWithLevelInBizTree(Document doctree, int level) {
 		if (level != 1) { // 目前只获取第一层数据
@@ -923,7 +1032,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 *            字段集
 	 * @param lang
 	 *            语言
-	 * @return
+	 * @return JSONArray
 	 */
 	private JSONArray getPoiInfoByTagsWithFields(Set<String> poiIdLst, String type, List<String> tags, List<String> fields,
 			String lang) {
@@ -971,7 +1080,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 *            字段集
 	 * @param lang
 	 *            语言
-	 * @return
+	 * @return JSONArray
 	 */
 	private JSONArray getPoiInfoByTagsWithFields(Set<String> poiIdLst, Map<String, List<Integer>> typesAndIds,
 			List<String> fields, String lang) {
@@ -1020,14 +1129,21 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * 
 	 * @param types
 	 *            标签名称
-	 * @return
+	 * @return Map
 	 */
-	private Map<String, List<Integer>> getTypesAndIdsByTypeNms(String types) {
+	private Map<String, List<Integer>> getTypesAndIdsByTypeNms(String types, String lang) {
 		Map<String, List<Integer>> list = new HashMap<>();
 		list.put("type", new LinkedList<Integer>());
 		list.put("scene_type", new LinkedList<Integer>());
-		Map<String, Integer> poiTypeNm2Ids = getPoiTypeNm2IdLst();
-		Map<String, Integer> poiSceneTypeNm2Ids = getPoiSceneTypeNm2IdLst();
+		Map<String, Integer> poiTypeNm2Ids;
+		Map<String, Integer> poiSceneTypeNm2Ids;
+//		if( POI.ZH.equals(lang)){
+			poiTypeNm2Ids = getPoiTypeNm2IdLst();
+			poiSceneTypeNm2Ids = getPoiSceneTypeNm2IdLst();
+//		} else {
+//			poiTypeNm2Ids = getPoiTypeNm2IdLst();
+//			poiSceneTypeNm2Ids = getPoiSceneTypeNm2IdLst();
+//		}
 		String[] tagArr = types.split(",");
 		for (String tag : tagArr) {
 			if (poiTypeNm2Ids.containsKey(tag)) {
@@ -1043,11 +1159,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 获取给定字段和id的poi
 	 * 
-	 * @param poi_id
-	 *            poi 的id
-	 * @param fields
-	 *            需要获取的字段
-	 * @return
+	 * @param poiIdLst poi id集合
+	 * @param fields 需要获取的字段
+	 * @param lang language
+	 * @return JSONArray
 	 */
 	private JSONArray getPoiInfoWtihFields(List<String> poiIdLst, List<String> fields, String lang) {
 		MongoCollection<Document> poi_collection = null;
@@ -1084,12 +1199,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 获取父poi下满足一级分类id的poi子结点（poi仅包含给定字段数据）
 	 * 
-	 * @param poi_id
-	 *            poi ID号
-	 * @param ctgr_id
-	 *            一级分类
-	 * @param fields
-	 *            需要获取的字段
+	 * @param poiIdLst poi id集合
+	 * @param ctgrlst category id集合
+	 * @param fields 需要获取的字段
+	 * @param lang language
 	 * @return
 	 */
 	private JSONArray getPoiInfoByCtgrIdWithFields(List<String> poiIdLst, List<Integer> ctgrlst, List<String> fields, String lang) {
@@ -1128,12 +1241,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 获取父poi下满足二级分类id的poi子结点（poi仅包含给定字段数据）
 	 * 
-	 * @param poi_id
-	 *            poi ID号
-	 * @param sub_ctgr_id
-	 *            二级分类
-	 * @param fields
-	 *            需要获取的字段
+	 * @param poiIdLst POI id集合
+	 * @param subCtgrlst sub_category id集合
+	 * @param fields 需要获取的字段
+	 * @param lang language
 	 * @return
 	 */
 	private JSONArray getPoiInfoBySubCtgrIdWithFields(List<String> poiIdLst, List<Integer> subCtgrlst, List<String> fields,
@@ -1173,7 +1284,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * @param poiIdLst poi点顺序集合
 	 * @param pois 通过mongo搜索出的满足条件的POI
-	 * @return
+	 * @return JSONArray
 	 */
 	private JSONArray getPoiInOrder(List<String> poiIdLst, Map<String, JSONObject> pois){
 		JSONArray array = new JSONArray();
@@ -1192,10 +1303,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	/**
 	 * 获取POI的指定字段信息
 	 * 
-	 * @param poi 
+	 * @param poi POI数据
 	 * @param fieldLst 字段集
 	 * @param lang
-	 * @return
+	 * @return JSONObject
 	 */
 	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
 		JSONObject result = new JSONObject();
@@ -1211,11 +1322,11 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
 		// 数据库存在字段信息
-		Map<Integer, String> poiTags = getPoiTagsLst();
-		Map<Integer, String> poiTypes = getPoiTypeId2NmLst();
-		Map<Integer, String> poiSceneTypes = getPoiSceneTypeId2NmLst();
+		Map<Integer, Map<String, String>> poiTags = getPoiTagsLst();
+		Map<Integer, Map<String, String>> poiTypes = getPoiTypeId2NmLst();
+		Map<Integer, Map<String, String>> poiSceneTypes = getPoiSceneTypeId2NmLst();
+		Map<Integer, Map<String, String>> typesLst;
 		Map<Integer, String> poiPanoTypes = getPoiPanoramaTypeId2NmLst();
-		Map<Integer, String> typesLst;
 
 		// 兼容性代码--type
 		// 如果需要返回标签字段,则为了保证兼容性,将"types"字段一同输出.
@@ -1238,7 +1349,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					JSONObject data = new JSONObject();
 					int id = types.getIntValue(i);
 					data.put("type_id", id);
-					data.put("type_name", typesLst.get(id));
+					data.put("type_name", typesLst.get(id).get(lang));
 					array.add(data);
 				}
 			}
@@ -1259,7 +1370,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 						tag = 8;//TODO
 					}
 					if (poiTags.containsKey(tag)) {
-						data.put("category_name", poiTags.get(tag));
+						data.put("category_name", poiTags.get(tag).get(lang));
 						data.put("category_id", tag);
 					}
 					result.put("category", data);
@@ -1280,7 +1391,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					}
 					JSONObject data = new JSONObject();
 					if (poiTags.containsKey(sub_tag)) {
-						data.put("sub_category_name", poiTags.get(sub_tag));
+						data.put("sub_category_name", poiTags.get(sub_tag).get(lang));
 						data.put("sub_category_id", sub_tag);
 					}
 					result.put("sub_category", data);
@@ -1306,7 +1417,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							JSONObject data = new JSONObject();
 							int id = types.getIntValue(i);
 							data.put("hotel_type_id", id);
-							data.put("hotel_type_name", poiTypes.get(id));
+							data.put("hotel_type_name", poiTypes.get(id).get(lang));
 							array.add(data);
 						}
 					}
@@ -1323,7 +1434,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 							JSONObject data = new JSONObject();
 							int id = types.getIntValue(i);
 							data.put("scene_type_id", id);
-							data.put("scene_type_name", poiSceneTypes.get(id));
+							data.put("scene_type_name", poiSceneTypes.get(id).get(lang));
 							array.add(data);
 						}
 					}
@@ -1404,7 +1515,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * 获得默认输出字段 公有字段+类别对应的所有私有字段
 	 * 
 	 * @param tag_id 类别id
-	 * @param fields 
+	 * @return List<String>
 	 */
 	private List<String> getFieldsByDefault(int tag_id) {
 		List<String> fields = new ArrayList<>();
@@ -1425,7 +1536,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	
 	/**
 	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
-	 * @return
+	 * @return Map<Integer, Integer>
 	 */
 	private Map<Integer, Integer> getTopTag2SubTagOthersCache() {
 		if(!topTag2SubTagOthersCache.isEmpty()){
@@ -1454,7 +1565,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * 将类别字符串转换为整数集合
 	 * 
 	 * @param ctgrIds 一级类别字符串。eg: 2,3,4
-	 * @return
+	 * @return List
 	 */
 	public List<Integer> getCtgrIdLst(String ctgrIds){
 		String[] ctgrArr = ctgrIds.split(",");
@@ -1465,3 +1576,5 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return ctgrlst;
 	}
 }
+
+// ps: lang 涉及到中文, 英文,以后还可能涉及到日文等,很多地方使用的是PoiCommon.POI.EN这种hard code 的形式,后面有时间考虑重整一下代码
