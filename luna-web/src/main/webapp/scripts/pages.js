@@ -236,6 +236,15 @@ $(document).ready(function () {
         submitSetting();
     });
 
+    $('[name=pageType]').on('change',function(e){
+        console.log($(this).val());
+        if($(this).val()==1){
+            $('#txtPageHeight').attr('readonly','readonly');
+        }else{
+            $('#txtPageHeight').removeAttr('readonly');
+        }
+    });
+
     /*页面级属性设置缩略图删除功能*/
     $("#wj-page-clc").click(function () {
         $("#wj-page").remove();
@@ -351,11 +360,18 @@ function getUrlParam(name) {
 }
 
 function resetDialog() {
-    $("#modify_page_id").val('');
-    $("#txt-name").val('');
-    $("#txt-short").val('');
-    $("#warn1").html('');
-    $("#warn2").html('');
+    document.querySelector('#editPageForm').reset();
+    // $("#modify_page_id").val('');
+    // $("#txt-name").val('');
+    // $("#txt-short").val('');
+    // $("#warn1").html('');
+    // $("#warn2").html('');
+    // var pageTypeDoms = document.querySelectorAll('[name=pageType]');
+    // for(var i = 0; i <pageTypeDoms.length;i++){
+    //     pageTypeDoms[i].attributes.remove('readonly');
+    // }
+    // document.querySelector('#txtPageHeight').value = '';
+    // document.querySelector('.')
 }
 
 /**

@@ -1225,28 +1225,34 @@
                 src="<%=request.getContextPath() %>/img/close.png"/></a>
           </div>
           <div class="pop-cont">
-            <div class="item-wrap">
-              <span class="item-tit">页面名称</span>
-              <input id="modify_page_id" hidden>
-              <input class="txt" id="txt-name" type="text" placeholder="输入页面的中文名称" />
-              <span id="warn1"></span>
-            </div>
-            <div class="item-wrap">
-              <span class="item-tit">英文名称</span>
-              <input class="txt" id="txt-short" type="text" placeholder="输入页面的英文名称" />
-              <span id="warn2"></span>
-            </div>
-            <div class="item-wrap">
-              <span class="item-tit">页面长度</span>
-              <div>
-                <div>
-                  <input type="radio" id="rdSinglePage" name="pageType"><label for="rdSinglePage">单页</label>
-                  <input type="radio" id="rdLongPage" name="pageType"><label for="rdLongPage">纵向长页面</label>
+            <form action="" id='editPageForm'>
+              <div class="item-wrap">
+                <span class="item-tit">页面名称</span>
+                <input id="modify_page_id" hidden>
+                <div class="item-cont">
+                  <input class="txt" id="txt-name" type="text" placeholder="输入页面的中文名称" />
+                  <span id="warn1"></span>
                 </div>
-                <input class="txt" id="txtPageLength" type="text" placeholder="输入页面长度，不小于617" name="pageLenth" />
-                <span id="warn2"></span>
               </div>
-            </div>
+              <div class="item-wrap">
+                <span class="item-tit">英文名称</span>
+                <div class="item-cont">
+                  <input class="txt" id="txt-short" type="text" placeholder="输入页面的英文名称" />
+                  <span id="warn2"></span>
+                </div>
+              </div>
+              <div class="item-wrap">
+                <span class="item-tit">页面长度</span>
+                <div class="item-cont">
+                  <div class="col-md-12" style="height:30px;">
+                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1"><label for="rdSinglePage">单页</label>
+                    <input type="radio" id="rdLongPage" name="pageType" value="2"><label for="rdLongPage">纵向长页面</label>
+                  </div>
+                  <input class="txt col-md-12" id="txtPageHeight" type="number" placeholder="输入页面长度，不小于617" name="pageHeight" min="617" readonly='readonly' />
+                  <span class="warnTips"></span>
+                </div>
+              </div>
+            </form>
           </div>
           <!-- 弹出层底部功能区 -->
           <div class="pop-fun">

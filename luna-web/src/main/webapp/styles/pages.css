@@ -330,10 +330,10 @@ ol {
 .canvas .inner-canvas {
     position: relative;
     display: block;
-    width: 375px;
-    height: 617px;
+    width: 377px;
+    height: 619px;
     border: 1px solid #DDDDDD;
-    margin: 50px auto 0 auto;
+    margin: 50px auto 50px auto;
     /* overflow: hidden; */
 }
 
@@ -676,16 +676,26 @@ a.img-clc:hover {
     margin-left: 5px;
     width: 370px;
     font-size: 14px;
-    height: 30px;
     margin-bottom: 10px;
+    overflow:hidden;
+}
+#pop-add .item-wrap .item-tit{
+    float:left;
+    margin-right: 5px;
+    line-height: 30px;
+}
+#pop-add .item-wrap .item-cont{
+    float:left;
+    width: 290px;
 }
 
 #warn1,
 #warn2,
 #warn3,
-#warn4 {
+#warn4,
+.warnTips {
     color: red;
-    position: absolute;
+    /* position: absolute; */
     margin-top: 5px;
     left: 355px;
 }
