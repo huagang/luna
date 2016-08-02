@@ -1236,6 +1236,17 @@
               <input class="txt" id="txt-short" type="text" placeholder="输入页面的英文名称" />
               <span id="warn2"></span>
             </div>
+            <div class="item-wrap">
+              <span class="item-tit">页面长度</span>
+              <div>
+                <div>
+                  <input type="radio" id="rdSinglePage" name="pageType"><label for="rdSinglePage">单页</label>
+                  <input type="radio" id="rdLongPage" name="pageType"><label for="rdLongPage">纵向长页面</label>
+                </div>
+                <input class="txt" id="txtPageLength" type="text" placeholder="输入页面长度，不小于617" name="pageLenth" />
+                <span id="warn2"></span>
+              </div>
+            </div>
           </div>
           <!-- 弹出层底部功能区 -->
           <div class="pop-fun">

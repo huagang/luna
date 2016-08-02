@@ -35,12 +35,12 @@ function isValidPageInfo() {
     var flag_name = true,
         flag_short = true,
         $txtName = $("#txt-name").val();
-    if ($txtName.length == 0) {
+    if ($txtName.length === 0) {
         $("#warn1").text("不能为空");
         flag_name = false;
     }
     var $txtShort = $("#txt-short").val();
-    if ($txtShort.length == 0) {
+    if ($txtShort.length === 0) {
         $("#warn2").text("不能为空");
         flag_short = false;
     }
