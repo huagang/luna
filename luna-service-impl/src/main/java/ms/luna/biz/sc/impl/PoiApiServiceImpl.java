@@ -97,6 +97,17 @@ public class PoiApiServiceImpl implements PoiApiService {
 	}
 
 	@Override
+	public JSONObject getPoisByActivityId(String json) {
+		JSONObject jSONObject = null;
+		try {
+			jSONObject = poiApiBL.getPoisByActivityId(json);
+		} catch (Exception e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return jSONObject;
+	}
+
+	@Override
 	public JSONObject getSubCtgrsByBizIdAndPoiId(String json) {
 		JSONObject jSONObject = null;
 		try {

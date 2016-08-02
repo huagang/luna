@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
@@ -337,9 +338,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String poi_id = param.getString("poi_id");
 		String lang = param.getString("lang");
 		Document doc = getPoiById(poi_id, lang);
-		List<String> fieldLst;
-//		convertInputApiFields2DbFieldLst("", fieldLst);
-		fieldLst = new ArrayList<>();
+		List<String> fieldLst = new ArrayList<>();
 		if (doc == null) {
 			logger.debug("Failed to get doc, request json: " + json);
 			return returnSuccessData("success", lang, new JSONObject());
@@ -530,7 +529,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 //		double lng = coordinates.getDoubleValue(0);
 //		double lat = coordinates.getDoubleValue(1);
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
-//		Bson filter = Filters.geoWithinCenter("lnglat", lng, lat, radius*0.621/3963192);
 		Bson filter = Filters.nearSphere("lnglat.coordinates", lng, lat, radius * 0.621 / 3963192, 0.0);
 		MongoCursor<Document> mongoCursor = poi_collection.find(filter).limit(poiNum).iterator();
 		JSONObject data = new JSONObject();
@@ -545,6 +543,43 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return resultdata;
 
 	}
+
+	// 根据活动id获取poi数据
+	@Override
+	public JSONObject getPoisByActivityId(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String activity_id = param.getString("activity_id");
+		String fields = param.getString("fields");
+		String lang = param.getString("lang");
+		List<String> activityIdLst = convertString2Lst(activity_id);
+		List<String> fieldLst = convertInputApiFields2DbFieldLst(fields);
+		// 搜索含有activity_id 的POI列表
+		Set<String> poiIdLst = getPoiIdLstByActivityId(activityIdLst);
+
+		// 获取详细POI信息
+		JSONObject data = new JSONObject();
+		if(!"All".equals(lang)) { // 指定语言版本
+			JSONArray poiArray = getPoisLstByIds(poiIdLst, fieldLst, lang);
+			JSONObject pois = new JSONObject();
+			pois.put("pois", poiArray);
+			data.put(lang, pois);
+		} else { // 非指定语言版本
+			JSONArray poiArray_zh = getPoisLstByIds(poiIdLst, fieldLst, POI.ZH);
+			JSONArray poiArray_en = getPoisLstByIds(poiIdLst, fieldLst, POI.EN);
+			JSONObject pois_zh = new JSONObject();
+			pois_zh.put("pois", poiArray_zh);
+			data.put(POI.ZH, pois_zh);
+
+			JSONObject pois_en = new JSONObject();
+			pois_en.put("pois", poiArray_en);
+			data.put(POI.EN, poiArray_en);
+		}
+		return FastJsonUtil.sucess("success", data);
+
+	}
+
+
+
 
 	// ------------------------------------------------------------------------------------------------------------------
 	
@@ -1574,6 +1609,95 @@ public class PoiApiBLImpl implements PoiApiBL {
 			ctgrlst.add(Integer.parseInt(ctgrArr[i]));
 		}
 		return ctgrlst;
+	}
+
+	/**
+	 * 将以","间隔的字符串转化为集合
+	 */
+	private List<String> convertString2Lst(String value) {
+		String[] arrs = value.split(",");
+		List<String> list = new ArrayList<>();
+		for(String arr : arrs) {
+			list.add(arr);
+		}
+		return list;
+	}
+
+	/**
+	 * 获取含有活动ID的poi集合(id)
+	 *
+	 * @param activityIdLst 活动id集合
+	 * @return Set
+	 */
+	private Set<String> getPoiIdLstByActivityId(List<String> activityIdLst) {
+
+		String[] returnFields = {"_id"};
+		BasicDBList conditions = new BasicDBList();
+		for(String id : activityIdLst) {
+			BasicDBObject condition = new BasicDBObject();
+			condition.append("activity_id", id);
+			conditions.add(condition);
+		}
+		BasicDBObject or = new BasicDBObject().append("$or", conditions);
+
+		// 分别搜索中文数据库和英文数据库
+		// -- 中文
+		MongoCollection<Document> collection = mongoConnector.getDBCollection(MongoTable.TABLE_POI_ZH);
+		MongoCursor<Document> cursor= collection.find(or).projection(Projections.include(returnFields)).iterator();
+		Set<String> sets = new HashSet<>();
+		while (cursor.hasNext()) {
+			Document doc = cursor.next();
+			sets.add(doc.getString("_id"));
+		}
+
+		// -- 英文
+		collection = mongoConnector.getDBCollection(MongoTable.TABLE_POI_EN);
+		cursor= collection.find(or).projection(Projections.include(returnFields)).iterator();
+		while (cursor.hasNext()) {
+			Document doc = cursor.next();
+			sets.add(doc.getString("_id"));
+		}
+		return sets;
+	}
+
+	/**
+	 * 根据id 获取POI数据列表
+	 *
+	 * @param poiIdLst poi id列表
+	 * @param fieldLst 返回字段列表
+	 * @param lang languag
+	 * @return JSONArray
+	 */
+	private JSONArray getPoisLstByIds(Set<String> poiIdLst, List<String> fieldLst, String lang) {
+		// filter
+		BasicDBList conditions = new BasicDBList();
+		for(String id : poiIdLst) {
+			BasicDBObject condition = new BasicDBObject();
+			condition.append("_id", new ObjectId(id));
+			conditions.add(condition);
+		}
+		BasicDBObject or = new BasicDBObject().append("$or", conditions);
+
+		// 提取数据
+		MongoCollection<Document> collection;
+		if(POI.ZH.equals(lang)) {
+			collection = mongoConnector.getDBCollection(MongoTable.TABLE_POI_ZH);
+		} else {
+			collection = mongoConnector.getDBCollection(MongoTable.TABLE_POI_EN);
+		}
+		MongoCursor<Document> cursor = collection.find(or).iterator();
+		List<Document> docs = new ArrayList<>();
+		while (cursor.hasNext()) {
+			docs.add(cursor.next());
+		}
+
+		// 字段过滤
+		JSONArray poiArray = new JSONArray();
+		for(Document doc : docs) {
+			JSONObject poiInfo = getPoiInfoWithFields(doc, fieldLst, lang);
+			poiArray.add(poiInfo);
+		}
+		return poiArray;
 	}
 }
 
