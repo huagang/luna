@@ -333,9 +333,9 @@
                   </div>
                   <div ng-show="img.tabs.style.content">
                     <!-- 模块大小位置 -->
-                    <div class="position">
-                      <h2>大小和位置</h2>
-                      <ul class="list-pos">
+                    <div class="position slide-panel">
+                    <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                        <ul class="list-pos slide-content">
                         <li>
                           <span>X</span>
                           <input type="number" ng-model="img.currentComponent.x" ng-blur="img.changeX()" />px</li>
@@ -437,9 +437,9 @@
                   </div>
                   <div ng-show="nav.tabs.style.content">
                     <!-- 模块大小位置 -->
-                    <div class="position">
-                      <h2>大小和位置</h2>
-                      <ul class="list-pos">
+                    <div class="position slide-panel">
+                    <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                        <ul class="list-pos slide-content">
                         <li>
                           <span>X</span>
                           <input type="number" ng-model="nav.currentComponent.x" ng-blur="nav.changeX()" />px</li>
@@ -579,9 +579,9 @@
                     </div>
                     <div ng-show="pano.tabs.style.content">
                         <!-- 模块大小位置 -->
-                        <div class="position">
-                            <h2>大小和位置</h2>
-                            <ul class="list-pos">
+                        <div class="position slide-panel">
+                        <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                            <ul class="list-pos slide-content">
                                 <li>
                                     <span>X</span>
                                     <input type="number" ng-model="pano.currentComponent.x" ng-blur="pano.changeX()" />px</li>
@@ -683,9 +683,9 @@
                     </div>
                     <div ng-show="audio.tabs.style.content">
                         <!-- 模块大小位置 -->
-                        <div class="position">
-                            <h2><label>大小和位置</label></h2>
-                            <ul class="list-pos">
+                      <div class="position slide-panel">
+                        <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                            <ul class="list-pos slide-content">
                                 <li>
                                     <span>X</span>
                                     <input type="number" ng-model="audio.currentComponent.x" ng-blur="audio.changeX()" />px</li>
@@ -810,9 +810,9 @@
                       </div>
                       <div ng-show="video.tabs.style.content">
                           <!-- 模块大小位置 -->
-                          <div class="position">
-                              <h2><label>大小和位置</label></h2>
-                              <ul class="list-pos">
+                        <div class="position slide-panel">
+                          <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                              <ul class="list-pos slide-content">
                                   <li>
                                       <span>X</span>
                                       <input type="number" ng-model="video.currentComponent.x" ng-blur="video.changeX()" />px</li>
@@ -924,9 +924,9 @@
                     </div>
                     <div ng-show="menuTab.tabs.style.content">
                         <!-- 模块大小位置 -->
-                        <div class="position">
-                            <h2><label>大小和位置</label></h2>
-                            <ul class="list-pos">
+                      <div class="position slide-panel">
+                        <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                            <ul class="list-pos slide-content">
                                 <li>
                                     <span>X</span>
                                     <input type="number" ng-model="menuTab.currentComponent.x" ng-blur="menuTab.changeX()" />px</li>
