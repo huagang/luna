@@ -49,6 +49,20 @@ public class MsTagFieldResult implements Serializable {
 	 */
 	private String tagName;
 
+	public String getTagNameEn() {
+		return tagNameEn;
+	}
+
+	public void setTagNameEn(String tagNameEn) {
+		this.tagNameEn = tagNameEn;
+	}
+
+	/**
+	 * TAG英文名称
+
+	 */
+	private String tagNameEn;
+
 	/**
 	 * 文本框提示内容
 	 */

@@ -1,9 +1,8 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
-
-import java.util.List;
 
 public interface MsPoiTagDAOBase {
     int countByCriteria(MsPoiTagCriteria example);
@@ -12,9 +11,9 @@ public interface MsPoiTagDAOBase {
 
     int deleteByPrimaryKey(Integer tagId);
 
-    void insert(MsPoiTag record);
+    Integer insert(MsPoiTag record);
 
-    void insertSelective(MsPoiTag record);
+    Integer insertSelective(MsPoiTag record);
 
     List<MsPoiTag> selectByCriteria(MsPoiTagCriteria example);
 
