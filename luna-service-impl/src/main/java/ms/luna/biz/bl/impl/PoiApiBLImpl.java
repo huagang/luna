@@ -512,7 +512,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		JSONObject param = JSONObject.parseObject(json);
 		Double lng = param.getDouble("lng");
 		Double lat = param.getDouble("lat");
-		Integer radius = param.getInteger("radius");
+		Double radius = param.getDouble("radius");
 		Integer poiNum = param.getInteger("number");
 		String fields = param.getString("fields");
 		String lang = param.getString("lang");

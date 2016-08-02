@@ -476,7 +476,7 @@ public class PoiApiCtrl {
 	public JSONObject getPoisAroundById(
 		@RequestParam(required = true, value = "longitude") Double longitude,
 		@RequestParam(required = true, value = "latitude") Double latitude,
-		@RequestParam(required = false, value = "radius") Integer radius,
+		@RequestParam(required = false, value = "radius") Double radius,
 		@RequestParam(required = false, value = "number") Integer number,
 		@RequestParam(required = false, value = "fields") String fields,
 		@RequestParam(required = false, value = "lang") String lang,
@@ -484,7 +484,7 @@ public class PoiApiCtrl {
 		try{
 			JSONObject param = new JSONObject();
 			if(radius == null) {
-				radius = PoiCommon.POI.RADIUS_AROUND_DEFAULT;
+				radius = new Double(PoiCommon.POI.RADIUS_AROUND_DEFAULT);
 			}
 			if(number == null) {
 				number = PoiCommon.POI.NUM_AROUND_DEFAULT;
