@@ -240,6 +240,7 @@ $(document).ready(function () {
         console.log($(this).val());
         if($(this).val()==1){
             $('#txtPageHeight').attr('readonly','readonly');
+            document.querySelector('#txtPageHeight').value='';
         }else{
             $('#txtPageHeight').removeAttr('readonly');
         }
@@ -361,6 +362,11 @@ function getUrlParam(name) {
 
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
+    var radioDom =  document.querySelectorAll('#editPageForm [type=radio]');
+    radioDom.forEach(function(v,i){
+        v.removeAttribute('checked');
+        v.removeAttribute('disabled');
+    });
     // $("#modify_page_id").val('');
     // $("#txt-name").val('');
     // $("#txt-short").val('');
@@ -368,7 +374,7 @@ function resetDialog() {
     // $("#warn2").html('');
     // var pageTypeDoms = document.querySelectorAll('[name=pageType]');
     // for(var i = 0; i <pageTypeDoms.length;i++){
-    //     pageTypeDoms[i].attributes.remove('readonly');
+    //     pageTypeDoms[i].removeAttribute('readonly');
     // }
     // document.querySelector('#txtPageHeight').value = '';
     // document.querySelector('.')
@@ -401,7 +407,6 @@ function deletePageDialog(pageID) {
 
 //弹出新增窗口
 function newPageDialog() {
-    resetDialog();
     $overlay.css("display", "block");
     var $pop_window = $("#pop-add");
     var h = $pop_window.height();
@@ -413,10 +418,12 @@ function newPageDialog() {
         "top": ($height - h) / 2,
         "left": ($width - w) / 2
     });
+    resetDialog();
+    $("[name=pageType][value=1]").trigger('click');
+    //  $("[name=pageType]")[0].attr('checked',true);
 }
 //编辑窗口，和新增共用
 function modify() {
-    resetDialog();
     $overlay.css("display", "block");
     var $pop_window = $("#pop-add");
     var h = $pop_window.height();
@@ -428,9 +435,15 @@ function modify() {
         "top": ($height - h) / 2,
         "left": ($width - w) / 2
     });
+    resetDialog();
     $("#modify_page_id").val(currentPageId);
     $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
     $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
+    $("[name=pageType][value="+lunaPage.pages[currentPageId].page_type+"]").trigger('click');
+    $("[name=pageType]").each(function(e){
+        $(this).attr('disabled','disabled');
+    });
 }
 
 /**

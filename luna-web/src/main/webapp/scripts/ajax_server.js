@@ -132,6 +132,9 @@ function modifyPageName() {
                 data = returndata.data;
                 lunaPage.pages[pageId].page_name = $("#txt-name").val();
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
+                lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
+                lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
+
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
                 $.alert("更新成功！");

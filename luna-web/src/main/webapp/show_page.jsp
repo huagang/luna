@@ -1245,8 +1245,8 @@
                 <span class="item-tit">页面长度</span>
                 <div class="item-cont">
                   <div class="col-md-12" style="height:30px;">
-                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1"><label for="rdSinglePage">单页</label>
-                    <input type="radio" id="rdLongPage" name="pageType" value="2"><label for="rdLongPage">纵向长页面</label>
+                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1" readonly="readonly"><label for="rdSinglePage">单页</label>
+                    <input type="radio" id="rdLongPage" name="pageType" value="2" readonly="readonly"><label for="rdLongPage">纵向长页面</label>
                   </div>
                   <input class="txt col-md-12" id="txtPageHeight" type="number" placeholder="输入页面长度，不小于617" name="pageHeight" min="617" readonly='readonly' />
                   <span class="warnTips"></span>
