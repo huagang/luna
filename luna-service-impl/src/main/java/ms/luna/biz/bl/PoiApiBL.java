@@ -36,5 +36,8 @@ public interface PoiApiBL {
 	
 	// 获得第一层所有poi数据
 	JSONObject getPoisInFirstLevel(String json);
+
+	// 获取poi周边数据
+	JSONObject getPoisAround(String json);
 	
 }

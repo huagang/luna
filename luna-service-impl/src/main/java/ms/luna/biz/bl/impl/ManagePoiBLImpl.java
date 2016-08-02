@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
@@ -1026,7 +1027,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("field_size", msTagFieldResult.getFieldSize());
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+//				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+				JSONArray extension_attrs = JSONObject.parseObject(msTagFieldResult.getExtensionAttrs()).getJSONArray(POI.ZH);
+				field_def.put("extension_attrs", extension_attrs);
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
@@ -1104,7 +1107,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			field_def.put("field_tips_for_templete", CharactorUtil.nullToBlank(msTagFieldResult.getFieldTipsForTemplete()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+//				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+				JSONArray extension_attrs = JSONObject.parseObject(msTagFieldResult.getExtensionAttrs()).getJSONArray(POI.ZH);
+				field_def.put("extension_attrs", extension_attrs);
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
@@ -1201,7 +1206,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		if (val.startsWith("[")) {
 			return JSONArray.parseArray(val);
 		}
-		return JSONArray.parseArray("["+val+"]");
+		return JSONArray.parseArray("[" + val + "]");
 	}
 	private String getProvinceId(String zoneId) {
 		String provinceId = msZoneCacheBL.getProvinceId(zoneId);
@@ -1343,5 +1348,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			}
 		}
 		return topTag2SubTagOthersCache;
+	}
+
+	public static void main(String[] args) {
+		String s = "{\"zh\":[{1:\"度假\"},{2:\"商务\"},{3:\"亲子\"},{4:\"特色\"},{5:\"其他\"}],\"en\":[{1:\"Holiday\"},{2:\"Business\"},{3:\"Family\"},{4:\"Feature\"},{5:\"Others\"}]}";
+		JSONObject json = JSONObject.parseObject(s);
+		System.out.println(json.toString());
 	}
 }

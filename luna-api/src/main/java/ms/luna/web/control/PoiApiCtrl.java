@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.VbConstant;
+import ms.luna.biz.util.DateUtil;
+import ms.luna.common.PoiCommon;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +103,7 @@ public class PoiApiCtrl {
 	@ResponseBody
 	public JSONObject getCtgrsByBizIdAndPoiId(
 			@RequestParam(required = true, value = "business_id") Integer biz_id,
-			@RequestParam(required = true, value = "poi_id") String poi_id, 
+			@RequestParam(required = true, value = "poi_id") String poi_id,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		try{
@@ -467,7 +470,68 @@ public class PoiApiCtrl {
 		}
 
 	}
-	
+
+	@RequestMapping(params = "method=getPoisAround")
+	@ResponseBody
+	public JSONObject getPoisAroundById(
+		@RequestParam(required = true, value = "longitude") Double longitude,
+		@RequestParam(required = true, value = "latitude") Double latitude,
+		@RequestParam(required = false, value = "radius") Integer radius,
+		@RequestParam(required = false, value = "number") Integer number,
+		@RequestParam(required = false, value = "fields") String fields,
+		@RequestParam(required = false, value = "lang") String lang,
+		HttpServletRequest request, HttpServletResponse response) throws IOException{
+		try{
+			JSONObject param = new JSONObject();
+			if(radius == null) {
+				radius = PoiCommon.POI.RADIUS_AROUND_DEFAULT;
+			}
+			if(number == null) {
+				number = PoiCommon.POI.NUM_AROUND_DEFAULT;
+			}
+			if(fields == null){
+				fields = "";
+			} else {
+				fields = fields.trim();
+			}
+			param.put("lng", longitude);
+			param.put("lat", latitude);
+			param.put("radius", radius);
+			param.put("number", number);
+			param.put("fields", fields);
+
+			// 指定语言
+			if(lang != null) {
+				param.put("lang", lang);
+				JSONObject result = poiApiService.getPoisAround(param.toString());
+				MsLogger.debug("获取lang:" + lang + "数据" + result.toString());
+				return result;
+			}
+
+			// 未指定语言
+			JSONObject datas = new JSONObject();
+			JSONObject result = null;
+			for(String language : LANG){
+				param.put("lang", language);
+				result = poiApiService.getPoisAround(param.toString());
+				MsLogger.debug("获取lang:"+language+"数据"+result.toString());
+				if("0".equals(result.getString("code"))){
+					JSONObject data = result.getJSONObject("data");
+					datas.put(language, data.getJSONObject(language));
+				} else {
+					return result;
+				}
+			}
+			result.put("data", datas);
+			return result;
+
+		} catch (Exception e) {
+			MsLogger.error("Fail to get pois around." + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to get pois around");
+		}
+
+	}
+
 	/**
 	 * 检测标签是否传入正确
 	 * @param tags 标签
