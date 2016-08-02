@@ -15,6 +15,7 @@ import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1271,6 +1272,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String province_id = docPoi.getString("province_id");
 		String city_id = docPoi.getString("city_id");
 		String county_id = docPoi.getString("county_id");
+		String detail_address = docPoi.getString("detail_address");
 		String province = msZoneCacheBL.getZoneName(province_id, lang);
 		String city = msZoneCacheBL.getZoneName(city_id, lang);
 		String county = msZoneCacheBL.getZoneName(county_id, lang);
@@ -1310,6 +1312,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("province", province);
 		data.put("city", city);
 		data.put("county", county);
+		data.put("detail_address", detail_address);
 		data.put("share_desc", share_desc);
 		
 		return FastJsonUtil.sucess("success", data);

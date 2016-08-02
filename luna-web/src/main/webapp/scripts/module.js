@@ -19,7 +19,11 @@ $(document).ready(function() {
         });
 
     });
-
+    $('.btn-slide').on('click',function(e){
+        $(this).closest('.slide-panel').find('.slide-content').toggle();
+        $(this).toggleClass('icon-slideup');
+        $(this).toggleClass('icon-slidedown');
+    });
 });
 
 //组件
@@ -43,8 +47,8 @@ $(function() {
         // });
         lunaPage.creatPageComponents(currentPageId, null, "text");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentTextModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("text");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         $editor.html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
@@ -68,8 +72,8 @@ $(function() {
         // });
         lunaPage.creatPageComponents(currentPageId, null, "img");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentImgModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("img");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("img");
@@ -91,8 +95,8 @@ $(function() {
         // });
         lunaPage.creatPageComponents(currentPageId, null, "nav");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentNavModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("nav");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("nav");
@@ -114,8 +118,8 @@ $(function() {
         // });
         lunaPage.creatPageComponents(currentPageId, null, "pano");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentPanoModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("pano");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("pano");
@@ -130,8 +134,8 @@ $(function() {
 
         lunaPage.creatPageComponents(currentPageId, null, "audio");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentAudioModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("audio");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("audio");
@@ -146,8 +150,8 @@ $(function() {
 
         lunaPage.creatPageComponents(currentPageId, null, "video");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentVideoModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("video");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("video");
@@ -165,8 +169,8 @@ $(function() {
 
         lunaPage.creatPageComponents(currentPageId, null, "tab");
         currentComponent = jQuery.extend(true, componentBaseModelTemplate, componentTabModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("tab");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("tab");
@@ -294,7 +298,7 @@ $(function() {
                 var fontFamily = $(this).text();
                 $("div.selected-text").css("font-family", fontFamily);
                 lunaPage.editPageComponents(currentPageId, currentComponentId);
-            })
+            });
             //字体大小
         $('#size-select li').click(function() {
             var fontSize = $(this).text();
@@ -531,7 +535,7 @@ $(function() {
             $(this).val('');
         });
     }
-})
+});
 
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
@@ -544,7 +548,7 @@ $.fn.getHexBackgroundColor = function(id, property) {
     }
     rgb = "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
     return rgb;
-}
+};
 
 
 //组件初始化,绑定支持的操作动作
@@ -620,7 +624,7 @@ function getEleFocus(_this) {
 
     currentComponentId = _this.attr('id');
 
-};
+}
 //平移、旋转时外边框消失
 function lostFocus(_this) {
     _this.find('.ui-resizable-handle').hide();

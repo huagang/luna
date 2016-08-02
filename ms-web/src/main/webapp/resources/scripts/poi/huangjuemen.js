@@ -29,7 +29,8 @@ var initHJMPoiPage = function() {
             province: poiData.data.province ,
             city: poiData.data.city,
             county: poiData.data.county,
-            phone: poiData.data.contact_phone
+            phone: poiData.data.contact_phone,
+            detail_address:poiData.data.detail_address,
         };
 
         // 更新文章头图
@@ -95,6 +96,7 @@ var initHJMPoiPage = function() {
             e.stopPropagation();
             e.preventDefault();
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
+            // console.log(data.city+data.county+ data.detail_address);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
@@ -103,7 +105,7 @@ var initHJMPoiPage = function() {
                             latitude: Number(data.lat), // 纬度，浮点数，范围为90 ~ -90
                             longitude: Number(data.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: data.poi_name, // 位置名
-                            address: '', // 地址详情说明
+                            address: data.city+data.county+ data.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                             infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                         });
@@ -182,7 +184,7 @@ var initHJMPoiPage = function() {
         qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
             //取出经纬度并且赋值
             latlng = res[0];
-            var url = "http://map.qq.com/nav/drive?start=" + latlng.lat + "%2C" + latlng.lng + "&dest=" + objdata.destPosition.lat + "%2C" + objdata.destPosition.lng + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
+            var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + objdata.destPosition.lng + "%2C" + objdata.destPosition.lat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
             // alert(url);
             window.location.href = url;
         });

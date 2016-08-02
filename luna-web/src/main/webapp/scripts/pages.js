@@ -20,7 +20,7 @@ var objdata = {
         width: 375, //画布的宽
         height: 617 //画布的高
     }
-}
+};
 
 //BaseComponet
 componentBaseModelTemplate = {
@@ -37,7 +37,7 @@ componentBaseModelTemplate = {
             horizontal: '', //横向方向
         }
     }
-}
+};
 
 //定义组件属性模板
 componentCanvasModelTemplate = {
@@ -121,7 +121,6 @@ componentAudioModelTemplate = {
         "autoPlay": '',
         "file": "",
         "loopPlay": "",
-        "panoId": "",
         "pauseIcon": "",
         "playIcon": ""
     },
@@ -185,7 +184,7 @@ var componentViewTemplate = {
         '</div>' +
         '</div>' +
         '</div>',
-}
+};
 
 
 
@@ -240,17 +239,17 @@ $(document).ready(function() {
     /*页面级属性设置缩略图删除功能*/
     $("#wj-page-clc").click(function() {
         $("#wj-page").remove();
-    })
+    });
 
     /*页面级属性设置，分享缩略图删除功能*/
     $("#wj-share-clc").click(function() {
         $("#wj-share").remove();
-    })
+    });
 
     //取消
     $("button.btn-clc").click(function() {
         $overlay.css("display", "none");
-        $("div.pop").css("display", "none")
+        $("div.pop").css("display", "none");
     });
 
     $("#btn-delete").click(function() {
@@ -289,7 +288,7 @@ $(document).ready(function() {
 
 function copy_code(copyText) {
     if (window.clipboardData) {
-        window.clipboardData.setData("Text", copyText)
+        window.clipboardData.setData("Text", copyText);
     } else {
         var flashcopier = 'flashcopier';
         if (!document.getElementById(flashcopier)) {
@@ -329,9 +328,9 @@ function copyToClipBoard(s) {
         if (!trans)
             return;
         trans.addDataFlavor('text/unicode');
-        var str = new Object();
-        var len = new Object();
-        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+        var str = {};
+        var len = {};
+        str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
         var copytext = s;
         str.data = copytext;
         trans.setTransferData("text/unicode", str, copytext.length * 2);
@@ -347,7 +346,7 @@ function copyToClipBoard(s) {
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg); //匹配目标参数
-    if (r != null) return unescape(r[2]);
+    if (r !== null) return unescape(r[2]);
     return null; //返回参数值
 }
 
@@ -431,67 +430,67 @@ function modify() {
             firstPage.trigger('click');
             componentPanel.init("canvas");
         }
-    }
+    };
 
     $.showPageList = function(pageList) {
         //debugger;
         setPageListHtml(pageList);
-    }
+    };
 
     $.editPageList = function(pageList) {
 
-    }
+    };
 
     $.savePageList = function(pageList) {
         //调用借口保存数据
         savePageData();
-    }
+    };
 
     //获取数据并展示
     $.getPageData = function(pageID) {
         //debugger;
-        if (!$.pages[pageID]['page_content']) {
+        if (!$.pages[pageID].page_content) {
             getPageDataDetail(pageID);
         }
         this.showPage(pageID);
-    }
+    };
 
     $.creatPage = function(pageID) {
         creatPageHtml(pageID);
-    }
+    };
 
     $.showPage = function(pageID) {
-        if (currentPageId != "" && currentPageId != pageID) {
+        if (currentPageId !== "" && currentPageId != pageID) {
             this.savePage(currentPageId);
         }
         currentPageId = pageID;
         setPageHtml(pageID);
-    }
+    };
 
     $.savePage = function(pageID, isPrompt) {
         //调用接口保存单个页面数据
         savePageData(pageID, isPrompt);
-    }
+    };
 
     $.delPage = function(pageID) {
         delete lunaPage.pages[pageID];
         currentPageId = "";
         currentPage = {};
         reOrderPage();
-    }
+    };
 
     $.showPageComponents = function(pageID, componentID) {
         setPageComponentsHtml(pageID, componentID);
-    }
+    };
 
     //更新component model
     $.editPageComponents = function(pageID, componentID) {
         updatePageComponents(pageID, componentID);
-    }
+    };
 
     $.creatPageComponents = function(pageID, componentID, componentType) {
         creatPageComponentsHtml(pageID, componentID, componentType);
-    }
+    };
 
     $.delPageComponents = function(pageID, componentID) {
         if (pageID && componentID) {
@@ -499,7 +498,7 @@ function modify() {
             currentComponentId = "";
             currentComponent = {};
         }
-    }
+    };
 })(lunaPage);
 
 /**
@@ -528,14 +527,14 @@ function reOrderPage() {
 
 function setPageListHtml(pageList) {
     $("#list-page").empty();
-    var orderedPages = [];
+    var orderedPages = [],page;
     for (var key in pageList) {
-        var page = pageList[key];
+        page = pageList[key];
         orderedPages[page.page_order] = page.page_id;
     }
     for (var i in orderedPages) {
         if (orderedPages[i]) {
-            var page = pageList[orderedPages[i]];
+            page = pageList[orderedPages[i]];
             $("#list-page").append(createPageListItemHtml(page));
         }
     }
@@ -584,8 +583,8 @@ function creatPageHtml(pageID) {
 function createCanvas() {
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
     currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
-    currentComponent["_id"] = currentComponentId;
-    lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+    currentComponent._id = currentComponentId;
+    lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
     componentPanel.init("canvas");
     lunaPage.editPageComponents(currentPageId, currentComponentId);
     componentPanel.update("canvas");
@@ -600,9 +599,9 @@ function setPageHtml(pageID) {
     $('#layermain').html("");
     $('#layermain').css("background-color", "#ffffff");
     // 解析json数据
-    var jsonData = lunaPage.pages[pageID]["page_content"];
+    var jsonData = lunaPage.pages[pageID].page_content;
 
-    if (!jsonData || Object.keys(jsonData).length == 0) {
+    if (!jsonData || Object.keys(jsonData).length === 0) {
         createCanvas();
     } else {
         // 组件数据解析，对应jsonData
@@ -627,7 +626,7 @@ function setPageHtml(pageID) {
  * 此函数只创建component UI
  */
 function creatPageComponentsHtml(pageID, componentID, componentType) {
-    if (currentPageId == "") {
+    if (currentPageId === "") {
         alert("请选择需要编辑的页面或者重新创建新页面！");
         return;
     }
@@ -724,8 +723,8 @@ function setPageComponentsHtml(pageID, componentID, comType) {
         alert("component error");
         return;
     }
-    var comType = componentObj.type; // text,img,bg
-    var content = componentObj.content;
+    comType = componentObj.type; // text,img,bg
+    var content = componentObj.content,icon;
     newComponent.children(".con").addClass("con_" + comType);
     switch (comType) {
         case "canvas":
@@ -743,39 +742,39 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "img":
             newComponent.attr("component-type", "img");
-            if (content == "") {
+            if (content === "") {
                 content = imghost + "/img/sample.png";
             }
             newComponent.children("div").append('<img src="' + content + '"/>');
             break;
         case "nav":
             newComponent.attr("component-type", "nav");
-            var icon = imghost + "/img/samplenav.png";
-            if (content != undefined && content.hasOwnProperty("icon")) {
+            icon = imghost + "/img/samplenav.png";
+            if (content !== undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "pano":
             newComponent.attr("component-type", "pano");
-            var icon = imghost + "/img/samplepano.png";
-            if (content != undefined && content.hasOwnProperty("icon")) {
+            icon = imghost + "/img/samplepano.png";
+            if (content !== undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "audio":
             newComponent.attr("component-type", "audio");
-            var icon = imghost + "/img/samplevideo.png";
-            if (content != undefined && content.hasOwnProperty("icon")) {
+            icon = imghost + "/img/samplevideo.png";
+            if (content !== undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "video":
             newComponent.attr("component-type", "video");
-            var icon = imghost + "/img/samplevideo.png";
-            if (content != undefined && content.hasOwnProperty("icon")) {
+            icon = imghost + "/img/samplevideo.png";
+            if (content !== undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
@@ -939,8 +938,8 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
         alert("component error");
         return;
     }
-    var comType = component.type; // text,img,bg
-    var content = component.content;
+    comType = component.type; // text,img,bg
+    var content = component.content,icon;
 
     switch (comType) {
         case "canvas":
@@ -953,34 +952,34 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
             break;
         case "img":
-            if (content == "") {
+            if (content === "") {
                 content = imghost + "/img/sample.png";
             }
             comobj.children("div.con").html('<img src="' + content + '"/>');
             break;
         case "nav":
-            if (content != undefined && content.hasOwnProperty("icon")) {
-                var icon = content.icon;
+            if (content !== undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
             break;
         case "pano":
-            if (content != undefined && content.hasOwnProperty("icon")) {
-                var icon = content.icon;
+            if (content !== undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
             break;
         case "audio":
-            if (content != undefined && content.hasOwnProperty("icon")) {
-                var icon = content.icon;
+            if (content !== undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
             break;
         case "video":
-            if (content != undefined && content.hasOwnProperty("icon")) {
-                var icon = content.icon;
+            if (content !== undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
@@ -998,7 +997,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
 
 
     var idValue = component._id;
-    var comType = component.type; // text，img
+    comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
     if (component.position.changeTrigger.horizontal == 'left') {
@@ -1033,7 +1032,7 @@ function showPanoBackground($container, componentData) {
     var pano = {},
         panoObj = $container.find('canvas');
 
-    if (componentData.panoId && panoObj.length == 0) {
+    if (componentData.panoId && panoObj.length === 0) {
         pano = new com.vbpano.Panorama($container.get(0));
         pano.setPanoId(componentData.panoId); //panoId
         pano.setHeading(componentData.pano.heading); //左右
@@ -1055,7 +1054,7 @@ function showPanoBackground($container, componentData) {
                 scope.$apply();
                 // $('#panoHead').trigger('blur');
             }
-        }
+        };
 
         //pitch方向滚动的时候回调函数
         pano.panoView.onPitchChangeCallback = function(pitch) {
@@ -1066,7 +1065,7 @@ function showPanoBackground($container, componentData) {
                 scope.$apply();
                 // $('#panoPitch').trigger('blur');
             }
-        }
+        };
         currentBgPano = pano;
     } else if (componentData.panoId && panoObj.length > 0) {
         currentBgPano.setPanoId(componentData.panoId);
@@ -1151,4 +1150,4 @@ var initMenuTab = {
         }
         return innerHtml.join('');
     }
-}
+};
