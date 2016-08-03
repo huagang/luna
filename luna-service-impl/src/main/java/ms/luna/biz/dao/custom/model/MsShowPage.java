@@ -38,6 +38,13 @@ public class MsShowPage {
     private Timestamp updateTime;
     @JSONField(name=MsShowPageDAO.FIELD_UPDATE_USER)
     private String updateUser;
+    @JSONField(name=MsShowPageDAO.FIELD_PAGE_TYPE)
+    private String pageType;
+    @JSONField(name=MsShowPageDAO.FIELD_PAGE_HEIGHT)
+    private String pageHeight;
+
+    public MsShowPage() {
+    }
 
     public String getPageId() {
         return pageId;
@@ -130,5 +137,20 @@ public class MsShowPage {
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
     }
-	
+
+    public String getPageType() {
+        return pageType;
+    }
+
+    public void setPageType(String pageType) {
+        this.pageType = pageType;
+    }
+
+    public String getPageHeight() {
+        return pageHeight;
+    }
+
+    public void setPageHeight(String pageHeight) {
+        this.pageHeight = pageHeight;
+    }
 }

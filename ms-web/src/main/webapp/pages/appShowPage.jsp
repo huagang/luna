@@ -16,6 +16,7 @@
     <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/fonts/iconfont.css">
 </head>
 <body>
     <div class="landscape">
@@ -65,6 +66,8 @@
         var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/interface.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>
 </html>

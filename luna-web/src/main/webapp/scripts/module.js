@@ -71,7 +71,7 @@ $(function() {
         //     }    
         // });
         lunaPage.creatPageComponents(currentPageId, null, "img");
-        currentComponent = jQuery.extend(true, {}, componentImgModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("img");
@@ -94,7 +94,7 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "nav");
-        currentComponent = jQuery.extend(true, {}, componentNavModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentNavModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("nav");
@@ -117,7 +117,7 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "pano");
-        currentComponent = jQuery.extend(true, {}, componentPanoModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentPanoModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("pano");
@@ -133,7 +133,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "audio");
-        currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentAudioModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("audio");
@@ -149,7 +149,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "video");
-        currentComponent = jQuery.extend(true, {}, componentVideoModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentVideoModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("video");
@@ -168,7 +168,7 @@ $(function() {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "tab");
-        currentComponent = jQuery.extend(true, {}, componentTabModelTemplate);
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentTabModelTemplate);
         currentComponent["_id"] = currentComponentId;
         lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
         componentPanel.init("tab");
@@ -298,7 +298,7 @@ $(function() {
                 var fontFamily = $(this).text();
                 $("div.selected-text").css("font-family", fontFamily);
                 lunaPage.editPageComponents(currentPageId, currentComponentId);
-            })
+            });
             //字体大小
         $('#size-select li').click(function() {
             var fontSize = $(this).text();
@@ -535,7 +535,7 @@ $(function() {
             $(this).val('');
         });
     }
-})
+});
 
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
@@ -548,7 +548,7 @@ $.fn.getHexBackgroundColor = function(id, property) {
     }
     rgb = "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
     return rgb;
-}
+};
 
 
 //组件初始化,绑定支持的操作动作
@@ -624,7 +624,7 @@ function getEleFocus(_this) {
 
     currentComponentId = _this.attr('id');
 
-};
+}
 //平移、旋转时外边框消失
 function lostFocus(_this) {
     _this.find('.ui-resizable-handle').hide();

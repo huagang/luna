@@ -109,6 +109,8 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_CODE, page.getPageCode());
 		document.append(FIELD_UPDATE_USER, page.getUpdateUser());
 		document.append(FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
+		document.append(FIELD_PAGE_TYPE, page.getPageType());
+		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		showPageCollection.updateOne(Filters.eq(FIELD_PAGE_ID, page.getPageId()), new Document("$set", document));
 	}
 	
@@ -177,6 +179,8 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_ORDER, page.getPageOrder());
 		document.append(FIELD_CREATE_TIME, new BsonDateTime(System.currentTimeMillis()));
 		document.append(FIELD_UPDATE_USER, page.getUpdateUser());
+		document.append(FIELD_PAGE_TYPE, page.getPageType());
+		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		return document;
 	}
 	
@@ -197,6 +201,8 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 			msShowPage.setShareTitle(document.getString(FIELD_SHARE_TITLE));
 			msShowPage.setSharePic(document.getString(FIELD_SHARE_PIC));
 			msShowPage.setShareDesc(document.getString(FIELD_SHARE_DESC));
+			msShowPage.setPageType(document.getString(FIELD_PAGE_TYPE));
+			msShowPage.setPageHeight(document.getString(FIELD_PAGE_HEIGHT));
 			
 			return msShowPage;
 		}
