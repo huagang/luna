@@ -1,6 +1,6 @@
 package ms.luna.web.control.platform;
 
-import com.alibaba.dubbo.common.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import ms.luna.web.control.common.BasicController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -30,13 +30,15 @@ public class UserController extends BasicController {
         return modelAndView;
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = "search")
+    @RequestMapping(method = RequestMethod.GET, params = "q")
     @ResponseBody
-    public JSONObject searchUser(@RequestParam(required = false) Integer offset,
+    public JSONObject searchUser(String q,
+                                 @RequestParam(required = false) Integer offset,
                                  @RequestParam(required = false) Integer limit) {
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "shawn");
+        jsonObject.put("name", "陈尚安");
+        jsonObject.put("q", q);
 
         logger.info("search user");
 

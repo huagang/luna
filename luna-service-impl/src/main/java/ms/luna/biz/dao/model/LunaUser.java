@@ -10,7 +10,7 @@ import ms.luna.biz.table.LunaUserTable;
 
 import java.io.Serializable;
 import java.util.Date;
-@JSONType(ignores = {"createTime"})
+@JSONType(ignores = {"createTime", "updateTime", "password"})
 public class LunaUser implements Serializable {
     @JSONField(name = LunaUserTable.FIELD_ID)
     private String uniqueId;
