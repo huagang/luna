@@ -295,7 +295,7 @@
 							<filtering>true</filtering>
 						</resource>
 						<resource>
-							<directory>src/main/resources</directory>
+							<directory>src/main/config</directory>
 							<targetPath>WEB-INF/classes</targetPath>
 							<filtering>true</filtering>
 						</resource>
@@ -308,13 +308,22 @@
 	<profiles>
 		<profile>
 			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.6</version>
+					</plugin>
+				</plugins>
+			</build>
 			<properties>
 				<zookeeper.address>localhost:2181</zookeeper.address>
 				<cosBaseDir>/dev</cosBaseDir>
 				<vodBaseDir>/dev</vodBaseDir>
-				<redis.host>10.66.152.87</redis.host>
-				<redis.instanceId>4246cb82-81d6-45f3-8482-a71cbb7015af</redis.instanceId>
-				<redis.password>vb2015redis</redis.password>
+				<redis.host>115.159.87.160</redis.host>
+				<redis.instanceId></redis.instanceId>
+				<redis.password>ssdoiw32237ejcu#R%#@</redis.password>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
