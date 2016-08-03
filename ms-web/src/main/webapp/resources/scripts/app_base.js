@@ -12,7 +12,7 @@ var objdata = {
     destPosition: {
 
     }
-}
+};
 
 String.prototype.format= function() {
     var s = this,
