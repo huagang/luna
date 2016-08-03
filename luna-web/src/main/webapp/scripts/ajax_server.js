@@ -34,17 +34,17 @@ function getAppData(appID) {
 function isValidPageInfo() {
     var validFlag = true,
         $txtName = $("#txt-name").val();
-    if ($txtName.length === 0) {
+    if ($txtName.length == 0) {
         $("#warn1").text("不能为空");
         validFlag = false;
     }
     var $txtShort = $("#txt-short").val();
-    if ($txtShort.length === 0) {
+    if ($txtShort.length == 0) {
         $("#warn2").text("不能为空");
         validFlag = false;
     }
     var txtPageHeight = document.querySelector('#txtPageHeight').value;
-    if (txtPageHeight < 617 || txtPageHeight.length === 0) {
+    if (txtPageHeight < 617 || txtPageHeight.length == 0) {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }

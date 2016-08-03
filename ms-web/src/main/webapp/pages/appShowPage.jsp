@@ -16,7 +16,7 @@
     <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/font/iconfont.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/fonts/iconfont.css">
 </head>
 <body>
     <div class="landscape">

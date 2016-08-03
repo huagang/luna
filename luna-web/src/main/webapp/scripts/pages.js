@@ -338,9 +338,9 @@ function copyToClipBoard(s) {
         if (!trans)
             return;
         trans.addDataFlavor('text/unicode');
-        var str = {};
-        var len = {};
-        str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+        var str = new Object();
+        var len = new Object();
+        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
         var copytext = s;
         str.data = copytext;
         trans.setTransferData("text/unicode", str, copytext.length * 2);
@@ -356,7 +356,7 @@ function copyToClipBoard(s) {
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg); //匹配目标参数
-    if (r !== null) return unescape(r[2]);
+    if (r != null) return unescape(r[2]);
     return null; //返回参数值
 }
 
@@ -478,7 +478,7 @@ function modify() {
     //获取数据并展示
     $.getPageData = function (pageID) {
         //debugger;
-        if (!$.pages[pageID].page_content) {
+        if (!$.pages[pageID]['page_content']) {
             getPageDataDetail(pageID);
         }
         this.showPage(pageID);
@@ -488,8 +488,8 @@ function modify() {
         creatPageHtml(pageID);
     };
 
-    $.showPage = function (pageID) {
-        if (currentPageId !== "" && currentPageId != pageID) {
+    $.showPage = function(pageID) {
+        if (currentPageId != "" && currentPageId != pageID) {
             this.savePage(currentPageId);
         }
         currentPageId = pageID;
@@ -612,8 +612,8 @@ function creatPageHtml(pageID) {
 function createCanvas() {
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
     currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
-    currentComponent._id = currentComponentId;
-    lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
+    currentComponent["_id"] = currentComponentId;
+    lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
     componentPanel.init("canvas");
     lunaPage.editPageComponents(currentPageId, currentComponentId);
     componentPanel.update("canvas");
@@ -628,9 +628,9 @@ function setPageHtml(pageID) {
     $('#layermain').html("");
     $('#layermain').css({"background-color":"#ffffff",'height':lunaPage.pages[pageID].page_height||'617px'});
     // 解析json数据
-    var jsonData = lunaPage.pages[pageID].page_content;
+    var jsonData = lunaPage.pages[pageID]["page_content"];
 
-    if (!jsonData || Object.keys(jsonData).length === 0) {
+    if (!jsonData || Object.keys(jsonData).length == 0) {
         createCanvas();
     } else {
         // 组件数据解析，对应jsonData
@@ -655,7 +655,7 @@ function setPageHtml(pageID) {
  * 此函数只创建component UI
  */
 function creatPageComponentsHtml(pageID, componentID, componentType) {
-    if (currentPageId === "") {
+    if (currentPageId == "") {
         alert("请选择需要编辑的页面或者重新创建新页面！");
         return;
     }
@@ -771,39 +771,39 @@ function setPageComponentsHtml(pageID, componentID, comType) {
             break;
         case "img":
             newComponent.attr("component-type", "img");
-            if (content === "") {
+            if (content == "") {
                 content = imghost + "/img/sample.png";
             }
             newComponent.children("div").append('<img src="' + content + '"/>');
             break;
         case "nav":
             newComponent.attr("component-type", "nav");
-            icon = imghost + "/img/samplenav.png";
-            if (content !== undefined && content.hasOwnProperty("icon")) {
+            var icon = imghost + "/img/samplenav.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "pano":
             newComponent.attr("component-type", "pano");
-            icon = imghost + "/img/samplepano.png";
-            if (content !== undefined && content.hasOwnProperty("icon")) {
+            var icon = imghost + "/img/samplepano.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "audio":
             newComponent.attr("component-type", "audio");
-            icon = imghost + "/img/samplevideo.png";
-            if (content !== undefined && content.hasOwnProperty("icon")) {
+            var icon = imghost + "/img/samplevideo.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
             break;
         case "video":
             newComponent.attr("component-type", "video");
-            icon = imghost + "/img/samplevideo.png";
-            if (content !== undefined && content.hasOwnProperty("icon")) {
+            var icon = imghost + "/img/samplevideo.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
                 icon = content.icon;
             }
             newComponent.children("div").append('<img src="' + icon + '"/>');
@@ -967,8 +967,8 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
         alert("component error");
         return;
     }
-    comType = component.type; // text,img,bg
-    var content = component.content, icon;
+    var comType = component.type; // text,img,bg
+    var content = component.content;
 
     switch (comType) {
         case "canvas":
@@ -981,34 +981,34 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
             break;
         case "img":
-            if (content === "") {
+            if (content == "") {
                 content = imghost + "/img/sample.png";
             }
             comobj.children("div.con").html('<img src="' + content + '"/>');
             break;
         case "nav":
-            if (content !== undefined && content.hasOwnProperty("icon")) {
-                icon = content.icon;
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
             break;
         case "pano":
-            if (content !== undefined && content.hasOwnProperty("icon")) {
-                icon = content.icon;
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
             break;
         case "audio":
-            if (content !== undefined && content.hasOwnProperty("icon")) {
-                icon = content.icon;
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
             break;
         case "video":
-            if (content !== undefined && content.hasOwnProperty("icon")) {
-                icon = content.icon;
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
 
@@ -1026,7 +1026,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
 
 
     var idValue = component._id;
-    comType = component.type; // text，img
+    var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
     if (component.position.changeTrigger.horizontal == 'left') {
@@ -1061,7 +1061,7 @@ function showPanoBackground($container, componentData) {
     var pano = {},
         panoObj = $container.find('canvas');
 
-    if (componentData.panoId && panoObj.length === 0) {
+    if (componentData.panoId && panoObj.length == 0) {
         pano = new com.vbpano.Panorama($container.get(0));
         pano.setPanoId(componentData.panoId); //panoId
         pano.setHeading(componentData.pano.heading); //左右

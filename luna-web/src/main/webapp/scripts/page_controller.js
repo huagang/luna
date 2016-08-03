@@ -201,8 +201,8 @@ function MenuController($scope, $rootScope, $http) {
 
 function BaseComponentController() {
 
-    this.isEmptyStr = function (str) {
-        if (str === null || str === "" || str == "none") {
+    this.isEmptyStr = function(str) {
+        if (str == null || str == "" || str == "none") {
             return true;
         }
         return false;
@@ -287,7 +287,7 @@ function InteractComponentController() {
          * this should not happen, it's better to initialized it outside by page-engine which provide component template for each component
          *
          */
-        if (this.currentComponent.action === undefined) {
+        if (this.currentComponent.action == undefined) {
             this.currentComponent.action = {
                 'href': {
                     'type': 'none',
@@ -295,24 +295,26 @@ function InteractComponentController() {
                 }
             };
         } else {
-            if (this.currentComponent.action.href.type == 'inner') {
+            if (this.currentComponent.action['href'].type == 'inner') {
                 this.loadPages();
             }
 
             var actionValue = this.currentComponent.action.href.value;
-            switch (this.currentComponent.action.href.type) {
-                case "inner":
-                    this.action.href.innerValue = actionValue;
-                    break;
-                case "outer":
-                    this.action.href.outerValue = actionValue;
-                    break;
-                case "email":
-                    this.action.href.email = actionValue;
-                    break;
-                case "phone":
-                    this.action.href.phone = actionValue;
-                    break;
+            with(this.action.href) {
+                switch (this.currentComponent.action['href'].type) {
+                    case "inner":
+                        innerValue = actionValue;
+                        break;
+                    case "outer":
+                        outerValue = actionValue;
+                        break;
+                    case "email":
+                        email = actionValue;
+                        break;
+                    case "phone":
+                        phone = actionValue;
+                        break;
+                }
             }
         }
     };
@@ -355,13 +357,13 @@ function InteractComponentController() {
         }
     };
 
-    this.loadPages = function () {
-        this.action.href.pageOptions.length = 0;
+    this.loadPages = function() {
+        this.action['href'].pageOptions.length = 0;
         var pages = lunaPage.pages;
         var pageIdArr = Object.keys(pages);
         if (pageIdArr) {
-            pageIdArr.forEach(function (pageId) {
-                this.action.href.pageOptions.push({
+            pageIdArr.forEach(function(pageId) {
+                this.action['href'].pageOptions.push({
                     id: pageId,
                     name: pages[pageId].page_name
                 });
@@ -488,7 +490,7 @@ function NavController($scope, $rootScope) {
     this.init = function () {
         NavController.prototype.init.call(this);
         //目前没有显式事件来触发清空起点信息，所以存储上可能会存了不需要存的起点信息，只能根据navType决定类型
-        if (this.currentComponent.navType === 0) {
+        if (this.currentComponent.navType == 0) {
             this.currentComponent.content.startName = "";
             this.currentComponent.content.startPosition = "";
         }
@@ -850,7 +852,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         } else {
             var liTarget = $event.target.nodeName == 'LI' ? $event.target : $event.target.parentNode;
             var tabsNum = liTarget.parentNode.children.length;
-            if (tabsNum % 3 === 0) {
+            if (tabsNum % 3 == 0) {
                 liTarget.children[1].style.left = '-100%';
             } else {
                 liTarget.children[1].style.left = '100%';
