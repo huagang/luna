@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.mongodb.CommandResult;
+import com.mongodb.DB;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import ms.luna.biz.util.MsLogger;
@@ -519,29 +521,42 @@ public class PoiApiBLImpl implements PoiApiBL {
 		MsLogger.debug("field list:" + fieldLst.toString());
 
 		// 取出POI数据的经纬度值
-//		Document doc = getPoiById(poi_id, PoiCommon.POI.ZH);
-//		if (doc == null) {
-//			MsLogger.debug("invalid poi id. " + poi_id);
-//			FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid poi id");
+//		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
+//		Bson filter = Filters.nearSphere("lnglat.coordinates", lng, lat, radius * 0.621 / 3963192, 0.0);
+//		MongoCursor<Document> mongoCursor = poi_collection.find(filter).limit(poiNum).iterator();
+//		JSONObject data = new JSONObject();
+//		JSONArray poiArray = new JSONArray();
+//		while(mongoCursor.hasNext()) {
+//			Document poi = mongoCursor.next();
+//			JSONObject poiInfo = getPoiInfoWithFields(poi, fieldLst, lang);
+//			poiArray.add(poiInfo);
 //		}
-//		Document lnglat = (Document) doc.get("lnglat");
-//		JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
-//		double lng = coordinates.getDoubleValue(0);
-//		double lat = coordinates.getDoubleValue(1);
-		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
-		Bson filter = Filters.nearSphere("lnglat.coordinates", lng, lat, radius * 0.621 / 3963192, 0.0);
-		MongoCursor<Document> mongoCursor = poi_collection.find(filter).limit(poiNum).iterator();
+//		data.put("pois", poiArray);
+//		JSONObject resultdata = returnSuccessData("success", lang, data);
+//		return resultdata;
+
+		//-------------------------------------------
+		BasicDBObject myCmd = new BasicDBObject();
+		myCmd.append("geoNear", PoiCommon.MongoTable.TABLE_POI_ZH);
+		double[] loc = {lng,lat};
+		myCmd.append("near", loc);
+		myCmd.append("spherical", true);
+		myCmd.append("maxDistance", radius * 0.621 / 3963192);
+		Document document = mongoConnector.getMongoDB().runCommand(myCmd);
+
+		JSONObject jsonObject = JSONObject.parseObject(document.toJson());
+		JSONArray resultArray = jsonObject.getJSONArray("results");
+
 		JSONObject data = new JSONObject();
 		JSONArray poiArray = new JSONArray();
-		while(mongoCursor.hasNext()) {
-			Document poi = mongoCursor.next();
-			JSONObject poiInfo = getPoiInfoWithFields(poi, fieldLst, lang);
+		for(int i = 0; i< resultArray.size(); i++) {
+			JSONObject poiInfo = getPoiInfoWithFields(resultArray.getJSONObject(i).getJSONObject("obj"), fieldLst, lang);
 			poiArray.add(poiInfo);
 		}
 		data.put("pois", poiArray);
 		JSONObject resultdata = returnSuccessData("success", lang, data);
 		return resultdata;
-
+		//-------------------------------------------
 	}
 
 	// 根据活动id获取poi数据
@@ -1334,7 +1349,12 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		return array;
 	}
-	
+
+	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
+		JSONObject poiJson = JSONObject.parseObject(poi.toJson());
+		return getPoiInfoWithFields(poiJson, fieldLst, lang);
+	}
+
 	/**
 	 * 获取POI的指定字段信息
 	 * 
@@ -1343,7 +1363,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * @param lang
 	 * @return JSONObject
 	 */
-	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
+	private JSONObject getPoiInfoWithFields(JSONObject poi, List<String> fieldLst, String lang) {
 		JSONObject result = new JSONObject();
 		// 前端输入字段全部错误
 		if(fieldLst == null || fieldLst.isEmpty()){
@@ -1434,7 +1454,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 				// 经纬度
 				if ("lnglat".equals(field)) {
-					Document lnglat = (Document) poi.get("lnglat");
+					JSONObject lnglat = (JSONObject) poi.get("lnglat");
 					JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
 					JSONObject data = new JSONObject();
 					data.put("lng", coordinates.getDoubleValue(0));
@@ -1541,7 +1561,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				result.put(convertDbField2ApiField(field), "");
 			}
 		}
-
+		result.put("poi_id", poi.getJSONObject("_id").getString("$oid"));
 
 		return result;
 	}
