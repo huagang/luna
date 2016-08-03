@@ -514,7 +514,7 @@ function NavController($scope, $rootScope) {
 
     this.changeStartName = function () {
         var startName = this.content.startName;
-        if (startName && startName.length >= 2 && startName.length <= 10) {
+        if (startName && startName.length >= 2 && startName.length <= 20) {
             this.currentComponent.content.startName = this.content.startName;
             console.log("save startName");
         }
@@ -530,7 +530,7 @@ function NavController($scope, $rootScope) {
 
     this.changeEndName = function () {
         var endName = this.content.endName;
-        if (endName && endName.length >= 2 && endName.length <= 10) {
+        if (endName && endName.length >= 2 && endName.length <= 20) {
             this.currentComponent.content.endName = this.content.endName;
             console.log("save endName");
         }
