@@ -66,6 +66,18 @@ componentTextModelTemplate = {
 
 };
 
+//图集组件数据模型
+componentImgListModelTemplate = {
+    "_id": "",
+    "type": "text",
+    "action": {
+        "href": {
+            "type": "none",
+            "value": ""
+        }
+    }
+};
+
 componentImgModelTemplate = {
     "_id": "",
     "type": "img",
@@ -102,7 +114,7 @@ componentPanoModelTemplate = {
     "content": {
         "icon": "",
         "panoId": "",
-        'panoType':{id:1}
+        'panoType': { id: 1 }
     },
     "action": {
         "href": {
@@ -237,12 +249,12 @@ $(document).ready(function () {
         submitSetting();
     });
 
-    $('[name=pageType]').on('change',function(e){
+    $('[name=pageType]').on('change', function (e) {
         console.log($(this).val());
-        if($(this).val()==1){
-            $('#txtPageHeight').attr('readonly','readonly');
-            document.querySelector('#txtPageHeight').value='';
-        }else{
+        if ($(this).val() == 1) {
+            $('#txtPageHeight').attr('readonly', 'readonly');
+            document.querySelector('#txtPageHeight').value = '';
+        } else {
             $('#txtPageHeight').removeAttr('readonly');
         }
     });
@@ -363,8 +375,8 @@ function getUrlParam(name) {
 
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
-    var radioDom =  document.querySelectorAll('#editPageForm [type=radio]');
-    radioDom.forEach(function(v,i){
+    var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
+    radioDom.forEach(function (v, i) {
         v.removeAttribute('checked');
         v.removeAttribute('disabled');
     });
@@ -441,9 +453,9 @@ function modify() {
     $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
     $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
     $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
-    $("[name=pageType][value="+lunaPage.pages[currentPageId].page_type+"]").trigger('click');
-    $("[name=pageType]").each(function(e){
-        $(this).attr('disabled','disabled');
+    $("[name=pageType][value=" + lunaPage.pages[currentPageId].page_type + "]").trigger('click');
+    $("[name=pageType]").each(function (e) {
+        $(this).attr('disabled', 'disabled');
     });
 }
 
@@ -489,7 +501,7 @@ function modify() {
         creatPageHtml(pageID);
     };
 
-    $.showPage = function(pageID) {
+    $.showPage = function (pageID) {
         if (currentPageId != "" && currentPageId != pageID) {
             this.savePage(currentPageId);
         }
@@ -627,7 +639,7 @@ function createCanvas() {
 function setPageHtml(pageID) {
     var $root = $('#layermain');
     $('#layermain').html("");
-    $('#layermain').css({"background-color":"#ffffff",'height':lunaPage.pages[pageID].page_height||'617px'});
+    $('#layermain').css({ "background-color": "#ffffff", 'height': lunaPage.pages[pageID].page_height || '617px' });
     // 解析json数据
     var jsonData = lunaPage.pages[pageID]["page_content"];
 
@@ -723,6 +735,11 @@ function creatPageComponentsHtml(pageID, componentID, componentType) {
             newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
             newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
             newComponent.addClass("tabmenu");
+            break;
+        case "imgList":
+            newComponent.attr("component-type", comType);
+            newComponent.children("div").append('<div class="imgListContainer"><div></div></div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
             break;
         default:
             $.alert("未知的组件类型");
@@ -1166,8 +1183,8 @@ var initMenuTab = {
         var innerHtml = [];
         for (var i = 0; i < tabList.length; i++) {
 
-            var defaultBgColor = 'background-color:' + (tabList[i].icon.bgColor? tabList[i].icon.bgColor.defaultColor:'#fff') + ';',
-                defaultIconColor = 'color:' + (tabList[i].icon.iconColor?tabList[i].icon.iconColor.defaultColor:'#ff4800') + ';';
+            var defaultBgColor = 'background-color:' + (tabList[i].icon.bgColor ? tabList[i].icon.bgColor.defaultColor : '#fff') + ';',
+                defaultIconColor = 'color:' + (tabList[i].icon.iconColor ? tabList[i].icon.iconColor.defaultColor : '#ff4800') + ';';
             switch (tabList[i].icon.type) {
                 case 'customer':
                     innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + (tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl) + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
