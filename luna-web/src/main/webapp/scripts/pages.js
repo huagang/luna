@@ -1165,9 +1165,9 @@ var initMenuTab = {
     getTabListHtmlInCavas: function (tabList) {
         var innerHtml = [];
         for (var i = 0; i < tabList.length; i++) {
-            console.log(tabList[i].icon.type);
-            var defaultBgColor = 'background-color:' + tabList[i].icon.bgColor.defaultColor + ';',
-                defaultIconColor = 'color:' + tabList[i].icon.iconColor.defaultColor + ';';
+
+            var defaultBgColor = 'background-color:' + (tabList[i].icon.bgColor? tabList[i].icon.bgColor.defaultColor:'#fff') + ';',
+                defaultIconColor = 'color:' + (tabList[i].icon.iconColor?tabList[i].icon.iconColor.defaultColor:'#ff4800') + ';';
             switch (tabList[i].icon.type) {
                 case 'customer':
                     innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + (tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl) + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');

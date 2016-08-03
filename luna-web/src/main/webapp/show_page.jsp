@@ -1104,12 +1104,12 @@
                         </ui-select>
                       </div>
                       <div class=""><span>背景颜色:</span>
-                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.bgColor.defaultColor" ng-change="menuTab.changeIconColor('bgColor', 'defaultColor')">
-                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.bgColor.currentColor" ng-change="menuTab.changeIconColor('bgColor', 'currentColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.bgColor.defaultColor" ng-change="menuTab.changeIconColor('bgColor', 'defaultColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.bgColor.currentColor" ng-change="menuTab.changeIconColor('bgColor', 'currentColor')">
                       </div>
                       <div class=""><span>图标颜色:</span>
-                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.iconColor.defaultColor" ng-change="menuTab.changeIconColor('iconColor','defaultColor')">
-                        <input type="text" class="color-set icon-color" data-control="hue"  ng-model="menuTab.currentTab.icon.iconColor.currentColor" ng-change="menuTab.changeIconColor('iconColor','currentColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.iconColor.defaultColor" ng-change="menuTab.changeIconColor('iconColor','defaultColor')">
+                        <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.iconColor.currentColor" ng-change="menuTab.changeIconColor('iconColor','currentColor')">
                       </div>
                     </div>
                     <h2><label>数据源</label></h2>
@@ -1117,15 +1117,20 @@
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
                         <div>栏目名称
                           <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
-                                            <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}
+                              <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}
                                             </option>
-                                        </select>
+                          </select>
                         </div>
                         <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称
                           <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
                                             <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}
                                             </option>
                                         </select>
+                        </div>
+                        <div ng-show="menuTab.currentTab.type == 'articleList'">
+                          <select name="" id="">
+                            
+                          </select>
                         </div>
                       </div>
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
@@ -1394,4 +1399,4 @@
         <!-- 删除用户弹出层 -->
       </body>
 
-</html>
+      </html>
