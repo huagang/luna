@@ -716,7 +716,7 @@ $(document).ready(function () {
             that.myScroll.on('scroll', that.checkScroll);
             that.myScroll.on('scrollEnd', that.checkScroll);
 
-            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            that.content.on('touchmove', function (e) { e.preventDefault(); }, false);
 
             that.content.on('transitionend', function (event) {
                 if (that.content.hasClass('transparent')) {
