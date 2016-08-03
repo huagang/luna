@@ -506,9 +506,13 @@ function NavController($scope, $rootScope) {
     };
 
     this.changeNavType = function () {
-        if (this.currentComponent.navType === 0) {
+        if (this.currentComponent.navType == 0) {
             this.currentComponent.content.startName = "";
             this.currentComponent.content.startPosition = "";
+            // navPositionForm.startName.$touched = navPositionForm.startPosition.$touched = false;
+        }else{
+            this.currentComponent.content.startName = this.content.startName ;
+            this.currentComponent.content.startPosition = this.content.startPosition;
         }
     };
 
