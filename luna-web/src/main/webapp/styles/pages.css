@@ -158,14 +158,15 @@ body {
 }
 
 .container-right {
-    width: 300px;
+    width: 320px;
     position: fixed;
     top: 64px;
     right: 0;
     border-left: 1px solid #DDDDDD;
     background-color: #FDFDFD;
-    height: 100%;
     z-index: 10;
+    /* overflow-y: auto; */
+    height: 100%;
 }
 
 .component-btn {
@@ -481,6 +482,9 @@ a.img-clc:hover {
 
 .control-manage {
     right: 0;
+    position: relative;
+    height: 85%;
+    overflow-y: scroll;
 }
 
 .control-manage> div {

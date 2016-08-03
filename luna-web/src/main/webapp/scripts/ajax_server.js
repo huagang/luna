@@ -43,8 +43,9 @@ function isValidPageInfo() {
         $("#warn2").text("不能为空");
         validFlag = false;
     }
-    var txtPageHeight = document.querySelector('#txtPageHeight').value;
-    if (txtPageHeight < 617 || txtPageHeight.length == 0) {
+    var txtPageHeight = document.querySelector('#txtPageHeight').value,
+        txtPageType = document.querySelector('[name=pageType]:checked').value;
+    if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }
@@ -64,7 +65,7 @@ function creatPageID() {
             'page_code': $("#txt-short").val(),
             'page_order': $(".list-page .drop-item[page_id]").length + 1,
             'page_type': document.querySelector('[name=pageType]:checked').value,
-            'page_height': document.querySelector('#txtPageHeight').value||'617',
+            'page_height': document.querySelector('#txtPageHeight').value || '617',
         };
         $.ajax({
             type: 'post',
