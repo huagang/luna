@@ -505,8 +505,8 @@ function NavController($scope, $rootScope) {
 
     this.changeNavType = function () {
         if (this.currentComponent.navType === 0) {
-            this.content.startName = "";
-            this.content.startPosition = "";
+            this.currentComponent.content.startName = "";
+            this.currentComponent.content.startPosition = "";
         }
     };
 
@@ -662,18 +662,20 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
         //根绝业务Id 获取栏目列表
         this.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
-        $http.get(apiUrlFormat(Inter.getApiUrl().articleColunmu, [objdata.businessId])).success(function (response) {
-            if (response.code == '0') {
-                if (response.data) {
+        $http.get(apiUrlFormat(Inter.getApiUrl().articleColunmu, [objdata.businessId])).success(function (res) {
+            if (res.code == '0') {
+                if (res.data) {
                     var reArr = [{ 'columnName': '请选择', 'columnId': '' }];
-                    for (var key in response.data) {
-                        reArr.push({ 'columnName': key, 'columnId': response.data[key] });
+                    for (var key in res.data) {
+                        reArr.push({ 'columnName': key, 'columnId': res.data[key] });
                     }
                     _self.articleColunmuList = reArr;
                 }
             } else {
-                alert('获取文章栏目失败');
+                alert(ErrCode.get(res.code));
             }
+        }).error(function (res) {
+            alert('栏目列表获取失败\n' + ErrCode.get(''));
         });
 
         this.articleList = [{ 'articleName': '请选择', 'articleId': '' }]; //栏目列表
@@ -687,8 +689,10 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                     _self.articleList = reArr;
                 }
             } else {
-                alert('获取文章失败');
+                alert(ErrCode.get(res.code));
             }
+        }).error(function (res) {
+            alert('文章列表获取失败 \n' + ErrCode.get(''));
         });
 
         //获取Poi 一级数
@@ -702,8 +706,10 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                     _self.firstPoiList = reArr;
                 }
             } else {
-                alert('获取poi列表失败');
+                alert(ErrCode.get(res.code));
             }
+        }).error(function (res) {
+            alert('一级Poi列表获取失败\n' + ErrCode.get(''));
         });
 
 
@@ -915,13 +921,15 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                     _self.poiTypeList = reArr;
                 }
             } else {
-                alert('获取poi类别失败');
+                alert(ErrCode.get(res.code));
             }
+        }).error(function (res) {
+            alert('Poi类别获取失败\n' + ErrCode.get(''));
         });
     };
 
     //改变图标的背景颜色
-    this.changeIconColor = function(colorType,colorStatus){
+    this.changeIconColor = function (colorType, colorStatus) {
         this.currentComponent.content.tabList = this.content.tabList;
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     };

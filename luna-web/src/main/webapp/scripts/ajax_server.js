@@ -64,7 +64,7 @@ function creatPageID() {
             'page_code': $("#txt-short").val(),
             'page_order': $(".list-page .drop-item[page_id]").length + 1,
             'page_type': document.querySelector('[name=pageType]:checked').value,
-            'page_height': document.querySelector('#txtPageHeight').value,
+            'page_height': document.querySelector('#txtPageHeight').value||'617',
         };
         $.ajax({
             type: 'post',

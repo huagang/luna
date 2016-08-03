@@ -626,7 +626,7 @@ function createCanvas() {
 function setPageHtml(pageID) {
     var $root = $('#layermain');
     $('#layermain').html("");
-    $('#layermain').css("background-color", "#ffffff");
+    $('#layermain').css({"background-color":"#ffffff",'height':lunaPage.pages[pageID].page_height||'617px'});
     // 解析json数据
     var jsonData = lunaPage.pages[pageID].page_content;
 

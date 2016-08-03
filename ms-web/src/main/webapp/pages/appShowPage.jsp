@@ -66,6 +66,8 @@
         var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/interface.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>
 </html>

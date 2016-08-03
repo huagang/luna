@@ -176,7 +176,9 @@ $(document).ready(function () {
 
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                $comGroup = $('<div class="component-group ' + item.page_code + '"><i class="icon icon-goback goback"></i></div>');
+                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '';
+            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"><i class="icon icon-goback goback"></i></div>');
+            console.log(item);
             if (document.querySelector('.component-group')) {
                 $comGroup.css('opacity', 0);
             }
@@ -492,7 +494,7 @@ $(document).ready(function () {
             this.setAction();
 
             return this.html;
-        }
+        };
     }
 
     /* 全景组件 */
@@ -501,10 +503,28 @@ $(document).ready(function () {
         BaseComponent.call(this);
 
         this.build = function () {
+            var panoUrl = '';
+
+            switch (this.value.content.panoType.id) {
+                case 1:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().singlePano, [this.value.content.panoId]);
+                    break;
+                case 2:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
+                    break;
+                case 3:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().customerPano, [this.value.content.panoId]);
+                    break;
+                default:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
+                    break;
+            }
+            console.log();
+
             this.setPosition();
             // Img.prototype.setPosition.call();
 
-            this.html.children("div").append('<a href="http://wap.visualbusiness.cn/vb/?panoID=' + this.value.content.panoId + '"><img src="' + this.value.content.icon + '"/></a>');
+            this.html.children("div").append('<a href="' + panoUrl + '"><img src="' + this.value.content.icon + '"/></a>');
 
             this.setMoreInfo();
 

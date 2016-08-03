@@ -536,10 +536,10 @@
                       <div class="form-group clearfix ng-hide" ng-show="nav.currentComponent.navType">
                         <label for="" title="线路起点名称" class="fw-normal col-md-3 text-right">起点名称：</label>
                         <div class="col-md-8">
-                          <input type="text" name="startName" placeholder="输入线路起点中文名称" ng-model="nav.content.startName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeStartName()">
-                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.required">起点名称长度不合法（请输入2-10个字符）</span>
-                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.minlength">起点名称长度不合法（请输入2-10个字符）</span>
-                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-10个字符）</span>
+                          <input type="text" name="startName" placeholder="输入线路起点中文名称" ng-model="nav.content.startName" ng-minlength="2" ng-maxlength="20" required ng-blur="nav.changeStartName()">
+                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.required">起点名称长度不合法（请输入2-20个字符）</span>
+                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.minlength">起点名称长度不合法（请输入2-20个字符）</span>
+                          <span class="help-block text-error" ng-show="navPositionForm.startName.$touched && navPositionForm.startName.$error.maxlength">起点名称长度不合法（请输入2-20个字符）</span>
                         </div>
                       </div>
                       <div class="form-group clearfix ng-hide" ng-show="nav.currentComponent.navType">
@@ -553,10 +553,10 @@
                       <div class="form-group clearfix">
                         <label for="" title="线路终点名称" class="fw-normal col-md-3 text-right">终点名称：</label>
                         <div class="col-md-8">
-                          <input type="text" name="endName" placeholder="输入线路终点中文名称" ng-model="nav.content.endName" ng-minlength="2" ng-maxlength="10" required ng-blur="nav.changeEndName()">
-                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.required">终点名称长度不合法（请输入2-10个字符）</span>
-                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.minlength">终点名称长度不合法（请输入2-10个字符）</span>
-                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-10个字符）</span>
+                          <input type="text" name="endName" placeholder="输入线路终点中文名称" ng-model="nav.content.endName" ng-minlength="2" ng-maxlength="20" required ng-blur="nav.changeEndName()">
+                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.required">终点名称长度不合法（请输入2-20个字符）</span>
+                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.minlength">终点名称长度不合法（请输入2-20个字符）</span>
+                          <span class="help-block text-error" ng-show="navPositionForm.endName.$touched && navPositionForm.endName.$error.maxlength">终点名称长度不合法（请输入2-20个字符）</span>
                         </div>
                       </div>
                       <div class="form-group clearfix">
@@ -1385,6 +1385,7 @@
         <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common/errCode.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
         <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
