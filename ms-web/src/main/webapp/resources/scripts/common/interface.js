@@ -30,7 +30,10 @@ var Inter = function() {
                 
                 // 业务搜索
                 searchBusiness: context+'/manage/app.do?method=search_business', //搜索业务请求
-                
+                //全景路径接口
+                singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
+                multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
+                customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
             };
         }
     };

@@ -65,6 +65,12 @@ var Inter = function() {
                 poiTypeListByBidAndFPoi: apiHost[curHost()]+'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
                 poiListByBidAndFPoi: apiHost[curHost()]+'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
                 poiListByBidAndFPoiAndPoiTyep: apiHost[curHost()]+'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
+                
+                //全景路径接口
+                singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
+                multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
+                customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+
             };
         }
     };

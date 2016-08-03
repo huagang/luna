@@ -257,22 +257,24 @@ img, video{
     height: 77px;
 }
 
-.menulist .icon{
+.menulist .iconfont{
     height: 48px;
     width: 48px;
     display: inline-block;
     border-radius: 50%;
+    line-height: 48px;
+    font-size: 26px;
 }
 
-.menulist .icon.current{
+.menulist .iconfont.current{
     display: none;
 }
 
-.menulist.current .icon{
+.menulist.current .iconfont{
     display: none;
 }
 
-.menulist.current .icon.current{
+.menulist.current .iconfont.current{
     display: inline-block;
 }
 
@@ -338,7 +340,7 @@ img, video{
      white-space: nowrap;
  }
  
- .detail-title:before{
+ .icon-arr-right{
      position: relative;
      top: -1px;
      left: 0px;
@@ -346,13 +348,10 @@ img, video{
      content: ' ';
      line-height: 45px;
      border: 6px solid transparent;
-     border-left: 7px solid #e5383a;
  }
 
 .icon {
-    background: url(../images/icons-2x.png) no-repeat;
-    display: inline-block;
-    background-size: 800px 504px;
+
 }
 
 .component-group.index .icon-goback,
