@@ -50,7 +50,7 @@ public class TestFarmPageService {
 	public void test(){
 		JSONObject param = new JSONObject();
 		Integer business_id = 46;
-		String app_name = "greek test8";
+		String app_name = "greek test5";
 		String owner = "greek";
 
 		param.put("business_id", business_id);

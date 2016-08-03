@@ -157,167 +157,167 @@ public class MsFarmFieldCriteria {
             criteriaWithBetweenValue.add(map);
         }
 
-        public Criteria andFieldNameIsNull() {
-            addCriterion("field_name is null");
+        public Criteria andNameIsNull() {
+            addCriterion("name is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameIsNotNull() {
-            addCriterion("field_name is not null");
+        public Criteria andNameIsNotNull() {
+            addCriterion("name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameEqualTo(String value) {
+        public Criteria andNameEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name =", value, "fieldName");
+            addCriterion("name =", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameNotEqualTo(String value) {
+        public Criteria andNameNotEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name <>", value, "fieldName");
+            addCriterion("name <>", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameGreaterThan(String value) {
+        public Criteria andNameGreaterThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name >", value, "fieldName");
+            addCriterion("name >", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameGreaterThanOrEqualTo(String value) {
+        public Criteria andNameGreaterThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name >=", value, "fieldName");
+            addCriterion("name >=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameLessThan(String value) {
+        public Criteria andNameLessThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name <", value, "fieldName");
+            addCriterion("name <", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameLessThanOrEqualTo(String value) {
+        public Criteria andNameLessThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name <=", value, "fieldName");
+            addCriterion("name <=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameLike(String value) {
+        public Criteria andNameLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name like", value, "fieldName");
+            addCriterion("name like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameNotLike(String value) {
+        public Criteria andNameNotLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_name not like", value, "fieldName");
+            addCriterion("name not like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameIn(List<String> values) {
+        public Criteria andNameIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_name in", values, "fieldName");
+            addCriterion("name in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameNotIn(List<String> values) {
+        public Criteria andNameNotIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_name not in", values, "fieldName");
+            addCriterion("name not in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameBetween(String value1, String value2) {
+        public Criteria andNameBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_name between", value1, value2, "fieldName");
+            addCriterion("name between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameNotBetween(String value1, String value2) {
+        public Criteria andNameNotBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_name not between", value1, value2, "fieldName");
+            addCriterion("name not between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameIsNull() {
-            addCriterion("field_show_name is null");
+        public Criteria andShowNameIsNull() {
+            addCriterion("show_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameIsNotNull() {
-            addCriterion("field_show_name is not null");
+        public Criteria andShowNameIsNotNull() {
+            addCriterion("show_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameEqualTo(String value) {
+        public Criteria andShowNameEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name =", value, "fieldShowName");
+            addCriterion("show_name =", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameNotEqualTo(String value) {
+        public Criteria andShowNameNotEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name <>", value, "fieldShowName");
+            addCriterion("show_name <>", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameGreaterThan(String value) {
+        public Criteria andShowNameGreaterThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name >", value, "fieldShowName");
+            addCriterion("show_name >", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameGreaterThanOrEqualTo(String value) {
+        public Criteria andShowNameGreaterThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name >=", value, "fieldShowName");
+            addCriterion("show_name >=", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameLessThan(String value) {
+        public Criteria andShowNameLessThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name <", value, "fieldShowName");
+            addCriterion("show_name <", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameLessThanOrEqualTo(String value) {
+        public Criteria andShowNameLessThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name <=", value, "fieldShowName");
+            addCriterion("show_name <=", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameLike(String value) {
+        public Criteria andShowNameLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name like", value, "fieldShowName");
+            addCriterion("show_name like", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameNotLike(String value) {
+        public Criteria andShowNameNotLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_show_name not like", value, "fieldShowName");
+            addCriterion("show_name not like", value, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameIn(List<String> values) {
+        public Criteria andShowNameIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_show_name in", values, "fieldShowName");
+            addCriterion("show_name in", values, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameNotIn(List<String> values) {
+        public Criteria andShowNameNotIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_show_name not in", values, "fieldShowName");
+            addCriterion("show_name not in", values, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameBetween(String value1, String value2) {
+        public Criteria andShowNameBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_show_name between", value1, value2, "fieldShowName");
+            addCriterion("show_name between", value1, value2, "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameNotBetween(String value1, String value2) {
+        public Criteria andShowNameNotBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_show_name not between", value1, value2, "fieldShowName");
+            addCriterion("show_name not between", value1, value2, "showName");
             return (Criteria) this;
         }
 
@@ -391,167 +391,167 @@ public class MsFarmFieldCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeIsNull() {
-            addCriterion("field_type is null");
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeIsNotNull() {
-            addCriterion("field_type is not null");
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeEqualTo(String value) {
+        public Criteria andTypeEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type =", value, "fieldType");
+            addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeNotEqualTo(String value) {
+        public Criteria andTypeNotEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type <>", value, "fieldType");
+            addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeGreaterThan(String value) {
+        public Criteria andTypeGreaterThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type >", value, "fieldType");
+            addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeGreaterThanOrEqualTo(String value) {
+        public Criteria andTypeGreaterThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type >=", value, "fieldType");
+            addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeLessThan(String value) {
+        public Criteria andTypeLessThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type <", value, "fieldType");
+            addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeLessThanOrEqualTo(String value) {
+        public Criteria andTypeLessThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type <=", value, "fieldType");
+            addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeLike(String value) {
+        public Criteria andTypeLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type like", value, "fieldType");
+            addCriterion("type like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeNotLike(String value) {
+        public Criteria andTypeNotLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_type not like", value, "fieldType");
+            addCriterion("type not like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeIn(List<String> values) {
+        public Criteria andTypeIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_type in", values, "fieldType");
+            addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeNotIn(List<String> values) {
+        public Criteria andTypeNotIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_type not in", values, "fieldType");
+            addCriterion("type not in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeBetween(String value1, String value2) {
+        public Criteria andTypeBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_type between", value1, value2, "fieldType");
+            addCriterion("type between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeNotBetween(String value1, String value2) {
+        public Criteria andTypeNotBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_type not between", value1, value2, "fieldType");
+            addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitIsNull() {
-            addCriterion("field_limit is null");
+        public Criteria andLimitsIsNull() {
+            addCriterion("limits is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitIsNotNull() {
-            addCriterion("field_limit is not null");
+        public Criteria andLimitsIsNotNull() {
+            addCriterion("limits is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitEqualTo(String value) {
+        public Criteria andLimitsEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit =", value, "fieldLimit");
+            addCriterion("limits =", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitNotEqualTo(String value) {
+        public Criteria andLimitsNotEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit <>", value, "fieldLimit");
+            addCriterion("limits <>", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitGreaterThan(String value) {
+        public Criteria andLimitsGreaterThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit >", value, "fieldLimit");
+            addCriterion("limits >", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitGreaterThanOrEqualTo(String value) {
+        public Criteria andLimitsGreaterThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit >=", value, "fieldLimit");
+            addCriterion("limits >=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitLessThan(String value) {
+        public Criteria andLimitsLessThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit <", value, "fieldLimit");
+            addCriterion("limits <", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitLessThanOrEqualTo(String value) {
+        public Criteria andLimitsLessThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit <=", value, "fieldLimit");
+            addCriterion("limits <=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitLike(String value) {
+        public Criteria andLimitsLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit like", value, "fieldLimit");
+            addCriterion("limits like", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitNotLike(String value) {
+        public Criteria andLimitsNotLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("field_limit not like", value, "fieldLimit");
+            addCriterion("limits not like", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitIn(List<String> values) {
+        public Criteria andLimitsIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_limit in", values, "fieldLimit");
+            addCriterion("limits in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitNotIn(List<String> values) {
+        public Criteria andLimitsNotIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("field_limit not in", values, "fieldLimit");
+            addCriterion("limits not in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitBetween(String value1, String value2) {
+        public Criteria andLimitsBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_limit between", value1, value2, "fieldLimit");
+            addCriterion("limits between", value1, value2, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitNotBetween(String value1, String value2) {
+        public Criteria andLimitsNotBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("field_limit not between", value1, value2, "fieldLimit");
+            addCriterion("limits not between", value1, value2, "limits");
             return (Criteria) this;
         }
 
@@ -859,27 +859,27 @@ public class MsFarmFieldCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andFieldNameLikeInsensitive(String value) {
+        public Criteria andNameLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("upper(field_name) like", value.toUpperCase(), "fieldName");
+            addCriterion("upper(name) like", value.toUpperCase(), "name");
             return (Criteria) this;
         }
 
-        public Criteria andFieldShowNameLikeInsensitive(String value) {
+        public Criteria andShowNameLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("upper(field_show_name) like", value.toUpperCase(), "fieldShowName");
+            addCriterion("upper(show_name) like", value.toUpperCase(), "showName");
             return (Criteria) this;
         }
 
-        public Criteria andFieldTypeLikeInsensitive(String value) {
+        public Criteria andTypeLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("upper(field_type) like", value.toUpperCase(), "fieldType");
+            addCriterion("upper(type) like", value.toUpperCase(), "type");
             return (Criteria) this;
         }
 
-        public Criteria andFieldLimitLikeInsensitive(String value) {
+        public Criteria andLimitsLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("upper(field_limit) like", value.toUpperCase(), "fieldLimit");
+            addCriterion("upper(limits) like", value.toUpperCase(), "limits");
             return (Criteria) this;
         }
 

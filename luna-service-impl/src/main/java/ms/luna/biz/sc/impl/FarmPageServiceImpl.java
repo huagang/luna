@@ -159,19 +159,19 @@ public class FarmPageServiceImpl implements FarmPageService {
 
             // 添加字段定义
             JSONObject field_def = (JSONObject) JSON.toJSON(field);
-            String field_name = field.getFieldName();
-            String field_type = field.getFieldType();
-            String field_limit = field.getFieldLimit();
+            String field_name = field.getName();
+            String field_type = field.getType();
+            String field_limit = field.getLimits();
             String extension_attrs = field.getExtensionAttrs();
-            field_def.put(MsFarmFieldTable.FIELD_LIMIT, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
-            field_def.put(MsFarmFieldTable.EXTENSION_ATTRS, convertExtensionAttrs2Json(extension_attrs, field_type));
+            field_def.put(MsFarmFieldTable.FIELD_LIMITS, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
+            field_def.put(MsFarmFieldTable.FIELD_EXTENSION_ATTRS, convertExtensionAttrs2Json(extension_attrs, field_type));
 
             // 添加字段值
             Object field_val = getFieldValFromDoc(document, field_name, field_type);
 
             JSONObject json = new JSONObject();
-            json.put(MsFarmFieldTable.FIELD_DEF, field_def);
-            json.put(MsFarmFieldTable.FIELD_VAL, field_val);
+            json.put(MsFarmFieldTable.FIELD_DEFINITION, field_def);
+            json.put(MsFarmFieldTable.FIELD_VALUE, field_val);
             array.add(json);
         }
         fieldArray.put(MsFarmFieldTable.FIELDS, array);
@@ -189,7 +189,7 @@ public class FarmPageServiceImpl implements FarmPageService {
         if (fieldType.RADIO_TEXT.equals(type)) { // eg:全景
             return JSONArray.parseArray(extension_attrs);
         }
-        if (fieldType.XIANGCUNYEQU.equals(type)) { // eg:乡村野趣
+        if (fieldType.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
             return JSONArray.parseArray(extension_attrs);
         }
         if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
@@ -219,7 +219,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             return jsonObject;
         } else if (fieldType.TEXT_PIC.equals(field_type)) {
             return jsonArray;
-        } else if (fieldType.XIANGCUNYEQU.equals(field_type)) {
+        } else if (fieldType.COUNTRY_ENJOYMENT.equals(field_type)) {
             return jsonArray;
         } else if (fieldType.CHECKBOX.equals(field_type)) {
             return jsonArray;

@@ -401,7 +401,7 @@ public final class VbConstant {
 		public static final String POINT = "POINT";
 		public static final String SELECT = "SELECT";
 		public static final String TEXT_PIC = "TEXT_PIC";
-		public static final String XIANGCUNYEQU = "XIANGCUNYEQU";
+		public static final String COUNTRY_ENJOYMENT = "COUNTRY_ENJOYMENT";
 		public static final String RADIO_TEXT = "RADIO_TEXT";
 	}
 
