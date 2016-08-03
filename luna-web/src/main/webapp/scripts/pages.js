@@ -588,7 +588,7 @@ function setPageListHtml(pageList) {
  * @return {[type]}      [description]
  */
 function createPageListItemHtml(page) {
-    console.log(page);
+    // console.log(page);
     var pageHtml = [];
     pageHtml.push('<li class="drop-item {1}" page_id="{0}" data-pagecode="{1}"><div class="mod">'.format(page.page_id, page.page_code));
     pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
@@ -1047,19 +1047,21 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
-    if (component.position.changeTrigger.horizontal == 'left') {
-        comobj.css("left", component.x + unit);
-        comobj.css("right", 'auto');
-    } else {
+    console.log(component.position.changeTrigger.horizontal);
+    console.log(component.position.changeTrigger.vertial);
+    if (component.position.changeTrigger.horizontal == 'right') {
         comobj.css("left", 'auto');
         comobj.css("right", component.right + unit);
-    }
-    if (component.position.changeTrigger.vertial == 'top') {
-        comobj.css("top", component.y + unit);
-        comobj.css("bottom", 'auto');
     } else {
+        comobj.css("left", component.x + unit);
+        comobj.css("right", 'auto');
+    }
+    if (component.position.changeTrigger.vertial == 'bottom') {
         comobj.css("top", 'auto');
         comobj.css("bottom", component.bottom + unit);
+    } else {
+        comobj.css("top", component.y + unit);
+        comobj.css("bottom", 'auto');
     }
     comobj.css("width", component.width + unit);
     comobj.css("height", component.height + unit);
