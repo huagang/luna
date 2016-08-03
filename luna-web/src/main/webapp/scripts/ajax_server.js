@@ -135,6 +135,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
+                $('#layermain').css('height',lunaPage.pages[pageId].page_height);
 
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");

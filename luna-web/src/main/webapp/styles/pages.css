@@ -485,6 +485,7 @@ a.img-clc:hover {
     position: relative;
     height: 85%;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .control-manage> div {
@@ -680,15 +681,17 @@ a.img-clc:hover {
     width: 370px;
     font-size: 14px;
     margin-bottom: 10px;
-    overflow:hidden;
+    overflow: hidden;
 }
-#pop-add .item-wrap .item-tit{
-    float:left;
+
+#pop-add .item-wrap .item-tit {
+    float: left;
     margin-right: 5px;
     line-height: 30px;
 }
-#pop-add .item-wrap .item-cont{
-    float:left;
+
+#pop-add .item-wrap .item-cont {
+    float: left;
     width: 290px;
 }
 
@@ -886,6 +889,21 @@ a.wj-img-clc {
     position: relative;
 }
 
+.menuTab-set .menutab-list .menutab-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60px;
+    display: inline-block;
+    vertical-align: inherit;
+}
+
+.menuTab-set .menutab-list .iconfont {
+    display: inline-block;
+    height: 20px;
+    vertical-align: inherit;
+}
+
 .menuTab-bg {
     height: 100%;
     /* background: url('http://material-10002033.file.myqcloud.com/guiyang/city/2a0ac9701b5c11e6be71525400a216a4.jpg') no-repeat; */
@@ -1003,7 +1021,7 @@ a.wj-img-clc {
     left: 300px;
 }
 
- .menuTab-set .minicolors {
+.menuTab-set .minicolors {
     display: inline-block;
     width: 35%;
 }
@@ -1020,6 +1038,7 @@ a.wj-img-clc {
 
 
 /*页签组件End*/
+
 
 /* 保存的后的提示 */
 

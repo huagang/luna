@@ -37,13 +37,17 @@ $(document).ready(function () {
         });
     }
 
-    var iftab = false;
+    var iftab = false,
+        iflongpage = false;
     if (pageData.data instanceof Array && pageData.data.length > 0) {
         for (var plist in pageData.data) {
             for (var con in pageData.data[plist].page_content) {
                 if (pageData.data[plist].page_content[con].type == "tab") {
                     iftab = true;
                 }
+            }
+            if (pageData.data[plist].page_type == "2") {
+                iflongpage = true;
             }
         }
     } else if (typeof pageData.data.page_content == "object") {
@@ -52,7 +56,11 @@ $(document).ready(function () {
                 iftab = true;
             }
         }
+        if (pageData.data.page_type == "2") {
+            iflongpage = true;
+        }
     }
+    // if (!iftab && !iflongpage) {
     if (!iftab) {
         init();
     }
@@ -177,6 +185,9 @@ $(document).ready(function () {
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
                 pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '';
+            if (item.page_type == "2") {
+                $("body").addClass("canscroll");
+            }
             $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"><i class="icon icon-goback goback"></i></div>');
             console.log(item);
             if (document.querySelector('.component-group')) {
@@ -1187,7 +1198,8 @@ function initPanoBg(panoBg) {
  * @return {[type]}          [description]
  */
 function showNav(posiData) {
-    if (!is_weixn()) {
+    console.log(posiData);
+    if (!is_weixn() || posiData.navType == "1") {
         var url;
         if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
@@ -1199,15 +1211,26 @@ function showNav(posiData) {
     } else {
         if (wx) {
             try {
-                var locationOptions = {
-                    latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
-                    longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
-                    name: posiData.navEndName, // 位置名
-                    address: posiData.address || '', // 地址详情说明
-                    scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
-                    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-                }
-                wx.openLocation(locationOptions);
+                var geocoder = new qq.maps.Geocoder();
+                var latLng = new qq.maps.LatLng(posiData.navEndLat, posiData.navEndLng);
+                geocoder.getAddress(latLng);
+                //设置服务请求成功的回调函数
+                geocoder.setComplete(function (res) {
+                    var locationOptions = {
+                        latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
+                        longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
+                        name: posiData.navEndName, // 位置名
+                        address: res.detail.address || posiData.navEndName, // 地址详情说明
+                        scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                        infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+                    }
+                    wx.openLocation(locationOptions);
+                });
+                 //若服务请求失败，则运行以下函数
+                geocoder.setError(function() {
+                    alert("请检查输入的经纬度是否正确！");
+                    console.log("出错了，请输入正确的经纬度！！！");
+                });
             } catch (e) {
                 console.log(e.msg);
             }

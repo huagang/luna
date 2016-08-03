@@ -201,7 +201,7 @@ function MenuController($scope, $rootScope, $http) {
 
 function BaseComponentController() {
 
-    this.isEmptyStr = function(str) {
+    this.isEmptyStr = function (str) {
         if (str == null || str == "" || str == "none") {
             return true;
         }
@@ -300,7 +300,7 @@ function InteractComponentController() {
             }
 
             var actionValue = this.currentComponent.action.href.value;
-            with(this.action.href) {
+            with (this.action.href) {
                 switch (this.currentComponent.action['href'].type) {
                     case "inner":
                         innerValue = actionValue;
@@ -357,12 +357,12 @@ function InteractComponentController() {
         }
     };
 
-    this.loadPages = function() {
+    this.loadPages = function () {
         this.action['href'].pageOptions.length = 0;
         var pages = lunaPage.pages;
         var pageIdArr = Object.keys(pages);
         if (pageIdArr) {
-            pageIdArr.forEach(function(pageId) {
+            pageIdArr.forEach(function (pageId) {
                 this.action['href'].pageOptions.push({
                     id: pageId,
                     name: pages[pageId].page_name
@@ -514,7 +514,7 @@ function NavController($scope, $rootScope) {
 
     this.changeStartName = function () {
         var startName = this.content.startName;
-        if (startName && startName.length >= 2 && startName.length <= 10) {
+        if (startName && startName.length >= 2 && startName.length <= 20) {
             this.currentComponent.content.startName = this.content.startName;
             console.log("save startName");
         }
@@ -530,7 +530,7 @@ function NavController($scope, $rootScope) {
 
     this.changeEndName = function () {
         var endName = this.content.endName;
-        if (endName && endName.length >= 2 && endName.length <= 10) {
+        if (endName && endName.length >= 2 && endName.length <= 20) {
             this.currentComponent.content.endName = this.content.endName;
             console.log("save endName");
         }
@@ -714,7 +714,14 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             alert('一级Poi列表获取失败\n' + ErrCode.get(''));
         });
 
-
+        //列表样式
+        this.pageListStyle = [{
+            id: '1',
+            name: '人物式列表',
+        }, {
+                id: '2',
+                name: '中标题列表',
+            }];
 
         //图标选择初始化
         this.iconList = [{
@@ -817,6 +824,9 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             articleId: '',
             typeName: tabTypeNames[type],
             delCls: '',
+            pageStyle: {
+                type: 1,
+            }
         };
 
         this.content.tabList.push(defaultTab);
@@ -859,6 +869,12 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             }
             this.selectTabTypeStatus = true;
         }
+    };
+
+    //列表类型
+    this.changePageStyle = function ($event, $index) {
+        this.currentComponent.content.tabList = this.content.tabList;
+        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     };
 
     //选择Icon的颜色
