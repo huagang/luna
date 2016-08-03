@@ -1200,6 +1200,7 @@ function initPanoBg(panoBg) {
 function showNav(posiData) {
     console.log(posiData);
     if (!is_weixn() || posiData.navType == "1") {
+        console.log('windows');
         var url;
         if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
@@ -1211,6 +1212,8 @@ function showNav(posiData) {
     } else {
         if (wx) {
             try {
+                console.log('wechat');
+
                 var geocoder = new qq.maps.Geocoder();
                 var latLng = new qq.maps.LatLng(posiData.navEndLat, posiData.navEndLng);
                 geocoder.getAddress(latLng);
@@ -1226,8 +1229,8 @@ function showNav(posiData) {
                     }
                     wx.openLocation(locationOptions);
                 });
-                 //若服务请求失败，则运行以下函数
-                geocoder.setError(function() {
+                //若服务请求失败，则运行以下函数
+                geocoder.setError(function () {
                     alert("请检查输入的经纬度是否正确！");
                     console.log("出错了，请输入正确的经纬度！！！");
                 });
