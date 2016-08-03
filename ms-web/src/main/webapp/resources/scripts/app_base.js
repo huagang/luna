@@ -1200,7 +1200,7 @@ function initPanoBg(panoBg) {
 function showNav(posiData) {
     console.log(posiData);
     if (!is_weixn() || posiData.navType == "1") {
-        console.log('windows');
+        alert('windows');
         var url;
         if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
@@ -1212,7 +1212,7 @@ function showNav(posiData) {
     } else {
         if (wx) {
             try {
-                console.log('wechat');
+                alert('wechat');
 
                 var geocoder = new qq.maps.Geocoder();
                 var latLng = new qq.maps.LatLng(posiData.navEndLat, posiData.navEndLng);
