@@ -1669,6 +1669,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * @return JSONArray
 	 */
 	private JSONArray getPoisLstByIds(Set<String> poiIdLst, List<String> fieldLst, String lang) {
+		if(poiIdLst.size() == 0) {
+			return new JSONArray();
+		}
+
 		// filter
 		BasicDBList conditions = new BasicDBList();
 		for(String id : poiIdLst) {
