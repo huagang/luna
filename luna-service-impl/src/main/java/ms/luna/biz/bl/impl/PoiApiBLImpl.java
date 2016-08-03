@@ -54,6 +54,8 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.PoiCommon;
 import ms.luna.common.PoiCommon.*;
 
+import javax.print.Doc;
+
 /**
  * @author greek
  *
@@ -520,22 +522,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		List<String> fieldLst= convertInputApiFields2DbFieldLst(fields);
 		MsLogger.debug("field list:" + fieldLst.toString());
 
-		// 取出POI数据的经纬度值
-//		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
-//		Bson filter = Filters.nearSphere("lnglat.coordinates", lng, lat, radius * 0.621 / 3963192, 0.0);
-//		MongoCursor<Document> mongoCursor = poi_collection.find(filter).limit(poiNum).iterator();
-//		JSONObject data = new JSONObject();
-//		JSONArray poiArray = new JSONArray();
-//		while(mongoCursor.hasNext()) {
-//			Document poi = mongoCursor.next();
-//			JSONObject poiInfo = getPoiInfoWithFields(poi, fieldLst, lang);
-//			poiArray.add(poiInfo);
-//		}
-//		data.put("pois", poiArray);
-//		JSONObject resultdata = returnSuccessData("success", lang, data);
-//		return resultdata;
-
-		//-------------------------------------------
+		// 设置搜索条件
 		BasicDBObject myCmd = new BasicDBObject();
 		myCmd.append("geoNear", PoiCommon.MongoTable.TABLE_POI_ZH);
 		double[] loc = {lng,lat};
@@ -543,20 +530,18 @@ public class PoiApiBLImpl implements PoiApiBL {
 		myCmd.append("spherical", true);
 		myCmd.append("maxDistance", radius * 0.621 / 3963192);
 		Document document = mongoConnector.getMongoDB().runCommand(myCmd);
+		List<Document> results = document.get("results", List.class);
 
-		JSONObject jsonObject = JSONObject.parseObject(document.toJson());
-		JSONArray resultArray = jsonObject.getJSONArray("results");
-
+		// 获取指定返回字段
 		JSONObject data = new JSONObject();
 		JSONArray poiArray = new JSONArray();
-		for(int i = 0; i< resultArray.size(); i++) {
-			JSONObject poiInfo = getPoiInfoWithFields(resultArray.getJSONObject(i).getJSONObject("obj"), fieldLst, lang);
+		for(Document res : results) {
+			JSONObject poiInfo = getPoiInfoWithFields((Document)res.get("obj"), fieldLst, lang);
 			poiArray.add(poiInfo);
 		}
 		data.put("pois", poiArray);
 		JSONObject resultdata = returnSuccessData("success", lang, data);
 		return resultdata;
-		//-------------------------------------------
 	}
 
 	// 根据活动id获取poi数据
@@ -1350,11 +1335,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		return array;
 	}
 
-	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
-		JSONObject poiJson = JSONObject.parseObject(poi.toJson());
-		return getPoiInfoWithFields(poiJson, fieldLst, lang);
-	}
-
 	/**
 	 * 获取POI的指定字段信息
 	 * 
@@ -1363,7 +1343,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * @param lang
 	 * @return JSONObject
 	 */
-	private JSONObject getPoiInfoWithFields(JSONObject poi, List<String> fieldLst, String lang) {
+	private JSONObject getPoiInfoWithFields(Document poi, List<String> fieldLst, String lang) {
 		JSONObject result = new JSONObject();
 		// 前端输入字段全部错误
 		if(fieldLst == null || fieldLst.isEmpty()){
@@ -1454,7 +1434,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				}
 				// 经纬度
 				if ("lnglat".equals(field)) {
-					JSONObject lnglat = (JSONObject) poi.get("lnglat");
+					Document lnglat = (Document) poi.get("lnglat");
 					JSONArray coordinates = FastJsonUtil.parse2Array(lnglat.get("coordinates"));
 					JSONObject data = new JSONObject();
 					data.put("lng", coordinates.getDoubleValue(0));
@@ -1561,7 +1541,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 				result.put(convertDbField2ApiField(field), "");
 			}
 		}
-		result.put("poi_id", poi.getJSONObject("_id").getString("$oid"));
+		result.put("poi_id", poi.getObjectId("_id").toString());
 
 		return result;
 	}
