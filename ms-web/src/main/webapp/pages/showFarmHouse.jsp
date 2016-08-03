@@ -158,7 +158,18 @@
             <span>周边</span>
         </header>
         <main>
-            <div id="map-container"></div>
+            <div id="map-container" ng-click="farm.handleMapClick()"></div>
+            <div class="marker-tip hidden">
+                <div class="tip-left">
+                    <i class="icon-triangle-bottom"></i>
+                    <p class="marker-name">森林公园</p>
+                    <span class="distance"></span>
+                </div><a target="_blank" href=""><div class="tip-right">
+                    <i class="icon-navigation"></i>
+                    <br>
+                    <span>路线</span>
+                </div></a>
+            </div>
         </main>
     </div>
     <div class="block-split"></div>

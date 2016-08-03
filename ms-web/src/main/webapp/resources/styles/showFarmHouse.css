@@ -5,6 +5,10 @@ body{
     font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
 }
 
+.hidden{
+    display: none !important;
+}
+
 .icon-location{
     display: inline-block;
     background: url(../../resources/images/farmhouse/location.png) center center no-repeat;
@@ -412,6 +416,66 @@ body{
     height: 72vw;
 }
 
+.marker-tip{
+    position: relative;
+    width: 180px;
+    height: 45px;
+
+}
+
+.marker-tip .tip-left{
+    display: inline-block;
+    height: 40px;
+    width: 105px;
+    padding: 5px 0 0 10px;
+    background-color: white;
+    border-radius: 4px 0 0 4px;
+    color: #6f6f6f;
+    font-size: 9px;
+
+}
+
+.marker-tip .tip-left .marker-name{
+    font-size: 14px;
+    color: #373737;
+    line-height: 18px;
+    margin-bottom: 2px;
+}
+
+.marker-tip .tip-right{
+    display: inline-block;
+    vertical-align: top;
+    width: 65px;
+    height: 40px;
+    color: white;
+    font-size: 9px;
+    text-align: center;
+    background-color: #0068b7;
+    border-radius: 0 4px 4px 0;
+    padding-top: 3px;
+    line-height: 9px;
+}
+.marker-tip .tip-right .icon-navigation{
+    display: inline-block;
+    background: url(../images/farmhouse/navigation-white.png) center center no-repeat;
+    background-size: contain;
+    height: 22px;
+    width: 19px;
+}
+
+.marker-tip .distance {
+    font-size: 9px;
+    line-height: 9px;
+}
+
+.icon-triangle-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 75px;
+    border-top: 5px solid white;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
 
 /* 周边 end */
 
@@ -423,3 +487,4 @@ body{
     border-top: 1px solid #d8d7dc;
     background-color: white;
 }
+
