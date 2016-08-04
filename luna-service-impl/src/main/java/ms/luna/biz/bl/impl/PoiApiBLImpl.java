@@ -12,15 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Filter;
 
-import com.mongodb.CommandResult;
-import com.mongodb.DB;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -523,9 +521,20 @@ public class PoiApiBLImpl implements PoiApiBL {
 		MsLogger.debug("field list:" + fieldLst.toString());
 
 		// 设置搜索条件
+		// { type: "Point", coordinates: [ 40, 5 ] }
 		BasicDBObject myCmd = new BasicDBObject();
+//		Document myCmd = new Document();// 不能将BasicDBObject 改为 Document
 		myCmd.append("geoNear", PoiCommon.MongoTable.TABLE_POI_ZH);
+
+		// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 		double[] loc = {lng,lat};
+
+//		List<Double> doc = new ArrayList<Double>();
+//		doc.add(lng);
+//		doc.add(lat);
+//		Document lnglat = new Document();
+//		lnglat.append("type", "Point").append("coordinates", lnglatArray);
+
 		myCmd.append("near", loc);
 		myCmd.append("spherical", true);
 		myCmd.append("maxDistance", radius * 0.621 / 3963192);
@@ -1703,6 +1712,21 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		return poiArray;
 	}
+
+	@Override
+	public JSONObject test() {
+		MongoCollection<Document> collection = mongoConnector.getDBCollection(MongoTable.TABLE_POI_ZH);
+		BasicDBObject doc1 = new BasicDBObject();
+		int [] a = new int[]{2};
+		doc1.append("detail_address" , "北邮");
+		doc1.append("tags", a);
+
+		Document res = collection.find(Filters.and(doc1)).limit(1).first();
+		System.out.println(res.toString());
+
+		return FastJsonUtil.sucess("success");
+	}
+
 }
 
 // ps: lang 涉及到中文, 英文,以后还可能涉及到日文等,很多地方使用的是PoiCommon.POI.EN这种hard code 的形式,后面有时间考虑重整一下代码

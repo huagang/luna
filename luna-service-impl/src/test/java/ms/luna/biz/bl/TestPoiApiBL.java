@@ -87,6 +87,13 @@ public class TestPoiApiBL {
 		System.out.println(result.toString());
 	}
 
+	@Test
+	public void testDocumentAndBasitDBObject(){
+		JSONObject result = poiApiBL.test();
+
+
+	}
+
 	public static void main(String[] args) {
 		JSONObject jsonObject = new JSONObject();
 		String[] tags = new String[]{"1", "2"};
@@ -96,4 +103,5 @@ public class TestPoiApiBL {
 		FastJsonUtil.parse2Array(jsonObject.get("tags")).getInteger(0);
 
 	}
+
 }
