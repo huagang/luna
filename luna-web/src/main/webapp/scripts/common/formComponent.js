@@ -2,10 +2,14 @@
     dependency files
         css
             styles/file_loading_tip.css
+            plugins/selectizeJs/selectize.bootstrap3.css
+
 
         js
             jquery
             deep-diff
+            plugins/selectizeJs/selectize.min.js
+
  */
 
 (function() {
@@ -140,7 +144,7 @@
         'SELECT': '',
         'TEXT_PIC': TextPic,
         'TEXT_PIC_GROUP': TextPicGroup,
-        'COUNTYENJOYMENT': '',
+        'COUNTYENJOYMENT': CountryEnjoyment,
         'RADIO_TEXT': RadioText,
         'FileUploader': Divider,
         'RadioList': RadioList,
@@ -932,7 +936,20 @@
 
         that.updateComponent = updateComponent;
 
+        // 输入框内容改变
+        that.handleTextChange = handleTextChange;
+
+        // 选择选项
+        that.handleOptionConfirm = handleOptionConfirm;
+
+        // 删除已经选择项
+        that.handleDelete = handleDelete;
+
+        // 编辑已经选择项
+        that.handleEdit = handleEdit;
+
         that.init();
+
         function init() {
             that.defautNum = 3;
 
@@ -943,6 +960,33 @@
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
 
         }
+
+        function render(){
+
+        }
+
+        function updateComponent(){
+
+        }
+
+        function handleTextChange(){
+
+        }
+
+        function handleOptionConfirm(){
+
+
+        }
+
+        function handleDelete(){
+
+        }
+
+        function handleEdit(){
+
+
+        }
+
     }
 
     /******************** checkbox  *********************/
@@ -1013,10 +1057,77 @@
         }
 
         function updateComponent(){
+            if (!that._component) {
+                that._component = document.createElement('div');
+                that.element = $(that._component);
+                that._component.className = 'textselect-list component';
 
+                that._bindEvent();
+            }
+            return that._component;
         }
 
     }
+
+    // 输入筛选框
+    function TextSelect(data){
+        /*  data
+                definition:
+                    options
+
+         */
+        var that = this;
+        that.data = data;
+
+        that.init = init;
+
+        that.render = render;
+
+        that._bindEvent = _bindEvent;
+
+        that.updateComponent = updateComponent;
+
+        // 输入框内容变化
+        that.handleChange = handleChange;
+
+        // 选择内容
+        that.handleSelect = handleSelect;
+
+        that.init();
+
+        function init() {
+            that.data.value = that.data.value || {};
+            that.value = that.data.value;
+            that.definition = that.data.definition || {};
+            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+            that._children = {};
+            if(that.definition.show_name) {
+                that._children.label = new Label({
+                    definition: {show_name: that.definition.show_name}
+                });
+            }
+
+            
+
+        }
+
+        function render(){
+
+        }
+
+        function handleChange(){
+
+        }
+
+        function handleSelect(){
+
+            if(that.data.onSelect){
+                onSelect.callback();
+            }
+        }
+    }
+
+
     window.FormComponent = {
         'BaseComponent': BaseComponent,
         'Label': Label,
