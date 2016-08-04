@@ -1507,7 +1507,7 @@
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
-        <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
+        <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/vbpano.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
