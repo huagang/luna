@@ -16,9 +16,11 @@ public class QRedisConfig {
 
     private final static Logger logger = Logger.getLogger(QRedisConfig.class);
 
-    public static String HOST = "10.66.165.223";
+    public final static String KEY_PREFIX = "LUNA";
+
+    public static String HOST = "115.159.87.160";
     public static int PORT = 6379;
-    public static String INSTANCE_ID = "4246cb82-81d6-45f3-8482-a71cbb7015af";
+    public static String INSTANCE_ID = "";
     public static String PASSWORD = "";
 
     public static int DEFAULT_TIME_OUT = 1000;
@@ -32,7 +34,7 @@ public class QRedisConfig {
         properties.load(QRedisConfig.class.getResourceAsStream("/redis.properties"));
 
         HOST = properties.getProperty("host");
-        INSTANCE_ID = properties.getProperty("instance_id");
+        INSTANCE_ID = properties.getProperty("instance_id", "");
         PASSWORD = properties.getProperty("password");
 
         logger.info("redis host: " + HOST);

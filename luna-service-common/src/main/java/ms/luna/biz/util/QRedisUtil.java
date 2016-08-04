@@ -1,6 +1,7 @@
 package ms.luna.biz.util;
 
 import ms.luna.biz.cons.QRedisConfig;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -33,8 +34,13 @@ public class QRedisUtil {
         jedisPoolConfig.setTestOnBorrow(true);
         jedisPoolConfig.setBlockWhenExhausted(false);
 
+        String password = QRedisConfig.PASSWORD;
+        if(StringUtils.isNotBlank(QRedisConfig.INSTANCE_ID)) {
+            password = QRedisConfig.INSTANCE_ID + ":" + QRedisConfig.PASSWORD;
+        }
+
         pool = new JedisPool(jedisPoolConfig, QRedisConfig.HOST, QRedisConfig.PORT,
-                QRedisConfig.DEFAULT_TIME_OUT, QRedisConfig.PASSWORD);
+                QRedisConfig.DEFAULT_TIME_OUT, password);
     }
 
 
@@ -53,6 +59,10 @@ public class QRedisUtil {
         if(pool != null) {
             pool.destroy();
         }
+    }
+
+    public static String generateLunaRedisKey(String key) {
+        return QRedisConfig.KEY_PREFIX + key;
     }
 
 

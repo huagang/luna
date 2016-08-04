@@ -219,7 +219,6 @@ public final class FastJsonUtil {
 	}
 
 	public static JSONObject sucess(String msg, Object data) {
-		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
@@ -228,7 +227,6 @@ public final class FastJsonUtil {
 	}
 	public static JSONObject sucessWithMsg(String key, Object data, Object... params) {
 		String msg = MsLunaMessage.getInstance().getMessage(key, params);
-		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
@@ -237,7 +235,6 @@ public final class FastJsonUtil {
 	}
 	
 	public static JSONObject sucess(String msg) {
-		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
@@ -246,7 +243,6 @@ public final class FastJsonUtil {
 	}
 	public static JSONObject sucessWithMsg(String key, Object... params) {
 		String msg = MsLunaMessage.getInstance().getMessage(key, params);
-		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);
@@ -255,7 +251,6 @@ public final class FastJsonUtil {
 	}
 
 	public static JSONObject sucess(String msg, String data) {
-		MsLogger.info(msg, 1);
 		JSONObject result = new JSONObject();
 		result.put("code", "0");
 		result.put("msg", msg);

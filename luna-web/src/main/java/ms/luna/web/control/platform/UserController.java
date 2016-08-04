@@ -1,14 +1,19 @@
 package ms.luna.web.control.platform;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.sc.LunaUserService;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.util.RequestHelper;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -23,6 +28,9 @@ public class UserController extends BasicController {
 
     private final static Logger logger = Logger.getLogger(UserController.class);
 
+    @Autowired
+    private LunaUserService lunaUserService;
+
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView indexPage() {
         ModelAndView modelAndView = buildModelAndView("login");
@@ -30,19 +38,16 @@ public class UserController extends BasicController {
         return modelAndView;
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = "q")
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public JSONObject searchUser(String q,
-                                 @RequestParam(required = false) Integer offset,
-                                 @RequestParam(required = false) Integer limit) {
+    public JSONObject searchUser(@RequestParam(required = false) Integer offset,
+                                 @RequestParam(required = false) Integer limit,
+                                 HttpServletRequest request) {
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "陈尚安");
-        jsonObject.put("q", q);
+        String keyword = RequestHelper.getString(request, "keyword");
+        JSONObject userList = lunaUserService.getUserList(0, keyword, offset, limit);
 
-        logger.info("search user");
-
-        return jsonObject;
+        return userList;
     }
 
 }
