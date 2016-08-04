@@ -39,6 +39,7 @@
     </div>
   </div>
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/deep-diff/deep-diff-0.3.3.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/formComponent.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/edit_farmhouse.js"></script>

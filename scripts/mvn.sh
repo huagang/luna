@@ -21,7 +21,7 @@ mvn clean package install
 
 cd ..
 cd luna-service-common
-mvn clean package install -P dev
+mvn clean package install -P dev -DskipTests
 
 cd ..
 cd luna-service-impl
@@ -30,4 +30,4 @@ mvn clean package -P dev
 
 cd ..
 cd luna-web
-mvn clean package -P dev 
+mvn clean package -P dev -DskipTests

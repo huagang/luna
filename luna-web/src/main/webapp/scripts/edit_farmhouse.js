@@ -46,7 +46,7 @@ $(function(){
 
         function initComponents(){
             that._component = new window.FormComponent.BaseComponent({
-                defination: that.formData,
+                definition: that.formData,
                 value: ''
             });
             that._component.render('.auto-form');
@@ -92,20 +92,147 @@ $(function(){
                 formData: [
                     {
                         "value": "",
-                        "defination": {
+                        "definition": {
                             "show_name": "启动页背景图",
                             "display_order": 1,
                             "extension_attrs": [],
-                            "limit": {
-                                "ext": [
-                                    "png",
-                                    "jpg"
-                                ],
-                                "max": 1
+                            "limits": {
+                                'PIC':{
+                                    "ext": [
+                                        "png",
+                                        "jpg"
+                                    ],
+                                    "max": 1
+                                }
                             },
                             "type": "PIC",
                             "name": "start_page_background_pic"
                         }
+                    },
+                    {
+                        "definition": {
+                            "show_name": "经营者自述",
+                            "display_order": 2,
+                            "name": "manager_self_introduction",
+                            "extension_attrs": [],
+                            "type": "TEXTAREA",
+                            playceholder: '哈哈哈',
+                            "limits": {
+                                'TEXTAREA':{
+                                    "max": 1024
+                                }
+                            }
+                        },
+                        "value": ""
+                    },
+                    {
+                        "definition":{
+                            type: 'DIVIDER',
+                            "display_order": 3
+
+                        }
+                    },
+                    {
+                        "definition": {
+                            "show_name": "精选房间全景标识",
+                            "display_order": 5,
+                            "name": "well_chosen_room_panorama_type",
+                            "extension_attrs": [
+                                {
+                                    value: "1",
+                                    text:"单场景点"
+                                },
+                                {
+                                    value: "2",
+                                    text:"相册"
+                                },
+                                {
+                                    value: "3",
+                                    text: "自定义接口"
+                                }
+                            ],
+                            "type": "RADIO_TEXT",
+                            "limits": {
+                                "TEXT": {
+                                    "max": 255
+                                }
+                            }
+                        },
+                        "value": {}
+                    },
+
+                    {
+                        "definition": {
+                            "show_name": "美食",
+                            "display_order": 7,
+                            "name": "delicacy",
+                            "extension_attrs": [],
+                            "type": "TEXT_PIC_GROUP",
+                            "limits": {
+                                "TEXT": {
+                                    "max": 255
+                                },
+                                "PIC": {
+                                    "ext": [
+                                        "png",
+                                        "jpg"
+                                    ],
+                                    "max": 20
+                                },
+                                'num': 2,
+                                'maxNum': 5
+                            }
+                        },
+                        "value": []
+                    },
+                    {
+                        "definition": {
+                            "show_name": "场地设施",
+                            "display_order": 9,
+                            "name": "facility",
+                            "extension_attrs": [
+                                {
+                                    value:'1',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'2',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'3',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'4',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'5',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'6',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'7',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'8',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'9',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'10',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'11',
+                                    label: "facility1facility1"
+                                },{
+                                    value:'12',
+                                    label: "facility1facility1"
+                                },
+
+                            ],
+                            "type": "CHECKBOX"
+                        },
+                        "value": []
                     }
 
                 ]
