@@ -1025,7 +1025,7 @@ $(document).ready(function () {
                                     + '<span>导航</span>'
                                     + '</a>'
                                     + '<a class="nav-item ' + (panoLink ? '' : "hidden") + '" href="' + panoLink + '">'
-                                    + '<img class="img" src="' + host + '../resources/images/pano-white.png"/>'
+                                    + '<img class="img" src="' + host + '/resources/images/pano-white.png"/>'
                                     + '<span>全景</span>'
                                     + '</a>'
                                     + '</div>'
