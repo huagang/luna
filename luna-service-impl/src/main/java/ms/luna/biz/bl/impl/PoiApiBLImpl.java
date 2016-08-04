@@ -581,7 +581,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 			JSONObject pois_en = new JSONObject();
 			pois_en.put("pois", poiArray_en);
-			data.put(POI.EN, poiArray_en);
+			data.put(POI.EN, pois_en);
 		}
 		return FastJsonUtil.sucess("success", data);
 
