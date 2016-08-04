@@ -872,11 +872,11 @@ $(document).ready(function () {
                     '<div class="menulist ' + (that.menuIndex == index ? 'current' : '') + '" item="profile" data-index="' + index + '">'
                     + '<div class="menulist-img" >'
                     // + '<div class="menuiconbg"  style="'+defaultBgStyle+'" >'
-                    + '<i class="icon iconfont icon-' + item.icon.code + '" style="' + defaultFontColor + defaultBgStyle + '"></i>'
-                    + '<i class="icon iconfont icon-' + item.icon.code + ' current" style="' + currentFontColor + currentBgStyle + '"></i>'
+                    + '<i class="icon iconfont icon-' + item.icon.code + '" style="' + defaultFontColor + defaultBgStyle + '">'+(item.icon.type=='text'? '<div class="icon-title">' +item.name+'</div>':'')+'</i>'
+                    + '<i class="icon iconfont icon-' + item.icon.code + ' current" style="' + currentFontColor + currentBgStyle + '">'+(item.icon.type=='text'? '<div class="icon-title">' +item.name+'</div>':'')+'</i>'
                     // + '</div>'
                     + '</div>'
-                    + '<span class="menulist-title">' + item.name + '</span>'
+                    + '<span class="menulist-title">' + (item.icon.type !='text'?item.name:'') + '</span>'
                     + '<span class="border" style="' + currentBgStyle + '"></span>'
                     + '</div>';
                 labsHtml += html;
@@ -1025,7 +1025,7 @@ $(document).ready(function () {
                                     + '<span>导航</span>'
                                     + '</a>'
                                     + '<a class="nav-item ' + (panoLink ? '' : "hidden") + '" href="' + panoLink + '">'
-                                    + '<img class="img" src="' + host + '../resources/images/pano-white.png"/>'
+                                    + '<img class="img" src="' + host + '/resources/images/pano-white.png"/>'
                                     + '<span>全景</span>'
                                     + '</a>'
                                     + '</div>'
