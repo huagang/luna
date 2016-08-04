@@ -36,7 +36,7 @@ var Inter = function() {
                 customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
 
                 //腾讯导航调用接口
-                qqNavStoEnd:'http://map.qq.com/m/mqq/nav/transport=2&spointy={0}&spointx={1}&epointy={2}&epointx={3}&eword={4}?key=TKUBZ-D24AF-GJ4JY-JDVM2-IBYKK-KEBCU&referer=weijing&ch=uri-api&ADTAG=uri-api.weijing', // 0:开始纬度 1:开始经度 2:结束纬度 3:结束经度 4:终点名称
+                qqNavStoEnd:'http://map.qq.com/m/mqq/nav/transport=2&spointy={0}&spointx={1}&epointy={2}&epointx={3}&eword={4}', // 0:开始纬度 1:开始经度 2:结束纬度 3:结束经度 4:终点名称
              };
         }
     };
