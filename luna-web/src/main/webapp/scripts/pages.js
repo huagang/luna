@@ -376,10 +376,11 @@ function getUrlParam(name) {
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
     var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
-    radioDom.forEach(function (v, i) {
-        v.removeAttribute('checked');
-        v.removeAttribute('disabled');
-    });
+    for(var i =0 ;i<radioDom.length;i++){
+        radioDom[i].removeAttribute('checked');
+        radioDom[i].removeAttribute('disabled');
+    }
+    
     // $("#modify_page_id").val('');
     // $("#txt-name").val('');
     // $("#txt-short").val('');
@@ -594,8 +595,10 @@ function createPageListItemHtml(page) {
     pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
     pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
     pageHtml.push('<div class="fun-page">');
-    pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
-    pageHtml.push('<a href="#" class="delete" page_id="' + page.page_id + '" onclick="deletePageDialog(\'' + page.page_id + '\');">删除<i class="icon icon-delete"></i></a>');
+    if (page.page_code != 'welcome' && page.page_code != 'index') {
+        pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
+        pageHtml.push('<a href="#" class="delete" page_id="' + page.page_id + '" onclick="deletePageDialog(\'' + page.page_id + '\');">删除<i class="icon icon-delete"></i></a>');
+    }
     pageHtml.push('</div></div></li>');
     return pageHtml.join("");
 
