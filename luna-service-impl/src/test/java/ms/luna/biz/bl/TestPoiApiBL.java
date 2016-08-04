@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.fastjson.JSONArray;
+import ms.luna.biz.util.FastJsonUtil;
 import org.apache.log4j.Logger;
+import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -55,7 +58,7 @@ public class TestPoiApiBL {
 		JSONObject param = new JSONObject();
 		Double lng = 116.3568879999999979;
 		Double lat = 39.9633070000000004;
-		Double radius = Double.parseDouble("100000");
+		Double radius = Double.parseDouble("1000");
 		String lang = "zh";
 		String fields = "poi_name,lnglat,address";
 		Integer number = 20;
@@ -82,6 +85,23 @@ public class TestPoiApiBL {
 		param.put("fields", fields);
 		JSONObject result = poiApiBL.getPoisByActivityId(param.toString());
 		System.out.println(result.toString());
+	}
+
+	@Test
+	public void testDocumentAndBasitDBObject(){
+		JSONObject result = poiApiBL.test();
+
+
+	}
+
+	public static void main(String[] args) {
+		JSONObject jsonObject = new JSONObject();
+		String[] tags = new String[]{"1", "2"};
+		jsonObject.put("tags", tags);
+		System.out.println(jsonObject.toString());
+
+		FastJsonUtil.parse2Array(jsonObject.get("tags")).getInteger(0);
+
 	}
 
 }
