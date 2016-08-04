@@ -973,6 +973,8 @@ a.wj-img-clc {
     text-overflow: ellipsis;
     line-height: 48px;
     color: #e5383a;
+    font-style: normal;
+    display: inline-block;
 }
 
 .dropdown {
