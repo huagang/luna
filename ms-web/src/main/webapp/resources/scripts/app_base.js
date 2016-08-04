@@ -304,7 +304,8 @@ $(document).ready(function () {
             }
         } else {
             if (document.referrer) {
-                location.href = document.referrer + '?disableWelcome=true';
+                window.history.go(-1);
+                // location.href = document.referrer + '?disableWelcome=true';
             } else {
                 location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1] + '?disableWelcome=true';
             }
