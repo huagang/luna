@@ -1249,11 +1249,11 @@
                                             </option>
                                         </select>
                         </div>
-                        <div ng-show="menuTab.currentTab.type == 'articleList'">列表样式:
+                        <!--<div ng-show="menuTab.currentTab.type == 'articleList'">列表样式:
                           <select name="" id="" ng-model="menuTab.currentTab.pageStyle.type" ng-options="style.name for style in menuTab.pageListStyle track by style.id" ng-change="menuTab.changePageStyle()">
                             <option value="">请选择</option>
                           </select>
-                        </div>
+                        </div>-->
                       </div>
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
                         <div>一级Poi
