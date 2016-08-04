@@ -1208,7 +1208,9 @@ function showNav(posiData) {
             objdata.destPosition = posiData;
             getMyLocation();
         } else {
-            url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng + "%2C" + posiData.navStartLat + "&dest=" + posiData.navEndLng + "%2C" + posiData.navEndLat + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+            
+            // url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng + "%2C" + posiData.navStartLat + "&dest=" + posiData.navEndLng + "%2C" + posiData.navEndLat + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+            url= Util.strFormat(Inter.getApiUrl().qqNavStoEnd,[posiData.navStartLat,posiData.navStartLng, posiData.navEndLat,posiData.navEndLng,posiData.navEndName]);
             window.location.href = url;
         }
     } else {
