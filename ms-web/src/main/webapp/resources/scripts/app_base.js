@@ -1158,7 +1158,7 @@ $(document).ready(function () {
         }
 
         function handleMenuClick(event) {
-            var index = parseInt(event.target.parentNode.parentNode.getAttribute('data-index'));
+            var index = $(event.target).closest('.menulist').data('index');
             if (index == that.menuIndex) {
                 return;
             }

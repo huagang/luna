@@ -148,6 +148,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             if(msArticles != null && msArticles.size() == 1) {
                 JSONObject ret = new JSONObject();
                 ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
+                ret.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticles.get(0).getId());
                 return FastJsonUtil.sucess("新建文章成功", ret);
             }
         } catch (Exception ex) {

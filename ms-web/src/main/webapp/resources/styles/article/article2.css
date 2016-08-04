@@ -21,6 +21,7 @@ html,body{
 	background-color: #fff;
 	position: relative;
 	height: 100%;
+	/* overflow: hidden; */
 }
 .wrapper > div{
 	flex-shrink: 0;
@@ -51,15 +52,17 @@ html,body{
 }
 .toolbar{
 	/* height: 56px; */
-	background-color: white;
+	/* background-color: white; */
 	position: absolute;
 	/* padding: 0 10px; */
 	/* border-bottom: 1px solid #dee0e3; */
 	right: 0;
+	top: 178px;
 }
 .title-wrapper{
-	padding: 15px 0 15px 15px;
+	padding: 15px 15px 15px 15px;
 	border-bottom: 1px solid #dee0e3;
+	width: 100%;
 }
 .title-wrapper .title{
 	color: #333;
@@ -84,7 +87,7 @@ html,body{
 	width: auto;
 	position: relative;
 	/* padding: 12px 5px; */
-	top: -22px;
+	/* top: -22px; */
 	margin-right: 15px;
 }
 /*.icon{
@@ -152,6 +155,7 @@ html,body{
 }
 .video-js{
 	margin:0 auto;
+	max-width: 100%;
 }
 .go-top {
     background: url('../../images/hjm/goTop.png') no-repeat;

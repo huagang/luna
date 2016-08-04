@@ -46,7 +46,7 @@
 		                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
 		                </div>
 		                <div class="group article-head-pic">
-		                    <p class="group-title">文章头图 <span>建议尺寸666*666</span> </p>
+		                    <p class="group-title">文章头图 <span>建议尺寸 600x320</span> </p>
 		                    <div class="pic-upload">
 		                        <div class="pic-upload-left">
 		                            <span class="btn fileinput-button" title='文件大小不超过1M'>

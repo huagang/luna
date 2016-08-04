@@ -277,8 +277,7 @@ var initPage = function() {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
-
+                            articleStore.previewUrl = data.data.url+'?preview';
                         }
                         alert("保存文章成功");
                     } else {
@@ -442,7 +441,7 @@ var initPage = function() {
             video: '',
             category: $("#category option:first-child").val() || '',
             business_id: business_id,
-            previewUrl: id ? "../show_article.do?method=init&article_id=" + id : '',
+            previewUrl: '',
             checkEmpty: function() {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
@@ -511,11 +510,13 @@ var initPage = function() {
                         { serverName: 'abstract_pic', storeName: 'thumbnail' },
                         { serverName: 'abstract_content', storeName: 'summary' },
                         { serverName: 'short_title', storeName: 'short_title' },
+                        { serverName: 'url', storeName: 'previewUrl' },
                     ];
                     data = data.data;
                     nameMapping.forEach(function(item) {
                         articleStore[item.storeName] = data[item.serverName];
                     });
+                    articleStore.previewUrl +='?preview';
                     insertArticleData();
                 } else {
                     console.log("请求文章数据失败");
