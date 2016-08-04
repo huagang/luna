@@ -119,7 +119,7 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_name") String pageName,
 			@RequestParam(required=true, value="page_code") String pageCode,
 			@RequestParam(required=true, value="page_type" ) int pageType,
-			@RequestParam(required=true, value="page_height" ) int pageHeight,
+			@RequestParam(required=false, value="page_height" ) int pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -210,7 +210,7 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_code") String pageCode,
 			@RequestParam(required=true, value="page_order") int pageOrder,
 			@RequestParam(required=true, value="page_type" ) int pageType,
-			@RequestParam(required=true, value="page_height" ) int pageHeight,
+			@RequestParam(required=false, value="page_height" ) int pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
