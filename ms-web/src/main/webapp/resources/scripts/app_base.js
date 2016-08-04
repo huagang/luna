@@ -716,7 +716,10 @@ $(document).ready(function () {
             that.myScroll.on('scroll', that.checkScroll);
             that.myScroll.on('scrollEnd', that.checkScroll);
 
-            that.content.on('touchmove', function (e) { e.preventDefault(); }, false);
+            //因为修复滚动效果，屏蔽该段代码
+            // that.content.on('touchmove', function (e) {
+            //     e.preventDefault();
+            // }, false);
 
             that.content.on('transitionend', function (event) {
                 if (that.content.hasClass('transparent')) {
