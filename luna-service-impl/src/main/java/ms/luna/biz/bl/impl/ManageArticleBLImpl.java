@@ -123,6 +123,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
+        jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
         // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
         jsonObject.put(MsArticleTable.FIELD_STATUS, msArticle.getStatus() ? 1 : 0);
 
