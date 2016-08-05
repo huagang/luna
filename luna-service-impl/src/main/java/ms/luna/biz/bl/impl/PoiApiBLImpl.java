@@ -16,6 +16,7 @@ import java.util.logging.Filter;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
@@ -135,6 +136,10 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 			// 兼容性代码--type
 			api2db_nm.put("types", "types");
+
+			// 新增字段:poi预览地址
+			api2db_nm.put("preview_url", "preview_url");
+
 		}
 		
 		// ---------------一级类别与下属私有字段集合的映射关系---------------
@@ -173,7 +178,9 @@ public class PoiApiBLImpl implements PoiApiBL {
 				commonFields.add(field_name);
 			}
 			// 公共字段有一个特例：sub_tag。sub_tag存在mongo中而不存在mysql中
+			// 根据业务需求,新增加一个预览字段
 			commonFields.add("sub_tag");
+			commonFields.add("preview_url");
 		}
 		
 	}
@@ -1365,6 +1372,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			return result;
 		}
 		int tag_id = FastJsonUtil.parse2Array(poi.get("tags")).getIntValue(0);
+		String poi_id = poi.getObjectId("_id").toString();
 		// 数据库存在字段信息
 		Map<Integer, Map<String, String>> poiTags = getPoiTagsLst();
 		Map<Integer, Map<String, String>> poiTypes = getPoiTypeId2NmLst();
@@ -1547,10 +1555,14 @@ public class PoiApiBLImpl implements PoiApiBL {
 				if("types".equals(field)) {
 					continue;
 				}
+				if("preview_url".equals(field)) {
+					result.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + poi_id);
+					continue;
+				}
 				result.put(convertDbField2ApiField(field), "");
 			}
 		}
-		result.put("poi_id", poi.getObjectId("_id").toString());
+		result.put("poi_id", poi_id);
 
 		return result;
 	}
@@ -1565,6 +1577,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 		List<String> fields = new ArrayList<>();
 		// 加入公共字段
 		fields.addAll(commonFields);
+		// 加入私有字段
 		List<String> privateFields = poiTag2PrivateField.get(tag_id);
 		if(privateFields != null) {
 			fields.addAll(privateFields);
