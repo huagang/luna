@@ -8,7 +8,7 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="limits" jdbcType="VARCHAR" property="limits" />
     <result column="placeholder" jdbcType="VARCHAR" property="placeholder" />
-    <result column="extension_attrs" jdbcType="VARCHAR" property="extensionAttrs" />
+    <result column="options" jdbcType="VARCHAR" property="options" />
     <result column="regist_hhmmss" jdbcType="TIMESTAMP" property="registHhmmss" />
     <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
   </resultMap>
@@ -38,7 +38,7 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    name, show_name, display_order, type, limits, placeholder, extension_attrs, regist_hhmmss, 
+    name, show_name, display_order, type, limits, placeholder, options, regist_hhmmss, 
     up_hhmmss
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.MsFarmFieldCriteria" resultMap="BaseResultMap">
@@ -63,10 +63,10 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsFarmField">
     insert into ms_farm_field (name, show_name, display_order, type, 
-      limits, placeholder, extension_attrs, regist_hhmmss, 
+      limits, placeholder, options, regist_hhmmss, 
       up_hhmmss)
     values (#name:VARCHAR#, #showName:VARCHAR#, #displayOrder:INTEGER#, #type:VARCHAR#, 
-      #limits:VARCHAR#, #placeholder:VARCHAR#, #extensionAttrs:VARCHAR#, #registHhmmss:TIMESTAMP#, 
+      #limits:VARCHAR#, #placeholder:VARCHAR#, #options:VARCHAR#, #registHhmmss:TIMESTAMP#, 
       #upHhmmss:TIMESTAMP#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsFarmField">
@@ -90,8 +90,8 @@
       <isNotNull prepend="," property="placeholder">
         placeholder
       </isNotNull>
-      <isNotNull prepend="," property="extensionAttrs">
-        extension_attrs
+      <isNotNull prepend="," property="options">
+        options
       </isNotNull>
       <isNotNull prepend="," property="registHhmmss">
         regist_hhmmss
@@ -121,8 +121,8 @@
       <isNotNull prepend="," property="placeholder">
         #placeholder:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="extensionAttrs">
-        #extensionAttrs:VARCHAR#
+      <isNotNull prepend="," property="options">
+        #options:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="registHhmmss">
         #registHhmmss:TIMESTAMP#
@@ -158,8 +158,8 @@
       <isNotNull prepend="," property="record.placeholder">
         placeholder = #record.placeholder:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.extensionAttrs">
-        extension_attrs = #record.extensionAttrs:VARCHAR#
+      <isNotNull prepend="," property="record.options">
+        options = #record.options:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="record.registHhmmss">
         regist_hhmmss = #record.registHhmmss:TIMESTAMP#
@@ -180,7 +180,7 @@
       type = #record.type:VARCHAR#,
       limits = #record.limits:VARCHAR#,
       placeholder = #record.placeholder:VARCHAR#,
-      extension_attrs = #record.extensionAttrs:VARCHAR#,
+      options = #record.options:VARCHAR#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#
     <isParameterPresent>

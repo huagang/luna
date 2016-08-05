@@ -5,6 +5,8 @@ package ms.luna.biz.table;
  */
 public class MsFarmFieldTable {
 
+    public static final String DIVIDER = "divider";
+
     public static final String FIELDS = "fields";
 
     public static final String FIELD_VALUE = "value";
@@ -23,7 +25,7 @@ public class MsFarmFieldTable {
 
     public static final String FIELD_PLACEHOLDER = "placeholder";
 
-    public static final String FIELD_EXTENSION_ATTRS = "extension_attrs";
+    public static final String FIELD_OPTIONS = "options";
 
     public static final String FIELD_REGIST_HHMMSS = "regist_hhmmss";
 

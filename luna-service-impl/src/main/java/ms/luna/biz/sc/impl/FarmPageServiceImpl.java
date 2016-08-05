@@ -3,7 +3,6 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import ms.luna.biz.bl.impl.ManageShowAppBLImpl;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.cons.VbConstant.fieldType;
@@ -27,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by greek on 16/7/25.
@@ -43,6 +43,9 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     @Autowired
     private MsFarmPageDAO msFarmPageDAO;
+
+    private static int[] divider = new int[]{2,4,6,7,8};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
+    // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
 
     @Override
     public JSONObject initPage(String json) {
@@ -65,6 +68,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             JSONObject data = new JSONObject();
             data.put(MsShowAppDAO.FIELD_APP_ID, appId);
             data.put(MsFarmFieldTable.FIELDS, fields.getJSONArray(MsFarmFieldTable.FIELDS));
+            data.put(MsFarmFieldTable.DIVIDER, divider);
             MsLogger.debug("Init app page. " + data.toString());
             return FastJsonUtil.sucess("success", data);
         } catch (Exception e) {
@@ -162,9 +166,11 @@ public class FarmPageServiceImpl implements FarmPageService {
             String field_name = field.getName();
             String field_type = field.getType();
             String field_limit = field.getLimits();
-            String extension_attrs = field.getExtensionAttrs();
+            String field_placeholder = field.getPlaceholder();
+            String extension_attrs = field.getOptions();
             field_def.put(MsFarmFieldTable.FIELD_LIMITS, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
-            field_def.put(MsFarmFieldTable.FIELD_EXTENSION_ATTRS, convertExtensionAttrs2Json(extension_attrs, field_type));
+            field_def.put(MsFarmFieldTable.FIELD_PLACEHOLDER, JSONObject.parseObject(field_placeholder));
+            field_def.put(MsFarmFieldTable.FIELD_OPTIONS, convertOptionsString2Json(extension_attrs, field_type));
 
             // 添加字段值
             Object field_val = getFieldValFromDoc(document, field_name, field_type);
@@ -181,24 +187,56 @@ public class FarmPageServiceImpl implements FarmPageService {
     /**
      * 将extension_attrs字段数据根据不同类型转化为指定格式信息.jsonarry, jsonobject, String
      *
-     * @param extension_attrs 拓展属性
+     * @param options 拓展属性
      * @param type 字段类型
      * @return Object
      */
-    private Object convertExtensionAttrs2Json(String extension_attrs, String type) {
+    private Object convertOptionsString2Json(String options, String type) {
+        // 把{"1":"a"}这种形式变为{"value":"1", "label":"a"}
+
         if (fieldType.RADIO_TEXT.equals(type)) { // eg:全景
-            return JSONArray.parseArray(extension_attrs);
+            return this.convertOptions2JSONArray(JSONArray.parseArray(options), "value", "label");
         }
         if (fieldType.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
-            return JSONArray.parseArray(extension_attrs);
+            return this.modifyJSONArray(JSONArray.parseArray(options), "name", "pic");
         }
         if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
-            return JSONArray.parseArray(extension_attrs);
+            return this.modifyJSONArray(JSONArray.parseArray(options), "value", "label");
         }
         // TODO
         return new JSONArray();
     }
 
+    // 将[[{"1","a"},{"2","b"}],[{"1","a"},{"2","b"}]]这种形式变为
+    // [[{"key":"1","value":"a"},{"key":"2","value":"b"}],[{"key":"1","value":"a"},{"key":"2","value":"b"}]]
+    private JSONArray convertOptions2JSONArray(JSONArray array, String key, String value) {
+        for(int i = 0; i< array.size(); i++) {
+            JSONArray subArray = array.getJSONArray(0);
+            subArray = modifyJSONArray(subArray, key, value);
+            array.set(i, subArray);
+        }
+        return array;
+    }
+
+    // 将{"1":"a"}变为{"key":"1", "value":"a"}
+    private JSONArray modifyJSONArray(JSONArray jsonArray, String key, String value) {
+        JSONArray result = new JSONArray();
+        for(int i = 0; i<jsonArray.size(); i++) {
+            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+            Set<String> sets = jsonObject1.keySet();
+            JSONObject jsonObject2 = new JSONObject();
+            for(String set : sets) {
+                jsonObject2.put(key, set);
+                jsonObject2.put(value, jsonObject1.getString(set));
+            }
+            result.add(jsonObject2);
+        }
+        return result;
+
+    }
+
+    
+    
     /**
      * 获取字段值
      *

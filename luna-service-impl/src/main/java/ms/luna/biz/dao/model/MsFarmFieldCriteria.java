@@ -637,85 +637,85 @@ public class MsFarmFieldCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsIsNull() {
-            addCriterion("extension_attrs is null");
+        public Criteria andOptionsIsNull() {
+            addCriterion("options is null");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsIsNotNull() {
-            addCriterion("extension_attrs is not null");
+        public Criteria andOptionsIsNotNull() {
+            addCriterion("options is not null");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsEqualTo(String value) {
+        public Criteria andOptionsEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs =", value, "extensionAttrs");
+            addCriterion("options =", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsNotEqualTo(String value) {
+        public Criteria andOptionsNotEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs <>", value, "extensionAttrs");
+            addCriterion("options <>", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsGreaterThan(String value) {
+        public Criteria andOptionsGreaterThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs >", value, "extensionAttrs");
+            addCriterion("options >", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsGreaterThanOrEqualTo(String value) {
+        public Criteria andOptionsGreaterThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs >=", value, "extensionAttrs");
+            addCriterion("options >=", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsLessThan(String value) {
+        public Criteria andOptionsLessThan(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs <", value, "extensionAttrs");
+            addCriterion("options <", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsLessThanOrEqualTo(String value) {
+        public Criteria andOptionsLessThanOrEqualTo(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs <=", value, "extensionAttrs");
+            addCriterion("options <=", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsLike(String value) {
+        public Criteria andOptionsLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs like", value, "extensionAttrs");
+            addCriterion("options like", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsNotLike(String value) {
+        public Criteria andOptionsNotLike(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("extension_attrs not like", value, "extensionAttrs");
+            addCriterion("options not like", value, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsIn(List<String> values) {
+        public Criteria andOptionsIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("extension_attrs in", values, "extensionAttrs");
+            addCriterion("options in", values, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsNotIn(List<String> values) {
+        public Criteria andOptionsNotIn(List<String> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("extension_attrs not in", values, "extensionAttrs");
+            addCriterion("options not in", values, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsBetween(String value1, String value2) {
+        public Criteria andOptionsBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("extension_attrs between", value1, value2, "extensionAttrs");
+            addCriterion("options between", value1, value2, "options");
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsNotBetween(String value1, String value2) {
+        public Criteria andOptionsNotBetween(String value1, String value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("extension_attrs not between", value1, value2, "extensionAttrs");
+            addCriterion("options not between", value1, value2, "options");
             return (Criteria) this;
         }
 
@@ -889,9 +889,9 @@ public class MsFarmFieldCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andExtensionAttrsLikeInsensitive(String value) {
+        public Criteria andOptionsLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
-            addCriterion("upper(extension_attrs) like", value.toUpperCase(), "extensionAttrs");
+            addCriterion("upper(options) like", value.toUpperCase(), "options");
             return (Criteria) this;
         }
 

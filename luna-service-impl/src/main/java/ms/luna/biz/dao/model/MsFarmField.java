@@ -7,7 +7,7 @@ import ms.luna.biz.table.MsFarmFieldTable;
 import java.io.Serializable;
 import java.util.Date;
 
-@JSONType(ignores={"registHhmmss","upHhmmss","extensionAttrs","limits"})
+@JSONType(ignores={"registHhmmss","upHhmmss","options","placeholder","limits"})
 public class MsFarmField implements Serializable {
     @JSONField(name = MsFarmFieldTable.FIELD_NAME)
     private String name;
@@ -21,8 +21,8 @@ public class MsFarmField implements Serializable {
     private String limits;
     @JSONField(name = MsFarmFieldTable.FIELD_PLACEHOLDER)
     private String placeholder;
-    @JSONField(name = MsFarmFieldTable.FIELD_EXTENSION_ATTRS)
-    private String extensionAttrs;
+    @JSONField(name = MsFarmFieldTable.FIELD_OPTIONS)
+    private String options;
     @JSONField(name = MsFarmFieldTable.FIELD_REGIST_HHMMSS)
     private Date registHhmmss;
     @JSONField(name = MsFarmFieldTable.FIELD_UP_HHMMSS)
@@ -78,12 +78,12 @@ public class MsFarmField implements Serializable {
         this.placeholder = placeholder == null ? null : placeholder.trim();
     }
 
-    public String getExtensionAttrs() {
-        return extensionAttrs;
+    public String getOptions() {
+        return options;
     }
 
-    public void setExtensionAttrs(String extensionAttrs) {
-        this.extensionAttrs = extensionAttrs == null ? null : extensionAttrs.trim();
+    public void setOptions(String options) {
+        this.options = options == null ? null : options.trim();
     }
 
     public Date getRegistHhmmss() {
@@ -120,7 +120,7 @@ public class MsFarmField implements Serializable {
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getLimits() == null ? other.getLimits() == null : this.getLimits().equals(other.getLimits()))
             && (this.getPlaceholder() == null ? other.getPlaceholder() == null : this.getPlaceholder().equals(other.getPlaceholder()))
-            && (this.getExtensionAttrs() == null ? other.getExtensionAttrs() == null : this.getExtensionAttrs().equals(other.getExtensionAttrs()))
+            && (this.getOptions() == null ? other.getOptions() == null : this.getOptions().equals(other.getOptions()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()));
     }
@@ -135,7 +135,7 @@ public class MsFarmField implements Serializable {
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getLimits() == null) ? 0 : getLimits().hashCode());
         result = prime * result + ((getPlaceholder() == null) ? 0 : getPlaceholder().hashCode());
-        result = prime * result + ((getExtensionAttrs() == null) ? 0 : getExtensionAttrs().hashCode());
+        result = prime * result + ((getOptions() == null) ? 0 : getOptions().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         return result;
@@ -143,6 +143,6 @@ public class MsFarmField implements Serializable {
 
     @Override
     public String toString() {
-        return "MsFarmField [name=" + name + ",showName=" + showName + ",displayOrder=" + displayOrder + ",type=" + type + ",limits=" + limits + ",placeholder=" + placeholder + ",extensionAttrs=" + extensionAttrs + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + "]";
+        return "MsFarmField [name=" + name + ",showName=" + showName + ",displayOrder=" + displayOrder + ",type=" + type + ",limits=" + limits + ",placeholder=" + placeholder + ",options=" + options + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + "]";
     }
 }
