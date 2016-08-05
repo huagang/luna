@@ -936,11 +936,10 @@
 
         that.updateComponent = updateComponent;
 
-        // 输入框内容改变
-        that.handleTextChange = handleTextChange;
-
         // 选择选项
-        that.handleOptionConfirm = handleOptionConfirm;
+        that.handleSelect = handleSelect;
+
+        that.addItem = addItem;
 
         // 删除已经选择项
         that.handleDelete = handleDelete;
@@ -951,35 +950,94 @@
         that.init();
 
         function init() {
-            that.defautNum = 3;
 
-            that.data.value = that.data.value || {};
+            that.data.value = that.data.value || [];
             that.value = that.data.value;
             that.definition = that.data.definition || {};
             that.definition.limits.num = that.definition.limits.num || that.defautNum;
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
-
+            that._template = '<select class="text-select"></select> \
+                <div class=""></div>\
+                <div class="item-container">\
+                    <div class="item">\
+                        <div style="pic-wrapper">\
+                            <div class="pic" style="background-color: #999">\
+                            </div>\
+                            <p class="item-name"></p>\
+                        </div>\
+                    </div>\
+                \
+                </div>'
+            ;
+            that._children = {};
+            if(that.definition.show_name){
+                that._children.label = new Label({
+                    definition: {
+                        show_name: that.definition.show_name
+                    }
+                });
+            }
         }
 
         function render(){
-
+            if (!that._component) {
+                that._component = document.createElement('div');
+                that.element = $(that._component);
+                that._component.className = 'country-enjoyment component';
+                that._component.innerHTML = that._template;
+                that.element.prepend(that._children.label.render());
+                if(that.definition.extension_attrs){
+                    if(! that.selectizeInitialed){
+                        that.selectizeInitialed = true;
+                        that.element.find('.text-select').selectize({
+                            options: that.definition.extension_attrs,
+                            labelField: 'label',
+                            searchField: ['label'],
+                            onChange: that.handleSelect
+                        });
+                    }
+                }
+                that._bindEvent();
+            }
+            return that._component;
         }
 
         function updateComponent(){
 
         }
 
-        function handleTextChange(){
+        function handleSelect(value){
+            var notFound = that.value.every(function(item){
+                if(item.value === value){
+                    return false;
+                }
+                return true;
+            });
+            if(notFound){
+                that.definition.extension_attrs.some(function(item){
+                    if(item.value === value){
+                        var newItem = {
+                            value: value,
+                            label: item.label,
+                            pic: ''
+                        };
+                        that.addItem(newItem);
+                        that.value.push(newItem);
+                        return true;
+                    }
+                    return false;
+                });
 
+            }
         }
 
-        function handleOptionConfirm(){
-
-
-        }
 
         function handleDelete(){
 
+        }
+
+        function addItem(item){
+            that.element.find('item-container')
         }
 
         function handleEdit(){
@@ -1057,75 +1115,10 @@
         }
 
         function updateComponent(){
-            if (!that._component) {
-                that._component = document.createElement('div');
-                that.element = $(that._component);
-                that._component.className = 'textselect-list component';
-
-                that._bindEvent();
-            }
-            return that._component;
         }
 
     }
 
-    // 输入筛选框
-    function TextSelect(data){
-        /*  data
-                definition:
-                    options
-
-         */
-        var that = this;
-        that.data = data;
-
-        that.init = init;
-
-        that.render = render;
-
-        that._bindEvent = _bindEvent;
-
-        that.updateComponent = updateComponent;
-
-        // 输入框内容变化
-        that.handleChange = handleChange;
-
-        // 选择内容
-        that.handleSelect = handleSelect;
-
-        that.init();
-
-        function init() {
-            that.data.value = that.data.value || {};
-            that.value = that.data.value;
-            that.definition = that.data.definition || {};
-            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
-            that._children = {};
-            if(that.definition.show_name) {
-                that._children.label = new Label({
-                    definition: {show_name: that.definition.show_name}
-                });
-            }
-
-            
-
-        }
-
-        function render(){
-
-        }
-
-        function handleChange(){
-
-        }
-
-        function handleSelect(){
-
-            if(that.data.onSelect){
-                onSelect.callback();
-            }
-        }
-    }
 
 
     window.FormComponent = {
