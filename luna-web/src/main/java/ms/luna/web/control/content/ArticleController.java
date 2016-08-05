@@ -15,9 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +50,7 @@ public class ArticleController extends BasicController {
     public static final String SEARCH_BUSINESS="method=search_business";
     public static final String PUBLISH_ARTICLE = "method=publish_article";
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -120,31 +118,28 @@ public class ArticleController extends BasicController {
 
     }
 
-    @RequestMapping(params = CREATE_ARTICLE, method = RequestMethod.POST)
-    public void submitCreateArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(method = RequestMethod.POST, value = "")
+    @ResponseBody
+    public JSONObject submitCreateArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         Pair<JSONObject, String> pair = toJson(request, true);
         JSONObject articleJson = pair.getLeft();
         if(pair.getRight() != null) {
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
-            return;
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
         }
         try {
             HttpSession session = request.getSession(false);
             MsUser msUser = (MsUser)session.getAttribute("msUser");
             articleJson.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
-            response.getWriter().print(ret);
-            return;
+            return ret;
         } catch (Exception ex) {
             logger.error("Failed to create article", ex);
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建文章失败，请重试"));
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建文章失败，请重试");
         }
     }
 
-    @RequestMapping(params = CREATE_ARTICLE, method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView createArticle(@RequestParam(required = true, value="business_id") int businessId,
                                       HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -159,31 +154,24 @@ public class ArticleController extends BasicController {
         return modelAndView;
     }
 
-    @RequestMapping(params = READ_ARTICLE)
-    public void readArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
-
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "data")
+    @ResponseBody
+    public JSONObject readArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if(id < 0) {
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法"));
-            return;
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
         }
         try{
             JSONObject ret = manageArticleService.getArticleById(id);
-            response.getWriter().print(ret);
-            return;
+            return ret;
         } catch (Exception ex) {
             logger.error("Failed to read article: " + id, ex);
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "读取文章信息失败"));
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "读取文章信息失败");
         }
     }
 
-    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.GET)
-    public ModelAndView updateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ModelAndView updateArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         JSONObject columnJsonData = manageArticleService.getColumnById(id);
         if(columnJsonData.getString("code").equals("0")) {
@@ -193,20 +181,16 @@ public class ArticleController extends BasicController {
         return modelAndView;
     }
 
-    @RequestMapping(params = UPDATE_ARTICLE, method = RequestMethod.POST)
-    public void submitUpdateArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}")
+    @ResponseBody
+    public JSONObject submitUpdateArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if(id < 0) {
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法"));
-            return;
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
         }
         Pair<JSONObject, String> pair = toJson(request, false);
         if(pair.getRight() != null) {
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight()));
-            return;
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
         }
 
         try{
@@ -216,35 +200,30 @@ public class ArticleController extends BasicController {
             jsonObject.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
-            response.getWriter().print(ret);
-            return;
+            return ret;
         } catch (Exception ex) {
             logger.error("Failed to update article: " + id , ex);
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败，请重试"));
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败，请重试");
 
         }
     }
 
-    @RequestMapping(params = DELETE_ARTICLE)
-    public void deleteArticle(@RequestParam(required = true, value = "id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseBody
+    public JSONObject deleteArticle(@PathVariable int id) throws IOException {
 
         try {
             JSONObject ret = manageArticleService.deleteArticle(id);
-            response.getWriter().print(ret);
+            return ret;
         } catch (Exception ex) {
             logger.error("Failed to delete article", ex);
-            response.getWriter().print(FastJsonUtil.error("-1", "删除失败"));
+            return FastJsonUtil.error("-1", "删除失败");
         }
     }
 
-    @RequestMapping(params = SEARCH_ARTICLE)
-    public void loadArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
-
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    @ResponseBody
+    public JSONObject loadArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int min = RequestHelper.getInteger(request, "offset");
         int max = RequestHelper.getInteger(request, "limit");
         JSONObject jsonQuery = new JSONObject();
@@ -254,49 +233,25 @@ public class ArticleController extends BasicController {
         }
         try {
             JSONObject ret = manageArticleService.loadArticle(jsonQuery.toJSONString());
-            logger.debug(ret);
             if ("0".equals(ret.getString("code"))) {
-                response.getWriter().print(ret.getJSONObject("data"));
-                return;
+                return ret.getJSONObject("data");
             }
         } catch (Exception ex) {
             logger.error("Failed to load column", ex);
         }
-        response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败"));
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败");
 
     }
 
-    @RequestMapping(params = SEARCH_BUSINESS)
-    public void searchBusiness(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
-
-        AreaOptionQueryBuilder.Builder builder = AreaOptionQueryBuilder.builder();
-        builder.newStringParam("province_id", request.getParameter("province_id"));
-        builder.newStringParam("city_id", request.getParameter("city_id"));
-        builder.newStringParam("county_id", request.getParameter("county_id"));
-        builder.newStringParam("keyword", request.getParameter("keyword"));
-
-        JSONObject param = builder.buildJsonQuery();
-        try {
-            JSONObject result = manageArticleService.searchBusiness(param.toString());
-            response.getWriter().print(result.toString());
-        } catch (Exception ex) {
-            logger.error("Failed to search business", ex);
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "搜索业务失败"));
-        }
-    }
-
-    @RequestMapping(params = PUBLISH_ARTICLE)
-    public void publishArticle(@RequestParam(required = true, value = "id") int id,
-                               HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(method = RequestMethod.PUT, value = "/publish/{id}")
+    @ResponseBody
+    public JSONObject publishArticle(@PathVariable int id) throws IOException {
         try {
             JSONObject ret = manageArticleService.publishArticle(id);
-            response.getWriter().print(ret.toJSONString());
+            return ret;
         } catch (Exception ex) {
             logger.error("Failed to publish article");
-            response.getWriter().print(FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败"));
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布文章失败");
         }
     }
 }

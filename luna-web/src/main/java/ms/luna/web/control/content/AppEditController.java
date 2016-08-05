@@ -1,6 +1,7 @@
 package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qcloud.vod.Common.Request;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
@@ -28,7 +29,7 @@ import java.io.IOException;
  * @Date: 2016-08-04
  */
 
-@Controller
+@Controller("appEditController")
 @RequestMapping("/content/app")
 public class AppEditController extends BasicController {
 
@@ -291,11 +292,9 @@ public class AppEditController extends BasicController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/setting")
+    @RequestMapping(method = RequestMethod.GET, value = "/setting/{appId}")
     @ResponseBody
-    public JSONObject getSettingOfApp(
-            @RequestParam(required=true, value="app_id") int appId,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject getSettingOfApp(@PathVariable int appId) throws IOException {
 
         try {
             JSONObject result = msShowAppService.getSettingOfApp(appId);
@@ -362,11 +361,15 @@ public class AppEditController extends BasicController {
     @RequestMapping(method = RequestMethod.PUT, value = "/publish/{appId}")
     @ResponseBody
     public JSONObject publishApp(@PathVariable int appId,
-                           HttpServletRequest request, HttpServletResponse response) throws IOException {
+                           HttpServletRequest request) throws IOException {
 
         int forceFlag = RequestHelper.getInteger(request, "force");
+        String appAddr = RequestHelper.getString(request, "app_addr");
         JSONObject param = new JSONObject();
         param.put("app_id", appId);
+        if(StringUtils.isNotBlank(appAddr)) {
+            param.put("app_addr", appAddr);
+        }
         if(forceFlag == 1) {
             param.put("force", 1);
         }

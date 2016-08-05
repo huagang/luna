@@ -35,7 +35,7 @@ public class AppController extends BasicController {
     @Autowired
     private ManageShowAppService manageShowAppService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request) {
         try {
             HttpSession session = request.getSession(false);
