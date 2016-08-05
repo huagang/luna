@@ -83,6 +83,10 @@ $(document).ready(function () {
 
     $(".app-wrap").on("click", "[hrefurl]", function (e) {
         e.stopPropagation();
+        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+            //禁止欢迎页面的点击事件
+            return;
+        }
         window.location.href = $(this).attr("hrefurl");
     });
 
@@ -252,11 +256,18 @@ $(document).ready(function () {
     //设置首页滑动到第一页
 
     if ($('.welcome').length > 0) {
+
+        //修改history 中的内容，来解决goback 中的问题
+
+
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
+            // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
         setTimeout(function () {
+            // window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
             });
@@ -381,7 +392,10 @@ $(document).ready(function () {
                 if (link) {
                     this.html.attr('data-href', link);
                     this.html.on('click', function (event) {
-
+                        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+                            //禁止欢迎页面的点击事件
+                            return;
+                        }
                         var link = event.currentTarget.getAttribute('data-href');
                         if (link == 'return') {
                             goback();

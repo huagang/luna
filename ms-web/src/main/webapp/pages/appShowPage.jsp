@@ -58,8 +58,8 @@
         var wechatOptions = {
             title: "${share_info_title}",
             desc: "${share_info_des}",
-            link: window.location.href,
-            imgUrl:"${share_info_pic}"
+            link: window.location.href.split('?')[0],
+            imgUrl:"${share_info_pic}",
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
