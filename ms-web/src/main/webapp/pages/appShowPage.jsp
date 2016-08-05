@@ -58,7 +58,7 @@
         var wechatOptions = {
             title: "${share_info_title}",
             desc: "${share_info_des}",
-            link: location.href.match(/^(.*(app|business)\/\w+)/)[1],
+            link: "${share_info_link}",
            // link: window.location.href.split('?')[0],
             imgUrl:"${share_info_pic}",
         };
