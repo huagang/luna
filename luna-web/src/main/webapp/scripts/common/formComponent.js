@@ -3,6 +3,8 @@
         css
             styles/file_loading_tip.css
             plugins/selectizeJs/selectize.bootstrap3.css
+            styles/ formComponent.css
+            styles/ common.css
 
 
         js
@@ -10,9 +12,20 @@
             deep-diff
             plugins/selectizeJs/selectize.min.js
 
+*/
+
+/*
+       注意事项
+            需要在设置window.context, 否则可能有些图片加载不了
  */
 
 (function() {
+
+
+    // 设置context
+    window.context = window.context || '';
+
+
     if (!String.prototype.format) {
         String.prototype.format = function () {
             var args = arguments;
@@ -26,6 +39,7 @@
     }
 
     var apiUrls = Inter.getApiUrl();
+
 
     function BaseComponent(data) {
         this.data = data;
@@ -144,12 +158,13 @@
         'SELECT': '',
         'TEXT_PIC': TextPic,
         'TEXT_PIC_GROUP': TextPicGroup,
-        'COUNTYENJOYMENT': CountryEnjoyment,
+        'COUNTRY_ENJOYMENT': CountryEnjoyment,
         'RADIO_TEXT': RadioText,
         'FileUploader': Divider,
         'RadioList': RadioList,
         'INPUT': Input,
-        'DIVIDER': Divider
+        'DIVIDER': Divider,
+        'POI_SEARCH': PoiSearch,
 
     };
 
@@ -229,6 +244,9 @@
 
         // 文件上传
         that.handleFileUp = handleFileUp;
+
+        // 清空内容
+        that.clear = clear;
 
         that.init();
         function init() {
@@ -331,6 +349,8 @@
                 return;
             }
             that.showLoadingTip();
+            that.element.find('.cleanInput').addClass('hide');
+
             var data = new FormData();
             data.append('file', event.target.files[0]);
             data.append('type', that.definition.type.toLocaleLowerCase());
@@ -343,16 +363,28 @@
                 dataType:'json',                       //服务器返回的格式,可以是json或xml等
                 processData:false,
                 success: function(data){
-                    that.value = data.data.access_url;
-                    that.element.find('.media').val(that.value);
-                    that.element.find('.media-fileup').val('');
-                    that.setWarn('');
+                    if(data.code === '0'){
+                        that.value = data.data.access_url;
+                        that.element.find('.media').val(that.value);
+                        that.element.find('.media-fileup').val('');
+                        that.setWarn('');
+                        that.element.find('.cleanInput').removeClass('hide');
+                    } else{
+                        that.setWarn(data.msg);
+                        if(that.value){
+                            that.element.find('.cleanInput').removeClass('hide');
+                        }
+                    }
                     that.hideLoadingTip();
-                    that.element.find('.cleanInput').removeClass('hide');
+
+
                 },
-                error: function(){
+                error: function(data){
                     that.setWarn(data.msg);
                     that.hideLoadingTip();
+                    if(that.value){
+                        that.element.find('.cleanInput').removeClass('hide');
+                    }
                 }
             });
         }
@@ -371,10 +403,21 @@
 
         function updateComponent(data) {
             if (data.value && data.value !== that.value) {
-                that.value = data.value.url;
+                that.value = data.value;
                 that.element.find('.media').val(that.value);
+                that.element.find('.cleanInput').removeClass('hide');
             }
         }
+
+        function clear(){
+            that.value = '';
+            that.element.find('.media').val(that.value);
+            that.element.find('.media-fileup').val('');
+            that.setWarn('');
+            that.hideLoadingTip();
+            that.element.find('.cleanInput').addClass('hide');
+        }
+
     }
     FileUploader.prototype = new BaseComponent();
 
@@ -833,8 +876,8 @@
             that.data.value = that.data.value || {};
             that.value = that.data.value;
             that.definition = that.data.definition || {};
-            that.definition.limits.num = that.definition.limits.num || that.defautNum;
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+            that.definition.limits.num = that.definition.limits.num || that.defautNum;
 
             // 初始化子组件
             that._children = [];
@@ -947,6 +990,12 @@
         // 编辑已经选择项
         that.handleEdit = handleEdit;
 
+        // 关闭弹窗
+        that.handleClose = handleClose;
+
+        // 保存编辑结果
+        that.confirmEdit = confirmEdit;
+
         that.init();
 
         function init() {
@@ -954,21 +1003,46 @@
             that.data.value = that.data.value || [];
             that.value = that.data.value;
             that.definition = that.data.definition || {};
-            that.definition.limits.num = that.definition.limits.num || that.defautNum;
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
-            that._template = '<select class="text-select"></select> \
-                <div class=""></div>\
-                <div class="item-container">\
-                    <div class="item">\
-                        <div style="pic-wrapper">\
-                            <div class="pic" style="background-color: #999">\
+            that.definition.limits.num = that.definition.limits.num || that.defautNum;
+            that._template =
+                    '<select class="text-select"></select> \
+                    <div class="mask hidden"></div>\
+                    <div class="pop-edit hidden">\
+                        <div class="pop-title">\
+                            <h4>编辑{0}</h4>\
+                            <a href="javascript:void(0)" class="btn-close">\
+                                <img src="{1}/img/close.png" />\
+                            </a>\
+                        </div>\
+                        <div class="pop-cont">\
+                            <div class="form-group">\
+                                <label>活动名称</label>\
+                                <span class="activity-name"></span>\
                             </div>\
-                            <p class="item-name"></p>\
+                            <div class="form-group pic-upload"></div>\
+                        </div>\
+                        <div class="pop-fun">\
+                            <div class="button-container">\
+                                <button class="button button-confirm"> 确定</button>\
+                                <button class="button button-close"> 取消</button>\
+                            </div> \
                         </div>\
                     </div>\
-                \
-                </div>'
-            ;
+                    <div class="item-container">\
+                        <div class="item hidden" data-value="">\
+                            <div class="pic-wrapper">\
+                                <div class="pic" style="background-color: #999">\
+                                </div>\
+                                <p class="item-name"></p>\
+                            </div>\
+                            <div class="footer" >\
+                                <a class="edit-item">编辑</a>\
+                                <a class="delete-item">删除</a>\
+                            </div>\
+                        </div>\
+                    \
+                    </div>'.format(that.definition.show_name, window.context);
             that._children = {};
             if(that.definition.show_name){
                 that._children.label = new Label({
@@ -977,6 +1051,17 @@
                     }
                 });
             }
+
+            that._children.picUploader = new FileUploader({
+                value: '', // url
+                definition: {
+                    limits: that.definition.limits,
+                    placeholder: '',
+                    type: 'PIC',
+                    display_order: 1,
+                    show_name: '图标'
+                }
+            });
         }
 
         function render(){
@@ -986,18 +1071,22 @@
                 that._component.className = 'country-enjoyment component';
                 that._component.innerHTML = that._template;
                 that.element.prepend(that._children.label.render());
-                if(that.definition.extension_attrs){
-                    if(! that.selectizeInitialed){
-                        that.selectizeInitialed = true;
-                        that.element.find('.text-select').selectize({
-                            options: that.definition.extension_attrs,
-                            labelField: 'label',
-                            searchField: ['label'],
-                            onChange: that.handleSelect
+                if(that.definition.options){
+                    if(! that.selectize){
+                        that.selectize = that.element.find('.text-select').selectize({
+                            options: that.definition.options,
+                            labelField: 'name',
+                            searchField: ['name'],
+                            onChange: that.handleSelect,
+                            highlight: false
                         });
+                        that.selectize =  that.selectize[0].selectize;
                     }
                 }
+
+                that.element.find('.pic-upload').append(that._children.picUploader.render());
                 that._bindEvent();
+
             }
             return that._component;
         }
@@ -1005,6 +1094,17 @@
         function updateComponent(){
 
         }
+
+        function _bindEvent(){
+            that.element.on('click', '.edit-item', that.handleEdit);
+            that.element.on('click', '.delete-item', that.handleDelete);
+            that.element.on('click', '.pop-edit .btn-close', that.handleClose);
+            that.element.on('click', '.pop-edit .button-close', that.handleClose);
+            that.element.on('click', '.mask', that.handleClose);
+            that.element.on('click', '.pop-edit .button-confirm', that.confirmEdit);
+        }
+
+
 
         function handleSelect(value){
             var notFound = that.value.every(function(item){
@@ -1014,15 +1114,13 @@
                 return true;
             });
             if(notFound){
-                that.definition.extension_attrs.some(function(item){
+                that.definition.options.some(function(item){
                     if(item.value === value){
-                        var newItem = {
+                        that.addItem({
                             value: value,
-                            label: item.label,
-                            pic: ''
-                        };
-                        that.addItem(newItem);
-                        that.value.push(newItem);
+                            name: item.name,
+                            pic: item.pic || ''
+                        });
                         return true;
                     }
                     return false;
@@ -1031,19 +1129,76 @@
             }
         }
 
+        function handleEdit(event){
+            var value = $(event.target).parentsUntil('.item-container', '.item').attr('data-value');
+            that.value.some(function(item, index){
+                if(item.value === value){
+                    that.curObj = item;
+                    return true;
+                }
+                return false;
+            });
 
-        function handleDelete(){
+            that.element.find('.pop-edit').removeClass('hidden');
+            that.element.find('.mask').removeClass('hidden');
+            $(document.body).addClass('modal-open');
+
+            that.element.find('.activity-name').html(that.curObj.name);
+            that._children.picUploader.clear();
+            if(that.curObj.pic){
+                that._children.picUploader.updateComponent({
+                    value: that.curObj.pic
+                });
+            }
+        }
+
+        function confirmEdit(){
+            that.curObj.pic = that._children.picUploader.value;
+            that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
+                'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
+
+            that.handleClose();
+        }
+
+        function handleClose(){
+            that.element.find('.pop-edit').addClass('hidden');
+            that.element.find('.mask').addClass('hidden');
+            $(document.body).removeClass('modal-open');
+            that.curObj = undefined;
+        }
+
+        function handleDelete(event){
+            var parent = $(event.target).parentsUntil('.item-container', '.item'),
+                value = parent.attr('data-value'), order;
+            that.value.some(function(item, index){
+                if(item.value === value){
+                    order = index;
+                    return true;
+                }
+                return false;
+            });
+            if(order){
+                that.value.splice(order, 1);
+            }
+
+            parent.remove();
 
         }
 
         function addItem(item){
-            that.element.find('item-container')
+            var ele = that.element.find('.item-container .item.hidden').clone(false, true);
+            ele.attr('data-value', item.value || '');
+            var pic = ele.find('.pic');
+            ele.find('.item-name').html(item.name);
+            if(item.pic){
+                pic.attr('style','background: url({0}) center center no-repeat;background-size: cover'.format(item.pic));
+            }
+            ele.removeClass('hidden');
+            that.element.find('.item-container').append(ele);
+            that.value.push(item);
+            that.selectize.clear();
         }
 
-        function handleEdit(){
-
-
-        }
 
     }
 
@@ -1112,6 +1267,7 @@
                 var order = parseInt(event.target.dataset.order);
                 that.checkedList[order] = ! that.checkedList[order];
             });
+
         }
 
         function updateComponent(){
@@ -1119,6 +1275,172 @@
 
     }
 
+
+    /****************** poi绑定 ****************/
+    function PoiSearch(data){  // 大组件 由于时间原因 没有进行细分
+
+        var that = this;
+        that.data = data;
+
+        that.init = init;
+
+        that.render = render;
+
+        that._bindEvent = _bindEvent;
+
+        that.updateComponent = updateComponent;
+
+        that.handleSelect = handleSelect;
+
+        that.handleInputChange = handleInputChange;
+
+        that.fetchPoiList = fetchPoiList;
+
+        that.handleTypeChange = handleTypeChange;
+
+        that.handleClearTimeout = handleClearTimeout;
+
+        that.init();
+
+        function init() {
+            that.data.value = that.data.value || '';
+            that.value = that.data.value;
+            that.definition = that.data.definition || {};
+            that.children = {};
+            that.data.filter = {type: 'name' };
+            that.template =
+                '<div class="form-group poi-filter"> \
+                    <label class="form-label">绑定POI</label>\
+                    <div class="form-right">\
+                        <select class="select-type">\
+                            <option value="name">按名称</option>\
+                            <option value="id">按id</option>\
+                        </select>\
+                        <select class="poi-select"></select>\
+                    </div>\
+                 </div>\
+                 <div class="form-group poi-name">\
+                    <label class="form-label">POI名称</label>\
+                    <span class="form-value"></span>\
+                 </div>\
+                 <div class="form-group poi-position">\
+                    <label class="form-label">坐标</label>\
+                    <span class="form-value"></span>\
+                 </div>\
+                 <div class="form-group poi-address">\
+                    <label class="form-label">地址</label>\
+                    <span class="form-value"></span>\
+                 </div>\
+                 <div class="form-group poi-pano">\
+                    <label class="form-label">全景标识</label>\
+                    <span class="form-value"></span>\
+                 </div>\
+                 <div class="form-group poi-phone">\
+                    <label class="form-label">联系电话</label>\
+                    <span class="form-value"></span>\
+                 </div>\
+                 <div class="form-group poi-phone">\
+                    <label class="form-label">缩略图</label>\
+                    <span class="form-value"></span>\
+                 </div>';
+
+        }
+
+        function render(){
+            if (!that._component) {
+                that._component = document.createElement('div');
+                that.element = $(that._component);
+                that._component.className = 'component poi-search';
+                that._component.innerHTML = that.template;
+                if(! that.selectize){
+                    that.selectize = that.element.find('.poi-select').selectize({
+                        options: that.options || [],
+                        labelField: 'poi_name',
+                        valueField: 'poi_id',
+                        searchField: ['poi_name'],
+                        onChange: that.handleSelect,
+                        highlight: false
+                    });
+                    that.selectize =  that.selectize[0].selectize;
+                }
+                var placeholder = (that.definition.placeholder || {})['TEXT'];
+                if(placeholder){
+                    that.element.find('.selectize-input input').attr('placeholder', placeholder);
+                }
+                that._bindEvent();
+            }
+
+            return that._component;
+
+        }
+
+
+        function _bindEvent(){
+
+            that.element.find('.selectize-input input').on('input', that.handleInputChange);
+            that.element.find('.selectize-input input').on('keydown', that.handleClearTimeout);
+            that.element.find('.select-type').on('change', that.handleTypeChange);
+        }
+
+        function  fetchPoiList(){
+            if(! that.data.filter.text){
+                return;
+            }
+            setTimeout(function(){
+                that.options = that.definition.options.reduce(function(mem, cur, index){
+                    var type =that.data.filter.type, text = that.data.filter.text;
+                    if(type === 'name' && cur.poi_name.indexOf(text) !== -1){
+                        mem.push(cur);
+                    }
+
+                    else if(type === 'id' && cur.poi_id.indexOf(text) !== -1){
+                        mem.push(cur);
+                    }
+                    return mem;
+                }, []) || [];
+                console.log(that.options);
+                that.selectize.clearOptions();
+                that.selectize.addOption(that.options);
+                that.selectize.open();
+            }, 500);
+
+        }
+
+        function handleInputChange(event){
+            that.data.filter.text = event.target.value;
+        }
+
+        function handleClearTimeout(event){
+            if(that.data.filter.timeoutId){
+                clearTimeout(that.data.filter.timeoutId);
+            }
+
+            that.data.filter.timeoutId = setTimeout(that.fetchPoiList, 500);
+        }
+
+        function handleTypeChange(event){
+            that.data.filter.type = event.target.value;
+            if(that.data.filter.type === 'name'){
+                that.selectize.settings.searchField = ['poi_name'];
+            } else if(that.data.filter.type === 'id'){
+                that.selectize.settings.searchField = ['poi_id'];
+            }
+            that.selectize.clear();
+            that.selectize.clearOptions();
+
+         }
+
+        function handleSelect(){
+
+        }
+
+        function updateComponent(){
+
+
+        }
+
+
+    }
 
 
     window.FormComponent = {
@@ -1132,6 +1454,7 @@
         'TextPic': TextPic,
         'TextPicGroup': TextPicGroup,
         'CheckboxList': CheckboxList,
+        'PoiSearch': PoiSearch
     };
 }());
 

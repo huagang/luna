@@ -188,7 +188,7 @@ $(function(){
                     {
                         "definition": {
                             "show_name": "场地设施",
-                            "display_order": 9,
+                            "display_order": 8,
                             "name": "facility",
                             "extension_attrs": [
                                 {
@@ -233,10 +233,123 @@ $(function(){
                             "type": "CHECKBOX"
                         },
                         "value": []
-                    }
+                    },
+                    {
+                        "definition": {
+                            "show_name": "乡村野趣",
+                            "display_order": 9,
+                            "name": "country_enjoyment",
+                            "options": [
+                                {
+                                    "value": "1",
+                                    "name": "name1",
+                                    "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160805/2E2L0d3D3K3U2Q3W263x2G1A3w3h1I1P.png"
+                                },
+                                {
+                                    "value": "2",
+                                    "name": "name2",
+                                    "pic": "http://view.luna.visualbusiness.cn/dev/poi/pic/20160805/2E2L0d3D3K3U2Q3W263x2G1A3w3h1I1P.png"
+                                }
+                            ],
+                            "placeholder": {
+                                "TEXT": [
+                                    "请输入项目名称"
+                                ]
+                            },
+                            "type": "COUNTRY_ENJOYMENT",
+                            "limits": {
+                                "TEXT": [
+                                    {
+                                        "max": 255
+                                    }
+                                ],
+                                PIC: {
+                                    ext: ['png', 'jpg'],
+                                    max: 1   // default 1M
+                                }
+                            }
+                        }
+                    },
+                    {
+                        value: '',
+                        'definition':{
+                            show_name: '绑定POI',
+                            name: 'poi',
+                            display_order: 10,
+                            type: 'POI_SEARCH',
+                            placeholder: {
+                                "TEXT":[
+                                    '请输入POI名称或者POI id'
+                                ]
+                            },
+                            options:[
+                                {
+                                    poi_name: "恒庐清茶馆",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a5289"
+                                },
+                                {
+                                    poi_name: "浙江美术馆",
+                                    other_name: "",
+                                    poi_id: "576bdf865971a163400a528e"
+                                },
+                                {
+                                    poi_name: "BERNINI",
+                                    other_name: "贝尼尼",
+                                    poi_id: "576bdf635971a163400a5288"
+                                },
+                                {
+                                    poi_name: "Joy酒隐(西湖店)",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a5287"
+                                },
+                                {
+                                    poi_name: "弘元饭店",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a5285"
+                                },
+                                {
+                                    poi_name: "柳湖小筑餐厅",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a5286"
+                                },
+                                {
+                                    poi_name: "杭州索菲特西湖大酒店",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a5284"
+                                },
+                                {
+                                    poi_name: "柳浪闻莺",
+                                    other_name: "",
+                                    poi_id: "576bb46f5971a127fd5e8c7c"
+                                },
+                                {
+                                    poi_name: "涌金门自行车租赁点",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a528a"
+                                },
+                                {
+                                    poi_name: "洗手间",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a528c"
+                                },
+                                {
+                                    poi_name: "清波门",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a528b"
+                                },
+                                {
+                                    poi_name: "学士居停车场",
+                                    other_name: "",
+                                    poi_id: "576bdf635971a163400a528d"
+                                }
+                            ]
+                        }
 
+                    }
                 ]
-            };
+
+            }
         }
 
     }

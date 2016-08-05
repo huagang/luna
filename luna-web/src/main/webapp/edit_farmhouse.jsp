@@ -21,6 +21,7 @@
   <link href="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.bootstrap3.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/file_loading_tip.css">
+  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/formComponent.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/edit_farmhouse.css">
 
 </head>
@@ -39,6 +40,9 @@
         </div>
     </div>
   </div>
+    <script>
+      window.context = "<%=request.getContextPath() %>";
+    </script>
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/deep-diff/deep-diff-0.3.3.min.js"></script>
