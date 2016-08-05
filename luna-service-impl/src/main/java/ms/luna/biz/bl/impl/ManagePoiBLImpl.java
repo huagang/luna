@@ -11,10 +11,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +60,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	private MsPoiTagDAO msPoiTagDAO;
 
 	@Autowired
-	private MsPoiFieldDAO msPoiFieldDAO; 
+	private MsPoiFieldDAO msPoiFieldDAO;
 
 	@Autowired
 	private MongoConnector mongoConnector;
@@ -74,13 +76,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	 */
 	private final static int TAG_LEVEL_TOP = 1;
 
-	
+
 	/**
 	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
 	 */
 	private static Map<Integer, Integer> topTag2SubTagOthersCache = new LinkedHashMap<>();// (旅游景点, 其他) --> (2,18) 
-										 // (基础设施,其他) -->(7,61) (其他, 其他) --> (8, 62)
-	
+	// (基础设施,其他) -->(7,61) (其他, 其他) --> (8, 62)
+
 	/**
 	 * 获取分类信息<br>
 	 */
@@ -131,14 +133,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 3.分享摘要
 			doc.put("share_desc", param.getString("share_desc"));
-			
+
 			lnglatArray = new ArrayList<Double>();
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray.add(param.getDouble("lng"));
 			lnglatArray.add(param.getDouble("lat"));
 			BasicDBObject lnglat = new BasicDBObject();
 			lnglat.append("type", "Point")
-			.append("coordinates", lnglatArray);
+					.append("coordinates", lnglatArray);
 			doc.put("lnglat", lnglat);
 
 			// 5.地址
@@ -174,10 +176,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
-			
+
 			// 8.全景类型
 			doc.put("panorama_type", param.getInteger("panorama_type"));
-			
+
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 
@@ -219,7 +221,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			} else {
 				doc.put("share_desc", "");
 			}
-			
+
 			// 4.经纬度Point(先经度后纬度), lnglat : { type: "Point", coordinates: [ -73.88, 40.78 ] }
 			lnglatArray = new ArrayList<Double>();
 			try {
@@ -236,7 +238,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			BasicDBObject lnglat = new BasicDBObject();
 			lnglat.append("type", "Point")
-			.append("coordinates", lnglatArray);
+					.append("coordinates", lnglatArray);
 			doc.put("lnglat", lnglat);
 
 			// 5.地址
@@ -280,10 +282,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// 8.全景数据ID
 			doc.put("panorama", param.getString("panorama"));
-			
+
 			// 8.全景类型
 			doc.put("panorama_type", param.getInteger("panorama_type"));
-						
+
 			// 9.联系电话
 			doc.put("contact_phone", param.getString("contact_phone"));
 		}
@@ -400,7 +402,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 						//-----------------------------------------------------------------------
 						// 视频需要通过转码得到url，上传后返回值为id。因此不进行视频地址的检测。
 						//-----------------------------------------------------------------------
-						
+
 						doc.put(field_name_def, field_name_val);
 					} else {
 						doc.put(field_name_def, "");
@@ -511,7 +513,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			List<String> subZoneIds = msZoneCacheBL.getSubZoneIds(zoneId);
 			BasicDBList filterSubZoneIds = new BasicDBList();
 			for (String subZoneId : subZoneIds) {
-				filterSubZoneIds.add(new BasicDBObject("zone_id", subZoneId));  
+				filterSubZoneIds.add(new BasicDBObject("zone_id", subZoneId));
 			}
 			condition.put("$or", filterSubZoneIds);
 		}
@@ -525,7 +527,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				find(condition)
 				.sort(sort)
 				.skip(offset).
-				limit(limit)
+						limit(limit)
 				.iterator();
 
 		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
@@ -569,7 +571,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 			// poi的ID
 			String _id = docPoi.getObjectId("_id").toString();
-			
+
 			BasicDBObject keyId = new BasicDBObject();
 			keyId.put("_id", new ObjectId(_id));
 			if (poi_collection_en.find(keyId).limit(1).first() != null) {
@@ -680,15 +682,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 						JSONObject field_def = privateField.getJSONObject("field_def");
 						Integer fieldType = field_def.getInteger("field_type");
 						switch (fieldType) {
-						case VbConstant.POI_FIELD_TYPE.复选框列表:
-							enDoc.put((String)field_def.get("field_name"), doc.get(field_def.get("field_name")));
-							break;
-						default:
-							// 一级分类有变化，需要清空checkbox以外私有字段值
-							if (!zhTags.equals(enTags)) {
-								enDoc.put((String)field_def.get("field_name"), "");
-							}
-							break;
+							case VbConstant.POI_FIELD_TYPE.复选框列表:
+								enDoc.put((String)field_def.get("field_name"), doc.get(field_def.get("field_name")));
+								break;
+							default:
+								// 一级分类有变化，需要清空checkbox以外私有字段值
+								if (!zhTags.equals(enTags)) {
+									enDoc.put((String)field_def.get("field_name"), "");
+								}
+								break;
 						}
 					}
 					updateDocument = new BasicDBObject();
@@ -741,7 +743,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MsPoiTagCriteria msPoiTagCriteria = new MsPoiTagCriteria();
 		// 去除公共字段的标签
 		msPoiTagCriteria.createCriteria()
-		.andTagIdNotEqualTo(PoiCommon.POI.公共TAGID);
+				.andTagIdNotEqualTo(PoiCommon.POI.公共TAGID);
 		msPoiTagCriteria.setOrderByClause("tag_level asc, parent_tag_id asc, ds_order asc");
 		List<MsPoiTag> lstMsPoiTag = msPoiTagDAO.selectByCriteria(msPoiTagCriteria);
 
@@ -790,10 +792,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		JSONObject data = new JSONObject();
 		data.put("tags_def", tags);
-		
+
 		// 获得全景类别
 		JSONArray types = new JSONArray();
-		
+
 		MsPoiFieldCriteria msPoiFieldCriteria = new MsPoiFieldCriteria();
 		MsPoiFieldCriteria.Criteria criteria = msPoiFieldCriteria.createCriteria();
 		criteria.andFieldNameEqualTo("panorama_type");
@@ -833,7 +835,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		BasicDBObject keyId = new BasicDBObject();
 		keyId.put("_id", new ObjectId(_id));
-		return poi_collection.find(keyId).limit(1).first(); 
+		return poi_collection.find(keyId).limit(1).first();
 	}
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
@@ -884,9 +886,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		} else {
 			commonFieldsVal.put("share_desc", "");
 		}
-		
+
 		// 4.经纬度
-		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
+		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat"));
 		JSONArray coordinates = lnglat.getJSONArray("coordinates");
 		// 经度
 		Double lng = coordinates.getDouble(0);
@@ -926,14 +928,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			panorama = docPoi.getString("panorama");
 		}
 		commonFieldsVal.put("panorama", panorama);
-		
+
 		// 8.全景类型
 		if(docPoi.containsKey("panorama_type")) {
 			commonFieldsVal.put("panorama_type", docPoi.getInteger("panorama_type"));
 		} else {
 			commonFieldsVal.put("panorama_type", "2");
 		}
-		
+
 		// 9.联系电话
 		String contact_phone = "";
 		if (docPoi.containsKey("contact_phone")) {
@@ -987,7 +989,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Map<String, StringBuffer> tagIdMaps = new HashMap<String, StringBuffer>();
 
 		for (MsTagFieldResult msTagFieldResult : lstMsTagFieldResult) {
-			
+
 			// 没有私有字段的一级分类
 			if (msTagFieldResult.getFieldName() == null) {
 				continue;
@@ -1008,7 +1010,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			if (fieldSet.contains(msTagFieldResult.getFieldName())) {
 				continue;
 			}
-			
+
 			// 没有私有字段的一级分类
 			if (msTagFieldResult.getFieldName() == null) {
 				continue;
@@ -1025,7 +1027,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("field_size", msTagFieldResult.getFieldSize());
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+//				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+				JSONArray extension_attrs = JSONObject.parseObject(msTagFieldResult.getExtensionAttrs()).getJSONArray(POI.ZH);
+				field_def.put("extension_attrs", extension_attrs);
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
@@ -1103,7 +1107,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			field_def.put("placeholder", CharactorUtil.nullToBlank(msTagFieldResult.getPlaceholder()));
 			field_def.put("field_tips_for_templete", CharactorUtil.nullToBlank(msTagFieldResult.getFieldTipsForTemplete()));
 			if (msTagFieldResult.getFieldType().intValue() == VbConstant.POI_FIELD_TYPE.复选框列表) {
-				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+//				field_def.put("extension_attrs", JSONArray.parseArray(msTagFieldResult.getExtensionAttrs()));
+				JSONArray extension_attrs = JSONObject.parseObject(msTagFieldResult.getExtensionAttrs()).getJSONArray(POI.ZH);
+				field_def.put("extension_attrs", extension_attrs);
 			} else {
 				field_def.put("extension_attrs", CharactorUtil.nullToBlank(msTagFieldResult.getExtensionAttrs()));
 			}
@@ -1200,7 +1206,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		if (val.startsWith("[")) {
 			return JSONArray.parseArray(val);
 		}
-		return JSONArray.parseArray("["+val+"]");
+		return JSONArray.parseArray("[" + val + "]");
 	}
 	private String getProvinceId(String zoneId) {
 		String provinceId = msZoneCacheBL.getProvinceId(zoneId);
@@ -1255,12 +1261,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 		JSONObject data = new JSONObject();
 		String long_title = docPoi.getString("long_title");// poi 名称
-		
-		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat")); 
+
+		JSONObject lnglat = FastJsonUtil.parse2Json(docPoi.get("lnglat"));
 		JSONArray coordinates = lnglat.getJSONArray("coordinates");
 		Double lng = coordinates.getDouble(0);// 经度
 		Double lat = coordinates.getDouble(1);// 纬度
-		
+
 		String short_title = docPoi.getString("short_title");
 		String brief_introduction = docPoi.getString("brief_introduction");
 		String thumbnail = docPoi.getString("thumbnail");
@@ -1271,6 +1277,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		String province_id = docPoi.getString("province_id");
 		String city_id = docPoi.getString("city_id");
 		String county_id = docPoi.getString("county_id");
+		String detail_address = docPoi.getString("detail_address");
 		String province = msZoneCacheBL.getZoneName(province_id, lang);
 		String city = msZoneCacheBL.getZoneName(city_id, lang);
 		String county = msZoneCacheBL.getZoneName(county_id, lang);
@@ -1310,11 +1317,12 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("province", province);
 		data.put("city", city);
 		data.put("county", county);
+		data.put("detail_address", detail_address);
 		data.put("share_desc", share_desc);
-		
+
 		return FastJsonUtil.sucess("success", data);
 	}
-	
+
 	/**
 	 * 获取二级分类为“其他”时 topTag与subTag的映射关系
 	 * @return
@@ -1336,9 +1344,10 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 						topTag2SubTagOthersCache.put(parent_tag_id, tag_id);
 					}
 				}
-				
+
 			}
 		}
 		return topTag2SubTagOthersCache;
 	}
+
 }
