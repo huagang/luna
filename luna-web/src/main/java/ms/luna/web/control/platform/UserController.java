@@ -33,8 +33,7 @@ public class UserController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView indexPage() {
-        ModelAndView modelAndView = buildModelAndView("login");
-        logger.info("user index page");
+        ModelAndView modelAndView = buildModelAndView("manage_user");
         return modelAndView;
     }
 

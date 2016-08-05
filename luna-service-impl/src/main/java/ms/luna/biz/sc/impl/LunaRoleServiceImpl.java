@@ -18,6 +18,7 @@ import ms.luna.cache.RoleCache;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -27,6 +28,8 @@ import java.util.*;
  * @Author: shawn@visualbusiness.com
  * @Date: 2016-07-22
  */
+
+@Service("lunaRoleService")
 public class LunaRoleServiceImpl implements LunaRoleService {
 
     private final static Logger logger = Logger.getLogger(LunaRoleServiceImpl.class);

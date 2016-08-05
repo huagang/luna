@@ -41,21 +41,8 @@ public class ArticleController extends BasicController {
     @Autowired
     private ManageColumnService manageColumnService;
 
-    public static final String INIT = "method=init";
-    public static final String CREATE_ARTICLE = "method=create_article";
-    public static final String READ_ARTICLE = "method=read_article";
-    public static final String UPDATE_ARTICLE = "method=update_article";
-    public static final String DELETE_ARTICLE = "method=delete_article";
-    public static final String SEARCH_ARTICLE = "method=async_search_article";
-    public static final String SEARCH_BUSINESS="method=search_business";
-    public static final String PUBLISH_ARTICLE = "method=publish_article";
-
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.setAttribute("menu_selected", "manage_article");
-        }
 
         return buildModelAndView("/manage_article");
     }
@@ -142,8 +129,6 @@ public class ArticleController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView createArticle(@RequestParam(required = true, value="business_id") int businessId,
                                       HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
         JSONObject columnJsonData = manageArticleService.getColumnByBusinessId(businessId);

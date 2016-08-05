@@ -36,6 +36,9 @@
 	<dubbo:reference id="manageBusinessTreeService" interface="ms.luna.biz.sc.ManageBusinessTreeService" />
 	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService" />
 	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService" />
+	<dubbo:reference interface="ms.luna.biz.sc.LunaRoleService" id="lunaRoleService" />
+	<dubbo:reference interface="ms.luna.biz.sc.LunaUserService" id="lunaUserService" />
+	<dubbo:reference interface="ms.luna.biz.sc.MenuService" id="menuService" />
 
 	
 </beans>

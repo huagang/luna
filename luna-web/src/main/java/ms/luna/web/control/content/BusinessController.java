@@ -39,18 +39,10 @@ public class BusinessController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.setAttribute("menu_selected", "manage_business");
-            }
-            ModelAndView modelAndView = buildModelAndView("/manage_business");
-            return modelAndView;
 
-        } catch (Exception e) {
-            logger.error("Failed to initialize", e);
-        }
-        return buildModelAndView("/error");
+        ModelAndView modelAndView = buildModelAndView("/manage_business");
+        return modelAndView;
+
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
