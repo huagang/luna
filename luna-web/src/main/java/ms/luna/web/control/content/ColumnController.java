@@ -37,7 +37,7 @@ public class ColumnController extends BasicController {
     @Autowired
     private ManageColumnService manageColumnService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {

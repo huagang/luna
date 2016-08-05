@@ -31,7 +31,7 @@ public class UserController extends BasicController {
     @Autowired
     private LunaUserService lunaUserService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView indexPage() {
         ModelAndView modelAndView = buildModelAndView("login");
         logger.info("user index page");
