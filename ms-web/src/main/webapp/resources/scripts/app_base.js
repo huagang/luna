@@ -977,6 +977,7 @@ $(document).ready(function () {
                             //html = '';
                             var hotelList = '', panoLink;
                             data.pois.forEach(function (item, index) {
+                                console.log(item);
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
@@ -1018,6 +1019,7 @@ $(document).ready(function () {
                                 }
                                 hotelList +=
                                     '<div class="hotel-item">'
+                                    +'<a href="">',
                                     + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
                                     + 'background-size: cover;">'
                                     + '<div class="nav">'
@@ -1037,6 +1039,7 @@ $(document).ready(function () {
                                     + '</div>'
                                     + '</div>'
                                     + '</div>'
+                                    +'</a>',
                                     + '<div class="hotel-info">'
                                     + '<p>' + item.share_desc + '</p>'
                                     + '<p class="contact ' + (item.contact_phone ? '' : 'hidden') + '">'

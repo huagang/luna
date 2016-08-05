@@ -510,8 +510,8 @@ function NavController($scope, $rootScope) {
             this.currentComponent.content.startName = "";
             this.currentComponent.content.startPosition = "";
             // navPositionForm.startName.$touched = navPositionForm.startPosition.$touched = false;
-        }else{
-            this.currentComponent.content.startName = this.content.startName ;
+        } else {
+            this.currentComponent.content.startName = this.content.startName;
             this.currentComponent.content.startPosition = this.content.startPosition;
         }
     };
@@ -755,6 +755,42 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
             }, {
                 name: '酒店',
                 code: 'lodge',
+                type: 'default',
+            }, {
+                name: '活动',
+                code: 'huodong',
+                type: 'default',
+            }, {
+                name: '溯源',
+                code: 'suyuan',
+                type: 'default',
+            }, {
+                name: '特产',
+                code: 'techan',
+                type: 'default',
+            }, {
+                name: '文学',
+                code: 'wenxue',
+                type: 'default',
+            }, {
+                name: '沿革',
+                code: 'yange',
+                type: 'default',
+            }, {
+                name: '遗迹',
+                code: 'yiji',
+                type: 'default',
+            }, {
+                name: '自然环境',
+                code: 'ziranhuanjing',
+                type: 'default',
+            }, {
+                name: '地理特征',
+                code: 'dilitezheng',
+                type: 'default',
+            },{
+                name: '风情',
+                code: 'fengqing',
                 type: 'default',
             }, {
                 name: '文字',
