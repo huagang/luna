@@ -419,7 +419,7 @@ var initPage = function() {
          * */
         var business_id, id;
         try {
-            business_id = parseInt(location.href.match(/business_id=(\d+)/)[1]);
+            business_id = parseInt(location.href.match(/content\/article\/(\d+)/)[1]);
         } catch (e) {
             business_id = null;
         }
