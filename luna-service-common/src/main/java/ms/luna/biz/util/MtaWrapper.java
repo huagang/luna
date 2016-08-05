@@ -43,7 +43,6 @@ public class MtaWrapper {
 
 	public static String createApp(String appName, int appType, String domain, long adminQQ) {
 
-		HttpClient httpClient = new HttpClient();
 		Map<String, Object> requestParamMap = new TreeMap<>();
 		requestParamMap.put("app_name", appName);
 		requestParamMap.put("app_type", appType);

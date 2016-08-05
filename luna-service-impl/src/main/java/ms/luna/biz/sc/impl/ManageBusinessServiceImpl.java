@@ -1,16 +1,29 @@
 package ms.luna.biz.sc.impl;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.bl.ManageBusinessBL;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.LunaUserRoleDAO;
+import ms.luna.biz.dao.custom.MsBusinessDAO;
+import ms.luna.biz.dao.custom.model.LunaUserRole;
+import ms.luna.biz.dao.model.MsBusiness;
+import ms.luna.biz.dao.model.MsBusinessCriteria;
+import ms.luna.biz.sc.ManageBusinessService;
+import ms.luna.biz.table.MsBusinessTable;
+import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.cache.MerchantCategoryCache;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
-
-import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.bl.ManageBusinessBL;
-import ms.luna.biz.sc.ManageBusinessService;
-import ms.luna.biz.util.FastJsonUtil;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -21,6 +34,7 @@ import ms.luna.biz.util.FastJsonUtil;
  *
  */
 
+@Transactional(rollbackFor = Exception.class)
 @Service("manageBusinessService")
 public class ManageBusinessServiceImpl implements ManageBusinessService {
 	
@@ -28,6 +42,12 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 
 	@Autowired 
 	private ManageBusinessBL manageBusinessBL;
+	@Autowired
+	private LunaUserRoleDAO lunaUserRoleDAO;
+	@Autowired
+	private MsBusinessDAO msBusinessDAO;
+	@Autowired
+	private MerchantCategoryCache merchantCategoryCache;
 	
 	@Override
 	public JSONObject createBusiness(String json) {
@@ -71,6 +91,125 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			logger.error("Failed to delete business", th);
 			return FastJsonUtil.error("-1", "删除业务失败");
 		}
+	}
+
+	@Override
+	public JSONObject getBusinessForEdit(JSONObject jsonObject) {
+		String loginUserId = jsonObject.getString("loginUserId");
+		String slaveUserId = jsonObject.getString("slaveUserId");
+		if(StringUtils.isBlank(loginUserId) || StringUtils.isBlank(slaveUserId)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
+		}
+		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
+		List<MsBusiness> selectedBusiness = getBusinessForUser(slaveUserId);
+
+		if(allValidBusiness == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
+		}
+
+		Set<Integer> businessIdSet = new HashSet<>(allValidBusiness.size());
+		for(MsBusiness msBusiness : allValidBusiness) {
+			businessIdSet.add(msBusiness.getBusinessId());
+		}
+
+		Set<Integer> selectedBusinessIdSet = new HashSet<>(selectedBusiness.size());
+		if(selectedBusiness != null) {
+			for (MsBusiness msBusiness : selectedBusiness) {
+				selectedBusinessIdSet.add(msBusiness.getBusinessId());
+			}
+		}
+
+		Map<Integer, String> businessCategoryIdMap = msBusinessDAO.readBusinessCategoryId(businessIdSet);
+		Map<String, String> categoryId2NameMap = merchantCategoryCache.getCategoryId2Name();
+
+		JSONObject resJson = new JSONObject();
+		for(MsBusiness msBusiness : allValidBusiness) {
+			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
+			if(categoryId == null) {
+				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
+			}
+			String categotryName = categoryId2NameMap.get(categoryId);
+			JSONArray jsonArray = resJson.getJSONArray(categotryName);
+			if(jsonArray == null) {
+				jsonArray = new JSONArray();
+				resJson.put(categotryName, jsonArray);
+			}
+			JSONObject businessJson = new JSONObject();
+			businessJson.put(MsBusinessTable.FIELD_BUSINESS_ID, msBusiness.getBusinessId());
+			businessJson.put(MsBusinessTable.FIELD_BUSINESS_NAME, msBusiness.getBusinessName());
+			if(selectedBusinessIdSet.contains(msBusiness.getBusinessId())) {
+				businessJson.put("selected", true);
+			} else {
+				businessJson.put("selected", false);
+			}
+			jsonArray.add(businessJson);
+		}
+
+		return FastJsonUtil.sucess("", resJson);
+	}
+
+	private List<MsBusiness> getBusinessForUser(String userId) {
+
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+		if(lunaUserRole == null) {
+			logger.warn("Failed to get business for user, user not found, userId: " + userId);
+			return null;
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", userId, type));
+			return null;
+		}
+		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
+		if(businessIdList.size() == 1 && businessIdList.get(0) == 0) {
+			// select all business
+		} else {
+			msBusinessCriteria.createCriteria().andBusinessIdIn(businessIdList);
+		}
+		List<MsBusiness> msBusinessList = msBusinessDAO.selectByCriteria(msBusinessCriteria);
+		return msBusinessList;
+
+	}
+
+	@Override
+	public JSONObject getBusinessForSelect(JSONObject jsonObject) {
+		// TODO: in future, should get business in pages
+		String userId = jsonObject.getString("userId");
+		if(StringUtils.isBlank(userId)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
+		}
+		List<MsBusiness> msBusinessList = getBusinessForUser(userId);
+		if(msBusinessList == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
+		}
+		Set<Integer> businessIdSet = new HashSet<>(msBusinessList.size());
+		for(MsBusiness msBusiness : msBusinessList) {
+			businessIdSet.add(msBusiness.getBusinessId());
+		}
+		Map<Integer, String> businessCategoryIdMap = msBusinessDAO.readBusinessCategoryId(businessIdSet);
+		Map<String, String> categoryId2NameMap = merchantCategoryCache.getCategoryId2Name();
+		JSONObject resJson = new JSONObject();
+		for(MsBusiness msBusiness : msBusinessList) {
+			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
+			if(categoryId == null) {
+				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
+			}
+			String categotryName = categoryId2NameMap.get(categoryId);
+			JSONArray jsonArray = resJson.getJSONArray(categotryName);
+			if(jsonArray == null) {
+				jsonArray = new JSONArray();
+				resJson.put(categotryName, jsonArray);
+			}
+			JSONObject businessJson = new JSONObject();
+			businessJson.put(MsBusinessTable.FIELD_BUSINESS_ID, msBusiness.getBusinessId());
+			businessJson.put(MsBusinessTable.FIELD_BUSINESS_NAME, msBusiness.getBusinessName());
+			jsonArray.add(businessJson);
+		}
+
+		return FastJsonUtil.sucess("", resJson);
 	}
 
 	@Override

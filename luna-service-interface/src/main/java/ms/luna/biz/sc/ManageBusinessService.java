@@ -31,4 +31,8 @@ public interface ManageBusinessService {
 
 	JSONObject deleteBusinessById(int id);
 
+	JSONObject getBusinessForEdit(JSONObject jsonObject);
+
+	JSONObject getBusinessForSelect(JSONObject jsonObject);
+
 }

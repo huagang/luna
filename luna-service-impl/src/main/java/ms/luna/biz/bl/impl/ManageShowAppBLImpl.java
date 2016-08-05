@@ -593,9 +593,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
 		// TODO: new version will not use these share_info fields, delete me later
-//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
-//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
-//		data.put(MsShowAppDAO.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
+		data.put(MsShowAppDAO.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
+		data.put(MsShowAppDAO.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
+		data.put(MsShowAppDAO.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
 
 		data.put("shareArray", jsonArray);
 		
@@ -616,18 +616,18 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		String appName = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_APP_NAME);
 		String picThumb = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_PIC_THUMB);
 		String note = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_NOTE);
-//		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);
-//		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_DES);
-//		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_PIC);
+		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);
+		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_DES);
+		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_PIC);
 		
 		MsShowApp msShowApp = new MsShowApp();
 		msShowApp.setAppId(appId);
 		msShowApp.setAppName(appName);
 		msShowApp.setPicThumb(picThumb);
 		msShowApp.setNote(note);
-//		msShowApp.setShareInfoTitle(shareInfoTitle);
-//		msShowApp.setShareInfoDes(shareInfoDes);
-//		msShowApp.setShareInfoPic(shareInfoPic);
+		msShowApp.setShareInfoTitle(shareInfoTitle);
+		msShowApp.setShareInfoDes(shareInfoDes);
+		msShowApp.setShareInfoPic(shareInfoPic);
 
 		msShowAppDAO.updateByPrimaryKeySelective(msShowApp);
 
