@@ -840,8 +840,8 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
 
         //创建新的Tab
         var defaultTab = {
-            // id: 'menutab' + (this.content.tabListCount + 1),
-            id: 'menutab' + new Date().getTime() + Math.floor(Math.random() * 10),
+            id: 'menutab' + (this.content.tabListCount + 1),
+            // id: 'menutab' + new Date().getTime() + Math.floor(Math.random() * 10),
             name: '页卡' + (this.content.tabListCount + 1),
             icon: {
                 customer: {
