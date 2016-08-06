@@ -48,7 +48,7 @@ public class BusinessController extends BasicController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "select")
+    @RequestMapping(method = RequestMethod.GET, value = "/select")
     public ModelAndView selectBusiness(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         LunaUserSession user = SessionHelper.getUser(session);
