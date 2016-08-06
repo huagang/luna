@@ -5,6 +5,7 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
@@ -35,9 +36,12 @@ public class AppController extends BasicController {
     @Autowired
     private ManageShowAppService manageShowAppService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    public static final String menu = "app";
+
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request) {
 
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         ModelAndView modelAndView = buildModelAndView("/manage_app");
         return modelAndView;
     }

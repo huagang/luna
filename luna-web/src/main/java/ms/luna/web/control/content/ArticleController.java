@@ -8,6 +8,7 @@ import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.web.common.AreaOptionQueryBuilder;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
@@ -35,15 +36,17 @@ import java.util.Map;
 public class ArticleController extends BasicController {
 
     private final static Logger logger = Logger.getLogger(ArticleController.class);
+    public static final String menu = "article";
 
     @Autowired
     private ManageArticleService manageArticleService;
     @Autowired
     private ManageColumnService manageColumnService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return buildModelAndView("/manage_article");
     }
 
@@ -126,7 +129,7 @@ public class ArticleController extends BasicController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.GET, value = "", params = "create")
     public ModelAndView createArticle(@RequestParam(required = true, value="business_id") int businessId,
                                       HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = buildModelAndView("/add_article");

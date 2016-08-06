@@ -6,6 +6,7 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsColumnTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.log4j.Logger;
@@ -33,13 +34,15 @@ import java.io.IOException;
 public class ColumnController extends BasicController {
 
     private final static Logger logger = Logger.getLogger(ColumnController.class);
+    public static final String menu = "column";
 
     @Autowired
     private ManageColumnService manageColumnService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         ModelAndView modelAndView = buildModelAndView("/manage_column");
         return modelAndView;
     }

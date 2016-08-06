@@ -7,6 +7,7 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
 import ms.luna.web.common.PulldownCtrl;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.MerchantRegistCtrl;
 import ms.luna.web.control.common.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import java.util.regex.Pattern;
 public class CrmController extends BasicController {
 
     private static final String CRM_URI = "/merchant_crm.jsp";
+    public static final String menu = "crm";
 
     @Autowired
     private PulldownCtrl pulldownCtrl;
@@ -59,7 +61,7 @@ public class CrmController extends BasicController {
             MsLogger.error("session is null");
             return new ModelAndView("/error.jsp");
         }
-        session.setAttribute("menu_selected", "crm");
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         MsUser msUser = (MsUser) session.getAttribute("msUser");
         String luna_nm = msUser.getNickName();
 

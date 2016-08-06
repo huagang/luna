@@ -17,11 +17,11 @@
 				   </dt>
 
 				   <c:forEach items="${module.menuArray}" var="menu">
-					   <dd class="menu-item">
+					   <dd class="menu-item ${sessionScope.menu_selected == menu.code ? 'selected' : ''}">
 						   <a href="${menu.url}">${menu.name}</a>
 					   </dd>
-				   </c:forEach>
 
+				   </c:forEach>
 
 			   </dl>
 			   </c:forEach>

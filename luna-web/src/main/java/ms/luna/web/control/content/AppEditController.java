@@ -8,6 +8,7 @@ import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +35,8 @@ import java.io.IOException;
 public class AppEditController extends BasicController {
 
     private final static Logger logger = Logger.getLogger(AppEditController.class);
+    public static final String menu = "app";
+
     @Autowired
     private ManageShowAppService msShowAppService;
 
@@ -43,6 +46,7 @@ public class AppEditController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/{appId}")
     public ModelAndView init(@PathVariable int appId, HttpServletRequest request) {
         try {
+            SessionHelper.setSelectedMenu(request.getSession(false), menu);
             ModelAndView modelAndView = buildModelAndView("show_page");
             modelAndView.addObject("appId", appId);
             return modelAndView;

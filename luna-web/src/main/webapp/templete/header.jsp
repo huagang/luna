@@ -5,7 +5,7 @@
     <!--通用导航栏 start-->
     <nav class="navbar">
         <div class="navbar-header">
-            <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+            <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
             <div class="navbar-right info-user">
                 <span class="business">
                     <span class="business-name"></span>
@@ -13,10 +13,10 @@
                     <span class="sep">|</span>
                 </span>
                 <img src="<%=request.getContextPath() %>/img/ic_person.png">
-                <span class="account">${sessionScope.msUser.nickName}</span>
+                <span class="account">${sessionScope.user.lunaName}</span>
                 <span class="sep">|</span>
                 <span class="account-logout">
-                    <a href="<%=request.getContextPath() %>/login.do?method=logout" target="_self" id="logout">
+                    <a href="<%=request.getContextPath() %>/common/logout" target="_self" id="logout">
                     	<img src="<%=request.getContextPath() %>/img/ic_exit_to_app_48px.png">退出
                     </a>
                 </span>

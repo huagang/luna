@@ -37,14 +37,28 @@ public class BusinessController extends BasicController {
 
     private final static Logger logger = Logger.getLogger(BusinessController.class);
 
+    public static final String menu = "business";
+
     @Autowired
     private ManageBusinessService manageBusinessService;
+    @Resource(name="pulldownCtrl")
+    private PulldownCtrl pulldownCtrl;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 
-        ModelAndView modelAndView = buildModelAndView("manage_business");
-        return modelAndView;
+        try {
+            SessionHelper.setSelectedMenu(request.getSession(false), menu);
+            ModelAndView modelAndView = buildModelAndView("manage_business");
+            modelAndView.addObject("provinces", pulldownCtrl.loadProvinces());
+            modelAndView.addObject("businessCategories", pulldownCtrl.loadBusinessCategories());
+//			modelAndView.addObject("businesses", businesses);
+            return modelAndView;
+
+        } catch (Exception e) {
+            logger.error("Failed to initialize", e);
+        }
+        return buildModelAndView("/error");
 
     }
 

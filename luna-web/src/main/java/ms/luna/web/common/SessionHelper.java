@@ -2,6 +2,7 @@ package ms.luna.web.common;
 
 import com.alibaba.fastjson.JSONArray;
 import ms.luna.common.LunaUserSession;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,6 +16,7 @@ public class SessionHelper {
 
     public static final String KEY_USER = "user";
     public static final String KEY_MENU = "menu";
+    public static final String KEY_SELECTED_MENU = "menu_selected";
 
     public static LunaUserSession getUser(HttpSession session) {
         if(session == null) {
@@ -44,5 +46,19 @@ public class SessionHelper {
             return;
         }
         session.setAttribute(KEY_MENU, menu);
+    }
+
+    public static void setSelectedMenu(HttpSession session, String menu) {
+        if(session == null || StringUtils.isBlank(menu)) {
+            return;
+        }
+        session.setAttribute(KEY_SELECTED_MENU, menu);
+     }
+
+    public static String getSelectedMenu(HttpSession session) {
+        if(session == null) {
+            return "";
+        }
+        return (String)session.getAttribute(KEY_SELECTED_MENU);
     }
 }
