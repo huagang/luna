@@ -12,9 +12,11 @@ $(document).ready(function() {
     $("#new-business").click(function() {
         addBusiness();
     });
+    window.urls = Inter.getApiUrl();
 });
 
 var newBusinessDialog = $("#pop-newbusiness").clone();
+
 
 //添加用户搜索功能
 function searchMerchant() {
@@ -31,8 +33,8 @@ function searchMerchant() {
     };
 
     $.ajax({
-        url: host + '/manage/business.do?method=search_merchant',
-        type: 'POST',
+        url: window.urls.searchMerchat,
+        type: 'GET',
         async: true,
         data: request_data,
         dataType: "json",
@@ -149,7 +151,7 @@ function submit_business() {
         "merchant_id": $("#result").val()
     };
     $.ajax({
-        url: host + '/manage/business.do?method=create_business',
+        url: window.urls.business,
         type: 'POST',
         async: true,
         data: request_data,
@@ -178,14 +180,10 @@ function submit_business() {
 }
 
 function submit_delete_business(business_id) {
-    request_data = {
-        "business_id": business_id
-    };
     $.ajax({
-        url: host + '/manage/business.do?method=delete_business',
-        type: 'POST',
+        url: window.urls.business + '/' + business_id,
+        type: 'DELETE',
         async: true,
-        data: request_data,
         dataType: "json",
         success: function(returndata) {
             switch (returndata.code) {
@@ -234,13 +232,12 @@ function update_business() {
     var business_code = $("#business-name-short-edit").val();
 
     var request_data = {
-        "business_id": business_id,
         "business_name": business_name,
         "business_code": business_code,
     };
     $.ajax({
-        url: host + '/manage/business.do?method=update_business',
-        type: 'POST',
+        url: window.urls.business + '/' + business_id,
+        type: 'PUT',
         async: true,
         data: request_data,
         dataType: "json",

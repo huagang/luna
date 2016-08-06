@@ -8,7 +8,7 @@
  */
 
 var Inter = function() {
-    var context ="";
+    var context = window.context || "";
     return {
         getApiUrl: function() {
             return {
@@ -19,14 +19,22 @@ var Inter = function() {
                 poiEdit:'/data/poi/initEditPage',//poi编辑功能
                 poiSave:'/data/poi/',//poi保存成功
 
+                // 商户
+                searchMerchat: context + '/content/business/searchMerchant', // 搜索商户接口 get 方法
+
+                // 业务
+                business: context + '/content/business', // 业务相关 POST PUT
+                getBusinessList: context + '/common/business', // 获取该用户能够选择的业务列表
+
             	//文章操作
+                article: context + '/content/article',
+
                 createArticle: context+'/manage/article.do?method=create_article', //保存文章
                 updateArticle: context+'/manage/article.do?method=update_article',
                 publishArticle: context+'/manage/article.do?method=publish_article', //发布文章
                 readArticle: context + "/manage/article.do?method=read_article", //读取文章数据
                 deleteArticle: context + "/manage/article.do?method=delete_article",//删除文章
-                readPoi: context + '', //TODO 读取poi数据信息
-                
+
                 //编辑器上传图片
                 uploadImageInArtcle: context + "/add_poi.do?method=upload_thumbnail",//上传图片
                 uploadVideoInArtcle: context + "/add_poi.do?method=upload_video",//上传视频
@@ -41,7 +49,8 @@ var Inter = function() {
 
                 // 上传路径
                 uploadPath: context+'/uploadCtrl.do?method=uploadFile2Cloud', //统一上传接口
-                
+
+                login: context + '/common/login',  //登录
             };
         }
     };
