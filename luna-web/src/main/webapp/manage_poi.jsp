@@ -252,7 +252,8 @@
 		});
 	});
 	function operationFormatter(value, row, index) {
-				return '<a class="detail" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().poiEdit,row._id) +'">详情</a>'
+	console.log( Util.strFormat(Inter.getApiUrl().poiEdit,row._id));
+				return '<a class="detail" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().poiEdit,[row._id]) +'">详情</a>'
 			   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\')">删除</a>';
 	}
 	function nameformatter(value, row, index) {
