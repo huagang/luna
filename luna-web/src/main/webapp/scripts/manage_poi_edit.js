@@ -37,7 +37,7 @@ $(function(){
 	$("#btn-upload").click(function(){
 		var formData = new FormData($("#excel_upload")[0]);
 		$.ajax({
-			url: host+'/manage_poi.do?method=asyncUploadPoisByExcel',
+			url: Inter.getApiUrl().poiDataImport,
 			type: 'POST',
             async: false,
             data: formData,
@@ -137,10 +137,10 @@ function newBlankPoiReadOnly(_id) {
 //“删除”按钮，删除POI数据
 function delPOI(obj, _id){
 	$.ajax({
-        url: host+'/manage_poi.do?method=checkPoiCanBeDeleteOrNot',
-        type: 'POST',
+        url: Util.strFormat( Inter.getApiUrl().poiCheckDelete,[_id]),
+        type: 'GET',
         async: false,
-        data: {"_id":_id},
+        // data: {"_id":_id},
         dataType:"json",
         success: function (returndata) {
             var result = returndata;
@@ -153,8 +153,8 @@ function delPOI(obj, _id){
                     //弹窗中的确定按钮
                     $("#btn-delete").unbind().click(function(){
                         $.ajax({
-                	        url: host+'/manage_poi.do?method=asyncDeletePoi',
-                	        type: 'POST',
+                	        url: Util.strFormat( Inter.getApiUrl().poiDelete,[_id]),
+                	        type: 'DELETE',
                 	        async: false,
                 	        data: {"_id":_id},
                 	        dataType:"json",

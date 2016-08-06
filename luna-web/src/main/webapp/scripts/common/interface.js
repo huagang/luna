@@ -12,6 +12,12 @@ var Inter = function() {
     return {
         getApiUrl: function() {
             return {
+                //数据管理
+                poiDataImport:'/data/poi/batch',// Poi 数据导入功能
+                poiCheckDelete:'/data/poi/checkPoiCanBeDeleteOrNot?_id={0}',//检查是否能够删除
+                poiDelete:'/data/poi/{0}',//poi删除功能
+                poiEdit:'/data/poi/initEditPage',//poi编辑功能
+                poiSave:'/data/poi/',//poi保存成功
 
                 // 商户
                 searchMerchat: context + '/content/business/searchMerchant', // 搜索商户接口 get 方法

@@ -42,3 +42,11 @@
     height: 16px;
     width: 16px;
 }
+
+.home {
+    height: 30px;
+    line-height: 30px;
+    margin: 30px 20px 0 0;
+    font-size: 16px;
+    direction: rtl;
+}
