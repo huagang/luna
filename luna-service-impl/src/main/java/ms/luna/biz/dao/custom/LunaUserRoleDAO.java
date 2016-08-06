@@ -21,4 +21,7 @@ public interface LunaUserRoleDAO {
     public void deleteUserRoleInfoByUserId(String userId);
 
     public List<LunaUserRole> readUserInfoByRole(List<Integer> roleIdList, String query, int start, int limit);
+
+    public int countUserByRole(List<Integer> roleIdList, String query);
+
 }

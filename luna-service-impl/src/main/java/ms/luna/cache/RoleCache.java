@@ -7,9 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -54,5 +52,23 @@ public class RoleCache {
 
     public LunaRole getRoleByRoleId(int roleId) {
         return lunaRoleDAO.selectByPrimaryKey(roleId);
+    }
+
+    public List<LunaRole> getAllRoles() {
+        LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
+        List<LunaRole> lunaRoles = lunaRoleDAO.selectByCriteria(lunaRoleCriteria);
+        return lunaRoles;
+    }
+
+    public Map<Integer, String> getAllRoleId2Name() {
+
+        LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
+        List<LunaRole> lunaRoles = lunaRoleDAO.selectByCriteria(lunaRoleCriteria);
+
+        Map<Integer, String> roleId2Name = new HashMap<>(lunaRoles.size());
+        for(LunaRole lunaRole : lunaRoles) {
+            roleId2Name.put(lunaRole.getId(), lunaRole.getName());
+        }
+        return roleId2Name;
     }
 }

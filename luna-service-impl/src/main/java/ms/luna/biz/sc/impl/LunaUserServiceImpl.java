@@ -3,6 +3,7 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import ms.biz.common.MailRunnable;
 import ms.biz.common.MenuHelper;
@@ -66,7 +67,7 @@ public class LunaUserServiceImpl implements LunaUserService {
         List<Integer> childRoleIdList = new ArrayList<>();
         // 当前角色不能设定自己角色的权限,但可以管理自己角色下的用户
         childRoleIdList.add(roleId);
-        List<Integer> roleList = Arrays.asList(roleId);
+        List<Integer> roleList = Lists.newArrayList(roleId);
         try {
             while (true) {
                 LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
@@ -82,7 +83,24 @@ public class LunaUserServiceImpl implements LunaUserService {
                 }
             }
             List<LunaUserRole> lunaUserRoleList = lunaUserRoleDAO.readUserInfoByRole(childRoleIdList, query, start, limit);
-            return FastJsonUtil.sucess("", JSON.toJSON(lunaUserRoleList));
+            JSONObject data = new JSONObject();
+            int total = lunaUserRoleDAO.countUserByRole(childRoleIdList, query);
+            JSONArray jsonArray = new JSONArray();
+
+            Map<Integer, String> allRoleId2Name = roleCache.getAllRoleId2Name();
+
+            for(LunaUserRole lunaUserRole : lunaUserRoleList) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(LunaUserTable.FIELD_ID, lunaUserRole.getUserId());
+                jsonObject.put(LunaUserTable.FIELD_LUNA_NAME, lunaUserRole.getLunaName());
+                jsonObject.put("role_name", allRoleId2Name.get(lunaUserRole.getRoleIds().get(0)));
+                jsonArray.add(jsonObject);
+            }
+
+            data.put("rows", jsonArray);
+            data.put("total", total);
+
+            return FastJsonUtil.sucess("", data);
         } catch (Exception ex) {
             logger.error("Failed to get child role by roleId: " + roleId, ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
@@ -406,7 +424,7 @@ public class LunaUserServiceImpl implements LunaUserService {
 
             LunaUserRole userRole = new LunaUserRole();
             userRole.setUserId(userId);
-            userRole.setNickName(lunaName);
+            userRole.setLunaName(lunaName);
             userRole.setRoleIds(Arrays.asList(roleId));
             userRole.setExtra(JSON.parseObject(extra));
             lunaUserRoleDAO.createUserRoleInfo(userRole);
