@@ -5,8 +5,6 @@
             plugins/selectizeJs/selectize.bootstrap3.css
             styles/formComponent.css
             styles/common.css
-
-
         js
             plugins/jquery.js
             plugins/deep-diff/deep-diff-0.3.3.min.js
