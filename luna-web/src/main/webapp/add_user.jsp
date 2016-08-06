@@ -19,13 +19,15 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_user.css">
+    <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+
 </head>
 <body>
 <!--通用导航栏 start-->
 <jsp:include page="/templete/header.jsp"/>
 <!--通用导航栏 end-->
 <!--中间业务内容 start-->
-<div class="content ng-hide" ng-app="addUser" ng-controller="AddUserController as user" ng-show="user.loaded" ng-init="user.loaded=true">
+<div class="content ng-hide ng-cloak" ng-app="addUser" ng-controller="AddUserController as user" ng-show="user.loaded" ng-init="user.loaded=true">
     <div class="inner-wrap">
         <div class="main-content">
             <!--侧边菜单 start-->
@@ -106,7 +108,6 @@
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
-<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_user.js"></script>

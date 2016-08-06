@@ -49,14 +49,14 @@
                             </div>
                             <!--用户搜索 end-->
                             <!--   添加用户按钮 -->
-                            <a class="button" id='useradd' target="_blank" href="./manage_user.do?method=add_user">添加用户</a>
+                            <a class="button" id='useradd' target="_blank" href="./platform/user/add">添加用户</a>
                             <!--用户列表 start-->
                             <div class="user-list">
 
                             <table id="table_users" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/manage_user.do?method=async_search_users"
+										 data-url="${basePath}/platform/user/search"
 										 data-side-pagination="server" 
 										 data-page-size="20"
 										 data-pagination="true"

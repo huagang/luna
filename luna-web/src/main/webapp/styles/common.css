@@ -123,8 +123,8 @@ a.button.disable:hover{
     height: 64px;
     padding: 12px 0;
 }
-.navbar .business-name,
-.navbar .business-name:hover
+.navbar .navbar-business-name,
+.navbar .navbar-business-name:hover
 {
     color: white;
 }

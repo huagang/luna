@@ -7,8 +7,8 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
             <div class="navbar-right info-user">
-                <span class="business">
-                    <span class="business-name"></span>
+                <span class="navbar-business">
+                    <span class="navbar-business-name"></span>
                     <a href="<%=request.getContextPath() %>/content/business/select"><span class="select-business"></span></a>
                     <span class="sep">|</span>
                 </span>
@@ -28,7 +28,7 @@
             var business = localStorage.getItem('business');
             if(business){
                 business = JSON.parse(business);
-                document.querySelector('.business .business-name').innerHTML = business.name;
+                document.querySelector('.navbar-business .navbar-business-name').innerHTML = business.name;
             }
         });
 
