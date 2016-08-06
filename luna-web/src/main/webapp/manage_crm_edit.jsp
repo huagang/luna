@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>

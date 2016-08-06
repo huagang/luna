@@ -6,15 +6,16 @@ $(function(){
 	window.onload = function() {
 		var merchant_id = $("#merchant_id_edit").attr("val");
 		editcrm(merchant_id);
-	}
+	};
+
     $("#merchant_nm_edit").blur(function(){
     	var hasError=merchantNameEdit();
         if(!hasError){
         	var meName = $("#merchant_nm_edit").val();
         	var meId = $("#merchant_id_edit").val();
         	$.ajax({
-        		url:host+'/manage_merchant.do?method=checkNm_edit',
-        		type:'POST',
+        		url:Inter.getApiUrl().crmCheckName.url,
+        		type:Inter.getApiUrl().crmCheckName.type,
         		async:false,
         		cache:false,
         		data:{

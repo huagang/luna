@@ -137,7 +137,7 @@ function newBlankPoiReadOnly(_id) {
 //“删除”按钮，删除POI数据
 function delPOI(obj, _id){
 	$.ajax({
-        url: Util.strFormat( Inter.getApiUrl().poiCheckDelete,[_id]),
+        url: Util.strFormat( Inter.getApiUrl().poiCheckDelete.url,[_id]),
         type: 'GET',
         async: false,
         // data: {"_id":_id},

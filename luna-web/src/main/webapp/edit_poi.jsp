@@ -22,10 +22,13 @@
     <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/styles/common.css">
     <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
+	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+	<script src="${basePath}/scripts/common/interface.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 
     <script src="${basePath}/scripts/lunaweb.js"></script>
     <script src="${basePath}/scripts/ajaxfileupload.js"></script>
@@ -387,7 +390,6 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
-<script src="${basePath}/scripts/common/interface.js"></script>
 <script src="${basePath}/scripts/add_edit_poi.js"></script>
 <script src="${basePath}/scripts/popup.js"></script>
 <script type="text/javascript">
