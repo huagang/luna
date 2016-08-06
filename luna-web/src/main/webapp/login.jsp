@@ -42,7 +42,7 @@
 	                     </p>
 	                </div>
 	                <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>
-	                <form method="post" action="<%=request.getContextPath() %>/login.do?method=logon_pwuser">
+	                <form method="post">
 	                 <div class="input-name">
 	                     <input type="text" name="luna_name" id="name-login" placeholder="请输入用户名">
 	                 </div>
@@ -85,6 +85,10 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
+<script>
+    window.context = "<%=request.getContextPath()%>";
+</script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/login.js"></script>
 </body>
 </html>

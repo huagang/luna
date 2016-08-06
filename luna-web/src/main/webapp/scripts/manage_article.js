@@ -33,6 +33,7 @@ var initPage = function() {
 
 jQuery('document').ready(function(e) {
     initPage.init();
+    window.urls = Inter.getApiUrl();
 });
 
 var APP_STATUS = {
@@ -47,7 +48,7 @@ function titleFormatter (value,row,index){
 
 function statusFormatter(value, row, index) {
     if(row.status === 1){
-        return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.status] + "'/>";
+        return "<img class='published' src='{0}/img/published.png' alt='{1}'/>".format(window.context, APP_STATUS[row.status]);
     } else {
         return APP_STATUS[row.status];
     }
@@ -59,7 +60,7 @@ function timeFormatter(value, row, index) {
 function operationFormatter(value, row, index) {
     var id = row.id;
     var title = row.title;
-    var editOp = '<a class="edit" href="./article.do?method=update_article&id={0}" target="_blank">编辑</a>'.format(id);
+    var editOp = '<a class="edit" href="{0}/{1}" target="_blank">编辑</a>'.format(window.urls.article, id);
     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, title);
 
     return editOp + deleteOp;
@@ -95,10 +96,13 @@ function ArticleController($scope, $rootScope, $http) {
         this.dialogBaseShow = false;
         this.newArticleShow = false;
         this.deleteArticleShow = false;
+        this.urls = window.urls;
+
 
         this.resetData();
         this.provinceOptions = [];
         this.loadProvinces();
+
 
     };
 
@@ -194,10 +198,8 @@ function ArticleController($scope, $rootScope, $http) {
 
     this.showCreateArticlePage = function() {
         if (this.businessId) {
-            window.open( host +
-                '/manage/article.do?method=create_article&business_id={0}'.format(this.businessId));
+            window.open( this.urls.article + "?business_id=" + this.businessId);
         }
-
     };
 
 
@@ -214,11 +216,8 @@ function ArticleController($scope, $rootScope, $http) {
 
     this.submitDeleteArticle = function(id) {
         var request = {
-            method: 'POST',
-            url: host + '/manage/article.do?method=delete_article',
-            data: {
-                'id': id
-            }
+            method: 'DELETE',
+            url: this.urls.article + '/' + id
         };
         $http(request).then(function success(response) {
             var data = response.data;
