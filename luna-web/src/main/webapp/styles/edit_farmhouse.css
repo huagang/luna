@@ -26,3 +26,10 @@
     display: block;
     border:0;
 }
+
+.navbar-right .operation{
+    line-height: 60px;
+    color: white;
+    cursor: pointer;
+    padding-right: 10px;
+}

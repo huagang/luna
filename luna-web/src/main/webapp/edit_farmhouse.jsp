@@ -28,7 +28,16 @@
 <body>
   <div class="container-fluid">
   <!--通用导航栏 start-->
-  <jsp:include page="/templete/header.jsp"/>
+    <nav class="navbar">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+        <div class="navbar-right ">
+              <a href="javscript:void(0)" class="operation save">保存</a>
+              <a href="javscript:void(0)" class="operation preview">预览</a>
+              <a href="javscript:void(0)" class="operation publish">发布</a>
+        </div>
+      </div>
+    </nav>
   <!--通用导航栏 end-->
   <!--中间区域内容 start-->
   <div class="content">

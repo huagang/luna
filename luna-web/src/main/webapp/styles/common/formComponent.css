@@ -39,7 +39,6 @@ p.warn{
     border-bottom: 1px solid #ccc;
 }
 
-
 .selectize-input{
     height: 34px;
 }
@@ -127,11 +126,13 @@ p.warn{
 
 .load-container{
     position: absolute;
+    z-index: 1;
     left: 100%;
     top: 0;
     margin: 2px 0 0 10px;
     height: 36px;
     width: 36px;
+    background-color: white;
 }
 .load-container .loader{
     width: 30px;
@@ -390,4 +391,8 @@ p.warn{
 
 .poi-search .selectize-control{
     width: 300px;
+}
+
+.poi-search img.form-value {
+    vertical-align: top;
 }

@@ -3,20 +3,22 @@
         css
             styles/file_loading_tip.css
             plugins/selectizeJs/selectize.bootstrap3.css
-            styles/ formComponent.css
-            styles/ common.css
+            styles/formComponent.css
+            styles/common.css
 
 
         js
-            jquery
-            deep-diff
+            plugins/jquery.js
+            plugins/deep-diff/deep-diff-0.3.3.min.js
             plugins/selectizeJs/selectize.min.js
+            script/common/interface.js
 
 */
 
 /*
        注意事项
             需要在设置window.context, 否则可能有些图片加载不了
+            功能不太完善, 没有的功能要自己加 :)
  */
 
 (function() {
@@ -65,7 +67,7 @@
 
         this._component = null; // 当前组件
 
-        this._children = {}; // 子组件对象, 每个父组件都应知道有哪些子组件 组件命名方式应该与组件作用相一致
+        this._children = []; // 子组件对象, 每个父组件都应知道有哪些子组件 组件命名方式应该与组件作用相一致
 
         // 初始化子组件
         this.initChildren();
@@ -73,7 +75,7 @@
 
     BaseComponent.prototype.initChildren = function () {
         (this.definition || []).forEach(function (item, index) {
-            this._children[item.definition.type] = new this.nameMapping[item.definition.type](item);
+            this._children[index] = new this.nameMapping[item.definition.type](item);
         }.bind(this));
 
     };
@@ -112,18 +114,71 @@
     };
 
 
-    BaseComponent.prototype.afterMount = function () { // 组件第一次渲染结束后调用
+   /* BaseComponent.prototype.afterMount = function () { // 组件第一次渲染结束后调用
 
-    };
+    };*/
 
     BaseComponent.updateComponent = function (data) { // 更新组件内容 只传递需要更改的内容
 
     };
 
 
-    BaseComponent.prototype.willUnMount = function () { //组件即将销毁时调用, 可能需要解除事件绑定
+    /*BaseComponent.prototype.willUnMount = function () { //组件即将销毁时调用, 可能需要解除事件绑定
 
+    };*/
+
+
+    BaseComponent.prototype.checkValidation = function(){
+        this.validation = true;
+        if(this._type === 'baseComponent'){
+            this.validation = '';
+        }
+        var hasChildren = false;
+        for(var i in this._children){
+            var name = this._children[i].definition.name;
+            if(name || (this.formType === 'array' && parseInt(name) === 0)){
+                hasChildren  = true;
+                if(! this._children[i].definition.empty){
+                    if(this.validation && ! this._children[i].checkValidation()){
+                        if(this._type === 'baseComponent'){
+                            this.validation = '';
+                        }
+                        this.validation = false;
+                    }
+                }
+            }
+        }
+
+        if(!hasChildren){
+            if(! this.value){
+                this.validation = false;
+            }
+        }
+        return this.validation;
     };
+
+    BaseComponent.prototype.formType = 'object';  //object array 为了区分返回给后台值的类型,是对象还是数组
+
+    BaseComponent.prototype.getFormValue = function(){
+        var hasChildren = false;
+        if(this.formType === 'object'){
+            this.formValue = {}
+        } else if(this.formType === 'array'){
+            this.formValue = [];
+        }
+        for(var i in this._children){
+            var name = this._children[i].definition.name;
+            if(name || (this.formType === 'array' && parseInt(name) > -1)){
+                hasChildren  = true;
+                this.formValue[name] = this._children[i].getFormValue();
+            }
+        }
+        if(! hasChildren){
+            this.formValue = this.value;
+        }
+
+        return this.formValue;
+    }
 
     BaseComponent.prototype.defaultLimits = {
         PIC: {
@@ -164,7 +219,7 @@
         'RadioList': RadioList,
         'INPUT': Input,
         'DIVIDER': Divider,
-        'POI_SEARCH': PoiSearch,
+        'POI_SEARCH': PoiSearch
 
     };
 
@@ -251,6 +306,7 @@
         that.init();
         function init() {
 
+            that._type = 'fileUploader';
             that.data.value = that.data.value || '';
             that.value = that.data.value;
 
@@ -264,6 +320,7 @@
 
             that.definition.limit = (that.definition.limits || that.defaultLimits)[that.definition.type];  // 如果没有传入限制参数, 则使用默认限制参数
 
+
             that._template =
                 "<div class='fileup'> \
                     <input type='text' readonly='true' class='media' placeholder='请输入{0}介绍地址'> \
@@ -274,9 +331,9 @@
                             <div class='loader'>Loading...</div> \
                         </div> \
                     </span> \
-                    <div class='cleanInput hide'><a href='javascript:void(0)'>删除</a></div> \
+                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{0}</a></div> \
                  </div>\
-                 <p class='warn'></p>";
+                 <p class='warn'></p>".format(that.definition.hideDeleteButton ? '' : '删除');
 
             that._children = {};
             if (that.definition.show_name) {
@@ -295,14 +352,13 @@
                 that._component.innerHTML = that._template.format(
                     that.typeNameMapping[that.definition.type], that.definition.limit.max);
 
-
                 if (that._children.label) {
                     var label = that._children.label.render();
                     that._component.insertBefore(label, that._component.firstChild);
                 }
                 if(that.value){
                     that.element.find('.media').val(that.value);
-                    that.element.find('.cleanInput').removeClass('hide');
+                    that.element.find('.cleanInput').removeClass('hidden');
                 }
 
                 that._bindEvent();
@@ -349,7 +405,7 @@
                 return;
             }
             that.showLoadingTip();
-            that.element.find('.cleanInput').addClass('hide');
+            that.element.find('.cleanInput').addClass('hidden');
 
             var data = new FormData();
             data.append('file', event.target.files[0]);
@@ -368,11 +424,11 @@
                         that.element.find('.media').val(that.value);
                         that.element.find('.media-fileup').val('');
                         that.setWarn('');
-                        that.element.find('.cleanInput').removeClass('hide');
+                        that.element.find('.cleanInput').removeClass('hidden');
                     } else{
                         that.setWarn(data.msg);
                         if(that.value){
-                            that.element.find('.cleanInput').removeClass('hide');
+                            that.element.find('.cleanInput').removeClass('hidden');
                         }
                     }
                     that.hideLoadingTip();
@@ -383,7 +439,7 @@
                     that.setWarn(data.msg);
                     that.hideLoadingTip();
                     if(that.value){
-                        that.element.find('.cleanInput').removeClass('hide');
+                        that.element.find('.cleanInput').removeClass('hidden');
                     }
                 }
             });
@@ -405,7 +461,7 @@
             if (data.value && data.value !== that.value) {
                 that.value = data.value;
                 that.element.find('.media').val(that.value);
-                that.element.find('.cleanInput').removeClass('hide');
+                that.element.find('.cleanInput').removeClass('hidden');
             }
         }
 
@@ -415,7 +471,7 @@
             that.element.find('.media-fileup').val('');
             that.setWarn('');
             that.hideLoadingTip();
-            that.element.find('.cleanInput').addClass('hide');
+            that.element.find('.cleanInput').addClass('hidden');
         }
 
     }
@@ -444,6 +500,8 @@
 
         that.init();
         function init(){
+            that._type = 'textarea';
+
             that.data.value = that.data.value || '';
             that.value = that.data.value;
 
@@ -503,7 +561,7 @@
         }
     }
 
-    // Textarea.prototype = new BaseComponent();
+    Textarea.prototype = new BaseComponent();
     /*************** TEXTAREA组件 end*******************/
 
 
@@ -519,8 +577,13 @@
         // 事件绑定
         that._bindEvent = _bindEvent;
 
+        // input onChange事件
+        that.handleChange = handleChange;
+
         that.init();
         function init() {
+            that._type = 'input';
+
             that.data.value = that.data.value || '';
             that.value = that.data.value;
 
@@ -586,6 +649,7 @@
             }
         }
     }
+    Input.prototype = new BaseComponent();
 
     /*************** 分割线组件 start*******************/
     function Divider(data){
@@ -603,6 +667,7 @@
         }
 
     }
+    Divider.prototype = new BaseComponent();
 
 
 
@@ -623,6 +688,7 @@
 
         that.init();
         function init() {
+            that._type = 'radioList';
 
             that.data.value = that.data.value || '';
             that.value = that.data.value;
@@ -649,7 +715,7 @@
                 if (that.value) {
                     that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', true);
                 }
-
+                that._bindEvent();
             }
 
             return this._component;
@@ -690,6 +756,7 @@
             }
         }
     }
+    RadioList.prototype = new BaseComponent();
 
 
     /*************** radio text 组件 start*******************/
@@ -707,6 +774,7 @@
 
         that.init();
         function init() {
+            that._type = 'radioText';
 
             that.data.value = that.data.value || {};
 
@@ -718,10 +786,15 @@
 
             that._children = {};
 
-            if(that.definition.extension_attrs){
+            if(that.definition.options){
                 that._children.radioList = new RadioList({
                     value: '',
-                    definition: {options: that.definition.extension_attrs}
+
+                    definition: {
+                        options: that.definition.options,
+                        name: 'value',
+                    }
+
                 });
             }
 
@@ -729,7 +802,7 @@
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
             }
 
-            that._children.input = new Input({definition:{limits: that.definition.limits}, value: ''});
+            that._children.input = new Input({definition:{limits: that.definition.limits, name: 'text'},  value: ''});
 
         }
 
@@ -757,7 +830,6 @@
             }
 
             return that._component;
-
         }
 
 
@@ -777,6 +849,8 @@
             }
         }
     }
+    RadioText.prototype = new BaseComponent();
+
 
 
 
@@ -795,6 +869,8 @@
         that.init();
 
         function init() {
+            that._type = 'textPic';
+
             that.data.value = that.data.value || {};
             that.value = that.data.value;
             that.definition = that.data.definition || {};
@@ -817,7 +893,8 @@
                 definition: {
                     limits: that.definition.limits || that.defaultLimits,
                     placeholder: '',
-                    display_order: curOrder
+                    display_order: curOrder,
+                    name: 'text'
                 }
             });
             that._children.picUploader = new FileUploader({
@@ -826,7 +903,9 @@
                     limits: that.definition.limits || that.defaultLimits,
                     placeholder: '',
                     type: 'PIC',
-                    display_order: curOrder + 1
+                    name: 'pic',
+                    display_order: curOrder + 1,
+                    hideDeleteButton: that.definition.hideDeleteButton
                 }
             });
         }
@@ -843,6 +922,10 @@
 
             if(data.definition.show_name && that._children.label){
                 that._children.label.updateComponent(data);
+            }
+
+            if(data.definition.name || data.definition.name === 0){
+                that.definition.name = data.definition.name;
             }
 
         }
@@ -871,6 +954,9 @@
 
         that.init();
         function init() {
+            that._type = 'textPicGroup';
+
+            that.formType = 'array';  // 返回的表单数据类型是数组
             that.defautNum = 3;
 
             that.data.value = that.data.value || {};
@@ -886,9 +972,12 @@
                     value:'',
                     definition: {
                         display_order: i + 1,
+                        name: i,
                         show_name: that.definition.show_name + (i + 1),
                         limits: that.definition.limits,
-                        placeholder: that.definition.placeholder || ''
+                        placeholder: that.definition.placeholder || '',
+                        hideDeleteButton: true,
+
                     }
                 }));
             }
@@ -934,9 +1023,11 @@
                 value:'',
                 definition: {
                     display_order: that._children.length + 1,
+                    name: that._children.length,
                     show_name: that.definition.show_name + (that._children.length + 1),
                     limits: that.definition.limits,
-                    placeholder: that.definition.placeholder || ''
+                    placeholder: that.definition.placeholder || '',
+                    hideDeleteButton: true,
                 }
             });
             that._children.push(child);
@@ -955,7 +1046,11 @@
             that._children.splice(order, 1);
             $('.textpic-group')[0].children[order].remove();
             for(var i = order; i < that._children.length; i++){
-                that._children[i].updateComponent({'definition':{'show_name': that.definition.show_name + (i+1)}});
+                that._children[i].updateComponent({'definition':
+                    {'show_name': that.definition.show_name + (i+1)},
+                     name: i,
+                     display_order: i + 1
+                });
             }
         }
 
@@ -963,6 +1058,7 @@
             //  暂时没有这个需求 不写 :)
         }
     }
+    TextPicGroup.prototype = new BaseComponent();
 
 
     /******************* country enjoyment **********************/
@@ -999,6 +1095,7 @@
         that.init();
 
         function init() {
+            that._type = 'countryEnjoyment';
 
             that.data.value = that.data.value || [];
             that.value = that.data.value;
@@ -1104,8 +1201,6 @@
             that.element.on('click', '.pop-edit .button-confirm', that.confirmEdit);
         }
 
-
-
         function handleSelect(value){
             var notFound = that.value.every(function(item){
                 if(item.value === value){
@@ -1201,6 +1296,8 @@
 
 
     }
+    CountryEnjoyment.prototype = new BaseComponent();
+
 
     /******************** checkbox  *********************/
     function CheckboxList(data){
@@ -1218,7 +1315,9 @@
         that.init();
 
         function init() {
-            that.data.value = that.data.value || {};
+            that._type = 'checkboxList';
+
+            that.data.value = that.data.value || [];
             that.value = that.data.value;
             that.definition = that.data.definition || {};
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
@@ -1228,8 +1327,6 @@
                     definition: { show_name: that.definition.show_name }
                 });
             }
-
-            that.checkedList = [];
         }
 
         function render(){
@@ -1239,7 +1336,7 @@
                 that._component.className = 'checkbox-list component';
 
                 var list = '', now=Date.now(), id;
-                (that.definition.extension_attrs || []).forEach(function(item, index){
+                (that.definition.options || []).forEach(function(item, index){
                     id = now + '-' + index;
                     list += "<label for='{0}' class='checkbox-label'>\
                                 <div class='fullname'>{3}</div>\
@@ -1265,7 +1362,13 @@
         function _bindEvent(){
             that.element.find('.checkbox').on('change', function(event){
                 var order = parseInt(event.target.dataset.order);
-                that.checkedList[order] = ! that.checkedList[order];
+                var value = that.definition.options[order].value;
+                var index = that.value.indexOf(value);
+                if(index  === -1 ){
+                    that.value.push(value);
+                } else{
+                    that.value.splice(index, 1);
+                }
             });
 
         }
@@ -1274,6 +1377,7 @@
         }
 
     }
+    CheckboxList.prototype = new BaseComponent();
 
 
     /****************** poi绑定 ****************/
@@ -1303,6 +1407,8 @@
         that.init();
 
         function init() {
+            that._type = 'poiSearch';
+
             that.data.value = that.data.value || '';
             that.value = that.data.value;
             that.definition = that.data.definition || {};
@@ -1339,10 +1445,10 @@
                     <label class="form-label">联系电话</label>\
                     <span class="form-value"></span>\
                  </div>\
-                 <div class="form-group poi-phone">\
+                 <div class="form-group poi-thumbnail">\
                     <label class="form-label">缩略图</label>\
-                    <span class="form-value"></span>\
-                 </div>';
+                    <img src="" class="form-value" height="200" alt="暂无图片"/> \
+                </div>';
 
         }
 
@@ -1430,8 +1536,41 @@
 
          }
 
-        function handleSelect(){
+        function handleSelect(value){
+            if(value &&  that.value !== value){
+                that.value = value;
+                $.ajax({
+                    url: apiUrls.poiDetail.format(value),
+                    type: 'GET',
+                    success:function(res){
+                        if(res.code === '0'){
+                            var detail = that.data.poiDetail = res.data.zh;
+                            that.element.addClass('show-poi-info');
+                            that.element.find('.poi-name .form-value').html(detail.poi_name);
+                            if(detail.lnglat.lat && detail.lnglat.lng){
+                                var position = detail.lnglat.lat + ',' + detail.lnglat.lng;
+                            } else{
+                                position = '暂无';
+                            }
+                            that.element.find('.poi-position .form-value').html(position);
+                            var address = [detail.address.province, detail.address.city, detail.address.county, detail.address.detail_address].join(',');
+                            that.element.find('.poi-address .form-value').html(address);
+                            var pano = "[{0}]{1}".format(detail.panorama.panorama_type_name || '暂无', detail.panorama.panorama_id||'暂无');
+                            that.element.find('.poi-pano .form-value').html(pano);
+                            that.element.find('.poi-phone .form-value').html(detail.contact_phone || '暂无');
+                            that.element.find('.poi-thumbnail .form-value').attr('src', detail.thumbnail);
 
+                        } else{
+                            console.error(res.msg || '获取poi信息出错, 请重试');
+                            that.element.removeClass('show-poi-info');
+                        }
+                    },
+                    error:function(res){
+                        console.error(res.msg || '获取poi信息出错, 请重试');
+                        that.element.removeClass('show-poi-info');
+                    }
+                });
+            }
         }
 
         function updateComponent(){
@@ -1441,20 +1580,23 @@
 
 
     }
+    PoiSearch.prototype = new BaseComponent();
 
 
     window.FormComponent = {
         'BaseComponent': BaseComponent,
-        'Label': Label,
+        'CheckboxList': CheckboxList,
+        'CountryEnjoyment': CountryEnjoyment,
+        'Divider': Divider,
         'FileInput': FileUploader,
-        'Textarea':Textarea,
+        'Input': Input,
+        'Label': Label,
+        'PoiSearch': PoiSearch,
         'RadioText':RadioText,
         'RadioList': RadioList,
-        'Input': Input,
+        'Textarea':Textarea,
         'TextPic': TextPic,
         'TextPicGroup': TextPicGroup,
-        'CheckboxList': CheckboxList,
-        'PoiSearch': PoiSearch
     };
 }());
 

@@ -4,7 +4,9 @@
 $(function(){
 
     var controller = new Controller();
-    function Controller(){
+    function Controller() {
+        window.t = this;
+
         var that = this;
 
         // 初始化函数
@@ -13,13 +15,7 @@ $(function(){
         // 初始化表单内容
         that.initComponents = initComponents;
 
-        /* 应该将其放到子组件中,而不是放到这儿
-        // 请求 搜索poi
-        that.searchPois = searchPois;
-
-        // 请求 获取单个poi信息
-        that.fetchPoiData = fetchPoiData;
-        */
+        that.getFields = getFields;
 
         // 请求 获取表单信息
         that.fetchFormData = fetchFormData;
@@ -35,46 +31,55 @@ $(function(){
 
         that.init();
         // 初始化函数
-        function init(){
+        function init() {
             that.testData = that.getTestData();
 
-            that.formData = null; //表单信息
+            that.fields = null; //表单信息
             that.farmhouseData = null; // 表单数据
 
             that.fetchFormData();
         }
 
-        function initComponents(){
+        function initComponents() {
             that._component = new window.FormComponent.BaseComponent({
-                definition: that.formData,
+                definition: that.fields,
                 value: ''
             });
             that._component.render('.auto-form');
         }
 
-        function fetchPoiData(){
-
-        }
-
-        function searchPois(){
-
-        }
-
         // 请求 获取表单信息
-        function fetchFormData(){
+        function fetchFormData() {
             $.ajax({
                 url: '/fdsafdsa/fdsafda',
                 type: 'GET',
                 data: {},
-                success: function(){
+                success: function () {
 
                 },
-                error: function(){
-                    that.formData = that.testData.formData;
+                error: function () {
+                    that.fields = that.testData.fields;
+                    that.divider = that.testData.divider;
+                    that.getFields();
                     that.initComponents();
+
                 }
             });
         }
+
+        function getFields() {
+            for(var i = 0; i < that.divider.length ; i+=1){
+                that.fields.splice(that.divider[i] + i, 0, {definition: {
+                    type: 'DIVIDER'
+                }});
+            }
+            that.fields.forEach(function(item, index){
+                item.definition.display_order = index + 1;
+            });
+
+
+        }
+
 
         // 请求 获取农家乐信息
         function postFormData(){
@@ -89,13 +94,20 @@ $(function(){
 
         function getTestData(){
             return {
-                formData: [
+                "divider": [
+                    1,
+                    2,
+                    4,
+                    5,
+                    6
+                ],
+                fields: [
                     {
                         "value": "",
                         "definition": {
                             "show_name": "启动页背景图",
                             "display_order": 1,
-                            "extension_attrs": [],
+                            "options": [],
                             "limits": {
                                 'PIC':{
                                     "ext": [
@@ -114,7 +126,7 @@ $(function(){
                             "show_name": "经营者自述",
                             "display_order": 2,
                             "name": "manager_self_introduction",
-                            "extension_attrs": [],
+                            "options": [],
                             "type": "TEXTAREA",
                             playceholder: '哈哈哈',
                             "limits": {
@@ -135,9 +147,9 @@ $(function(){
                     {
                         "definition": {
                             "show_name": "精选房间全景标识",
-                            "display_order": 5,
+                            "display_order": 4,
                             "name": "well_chosen_room_panorama_type",
-                            "extension_attrs": [
+                            "options": [
                                 {
                                     value: "1",
                                     text:"单场景点"
@@ -164,9 +176,9 @@ $(function(){
                     {
                         "definition": {
                             "show_name": "美食",
-                            "display_order": 7,
+                            "display_order": 5,
                             "name": "delicacy",
-                            "extension_attrs": [],
+                            "options": [],
                             "type": "TEXT_PIC_GROUP",
                             "limits": {
                                 "TEXT": {
@@ -188,9 +200,9 @@ $(function(){
                     {
                         "definition": {
                             "show_name": "场地设施",
-                            "display_order": 8,
+                            "display_order": 6,
                             "name": "facility",
-                            "extension_attrs": [
+                            "options": [
                                 {
                                     value:'1',
                                     label: "facility1facility1"
@@ -237,7 +249,7 @@ $(function(){
                     {
                         "definition": {
                             "show_name": "乡村野趣",
-                            "display_order": 9,
+                            "display_order": 7,
                             "name": "country_enjoyment",
                             "options": [
                                 {
@@ -275,7 +287,7 @@ $(function(){
                         'definition':{
                             show_name: '绑定POI',
                             name: 'poi',
-                            display_order: 10,
+                            display_order: 8,
                             type: 'POI_SEARCH',
                             placeholder: {
                                 "TEXT":[
