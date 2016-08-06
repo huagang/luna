@@ -22,8 +22,6 @@
  */
 
 (function() {
-
-
     // 设置context
     window.context = window.context || '';
 
@@ -139,18 +137,39 @@
             if(name || (this.formType === 'array' && parseInt(name) === 0)){
                 hasChildren  = true;
                 if(! this._children[i].definition.empty){
-                    if(this.validation && ! this._children[i].checkValidation()){
-                        if(this._type === 'baseComponent'){
-                            this.validation = '';
+                    if(this._type === 'baseComponent') {
+                        if(! this._children[i].checkValidation()){
+                            this.validation += this._children[i].definition.show_name + '不能为空   \n';
                         }
+                    }
+                    else if(this.validation && ! this._children[i].checkValidation()) {
                         this.validation = false;
                     }
+
                 }
             }
         }
 
         if(!hasChildren){
+            var isEmpty = false;
             if(! this.value){
+                isEmpty = true;
+            } else if(toString.call(this.value) === "[object Object]"){
+                for(var i in this.value){
+                    var notEmpty = true;
+                }
+
+
+                if(! notEmpty){
+                    isEmpty =true;
+                }
+
+            } else if(toString.call(this.value) === "[object Array]"){
+                if(this.value.length === 0 ){
+                    isEmpty = true;
+                }
+            }
+            if(isEmpty){
                 this.validation = false;
             }
         }
@@ -252,7 +271,7 @@
         function render() {
             if (!that.component) {
                 that._component = document.createElement('label');
-                that._component.className = 'component-label'
+                that._component.className = 'component-label';
                 that._component.innerHTML = that.definition.show_name;
                 return that._component;
             }
