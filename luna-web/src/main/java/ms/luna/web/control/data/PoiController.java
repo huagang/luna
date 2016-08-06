@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
+import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
 import ms.luna.common.MsLunaResource;
 import ms.luna.common.PoiCommon;
@@ -56,8 +57,11 @@ public class PoiController extends BasicController {
     @Autowired
     private ManagePoiService managePoiService;
 
-    @Resource(name="pulldownCtrl")
+    @Autowired
     private PulldownCtrl pulldownCtrl;
+
+    @Autowired
+    private VodPlayService vodPlayService;
 
     /**
      * 二级菜单缓存
@@ -379,6 +383,7 @@ public class PoiController extends BasicController {
         response.getWriter().print(FastJsonUtil.error("-1", "发生异常").toString());
         response.setStatus(200);
     }
+
 
     public JSONObject searchSubTags(Integer topTagId) {
         return subTagsCache.get(topTagId);
