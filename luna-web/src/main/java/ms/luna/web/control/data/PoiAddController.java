@@ -150,6 +150,7 @@ public class PoiAddController extends BasicController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST, value = "")
+    @ResponseBody
     public JSONObject addPoi(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession(false);

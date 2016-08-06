@@ -138,15 +138,15 @@ public class PoiEditController extends BasicController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.PUT, value = "")
-    public void updatePoi(
+    @ResponseBody
+    public JSONObject updatePoi(
             @RequestParam(required = true, value = "poiId") String _id,
             @RequestParam(required = false, value = "lang") String lang,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Excel上传后数据检查有错误的POI，点击保存后以新建添加的方式增加POI(处理逻辑同新建添加)
         if (_id.isEmpty()) {
-            poiAddController.addPoi(request, response);
-            return;
+            return poiAddController.addPoi(request, response);
         }
 
         try {
@@ -159,19 +159,13 @@ public class PoiEditController extends BasicController {
             JSONObject result = managePoiService.updatePoi(param.toString(), msUser);
             MsLogger.error(result.toJSONString());
             if ("0".equals(result.getString("code"))) {
-                response.getWriter().print(FastJsonUtil.sucess("0"));
-                response.setStatus(200);
-                return;
+                return FastJsonUtil.sucess("0");
             } else {
-                response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
-                response.setStatus(200);
-                return;
+                return FastJsonUtil.error("-1", result.getString("msg"));
             }
         } catch(IllegalArgumentException e) {
             MsLogger.error(e);
-            response.getWriter().print(FastJsonUtil.error("-2", e.getMessage()));
-            response.setStatus(200);
-            return;
+            return FastJsonUtil.error("-2", e.getMessage());
         }
     }
 
