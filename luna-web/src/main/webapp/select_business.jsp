@@ -78,7 +78,5 @@
     }
 </script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/select_business.js"></script>
-
 </body>
 </html>
