@@ -4,7 +4,7 @@ $(function () {
 	//新建商户
     $("#new-built").click(function(){
 //    	window.location.href = host + '/manage_merchant.do?method=init_add';
-    	window.open(host + '/manage_merchant.do?method=init_add');
+    	window.open(Inter.getApiUrl().crmAddPage);
     });
     //商户名称
     $("#merchant_nm").blur(function(){
@@ -12,8 +12,8 @@ $(function () {
         if(!hasError){
         	var meName = $("#merchant_nm").val();
         	$.ajax({
-        		url:host+'/manage_merchant.do?method=checkNm_add',
-        		type:'POST',
+        		url:Inter.getApiUrl().crmCheckName,
+        		type:'GET',
         		async:false,
         		cache:false,
         		data:{'merchant_nm':meName},
@@ -295,8 +295,8 @@ $(function () {
         var merchant_id = $("#close-row").attr("merchant_id");
 //        var index = $("#close-row").attr("index");
     	$.ajax({
-    		type: 'post',
-    		url: host +'/manage_merchant.do?method=close_merchant',
+    		type: 'PUT',
+    		url: Inter.getApiUrl().crmDisableUser,
     		cache: false,
     		async:false,
     		data: {'merchant_id':merchant_id},
@@ -387,8 +387,8 @@ function closecrm(obj,merchant_id){
 //关闭按钮弹窗
 function opencrm(obj,merchant_id){
 	$.ajax({
-		type: 'post',
-		url: host +'/manage_merchant.do?method=open_merchant',
+		type: 'PUT',
+		url: Inter.getApiUrl().crmEnableUser,
 		cache: false,
 		async:false,
 		data: {'merchant_id':merchant_id},
@@ -785,7 +785,7 @@ function thumbnailDisplay(ImgD,height_s,width_s){
 // 跳转到编辑页面
 function editcrm2(merchant_id){
 //	window.location.href = host + '/manage_merchant.do?method=init_edit&&merchant_id='+merchant_id;//0e2X1b3V0C1c3O0F1o2l2T053o2r2r1i
-	window.open(host + '/manage_merchant.do?method=init_edit&&merchant_id='+merchant_id);
+	window.open(Util.strFormat(initEditPage,[merchant_id]) );
 }
 
 // 纯属测试

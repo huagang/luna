@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
+    <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
@@ -54,7 +56,7 @@
 	                         <table id="table_business" class="table"
 	                         			 data-toggle="table"
 	                         			 data-toolbar=""
-								 data-url="${basePath}/manage_merchant.do?method=async_search_merchants"
+								 data-url="/content/crm/search"
 								 data-pagination="true"
 								 data-side-pagination="server" 
 								 data-page-size="20"

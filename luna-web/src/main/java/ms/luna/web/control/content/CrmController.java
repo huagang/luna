@@ -46,7 +46,6 @@ public class CrmController extends BasicController {
 
     /**
      * 商户管理页面初始化
-     *
      * @param request
      * @param response
      * @throws Exception
