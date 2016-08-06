@@ -64,7 +64,7 @@ var Inter = function() {
                 // 上传路径
                 uploadPath: {url: context+'/uploadCtrl.do?method=uploadFile2Cloud',type:''}, //统一上传接口
 
-                login: {url: context + '/common/login',type:''},  //登录
+                login: {url: context + '/common/login', type:'POST'},  //登录提交接口
             };
         }
     };

@@ -30,20 +30,6 @@
 <div class="content" >
     <div class="inner-wrap">
         <div class="title"><h3>请选择您要进入的商户业务</h3></div>
-        <%--<div class="business-container ng-hide" ng-app="selectBusiness" ng-controller="selectBusinessController as business"--%>
-            <%--ng-show="business.show" ng-init="business.show=true">--%>
-            <%--<div class="business-list" ng-repeat="(name,businessGroup) in  business.businessData">--%>
-                <%--<label>{{name}}</label>--%>
-                <%--<div class="business-wrapper">--%>
-                    <%--<span class="business" ng-repeat="businessItem in businessGroup">--%>
-                        <%--<span ng-click="business.handleBusinessClick(businessItem.business_id, businessItem.business_name)"--%>
-                              <%--class="business-name" >{{businessItem.business_name}}</span>--%>
-                        <%--<span class="hot ng-hide" ng-show="businessItem.hot"></span>--%>
-                    <%--</span>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-
         <div class="business-container">
             <c:forEach items = "${businessMap}" var="entry">
                 <div class="business-list">
@@ -59,12 +45,8 @@
                         </c:forEach>
                     </div>
                 </div>
-
-
             </c:forEach>
-
         </div>
-
         <p class="home"><a href="<%=request.getContextPath() %>/">稍后再选</a></p>
     </div>
 </div>

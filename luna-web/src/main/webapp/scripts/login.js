@@ -58,8 +58,8 @@ $(function(){
     	$warn.css('display','none');
     	
         $.ajax({
-            url: apiUrls.login,
-            type: 'POST',
+            url: apiUrls.login.url,
+            type: apiUrls.login.type,
             async: true,
             data: {"luna_name":userName,"password":passWord},
             dataType:"json",
