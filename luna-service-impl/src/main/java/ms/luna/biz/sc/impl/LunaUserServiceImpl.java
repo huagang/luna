@@ -20,6 +20,7 @@ import ms.luna.biz.util.VbMD5;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
+import ms.luna.common.LunaUserSession;
 import ms.luna.schedule.service.EmailService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -230,9 +231,14 @@ public class LunaUserServiceImpl implements LunaUserService {
 
         LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(lunaUser.getUniqueId());
 
-        JSONObject userInfoJson = (JSONObject) JSON.toJSON(lunaUser);
-        userInfoJson.put(LunaUserRoleTable.FIELD_ROLE_IDS, JSON.toJSON(userRole.getRoleIds()));
-        userInfoJson.put(LunaUserRoleTable.FIELD_EXTRA, JSON.toJSON(userRole.getExtra()));
+        LunaUserSession lunaUserSession = new LunaUserSession();
+        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
+        lunaUserSession.setLunaName(lunaUser.getLunaName());
+        lunaUserSession.setNickName(lunaUser.getNickName());
+        lunaUserSession.setEmail(lunaUser.getEmail());
+
+        lunaUserSession.setRoleIds(userRole.getRoleIds());
+        lunaUserSession.setExtra(userRole.getExtra());
 
         LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
         lunaRoleMenuCriteria.createCriteria().andRoleIdIn(userRole.getRoleIds());
@@ -258,8 +264,9 @@ public class LunaUserServiceImpl implements LunaUserService {
                 }
             }
         }
-        userInfoJson.put("uriSet", uriSet);
-        return FastJsonUtil.sucess("", userInfoJson);
+        lunaUserSession.setUriSet(uriSet);
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
     }
 
     @Override

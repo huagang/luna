@@ -43,7 +43,7 @@
                             <table id="table_article" class="table"
                                    data-toggle="table"
                                    data-toolbar=""
-                                   data-url="${basePath}/manage/article.do?method=async_search_article"
+                                   data-url="${basePath}/content/article/search"
                                    data-pagination="true"
                                    data-page-size=20
                                    data-side-pagination="server"
@@ -119,9 +119,13 @@
     <!-- 底部功能区 -->
 </div>
 <!--新建业务 end-->
+<script>
+    window.context = "<%=request.getContextPath() %>";
+</script>
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>

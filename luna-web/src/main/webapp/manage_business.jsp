@@ -48,7 +48,7 @@
                             <table id="table_business" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/manage/business.do?method=async_search_business"
+										 data-url="${basePath}/content/business/search"
 										 data-pagination="true"
 										 data-page-size=20
 										 data-side-pagination="server" 
@@ -200,6 +200,7 @@
 </div>
 <!--弹出层 end-->
 
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/business_manage.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script type="text/javascript">
