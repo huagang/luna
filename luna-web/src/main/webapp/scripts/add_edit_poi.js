@@ -428,7 +428,7 @@ $(function() {
         if (!hasError) {
             var formdata = new FormData($("#poiModel")[0]);
             $.ajax({
-                url: host + "/add_poi.do?method=addPoi",
+                url: Inter.getApiUrl().poiSave,
                 type: 'POST',
                 async: false,
                 cache: true,
