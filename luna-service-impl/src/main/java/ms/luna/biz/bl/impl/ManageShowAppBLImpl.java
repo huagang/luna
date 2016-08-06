@@ -503,18 +503,19 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		business = msBusinessDAO.selectByPrimaryKey(businessId);
 		
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
-		String businessUrl = msWebUrl + String.format(businessUriTemplate, business.getBusinessCode());
+//		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
+		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
 		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
-		String qrImgUrl = generateQR(businessUrl, businessDir, "QRCode.jpg");
+		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
 		
 		if(StringUtils.isBlank(qrImgUrl)) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
 		}
 		JSONObject data = new JSONObject();
 		data.put("QRImg", qrImgUrl);
-		data.put("link", businessUrl);
+		data.put("link", indexUrl);
 		
 		return FastJsonUtil.sucess("发布成功", data);
 	}

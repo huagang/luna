@@ -26,6 +26,7 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select.css">
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select2.css">
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
+        <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>

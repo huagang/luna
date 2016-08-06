@@ -49,8 +49,6 @@
     <script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="${stat_id}" ></script>
     <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
     <script type="text/javascript">
-        // var shareInfo={"title":"${share_info_title}","desc":"${share_info_des}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
-        // getShareInfo(window.document.location.href,shareInfo);
 
         var pageData = ${pageData};
 
@@ -58,8 +56,9 @@
         var wechatOptions = {
             title: "${share_info_title}",
             desc: "${share_info_des}",
-            link: window.location.href,
-            imgUrl:"${share_info_pic}"
+            link: "${share_info_link}",
+           // link: window.location.href.split('?')[0],
+            imgUrl:"${share_info_pic}",
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);

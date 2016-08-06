@@ -104,8 +104,15 @@ window.onload = function () {
             // audio.src = data.audio;
             // audioBtnWraper.classList.remove('hidden');
         }
+        
+
+        //设置标题宽度
         if (!data.video && !data.audio) {
             document.querySelector('.title-wrapper .title').style.width = '100%';
+        } else if (data.video && data.audio) {
+
+        } else {
+            document.querySelector('.title-wrapper .title').style.width = '80%';
         }
     }
 

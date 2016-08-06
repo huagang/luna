@@ -83,6 +83,10 @@ $(document).ready(function () {
 
     $(".app-wrap").on("click", "[hrefurl]", function (e) {
         e.stopPropagation();
+        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+            //禁止欢迎页面的点击事件
+            return;
+        }
         window.location.href = $(this).attr("hrefurl");
     });
 
@@ -114,7 +118,7 @@ $(document).ready(function () {
         e.preventDefault();
         e.stopPropagation();
 
-        var startPosition = $(this).attr("startPosition"), startLng, startLat, navType, error;
+        var startPosition = $(this).closest('.navimg').attr("startPosition"), startLng, startLat, navType, error;
         if (!startPosition) { //没有设定当前位置 因而获取之
             var that = this;
             getMyLocation(function (position) {
@@ -252,11 +256,18 @@ $(document).ready(function () {
     //设置首页滑动到第一页
 
     if ($('.welcome').length > 0) {
+
+        //修改history 中的内容，来解决goback 中的问题
+
+
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
+            // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
         setTimeout(function () {
+            // window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
             });
@@ -304,7 +315,8 @@ $(document).ready(function () {
             }
         } else {
             if (document.referrer) {
-                location.href = document.referrer + '?disableWelcome=true';
+                window.history.go(-1);
+                // location.href = document.referrer + '?disableWelcome=true';
             } else {
                 location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1] + '?disableWelcome=true';
             }
@@ -380,7 +392,10 @@ $(document).ready(function () {
                 if (link) {
                     this.html.attr('data-href', link);
                     this.html.on('click', function (event) {
-
+                        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+                            //禁止欢迎页面的点击事件
+                            return;
+                        }
                         var link = event.currentTarget.getAttribute('data-href');
                         if (link == 'return') {
                             goback();
@@ -872,11 +887,11 @@ $(document).ready(function () {
                     '<div class="menulist ' + (that.menuIndex == index ? 'current' : '') + '" item="profile" data-index="' + index + '">'
                     + '<div class="menulist-img" >'
                     // + '<div class="menuiconbg"  style="'+defaultBgStyle+'" >'
-                    + '<i class="icon iconfont icon-' + item.icon.code + '" style="' + defaultFontColor + defaultBgStyle + '">'+(item.icon.type=='text'? '<div class="icon-title">' +item.name+'</div>':'')+'</i>'
-                    + '<i class="icon iconfont icon-' + item.icon.code + ' current" style="' + currentFontColor + currentBgStyle + '">'+(item.icon.type=='text'? '<div class="icon-title">' +item.name+'</div>':'')+'</i>'
+                    + '<i class="icon iconfont icon-' + item.icon.code + '" style="' + defaultFontColor + defaultBgStyle + '">' + (item.icon.type == 'text' ? '<div class="icon-title">' + item.name + '</div>' : '') + '</i>'
+                    + '<i class="icon iconfont icon-' + item.icon.code + ' current" style="' + currentFontColor + currentBgStyle + '">' + (item.icon.type == 'text' ? '<div class="icon-title">' + item.name + '</div>' : '') + '</i>'
                     // + '</div>'
                     + '</div>'
-                    + '<span class="menulist-title">' + (item.icon.type !='text'?item.name:'') + '</span>'
+                    + '<span class="menulist-title">' + (item.icon.type != 'text' ? item.name : '') + '</span>'
                     + '<span class="border" style="' + currentBgStyle + '"></span>'
                     + '</div>';
                 labsHtml += html;
@@ -976,6 +991,7 @@ $(document).ready(function () {
                             //html = '';
                             var hotelList = '', panoLink;
                             data.pois.forEach(function (item, index) {
+                                // console.log(item);
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
@@ -1001,7 +1017,7 @@ $(document).ready(function () {
                                     var address = item.address.city + item.address.county + item.address.detail_address;
                                     navAttr = ' endName="{0}" endPosition="{1},{2}" address="{3}" data-navtype="{4}"'.format(
                                         item.poi_name, item.lnglat.lat, item.lnglat.lng, address, 0);
-                                    console.log(navAttr);
+                                    // console.log(navAttr);
 
                                 }
                                 if (item.contact_phone) {
@@ -1013,12 +1029,13 @@ $(document).ready(function () {
                                             phones += '<a href="tel:' + item + '">' + item + '</a>  ';
                                         }
                                     });
-                                    console.log(phones);
+                                    // console.log(phones);
                                 }
                                 hotelList +=
                                     '<div class="hotel-item">'
-                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
-                                    + 'background-size: cover;">'
+                                    // +'<a href="">',
+                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;background-size: cover;position:relative;">'
+                                    + '<a hrefurl="' + item.preview_url + '" style="height:100%;width:100%;position:absolute;" ></a>'
                                     + '<div class="nav">'
                                     + '<a class="nav-item navimg nav-location ' + navClass + '" ' + navAttr + '>'
                                     + '<img class="img" src="' + host + '/resources/images/navigation-white.png"/>'
@@ -1036,6 +1053,7 @@ $(document).ready(function () {
                                     + '</div>'
                                     + '</div>'
                                     + '</div>'
+                                    // +'</a>',
                                     + '<div class="hotel-info">'
                                     + '<p>' + item.share_desc + '</p>'
                                     + '<p class="contact ' + (item.contact_phone ? '' : 'hidden') + '">'
@@ -1208,9 +1226,9 @@ function showNav(posiData) {
             objdata.destPosition = posiData;
             getMyLocation();
         } else {
-            
+
             // url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng + "%2C" + posiData.navStartLat + "&dest=" + posiData.navEndLng + "%2C" + posiData.navEndLat + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
-            url= Util.strFormat(Inter.getApiUrl().qqNavStoEnd,[posiData.navStartLat,posiData.navStartLng, posiData.navEndLat,posiData.navEndLng,posiData.navEndName]);
+            url = Util.strFormat(Inter.getApiUrl().qqNavStoEnd, [posiData.navStartLat, posiData.navStartLng, posiData.navEndLat, posiData.navEndLng, posiData.navEndName]);
             window.location.href = url;
         }
     } else {
