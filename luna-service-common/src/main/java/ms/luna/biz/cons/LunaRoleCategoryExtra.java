@@ -11,6 +11,7 @@ public class LunaRoleCategoryExtra {
     public static final String TYPE_BUSINESS = "business";
     public static final String TYPE_DATA_SOURCE = "data_source";
     public static final String TYPE_SERVICE = "service";
+    public static final String TYPE_OTHER = "other";
 
 
 }
