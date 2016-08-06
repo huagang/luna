@@ -6,6 +6,7 @@
 
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
   <meta charset="utf-8" />
@@ -29,30 +30,53 @@
 <div class="content" >
     <div class="inner-wrap">
         <div class="title"><h3>请选择您要进入的商户业务</h3></div>
-        <div class="business-container ng-hide" ng-app="selectBusiness" ng-controller="selectBusinessController as business"
-            ng-show="business.show" ng-init="business.show=true">
-            <div class="business-list" ng-repeat="(name,businessGroup) in  business.businessData">
-                <label>{{name}}</label>
-                <div class="business-wrapper">
-                    <span class="business" ng-repeat="businessItem in businessGroup">
-                        <span ng-click="business.handleBusinessClick(businessItem.business_id, businessItem.business_name)"
-                              class="business-name" >{{businessItem.business_name}}</span>
-                        <span class="hot ng-hide" ng-show="businessItem.hot"></span>
-                    </span>
+        <%--<div class="business-container ng-hide" ng-app="selectBusiness" ng-controller="selectBusinessController as business"--%>
+            <%--ng-show="business.show" ng-init="business.show=true">--%>
+            <%--<div class="business-list" ng-repeat="(name,businessGroup) in  business.businessData">--%>
+                <%--<label>{{name}}</label>--%>
+                <%--<div class="business-wrapper">--%>
+                    <%--<span class="business" ng-repeat="businessItem in businessGroup">--%>
+                        <%--<span ng-click="business.handleBusinessClick(businessItem.business_id, businessItem.business_name)"--%>
+                              <%--class="business-name" >{{businessItem.business_name}}</span>--%>
+                        <%--<span class="hot ng-hide" ng-show="businessItem.hot"></span>--%>
+                    <%--</span>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+
+        <div class="business-container">
+            <c:forEach items = "${businessMap}" var="entry">
+                <div class="business-list">
+                    <label>${entry.key}</label>
+                    <div class="business-wrapper">
+                        <c:forEach items="${entry.value}" var="businessItem">
+                            <span class="business">
+                                <span  onclick="handleBusinessClick('${businessItem.business_id}', '${businessItem.business_name}')"
+                                       class="business-name" >${businessItem.business_name}</span>
+                                <!--<span class="hot ng-hide" ng-show="businessItem.hot"></span>-->
+                            </span>
+
+                        </c:forEach>
+                    </div>
                 </div>
-            </div>
+
+
+            </c:forEach>
+
         </div>
+
         <p class="home"><a href="<%=request.getContextPath() %>/">稍后再选</a></p>
     </div>
 </div>
 <script>
     window.context = '<%=request.getContextPath() %>';
-    var businessMap = ${businessMap};
+    // 业务点击事件
+    function handleBusinessClick(id, name){
+        localStorage.setItem('business', JSON.stringify({id: id, name: name}));
+        console.log('businessId', localStorage.getItem('businessId'));
+        location.href = window.context + '/'; // 去首页
+    }
 </script>
-<script type="text/javascript" src="./plugins/angular/js/angular.min.js"></script>
-<script type="text/javascript" src="./scripts/common/interface.js"></script>
-
-<script type="text/javascript" src="./scripts/select_business.js"></script>
-
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 </body>
 </html>
