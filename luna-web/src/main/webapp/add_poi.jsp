@@ -18,14 +18,16 @@
     <meta name="Description" content="皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。" />
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
-    <script src="${basePath}/plugins/jquery.js"></script>
     <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/styles/common.css">
     <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
-<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+    <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+    <script src="${basePath}/plugins/jquery.js"></script>
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+    <script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
     <script src="${basePath}/scripts/lunaweb.js"></script>
     <script src="${basePath}/scripts/ajaxfileupload.js"></script>
     <script src="${basePath}/scripts/fileupload.js"></script>
@@ -300,6 +302,7 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+
 <script src="${basePath}/scripts/add_edit_poi.js"></script>
 <script src="${basePath}/scripts/popup.js"></script>
 

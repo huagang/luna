@@ -33,20 +33,20 @@ import java.util.Map;
 /**
  * Created by greek on 16/8/5.
  */
-@Controller("editAddController")
+@Controller("poiEditController")
 @RequestMapping("/data/poi")
 public class PoiEditController extends BasicController {
 
     @Autowired
     private ManagePoiService managePoiService;
 
-    @Resource(name="pulldownCtrl")
+    @Autowired
     private PulldownCtrl pulldownCtrl;
 
     @Autowired
     private PoiController poiController;
 
-    @Resource(name="addPoiCtrl")
+    @Autowired
     private PoiAddController poiAddController;
 
     /**
