@@ -1,11 +1,15 @@
 package ms.luna.web.control.common;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.LunaUserService;
+import ms.luna.biz.sc.MenuService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -33,6 +39,8 @@ public class LoginController extends BasicController {
 
     @Autowired
     private LunaUserService lunaUserService;
+    @Autowired
+    private MenuService menuService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView init() {
@@ -46,6 +54,10 @@ public class LoginController extends BasicController {
                             @RequestParam(value="password", required=true) String password,
                             HttpServletRequest request) {
 
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
+        }
         if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码不能为空");
         }
@@ -58,8 +70,23 @@ public class LoginController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码错误");
         }
 
-        MsUser msUser = new MsUser();
         logger.trace(result);
+
+        JSONObject data = result.getJSONObject("data");
+
+        LunaUserSession lunaUserSession = JSON.toJavaObject(data, LunaUserSession.class);
+
+        session = request.getSession(true);
+        session.setAttribute(SessionHelper.KEY_USER, lunaUserSession);
+
+        List<Integer> roleIds = lunaUserSession.getRoleIds();
+        if(roleIds != null && roleIds.size() > 0) {
+            JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(roleIds.get(0));
+            logger.trace(moduleAndMenuByRoleId);
+            if(moduleAndMenuByRoleId.getString("code").equals("0")) {
+                session.setAttribute(SessionHelper.KEY_MENU, moduleAndMenuByRoleId.getJSONArray("data"));
+            }
+        }
 
         return FastJsonUtil.sucess("登录成功");
     }

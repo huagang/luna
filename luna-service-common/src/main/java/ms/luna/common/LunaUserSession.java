@@ -2,6 +2,8 @@ package ms.luna.common;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
+import ms.luna.biz.table.LunaUserRoleTable;
+import ms.luna.biz.table.LunaUserTable;
 
 import java.util.List;
 import java.util.Map;
@@ -16,17 +18,17 @@ import java.util.Set;
 @JSONType
 public class LunaUserSession {
 
-    @JSONField(name = "email")
-    private String email;
-    @JSONField(name = "unique_id")
+    @JSONField(name = LunaUserTable.FIELD_ID)
     private String uniqueId;
-    @JSONField(name = "luna_name")
+    @JSONField(name = LunaUserTable.FIELD_LUNA_NAME)
     private String lunaName;
-    @JSONField(name = "nick_name")
+    @JSONField(name = LunaUserTable.FIELD_NICK_NAME)
     private String nickName;
-    @JSONField(name = "role_ids")
+    @JSONField(name = LunaUserTable.FIELD_EMAIL)
+    private String email;
+    @JSONField(name = LunaUserRoleTable.FIELD_ROLE_IDS)
     private List<Integer> roleIds;
-    @JSONField(name = "extra")
+    @JSONField(name = LunaUserRoleTable.FIELD_EXTRA)
     private Map<String, Object> extra;
 
     @JSONField(name = "uri_set")
