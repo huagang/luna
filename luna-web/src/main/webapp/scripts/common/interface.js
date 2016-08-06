@@ -43,7 +43,8 @@ var Inter = function() {
 
                 // 上传路径
                 uploadPath: context+'/uploadCtrl.do?method=uploadFile2Cloud', //统一上传接口
-                
+
+                login: context + '/common/login',  //登录
             };
         }
     };
