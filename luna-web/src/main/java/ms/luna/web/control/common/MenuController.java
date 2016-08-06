@@ -37,8 +37,9 @@ public class MenuController extends BasicController {
 
         HttpSession session = request.getSession(false);
         if(session != null) {
-            MsUser msUser = (MsUser) session.getAttribute("msUser");
-            return menuService.getModuleAndMenuByRoleId(msUser.getRoleId());
+            return FastJsonUtil.sucess("success");
+//            MsUser msUser = (MsUser) session.getAttribute("msUser");
+//            return menuService.getModuleAndMenuByRoleId(msUser.getRoleId());
         } else {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有权限获取菜单");
         }
