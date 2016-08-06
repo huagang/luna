@@ -54,9 +54,12 @@ public class LoginController extends BasicController {
                             @RequestParam(value="password", required=true) String password,
                             HttpServletRequest request) {
 
+
         HttpSession session = request.getSession(false);
-        if(session != null) {
-            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
+        if(session != null && session.getAttribute(SessionHelper.KEY_USER) != null) {
+            // 重新登录不要求显式退出,自动退出
+            session.invalidate();
+//            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
         }
         if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码不能为空");
@@ -92,7 +95,7 @@ public class LoginController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
     public ModelAndView logout(HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         if(session != null) {
             session.invalidate();
         }

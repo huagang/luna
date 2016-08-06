@@ -51,9 +51,13 @@ public class BusinessController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/select")
     public ModelAndView selectBusiness(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        if(session == null) {
+            logger.warn("User not login, should not happen");
+            return buildModelAndView("login");
+        }
         LunaUserSession user = SessionHelper.getUser(session);
         if(user == null) {
-            logger.warn("User not login, should not happen");
+            logger.warn("User info not set, should not happen");
             return buildModelAndView("login");
         }
         JSONObject jsonObject = new JSONObject();

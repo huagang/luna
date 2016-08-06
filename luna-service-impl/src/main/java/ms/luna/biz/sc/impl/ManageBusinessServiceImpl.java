@@ -171,6 +171,7 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			msBusinessCriteria.createCriteria().andBusinessIdIn(businessIdList);
 		}
 		List<MsBusiness> msBusinessList = msBusinessDAO.selectByCriteria(msBusinessCriteria);
+
 		return msBusinessList;
 
 	}
@@ -198,11 +199,15 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			if(categoryId == null) {
 				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
 			}
-			String categotryName = categoryId2NameMap.get(categoryId);
-			JSONArray jsonArray = resJson.getJSONArray(categotryName);
+			String categoryName = categoryId2NameMap.get(categoryId);
+			if(categoryName == null) {
+				logger.warn("category not exist, id: " + categoryId);
+				continue;
+			}
+			JSONArray jsonArray = resJson.getJSONArray(categoryName);
 			if(jsonArray == null) {
 				jsonArray = new JSONArray();
-				resJson.put(categotryName, jsonArray);
+				resJson.put(categoryName, jsonArray);
 			}
 			JSONObject businessJson = new JSONObject();
 			businessJson.put(MsBusinessTable.FIELD_BUSINESS_ID, msBusiness.getBusinessId());

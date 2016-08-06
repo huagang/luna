@@ -28,7 +28,7 @@ function SelectBusinessController($scope, $http){
         vm.urls = Inter.getApiUrl();
         vm.fetched = true;
         vm.fetchData();
-    };
+    }
 
 
 
@@ -47,34 +47,19 @@ function SelectBusinessController($scope, $http){
         }, function(res){
             alert('获取业务数据信息失败,请刷新页面重试');
         });
-
-
-        /*
-
-        vm.businessData = [
-            {
-                id: 'scenic',
-                name: '景区',
-                businessList:[
-                    {
-                        id: '1',
-                        name: '三清山景区',
-                        hot: true
-                    }},];*/
-    };
+    }
 
     // 发送选择的业务信息
     function postBusinessInfo(){
 
-    };
+    }
 
     // 业务点击事件
     function handleBusinessClick(id, name){
-        console.log('clicked', id);
-        localStorage.setItem('business', {id: id, name: name});
+        localStorage.setItem('business', JSON.stringify({id: id, name: name}));
         console.log('businessId', localStorage.getItem('businessId'));
-        location.href = './menu.do?method=goHome';
-    };
+        location.href = window.context + '/'; // 去首页
+    }
 
 
 

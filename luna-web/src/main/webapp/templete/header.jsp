@@ -7,6 +7,11 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
             <div class="navbar-right info-user">
+                <span class="business">
+                    <span class="business-name"></span>
+                    <a href="<%=request.getContextPath() %>/content/business/select" class="select-business"></a>
+                    <span class="sep">|</span>
+                </span>
                 <img src="<%=request.getContextPath() %>/img/ic_person.png">
                 <span class="account">${sessionScope.msUser.nickName}</span>
                 <span class="sep">|</span>
@@ -18,4 +23,14 @@
             </div>
         </div>
     </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded',function(){
+            var business = localStorage.getItem('business');
+            if(business){
+                business = JSON.parse(business);
+                document.querySelector('.business .business-name').innerHTML = business.name;
+            }
+        });
+
+    </script>
     <!--通用导航栏 end-->

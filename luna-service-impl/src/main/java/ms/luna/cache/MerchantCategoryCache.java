@@ -30,6 +30,7 @@ public class MerchantCategoryCache {
         MsCategoryCriteria msCategoryCriteria = new MsCategoryCriteria();
         msCategoryCriteria.createCriteria().andDelFlgEqualTo("0");
         List<MsCategory> msCategoryList = msCategoryDAO.selectByCriteria(msCategoryCriteria);
+        logger.debug("all category size: " + msCategoryList.size());
         return msCategoryList;
     }
 

@@ -22,12 +22,12 @@ public class MongoTest {
 		
 		MongoConnector mongoConnector = new MongoConnector("mongo.properties");
 		
-		MongoCollection<Document> testCollection = mongoConnector.getDBCollection("show_page");
+		MongoCollection<Document> testCollection = mongoConnector.getDBCollection("luna_user_role");
 //		Document document = new Document();
 //		document.append("ctime", new BsonDateTime(System.currentTimeMillis()));
 //		testCollection.insertOne(document);
 //		Bson query = Filters.eq("_id", new ObjectId("57206a16a6a5551473fe8088"));
-		Bson query = Filters.eq("_id", "57320e91781f0f2908232b0d");
+		Bson query = Filters.eq("_id", "0ac21e51ed7f4da9bc30176753d550b2");
 		testCollection.find(query).forEach(new Block<Document>() {
 
 			@Override

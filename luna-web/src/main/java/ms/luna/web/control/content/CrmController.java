@@ -426,6 +426,7 @@ public class CrmController extends BasicController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET, value = "/merchantId/{merchantId}")
+    @ResponseBody
     public JSONObject loadMerchant(
             @PathVariable("merchantId") String merchantId,
             HttpServletRequest request, HttpServletResponse response) throws IOException {

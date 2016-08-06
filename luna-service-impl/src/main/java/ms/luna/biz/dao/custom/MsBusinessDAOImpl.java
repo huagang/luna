@@ -53,9 +53,11 @@ public class MsBusinessDAOImpl extends MsBusinessDAOBaseImpl implements MsBusine
 	public Map<Integer, String> readBusinessCategoryId(Collection<Integer> businessIds) {
 
 		String businessIdStr = StringUtils.join(businessIds, ",");
-		String selectSql = String.format("select a.business_id business_id, b.category_id category_id from " +
-				"ms_business a join ms_merchant_manage b on a.merchant_id = b.merchant_id" +
-				"where a.business_id in (%s)", businessIdStr);
+		String selectSql = String.format("select a.business_id business_id, b.category_id category_id from" +
+				" ms_business a join ms_merchant_manage b on a.merchant_id = b.merchant_id" +
+				" where a.business_id in (%s)", businessIdStr);
+
+		logger.info("read business category id: " + selectSql);
 
 		Map<Integer, String> businessId2CategoryId = new HashMap<>();
 		try {
