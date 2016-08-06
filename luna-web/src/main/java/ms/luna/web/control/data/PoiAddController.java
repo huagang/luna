@@ -170,6 +170,124 @@ public class PoiAddController extends BasicController {
     }
 
     /**
+     * 异步上传图片
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    // 原api: /add_poi.do?method=upload_thumbnail
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadThumbnail")
+    public void uploadThumbnail(
+            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
+        if (ext == null) {
+            response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+            response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+            response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
+            response.setStatus(200);
+            return;
+        }
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fileNameInCloud = VbMD5.generateToken() + ext;
+        super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud);
+    }
+
+    /**
+     * 异步上传音频
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    // 原api: /add_poi.do?method=upload_audio
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadAudio")
+    public void uploadAudio(
+            @RequestParam(required = true, value = "audio_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
+        if (ext == null) {
+            response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+            response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+            response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
+            response.setStatus(200);
+            return;
+        }
+
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fileNameInCloud = VbMD5.generateToken() + ext;
+        super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud);
+    }
+
+    /**
+     * 异步上传视频
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    // 原api: /add_poi.do?method=upload_video
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadVideo")
+    @ResponseBody
+    public JSONObject uploadVideo(
+            @RequestParam(required = true, value = "video_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // super.uploadLocalFile2Cloud(request, response, file, pic_address);
+        response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
+        response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
+        try {
+            String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
+            if (ext == null) {
+                return FastJsonUtil.error("4", "文件扩展名有错误");
+            }
+            String fileName = VbMD5.generateToken() + ext;// 生成文件名
+            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            String[] temp = request.getRequestURL().toString().split("/");
+            String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
+            JSONObject result = VODUtil.getInstance().upload2Cloud(file,
+                    VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName, webAddr, 0);
+
+            String phone_url = "";
+            JSONObject vodJson = new JSONObject();
+            if ("0".equals(result.getString("code"))) {
+                JSONObject data = result.getJSONObject("data");
+                String vod_file_id = data.getString("vod_file_id");
+                JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
+
+                if("0".equals(result.getString("code"))){
+                    phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
+                }
+                JSONObject param = new JSONObject();
+                param.put("vod_file_id", vod_file_id);
+                param.put("vod_original_file_url", phone_url);
+                vodPlayService.createVodRecord(param.toString());
+                vodJson = FastJsonUtil.sucess("成功", param);
+            }
+            if(!"".equals(phone_url)) {
+                vodJson.put("type", VbUtility.getExtensionOfPicFileName(phone_url));
+                vodJson.put("state", "SUCCESS");
+            } else {
+                vodJson.put("type", "");
+                vodJson.put("state", "FAIL");
+            }
+            vodJson.put("url", phone_url);
+            vodJson.put("original", file.getOriginalFilename());
+            vodJson.put("name", file.getOriginalFilename());
+            vodJson.put("size", file.getSize());
+
+            return vodJson;
+        } catch (Exception e) {
+            JSONObject vodJson = FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
+            vodJson.put("original", file.getOriginalFilename());
+            vodJson.put("name", file.getOriginalFilename());
+            vodJson.put("url", "");
+            vodJson.put("size", file.getSize());
+            vodJson.put("type", "");
+            vodJson.put("state", "FAIL");
+            return vodJson;
+
+        }
+    }
+
+    /**
      * 1.接收参数检查<p>
      * 2.封装参数到json格式
      * @param request

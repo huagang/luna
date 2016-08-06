@@ -21,10 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -611,6 +609,39 @@ public class CrmController extends BasicController {
             return FastJsonUtil.error("-1", "Failed to check merchant name. ");
         }
 
+    }
+
+    /**
+     * 异步上传图片（创建）
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    // 原Api接口:/manage_merchant.do?method=upload_thumbnail_add
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadThumbnail")
+    @ResponseBody
+    public JSONObject uploadThumbnailAdd(@RequestParam(required = true, value = "thumbnail_fileup_add") MultipartFile file,
+                                   HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+
+            String orignalFileName = file.getOriginalFilename();
+            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String fileName = "/" + sdf.format(date) + "/" + VbMD5.generateToken() + ext;
+            byte[] bytes = file.getBytes();// 获得文件内容
+            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
+                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
+            MsLogger.debug("method:uploadLocalFile2Cloud, result from service: " + result.toString());
+
+            return result;
+        } catch (Exception e) {
+            MsLogger.error(e);
+            return FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e));
+        }
+        // super.uploadLocalFile2Cloud(request, response, file,
+        // COSUtil.picAddress);
     }
 
     /**
