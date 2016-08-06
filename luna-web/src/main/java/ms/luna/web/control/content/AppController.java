@@ -37,19 +37,9 @@ public class AppController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request) {
-        try {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.setAttribute("menu_selected", "manage_app");
-            }
-            ModelAndView modelAndView = buildModelAndView("/manage_app");
-            return modelAndView;
 
-        } catch (Exception e) {
-            logger.error("Failed to initialize", e);
-        }
-        return buildModelAndView("/error");
-
+        ModelAndView modelAndView = buildModelAndView("/manage_app");
+        return modelAndView;
     }
 
     private boolean isValidName(String appName) {

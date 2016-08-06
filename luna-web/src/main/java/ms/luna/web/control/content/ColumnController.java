@@ -39,12 +39,8 @@ public class ColumnController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.setAttribute("menu_selected", "manage_column");
-        }
-        ModelAndView modelAndView = buildModelAndView("/manage_column");
 
+        ModelAndView modelAndView = buildModelAndView("/manage_column");
         return modelAndView;
     }
 

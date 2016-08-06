@@ -9,8 +9,6 @@
     <title></title>
 </head>
 <body>
-
-Index page
-
+500....Internal Error
 </body>
 </html>

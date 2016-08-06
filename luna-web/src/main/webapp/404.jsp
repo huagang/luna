@@ -9,8 +9,6 @@
     <title></title>
 </head>
 <body>
-
-Index page
-
+404....Not Found
 </body>
 </html>

@@ -4,30 +4,29 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.Executors;
-import ms.biz.common.AuthenticatedUserHolder;
 import ms.biz.common.MailRunnable;
 import ms.biz.common.MenuHelper;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.cons.LunaRoleCategoryExtra;
 import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.dao.model.*;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.LunaUserService;
-import ms.luna.biz.table.*;
+import ms.luna.biz.table.LunaRoleCategoryTable;
+import ms.luna.biz.table.LunaRoleTable;
+import ms.luna.biz.table.LunaUserRoleTable;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
-import ms.luna.cache.RoleMenuCache;
+import ms.luna.common.LunaUserSession;
 import ms.luna.schedule.service.EmailService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,6 +37,8 @@ import java.util.*;
  * @Author: shawn@visualbusiness.com
  * @Date: 2016-07-22
  */
+
+@Service("lunaUserService")
 public class LunaUserServiceImpl implements LunaUserService {
 
     private final static Logger logger = Logger.getLogger(LunaUserServiceImpl.class);
@@ -230,9 +231,14 @@ public class LunaUserServiceImpl implements LunaUserService {
 
         LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(lunaUser.getUniqueId());
 
-        JSONObject userInfoJson = (JSONObject) JSON.toJSON(lunaUser);
-        userInfoJson.put(LunaUserRoleTable.FIELD_ROLE_IDS, JSON.toJSON(userRole.getRoleIds()));
-        userInfoJson.put(LunaUserRoleTable.FIELD_EXTRA, JSON.toJSON(userRole.getExtra()));
+        LunaUserSession lunaUserSession = new LunaUserSession();
+        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
+        lunaUserSession.setLunaName(lunaUser.getLunaName());
+        lunaUserSession.setNickName(lunaUser.getNickName());
+        lunaUserSession.setEmail(lunaUser.getEmail());
+
+        lunaUserSession.setRoleIds(userRole.getRoleIds());
+        lunaUserSession.setExtra(userRole.getExtra());
 
         LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
         lunaRoleMenuCriteria.createCriteria().andRoleIdIn(userRole.getRoleIds());
@@ -257,9 +263,10 @@ public class LunaUserServiceImpl implements LunaUserService {
                     uriSet.add(menu.getUrl());
                 }
             }
-            userInfoJson.put("uriSet", uriSet);
         }
-        return FastJsonUtil.sucess("", userInfoJson);
+        lunaUserSession.setUriSet(uriSet);
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
     }
 
     @Override

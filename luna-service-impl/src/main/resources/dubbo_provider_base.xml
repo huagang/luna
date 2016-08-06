@@ -24,5 +24,8 @@
 	<dubbo:service interface="ms.luna.biz.sc.ManageColumnService" ref="manageColumnService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageArticleService" ref="manageArticleService" />
 	<dubbo:service interface="ms.luna.biz.sc.PoiApiService" ref="poiApiService" />
+	<dubbo:service interface="ms.luna.biz.sc.LunaRoleService" ref="lunaRoleService" />
+	<dubbo:service interface="ms.luna.biz.sc.LunaUserService" ref="lunaUserService" />
+	<dubbo:service interface="ms.luna.biz.sc.MenuService" ref="menuService" />
 
 </beans>

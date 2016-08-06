@@ -7,15 +7,15 @@
 	<!-- 统一错误页面处理 -->
 	<error-page>
 		<exception-type>java.lang.Throwable</exception-type>
-		<location>/error.jsp</location>
+		<location>/500.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/error.jsp</location>
+		<location>/500.jsp</location>
 	</error-page>
 	<error-page>  
 	    <error-code>404</error-code>  
-	    <location>/error.jsp</location>  
+	    <location>/404.jsp</location>
 	</error-page>
 	<servlet>
 		<servlet-name>dispatcherServlet</servlet-name>
@@ -80,18 +80,18 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<filter>
-		<filter-name>LoginFilter</filter-name>
-		<filter-class>ms.luna.web.filter.LoginFilter</filter-class>
-		<init-param>
-			<param-name>EXCLUSIONS</param-name>
-			<param-value>*/vm/*,*.css,*.css.map,*/img/*,*.ico,*.js,*.png,*.jpg,*/auth_failed.jsp,*/login.jsp,*/error.jsp,*/plugins/*,*/styles/*</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>LoginFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	<!--<filter>-->
+		<!--<filter-name>LoginFilter</filter-name>-->
+		<!--<filter-class>ms.luna.web.filter.LoginFilter</filter-class>-->
+		<!--<init-param>-->
+			<!--<param-name>EXCLUSIONS</param-name>-->
+			<!--<param-value>*/vm/*,*.css,*.css.map,*/img/*,*.ico,*.js,*.png,*.jpg,*/auth_failed.jsp,*/login.jsp,*/error.jsp,*/plugins/*,*/styles/*</param-value>-->
+		<!--</init-param>-->
+	<!--</filter>-->
+	<!--<filter-mapping>-->
+		<!--<filter-name>LoginFilter</filter-name>-->
+		<!--<url-pattern>/*</url-pattern>-->
+	<!--</filter-mapping>-->
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>/img/*</url-pattern>
