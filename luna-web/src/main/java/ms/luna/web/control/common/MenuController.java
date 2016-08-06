@@ -44,7 +44,7 @@ public class MenuController extends BasicController {
             if(roleIds != null && roleIds.size() > 0) {
                 JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(roleIds.get(0));
                 logger.trace(moduleAndMenuByRoleId);
-                return FastJsonUtil.sucess("", moduleAndMenuByRoleId);
+                return moduleAndMenuByRoleId;
             } else {
                 return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有权限获取菜单");
             }

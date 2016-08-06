@@ -73,18 +73,16 @@ public class LoginController extends BasicController {
         logger.trace(result);
 
         JSONObject data = result.getJSONObject("data");
-
         LunaUserSession lunaUserSession = JSON.toJavaObject(data, LunaUserSession.class);
-
         session = request.getSession(true);
-        session.setAttribute(SessionHelper.KEY_USER, lunaUserSession);
+        SessionHelper.setUser(session, lunaUserSession);
 
         List<Integer> roleIds = lunaUserSession.getRoleIds();
         if(roleIds != null && roleIds.size() > 0) {
             JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(roleIds.get(0));
             logger.trace(moduleAndMenuByRoleId);
             if(moduleAndMenuByRoleId.getString("code").equals("0")) {
-                session.setAttribute(SessionHelper.KEY_MENU, moduleAndMenuByRoleId.getJSONArray("data"));
+                SessionHelper.setMenu(session, moduleAndMenuByRoleId.getJSONArray("data"));
             }
         }
 

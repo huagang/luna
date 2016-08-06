@@ -12,6 +12,7 @@ import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.dao.model.MsBusiness;
 import ms.luna.biz.dao.model.MsBusinessCriteria;
 import ms.luna.biz.sc.ManageBusinessService;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.MerchantCategoryCache;
@@ -177,7 +178,7 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 	@Override
 	public JSONObject getBusinessForSelect(JSONObject jsonObject) {
 		// TODO: in future, should get business in pages
-		String userId = jsonObject.getString("userId");
+		String userId = jsonObject.getString(LunaUserTable.FIELD_ID);
 		if(StringUtils.isBlank(userId)) {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}

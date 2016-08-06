@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessService;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.PulldownCtrl;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
@@ -40,9 +43,29 @@ public class BusinessController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 
-        ModelAndView modelAndView = buildModelAndView("/manage_business");
+        ModelAndView modelAndView = buildModelAndView("manage_business");
         return modelAndView;
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "select")
+    public ModelAndView selectBusiness(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        LunaUserSession user = SessionHelper.getUser(session);
+        if(user == null) {
+            logger.warn("User not login, should not happen");
+            return buildModelAndView("login");
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(LunaUserTable.FIELD_ID, user.getUniqueId());
+        JSONObject businessForSelect = manageBusinessService.getBusinessForSelect(jsonObject);
+        if(businessForSelect.getString("code").equals("0")) {
+            ModelAndView modelAndView = buildModelAndView("select_business");
+            modelAndView.addObject("businessMap", businessForSelect.getJSONObject("data"));
+            return modelAndView;
+        } else {
+            return buildModelAndView("500");
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
