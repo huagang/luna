@@ -47,6 +47,7 @@
 </div>
 <script>
     window.context = '<%=request.getContextPath() %>';
+    var businessMap = ${businessMap};
 </script>
 <script type="text/javascript" src="./plugins/angular/js/angular.min.js"></script>
 <script type="text/javascript" src="./scripts/common/interface.js"></script>
