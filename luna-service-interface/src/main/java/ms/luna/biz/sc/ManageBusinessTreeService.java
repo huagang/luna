@@ -27,7 +27,7 @@ public interface ManageBusinessTreeService {
 	/**
 	 * 创建一棵业务树
 	 */
-	JSONObject createBusinessTree(String json, MsUser msUser);
+	JSONObject createBusinessTree(String json);
 
 	/**
 	 * 删除一棵业务树
@@ -50,6 +50,6 @@ public interface ManageBusinessTreeService {
 	 * 
 	 * 保存业务树数据
 	 */
-	JSONObject saveBusinessTree(String json, MsUser msUser);
+	JSONObject saveBusinessTree(String json);
 	
 }

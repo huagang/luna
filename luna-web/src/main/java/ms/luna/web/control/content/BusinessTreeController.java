@@ -8,6 +8,7 @@ import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.model.common.SimpleModel;
@@ -40,12 +41,12 @@ public class BusinessTreeController extends BasicController {
     @Resource(name="pulldownCtrl")
     private PulldownCtrl pulldownCtrl;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/businessTree")
+    @RequestMapping(method = RequestMethod.GET, value = "/businessTree/{business_id}")
     public ModelAndView init(
-            @RequestParam(required = true, value="business_id") Integer businessId,
-            @RequestParam(required = false, value="province_id") String provinceId,
-            @RequestParam(required = false, value="city_id") String cityId,
-            @RequestParam(required = false, value="county_id") String countyId,
+            @PathVariable("business_id") String businessId,
+            @RequestParam(required = false, value = "province_id") String provinceId,
+            @RequestParam(required = false, value = "city_id") String cityId,
+            @RequestParam(required = false, value = "county_id") String countyId,
             HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         try {
@@ -106,8 +107,6 @@ public class BusinessTreeController extends BasicController {
 
         MsLogger.info("viewBusinessTree start....");
         try {
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setContentType("text/html; charset=UTF-8");
 
             JSONObject param = JSONObject.parseObject("{}");
             param.put("businessId", businessId);
@@ -154,7 +153,7 @@ public class BusinessTreeController extends BasicController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/saveBusinessTree")
+    @RequestMapping(method = RequestMethod.POST, value = "/saveBusinessTree")
     @ResponseBody
     public JSONObject saveBusinessTree(
             @RequestParam(required = true, value="businessTree") String businessTree,
@@ -163,15 +162,18 @@ public class BusinessTreeController extends BasicController {
 
         MsLogger.info("saveBusinessTree start....");
         try {
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setContentType("text/html; charset=UTF-8");
 
             JSONObject param = JSON.parseObject(businessTree);
 
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser) session.getAttribute("msUser");
-
-            JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString(), msUser);
+//            MsUser msUser = (MsUser) session.getAttribute("msUser");
+            if(session == null) {
+                throw new Exception("session is null");
+            }
+            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
+            String uniqueId = msUser.getUniqueId();
+            param.put("uniqueId", uniqueId);
+            JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString());
             MsLogger.info(result.toJSONString());
             return result;
         } catch (Exception e) {
