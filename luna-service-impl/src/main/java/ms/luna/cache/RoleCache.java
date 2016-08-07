@@ -1,6 +1,7 @@
 package ms.luna.cache;
 
 import com.google.common.collect.Lists;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.dao.custom.LunaRoleDAO;
 import ms.luna.biz.dao.model.LunaRole;
 import ms.luna.biz.dao.model.LunaRoleCriteria;
@@ -24,7 +25,6 @@ public class RoleCache {
      */
 
     private final static Logger logger = Logger.getLogger(RoleCache.class);
-    private final static int ROOT_ROLE_ID = 1;
 
     @Autowired
     private LunaRoleDAO lunaRoleDAO;
@@ -32,7 +32,7 @@ public class RoleCache {
     public List<LunaRole> getChildRolesByRoleId(int roleId) {
         List<LunaRole> childRoleList = new ArrayList<>();
         List<Integer> roleList = Lists.newArrayList(roleId);
-        if(roleId == ROOT_ROLE_ID) {
+        if(roleId == DbConfig.ROOT_ROLE_ID) {
             // 皓月平台高级管理员可以创建自己,自己是自己的子角色
             childRoleList.add(getRoleByRoleId(roleId));
         }
