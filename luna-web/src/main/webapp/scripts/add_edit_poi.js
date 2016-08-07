@@ -255,7 +255,7 @@ $(function () {
         var tagid = $("#topTag").find("option:selected").val();
 
         $.ajax({
-            url: Util.strFormat(Inter.getApiUrl().ayncSearchSubTag, [tagid]),
+            url: Util.strFormat(Inter.getApiUrl().ayncSearchSubTag.url, [tagid]),
             type: 'GET',
             async: false,
             cache: false,
@@ -305,7 +305,7 @@ $(function () {
             if ('en' == lang) {
                 // check检查
                 $.ajax({
-                    url: Inter.getApiUrl().poiCheckForEnglish,
+                    url: Inter.getApiUrl().poiCheckForEnglish.url,
                     type: 'POST',
                     async: false,
                     cache: true,
@@ -337,8 +337,8 @@ $(function () {
             if (!noerror) {
                 $.confirm(msg, function () {
                     $.ajax({
-                        url: Inter.getApiUrl().poiEditSave,
-                        type: 'PUT',
+                        url: Inter.getApiUrl().poiEditSave.url,
+                        type: 'POST',
                         async: true,
                         cache: true,
                         data: formdata,
@@ -351,7 +351,7 @@ $(function () {
                                     $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                     setTimeout(function () {
                                         $("#status-message").css('display', 'none');
-                                        window.location.href = host + "/manage_poi.do?method=init";
+                                        window.location.href = Inter.getApiUrl().poiInit.url;
                                     }, 2000);
                                     break;
                                 default:
@@ -374,8 +374,8 @@ $(function () {
                 // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
                 // 后台对于提交上来的数据，不再做中文检查
                 $.ajax({
-                    url: Inter.getApiUrl().poiEditSave,
-                    type: 'PUT',
+                    url: Inter.getApiUrl().poiEditSave.url,
+                    type: 'POST',
                     async: true,
                     cache: true,
                     data: formdata,
@@ -388,7 +388,7 @@ $(function () {
                                 $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                 setTimeout(function () {
                                     $("#status-message").css('display', 'none');
-                                    window.location.href = host + "/manage_poi.do?method=init";
+                                    window.location.href = Inter.getApiUrl().poiInit.url;
                                 }, 2000);
                                 break;
                             default:
@@ -428,7 +428,7 @@ $(function () {
         if (!hasError) {
             var formdata = new FormData($("#poiModel")[0]);
             $.ajax({
-                url: Inter.getApiUrl().poiSave,
+                url: Inter.getApiUrl().poiAddSave.url,
                 type: 'POST',
                 async: false,
                 cache: true,
@@ -442,7 +442,7 @@ $(function () {
                             $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                             setTimeout(function () {
                                 $("#status-message").css('display', 'none');
-                                window.location.href = host + "/manage_poi.do?method=init";
+                                window.location.href = Inter.getApiUrl().poiInit.url;
                             }, 2000);
                             break;
                         default:
@@ -743,7 +743,7 @@ var geocoder = new qq.maps.Geocoder({
         }
         $.ajax({
             type: 'post',
-            url: Inter.getApiUrl().poiConfirmArea,
+            url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
             cache: false,
             async: false,
             data: params,
@@ -785,7 +785,6 @@ function findZoneIdsWithQQZoneName(lat, lng) {
     //调用获取位置方法
     geocoder.getAddress(latLng);
 }
-
 /**
  * 初始化编辑器
  * @return {[type]} [description]
@@ -819,7 +818,7 @@ function initEditor() {
                 // 'music',
                 'insertvideo',
             ]
-        ],
+        ]
     });
     return ue;
 }

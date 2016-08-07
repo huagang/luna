@@ -13,13 +13,16 @@ var Inter = function() {
         getApiUrl: function() {
             return {
                 //数据管理
-                poiDataImport:{url: '/data/poi/batch',type:'POST'},// Poi 数据导入功能
+                poiInit:{url:"/data/poi",type:"GET"},
+                poiDataImport:{url: '/data/poi/batch',type:'POST'},// Poi 批量数据导入功能
                 poiCheckDelete:{url: '/data/poi/checkPoiCanBeDeleteOrNot?_id={0}',type:'GET'},//检查是否能够删除
                 poiDelete:{url: '/data/poi/{0}',type:'DELETE'},//poi删除功能
                 poiEdit:{url: '/data/poi/initEditPage?poiId={0}',type:'GET'},//poi编辑功能
-                poiSave:{url: '/data/poi',type:'PUT'},//poi保存成功
-                poiEditSave:{url: '/data/poi?poiId={0}&lang={1}',type:'PUT'},//poi保存成功
-                ayncSearchSubTag:{url: '/data/poi/subTag/{0}',type:'GET'}, //查找二级栏目的数据 
+                poiAddSave:{url: '/data/poi',type:'POST'},//poi 创建成功
+                poiEditSave:{url: '/data/poi/edit',type:'POST'},//poi编辑成功
+                ayncSearchSubTag:{url: '/data/poi/subTag/{0}',type:'GET'}, //查找二级栏目的数据
+                poiReadPage:{url: '/data/poi/batch/initReadPage',type:"POST"},//poi只读页面
+                poiBatchEdit:{url:"/data/poi/batch/initEditPage",type:"POST"},//poi 批量导入 编辑
 
                 poiCheckForEnglish:{url: '/data/poi/checkPoi?poiId={0}&lang={1}',type:'GET'},//英文poi检查
                 poiConfirmArea:'',//确认poi所在区域是否正确

@@ -50,12 +50,12 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
                 	<c:if test="${lang == 'zh'}">
-                		<a href="./edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+                		<a href= "/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
                 	</c:if>
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form commandName="poiModel" method="post" action="${basePath}/edit_poi.do?method=updatePoi" enctype="multipart/form-data">
+            <form:form commandName="poiModel" method="post" action="$/data/poi/edit" enctype="multipart/form-data">
             	<input type="hidden" id="lang" value="${lang}" name="lang"/>
             	<form:input id="poiId" cssStyle="display:none" path="poiId"/>
 	            <div>
