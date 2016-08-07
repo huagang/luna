@@ -4,17 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.MenuHelper;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaRoleDAO;
 import ms.luna.biz.dao.custom.LunaRoleMenuDAO;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.LunaRoleService;
-import ms.luna.biz.sc.MenuService;
 import ms.luna.biz.table.LunaMenuTable;
 import ms.luna.biz.table.LunaModuleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
+import ms.luna.cache.RoleCategoryCache;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ public class LunaRoleServiceImpl implements LunaRoleService {
     private ModuleMenuCache moduleMenuCache;
     @Autowired
     private RoleCache roleCache;
+    @Autowired
+    private RoleCategoryCache roleCategoryCache;
 
     /**
      * read role list, only access children role for current user
@@ -157,16 +160,33 @@ public class LunaRoleServiceImpl implements LunaRoleService {
      * @return
      */
     @Override
-    public JSONObject getAllRoleList(int roleId) {
-        if(roleId != 10000) {
+    public JSONObject getAllRoleList(int roleId, int offset, int limit) {
+        if(roleId != DbConfig.ROOT_ROLE_ID) {
             // super role id, hardcode here
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有权限");
         }
-        LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
-        lunaRoleCriteria.createCriteria();
         try {
-            List<LunaRole> lunaRoles = lunaRoleDAO.selectByCriteria(lunaRoleCriteria);
-            return FastJsonUtil.sucess("", JSON.toJSON(lunaRoles));
+            List<LunaRole> lunaRoles = roleCache.getAllRoles();
+            if(offset > lunaRoles.size()) {
+                offset = lunaRoles.size() - 1;
+            }
+            if(offset + limit >= lunaRoles.size()) {
+                limit = lunaRoles.size() - offset - 1;
+            }
+            List<LunaRole> subRoles = lunaRoles.subList(offset, offset + limit);
+            Map<Integer, String> categoryId2NameMap = roleCategoryCache.getCategoryId2NameMap();
+            JSONArray jsonArray = new JSONArray();
+            for(LunaRole lunaRole : subRoles) {
+                JSONObject jsonObject = (JSONObject) JSON.toJSON(lunaRole);
+                jsonObject.put("category_name", categoryId2NameMap.get(lunaRole.getCategoryId()));
+                jsonArray.add(jsonObject);
+            }
+
+            JSONObject result = new JSONObject();
+            result.put("total", subRoles.size());
+            result.put("rows", jsonArray);
+
+            return FastJsonUtil.sucess("", result);
         } catch (Exception ex) {
             logger.error("Failed to get all role list", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");

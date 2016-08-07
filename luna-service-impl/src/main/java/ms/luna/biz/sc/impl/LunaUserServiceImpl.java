@@ -320,6 +320,11 @@ public class LunaUserServiceImpl implements LunaUserService {
         return getChildRoleAndModuleByRoleId(lunaUserRole.getRoleId());
     }
 
+    /**
+     * 获取权限模块下的角色, 目前创建角色使用了角色类别归类, 此方法不再使用
+     * @param roleId
+     * @return
+     */
     @Override
     public JSONObject getChildRoleAndModuleByRoleId(int roleId) {
 
