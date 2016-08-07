@@ -63,8 +63,9 @@ public class ModuleMenuCache {
         }
         lunaModuleList = newLunaModuleList;
         LunaMenuCriteria lunaMenuCriteria = new LunaMenuCriteria();
+        lunaMenuCriteria.createCriteria().andStatusEqualTo(true);
         lunaMenuCriteria.setOrderByClause("display_order asc");
-        List<LunaMenu> newLunaMenuList = lunaMenuDAO.selectByCriteria(new LunaMenuCriteria());
+        List<LunaMenu> newLunaMenuList = lunaMenuDAO.selectByCriteria(lunaMenuCriteria);
         Map<Integer, List<Integer>> newModule2Menu = new ConcurrentHashMap<>();
         if(newLunaMenuList != null) {
             for(LunaMenu lunaMenu : newLunaMenuList) {

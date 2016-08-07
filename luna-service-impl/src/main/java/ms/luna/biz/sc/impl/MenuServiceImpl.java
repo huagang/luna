@@ -110,6 +110,7 @@ public class MenuServiceImpl implements MenuService {
                 JSONObject moduleJson = new JSONObject();
                 moduleJson.put(LunaModuleTable.FIELD_NAME, module.getName());
                 moduleJson.put(LunaModuleTable.FIELD_ID, module.getId());
+                moduleJson.put(LunaModuleTable.FIELD_CODE, module.getCode());
                 moduleJson.put("menuArray", menuArray);
                 jsonArray.add(moduleJson);
             }

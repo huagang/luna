@@ -1,5 +1,6 @@
 package ms.luna.cache;
 
+import com.google.common.collect.Lists;
 import ms.luna.biz.dao.custom.LunaRoleDAO;
 import ms.luna.biz.dao.model.LunaRole;
 import ms.luna.biz.dao.model.LunaRoleCriteria;
@@ -29,7 +30,7 @@ public class RoleCache {
 
     public List<LunaRole> getChildRolesByRoleId(int roleId) {
         List<LunaRole> childRoleList = new ArrayList<>();
-        List<Integer> roleList = Arrays.asList(roleId);
+        List<Integer> roleList = Lists.newArrayList(roleId);
         try {
             while (true) {
                 LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
