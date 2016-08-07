@@ -92,6 +92,10 @@ var Inter = function() {
                 uploadPath: {url: context+'/uploadCtrl.do?method=uploadFile2Cloud',type:''}, //统一上传接口
 
                 login: {url: context + '/common/login', type:'POST'},  //登录提交接口
+
+                // 用户注册
+                registrationPage:{url:"/comomon/registration/token/{0}",type:"GET"},//注册页面
+                registrationRegist:{url:"/comomon/registration",type:"POST"} // 注册
             };
         }
     };
