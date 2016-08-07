@@ -34,5 +34,8 @@ public interface PoiApiService {
 	
 	// 获得第一层所有poi数据
 	JSONObject getPoisInFirstLevel(String json);
+
+	// poi检索
+	JSONObject retrievePois(String json);
 	
 }

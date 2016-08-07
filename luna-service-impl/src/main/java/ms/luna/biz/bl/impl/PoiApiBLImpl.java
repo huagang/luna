@@ -12,12 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Filter;
+import java.util.regex.Pattern;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.Projection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -497,6 +502,150 @@ public class PoiApiBLImpl implements PoiApiBL {
 			return FastJsonUtil.error("1", "biz_id:" + biz_id + "biz_id:" + biz_id + "业务关系树不存在");
 		}
 	}
+
+	// poi 检索
+	@Override
+	public JSONObject retrievePois(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String filterName = param.getString("filterName");
+		String lang = param.getString("lang");
+		Integer limit = param.getInteger("limit");
+		String type = param.getString("type");
+
+		// 搜索策略: 先假设filterName为名称,搜索时如果满足条件则返回结果,否则,则假设filterName为id再进一步搜索
+		// 搜索时先搜索中文库,如果搜索中文库的名称和id都没有满足数量要求,则继续搜索英文库
+		// 名称搜索为相似搜索,而id搜索为等价搜索
+
+		List<String> langLst = getLangLst(lang);
+		List<String> retriveTypeLst = getRetriveTypeLst(type);
+		JSONArray pois = new JSONArray();
+		JSONObject data = new JSONObject();
+		MongoCollection<Document> poi_collection;
+		int count = limit; // 剩余搜索数量.每一次检索,数量都可能检索.当检索数量达到要求时退出检索
+		for(String lan : langLst) {
+			poi_collection = getPoiCollectionByLang(lang);
+			for(String tp : retriveTypeLst) {
+				JSONArray array = new JSONArray();
+				if("name".equals(tp)) {
+					array = retrievePoisByName(poi_collection, filterName, count);
+				} else if("id".equals(tp)) {
+					array = retrivePoisByPoiId(poi_collection, filterName, count);
+				}
+				pois.addAll(array);
+				if(array.size() >= count) { // 数量满足要求
+					data.put("pois", pois);
+					return FastJsonUtil.sucess("success", data);
+				}
+				count = count - array.size();
+			}
+		}
+		data.put("pois", pois);
+		return FastJsonUtil.sucess("success", data);
+
+	}
+
+	/**
+	 * 通过id进行poi检索
+	 *
+	 * @param collection 数据库collection
+	 * @param filterName 检索条件
+	 * @param count 数量上限
+	 * @return
+	 */
+	private JSONArray retrivePoisByPoiId(MongoCollection<Document> collection, String filterName, int count) {
+		if(filterName.length() != 24) { // ObjectId 一定是24位
+			return new JSONArray();
+		}
+		Document filter = new Document().append("_id",new ObjectId(filterName));
+		List<String> includes = new ArrayList<>();
+		includes.add("_id");
+		includes.add("long_title");
+		MongoCursor<Document> cursor = collection.find(filter).projection(Projections.include(includes)).limit(1).iterator();
+
+		JSONArray array = new JSONArray();
+		while (cursor.hasNext()) {
+			JSONObject meta = new JSONObject();
+			Document document = cursor.next();
+			meta.put("poi_id", document.getObjectId("_id").toString());
+			meta.put("poi_name", document.getString("long_title"));
+			array.add(meta);
+		}
+		return array;
+
+	}
+
+	/**
+	 * 通过名称进行poi检索
+	 *
+	 * @param collection 数据库collection
+	 * @param filterName 检索条件
+	 * @param count 数量上限
+	 * @return
+	 */
+	private JSONArray retrievePoisByName(MongoCollection<Document> collection, String filterName, int count) {
+//		Document filter = new Document().append("long_title", "/" + filterName + "/");
+		List<String> includes = new ArrayList<>();
+		includes.add("_id");
+		includes.add("long_title");
+		Pattern pattern = Pattern.compile("^.*" + filterName + ".*$", Pattern.CASE_INSENSITIVE);
+		MongoCursor<Document> cursor = collection.find(Filters.regex("long_title",pattern)).
+				projection(Projections.include(includes)).limit(count).iterator();
+
+		JSONArray array = new JSONArray();
+		while (cursor.hasNext()) {
+			JSONObject meta = new JSONObject();
+			Document document = cursor.next();
+			meta.put("poi_id", document.getObjectId("_id").toString());
+			meta.put("poi_name", document.getString("long_title"));
+			array.add(meta);
+		}
+		return array;
+	}
+
+	/**
+	 * 获取不同语言版本对应的数据库(目前只有中,英文版)
+	 *
+	 * @param lang 语言
+	 */
+	private MongoCollection<Document> getPoiCollectionByLang(String lang) {
+		if("en".equals(lang)) {
+			return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
+		}
+		return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
+	}
+
+	/**
+	 * 获取所要检索的语言版本
+	 *
+	 * @param lang 语言
+	 */
+	private List<String> getLangLst(String lang) {
+		List<String> langLst = new ArrayList<>();
+		if("ALL".equals(lang)) {
+			langLst.add("zh");
+//			langLst.add("en"); // 不搜索英文
+		} else {
+			langLst.add(lang);
+		}
+		return langLst;
+	}
+
+	/**
+	 * 获取所要检索的类型集合
+	 *
+	 * @param type 检索类型
+	 */
+	private List<String> getRetriveTypeLst(String type) {
+		List<String> typeLst = new ArrayList<>();
+		if("ALL".equals(type)) {
+			typeLst.add("name");
+			typeLst.add("id");
+		} else {
+			typeLst.add(type);
+		}
+		return typeLst;
+	}
+
 
 	// ------------------------------------------------------------------------------------------------------------------
 	
