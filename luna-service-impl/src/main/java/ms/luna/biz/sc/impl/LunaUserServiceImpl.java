@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import ms.biz.common.MailRunnable;
 import ms.biz.common.MenuHelper;
 import ms.luna.biz.cons.ErrorCode;
@@ -107,19 +108,14 @@ public class LunaUserServiceImpl implements LunaUserService {
 
     @Override
     public JSONObject inviteUser(String loginUserId, JSONObject jsonObject) {
-        JSONArray emailArray = jsonObject.getJSONArray("emailArray");
+        String[] emailArray = jsonObject.getString("emails").split(",|,");
         int roleId = jsonObject.getInteger("role_id");
         int categoryId = jsonObject.getInteger("category_id");
         String webAddr = jsonObject.getString("webAddr");
 
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
 
-        Set<String> emailSet = new HashSet<>(emailArray.size());
-        for(int i = 0; i < emailArray.size(); i++) {
-            String email = emailArray.getString(i);
-            emailSet.add(email);
-        }
-
+        Set<String> emailSet = Sets.newHashSet(emailArray);
 
         LunaUserCriteria lunaUserCriteria = new LunaUserCriteria();
         lunaUserCriteria.createCriteria().andEmailIn(Lists.newArrayList(emailSet));
@@ -328,22 +324,12 @@ public class LunaUserServiceImpl implements LunaUserService {
     public JSONObject getChildRoleAndModuleByRoleId(int roleId) {
 
         Map<Integer, LunaRole> roleId2Role = new HashMap<>();
-        List<Integer> roleList = Lists.newArrayList(roleId);
         Map<Integer, List<LunaRole>> module2RoleList = new HashMap<>();
         JSONArray jsonArray = new JSONArray();
         try {
-            while (true) {
-                LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
-                lunaRoleCriteria.createCriteria().andParentIdIn(roleList);
-                List<LunaRole> lunaRoles = lunaRoleDAO.selectByCriteria(lunaRoleCriteria);
-                if (lunaRoles == null || lunaRoles.size() == 0) {
-                    break;
-                }
-                roleList.clear();
-                for (LunaRole lunaRole : lunaRoles) {
-                    roleList.add(lunaRole.getId());
-                    roleId2Role.put(lunaRole.getId(), lunaRole);
-                }
+            List<LunaRole> childRolesByRoleId = roleCache.getChildRolesByRoleId(roleId);
+            for(LunaRole lunaRole : childRolesByRoleId) {
+                roleId2Role.put(lunaRole.getId(), lunaRole);
             }
 
             LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
@@ -413,13 +399,15 @@ public class LunaUserServiceImpl implements LunaUserService {
 
         try {
             LunaRegEmailCriteria lunaRegEmailCriteria = new LunaRegEmailCriteria();
-            lunaRegEmailCriteria.createCriteria().andTokenEqualTo(token)
-                    .andStatusEqualTo(false);
+            lunaRegEmailCriteria.createCriteria().andTokenEqualTo(token);
             List<LunaRegEmail> lunaRegEmailList = lunaRegEmailDAO.selectByCriteriaWithBLOBs(lunaRegEmailCriteria);
             if (lunaRegEmailList == null) {
                 logger.warn("user already exist:" + lunaName);
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "非法邀请码");
+            } else if (lunaRegEmailList.get(0).getStatus()){
                 return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "该账户已被注册");
             }
+
             // 乐观锁——status
             LunaRegEmail lunaRegEmail = new LunaRegEmail();
             lunaRegEmail.setStatus(true);
