@@ -39,8 +39,11 @@ var Inter = function() {
                 crmDisableUser:{url: '/content/crm/merchantId/{0}/disable',type:'PUT'},//关闭商户
                 crmCheckName:{url: '/content/crm/checkName',type:'GET'},//检查姓名
 
-
-
+                // 商户注册
+                merchantInit:{url:"/common/merchant/registPage",type:"GET"}, // 注册初始页面
+                merchantRegist:{url:"/common/merchant",type:"POST"},// 注册
+                merchantCheckName:{url:"/common/merchant/checkName",type:"GET"}, //检查用户名
+                merchantSuccess:{url:"common/merchant/successPage",type:"GET"}, //注册成功页面
                 // 商户
                 searchMerchat:{url:  context + '/content/business/searchMerchant',type:''}, // 搜索商户接口 get 方法
 
