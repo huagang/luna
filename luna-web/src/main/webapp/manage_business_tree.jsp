@@ -25,6 +25,8 @@
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -75,7 +77,7 @@
                             <table id="table_business_tree" class="table"
 										data-toggle="table"
 										data-toolbar=""
-										data-url="${basePath}/manage_business_tree.do?method=async_search_business_trees"
+										data-url="/content/businessRelation/businessTree/search"
 										data-pagination="true"
 										data-side-pagination="server"
 										data-page-size="20"
@@ -207,7 +209,8 @@
 	function operationFormatter(value, row, index) {
 		var business_id = row.business_id;
 
-		var editOp = '<a target="_blank" class="edit" href="./business_tree.do?method=init&business_id=' + business_id + '">编辑</a>';
+//		var editOp = '<a target="_blank" class="edit" href="./business_tree.do?method=init&business_id=' + business_id + '">编辑</a>';
+		var editOp = '<a target="_blank" class="edit" href="'+Util.strFormat(Inter.getApiUrl().bizRelationEditPage.url, [business_id])+'">编辑</a>';
 		var deleteOp = '<a class="delete" href="javascript:void(0)" onclick="delBusinessTree(this,' + business_id + ')">删除</a>';
 
 		return editOp + deleteOp;
