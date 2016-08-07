@@ -28,10 +28,15 @@ var Inter = function() {
                 poiConfirmArea:'',//确认poi所在区域是否正确
                 
                 //CRM管理
+                crmInit:{url:"/content/crm",type:"GET"},//CRM管理页面
                 crmAddPage:{url: '/content/crm/initAddPage',type:'GET'},//Crm添加页面
-                initEditPage:{url: '/content/crm/initEditPage?merchant_id={0}',type:'GET'}, //请求CRM编辑界面
-                crmEnableUser:{url: '/content/crm/open',type:'PUT'},//开启商户
-                crmDisableUser:{url: '/content/crm/close',type:'PUT'},//关闭商户
+                crmEditPage:{url: '/content/crm/initEditPage?merchantId={0}', type:'GET'},// crm 编辑页面
+                crmUserInfo:{url: '/content/crm/merchantId/{0}'}, // crm 获取商户信息
+                crmAddSave:{url:"/content/crm",type:"POST"},//crm 创建商户
+                crmEditSave:{url:"/content/crm/edit",type:"POST"},//crm 编辑商户
+                crmDelete:{url:"/content/crm",type:"DELETE"},//crm 删除商户
+                crmEnableUser:{url: '/content/crm/{0}/enable',type:'PUT'},//开启商户
+                crmDisableUser:{url: '/content/crm/merchantId/{0}/disable',type:'PUT'},//关闭商户
                 crmCheckName:{url: '/content/crm/checkName',type:'GET'},//检查姓名
 
 

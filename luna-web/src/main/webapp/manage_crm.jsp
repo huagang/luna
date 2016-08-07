@@ -102,7 +102,8 @@
         <h4>新建商户</h4>
         <a href="#" class="btn-close" onclick="clcContent(this)"><img src="img/close.png" /></a>
     </div>
-    <form id="form-add" action="<%=request.getContextPath() %>/manage_merchant.do?method=create_merchant" method="post" 
+    <%--<form id="form-add" action="<%=request.getContextPath() %>/manage_merchant.do?method=create_merchant" method="post" --%>
+    <form id="form-add" action="/content/crm" method="post"
         onkeydown="if(event.keyCode==13){return false;}" >
         <div class="pop-cont merchant">
             <div class="item">

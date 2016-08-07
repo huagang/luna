@@ -19,8 +19,8 @@ $(function(){
         		async:false,
         		cache:false,
         		data:{
-        			'merchant_nm_edit':meName,
-        			'merchant_id_edit':meId
+        			'merchant_nm':meName,
+        			'merchant_id':meId
         		},
         		dataType:'JSON',
         		success:function(returndata){
@@ -259,7 +259,8 @@ $(function(){
 	    				case '0': 
 	    					$("#pop-overlay").css("display","none");
 	    			        $("#pop-editmerchant").css("display","none");
-	    					window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
+	    					//window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
+	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
 	    					break;
 	    				case '3':
         					$("#merchant-name-edit-warn").html('商户重名（您下手慢了）').show();
@@ -334,9 +335,10 @@ function editcrm(obj){
     var $popwindow = $("#pop-editmerchant");
     popWindow($popwindow);
     $.ajax({
-    	url:host+"/manage_merchant.do?method=load_merchant",
+    	//url:host+"/manage_merchant.do?method=load_merchant",
+    	url: Util.strFormat(Inter.getApiUrl().crmUserInfo.url,[obj]),
     	async:false,
-    	type:'POST',
+    	type:'GET',
     	data:{'merchant_id':obj},
     	dataType:"json",
     	success:function(returndata){
