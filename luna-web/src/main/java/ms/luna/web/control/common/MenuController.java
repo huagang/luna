@@ -39,15 +39,11 @@ public class MenuController extends BasicController {
 
         HttpSession session = request.getSession(false);
         if(session != null) {
-            LunaUserSession lunaUserSession = (LunaUserSession) session.getAttribute(SessionHelper.KEY_USER);
-            List<Integer> roleIds = lunaUserSession.getRoleIds();
-            if(roleIds != null && roleIds.size() > 0) {
-                JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(roleIds.get(0));
-                logger.trace(moduleAndMenuByRoleId);
-                return moduleAndMenuByRoleId;
-            } else {
-                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有权限获取菜单");
-            }
+            LunaUserSession lunaUserSession = SessionHelper.getUser(session);
+            JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
+            logger.trace(moduleAndMenuByRoleId);
+            return moduleAndMenuByRoleId;
+
         } else {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有权限获取菜单");
         }

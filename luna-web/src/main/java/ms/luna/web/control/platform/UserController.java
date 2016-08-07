@@ -11,10 +11,7 @@ import ms.luna.web.util.RequestHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +57,7 @@ public class UserController extends BasicController {
         if(limit < 0) {
             limit = 20;
         }
-        JSONObject jsonObject = lunaUserService.getUserList(user.getRoleIds().get(0), keyword, offset, limit);
+        JSONObject jsonObject = lunaUserService.getUserList(user.getRoleId(), keyword, offset, limit);
         if(jsonObject.getString("code").equals("0")) {
             return jsonObject.getJSONObject("data");
         } else {
@@ -72,8 +69,28 @@ public class UserController extends BasicController {
     @ResponseBody
     public JSONObject submitCreateUser(HttpServletRequest request) {
 
-
+//        lunaUserService.inviteUser()
         return FastJsonUtil.sucess("");
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseBody
+    public JSONObject deleteUser(@PathVariable String id) {
+        try {
+            JSONObject jsonObject = lunaUserService.deleteUser(id);
+            return jsonObject;
+        } catch (Exception ex) {
+            logger.error("Failed to delete user");
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/invite")
+    @ResponseBody
+    public JSONObject inviteUser(HttpServletRequest request) {
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        JSONObject userRoleForCreate = lunaUserService.getUserRoleForCreate(user.getRoleId());
+        return userRoleForCreate;
     }
 
 }

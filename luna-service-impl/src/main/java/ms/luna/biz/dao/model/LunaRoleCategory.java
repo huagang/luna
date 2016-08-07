@@ -7,7 +7,7 @@ import ms.luna.biz.table.LunaRoleCategoryTable;
 import java.io.Serializable;
 import java.util.Date;
 
-@JSONType(includes = {LunaRoleCategoryTable.FIELD_ID,  LunaRoleCategoryTable.FIELD_NAME})
+@JSONType(includes = {LunaRoleCategoryTable.FIELD_ID,  LunaRoleCategoryTable.FIELD_NAME, LunaRoleCategoryTable.FIELD_EXTRA})
 public class LunaRoleCategory implements Serializable {
     @JSONField(name = LunaRoleCategoryTable.FIELD_ID)
     private Integer id;
@@ -16,6 +16,7 @@ public class LunaRoleCategory implements Serializable {
 
     private Date updateTime;
 
+    @JSONField(name = LunaRoleCategoryTable.FIELD_EXTRA)
     private String extra;
 
     private static final long serialVersionUID = 1L;

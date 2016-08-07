@@ -52,12 +52,7 @@ public class MenuServiceImpl implements MenuService {
             if (lunaUserRole == null) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户不存在");
             }
-            List<Integer> roleIds = lunaUserRole.getRoleIds();
-            if(roleIds != null && roleIds.size() > 0) {
-                return getModuleAndMenuByRoleId(roleIds.get(0));
-            } else {
-                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户无任何角色");
-            }
+            return getModuleAndMenuByRoleId(lunaUserRole.getRoleId());
         } catch (Exception ex) {
             logger.error("Failed to get module and menu by userId: " + userId, ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");

@@ -3,7 +3,6 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import ms.biz.common.MailRunnable;
 import ms.biz.common.MenuHelper;
@@ -27,7 +26,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -93,7 +91,7 @@ public class LunaUserServiceImpl implements LunaUserService {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(LunaUserTable.FIELD_ID, lunaUserRole.getUserId());
                 jsonObject.put(LunaUserTable.FIELD_LUNA_NAME, lunaUserRole.getLunaName());
-                jsonObject.put("role_name", allRoleId2Name.get(lunaUserRole.getRoleIds().get(0)));
+                jsonObject.put("role_name", allRoleId2Name.get(lunaUserRole.getRoleId()));
                 jsonArray.add(jsonObject);
             }
 
@@ -111,7 +109,7 @@ public class LunaUserServiceImpl implements LunaUserService {
     public JSONObject inviteUser(String loginUserId, JSONObject jsonObject) {
         JSONArray emailArray = jsonObject.getJSONArray("emailArray");
         int roleId = jsonObject.getInteger("role_id");
-        int moduleId = jsonObject.getInteger("module_id");
+        int categoryId = jsonObject.getInteger("category_id");
         String webAddr = jsonObject.getString("webAddr");
 
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
@@ -157,7 +155,7 @@ public class LunaUserServiceImpl implements LunaUserService {
         String currentDate = sdf.format(new Date());
         LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(loginUserId);
         LunaRole lunaRole = lunaRoleDAO.selectByPrimaryKey(roleId);
-        LunaModule module = moduleMenuCache.getModule(moduleId);
+        String categoryName = roleCategoryCache.getCategoryNameById(categoryId);
 
         for (Map.Entry<String, String> entry : toInviteEmail.entrySet()) {
             String email = entry.getKey();
@@ -170,7 +168,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             lunaRegEmail.setStatus(false);
             lunaRegEmail.setInviteUniqueId(loginUserId);
             lunaRegEmailDAO.insertSelective(lunaRegEmail);
-            Runnable mailRunnable = new MailRunnable(email, token, module.getName(), currentDate,
+            Runnable mailRunnable = new MailRunnable(email, token, categoryName, currentDate,
                     lunaUser.getLunaName(), lunaRole.getName(), webAddr);
             emailService.sendEmail(mailRunnable);
         }
@@ -185,8 +183,7 @@ public class LunaUserServiceImpl implements LunaUserService {
         if(userRole == null) {
             return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户不存在");
         }
-        List<Integer> roleIds = userRole.getRoleIds();
-        Integer roleId = roleIds.get(0);
+        int roleId = userRole.getRoleId();
 
         List<LunaRole> childRolesByRoleId = roleCache.getChildRolesByRoleId(loginRole);
 
@@ -208,7 +205,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有权限获取用户信息");
         }
         JSONObject userInfoJson = new JSONObject();
-        userInfoJson.put(LunaUserRoleTable.FIELD_ROLE_IDS, JSON.toJSON(userRole.getRoleIds()));
+        userInfoJson.put(LunaUserRoleTable.FIELD_ROLE_ID, roleId);
         userInfoJson.put(LunaUserRoleTable.FIELD_EXTRA, JSON.toJSON(userRole.getExtra()));
         userInfoJson.put(LunaRoleTable.FIELD_CATEGORY_ID, crtRole.getCategoryId());
         List<LunaRoleCategory> roleCategoryList = roleCategoryCache.getAllRoleCategoryList();
@@ -226,6 +223,36 @@ public class LunaUserServiceImpl implements LunaUserService {
         userInfoJson.put("options", jsonArray);
 
         return FastJsonUtil.sucess("success", userInfoJson);
+    }
+
+    @Override
+    public JSONObject getUserRoleForCreate(int loginRole) {
+
+        List<LunaRole> childRolesByRoleId = roleCache.getChildRolesByRoleId(loginRole);
+
+        Map<Integer, List<LunaRole>> category2LunaRole = new HashMap<>();
+        for(LunaRole lunaRole : childRolesByRoleId) {
+            int categoryId = lunaRole.getCategoryId();
+            List<LunaRole> crtLunaRoleList = category2LunaRole.get(categoryId);
+            if(crtLunaRoleList == null) {
+                crtLunaRoleList = new ArrayList<>();
+                category2LunaRole.put(categoryId, crtLunaRoleList);
+            }
+            crtLunaRoleList.add(lunaRole);
+        }
+        List<LunaRoleCategory> roleCategoryList = roleCategoryCache.getAllRoleCategoryList();
+
+        JSONArray jsonArray = new JSONArray();
+        //category is well sorted, use it to sort category role
+        for(LunaRoleCategory lunaRoleCategory : roleCategoryList) {
+            int categoryId = lunaRoleCategory.getId();
+            if(category2LunaRole.containsKey(categoryId)) {
+                JSONObject jsonObject = (JSONObject) JSON.toJSON(lunaRoleCategory);
+                jsonObject.put("roleArray", JSON.toJSON(category2LunaRole.get(categoryId)));
+                jsonArray.add(jsonObject);
+            }
+        }
+        return FastJsonUtil.sucess("success", jsonArray);
     }
 
     @Override
@@ -255,11 +282,11 @@ public class LunaUserServiceImpl implements LunaUserService {
         lunaUserSession.setNickName(lunaUser.getNickName());
         lunaUserSession.setEmail(lunaUser.getEmail());
 
-        lunaUserSession.setRoleIds(userRole.getRoleIds());
+        lunaUserSession.setRoleId(userRole.getRoleId());
         lunaUserSession.setExtra(userRole.getExtra());
 
         LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-        lunaRoleMenuCriteria.createCriteria().andRoleIdIn(userRole.getRoleIds());
+        lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(userRole.getRoleId());
         List<LunaRoleMenu> lunaRoleMenuList = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
 
         List<Integer> menuIdList = new ArrayList<>(lunaRoleMenuList.size());
@@ -294,19 +321,14 @@ public class LunaUserServiceImpl implements LunaUserService {
             logger.warn("no role for user: " + userId);
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
         }
-        List<Integer> roleIds = lunaUserRole.getRoleIds();
-        if(roleIds != null && roleIds.size() > 0) {
-            // TODO: 未来用户可能存在多个权限
-            return getChildRoleAndModuleByRoleId(roleIds.get(0));
-        }
-        return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户无任何权限");
+        return getChildRoleAndModuleByRoleId(lunaUserRole.getRoleId());
     }
 
     @Override
     public JSONObject getChildRoleAndModuleByRoleId(int roleId) {
 
         Map<Integer, LunaRole> roleId2Role = new HashMap<>();
-        List<Integer> roleList = Arrays.asList(roleId);
+        List<Integer> roleList = Lists.newArrayList(roleId);
         Map<Integer, List<LunaRole>> module2RoleList = new HashMap<>();
         JSONArray jsonArray = new JSONArray();
         try {
@@ -425,7 +447,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             LunaUserRole userRole = new LunaUserRole();
             userRole.setUserId(userId);
             userRole.setLunaName(lunaName);
-            userRole.setRoleIds(Arrays.asList(roleId));
+            userRole.setRoleId(roleId);
             userRole.setExtra(JSON.parseObject(extra));
             lunaUserRoleDAO.createUserRoleInfo(userRole);
         } catch (Exception ex) {

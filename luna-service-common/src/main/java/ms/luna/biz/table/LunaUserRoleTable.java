@@ -12,7 +12,7 @@ public class LunaUserRoleTable {
 
     public static final String FIELD_USER_ID = "_id";
     public static final String FIELD_LUNA_NAME = "luna_name";
-    public static final String FIELD_ROLE_IDS = "role_ids";
+    public static final String FIELD_ROLE_ID = "role_id";
     public static final String FIELD_EXTRA = "extra";
     public static final String FIELD_UPDATE_TIME = "update_time";
 }
