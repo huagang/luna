@@ -1,6 +1,5 @@
 package ms.luna.biz.sc.impl;
 
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.bl.ManageBusinessBL;
@@ -16,6 +15,7 @@ import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.MerchantCategoryCache;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,11 +98,14 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 	public JSONObject getBusinessForEdit(JSONObject jsonObject) {
 		String loginUserId = jsonObject.getString("loginUserId");
 		String slaveUserId = jsonObject.getString("slaveUserId");
-		if(StringUtils.isBlank(loginUserId) || StringUtils.isBlank(slaveUserId)) {
+		if(StringUtils.isBlank(loginUserId)) {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}
 		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
-		List<MsBusiness> selectedBusiness = getBusinessForUser(slaveUserId);
+		List<MsBusiness> selectedBusiness = null;
+		if(StringUtils.isNotBlank(slaveUserId)) {
+			selectedBusiness = getBusinessForUser(slaveUserId);
+		}
 
 		if(allValidBusiness == null) {
 			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
@@ -113,7 +116,7 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			businessIdSet.add(msBusiness.getBusinessId());
 		}
 
-		Set<Integer> selectedBusinessIdSet = new HashSet<>(selectedBusiness.size());
+		Set<Integer> selectedBusinessIdSet = new HashSet<>();
 		if(selectedBusiness != null) {
 			for (MsBusiness msBusiness : selectedBusiness) {
 				selectedBusinessIdSet.add(msBusiness.getBusinessId());
@@ -128,8 +131,13 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
 			if(categoryId == null) {
 				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
+				continue;
 			}
 			String categotryName = categoryId2NameMap.get(categoryId);
+			if(StringUtils.isBlank(categotryName)) {
+				logger.warn("Failed to get categoryName for categoryId: " + categoryId);
+				continue;
+			}
 			JSONArray jsonArray = resJson.getJSONArray(categotryName);
 			if(jsonArray == null) {
 				jsonArray = new JSONArray();

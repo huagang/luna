@@ -86,6 +86,25 @@ public class BusinessController extends BasicController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/selectForEdit")
+    @ResponseBody
+    public JSONObject selectBusinessForEdit(@RequestParam(required = false, value = "unique_id") String slaveUserId,
+                                            HttpServletRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        jsonObject.put("loginUserId", user.getUniqueId());
+        if(StringUtils.isNotBlank(slaveUserId)) {
+            jsonObject.put("slaveUserId", slaveUserId);
+        }
+        try {
+            return manageBusinessService.getBusinessForEdit(jsonObject);
+        } catch (Exception ex) {
+            logger.error("Failed to get business for edit", ex);
+
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject asyncSearchBusiness(@RequestParam(required = false) Integer offset,
