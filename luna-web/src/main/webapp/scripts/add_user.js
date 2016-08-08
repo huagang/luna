@@ -14,6 +14,9 @@
         // 数据初始化
         vm.init = init;
 
+        // 操作 更新业务信息到vm.data.extra对象中
+        vm.transformBusinessData = transformBusinessData;
+
         // 操作 解析url中search信息并将其转化为对象
         vm.initSearch = initSearch;
 
@@ -54,14 +57,6 @@
 
         function init() {
             vm.apiUrls = Inter.getApiUrl();
-            vm.initSearch();
-
-            if (vm.search.username) {
-                // 编辑用户
-                vm.fetchUserData();
-                vm.pagePurpose = 'edit';
-            }
-
             vm.data = {
                 email: '',
                 emailFocus: false,
@@ -76,12 +71,16 @@
 
             vm.moduleData = [];
             vm.moduleOption = [];
-            vm.business = [];
+            vm.business = {};
             vm.choiceType = ''; // 'radio' or 'checkbox'
             vm.roles = [];
-            vm.postUrl = Inter.getApiUrl().addUser || '';
-
+            try{
+                vm.userId = location.href.match(/unique_id=(\w+)/)[1];
+            } catch(e){
+                vm.userId = '';
+            }
             vm.fetchInviteAuthData();
+            vm.fetchBusinessData();
             vm.fetchUserData();
         };
 
@@ -129,8 +128,8 @@
                 vm.inviteAuth.some(function (item) {
                     if (item.id === vm.data.module) {
                         vm.data.extra = {"type": item.extra.type, value:undefined};
-                        vm.data.business = [];
                         vm.roles = item.roleArray;
+                        vm.data.business = {};
                         vm.data.role = '';
 
                         if(item.extra.type === 'business'){
@@ -162,28 +161,45 @@
 
         // 角色更改
         function handleRoleChange() {
-            var effect;
-            vm.roles.forEach(function (item) {
-                if (item.id === vm.data.role && item.is_admin ) {
-                    effect = 'all';
+            var extra_value;
+            vm.roles.some(function (item) {
+                if (item.id === vm.data.role) {
+                    extra_value = item.extra_value;
+                    return true;
                 }
+                return false;
             });
 
             vm.data.business = {};
-            if (effect === 'all' && vm.choiceType === 'checkbox') {
+            if (vm.choiceType === 'checkbox' && extra_value === 0) {
                 // 全选
-                vm.business.forEach(function (item) {
-                    item.items.forEach(function (subItem) {
-                        vm.data.business[subItem.id] = true;
+                Object.keys(vm.business).forEach(function (item) {
+                    vm.business[item].forEach(function (subItem) {
+                        vm.data.business[subItem.business_id] = true;
                     });
                 });
             }
         }
 
         function handleOptionsChange(){
+            var id = event.target.getAttribute('id');
             if(vm.choiceType === 'radio'){
                 vm.data.business = {};
-                vm.data.business[event.target.getAttribute('id')] = true;
+                vm.data.business[id] = 'checked';
+            } else if(vm.choiceType ==='checkbox'){
+                vm.data.business[id] = vm.data.business[id] ? '' : 'checked';
+            }
+            console.log(vm.data.business);
+        }
+
+        function transformBusinessData(){
+            if( vm.extraData && vm.extraData.type === 'business'){
+                vm.data.extra.value = [];
+                Object.keys(vm.data.business).forEach(function(item, index) {
+                    if(vm.data.business[item]){
+                        vm.data.extra.value.push(item);
+                    }
+                });
             }
         }
 
@@ -201,36 +217,34 @@
                     msg: '没有选择角色\n'
                 }
             ], res = {error: null, msg: ''}, data = vm.data;
+
+
             emptyCheckList.forEach(function (item) {
                 if (!data[item.name] || (toString.call(data[item.name]) === "[object Array]" && data[item.name].length === 0)) {
                     res.error = true;
                     res.msg += item.msg;
                 }
             });
-
-            if(! vm.data.extra.value || toString.call(data[item.name]) === "[object Array]" && data[item.name].length === 0){
-                res.error = true;
-                res.msg += '没有' + vm.extraData.label +'\n';
+            if(vm.data.extra.type){
+                if(! vm.data.extra.value || toString.call(vm.data.extra.value) === "[object Array]" && vm.data.extra.value.length === 0){
+                    res.error = true;
+                    res.msg += '没有' + vm.extraData.label +'\n';
+                }
             }
+
 
             return res;
         }
 
         // 获取编辑用户的信息
         function fetchUserData(){
-            try{
-                var userId = location.href.match(/id=(\w+)/)[1];
-            } catch(e){
-                return;
-            }
-            if(userId){
-                vm.userId = parseInt(userId);
+            if(vm.userId){
                 $http({
-                    url: vm.apiUrls.fetchUserAuth.url,
-                    type: vm.apiUrls.fetchUserAuth.type,
+                    url: vm.apiUrls.fetchUserAuthData.url,
+                    type: vm.apiUrls.fetchUserAuthData.type
                 }).then(function(res){
                     if(res.data.code === '0'){
-
+                        vm.authData = res.data.data;
                     } else{
                         console.error(res.data.msg || '获取用户权限信息失败');
                     }
@@ -240,35 +254,39 @@
             }
         }
 
+
+
         // 发送邮箱邀请的数据请求
         function handleInviteUser() {
+            if( vm.extraData && vm.extraData.type === 'business'){
+                vm.transformBusinessData();
+            }
             var res = vm._checkValidation();
             if (!res.error) {
                 //发送数据请求
-                var extra = {type: '', value:''};
-                var module = vm.moduleOption.filter(function(item){
-                    if(item.id === vm.data.module){
-                        return true;
-                    }
-                    return false;
-                });
-
                 var data = new FormData();
-                data.push('emailArray', vm.data.emailList);
-                data.push('module_id', vm.data.module);
-                data.push('role_id', parseInt(vm.data.role));
-                data.push('extra', vm.data.extra);
+                data.append('emails', JSON.stringify(vm.data.emailList));
+                data.append('category_id', vm.data.module);
+                data.append('role_id', parseInt(vm.data.role));
+                if(vm.data.extra && vm.data.extra.type){
+                    data.append('extra', JSON.stringify(vm.data.extra));
+                }
                 var url = vm.userId ? vm.apiUrls.updateUserAuth : vm.apiUrls.inviteUsers;
                 $http({
                     url: url.url,
                     method: url.type,
+                    data: data,
                     headers: {
                         "Content-Type": undefined
                     }
-                }).then(function () {
-
-                }, function () {
-
+                }).then(function (res) {
+                    if(res.data.code === '0'){
+                        alert('新建用户成功');
+                    } else{
+                        alert(res.data.msg || '新建用户失败');
+                    }
+                }, function (res) {
+                    alert(res.data.msg || '新建用户失败');
                 });
             } else {
                 alert(res.msg);
@@ -298,13 +316,31 @@
 
         // 获取业务信息
         function fetchBusinessData(){
+            var req  = vm.userId ? vm.apiUrls.getBusinessListForEdit : vm.apiUrls.getBusinessList;
             $http({
-                url: vm.apiUrls.getBusinessList.url,
-                method: vm.apiUrls.getBusinessList.type,
+                url: req.url.format(vm.userId),
+                method: req.type
             }).then(function(res){
-                if(res.data.total > 0){
-                    vm.business = res.data.rows;
-                } else{
+                if(res.data.code === '0'){
+                    vm.business = res.data.data;
+                    vm.data.business = {};
+                    if(vm.userId){
+                        Object.keys(vm.business).forEach(function(item, index){
+                            (vm.business[item] || []).forEach(function(item, index){
+                                vm.data.business[item.business_id] = item.selected ? 'checked' : '';
+                            });
+                        });
+                     }
+
+                    if(Object.keys(vm.business).length > 1 ||
+                        vm.business[Object.keys(vm.business)[0]].length > 1){
+                        vm.businessShowType = 'multiple';
+                    } else if(Object.keys(vm.business).length === 1
+                        && vm.business[Object.keys(vm.business)[0]].length === 1){
+                        vm.businessShowType = 'single';
+                    }
+                }
+                else{
                     console.error(res.data.msg || '获取业务列表失败');
                 }
             }, function(res){

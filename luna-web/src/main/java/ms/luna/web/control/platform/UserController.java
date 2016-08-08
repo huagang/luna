@@ -103,7 +103,8 @@ public class UserController extends BasicController {
         jsonObject.put("role_id", roleId);
         jsonObject.put(LunaRoleTable.FIELD_CATEGORY_ID, categoryId);
         jsonObject.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
-
+        logger.error(jsonObject);
+        logger.error(extra);
         try {
             lunaUserService.inviteUser(user.getUniqueId(), jsonObject);
         } catch (Exception ex) {

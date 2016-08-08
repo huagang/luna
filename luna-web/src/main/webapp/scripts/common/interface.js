@@ -65,8 +65,8 @@ var Inter = function() {
 
                 // 业务
                 business: {url: context + '/content/business',type:''}, // 业务相关 POST PUT
-                getBusinessList:{url:  context + '/common/business?data',type:'GET'}, // 获取该用户能够选择的业务列表
-
+                getBusinessList: {url: context + '/content/business/selectForEdit', type:'GET'},
+                getBusinessListForEdit: {url: context + '/content/business/selectForEdit?unique_id={0}', type: 'GET'},
             	//文章操作
                 article: {url: context + '/content/article',type:''},
 
@@ -98,12 +98,10 @@ var Inter = function() {
                 registrationRegist:{url:"/comomon/registration",type:"POST"}, // 注册
 
                 // 权限
-                fetchUserAuth: {url: '', type: 'GET'}, // 获取用户权限
                 updateUserAuth: {url: '', type: 'PUT'}, // 更新用户权限
-                inviteUsers: {url: '', type: 'POST'}, // 邀请用户
-
+                inviteUsers: {url: context + '/platform/user', type: 'POST'}, // 邀请用户
                 inviteAuth: {url: context + '/platform/user/invite?data', type: 'GET'}, // 获取邀请权限
-
+                fetchUserAuthData: {url: context + '/platform/user/invite/{0}?edit', type: 'GET'},
 
                 // 省市县\分类下拉列表
                 pullDownProvinces:{url:"/common/pulldown/provinces",type:"GET"}, //省
