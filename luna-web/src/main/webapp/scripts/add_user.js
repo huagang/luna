@@ -229,7 +229,9 @@
                     msg: '没有选择角色\n'
                 }
             ], res = {error: null, msg: ''}, data = vm.data;
-
+            if(vm.userId){
+                emptyCheckList.splice(0,1);
+            }
 
             emptyCheckList.forEach(function (item) {
                 if (!data[item.name] || (toString.call(data[item.name]) === "[object Array]" && data[item.name].length === 0)) {
@@ -270,16 +272,20 @@
             if (!res.error) {
                 //发送数据请求
                 var data = new FormData();
-                data.append('emails', vm.data.emailList.join(','));
+                if(! vm.userId){
+                    data.append('emails', vm.data.emailList.join(','));
+                }
                 data.append('category_id', vm.data.module);
                 data.append('role_id', parseInt(vm.data.role));
                 if(vm.data.extra && vm.data.extra.type){
                     data.append('extra', JSON.stringify(vm.data.extra));
                 }
-                var url = vm.userId ? vm.apiUrls.updateUserAuth : vm.apiUrls.inviteUsers;
+                var url = vm.userId ? vm.apiUrls.updateUserAuth.url.format(vm.userId) : vm.apiUrls.inviteUsers.url,
+                    type = vm.userId ? vm.apiUrls.updateUserAuth.type : vm.apiUrls.inviteUsers.type;
+
                 $http({
-                    url: url.url,
-                    method: url.type,
+                    url: url,
+                    method: type,
                     data: data,
                     headers: {
                         "Content-Type": undefined

@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="button" ng-click="user.handleInviteUser()">邮箱邀请</button>
+                    <button class="button" ng-click="user.handleInviteUser()">{{user.userId ? '保存' : '邮箱邀请' }}</button>
                 </div>
             </div>
 

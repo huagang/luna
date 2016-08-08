@@ -105,10 +105,11 @@ var Inter = function() {
                 registrationRegist:{url:"/comomon/registration",type:"POST"}, // 注册
 
                 // 权限
-                updateUserAuth: {url: '', type: 'PUT'}, // 更新用户权限
+                updateUserAuth: {url: context + '/platform/user/{0}', type: 'PUT'}, // 更新用户权限
                 inviteUsers: {url: context + '/platform/user', type: 'POST'}, // 邀请用户
                 inviteAuth: {url: context + '/platform/user/invite?data', type: 'GET'}, // 获取邀请权限
                 fetchUserAuthData: {url: context + '/platform/user/invite/{0}?edit', type: 'GET'},
+                delUser: {url: context + '/platform/user/{0}', type: 'DELETE'},
 
                 // 省市县\分类下拉列表
                 pullDownProvinces:{url:"/common/pulldown/provinces",type:"GET"}, //省

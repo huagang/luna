@@ -2,24 +2,19 @@
 author:Demi*/
 $(document).ready(function(){
     //删除用户确定按钮
+	var apiUrl = Inter.getApiUrl();
     $("#btn-delete").click(function () {
         $("#pop-overlay").css("display","none");
         $("#pop-delete").css("display","none");
         var luna_name = $("#del-row").attr("luna_name");
-        var role_code = $("#del-row").attr("role_code");
-        var module_code = $("#del-row").attr("module_code");
+        var unique_id = $("#del-row").attr("unique_id");
+        var role_name = $("#del-row").attr("role_name");
         var index = $("#del-row").attr("index");
-    	var params = {
-    			'luna_name':luna_name,
-    			'module_code':module_code,
-    			'role_code':role_code
-    	};
+
     	$.ajax({
-    		type: 'post',
-    		url: host +'/manage_user.do?method=del_user',
+    		url: Util.strFormat(apiUrl.delUser.url,[unique_id]),
+			type: apiUrl.delUser.type,
     		cache: false,
-    		async:false,
-    		data: params,
     		dataType: 'json',
     		success: function (returndata) {
     			var code = returndata.code;
@@ -59,16 +54,13 @@ $(document).ready(function(){
 });
 
 //删除按钮弹窗
-function delUser(obj,luna_name,module_code,role_code,msUserName){
-	if(luna_name == msUserName){//如果编辑用户为当前用户，则不能编辑
-		return;
-	}
+function delUser(obj,luna_name,unique_id, role_name){
     var target = $(obj).parent().parent();
     var $pop_window = $("#pop-delete");
     var index = target.attr("data-index");
     popWindow($pop_window);
     $('#del-row').attr("luna_name",luna_name);
-    $('#del-row').attr("module_code",module_code);
-    $('#del-row').attr("role_code",role_code);
+    $('#del-row').attr("unique_id", unique_id);
+    $('#del-row').attr("role_name",role_name);
     $('#del-row').attr("index",index);
 }
