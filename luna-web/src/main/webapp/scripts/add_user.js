@@ -127,21 +127,34 @@
         //权限模块更改
         function handleModuleChange() {
             if (vm.data.module) {
-                vm.inviteAuth.forEach(function (item) {
+                vm.data.module = parseInt(vm.data.module);
+                vm.inviteAuth.some(function (item) {
                     if (item.id === vm.data.module) {
+
                         vm.data.roles = item.roles;
-                        if(item.name === '商家服务'){
-                            vm.choiceType = 'checkbox';
-                        } else if(item.name === '内容运营'){
-                            vm.choiceType = 'radio';
+                        if(item.extra.type === 'business'){
+                            if(item.extra.mode === 0){
+                                vm.choiceType = 'checkbox';
+                            } else if(item.extra.mode === 1){
+                                vm.choiceType = 'radio';
+                            }
                         } else{
                             vm.choiceType = '';
                         }
+                        vm.extraData = item.extra || {};
+                        vm.data.role = '';
+                        vm.data.extra = {"type": vm.extraData.type, value:undefined};
+                        vm.data.business = {};
+                        var keys = Object.keys(vm.extraData.options);
+                        vm.extraData.optionLength = keys.length;
+                        if(vm.extraData.optionLength === 1){
+                            vm.data.extra.value = keys[0];
+                            vm.data.extraData.option = vm.data.extraData.options[keys[0]];
+                        }
+                        return true;
                     }
+                    return false;
                 });
-                vm.data.role = '';
-                vm.data.extra = {};
-                vm.data.business = {};
             }
         }
 
@@ -258,10 +271,15 @@
         function fetchInviteAuthData() {
             $http({
                 url: vm.apiUrls.inviteAuth.url,
-                method: vm.apiUrls.inviteAuth.type
+                method: vm.apiUrls.inviteAuth.type,
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.inviteAuth = res.data.data;
+                    vm.inviteAuth.forEach(function(item,index){
+                        if(item.extra && typeof item.extra === 'string'){
+                            item.extra = JSON.parse(item.extra);
+                        }
+                    });
                 } else{
                     console.error(res.data.msg || '获取邀请权限信息失败');
                 }

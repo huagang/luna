@@ -69,16 +69,16 @@
                     <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
 
-                <div class='form-input ng-hide' ng-show="user.data.module === 'basicData'">
-                    <label>数据来源:</label>
-                    <select class="ng-hide" ng-model="user.data.dataSrc" ng-show="user.dataSrcOption.length > 1">
-                        <option ng-repeat="item in user.dataSrcOption" value="{{item.id}}">{{item.name}}</option>
+                <div class='form-input ng-hide' ng-show="! user.data.choiceType ">
+                    <label>{{user.extraData.label}}</label>
+                    <select class="ng-hide" ng-model="user.data.extra.value" ng-show="user.extraData.optionLength > 1">
+                        <option ng-repeat="(value, label) in user.dataSrcOption" value="{{value}}">{{label}}</option>
                     </select>
-                    <span class="ng-hide" ng-show="user.dataSrcOption.length === 1">{{user.dataSrcOption[0].name}}</span>
+                    <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
                 </div>
 
                 <div class="form-input bussiness-container" ng-show="user.choiceType">
-                    <label>选择业务:</label>
+                    <label>{{user.extraData.label}}</label>
                     <div class="ng-hide" ng-show="user.business.length > 1 || user.business[0].items.length > 1">
                         <div class='business-group' ng-repeat="business in user.business">
                             <label>{{business.name}}</label>
@@ -91,8 +91,6 @@
                     </div>
                     <span class="ng-hide" ng-show="user.business.length === 1 && user.business[0].items.length === 1">
                         {{user.business[0].items[0].name}}</span>
-
-
                 </div>
 
                 <div class="footer">
