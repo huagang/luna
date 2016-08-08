@@ -17,6 +17,7 @@ import ms.luna.biz.table.LunaRoleTable;
 import ms.luna.biz.table.LunaUserRoleTable;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.UUIDGenerator;
 import ms.luna.biz.util.VbMD5;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
@@ -427,7 +428,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             String email = lunaRegEmail.getEmail();
             String extra = lunaRegEmail.getExtra();
             LunaUser lunaUser = new LunaUser();
-            String userId = UUID.randomUUID().toString().replace("-", "");
+            String userId = UUIDGenerator.generateUUID();
             lunaUser.setUniqueId(userId);
             lunaUser.setLunaName(lunaName);
             lunaUser.setNickName(lunaName);
