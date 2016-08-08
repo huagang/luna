@@ -18,4 +18,6 @@ public interface LunaRoleService {
     public JSONObject updateMenuForRole(int loginRoleId, int slaveRoleId, JSONArray menuArray);
 
     public JSONObject getAllRoleList(int roleId, int offset, int limit);
+
+    public JSONObject getRoleInfo(int roleId);
 }
