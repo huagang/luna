@@ -197,7 +197,7 @@
                 vm.data.extra.value = [];
                 Object.keys(vm.data.business).forEach(function(item, index) {
                     if(vm.data.business[item]){
-                        vm.data.extra.value.push(item);
+                        vm.data.extra.value.push(parseInt(item));
                     }
                 });
             }
@@ -240,7 +240,7 @@
         function fetchUserData(){
             if(vm.userId){
                 $http({
-                    url: vm.apiUrls.fetchUserAuthData.url,
+                    url: vm.apiUrls.fetchUserAuthData.url.format(vm.userId),
                     type: vm.apiUrls.fetchUserAuthData.type
                 }).then(function(res){
                     if(res.data.code === '0'){
@@ -265,7 +265,7 @@
             if (!res.error) {
                 //发送数据请求
                 var data = new FormData();
-                data.append('emails', JSON.stringify(vm.data.emailList));
+                data.append('emails', vm.data.emailList.join(','));
                 data.append('category_id', vm.data.module);
                 data.append('role_id', parseInt(vm.data.role));
                 if(vm.data.extra && vm.data.extra.type){

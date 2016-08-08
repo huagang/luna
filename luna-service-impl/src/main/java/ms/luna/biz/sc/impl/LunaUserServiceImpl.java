@@ -109,7 +109,7 @@ public class LunaUserServiceImpl implements LunaUserService {
 
     @Override
     public JSONObject inviteUser(String loginUserId, JSONObject jsonObject) {
-        String[] emailArray = jsonObject.getString("emails").split(",|,");
+        String[] emailArray = jsonObject.getString("emails").split(",|，");
         int roleId = jsonObject.getInteger("role_id");
         int categoryId = jsonObject.getInteger("category_id");
         String webAddr = jsonObject.getString("webAddr");
