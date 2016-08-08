@@ -130,10 +130,10 @@
 				</div>	         
 		    </div>
 		</div>
-        <script src='../scripts/lunaweb.js'></script>
 		<script type='text/javascript'>
-			window.UEDITOR_HOME_URL = window.host + "/plugins/ueditor/";
+			window.UEDITOR_HOME_URL =  "/plugins/ueditor/";
 		</script>
+        <script src='<%=request.getContextPath() %>/scripts/lunaweb.js'></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
