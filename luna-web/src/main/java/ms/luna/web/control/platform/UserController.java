@@ -105,8 +105,7 @@ public class UserController extends BasicController {
         jsonObject.put("webAddr", CommonURI.getAbsoluteUrlForServletPath(request, CommonURI.REGITSTER_SERVLET_PATH));
         jsonObject.put(LunaRoleTable.FIELD_CATEGORY_ID, categoryId);
         jsonObject.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
-        logger.error(jsonObject);
-        logger.error(extra);
+        logger.info("invite email: " + emails);
         try {
             return lunaUserService.inviteUser(user.getUniqueId(), jsonObject);
         } catch (Exception ex) {
