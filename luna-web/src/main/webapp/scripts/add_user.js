@@ -8,6 +8,7 @@
         .controller('AddUserController', ['$rootScope', '$scope', "$http", AddUserController]);
 
     function AddUserController($rootScope, $scope, $http) {
+        window.vm = this;
         var vm = this;
 
         // 数据初始化
@@ -33,6 +34,8 @@
 
         // 事件 角色更改
         vm.handleRoleChange = handleRoleChange;
+
+        vm.handleOptionsChange = handleOptionsChange;
 
         // 请求 发送邀请用户请求
         vm.handleInviteUser = handleInviteUser;
@@ -80,7 +83,7 @@
                 {id: 'vb', name: '微景'},
             ];
 
-            vm.choiceType = 'checkbox'; // 'radio' or 'checkbox'
+            vm.choiceType = ''; // 'radio' or 'checkbox'
             vm.roles = [];
             vm.postUrl = Inter.getApiUrl().addUser || '';
         };
@@ -97,7 +100,7 @@
         // 删除邮箱
         function handelDeleteEmail(index) {
             vm.data.emailList.splice(index, 1);
-        };
+        }
 
         // 事件 输入邮箱时按下了回车键或者空格键 输入结束
         function handleEmailKeyDown() {
@@ -113,14 +116,14 @@
 
                 }
             }
-        };
+        }
 
         //事件 邮箱获得焦点
         function handleEmailFocus() {
             vm.data.emailFocus = true;
             angular.element("#email-input").focus();
 
-        };
+        }
 
         //权限模块更改
         function handleModuleChange() {
@@ -129,6 +132,13 @@
                 vm.moduleOption.forEach(function (item) {
                     if (item.id === module) {
                         roles = item.roles;
+                        if(item.name === '商家服务'){
+                            vm.choiceType = 'checkbox';
+                        } else if(item.name === '内容运营'){
+                            vm.choiceType = 'radio';
+                        } else{
+                            vm.choiceType = '';
+                        }
                     }
                 });
                 vm.roles = roles;
@@ -136,7 +146,7 @@
                 vm.data.extra = {};
                 vm.data.business = {};
             }
-        };
+        }
 
         // 角色更改
         function handleRoleChange() {
@@ -156,11 +166,14 @@
                     });
                 });
             }
+        }
 
-
-
-        };
-
+        function handleOptionsChange(){
+            if(vm.choiceType === 'radio'){
+                vm.data.business = {};
+                vm.data.business[event.target.getAttribute('id')] = true;
+            }
+        }
 
         // 检查数据是否合法
         function _checkValidation() {
@@ -188,21 +201,44 @@
                 }
             });
             return res;
-        };
+        }
 
         // 发送邮箱邀请的数据请求
         function handleInviteUser() {
             var res = vm._checkValidation();
             if (!res.error) {
                 //发送数据请求
+                var extra = {type: '', value:''};
+                var module = vm.moduleOption.filter(function(item){
+                    if(item.id === vm.data.module){
+                        return true;
+                    }
+                    return false;
+                });
+
+                switch(module.name){
+                    case '皓月平台':
+                        extra.type = 'other';
+                        break;
+                    case '基础数据':
+                        extra.type = 'other';
+                        break;
+                    case '商家服务':
+                        break;
+                    case '内容运营':
+                        break;
+                    case '第三方服务':
+                        extra.type = 'other';
+                        break;
+                }
                 var data = new FormData();
-                data.push('', vm.data.emailList);
-                data.push('', vm.data.module);
-                data.push('', vm.data.role);
-                data.push('', vm.data.dataSrc);
+                data.push('emailArray', vm.data.emailList);
+                data.push('module_id', vm.data.module);
+                data.push('role_id', vm.data.role);
+                data.push('extra', vm.data.dataSrc);
                 $http({
                     method: 'POST',
-                    url: '',
+                    url: 'haha',
                     headers: {
                         "Content-Type": undefined
                     }
@@ -214,12 +250,12 @@
             } else {
                 alert(res.msg);
             }
-        };
+        }
 
         // 获取用户信息
         function fetchUserData() {
 
-        };
+        }
 
         // 获取模块信息
         function fetchModuleData() {
@@ -227,36 +263,36 @@
                 vm.moduleOption = [
                     {
                         id: 'luna', name: '皓月平台', roles: [
-                        {id: 'admin', name: '管理员1', effect: 'all'},
-                        {id: 'Operations', name: '运营员1'},
-                        {id: 'lala', name: 'lala1'},
-                    ]
+                            {id: 'admin', name: '管理员1', effect: 'all'},
+                            {id: 'Operations', name: '运营员1'},
+                            {id: 'lala', name: 'lala1'}
+                        ]
                     },
                     {
                         id: 'basicData', name: '基础数据', roles: [
-                        {id: 'admin', name: '管理员2', effect: 'all'},
-                        {id: 'Operations', name: '运营员2'},
-                        {id: 'lala', name: 'lala2'},
-                    ]
+                            {id: 'admin', name: '管理员2', effect: 'all'},
+                            {id: 'Operations', name: '运营员2'},
+                            {id: 'lala', name: 'lala2'}
+                        ]
                     },
                     {
                         id: 'businessService', name: '商家服务', roles: [
-                        {id: 'admin', name: '管理员3', effect: 'all'},
-                        {id: 'Operations', name: '运营员3'},
-                        {id: 'lala', name: 'lala3'},
-                    ]
+                            {id: 'admin', name: '管理员3', effect: 'all'},
+                            {id: 'Operations', name: '运营员3'},
+                            {id: 'lala', name: 'lala3'}
+                        ]
                     },
                     {
                         id: 'contentOperation', name: '内容运营', roles: [
-                        {id: 'admin', name: '管理员4', effect: 'all'},
-                        {id: 'Operations', name: '运营员4'},
-                        {id: 'lala', name: 'lala4'},
-                    ]
+                            {id: 'admin', name: '管理员4', effect: 'all'},
+                            {id: 'Operations', name: '运营员4'},
+                            {id: 'lala', name: 'lala4'}
+                        ]
                     }, {
                         id: 'thirdPartyService', name: '第三方服务', roles: [
                             {id: 'admin', name: '管理员4', effect: 'all'},
                             {id: 'Operations', name: '运营员4'},
-                            {id: 'lala', name: 'lala4'},
+                            {id: 'lala', name: 'lala4'}
                         ]
                     },
                 ];
