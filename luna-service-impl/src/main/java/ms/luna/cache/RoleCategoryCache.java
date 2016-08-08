@@ -42,4 +42,10 @@ public class RoleCategoryCache {
         return lunaRoleCategoryDAO.selectByCriteriaWithBLOBs(new LunaRoleCategoryCriteria());
     }
 
+    public String getCategoryNameById(int id) {
+
+        LunaRoleCategory lunaRoleCategory = lunaRoleCategoryDAO.selectByPrimaryKey(id);
+        return lunaRoleCategory.getName();
+    }
+
 }

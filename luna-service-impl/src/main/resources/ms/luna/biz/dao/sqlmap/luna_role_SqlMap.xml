@@ -8,6 +8,7 @@
     <result column="is_admin" jdbcType="BIT" property="isAdmin" />
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="extra_value" jdbcType="INTEGER" property="extraValue" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -36,7 +37,7 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    id, name, code, is_admin, parent_id, category_id, update_time
+    id, name, code, is_admin, parent_id, category_id, extra_value, update_time
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaRoleCriteria" resultMap="BaseResultMap">
     select
@@ -70,9 +71,9 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaRole">
     insert into luna_role (name, code, is_admin, parent_id, category_id, 
-      update_time)
+      extra_value, update_time)
     values (#name:VARCHAR#, #code:VARCHAR#, #isAdmin:BIT#, #parentId:INTEGER#, #categoryId:INTEGER#, 
-      #updateTime:TIMESTAMP#)
+      #extraValue:INTEGER#, #updateTime:TIMESTAMP#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -95,6 +96,9 @@
       <isNotNull prepend="," property="categoryId">
         category_id
       </isNotNull>
+      <isNotNull prepend="," property="extraValue">
+        extra_value
+      </isNotNull>
       <isNotNull prepend="," property="updateTime">
         update_time
       </isNotNull>
@@ -116,6 +120,9 @@
       </isNotNull>
       <isNotNull prepend="," property="categoryId">
         #categoryId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="extraValue">
+        #extraValue:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="updateTime">
         #updateTime:TIMESTAMP#
@@ -151,6 +158,9 @@
       <isNotNull prepend="," property="record.categoryId">
         category_id = #record.categoryId:INTEGER#
       </isNotNull>
+      <isNotNull prepend="," property="record.extraValue">
+        extra_value = #record.extraValue:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="record.updateTime">
         update_time = #record.updateTime:TIMESTAMP#
       </isNotNull>
@@ -167,6 +177,7 @@
       is_admin = #record.isAdmin:BIT#,
       parent_id = #record.parentId:INTEGER#,
       category_id = #record.categoryId:INTEGER#,
+      extra_value = #record.extraValue:INTEGER#,
       update_time = #record.updateTime:TIMESTAMP#
     <isParameterPresent>
       <include refid="luna_role.Example_Where_Clause" />
@@ -190,6 +201,9 @@
       <isNotNull prepend="," property="categoryId">
         category_id = #categoryId:INTEGER#
       </isNotNull>
+      <isNotNull prepend="," property="extraValue">
+        extra_value = #extraValue:INTEGER#
+      </isNotNull>
       <isNotNull prepend="," property="updateTime">
         update_time = #updateTime:TIMESTAMP#
       </isNotNull>
@@ -203,6 +217,7 @@
       is_admin = #isAdmin:BIT#,
       parent_id = #parentId:INTEGER#,
       category_id = #categoryId:INTEGER#,
+      extra_value = #extraValue:INTEGER#,
       update_time = #updateTime:TIMESTAMP#
     where id = #id:INTEGER#
   </update>

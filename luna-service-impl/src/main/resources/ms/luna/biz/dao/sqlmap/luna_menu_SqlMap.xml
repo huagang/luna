@@ -9,6 +9,7 @@
     <result column="auth" jdbcType="VARCHAR" property="auth" />
     <result column="module_id" jdbcType="INTEGER" property="moduleId" />
     <result column="display_order" jdbcType="INTEGER" property="displayOrder" />
+    <result column="status" jdbcType="BIT" property="status" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -37,7 +38,7 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    id, name, code, url, auth, module_id, display_order, update_time
+    id, name, code, url, auth, module_id, display_order, status, update_time
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaMenuCriteria" resultMap="BaseResultMap">
     select
@@ -71,9 +72,9 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaMenu">
     insert into luna_menu (name, code, url, auth, module_id, 
-      display_order, update_time)
+      display_order, status, update_time)
     values (#name:VARCHAR#, #code:VARCHAR#, #url:VARCHAR#, #auth:VARCHAR#, #moduleId:INTEGER#, 
-      #displayOrder:INTEGER#, #updateTime:TIMESTAMP#)
+      #displayOrder:INTEGER#, #status:BIT#, #updateTime:TIMESTAMP#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -99,6 +100,9 @@
       <isNotNull prepend="," property="displayOrder">
         display_order
       </isNotNull>
+      <isNotNull prepend="," property="status">
+        status
+      </isNotNull>
       <isNotNull prepend="," property="updateTime">
         update_time
       </isNotNull>
@@ -123,6 +127,9 @@
       </isNotNull>
       <isNotNull prepend="," property="displayOrder">
         #displayOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="status">
+        #status:BIT#
       </isNotNull>
       <isNotNull prepend="," property="updateTime">
         #updateTime:TIMESTAMP#
@@ -161,6 +168,9 @@
       <isNotNull prepend="," property="record.displayOrder">
         display_order = #record.displayOrder:INTEGER#
       </isNotNull>
+      <isNotNull prepend="," property="record.status">
+        status = #record.status:BIT#
+      </isNotNull>
       <isNotNull prepend="," property="record.updateTime">
         update_time = #record.updateTime:TIMESTAMP#
       </isNotNull>
@@ -178,6 +188,7 @@
       auth = #record.auth:VARCHAR#,
       module_id = #record.moduleId:INTEGER#,
       display_order = #record.displayOrder:INTEGER#,
+      status = #record.status:BIT#,
       update_time = #record.updateTime:TIMESTAMP#
     <isParameterPresent>
       <include refid="luna_menu.Example_Where_Clause" />
@@ -204,6 +215,9 @@
       <isNotNull prepend="," property="displayOrder">
         display_order = #displayOrder:INTEGER#
       </isNotNull>
+      <isNotNull prepend="," property="status">
+        status = #status:BIT#
+      </isNotNull>
       <isNotNull prepend="," property="updateTime">
         update_time = #updateTime:TIMESTAMP#
       </isNotNull>
@@ -218,6 +232,7 @@
       auth = #auth:VARCHAR#,
       module_id = #moduleId:INTEGER#,
       display_order = #displayOrder:INTEGER#,
+      status = #status:BIT#,
       update_time = #updateTime:TIMESTAMP#
     where id = #id:INTEGER#
   </update>

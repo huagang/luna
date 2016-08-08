@@ -16,6 +16,8 @@ public interface LunaUserService {
 
     JSONObject getUserRoleForEdit(int loginRole, String slaveUserId);
 
+    JSONObject getUserRoleForCreate(int loginRole);
+
     JSONObject getChildRoleAndModuleByUserId(String userId);
 
     JSONObject getChildRoleAndModuleByRoleId(int roleId);

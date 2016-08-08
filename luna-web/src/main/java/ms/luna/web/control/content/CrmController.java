@@ -6,6 +6,7 @@ import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.MerchantRegistCtrl;
@@ -62,7 +63,7 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        MsUser msUser = (MsUser) session.getAttribute("msUser");
+        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
         String luna_nm = msUser.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm.jsp");
@@ -92,7 +93,7 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         session.setAttribute("menu_selected", "crm");
-        MsUser msUser = (MsUser) session.getAttribute("msUser");
+        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
         String luna_nm = msUser.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm_add.jsp");
@@ -113,7 +114,9 @@ public class CrmController extends BasicController {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET, value = "/initEditPage")
-    public ModelAndView init_edit(@RequestParam(required = true) String merchant_id,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView init_edit(
+            @RequestParam(required = true, value = "merchantId") String merchant_id,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(false);
@@ -122,7 +125,7 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         session.setAttribute("menu_selected", "crm");
-        MsUser msUser = (MsUser) session.getAttribute("msUser");
+        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
         String luna_nm = msUser.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm_edit.jsp");
@@ -222,7 +225,7 @@ public class CrmController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/regist")
+    @RequestMapping(method = RequestMethod.POST, value = "")
     @ResponseBody
     public JSONObject createMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -312,7 +315,7 @@ public class CrmController extends BasicController {
      * @param request
      * @param response
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/merchantId/{merchant_id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "")
     @ResponseBody
     public JSONObject deleteMerchantById(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -354,17 +357,20 @@ public class CrmController extends BasicController {
      * 关闭商户
      *
      * @param request
-     * @param response
+     * @param response/
      */
-    @RequestMapping(method = RequestMethod.PUT, value = "/close")
+    @RequestMapping(method = RequestMethod.PUT, value = "/merchantId/{merchant_id}/disable")
     @ResponseBody
-    public JSONObject closeMerchantById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject closeMerchantById(
+            @PathVariable("merchant_id") String merchant_id,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            String merchant_id = request.getParameter("merchant_id");
-            if (merchant_id == null || merchant_id.isEmpty()) {
-                return FastJsonUtil.error("-1", "参数错误");
-            }
+//            String merchant_id = request.getParameter("merchant_id");
+//            if (merchant_id == null || merchant_id.isEmpty()) {
+//                return FastJsonUtil.error("-1", "参数错误");
+//            }
+
             JSONObject param = JSONObject.parseObject("{}");
             param.put("merchant_id", merchant_id);
 
@@ -372,7 +378,7 @@ public class CrmController extends BasicController {
             MsLogger.debug("method:closeMerchantById, result from service: "+result.toString());
 
             if ("0".equals(result.getString("code"))) {
-                response.getWriter().print(result.toString());
+//                response.getWriter().print(result.toString());
                 return result;
             } else if ("1".equals(result.getString("code"))) {
                 return FastJsonUtil.error("1", "商户id不存在");
@@ -391,15 +397,17 @@ public class CrmController extends BasicController {
      * @param request
      * @param response
      */
-    @RequestMapping(method = RequestMethod.PUT, value = "/open")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{merchant_id}/enable")
     @ResponseBody
-    public JSONObject openMerchantById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject openMerchantById(
+            @PathVariable("merchant_id") String merchant_id,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            String merchant_id = request.getParameter("merchant_id");
-            if (merchant_id == null || merchant_id.isEmpty()) {
-                return FastJsonUtil.error("-2", "参数错误");
-            }
+//            String merchant_id = request.getParameter("merchant_id");
+//            if (merchant_id == null || merchant_id.isEmpty()) {
+//                return FastJsonUtil.error("-2", "参数错误");
+//            }
             JSONObject param = JSONObject.parseObject("{}");
             param.put("merchant_id", merchant_id);
 
@@ -431,9 +439,7 @@ public class CrmController extends BasicController {
             @PathVariable("merchantId") String merchantId,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setContentType("text/html; charset=UTF-8");
-            String merchant_id = request.getParameter("merchant_id");
+//            String merchant_id = request.getParameter("merchant_id");
 
             JSONObject param = JSONObject.parseObject("{}");
             param.put("merchant_id", merchantId);
@@ -484,7 +490,8 @@ public class CrmController extends BasicController {
             }
 
         } catch (Exception e) {
-            return FastJsonUtil.error("-1", "Failed to load merchant:" + VbUtility.printStackTrace(e));
+            MsLogger.error("Failed to load merchant:" + e.getMessage());
+            return FastJsonUtil.error("-1", "Failed to load merchant");
         }
     }
 
@@ -494,7 +501,7 @@ public class CrmController extends BasicController {
      * @param request
      * @param response
      */
-    @RequestMapping(method = RequestMethod.PUT, value = "/editMerchant")
+    @RequestMapping(method = RequestMethod.POST, value = "/edit")
     @ResponseBody
     public JSONObject editMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -590,7 +597,7 @@ public class CrmController extends BasicController {
             JSONObject param = new JSONObject();
             param.put("merchant_nm", merchant_nm);
             JSONObject result;
-            if (merchant_nm == null) {
+            if (merchant_id == null) {
                 result = manageMerchantService.isAddedMerchantNmEist(param.toString());// 添加商户
             } else {
                 param.put("merchant_id", merchant_id);

@@ -601,6 +601,76 @@ public class LunaRoleCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andExtraValueIsNull() {
+            addCriterion("extra_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueIsNotNull() {
+            addCriterion("extra_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value =", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value <>", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value >", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value >=", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value <", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("extra_value <=", value, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("extra_value in", values, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("extra_value not in", values, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("extra_value between", value1, value2, "extraValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtraValueNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("extra_value not between", value1, value2, "extraValue");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdateTimeIsNull() {
             addCriterion("update_time is null");
             return (Criteria) this;

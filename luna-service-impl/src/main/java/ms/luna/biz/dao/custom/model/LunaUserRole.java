@@ -19,8 +19,8 @@ public class LunaUserRole {
     private String userId;
     @JSONField(name = LunaUserRoleTable.FIELD_LUNA_NAME)
     private String lunaName;
-    @JSONField(name= LunaUserRoleTable.FIELD_ROLE_IDS)
-    private List<Integer> roleIds;
+    @JSONField(name= LunaUserRoleTable.FIELD_ROLE_ID)
+    private int roleId;
     @JSONField(name=LunaUserRoleTable.FIELD_EXTRA)
     private Map<String, Object> extra;
     @JSONField(name=LunaUserRoleTable.FIELD_UPDATE_TIME)
@@ -42,12 +42,12 @@ public class LunaUserRole {
         this.lunaName = lunaName;
     }
 
-    public List<Integer> getRoleIds() {
-        return roleIds;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public void setRoleIds(List<Integer> roleIds) {
-        this.roleIds = roleIds;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public Map<String, Object> getExtra() {

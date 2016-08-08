@@ -80,13 +80,10 @@ public class LoginController extends BasicController {
         session = request.getSession(true);
         SessionHelper.setUser(session, lunaUserSession);
 
-        List<Integer> roleIds = lunaUserSession.getRoleIds();
-        if(roleIds != null && roleIds.size() > 0) {
-            JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(roleIds.get(0));
-            logger.trace(moduleAndMenuByRoleId);
-            if(moduleAndMenuByRoleId.getString("code").equals("0")) {
-                SessionHelper.setMenu(session, moduleAndMenuByRoleId.getJSONArray("data"));
-            }
+        JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
+        logger.trace(moduleAndMenuByRoleId);
+        if(moduleAndMenuByRoleId.getString("code").equals("0")) {
+            SessionHelper.setMenu(session, moduleAndMenuByRoleId.getJSONArray("data"));
         }
 
         return FastJsonUtil.sucess("登录成功");

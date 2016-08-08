@@ -19,11 +19,14 @@ public class LunaMenu implements Serializable {
     @JSONField(name = LunaMenuTable.FIELD_URL)
     private String url;
     @JSONField(name = LunaMenuTable.FIELD_AUTH)
+
     private String auth;
 
     private Integer moduleId;
 
     private Integer displayOrder;
+
+    private Boolean status;
 
     private Date updateTime;
 
@@ -85,6 +88,14 @@ public class LunaMenu implements Serializable {
         this.displayOrder = displayOrder;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -112,6 +123,7 @@ public class LunaMenu implements Serializable {
             && (this.getAuth() == null ? other.getAuth() == null : this.getAuth().equals(other.getAuth()))
             && (this.getModuleId() == null ? other.getModuleId() == null : this.getModuleId().equals(other.getModuleId()))
             && (this.getDisplayOrder() == null ? other.getDisplayOrder() == null : this.getDisplayOrder().equals(other.getDisplayOrder()))
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
@@ -126,12 +138,13 @@ public class LunaMenu implements Serializable {
         result = prime * result + ((getAuth() == null) ? 0 : getAuth().hashCode());
         result = prime * result + ((getModuleId() == null) ? 0 : getModuleId().hashCode());
         result = prime * result + ((getDisplayOrder() == null) ? 0 : getDisplayOrder().hashCode());
+        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "LunaMenu [id=" + id + ",name=" + name + ",code=" + code + ",url=" + url + ",auth=" + auth + ",moduleId=" + moduleId + ",displayOrder=" + displayOrder + ",updateTime=" + updateTime + "]";
+        return "LunaMenu [id=" + id + ",name=" + name + ",code=" + code + ",url=" + url + ",auth=" + auth + ",moduleId=" + moduleId + ",displayOrder=" + displayOrder + ",status=" + status + ",updateTime=" + updateTime + "]";
     }
 }

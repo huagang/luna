@@ -78,12 +78,17 @@ public class PoiEditController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/batch/initEditPage")
+    @RequestMapping(method = RequestMethod.POST, value = "/batch/initEditPage")
     public ModelAndView initOfPopupFixPoi(
-            @RequestParam(required = true, value="dataPoi") String unSavedPoi,
-            @RequestParam(required = false, value = "lang", defaultValue="zh")
-            String lang,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String unSavedPoi = request.getParameter("dataPoi");
+        String lang = request.getParameter("lang");
+        if(unSavedPoi == null) {
+            return new ModelAndView("/error.jsp");
+        }
+        if(lang == null) {
+            lang = "zh";
+        }
         return this.initCommPart(unSavedPoi, null, lang, request, response);
     }
 
@@ -93,13 +98,16 @@ public class PoiEditController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/batch/initReadPage")
-    public ModelAndView newBlankPoiReadOnly(
-            @RequestParam(required = true)
-            String _id,
-            @RequestParam(required = false, value = "lang", defaultValue="zh")
-            String lang,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(method = RequestMethod.POST, value = "/batch/initReadPage")
+    public ModelAndView newBlankPoiReadOnly(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String _id = request.getParameter("_id");
+        String lang = request.getParameter("lang");
+        if(_id == null) {
+            return new ModelAndView("/error.jsp");
+        }
+        if(lang == null) {
+            lang = "zh";
+        }
         ModelAndView mav = this.init(_id, lang, request, response);
         mav.addObject("poiReadOnly", Boolean.TRUE);
         return mav;
@@ -111,7 +119,7 @@ public class PoiEditController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/checkPoi")
+    @RequestMapping(method = RequestMethod.POST, value = "/checkPoi")
     @ResponseBody
     public JSONObject checkPoi(
             @RequestParam(required = true, value = "poiId") String _id,
@@ -137,14 +145,13 @@ public class PoiEditController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.PUT, value = "")
+    @RequestMapping(method = RequestMethod.POST, value = "/edit")
     @ResponseBody
-    public JSONObject updatePoi(
-            @RequestParam(required = true, value = "poiId") String _id,
-            @RequestParam(required = false, value = "lang") String lang,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject updatePoi(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Excel上传后数据检查有错误的POI，点击保存后以新建添加的方式增加POI(处理逻辑同新建添加)
+        String _id = request.getParameter("poiId");
+        String lang = request.getParameter("lang");
         if (_id.isEmpty()) {
             return poiAddController.addPoi(request, response);
         }

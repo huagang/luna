@@ -1,6 +1,4 @@
 ﻿<!--平台类别管理页面  author:Demi-->
-<%@page import="ms.luna.biz.cons.VbConstant"%>
-<%@page import="ms.luna.web.util.WebHelper"%>
 <%@ page language="java" session="true" contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@ taglib uri="/ms-tags" prefix="ms"%>
