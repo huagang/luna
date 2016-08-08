@@ -102,6 +102,7 @@ public class UserController extends BasicController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("emails", emails);
         jsonObject.put("role_id", roleId);
+        jsonObject.put("webAddr", CommonURI.getAbsoluteUrlForServletPath(request, CommonURI.REGITSTER_SERVLET_PATH));
         jsonObject.put(LunaRoleTable.FIELD_CATEGORY_ID, categoryId);
         jsonObject.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
 
@@ -112,44 +113,6 @@ public class UserController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
         return FastJsonUtil.sucess("");
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/register")
-    public ModelAndView registerUser(@RequestParam(required = true, value = "token") String token,
-                                     HttpServletRequest request) {
-        JSONObject result = lunaUserService.isTokenValid(token);
-        if(result.getString("code").equals("0")) {
-            return buildModelAndView("register");
-        } else {
-            return buildModelAndView("error");
-        }
-
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
-    @ResponseBody
-    public JSONObject submitRegisterUser(@RequestParam(required = true, value = "token") String token,
-                                         HttpServletRequest request) {
-        String lunaName = RequestHelper.getString(request, "userName");
-        String password = RequestHelper.getString(request, "password");
-
-        if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
-            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码不能为空");
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("luna_name", lunaName);
-        jsonObject.put("password", password);
-        jsonObject.put("token", token);
-
-        try {
-            lunaUserService.registerUser(jsonObject);
-        } catch (Exception ex) {
-            logger.error("Failed to register user", ex);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "注册失败");
-        }
-
-        return FastJsonUtil.sucess("success");
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
