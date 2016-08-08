@@ -117,6 +117,12 @@ var Inter = function() {
                 pullDownCategorys:{url:"/common/pulldown/categorys",type:"GET"}, //分类
                 pullDownZoneIds:{url:"/common/pulldown/zoneIds",type:"GET"}, //分类
 
+                // 类别管理
+                cateInit:{url:"/platform/category",type:"GET"}, //初始化
+                cateCreate:{url:"/platform/category",type:"POST"}, // 创建
+                cateUpdate:{url:"/platform/category",type:"PUT"}, // 更新
+                cateDelete:{url:"/platform/category",type:"DELETE"},//删除
+
             };
         }
     };
