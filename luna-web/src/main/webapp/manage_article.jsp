@@ -36,7 +36,7 @@
                 <!--主题内容 start-->
                 <div class="main">
                     <div class="main-hd"><h3>内容管理</h3></div>
-                    <button type="button" ng-click="article.newArticleDialog()">+新建文章</button>
+                    <button type="button" ng-click="article.showCreateArticlePage()">+新建文章</button>
                     <div class="main-bd">
                         <!--业务列表 start-->
                         <div class="business-list">
@@ -82,43 +82,7 @@
 <!--弹出层 start-->
 <!--模态窗口 -->
 <div id="pop-overlay" class="ng-hide" ng-show="article.dialogBaseShow"></div>
-<!--新建业务 start-->
-<div class="pop ng-hide" id="newArticleDialog" ng-show="article.newArticleShow" >
-    <div class="pop-title">
-        <h4>业务配置</h4>
-        <a href="#" class="btn-close" ng-click="article.hideNewArticleDialog()"><img src="${basePath}/img/close.png" /></a>
-    </div>
-    <div class="pop-cont">
-        <div class="form-group">
-            <label>选择业务</label>
-            <select class="select" id="province" ng-model="article.provinceId" ng-change="article.changeProvince()">
-                <option value="ALL">请选择省份</option>
-                <option ng-repeat="item in article.provinceOptions" value="{{item.province_id}}">{{item.province_nm_zh}}</option>
 
-            </select>
-            <select class="select" id="city" ng-model="article.cityId" ng-change="article.changeCity()">
-                <option value="ALL">请选择市</option>
-            </select>
-            <select class="select" id="county" ng-model="article.countyId">
-                <option value="ALL">请选择区县</option>
-            </select>
-            <input type="text" ng-model="article.businessQuery" placeholder="输入业务名称" style="margin-top:15px;width:370px;">
-            <button type="button" ng-click="article.searchBusiness()">搜索</button>
-        </div>
-        <div class="form-group">
-            <label>搜索结果</label>
-            <select class="select" ng-model="article.businessId">
-                <option ng-repeat="item in article.businessOptions" value="{{item.business_id}}">{{item.business_name}}</option>
-            </select>
-        </div>
-    </div>
-    <!-- 底部功能区 -->
-    <div class="pop-fun">
-        <button type="button" ng-disabled="! article.isEnable()" ng-click="article.showCreateArticlePage()">下一步</button>
-    </div>
-    <!-- 底部功能区 -->
-</div>
-<!--新建业务 end-->
 <script>
     window.context = "<%=request.getContextPath() %>";
 </script>
@@ -126,6 +90,7 @@
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>

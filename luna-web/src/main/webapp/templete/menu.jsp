@@ -18,7 +18,6 @@
 					   <dd class="menu-item ${sessionScope.menu_selected == menu.code ? 'selected' : ''}">
 						   <a href="${menu.url}">${menu.name}</a>
 					   </dd>
-
 				   </c:forEach>
 
 			   </dl>
