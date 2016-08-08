@@ -5,6 +5,7 @@ import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -45,13 +46,11 @@ public abstract class BasicController {
 	 * @param fileNameInCloud
 	 * @throws IOException
 	 */
-	protected void uploadLocalFile2Cloud(HttpServletRequest request, HttpServletResponse response,
+	protected JSONObject uploadLocalFile2Cloud(HttpServletRequest request, HttpServletResponse response,
 			MultipartFile file,
 			String localServerTempPath,
 			String addressInCloud,
 			String fileNameInCloud) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html; charset=UTF-8");
 		JSONObject result;
 		try {
 			result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET,
@@ -66,9 +65,7 @@ public abstract class BasicController {
 				result.put("type", VbUtility.getExtensionOfPicFileName(url));
 				result.put("state", "SUCCESS");
 				// access_url
-				response.getWriter().print(result.toString());
-				response.setStatus(200);
-				return;
+				return result;
 
 			} else {
 				result.put("original", file.getOriginalFilename());
@@ -78,9 +75,7 @@ public abstract class BasicController {
 				result.put("type", "");
 				result.put("state", "FAIL");
 
-				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
-				response.setStatus(200);
-				return;
+				return FastJsonUtil.error("-1", result.getString("msg"));
 			}
 		} catch (Exception e) {
 			MsLogger.error(e);
@@ -92,9 +87,9 @@ public abstract class BasicController {
 			result.put("type", "");
 			result.put("state", "FAIL");
 			result.putAll(FastJsonUtil.error("-1", VbUtility.printStackTrace(e)));
-			response.getWriter().print(result.toJSONString());
-			response.setStatus(200);
-			return;
+//			response.getWriter().print(result.toJSONString());
+//			response.setStatus(200);
+			return result;
 		}
 	}
 
@@ -107,16 +102,11 @@ public abstract class BasicController {
 	 * @param fileNameInCloud
 	 * @throws IOException
 	 */
-	protected void uploadLocalFile2Cloud(HttpServletRequest request, HttpServletResponse response,
+	protected JSONObject uploadLocalFile2Cloud(HttpServletRequest request, HttpServletResponse response,
 			MultipartFile file,
 			String addressInCloud,
 			String fileNameInCloud) throws IOException {
-		uploadLocalFile2Cloud(request,
-				response,
-				file,
-				localServerTempPath, 
-				addressInCloud,
-				fileNameInCloud);
+		return uploadLocalFile2Cloud(request, response, file, localServerTempPath, addressInCloud, fileNameInCloud);
 	}
 
 	/**

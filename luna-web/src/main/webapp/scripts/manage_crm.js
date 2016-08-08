@@ -56,38 +56,7 @@ $(function () {
 			$("#div-img").css("display","none");
         }
     });
-//    //文件上传
-//    $("#license-upload").change(function(){
-//        var $license= $(this),
-//    		$license_url = $("#license-url");
-//        var url = $license.val();
-//        	$warn = $("#license-upload-warn");
-//        var hasError = licenseVerify($license,url,$warn);
-//        if(!hasError){
-//    		$warn.css('display','none');
-//    		$.ajaxFileUpload({
-//    			//处理文件上传操作的服务器端地址
-//    			url:host+"/manage_merchant.do?method=upload_thumbnail_add",
-//    			secureuri:false,                       //是否启用安全提交,默认为false
-//    			fileElementId: 'license-upload', 
-//    			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-//    			success:function(returndata){        //服务器响应成功时的处理函数
-//    				if (returndata.code=='0') {
-//    					$license_url.val(returndata.data.access_url);
-//    				} else {
-//    					$license_url.val('');
-//    					$warn.html(returndata.msg);
-//    					$warn.css('display','block');
-//    				}
-//    			},
-//    			error:function(returndata){ //服务器响应失败时的处理函数
-//    				$license_url.val('');
-//    				$warn.html('上传失败，请重试！！');
-//    				$warn.css('display','block');
-//    			}
-//    		});
-//    	}
-//    });
+
     //商户地址，select
     $('#province').change(function(){
         var province = $("#province option:checked").val();
@@ -350,7 +319,8 @@ function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/manage_merchant.do?method=upload_thumbnail_add",
+			//url:host+"/manage_merchant.do?method=upload_thumbnail_add",
+			url: Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等

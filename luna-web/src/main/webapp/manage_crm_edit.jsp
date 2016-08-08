@@ -85,7 +85,7 @@
 			                    <div id="license-area-edit" style="position:relative;">
 			                   		<input type="text" id="license-url-edit" name="resource_content_edit" readonly="readonly">
 				              		<!-- <input id="license-url-edit" name="resource_content_edit" style="display:none;"/> -->
-				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup_edit" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
+				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
 				                   	<button id="btn-license-upload-edit" >修改</button>
 									<div class="warn" id="license-upload-edit-warn">格式不正确</div>
 			                	</div>

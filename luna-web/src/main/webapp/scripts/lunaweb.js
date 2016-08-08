@@ -48,9 +48,9 @@ function change_province(mode) {
 			'province_id':province_id  
 	};  
 	$.ajax({
-		type: 'post',
+		type: 'GET',
 		//url: host +'/pulldown.do?method=load_citys',
-		url: Inter.getApiUrl().pullDownCitys,
+		url: Inter.getApiUrl().pullDownCitys.url,
 		cache: false,
 		async: false,
 		data: params,
@@ -87,7 +87,7 @@ function change_city(mode) {
 			'city_id':city_id  
 	};  
 	$.ajax({
-		type: 'post',
+		type: 'GET',
 		//url: host +'/pulldown.do?method=load_counties',
 		url: Inter.getApiUrl().pullDownCounties.url,
 		cache: false,
@@ -185,7 +185,7 @@ function load_counties_only(city_id){
 
 function load_categorys_only() {
 	$.ajax({
-		type: 'post',
+		type: 'GET',
 		//url: host + '/pulldown.do?method=load_categorys',
 		url: Inter.getApiUrl().pullDownCategorys.url,
 		cache: false,

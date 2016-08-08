@@ -212,9 +212,9 @@ var initPage = function() {
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function(action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-                return Inter.getApiUrl().uploadImageInArtcle;
+                return Inter.getApiUrl().uploadImageInArtcle.url;
             } else if (action == 'uploadvideo') {
-                return Inter.getApiUrl().uploadVideoInArtcle;
+                return Inter.getApiUrl().uploadVideoInArtcle.url;
             } else {
                 return this._bkGetActionUrl.call(this, action);
             }

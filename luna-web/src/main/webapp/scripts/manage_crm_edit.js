@@ -305,7 +305,8 @@ function asyncUploadPicEdit(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/manage_merchant.do?method=upload_thumbnail_edit",
+			//url:host+"/manage_merchant.do?method=upload_thumbnail_edit",
+			url:Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等

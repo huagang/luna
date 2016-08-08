@@ -742,7 +742,7 @@ var geocoder = new qq.maps.Geocoder({
             "district": district,
         }
         $.ajax({
-            type: 'post',
+            type: 'GET',
             //url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
             url: Inter.getApiUrl().pullDownZoneIds.url,
             cache: false,
@@ -795,9 +795,11 @@ function initEditor() {
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function (action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return host + "/add_poi.do?method=upload_thumbnail";
+            //return host + "/add_poi.do?method=upload_thumbnail";
+            return Inter.getApiUrl().poiThumbnailUpload.url;
         } else if (action == 'uploadvideo') {
-            return host + "/add_poi.do?method=upload_video";
+            //return host + "/add_poi.do?method=upload_video";
+            return Inter.getApiUrl().poiVideoUpload.url;
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
