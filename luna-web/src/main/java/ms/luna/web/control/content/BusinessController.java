@@ -8,9 +8,9 @@ import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AreaOptionQueryBuilder;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,7 +42,7 @@ public class BusinessController extends BasicController {
     @Autowired
     private ManageBusinessService manageBusinessService;
     @Resource(name="pulldownCtrl")
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
@@ -50,8 +50,8 @@ public class BusinessController extends BasicController {
         try {
             SessionHelper.setSelectedMenu(request.getSession(false), menu);
             ModelAndView modelAndView = buildModelAndView("manage_business");
-            modelAndView.addObject("provinces", pulldownCtrl.loadProvinces());
-            modelAndView.addObject("businessCategories", pulldownCtrl.loadBusinessCategories());
+            modelAndView.addObject("provinces", pulldownController.loadProvinces());
+            modelAndView.addObject("businessCategories", pulldownController.loadBusinessCategories());
 //			modelAndView.addObject("businesses", businesses);
             return modelAndView;
 

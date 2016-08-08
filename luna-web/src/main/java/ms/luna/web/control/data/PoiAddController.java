@@ -8,9 +8,8 @@ import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
 import ms.luna.common.PoiCommon;
-import ms.luna.web.common.PulldownCtrl;
-import ms.luna.web.control.ManagePoiCtrl;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -42,8 +40,8 @@ public class PoiAddController extends BasicController {
     @Autowired
     private ManagePoiService managePoiService;
 
-    @Resource(name="pulldownCtrl")
-    private PulldownCtrl pulldownCtrl;
+    @Autowired
+    private PulldownController pulldownController;
 
     @Autowired
     private VodPlayService vodPlayService;
@@ -94,7 +92,7 @@ public class PoiAddController extends BasicController {
         // 省份信息
         List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
         try {
-            for (Map<String, String> map : pulldownCtrl.loadProvinces()) {
+            for (Map<String, String> map : pulldownController.loadProvinces()) {
                 simpleModel = new SimpleModel();
                 simpleModel.setValue(map.get("province_id"));
                 simpleModel.setLabel(map.get("province_nm_zh"));
@@ -115,7 +113,7 @@ public class PoiAddController extends BasicController {
         lstCitys.add(simpleModel);
         try {
             // 北京城市信息（需要初始化）
-            for (Map<String, String> map : pulldownCtrl.loadCitys("110000")) {
+            for (Map<String, String> map : pulldownController.loadCitys("110000")) {
                 simpleModel = new SimpleModel();
                 simpleModel.setValue(map.get("city_id"));
                 simpleModel.setLabel(map.get("city_nm_zh"));

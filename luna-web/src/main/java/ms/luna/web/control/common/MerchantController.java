@@ -3,7 +3,6 @@ package ms.luna.web.control.common;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.control.ManageMerchantCtrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class MerchantController extends BasicController {
     private static final String SUCCESS_URI = "/merchant_register_success.jsp";
 
     @Autowired
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @Autowired
     private ManageMerchantCtrl manageMerchantCtrl;
@@ -47,8 +46,8 @@ public class MerchantController extends BasicController {
         response.setContentType("text/html; charset=UTF-8");
         try {
             ModelAndView model = new ModelAndView(MERREGIST_URI, map);
-            model.addObject("categoryMap", pulldownCtrl.loadCategorys());
-            model.addObject("provinces", pulldownCtrl.loadProvinces());
+            model.addObject("categoryMap", pulldownController.loadCategorys());
+            model.addObject("provinces", pulldownController.loadProvinces());
             return model;
         } catch (Exception e) {
             return new ModelAndView("/error.jsp", map);

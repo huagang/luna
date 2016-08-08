@@ -98,6 +98,12 @@ var Inter = function() {
                 registrationRegist:{url:"/comomon/registration",type:"POST"}, // 注册
 
                 inviteAuth: {url: context + '/platform/user/invite', type: 'GET'},
+                // 省市县\分类下拉列表
+                pullDownProvinces:{url:"/common/pulldown/provinces",type:"GET"}, //省
+                pullDownCitys:{url:"/common/pulldown/citys",type:"GET"}, //市
+                pullDownCounties:{url:"/common/pulldown/counties",type:"GET"}, //县
+                pullDownCategorys:{url:"/common/pulldown/categorys",type:"GET"}, //分类
+                pullDownZoneIds:{url:"/common/pulldown/ZoneIds",type:"GET"} //分类
             };
         }
     };
