@@ -193,7 +193,7 @@ function verifyDel(){
     var ev= $(event.target).parent().parent();  //获取当前弹出窗口
     $.ajax({
         //url: host+'/manage/category.do?method=delete_category',
-        url: Inter.getApiUrl().cateDelete.url,
+        url: Util.strFormat(Inter.getApiUrl().cateDelete.url,[category_id]),
         type: 'DELETE',
         async: false,
         data: {"category_id":category_id},

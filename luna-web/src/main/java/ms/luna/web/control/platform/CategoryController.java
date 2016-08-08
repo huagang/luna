@@ -14,6 +14,7 @@ import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.PulldownController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -102,14 +103,16 @@ public class CategoryController {
      * @throws IOException
      */
 //    @RequestMapping(params = "method=delete_category")
-    @RequestMapping(method = RequestMethod.DELETE, value = "")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{category_id}")
     @ResponseBody
-    public JSONObject delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject delete(
+            @PathVariable("category_id") String category_id,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String category_id = request.getParameter("category_id");
-            if (category_id == null || category_id.isEmpty()) {
-                return FastJsonUtil.error("-1", "分类ID不能为空");
-            }
+//            String category_id = request.getParameter("category_id");
+//            if (category_id == null || category_id.isEmpty()) {
+//                return FastJsonUtil.error("-1", "分类ID不能为空");
+//            }
 
             JSONObject param = JSONObject.parseObject("{}");
             param.put("category_id", category_id);
