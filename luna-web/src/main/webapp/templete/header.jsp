@@ -16,7 +16,7 @@
                 <span class="account">${sessionScope.user.lunaName}</span>
                 <span class="sep">|</span>
                 <span class="account-logout">
-                    <a href="<%=request.getContextPath() %>/common/logout" target="_self" id="logout">
+                    <a href="<%=request.getContextPath() %>/common/logout" target="_self" id="logout" onclick="localStorage.removeItem('business')">
                     	<img src="<%=request.getContextPath() %>/img/ic_exit_to_app_48px.png">退出
                     </a>
                 </span>

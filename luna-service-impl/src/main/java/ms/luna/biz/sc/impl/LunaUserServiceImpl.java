@@ -109,7 +109,7 @@ public class LunaUserServiceImpl implements LunaUserService {
 
     @Override
     public JSONObject inviteUser(String loginUserId, JSONObject jsonObject) {
-        String[] emailArray = jsonObject.getString("emails").split(",|,");
+        String[] emailArray = jsonObject.getString("emails").split(",|，");
         int roleId = jsonObject.getInteger("role_id");
         int categoryId = jsonObject.getInteger("category_id");
         String webAddr = jsonObject.getString("webAddr");
@@ -117,24 +117,24 @@ public class LunaUserServiceImpl implements LunaUserService {
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
 
         Set<String> emailSet = Sets.newHashSet(emailArray);
+        logger.info("invited email set: " + emailSet);
 
         LunaUserCriteria lunaUserCriteria = new LunaUserCriteria();
         lunaUserCriteria.createCriteria().andEmailIn(Lists.newArrayList(emailSet));
 
         List<LunaUser> lunaUserList = lunaUserDAO.selectByCriteria(lunaUserCriteria);
-        Set<String> existEmailSet = null;
+        Set<String> existEmailSet = new HashSet<>(lunaUserList.size());
         Map<String, String> toInviteEmail = new HashMap<>();
         if(lunaUserList != null && lunaUserList.size() > 0) {
-            existEmailSet = new HashSet<>(lunaUserList.size());
             for (LunaUser lunaUser : lunaUserList) {
                 existEmailSet.add(lunaUser.getEmail());
             }
+        }
 
-            for(String email : emailSet) {
-                if(! existEmailSet.contains(email)) {
-                    String token = UUID.randomUUID().toString().replace("-", "");
-                    toInviteEmail.put(email, token);
-                }
+        for(String email : emailSet) {
+            if(! existEmailSet.contains(email)) {
+                String token = UUID.randomUUID().toString().replace("-", "");
+                toInviteEmail.put(email, token);
             }
         }
 
@@ -489,8 +489,8 @@ public class LunaUserServiceImpl implements LunaUserService {
         lunaRegEmailCriteria.createCriteria().andTokenEqualTo(token).andStatusEqualTo(false);
         Integer count = lunaRegEmailDAO.countByCriteria(lunaRegEmailCriteria);
         if(count == 0){
-            return FastJsonUtil.error("-2", "无有效链接！");//可能没有,也可能已注册
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "token无效");//可能没有,也可能已注册
         }
-        return FastJsonUtil.sucess("存在有效链接！");
+        return FastJsonUtil.sucess("");
     }
 }

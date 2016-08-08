@@ -19,8 +19,8 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_user.css">
+    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
-
 </head>
 <body>
 <!--通用导航栏 start-->
@@ -35,10 +35,10 @@
             <!--侧边菜单 end-->
             <!--主题内容 start-->
             <div class="main">
-                <div class="main-hd"><h3>{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</h3></div>
+                <div class="main-hd"><h3>{{user.userId ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="./manage_user.do?method=init">&lt;用户管理</a></li>
-                    <li class="active">{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</li>
+                    <li><a href="<%=request.getContextPath()%>/platform/user/invite">&lt;用户管理</a></li>
+                    <li class="active">{{user.userId ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
                 <div class='form-input' id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
@@ -49,15 +49,15 @@
                     </span>
                     <input id="email-input" ng-model="user.data.email" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
                 </div>
-
+                <p class="warn">{{user.data.invalidEmail ? '邮箱格式不正确' : ''}}</p>
                 <div class='form-input'>
                     <label>权限模块:</label>
                     <div class="radio-wrapper">
-                        <span class='ng-hide' ng-repeat="module in user.moduleOption" ng-show="user.moduleOption.length > 1">
+                        <span class='ng-hide' ng-repeat="module in user.inviteAuth" ng-show="user.inviteAuth.length > 1">
                             <input type="radio" id="{{module.id}}" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
                             <label class="module-name" for="{{module.id}}">{{module.name}}</label>
                         </span>
-                        <span class="ng-hide" ng-show="user.moduleOption.length === 1">{{user.moduleOption[0].name}}</span>
+                        <span class="ng-hide" ng-show="user.inviteAuth.length === 1">{{user.inviteAuth[0].name}}</span>
                     </div>
                 </div>
                 <div class='form-input'>
@@ -65,36 +65,36 @@
                     <select class="ng-hide" ng-model="user.data.role" ng-change="user.handleRoleChange()" ng-show="user.roles.length !== 1">
                         <option class="ng-hide" ng-show="user.roles.length === 0" disabled="disabled">无</option>
                         <option class="ng-hide" ng-repeat="role in user.roles" value="{{role.id}}" ng-show="user.roles.length>0">{{role.name}}</option>
+
                     </select>
                     <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
 
-                <div class='form-input ng-hide' ng-show="user.data.module === 'basicData'">
-                    <label>数据来源:</label>
-                    <select class="ng-hide" ng-model="user.data.dataSrc" ng-show="user.dataSrcOption.length > 1">
-                        <option ng-repeat="item in user.dataSrcOption" value="{{item.id}}">{{item.name}}</option>
+                <div class='form-input ng-hide' ng-show="! user.choiceType ">
+                    <label>{{user.extraData.label}}</label>
+                    <select class="ng-hide" ng-model="user.data.extra.value" ng-show="user.extraData.optionLength > 1">
+                        <option ng-repeat="(value, label) in user.extraData.options" value="{{value}}">{{label}}</option>
                     </select>
-                    <span class="ng-hide" ng-show="user.dataSrcOption.length === 1">{{user.dataSrcOption[0].name}}</span>
+                    <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
                 </div>
 
-                <div class="form-input bussiness-container">
-                    <label>选择业务:</label>
-                    <div class="ng-hide" ng-show="user.business.length > 1 || user.business[0].items.length > 1">
-                        <div class='business-group' ng-repeat="business in user.business">
-                            <label>{{business.name}}</label>
-                        <span class="business-wrapper" ng-repeat="item in business.items">
-                            <input class='business' type="{{user.choiceType}}" ng-model="user.data.business[user.choiceType==='radio'? 'id' : item.id]"
-                                   id="{{item.id}}" value="{{item.id}}"/>
-                            <label for="{{item.id}}" class="business-name" title="{{item.name}}">{{item.name}}</label>
-                        </span>
+                <div class="form-input" ng-show="user.choiceType">
+                    <label>{{user.extraData.label}}</label>
+                    <div class="bussiness-container">
+                        <div class="ng-hide" ng-show="user.businessShowType === 'multiple'">
+                            <div class='business-group' ng-repeat="(label,business) in user.business">
+                                <label>{{label}}</label>
+                                <span class="business-wrapper" ng-repeat="item in business" >
+                                    <input class='business' type="{{user.choiceType}}" ng-checked="(user.data.business[item.business_id] || '')"
+                                           ng-click="user.handleOptionsChange()" id="{{item.business_id}}"/>
+                                    <label for="{{item.business_id}}" class="business-name" title="{{item.business_name}}">{{item.business_name}}</label>
+                                </span>
+                            </div>
                         </div>
+                        <span class="ng-hide" ng-show="user.businessShowType === 'single'">
+                            {{user.business[Object.keys(user.business)[0]].business_name}}</span>
                     </div>
-                    <span class="ng-hide" ng-show="user.business.length === 1 && user.business[0].items.length === 1">
-                        {{user.business[0].items[0].name}}</span>
-
-
                 </div>
-
                 <div class="footer">
                     <button class="button" ng-click="user.handleInviteUser()">邮箱邀请</button>
                 </div>
@@ -105,14 +105,14 @@
     </div>
 
 </div>
-<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_user.js"></script>
 <script>
-    var roleData = ${roleData};
+    var roleData = "${roleData}";
 </script>
 </body>
 </html>

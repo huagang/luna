@@ -8,10 +8,14 @@
         .controller('AddUserController', ['$rootScope', '$scope', "$http", AddUserController]);
 
     function AddUserController($rootScope, $scope, $http) {
+        window.vm = this;
         var vm = this;
 
         // 数据初始化
         vm.init = init;
+
+        // 操作 更新业务信息到vm.data.extra对象中
+        vm.transformBusinessData = transformBusinessData;
 
         // 操作 解析url中search信息并将其转化为对象
         vm.initSearch = initSearch;
@@ -34,30 +38,25 @@
         // 事件 角色更改
         vm.handleRoleChange = handleRoleChange;
 
-        // 请求 发送邀请用户请求
-        vm.handleInviteUser = handleInviteUser;
-
-        // 请求 获取用户信息
-        vm.fetchUserData = fetchUserData;
-
-        // 请求 获取模块信息
-        vm.fetchModuleData = fetchModuleData;
+        // 事件 input['checkbox'] input['radio']更改
+        vm.handleOptionsChange = handleOptionsChange;
 
         // 请求 获取业务信息
         vm.fetchBusinessData = fetchBusinessData;
 
+        // 请求 获取编辑用户信息
+        vm.fetchUserData = fetchUserData;
+
+        // 请求 发送邀请用户请求
+        vm.handleInviteUser = handleInviteUser;
+
+        // 请求 获取邀请权限信息
+        vm.fetchInviteAuthData = fetchInviteAuthData;
+
         vm.init(); //初始化
 
         function init() {
-            vm.initSearch();
-            if (vm.search.username) {
-                // 编辑用户
-                vm.fetchUserData();
-                vm.pagePurpose = 'edit';
-            }
-            vm.fetchBusinessData();
-            vm.fetchModuleData();
-
+            vm.apiUrls = Inter.getApiUrl();
             vm.data = {
                 email: '',
                 emailFocus: false,
@@ -72,17 +71,17 @@
 
             vm.moduleData = [];
             vm.moduleOption = [];
-            vm.business = [];
-            vm.dataSrcOption = [
-                {id: 'all', name: '全部'},
-                {id: 'dinglian', name: '鼎联'},
-                {id: 'tencent', name: 'Tencent'},
-                {id: 'vb', name: '微景'},
-            ];
-
-            vm.choiceType = 'checkbox'; // 'radio' or 'checkbox'
+            vm.business = {};
+            vm.choiceType = ''; // 'radio' or 'checkbox'
             vm.roles = [];
-            vm.postUrl = Inter.getApiUrl().addUser || '';
+            try{
+                vm.userId = location.href.match(/unique_id=(\w+)/)[1];
+            } catch(e){
+                vm.userId = '';
+            }
+            vm.fetchInviteAuthData();
+            vm.fetchBusinessData();
+            vm.fetchUserData();
         };
 
 
@@ -97,7 +96,7 @@
         // 删除邮箱
         function handelDeleteEmail(index) {
             vm.data.emailList.splice(index, 1);
-        };
+        }
 
         // 事件 输入邮箱时按下了回车键或者空格键 输入结束
         function handleEmailKeyDown() {
@@ -113,54 +112,96 @@
 
                 }
             }
-        };
+        }
 
         //事件 邮箱获得焦点
         function handleEmailFocus() {
             vm.data.emailFocus = true;
             angular.element("#email-input").focus();
 
-        };
+        }
 
         //权限模块更改
         function handleModuleChange() {
             if (vm.data.module) {
-                var roles, module = vm.data.module;
-                vm.moduleOption.forEach(function (item) {
-                    if (item.id === module) {
-                        roles = item.roles;
+                vm.data.module = parseInt(vm.data.module);
+                vm.inviteAuth.some(function (item) {
+                    if (item.id === vm.data.module) {
+                        vm.data.extra = {"type": item.extra.type, value:undefined};
+                        vm.roles = item.roleArray;
+                        vm.data.business = {};
+                        vm.data.role = '';
+
+                        if(item.extra.type === 'business'){
+                            if(item.extra.mode === 0){
+                                vm.choiceType = 'checkbox';
+                            } else if(item.extra.mode === 1){
+                                vm.choiceType = 'radio';
+                            }
+                            vm.extraData = item.extra || {};
+                        } else{
+                            vm.choiceType = '';
+                            vm.extraData = item.extra || {};
+                            var keys = Object.keys(vm.extraData.options);
+                            vm.extraData.optionLength = keys.length;
+                            if(vm.extraData.optionLength === 1){
+                                vm.data.extra.value = keys[0];
+                                vm.extraData.option = vm.extraData.options[keys[0]];
+                            }
+
+                        }
+
+
+                        return true;
                     }
+                    return false;
                 });
-                vm.roles = roles;
-                vm.data.role = '';
-                vm.data.extra = {};
-                vm.data.business = {};
             }
-        };
+        }
 
         // 角色更改
         function handleRoleChange() {
-            var effect;
-            vm.roles.forEach(function (item) {
+            var extra_value;
+            vm.roles.some(function (item) {
                 if (item.id === vm.data.role) {
-                    effect = item.effect;
+                    extra_value = item.extra_value;
+                    return true;
                 }
+                return false;
             });
 
             vm.data.business = {};
-            if (effect === 'all' && vm.choiceType === 'checkbox') {
+            if (vm.choiceType === 'checkbox' && extra_value === 0) {
                 // 全选
-                vm.business.forEach(function (item) {
-                    item.items.forEach(function (subItem) {
-                        vm.data.business[subItem.id] = true;
+                Object.keys(vm.business).forEach(function (item) {
+                    vm.business[item].forEach(function (subItem) {
+                        vm.data.business[subItem.business_id] = true;
                     });
                 });
             }
+        }
 
+        function handleOptionsChange(){
+            var id = event.target.getAttribute('id');
+            if(vm.choiceType === 'radio'){
+                vm.data.business = {};
+                vm.data.business[id] = 'checked';
+            } else if(vm.choiceType ==='checkbox'){
+                vm.data.business[id] = vm.data.business[id] ? '' : 'checked';
+            }
+            console.log(vm.data.business);
+        }
 
-
-        };
-
+        function transformBusinessData(){
+            if( vm.extraData && vm.extraData.type === 'business'){
+                vm.data.extra.value = [];
+                Object.keys(vm.data.business).forEach(function(item, index) {
+                    if(vm.data.business[item]){
+                        vm.data.extra.value.push(parseInt(item));
+                    }
+                });
+            }
+        }
 
         // 检查数据是否合法
         function _checkValidation() {
@@ -174,178 +215,137 @@
                 }, {
                     name: 'role',
                     msg: '没有选择角色\n'
-                }, {
-                    name: 'dataSrc',
-                    msg: '没有选择数据来源\n'
                 }
-
-
             ], res = {error: null, msg: ''}, data = vm.data;
+
+
             emptyCheckList.forEach(function (item) {
                 if (!data[item.name] || (toString.call(data[item.name]) === "[object Array]" && data[item.name].length === 0)) {
                     res.error = true;
                     res.msg += item.msg;
                 }
             });
+            if(vm.data.extra.type){
+                if(! vm.data.extra.value || toString.call(vm.data.extra.value) === "[object Array]" && vm.data.extra.value.length === 0){
+                    res.error = true;
+                    res.msg += '没有' + vm.extraData.label +'\n';
+                }
+            }
+
+
             return res;
-        };
+        }
+
+        // 获取编辑用户的信息
+        function fetchUserData(){
+            if(vm.userId){
+                $http({
+                    url: vm.apiUrls.fetchUserAuthData.url.format(vm.userId),
+                    type: vm.apiUrls.fetchUserAuthData.type
+                }).then(function(res){
+                    if(res.data.code === '0'){
+                        vm.authData = res.data.data;
+                    } else{
+                        console.error(res.data.msg || '获取用户权限信息失败');
+                    }
+                }, function(res){
+                    console.error(res.data.msg || '获取用户权限信息失败')
+                });
+            }
+        }
+
+
 
         // 发送邮箱邀请的数据请求
         function handleInviteUser() {
+            if( vm.extraData && vm.extraData.type === 'business'){
+                vm.transformBusinessData();
+            }
             var res = vm._checkValidation();
             if (!res.error) {
                 //发送数据请求
                 var data = new FormData();
-                data.push('', vm.data.emailList);
-                data.push('', vm.data.module);
-                data.push('', vm.data.role);
-                data.push('', vm.data.dataSrc);
+                data.append('emails', vm.data.emailList.join(','));
+                data.append('category_id', vm.data.module);
+                data.append('role_id', parseInt(vm.data.role));
+                if(vm.data.extra && vm.data.extra.type){
+                    data.append('extra', JSON.stringify(vm.data.extra));
+                }
+                var url = vm.userId ? vm.apiUrls.updateUserAuth : vm.apiUrls.inviteUsers;
                 $http({
-                    method: 'POST',
-                    url: '',
+                    url: url.url,
+                    method: url.type,
+                    data: data,
                     headers: {
                         "Content-Type": undefined
                     }
-                }).then(function () {
-
-                }, function () {
-
+                }).then(function (res) {
+                    if(res.data.code === '0'){
+                        alert('新建用户成功');
+                    } else{
+                        alert(res.data.msg || '新建用户失败');
+                    }
+                }, function (res) {
+                    alert(res.data.msg || '新建用户失败');
                 });
             } else {
                 alert(res.msg);
             }
-        };
+        }
 
-        // 获取用户信息
-        function fetchUserData() {
-
-        };
-
-        // 获取模块信息
-        function fetchModuleData() {
-            setTimeout(function () {
-                vm.moduleOption = [
-                    {
-                        id: 'luna', name: '皓月平台', roles: [
-                        {id: 'admin', name: '管理员1', effect: 'all'},
-                        {id: 'Operations', name: '运营员1'},
-                        {id: 'lala', name: 'lala1'},
-                    ]
-                    },
-                    {
-                        id: 'basicData', name: '基础数据', roles: [
-                        {id: 'admin', name: '管理员2', effect: 'all'},
-                        {id: 'Operations', name: '运营员2'},
-                        {id: 'lala', name: 'lala2'},
-                    ]
-                    },
-                    {
-                        id: 'businessService', name: '商家服务', roles: [
-                        {id: 'admin', name: '管理员3', effect: 'all'},
-                        {id: 'Operations', name: '运营员3'},
-                        {id: 'lala', name: 'lala3'},
-                    ]
-                    },
-                    {
-                        id: 'contentOperation', name: '内容运营', roles: [
-                        {id: 'admin', name: '管理员4', effect: 'all'},
-                        {id: 'Operations', name: '运营员4'},
-                        {id: 'lala', name: 'lala4'},
-                    ]
-                    }, {
-                        id: 'thirdPartyService', name: '第三方服务', roles: [
-                            {id: 'admin', name: '管理员4', effect: 'all'},
-                            {id: 'Operations', name: '运营员4'},
-                            {id: 'lala', name: 'lala4'},
-                        ]
-                    },
-                ];
-                $scope.$apply();
-            }, 400);
-
-        };
+        // 获取邀请权限信息失败
+        function fetchInviteAuthData() {
+            $http({
+                url: vm.apiUrls.inviteAuth.url,
+                method: vm.apiUrls.inviteAuth.type,
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    vm.inviteAuth = res.data.data;
+                    vm.inviteAuth.forEach(function(item,index){
+                        if(item.extra && typeof item.extra === 'string'){
+                            item.extra = JSON.parse(item.extra);
+                        }
+                    });
+                } else{
+                    console.error(res.data.msg || '获取邀请权限信息失败');
+                }
+            }, function(res){
+                console.error(res.data.msg);
+            });
+        }
 
         // 获取业务信息
-        function fetchBusinessData() {
-            setTimeout(function () {
-                vm.business = [
-                    {
-                        id: 'scenic',
-                        name: '景区',
-                        items: [
-                            {
-                                id: '1',
-                                name: '三台山'
-                            }, {
-                                id: '2',
-                                name: '三台山'
-                            }, {
-                                id: '3',
-                                name: '三台山'
-                            }, {
-                                id: '4',
-                                name: '三台山'
-                            }
-                        ]
-                    },
-                    {
-                        id: 'hotel',
-                        name: '酒店',
-                        items: [
-                            {
-                                id: '5',
-                                name: '三台山'
-                            }, {
-                                id: '6',
-                                name: '三台山'
-                            }, {
-                                id: '7',
-                                name: '三台山'
-                            }, {
-                                id: '8',
-                                name: '三台山'
-                            }
-                        ]
-                    }, {
-                        id: 'cloudCard',
-                        name: '云名片',
-                        items: [
-                            {
-                                id: '9',
-                                name: '三台山'
-                            }, {
-                                id: '10',
-                                name: '三台山'
-                            }, {
-                                id: '11',
-                                name: '三台山'
-                            }, {
-                                id: '12',
-                                name: '三台山'
-                            }
-                        ]
-                    }, {
-                        id: 'farmhouse',
-                        name: '农家院',
-                        items: [
-                            {
-                                id: '13',
-                                name: '三台山'
-                            }, {
-                                id: '14',
-                                name: '三台山'
-                            }, {
-                                id: '15',
-                                name: '三台山'
-                            }, {
-                                id: '16',
-                                name: '三台山'
-                            }
-                        ]
-                    },
-                ];
-                $scope.$apply();
-            }, 500);
+        function fetchBusinessData(){
+            var req  = vm.userId ? vm.apiUrls.getBusinessListForEdit : vm.apiUrls.getBusinessList;
+            $http({
+                url: req.url.format(vm.userId),
+                method: req.type
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    vm.business = res.data.data;
+                    vm.data.business = {};
+                    if(vm.userId){
+                        Object.keys(vm.business).forEach(function(item, index){
+                            (vm.business[item] || []).forEach(function(item, index){
+                                vm.data.business[item.business_id] = item.selected ? 'checked' : '';
+                            });
+                        });
+                     }
+
+                    if(Object.keys(vm.business).length > 1 ||
+                        vm.business[Object.keys(vm.business)[0]].length > 1){
+                        vm.businessShowType = 'multiple';
+                    } else if(Object.keys(vm.business).length === 1
+                        && vm.business[Object.keys(vm.business)[0]].length === 1){
+                        vm.businessShowType = 'single';
+                    }
+                }
+                else{
+                    console.error(res.data.msg || '获取业务列表失败');
+                }
+            }, function(res){
+                console.error(res.data.msg || '获取业务列表失败');
+            })
         }
 
 

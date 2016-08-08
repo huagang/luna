@@ -49,7 +49,7 @@
                             </div>
                             <!--用户搜索 end-->
                             <!--   添加用户按钮 -->
-                            <a class="button" id='useradd' target="_blank" href="./platform/user/add">添加用户</a>
+                            <a class="button" id='useradd' target="_blank" href="<%=request.getContextPath() %>/platform/user/invite">添加用户</a>
                             <!--用户列表 start-->
                             <div class="user-list">
 
@@ -136,7 +136,7 @@
 		var msUserName = '${sessionScope.msUser.nickName}';
 		var luna_name = row.luna_name;
 		if(msUserName != luna_name){
-			return '<a class="edit" href="./manage_user.do?method=edit_user&username=' + msUserName + '">编辑</a>'
+			return '<a class="edit" href="./user/invite?unique_id=' + row.unique_id + '">编辑</a>'
         		+'<a class="delete" href="#" onclick="delUser(this,\''+row.luna_name+'\',\''+row.module_code+'\',\''+row.role_code+'\',\''+msUserName+'\')">删除</a>'
 		} else {
 			return '<a class="delete" href="#" onclick="editUser(\''+row.module_code+'\',\''+row.luna_name+'\',\''+row.role_code+'\',\''+msUserName+'\')">查看</a>'

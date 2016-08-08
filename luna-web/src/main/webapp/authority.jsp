@@ -92,7 +92,7 @@
 		});
 
 		function operationFormatter(value, row, index) {
-			return'<a class="modify" href="'+ host+ '/authority_set.do?method=init&ms_role_code='+row.role_code+'">权限</a>'
+			return'<a class="modify" href="'+ host+ '/platform/authority/'+row.id+'">权限</a>'
 		}
 
 		function queryParams(params) {

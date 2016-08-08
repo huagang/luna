@@ -192,4 +192,15 @@ public class LunaRoleServiceImpl implements LunaRoleService {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
     }
+
+    @Override
+    public JSONObject getRoleInfo(int roleId) {
+        try {
+            LunaRole roleByRoleId = roleCache.getRoleByRoleId(roleId);
+            return FastJsonUtil.sucess("", JSON.toJSON(roleByRoleId));
+        } catch (Exception ex) {
+            logger.error("Failed to get role by id: " + roleId);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
 }
