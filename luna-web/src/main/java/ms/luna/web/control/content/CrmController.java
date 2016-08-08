@@ -53,8 +53,6 @@ public class CrmController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(false);
         if (session == null) {
             MsLogger.error("session is null");
@@ -83,8 +81,6 @@ public class CrmController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/initAddPage")
     public ModelAndView init_add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(false);
         if (session == null) {
             MsLogger.error("session is null");
@@ -115,8 +111,6 @@ public class CrmController extends BasicController {
     public ModelAndView init_edit(
             @RequestParam(required = true, value = "merchantId") String merchant_id,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(false);
         if (session == null) {
             MsLogger.error("session is null");
