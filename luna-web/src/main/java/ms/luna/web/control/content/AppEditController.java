@@ -156,10 +156,6 @@ public class AppEditController extends BasicController {
             @RequestParam(required=true, value="page_order") int pageOrder,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
-
-
         if(appId <= 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "appId不合法！");
         }

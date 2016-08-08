@@ -44,8 +44,6 @@ public class MerchantController extends BasicController {
     public ModelAndView init_regist(
             @RequestParam(required = false) Map<String, String> map,
             HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         try {
             ModelAndView model = new ModelAndView(MERREGIST_URI, map);
             model.addObject("categoryMap", pulldownController.loadCategorys());
@@ -168,8 +166,6 @@ public class MerchantController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/successPage")
     public ModelAndView success(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html; charset=UTF-8");
         return new ModelAndView(SUCCESS_URI);
     }
 

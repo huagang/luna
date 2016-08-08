@@ -126,8 +126,8 @@ function ColumnController($scope, $rootScope, $http) {
     this.submitNewColumn = function() {
 
         var request = {
-            method: 'POST',
-            url: host + '/manage/column.do?method=create_column',
+            method: Inter.getApiUrl().columnCreate.type,
+            url: Inter.getApiUrl().columnCreate.url,
             data: {
                 'name': this.currentName,
                 'code': this.currentCode,
@@ -167,8 +167,8 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.submitUpdateColumn = function() {
         var request = {
-            method: 'POST',
-            url: host + '/manage/column.do?method=update_column',
+            method: Inter.getApiUrl().columnUpdate.type,
+            url: Util.strFormat(Inter.getApiUrl().columnUpdate.url, [this.currentId]),
             data: {
                 'id': this.currentId,
                 'name': this.currentName,
@@ -203,11 +203,8 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.submitDeleteColumn = function(id){
         var request = {
-            method: 'POST',
-            url: host + '/manage/column.do?method=delete_column',
-            data: {
-                'id': id
-            }
+            method: Inter.getApiUrl().columnDelete.type,
+            url: Util.strFormat(Inter.getApiUrl().columnDelete.url, [id]),
         };
         $http(request).then(function success(response) {
             var data = response.data;

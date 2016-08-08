@@ -3,6 +3,13 @@
  * author:wumengqiang & duyutao
  * Date:2016-6-22
  */
+//获取当前的业务数据
+var business = {};
+if (window.localStorage.business.length === 0) {
+    window.location.href = Inter.getApiUrl().selectBusinessPage;
+} else {
+    business = JSON.parse(window.localStorage.business);
+}
 
 var initPage = function() {
     var ue;
@@ -238,8 +245,7 @@ var initPage = function() {
                 ]
             ],
         });
-
-    }
+    };
 
     /**
      * 初始化保存、发布、预览时间
@@ -257,7 +263,7 @@ var initPage = function() {
 
             var data = {
                 id: articleStore.id || null,
-                business_id: articleStore.business_id || -1,
+                business_id: business.id,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -268,8 +274,8 @@ var initPage = function() {
                 short_title:document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
-                url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
-                type: 'POST',
+                url: articleStore.id ? Inter.getApiUrl().articleUpdate.url : Inter.getApiUrl().articleCreate.url,
+                type:  articleStore.id ? Inter.getApiUrl().articleUpdate.type : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -304,8 +310,8 @@ var initPage = function() {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function(e) {
             $.ajax({
-                url: Inter.getApiUrl().publishArticle,
-                type: 'POST',
+                url: Inter.getApiUrl().articlePublish.url,
+                type:Inter.getApiUrl().articlePublish.type,
                 async: true,
                 data: { id: articleStore.id },
                 dataType: "json",
@@ -551,7 +557,7 @@ var initPage = function() {
                 updateArticleData(articleStore.id);
             }
         }
-    }
+    };
 }();
 
 
