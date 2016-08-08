@@ -44,7 +44,7 @@ public class ManageBusinessTreeServiceImpl implements ManageBusinessTreeService 
 	}
 
 	@Override
-	public JSONObject createBusinessTree(String json, MsUser msUser) {
+	public JSONObject createBusinessTree(String json) {
 		JSONObject result = null;
 		try {
 			result = manageBusinessTreeBL.createBusinessTree(json);
@@ -92,7 +92,7 @@ public class ManageBusinessTreeServiceImpl implements ManageBusinessTreeService 
 	}
 
 	@Override
-	public JSONObject saveBusinessTree(String json, MsUser msUser) {
+	public JSONObject saveBusinessTree(String json) {
 		JSONObject result = null;
 		try {
 			result = manageBusinessTreeBL.saveBusinessTree(json);

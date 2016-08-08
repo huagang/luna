@@ -1,6 +1,5 @@
 package ms.luna.web.control.platform;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaRoleService;

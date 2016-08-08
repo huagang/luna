@@ -28,8 +28,9 @@ $(document).ready(function(){
 		};
 
 		$.ajax({
-	        url: host + '/manage_business_tree.do?method=async_search_businesses',
-	        type: 'POST',
+	        //url: host + '/manage_business_tree.do?method=async_search_businesses',
+			url: Inter.getApiUrl().bizRelationBizSearch.url,
+	        type: 'GET',
 	        async: false,
 	        data: param,
 	        dataType:"json",
@@ -82,7 +83,8 @@ function createBusinessTree() {
 		"business_id": $("#business_list").val()
 	};
     $.ajax({
-        url: host + '/manage_business_tree.do?method=async_create_business_tree',
+        //url: host + '/manage_business_tree.do?method=async_create_business_tree',
+        url: Util.strFormat(Inter.getApiUrl().bizRelationCreate.url,[param.business_id]),
         type: 'POST',
         async: true,
         data: param,
@@ -115,8 +117,9 @@ function deleteBusinessTree(business_id) {
 			"business_id": business_id
 		};
 	    $.ajax({
-	        url: host + '/manage_business_tree.do?method=delete_business_tree',
-	        type: 'POST',
+	        //url: host + '/manage_business_tree.do?method=delete_business_tree',
+	        url: Util.strFormat(Inter.getApiUrl().bizRelationDelete.url, [request_data.business_id]),
+	        type: 'DELETE',
 	        async: true,
 	        data: request_data,
 	        dataType:"json",

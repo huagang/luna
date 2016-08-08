@@ -5,8 +5,11 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.PulldownCtrl;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,8 @@ import java.io.IOException;
 @RequestMapping("/content/businessRelation")
 public class BusinessRelationController extends BasicController {
 
+    public static String menu = "businessRelation";
+
     @Autowired
     private ManageBusinessTreeService manageBusinessTreeService;
 
@@ -39,10 +44,11 @@ public class BusinessRelationController extends BasicController {
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         try {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.setAttribute("menu_selected", "manage_business_tree");
-            }
+//            HttpSession session = request.getSession(false);
+//            if (session != null) {
+//                session.setAttribute("menu_selected", "manage_business_tree");
+//            }
+            SessionHelper.setSelectedMenu(request.getSession(false), menu);
             view.addObject("provinces", pulldownCtrl.loadProvinces());
             view.addObject("citys", pulldownCtrl.loadCitys("110000"));
             view.addObject("provinceId", "110000");
@@ -55,7 +61,7 @@ public class BusinessRelationController extends BasicController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/searchBusinessTree")
+    @RequestMapping(method = RequestMethod.GET, value = "/businessTree/search")
     @ResponseBody
     public JSONObject asyncSearchBusinessTrees(
             @RequestParam(required = false) Integer offset,
@@ -90,7 +96,8 @@ public class BusinessRelationController extends BasicController {
         return resJSON;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/searchBusiness")
+    @RequestMapping(method = RequestMethod.GET, value = "/business/search")
+    @ResponseBody
     public JSONObject asyncSearchBusinesses(
             @RequestParam(required = true, value="province_id") String provinceId,
             @RequestParam(required = false, value="city_id") String cityId,
@@ -116,6 +123,7 @@ public class BusinessRelationController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/businessId/{businessId}")
+    @ResponseBody
     public JSONObject asyncCreateBusinessTree(
             @PathVariable("businessId") Integer businessId,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -125,8 +133,13 @@ public class BusinessRelationController extends BasicController {
             JSONObject param = new JSONObject();
             param.put("businessId", businessId);
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
-            JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString(), msUser);
+            if (session == null) {
+                throw new Exception("session is null");
+            }
+            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
+            String uniqueId = msUser.getUniqueId();
+            param.put("uniqueId", uniqueId);
+            JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString());
             return result;
         } catch (Exception e) {
             MsLogger.error("Failed to create Business Tree", e);
@@ -135,6 +148,7 @@ public class BusinessRelationController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/businessId/{businessId}")
+    @ResponseBody
     public JSONObject asyncDeleteBusinessTree(
             @PathVariable("businessId") Integer businessId,
             HttpServletRequest request, HttpServletResponse response ) throws IOException {

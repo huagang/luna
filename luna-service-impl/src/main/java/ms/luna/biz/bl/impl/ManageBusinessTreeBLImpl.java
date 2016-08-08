@@ -87,8 +87,9 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		Date date = new Date();
 		document.put("c_list", param.get("c_list"));
 		document.put("update_hhmmss", date);
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		document.put("updated_by_unique_id", msUser.getUniqueId());
+//		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
+//		document.put("updated_by_unique_id", msUser.getUniqueId());
+		document.put("updated_by_unique_id", param.getString("uniqueId"));
 
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("$set", document);
@@ -173,8 +174,8 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		document.put("c_list", JSONObject.parse("{}"));
 		document.put("regist_hhmmss", date);
 		document.put("update_hhmmss", date);
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		document.put("updated_by_unique_id", msUser.getUniqueId());
+//		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
+		document.put("updated_by_unique_id", param.getString("uniqueId"));
 
 		// mongo中有唯一性约束，所以直接插入即可
 		try {

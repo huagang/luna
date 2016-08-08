@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * Created by greek on 16/8/5.
  */
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/common/merchant")
 public class MerchantController extends BasicController {
 
     private static final String MERREGIST_URI = "/merchant-register.jsp";
@@ -39,7 +39,7 @@ public class MerchantController extends BasicController {
     @Autowired
     private ManageMerchantService manageMerchantService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/merchant/registPage")
+    @RequestMapping(method = RequestMethod.GET, value = "/registPage")
     public ModelAndView init_regist(
             @RequestParam(required = false) Map<String, String> map,
             HttpServletRequest request, HttpServletResponse response) {
@@ -62,7 +62,7 @@ public class MerchantController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/merchant")
+    @RequestMapping(method = RequestMethod.POST, value = "")
     @ResponseBody
     public JSONObject createMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -136,7 +136,7 @@ public class MerchantController extends BasicController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/merchant/checkName")
+    @RequestMapping(method = RequestMethod.GET, value = "/checkName")
     @ResponseBody
     public JSONObject checkMerchantNm_add(
             @RequestParam(required = true, value = "merchant_nm") String merchant_nm,
@@ -165,7 +165,7 @@ public class MerchantController extends BasicController {
      * @param response
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/merchant/successPage")
+    @RequestMapping(method = RequestMethod.GET, value = "/successPage")
     public ModelAndView success(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");

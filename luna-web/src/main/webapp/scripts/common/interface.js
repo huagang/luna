@@ -17,6 +17,7 @@ var Inter = function() {
                 poiDataImport:{url: '/data/poi/batch',type:'POST'},// Poi 批量数据导入功能
                 poiCheckDelete:{url: '/data/poi/checkPoiCanBeDeleteOrNot?_id={0}',type:'GET'},//检查是否能够删除
                 poiDelete:{url: '/data/poi/{0}',type:'DELETE'},//poi删除功能
+                poiAddPage:{url: '/data/poi/addPage',type:'GET'},//poi删除功能
                 poiEdit:{url: '/data/poi/initEditPage?poiId={0}',type:'GET'},//poi编辑功能
                 poiAddSave:{url: '/data/poi',type:'POST'},//poi 创建成功
                 poiEditSave:{url: '/data/poi/edit',type:'POST'},//poi编辑成功
@@ -38,6 +39,24 @@ var Inter = function() {
                 crmEnableUser:{url: '/content/crm/{0}/enable',type:'PUT'},//开启商户
                 crmDisableUser:{url: '/content/crm/merchantId/{0}/disable',type:'PUT'},//关闭商户
                 crmCheckName:{url: '/content/crm/checkName',type:'GET'},//检查姓名
+
+                // 商户注册
+                merchantInit:{url:"/common/merchant/registPage",type:"GET"}, // 注册初始页面
+                merchantRegist:{url:"/common/merchant",type:"POST"},// 注册
+                merchantCheckName:{url:"/common/merchant/checkName",type:"GET"}, //检查用户名
+                merchantSuccess:{url:"common/merchant/successPage",type:"GET"}, //注册成功页面
+
+                // 业务数据关系管理
+                bizRelationInit:{url:"/content/businessRelation",type:"GET"}, // 管理页面初始化
+                bizRelationBizTreeSearch:{url:"/content/businessRelation/businessTree/search",type:"GET"}, //业务关系树搜索
+                bizRelationBizSearch:{url:"/content/businessRelation/business/search",type:"GET"}, //业务搜索
+                bizRelationDelete:{url:"/content/businessRelation/businessId/{0}",type:"DELETE"}, //删除业务关系树
+                bizRelationCreate:{url:"/content/businessRelation/businessId/{0}",type:"POST"}, //创建业务关系树
+                bizRelationEditPage:{url:"/content/businessRelation/businessTree/{0}", type:"GET"}, // 业务关系树编辑页面
+                bizRelationBizTreeView:{url:"/content/businessRelation/businessId/{0}", type:"GET"}, // 业务关系树视图
+                bizRelationPoiSearch:{url:"/content/businessRelation/searchPois", type:"GET"}, // 搜索POI
+                bizRelationBizTreeEdit:{url:"/content/businessRelation/saveBusinessTree", type:"PUT"}, // 保存编辑的业务关系树
+
 
 
 
@@ -73,6 +92,10 @@ var Inter = function() {
                 uploadPath: {url: context+'/uploadCtrl.do?method=uploadFile2Cloud',type:''}, //统一上传接口
 
                 login: {url: context + '/common/login', type:'POST'},  //登录提交接口
+
+                // 用户注册
+                registrationPage:{url:"/comomon/registration/token/{0}",type:"GET"},//注册页面
+                registrationRegist:{url:"/comomon/registration",type:"POST"} // 注册
             };
         }
     };
