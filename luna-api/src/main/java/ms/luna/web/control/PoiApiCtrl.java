@@ -35,6 +35,8 @@ public class PoiApiCtrl {
 	private PoiApiService poiApiService;
 
 	private static String[] LANG = {"zh", "en"}; // 语言
+
+	private static String[] RetrieveType = {"name", "id"}; // 检索类型
 	
 	/**
 	 * 根据业务获取一个层级的poi数据列表
