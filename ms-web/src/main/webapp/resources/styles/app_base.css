@@ -35,9 +35,6 @@ html,body{
 	background-size:cover;
 }
 
-<<<<<<< Updated upstream
-.component-group{
-=======
 .bg-canvas {
     background-position: top center;
     background-repeat: no-repeat;
@@ -78,7 +75,6 @@ html,body{
 }
 
 .componentbox .con {
->>>>>>> Stashed changes
     width: 100%;
     height: 100%;
 }
