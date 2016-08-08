@@ -428,7 +428,7 @@ $(document).ready(function () {
         };
 
         this.setParaBg = function () {
-            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
+            var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
         }
