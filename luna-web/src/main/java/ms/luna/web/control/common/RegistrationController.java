@@ -1,5 +1,6 @@
 package ms.luna.web.control.common;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.LoginService;
 import ms.luna.biz.sc.LunaUserService;
@@ -8,6 +9,7 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,6 @@ public class RegistrationController extends BasicController {
     @Autowired
     private LunaUserService lunaUserService;
 
-    private static int TOKEN_LENGTH = 46; //token长度
-
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView register(
             @RequestParam(required = true, value = "token") String token,
@@ -42,13 +42,13 @@ public class RegistrationController extends BasicController {
             MsLogger.debug("method:isTokenValid, result from service: " + result.toString());
 
             if("0".equals(result.get("code"))){
-                ModelAndView model = new ModelAndView("/register.jsp");
+                ModelAndView model = buildModelAndView("register");
                 model.addObject("token", token);
                 return model;
             }
-            return new ModelAndView("/login_overtime.jsp");
+            return buildModelAndView("login_overtime");
         } catch (Exception e) {
-            return new ModelAndView("/error.jsp");
+            return buildModelAndView("error");
         }
     }
 
@@ -63,7 +63,7 @@ public class RegistrationController extends BasicController {
         try {
 
             // 检测token
-            if(token.isEmpty() || token.length() != TOKEN_LENGTH){//token长度不正确
+            if(StringUtils.isBlank(token)){//token长度不正确
                 return FastJsonUtil.error("4", "token不正确,token:" + token);
             }
             //检查账户名
