@@ -9,8 +9,8 @@ import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
 import ms.luna.common.MsLunaResource;
 import ms.luna.common.PoiCommon;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.apache.poi.EncryptedDocumentException;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -58,7 +57,7 @@ public class PoiController extends BasicController {
     private ManagePoiService managePoiService;
 
     @Autowired
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @Autowired
     private VodPlayService vodPlayService;
@@ -121,7 +120,7 @@ public class PoiController extends BasicController {
         List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
         SimpleModel simpleModel = null;
         try {
-            for (Map<String, String> map : pulldownCtrl.loadProvinces()) {
+            for (Map<String, String> map : pulldownController.loadProvinces()) {
                 simpleModel = new SimpleModel();
                 simpleModel.setValue(map.get("province_id"));
                 simpleModel.setLabel(map.get("province_nm_zh"));

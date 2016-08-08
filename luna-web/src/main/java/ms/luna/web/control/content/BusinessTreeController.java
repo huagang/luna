@@ -9,8 +9,8 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +39,7 @@ public class BusinessTreeController extends BasicController {
     private ManagePoiService managePoiService;
 
     @Resource(name="pulldownCtrl")
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/businessTree/{business_id}")
     public ModelAndView init(
@@ -52,18 +52,18 @@ public class BusinessTreeController extends BasicController {
         try {
 
             // 省份列表
-            view.addObject("provinces", pulldownCtrl.loadProvinces());
+            view.addObject("provinces", pulldownController.loadProvinces());
 
             // 城市信息
             if (!CharactorUtil.isEmpyty(provinceId)) {
-                view.addObject("citys", pulldownCtrl.loadCitys(provinceId));
+                view.addObject("citys", pulldownController.loadCitys(provinceId));
             } else {
                 view.addObject("citys", new ArrayList<SimpleModel>());
             }
 
             // 区/县信息
             if (!CharactorUtil.isEmpyty(cityId)) {
-                view.addObject("countys", pulldownCtrl.loadCountys(cityId));
+                view.addObject("countys", pulldownController.loadCountys(cityId));
             } else {
                 view.addObject("countys", new ArrayList<SimpleModel>());
             }

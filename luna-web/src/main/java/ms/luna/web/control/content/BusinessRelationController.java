@@ -6,9 +6,9 @@ import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class BusinessRelationController extends BasicController {
     private ManageBusinessTreeService manageBusinessTreeService;
 
     @Resource(name="pulldownCtrl")
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
@@ -49,8 +49,8 @@ public class BusinessRelationController extends BasicController {
 //                session.setAttribute("menu_selected", "manage_business_tree");
 //            }
             SessionHelper.setSelectedMenu(request.getSession(false), menu);
-            view.addObject("provinces", pulldownCtrl.loadProvinces());
-            view.addObject("citys", pulldownCtrl.loadCitys("110000"));
+            view.addObject("provinces", pulldownController.loadProvinces());
+            view.addObject("citys", pulldownController.loadCitys("110000"));
             view.addObject("provinceId", "110000");
             view.setViewName("/manage_business_tree.jsp");
             return view;

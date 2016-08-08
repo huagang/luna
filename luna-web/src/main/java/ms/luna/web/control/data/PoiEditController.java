@@ -9,10 +9,8 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.PoiCommon;
-import ms.luna.web.common.PulldownCtrl;
-import ms.luna.web.control.AddPoiCtrl;
-import ms.luna.web.control.ManagePoiCtrl;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -41,7 +38,7 @@ public class PoiEditController extends BasicController {
     private ManagePoiService managePoiService;
 
     @Autowired
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
 
     @Autowired
     private PoiController poiController;
@@ -301,7 +298,7 @@ public class PoiEditController extends BasicController {
         // 省份信息
         List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
         try {
-            for (Map<String, String> map : pulldownCtrl.loadProvinces()) {
+            for (Map<String, String> map : pulldownController.loadProvinces()) {
                 SimpleModel simpleModel = new SimpleModel();
                 simpleModel.setValue(map.get("province_id"));
                 simpleModel.setLabel(map.get("province_nm_zh"));
@@ -324,7 +321,7 @@ public class PoiEditController extends BasicController {
         try {
             if (!"ALL".equals(poiModel.getProvinceId())
                     && !CharactorUtil.isEmpyty(poiModel.getProvinceId())) {
-                for (Map<String, String> map : pulldownCtrl.loadCitys(poiModel.getProvinceId())) {
+                for (Map<String, String> map : pulldownController.loadCitys(poiModel.getProvinceId())) {
                     simpleModel = new SimpleModel();
                     simpleModel.setValue(map.get("city_id"));
                     simpleModel.setLabel(map.get("city_nm_zh"));
@@ -348,7 +345,7 @@ public class PoiEditController extends BasicController {
         try {
             if (!"ALL".equals(poiModel.getCityId())
                     && !poiModel.getCityId().isEmpty()) {
-                for (Map<String, String> map : pulldownCtrl.loadCountys(poiModel.getCityId())) {
+                for (Map<String, String> map : pulldownController.loadCountys(poiModel.getCityId())) {
                     simpleModel = new SimpleModel();
                     simpleModel.setValue(map.get("county_id"));
                     simpleModel.setLabel(map.get("county_nm_zh"));

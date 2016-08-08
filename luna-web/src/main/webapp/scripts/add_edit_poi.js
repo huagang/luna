@@ -743,7 +743,8 @@ var geocoder = new qq.maps.Geocoder({
         }
         $.ajax({
             type: 'post',
-            url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
+            //url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
+            url: Inter.getApiUrl().pullDownZoneIds.url,
             cache: false,
             async: false,
             data: params,

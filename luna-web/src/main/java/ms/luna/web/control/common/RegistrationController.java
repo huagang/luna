@@ -37,14 +37,14 @@ public class RegistrationController extends BasicController {
             @PathVariable("token") String token,
             HttpServletRequest request, HttpServletResponse response){
         try {
-            JSONObject json = JSONObject.parseObject("{}");
-            json.put("token", token);
+//            JSONObject json = JSONObject.parseObject("{}");
+//            json.put("token", token);
             // token检查 -- token目前可能会有变化,暂时不做长度检查
 //            if(token.isEmpty() || token.length() != TOKEN_LENGTH){
 //                return new ModelAndView("/error.jsp");
 //            }
 
-            JSONObject result = lunaUserService.isTokenValid(json.toString());
+            JSONObject result = lunaUserService.isTokenValid(token);
             MsLogger.debug("method:isTokenValid, result from service: " + result.toString());
 
             if("0".equals(result.get("code"))){
@@ -88,7 +88,7 @@ public class RegistrationController extends BasicController {
             }
             //注册
             JSONObject json = JSONObject.parseObject("{}");
-            json.put("nickname", nickname);
+            json.put("luna_name", nickname);
             json.put("password", password);
             json.put("token", token);
             result = lunaUserService.registerUser(json);

@@ -49,7 +49,8 @@ function change_province(mode) {
 	};  
 	$.ajax({
 		type: 'post',
-		url: host +'/pulldown.do?method=load_citys',
+		//url: host +'/pulldown.do?method=load_citys',
+		url: Inter.getApiUrl().pullDownCitys,
 		cache: false,
 		async: false,
 		data: params,
@@ -87,7 +88,8 @@ function change_city(mode) {
 	};  
 	$.ajax({
 		type: 'post',
-		url: host +'/pulldown.do?method=load_counties',
+		//url: host +'/pulldown.do?method=load_counties',
+		url: Inter.getApiUrl().pullDownCounties.url,
 		cache: false,
 		async: false,
 		data: params,
@@ -123,7 +125,8 @@ function load_citys_only(province_id) {
 	};
 	$.ajax({
 		type: 'post',
-		url: host +'/pulldown.do?method=load_citys',
+		//url: host +'/pulldown.do?method=load_citys',
+		url: Inter.getApiUrl().pullDownCitys.url,
 		cache: false,
 		async: false,
 		data: params,
@@ -154,7 +157,8 @@ function load_counties_only(city_id){
 	};
 	$.ajax({
 		type: 'post',
-		url: host +'/pulldown.do?method=load_counties',
+		//url: host +'/pulldown.do?method=load_counties',
+		url: Inter.getApiUrl().pullDownCounties.url,
 		cache: false,
 		async: false,
 		data: params,
@@ -182,7 +186,8 @@ function load_counties_only(city_id){
 function load_categorys_only() {
 	$.ajax({
 		type: 'post',
-		url: host + '/pulldown.do?method=load_categorys',
+		//url: host + '/pulldown.do?method=load_categorys',
+		url: Inter.getApiUrl().pullDownCategorys.url,
 		cache: false,
 		async: false,
 		dataType: 'json',
