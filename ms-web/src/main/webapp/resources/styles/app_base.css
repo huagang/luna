@@ -35,7 +35,50 @@ html,body{
 	background-size:cover;
 }
 
+<<<<<<< Updated upstream
 .component-group{
+=======
+.bg-canvas {
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+/* 重力感应背景样式 */
+
+.paraScene {
+    overflow: hidden;
+}
+
+.layer {
+    /* margin-left:-22%; */
+    /* margin-top:-22%; */
+    height: 100%;
+    width: 100%;
+}
+
+.img-wraper {
+    height: 125%;
+    width: 150%;
+    margin-left: -25%;
+    margin-top: -12.5%;
+}
+.img-wraper img{
+    height:100% !important;
+}
+
+.component-group {
+    top:0;
+    width: 100%;
+    /*height: 100.1%;*/
+    height: 100%;
+    position:absolute;
+    overflow: hidden;
+}
+
+.componentbox .con {
+>>>>>>> Stashed changes
     width: 100%;
     height: 100%;
 }
