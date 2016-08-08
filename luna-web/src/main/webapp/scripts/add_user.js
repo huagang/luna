@@ -32,34 +32,33 @@
         // 事件 权限模块更改
         vm.handleModuleChange = handleModuleChange;
 
+
         // 事件 角色更改
         vm.handleRoleChange = handleRoleChange;
 
+        // 事件 input['checkbox'] input['radio']更改
         vm.handleOptionsChange = handleOptionsChange;
+
+        // 请求 获取编辑用户信息
+        vm.fetchUserData = fetchUserData;
 
         // 请求 发送邀请用户请求
         vm.handleInviteUser = handleInviteUser;
 
-        // 请求 获取用户信息
-        vm.fetchUserData = fetchUserData;
-
-        // 请求 获取模块信息
-        vm.fetchModuleData = fetchModuleData;
-
-        // 请求 获取业务信息
-        vm.fetchBusinessData = fetchBusinessData;
+        // 请求 获取邀请权限信息
+        vm.fetchInviteAuthData = fetchInviteAuthData;
 
         vm.init(); //初始化
 
         function init() {
+            vm.apiUrls = Inter.getApiUrl();
             vm.initSearch();
             if (vm.search.username) {
                 // 编辑用户
                 vm.fetchUserData();
                 vm.pagePurpose = 'edit';
             }
-            vm.fetchBusinessData();
-            vm.fetchModuleData();
+            vm.fetchInviteAuthData();
 
             vm.data = {
                 email: '',
@@ -128,10 +127,9 @@
         //权限模块更改
         function handleModuleChange() {
             if (vm.data.module) {
-                var roles, module = vm.data.module;
-                vm.moduleOption.forEach(function (item) {
-                    if (item.id === module) {
-                        roles = item.roles;
+                vm.inviteAuth.forEach(function (item) {
+                    if (item.id === vm.data.module) {
+                        vm.data.roles = item.roles;
                         if(item.name === '商家服务'){
                             vm.choiceType = 'checkbox';
                         } else if(item.name === '内容运营'){
@@ -141,7 +139,6 @@
                         }
                     }
                 });
-                vm.roles = roles;
                 vm.data.role = '';
                 vm.data.extra = {};
                 vm.data.business = {};
@@ -203,6 +200,11 @@
             return res;
         }
 
+        // 获取编辑用户的信息
+        function fetchUserData(){
+
+        }
+
         // 发送邮箱邀请的数据请求
         function handleInviteUser() {
             var res = vm._checkValidation();
@@ -252,136 +254,20 @@
             }
         }
 
-        // 获取用户信息
-        function fetchUserData() {
-
-        }
-
-        // 获取模块信息
-        function fetchModuleData() {
-            setTimeout(function () {
-                vm.moduleOption = [
-                    {
-                        id: 'luna', name: '皓月平台', roles: [
-                            {id: 'admin', name: '管理员1', effect: 'all'},
-                            {id: 'Operations', name: '运营员1'},
-                            {id: 'lala', name: 'lala1'}
-                        ]
-                    },
-                    {
-                        id: 'basicData', name: '基础数据', roles: [
-                            {id: 'admin', name: '管理员2', effect: 'all'},
-                            {id: 'Operations', name: '运营员2'},
-                            {id: 'lala', name: 'lala2'}
-                        ]
-                    },
-                    {
-                        id: 'businessService', name: '商家服务', roles: [
-                            {id: 'admin', name: '管理员3', effect: 'all'},
-                            {id: 'Operations', name: '运营员3'},
-                            {id: 'lala', name: 'lala3'}
-                        ]
-                    },
-                    {
-                        id: 'contentOperation', name: '内容运营', roles: [
-                            {id: 'admin', name: '管理员4', effect: 'all'},
-                            {id: 'Operations', name: '运营员4'},
-                            {id: 'lala', name: 'lala4'}
-                        ]
-                    }, {
-                        id: 'thirdPartyService', name: '第三方服务', roles: [
-                            {id: 'admin', name: '管理员4', effect: 'all'},
-                            {id: 'Operations', name: '运营员4'},
-                            {id: 'lala', name: 'lala4'}
-                        ]
-                    },
-                ];
-                $scope.$apply();
-            }, 400);
-
-        };
-
-        // 获取业务信息
-        function fetchBusinessData() {
-            setTimeout(function () {
-                vm.business = [
-                    {
-                        id: 'scenic',
-                        name: '景区',
-                        items: [
-                            {
-                                id: '1',
-                                name: '三台山'
-                            }, {
-                                id: '2',
-                                name: '三台山'
-                            }, {
-                                id: '3',
-                                name: '三台山'
-                            }, {
-                                id: '4',
-                                name: '三台山'
-                            }
-                        ]
-                    },
-                    {
-                        id: 'hotel',
-                        name: '酒店',
-                        items: [
-                            {
-                                id: '5',
-                                name: '三台山'
-                            }, {
-                                id: '6',
-                                name: '三台山'
-                            }, {
-                                id: '7',
-                                name: '三台山'
-                            }, {
-                                id: '8',
-                                name: '三台山'
-                            }
-                        ]
-                    }, {
-                        id: 'cloudCard',
-                        name: '云名片',
-                        items: [
-                            {
-                                id: '9',
-                                name: '三台山'
-                            }, {
-                                id: '10',
-                                name: '三台山'
-                            }, {
-                                id: '11',
-                                name: '三台山'
-                            }, {
-                                id: '12',
-                                name: '三台山'
-                            }
-                        ]
-                    }, {
-                        id: 'farmhouse',
-                        name: '农家院',
-                        items: [
-                            {
-                                id: '13',
-                                name: '三台山'
-                            }, {
-                                id: '14',
-                                name: '三台山'
-                            }, {
-                                id: '15',
-                                name: '三台山'
-                            }, {
-                                id: '16',
-                                name: '三台山'
-                            }
-                        ]
-                    },
-                ];
-                $scope.$apply();
-            }, 500);
+        // 获取邀请权限信息失败
+        function fetchInviteAuthData() {
+            $http({
+                url: vm.apiUrls.inviteAuth.url,
+                method: vm.apiUrls.inviteAuth.type
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    vm.inviteAuth = res.data.data;
+                } else{
+                    console.error(res.data.msg || '获取邀请权限信息失败');
+                }
+            }, function(res){
+                console.error(res.data.msg);
+            });
         }
 
 

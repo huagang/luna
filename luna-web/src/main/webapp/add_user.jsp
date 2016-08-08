@@ -53,11 +53,11 @@
                 <div class='form-input'>
                     <label>权限模块:</label>
                     <div class="radio-wrapper">
-                        <span class='ng-hide' ng-repeat="module in user.moduleOption" ng-show="user.moduleOption.length > 1">
+                        <span class='ng-hide' ng-repeat="module in user.inviteAuth" ng-show="user.inviteAuth.length > 1">
                             <input type="radio" id="{{module.id}}" value="{{module.id}}" ng-model="user.data.module" ng-change="user.handleModuleChange()"/>
                             <label class="module-name" for="{{module.id}}">{{module.name}}</label>
                         </span>
-                        <span class="ng-hide" ng-show="user.moduleOption.length === 1">{{user.moduleOption[0].name}}</span>
+                        <span class="ng-hide" ng-show="user.inviteAuth.length === 1">{{user.inviteAuth[0].name}}</span>
                     </div>
                 </div>
                 <div class='form-input'>

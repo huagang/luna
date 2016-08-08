@@ -49,7 +49,7 @@
                             </div>
                             <!--用户搜索 end-->
                             <!--   添加用户按钮 -->
-                            <a class="button" id='useradd' target="_blank" href="./platform/user/add">添加用户</a>
+                            <a class="button" id='useradd' target="_blank" href="<%=request.getContextPath() %>/platform/user/invite">添加用户</a>
                             <!--用户列表 start-->
                             <div class="user-list">
 
