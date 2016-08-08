@@ -52,6 +52,7 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
     public void createUserRoleInfo(LunaUserRole lunaUserRole) {
         Document document = userRole2Document(lunaUserRole);
         document.put(LunaUserRoleTable.FIELD_USER_ID, lunaUserRole.getUserId());
+        document.put(LunaUserRoleTable.FIELD_LUNA_NAME, lunaUserRole.getLunaName());
         lunaUserRoleCollection.insertOne(document);
     }
 
@@ -99,7 +100,6 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
 
     private Document userRole2Document(LunaUserRole lunaUserRole) {
         Document document = new Document();
-        document.put(LunaUserRoleTable.FIELD_LUNA_NAME, lunaUserRole.getLunaName());
         document.put(LunaUserRoleTable.FIELD_ROLE_ID, lunaUserRole.getRoleId());
         document.put(LunaUserRoleTable.FIELD_EXTRA, lunaUserRole.getExtra());
         document.put(LunaUserRoleTable.FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));

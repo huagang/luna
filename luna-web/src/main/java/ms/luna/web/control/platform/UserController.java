@@ -6,6 +6,7 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaUserService;
 import ms.luna.biz.table.LunaRoleCategoryTable;
 import ms.luna.biz.table.LunaRoleTable;
+import ms.luna.biz.table.LunaUserRoleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.CommonURI;
@@ -180,7 +181,25 @@ public class UserController extends BasicController {
     @ResponseBody
     public JSONObject submitUpdateUserRole(@PathVariable String id, HttpServletRequest request) {
 
-        return FastJsonUtil.sucess("success");
+        int roleId = RequestHelper.getInteger(request, "role_id");
+        String extra = RequestHelper.getString(request, "extra");
+
+        if(roleId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "角色不合法");
+        }
+        if(StringUtils.isBlank(extra)) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "选项不合法");
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(LunaUserRoleTable.FIELD_USER_ID, id);
+        jsonObject.put(LunaUserRoleTable.FIELD_ROLE_ID, roleId);
+        jsonObject.put(LunaUserRoleTable.FIELD_EXTRA, extra);
+        try {
+            return lunaUserService.updateUserRole(jsonObject);
+        } catch (Exception ex) {
+            logger.error("Failed to submit update user role", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "edit")
