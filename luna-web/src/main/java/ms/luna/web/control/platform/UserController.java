@@ -6,6 +6,7 @@ import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaUserService;
 import ms.luna.biz.table.LunaRoleCategoryTable;
 import ms.luna.biz.table.LunaRoleTable;
+import ms.luna.biz.table.LunaUserRoleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.CommonURI;
@@ -101,6 +102,7 @@ public class UserController extends BasicController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("emails", emails);
         jsonObject.put("role_id", roleId);
+        jsonObject.put("webAddr", CommonURI.getAbsoluteUrlForServletPath(request, CommonURI.REGITSTER_SERVLET_PATH));
         jsonObject.put(LunaRoleTable.FIELD_CATEGORY_ID, categoryId);
         jsonObject.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
         logger.error(jsonObject);
@@ -112,44 +114,6 @@ public class UserController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
         return FastJsonUtil.sucess("");
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/register")
-    public ModelAndView registerUser(@RequestParam(required = true, value = "token") String token,
-                                     HttpServletRequest request) {
-        JSONObject result = lunaUserService.isTokenValid(token);
-        if(result.getString("code").equals("0")) {
-            return buildModelAndView("register");
-        } else {
-            return buildModelAndView("error");
-        }
-
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
-    @ResponseBody
-    public JSONObject submitRegisterUser(@RequestParam(required = true, value = "token") String token,
-                                         HttpServletRequest request) {
-        String lunaName = RequestHelper.getString(request, "userName");
-        String password = RequestHelper.getString(request, "password");
-
-        if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
-            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码不能为空");
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("luna_name", lunaName);
-        jsonObject.put("password", password);
-        jsonObject.put("token", token);
-
-        try {
-            lunaUserService.registerUser(jsonObject);
-        } catch (Exception ex) {
-            logger.error("Failed to register user", ex);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "注册失败");
-        }
-
-        return FastJsonUtil.sucess("success");
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
@@ -181,7 +145,25 @@ public class UserController extends BasicController {
     @ResponseBody
     public JSONObject submitUpdateUserRole(@PathVariable String id, HttpServletRequest request) {
 
-        return FastJsonUtil.sucess("success");
+        int roleId = RequestHelper.getInteger(request, "role_id");
+        String extra = RequestHelper.getString(request, "extra");
+
+        if(roleId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "角色不合法");
+        }
+        if(StringUtils.isBlank(extra)) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "选项不合法");
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(LunaUserRoleTable.FIELD_USER_ID, id);
+        jsonObject.put(LunaUserRoleTable.FIELD_ROLE_ID, roleId);
+        jsonObject.put(LunaUserRoleTable.FIELD_EXTRA, extra);
+        try {
+            return lunaUserService.updateUserRole(jsonObject);
+        } catch (Exception ex) {
+            logger.error("Failed to submit update user role", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "edit")

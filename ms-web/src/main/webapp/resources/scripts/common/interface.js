@@ -20,9 +20,11 @@ var Inter = function() {
                 deleteArticle: context + "/manage/article.do?method=delete_article",//删除文章
                 readPoi: context + '', //TODO 读取poi数据信息
                 //编辑器上传图片
-                uploadImageInArtcle: context + "/add_poi.do?method=upload_thumbnail",//上传图片
-                uploadVideoInArtcle: context + "/add_poi.do?method=upload_video",//上传视频
-                
+                //uploadImageInArtcle: context + "/add_poi.do?method=upload_thumbnail",//上传图片
+                //uploadVideoInArtcle: context + "/add_poi.do?method=upload_video",//上传视频
+                uploadImageInArtcle: "/data/poi/thumbnail/upload",//上传图片
+                uploadVideoInArtcle: "/data/poi/video/upload",//上传视频
+
                 //微景展操作
                 createApp: context + '/manage/app.do?method=create_app',  //创建微景展
                 updateApp: context + '/manage/app.do?method=update_app',  //更新微景展信息

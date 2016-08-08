@@ -74,7 +74,6 @@ public class LunaLoginFilter implements Filter {
 
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            String uri = httpServletRequest.getRequestURI();
             String contextPath = httpServletRequest.getContextPath();
             String servletPath = httpServletRequest.getServletPath();
 

@@ -625,10 +625,11 @@ public class CrmController extends BasicController {
      * @throws IOException
      */
     // 原Api接口:/manage_merchant.do?method=upload_thumbnail_add
-    @RequestMapping(method = RequestMethod.POST, value = "/uploadThumbnail")
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
     @ResponseBody
-    public JSONObject uploadThumbnailAdd(@RequestParam(required = true, value = "thumbnail_fileup_add") MultipartFile file,
-                                   HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String uploadThumbnail(
+            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
             String orignalFileName = file.getOriginalFilename();
@@ -641,14 +642,13 @@ public class CrmController extends BasicController {
                     localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
             MsLogger.debug("method:uploadLocalFile2Cloud, result from service: " + result.toString());
 
-            return result;
+            return result.toString();
         } catch (Exception e) {
             MsLogger.error(e);
-            return FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e));
+            return FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e)).toString();
         }
-        // super.uploadLocalFile2Cloud(request, response, file,
-        // COSUtil.picAddress);
     }
+
 
     /**
      * 加载商户状态列表（to be 改进）

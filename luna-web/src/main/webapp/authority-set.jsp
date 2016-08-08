@@ -43,13 +43,12 @@
                     <div class="main-hd"><h3>组权限管理</h3></div>
                     <div>
                         <ol class="breadcrumb" style="background-color: #fff;">
-                            <li><a href="<%=request.getContextPath() %>/authority.do?method=init_authority">&lt;权限管理</a></li>
-                            <li class="active">${ms_role_name}</li>
+                            <li><a href="<%=request.getContextPath() %>/platform/authority">&lt;权限管理</a></li>
+                            <li class="active">${roleName}</li>
                         </ol>
                     </div>
                     <div class="main-bd">
                         <!--权限管理列表 start-->
-                        <form:form commandName="authoritySetModel" method="post" action="${basePath}/authority_set.do?method=save">
 	                        <table class="table">
 	                            <thead>
 	                                <tr>
@@ -58,13 +57,13 @@
 	                                </tr>
 	                            </thead>
 	                            <tbody>
-	                            	<c:forEach items="${authoritySetModel.modules}" var="varModule" varStatus="varModuleStatus"> 
+	                            	<c:forEach items="${moduleAndMenu}" var="varModule">
 				                 			<tr>
-			                                    <th>${varModule["label"]}</th>
+			                                    <th>${varModule["name"]}</th>
 			                                    <td>
-			                                    	<c:forEach items="${varModule['functions']}" var="varFunction" varStatus="varFunctionStatus">
+			                                    	<c:forEach items="${varModule['menuArray']}" var="menu">
 														 <label class="checkbox-inline">
-														 	<form:checkbox path="checkeds" disabled="${varFunction['editable'] == false}" value="${varFunction['value']}" label="${varFunction['label']}"/>
+                                                             <input type="checkbox" value="${menu.id}" ${menu.selected == true ? "checked='checked'" : ""}>${menu.name}
 														 </label>
 			                                    	</c:forEach>
 			                                    </td>
@@ -72,19 +71,16 @@
 									</c:forEach>
 	                            </tbody>
 	                        </table>
-	                       <c:if test="${ms_role_code!='luna_senior_admin'}">
-	                        	<button id="btn-save" type="submit">保存</button>
-	                        	<a href="javascript:document.getElementById('reset').click();" id="clc">取消</a>
-	                        	<button type="reset" id="reset" value="Reset" style="display:none">Reset</button>
-	                       </c:if>
-	                        <!--权限管理列表 end-->
-                        </form:form>
+
                     </div>
                 </div>
                 <!--主题内容 end-->
             </div>
         </div>
     </div>
+    <script>
+        var moduleAndMenu = ${moduleAndMenu};
+    </script>
     <!--中间区域内容 end-->
     <!--底部版权 start-->
    <jsp:include page="/templete/bottom.jsp"/>

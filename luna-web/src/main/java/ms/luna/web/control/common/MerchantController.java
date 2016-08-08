@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -169,6 +171,34 @@ public class MerchantController extends BasicController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html; charset=UTF-8");
         return new ModelAndView(SUCCESS_URI);
+    }
+
+    /**
+     * 异步上传图片
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    @ResponseBody
+    public String uploadThumbnail(
+            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try{
+            String orignalFileName = file.getOriginalFilename();
+            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String fileName = "/"+sdf.format(date) + "/" + VbMD5.generateToken() + ext;
+            byte[] bytes = file.getBytes();// 获得文件内容
+            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
+                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
+            return result.toString();
+        } catch (Exception e) {
+            MsLogger.debug("Failed to upload thumbnail: " + e.getMessage());
+            return FastJsonUtil.error("-1", "Failed to upload thumbnail: ").toString();
+        }
     }
 
     /**

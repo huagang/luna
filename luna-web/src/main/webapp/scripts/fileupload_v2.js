@@ -73,7 +73,8 @@ var FileUploader = {
 		data.append(this._formNamesForFile[type],file);
 		$.ajax({
 			//处理文件上传操作的服务器端地址
-			url:this._host+"/add_poi.do?method=upload_"+type,
+			//url:this._host+"/add_poi.do?method=upload_"+type,
+			url: "/data/poi/" + type + "/upload",
 			type:'POST',
 			contentType: false,
 			data: data,

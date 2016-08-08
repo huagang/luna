@@ -173,22 +173,18 @@ public class PoiAddController extends BasicController {
      * @param response
      * @throws IOException
      */
-    // 原api: /add_poi.do?method=upload_thumbnail
-    @RequestMapping(method = RequestMethod.POST, value = "/uploadThumbnail")
-    public void uploadThumbnail(
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    @ResponseBody
+    public String uploadThumbnail(
             @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
         if (ext == null) {
-            response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
-            response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
-            response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
-            response.setStatus(200);
-            return;
+            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
         }
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         String fileNameInCloud = VbMD5.generateToken() + ext;
-        super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud);
+        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
     }
 
     /**
@@ -197,23 +193,19 @@ public class PoiAddController extends BasicController {
      * @param response
      * @throws IOException
      */
-    // 原api: /add_poi.do?method=upload_audio
-    @RequestMapping(method = RequestMethod.POST, value = "/uploadAudio")
-    public void uploadAudio(
+    @RequestMapping(method = RequestMethod.POST, value = "/audio/upload")
+    @ResponseBody
+    public String uploadAudio(
             @RequestParam(required = true, value = "audio_fileup") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
         if (ext == null) {
-            response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
-            response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
-            response.getWriter().print(FastJsonUtil.error("-1", "文件扩展名有错误"));
-            response.setStatus(200);
-            return;
+            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
         }
 
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         String fileNameInCloud = VbMD5.generateToken() + ext;
-        super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud);
+        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
     }
 
     /**
@@ -222,19 +214,16 @@ public class PoiAddController extends BasicController {
      * @param response
      * @throws IOException
      */
-    // 原api: /add_poi.do?method=upload_video
-    @RequestMapping(method = RequestMethod.POST, value = "/uploadVideo")
+    @RequestMapping(method = RequestMethod.POST, value = "/video/upload")
     @ResponseBody
-    public JSONObject uploadVideo(
+    public String uploadVideo(
             @RequestParam(required = true, value = "video_fileup") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         // super.uploadLocalFile2Cloud(request, response, file, pic_address);
-        response.setHeader(VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_KEY, VbConstant.ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);
-        response.setContentType(VbConstant.NORMAL_CONTENT_TYPE);
         try {
             String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
             if (ext == null) {
-                return FastJsonUtil.error("4", "文件扩展名有错误");
+                return FastJsonUtil.error("4", "文件扩展名有错误").toString();
             }
             String fileName = VbMD5.generateToken() + ext;// 生成文件名
             String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
@@ -271,7 +260,7 @@ public class PoiAddController extends BasicController {
             vodJson.put("name", file.getOriginalFilename());
             vodJson.put("size", file.getSize());
 
-            return vodJson;
+            return vodJson.toString();
         } catch (Exception e) {
             JSONObject vodJson = FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
             vodJson.put("original", file.getOriginalFilename());
@@ -280,7 +269,7 @@ public class PoiAddController extends BasicController {
             vodJson.put("size", file.getSize());
             vodJson.put("type", "");
             vodJson.put("state", "FAIL");
-            return vodJson;
+            return vodJson.toString();
 
         }
     }

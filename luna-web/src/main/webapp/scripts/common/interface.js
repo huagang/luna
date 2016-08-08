@@ -27,7 +27,11 @@ var Inter = function() {
 
                 poiCheckForEnglish:{url:  context + '/data/poi/checkPoi?poiId={0}&lang={1}',type:'GET'},//英文poi检查
                 poiConfirmArea:'',//确认poi所在区域是否正确
-                
+
+                poiThumbnailUpload:{url:"/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
+                poiAudioUpload:{url:"/data/poi/audio/upload",type:"POST"}, //poi音频上传
+                poiVideoUpload:{url:"/data/poi/video/upload",type:"POST"}, //poi视频上传
+
                 //CRM管理
                 crmInit:{url: context + "/content/crm",type:"GET"},//CRM管理页面
                 crmAddPage:{url:  context + '/content/crm/initAddPage',type:'GET'},//Crm添加页面
@@ -45,6 +49,7 @@ var Inter = function() {
                 merchantRegist:{url: context + "/common/merchant",type:"POST"},// 注册
                 merchantCheckName:{url: context + "/common/merchant/checkName",type:"GET"}, //检查用户名
                 merchantSuccess:{url: context + "common/merchant/successPage",type:"GET"}, //注册成功页面
+                crmThumbnailUpload:{url:"/content/crm/thumbnail/upload",type:"POST"}, // 上传图片
 
                 // 业务数据关系管理
                 bizRelationInit:{url: context + "/content/businessRelation",type:"GET"}, // 管理页面初始化
@@ -77,8 +82,10 @@ var Inter = function() {
                 deleteArticle: {url: context + "/manage/article.do?method=delete_article",type:''},//删除文章
 
                 //编辑器上传图片
-                uploadImageInArtcle:{url:  context + "/add_poi.do?method=upload_thumbnail",type:''},//上传图片
-                uploadVideoInArtcle: {url: context + "/add_poi.do?method=upload_video",type:''},//上传视频
+                //uploadImageInArtcle:{url:  context + "/add_poi.do?method=upload_thumbnail",type:''},//上传图片
+                //uploadVideoInArtcle: {url: context + "/add_poi.do?method=upload_video",type:''},//上传视频
+                uploadImageInArtcle:{url:  "/data/poi/thumbnail/upload",type:'POST'},//上传图片
+                uploadVideoInArtcle: {url: "/data/poi/thumbnail/video",type:'POST'},//上传视频
                 
                 //微景展操作
                 createApp: {url: context + '/manage/app.do?method=create_app',type:''},  //创建微景展
