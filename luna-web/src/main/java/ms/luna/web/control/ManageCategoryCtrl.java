@@ -106,7 +106,7 @@ public class ManageCategoryCtrl {
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 
 			// categoryService
-			JSONObject result = categoryService.deleteCategory(param.toString(), msUser);
+			JSONObject result = categoryService.deleteCategory(param.toString());
 
 			if ("0".equals(result.getString("code"))) {
 				pulldownCtrl.refreshCategorysCache(category_id, "", PulldownCtrl.REFRESHMODE.DELETE);//更新缓存
@@ -179,7 +179,7 @@ public class ManageCategoryCtrl {
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			// categoryService
-			JSONObject result = categoryService.addCategory(param.toString(), msUser);
+			JSONObject result = categoryService.addCategory(param.toString());
 //			if (!"0".equals(result.getString("code"))) {
 //				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {
@@ -270,7 +270,7 @@ public class ManageCategoryCtrl {
 			param.put("category_nm_en", category_nm_en);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			// categoryService
-			JSONObject result = categoryService.updateCategory(param.toString(), msUser);
+			JSONObject result = categoryService.updateCategory(param.toString());
 //			if (!"0".equals(result.getString("code"))) {
 //				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {

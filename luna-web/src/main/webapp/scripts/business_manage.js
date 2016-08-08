@@ -236,7 +236,7 @@ function update_business() {
         "business_code": business_code,
     };
     $.ajax({
-        url: window.urls.business + '/' + business_id,
+        url: window.urls.business.url + '/' + business_id,
         type: 'PUT',
         async: true,
         data: request_data,

@@ -8,6 +8,7 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.util.VbUtility;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.PulldownController;
@@ -113,11 +114,8 @@ public class CategoryController {
             JSONObject param = JSONObject.parseObject("{}");
             param.put("category_id", category_id);
 
-            HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
-
             // categoryService
-            JSONObject result = categoryService.deleteCategory(param.toString(), msUser);
+            JSONObject result = categoryService.deleteCategory(param.toString());
 
             if ("0".equals(result.getString("code"))) {
                 pulldownController.refreshCategorysCache(category_id, "", PulldownCtrl.REFRESHMODE.DELETE);//更新缓存
@@ -178,10 +176,9 @@ public class CategoryController {
             JSONObject param = JSONObject.parseObject("{}");
             param.put("category_nm_zh", category_nm_zh);
             param.put("category_nm_en", category_nm_en);
-            HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+
             // categoryService
-            JSONObject result = categoryService.addCategory(param.toString(), msUser);
+            JSONObject result = categoryService.addCategory(param.toString());
 //			if (!"0".equals(result.getString("code"))) {
 //				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {
@@ -215,7 +212,7 @@ public class CategoryController {
      */
     @SuppressWarnings("unchecked")
 //    @RequestMapping(params = "method=update_category")
-    @RequestMapping(method = RequestMethod.GET, value = "")
+    @RequestMapping(method = RequestMethod.PUT, value = "")
     @ResponseBody
     public JSONObject updateCategory(HttpServletRequest request, HttpServletResponse response) {
 
@@ -254,9 +251,8 @@ public class CategoryController {
             param.put("category_id", category_id);
             param.put("category_nm_zh", category_nm_zh);
             param.put("category_nm_en", category_nm_en);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
             // categoryService
-            JSONObject result = categoryService.updateCategory(param.toString(), msUser);
+            JSONObject result = categoryService.updateCategory(param.toString());
 //			if (!"0".equals(result.getString("code"))) {
 //				response.getWriter().print(FastJsonUtil.error("-1", result.getString("msg")));
 //			} else {

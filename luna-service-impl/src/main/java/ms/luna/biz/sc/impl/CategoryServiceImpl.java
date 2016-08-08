@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public JSONObject deleteCategory(String json, MsUser msUser) {
+	public JSONObject deleteCategory(String json) {
 		JSONObject result = null;
 		try {
 			result = categoryBL.deleteCategory(json);
@@ -39,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public JSONObject addCategory(String json, MsUser msUser) {
+	public JSONObject addCategory(String json) {
 		JSONObject result = null;
 		try {
 			result = categoryBL.addCategory(json);
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public JSONObject updateCategory(String json, MsUser msUser) {
+	public JSONObject updateCategory(String json) {
 		JSONObject result = null;
 		try {
 			result = categoryBL.updateCategory(json);
