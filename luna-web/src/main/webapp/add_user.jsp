@@ -37,7 +37,7 @@
             <div class="main">
                 <div class="main-hd"><h3>{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="./manage_user.do?method=init">&lt;用户管理</a></li>
+                    <li><a href="<%=request.getContextPath()%>/platform/user">&lt;用户管理</a></li>
                     <li class="active">{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
@@ -49,7 +49,7 @@
                     </span>
                     <input id="email-input" ng-model="user.data.email" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
                 </div>
-
+                <p class="warn">{{user.data.invalidEmail ? '邮箱格式不正确' : ''}}</p>
                 <div class='form-input'>
                     <label>权限模块:</label>
                     <div class="radio-wrapper">
@@ -65,34 +65,36 @@
                     <select class="ng-hide" ng-model="user.data.role" ng-change="user.handleRoleChange()" ng-show="user.roles.length !== 1">
                         <option class="ng-hide" ng-show="user.roles.length === 0" disabled="disabled">无</option>
                         <option class="ng-hide" ng-repeat="role in user.roles" value="{{role.id}}" ng-show="user.roles.length>0">{{role.name}}</option>
+
                     </select>
                     <span class="ng-hide" ng-show="user.roles.length === 1">{{user.roles[0].name}}</span>
                 </div>
 
-                <div class='form-input ng-hide' ng-show="! user.data.choiceType ">
+                <div class='form-input ng-hide' ng-show="! user.choiceType ">
                     <label>{{user.extraData.label}}</label>
                     <select class="ng-hide" ng-model="user.data.extra.value" ng-show="user.extraData.optionLength > 1">
-                        <option ng-repeat="(value, label) in user.dataSrcOption" value="{{value}}">{{label}}</option>
+                        <option ng-repeat="(value, label) in user.extraData.options" value="{{value}}">{{label}}</option>
                     </select>
                     <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
                 </div>
 
-                <div class="form-input bussiness-container" ng-show="user.choiceType">
+                <div class="form-input" ng-show="user.choiceType">
                     <label>{{user.extraData.label}}</label>
-                    <div class="ng-hide" ng-show="user.business.length > 1 || user.business[0].items.length > 1">
-                        <div class='business-group' ng-repeat="business in user.business">
-                            <label>{{business.name}}</label>
+                    <div class="bussiness-container">
+                        <div class="ng-hide" ng-show="user.business.length > 1">
+                            <div class='business-group' ng-repeat="business in user.business">
+                                <label>{{business.name}}</label>
                         <span class="business-wrapper" ng-repeat="item in business.items">
                             <input class='business' type="{{user.choiceType}}" ng-model="user.data.business[item.id]"
                                    ng-change="user.handleOptionsChange()" id="{{item.id}}" value="{{item.id}}"/>
                             <label for="{{item.id}}" class="business-name" title="{{item.name}}">{{item.name}}</label>
                         </span>
+                            </div>
                         </div>
+                        <span class="ng-hide" ng-show="user.business.length === 1 && user.business[0].items.length === 1">
+                            {{user.business[0].items[0].name}}</span>
                     </div>
-                    <span class="ng-hide" ng-show="user.business.length === 1 && user.business[0].items.length === 1">
-                        {{user.business[0].items[0].name}}</span>
                 </div>
-
                 <div class="footer">
                     <button class="button" ng-click="user.handleInviteUser()">邮箱邀请</button>
                 </div>

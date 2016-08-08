@@ -65,7 +65,7 @@ var Inter = function() {
 
                 // 业务
                 business: {url: context + '/content/business',type:''}, // 业务相关 POST PUT
-                getBusinessList:{url:  context + '/common/business',type:''}, // 获取该用户能够选择的业务列表
+                getBusinessList:{url:  context + '/common/business?data',type:'GET'}, // 获取该用户能够选择的业务列表
 
             	//文章操作
                 article: {url: context + '/content/article',type:''},
@@ -96,6 +96,10 @@ var Inter = function() {
                 // 用户注册
                 registrationPage:{url:"/comomon/registration/token/{0}",type:"GET"},//注册页面
                 registrationRegist:{url:"/comomon/registration",type:"POST"}, // 注册
+
+                // 权限
+                fetchUserAuth: {url: '', type: 'GET'}, // 获取用户权限
+                inviteUsers: {url: '', type: 'POST'}, // 邀请用户
 
                 inviteAuth: {url: context + '/platform/user/invite', type: 'GET'},
                 // 省市县\分类下拉列表

@@ -90,3 +90,9 @@
     margin-bottom: 0;
 
 }
+.warn{
+    width: 100%;
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
