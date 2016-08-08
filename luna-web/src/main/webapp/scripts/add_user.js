@@ -169,7 +169,7 @@
         function handleRoleChange() {
             var extra_value;
             vm.roles.some(function (item) {
-                if (item.id === vm.data.role) {
+                if (item.id == vm.data.role) {
                     extra_value = item.extra_value;
                     return true;
                 }
@@ -179,9 +179,10 @@
             vm.data.business = {};
             if (vm.choiceType === 'checkbox' && extra_value === 0) {
                 // 全选
+                vm.businessSelectAll = true;
                 Object.keys(vm.business).forEach(function (item) {
                     vm.business[item].forEach(function (subItem) {
-                        vm.data.business[subItem.business_id] = true;
+                        vm.data.business[subItem.business_id] = 'checked';
                     });
                 });
             }
@@ -196,16 +197,21 @@
                 vm.data.business[id] = vm.data.business[id] ? '' : 'checked';
             }
             console.log(vm.data.business);
+            vm.businessSelectAll = false;
         }
 
         function transformBusinessData(){
             if( vm.extraData && vm.extraData.type === 'business'){
                 vm.data.extra.value = [];
-                Object.keys(vm.data.business).forEach(function(item, index) {
-                    if(vm.data.business[item]){
-                        vm.data.extra.value.push(parseInt(item));
-                    }
-                });
+                if(vm.businessSelectAll){
+                    vm.data.extra.value = [0];
+                } else{
+                    Object.keys(vm.data.business).forEach(function(item, index) {
+                        if(vm.data.business[item]){
+                            vm.data.extra.value.push(parseInt(item));
+                        }
+                    });
+                }
             }
         }
 
@@ -248,12 +254,6 @@
                 vm.data.module = roleData.category_id;
                 vm.data.role = roleData.role_id + '';
                 vm.data.extra = roleData.extra;
-                if(vm.data.extra.type === 'business' && vm.data.extra.length > 0){
-                    vm.data.business = {};
-                    vm.data.extra.forEach(function(item){
-                        vm.data.business[item] = 'checked';
-                    });
-                }
             }
         }
 
@@ -302,7 +302,7 @@
         function fetchInviteAuthData() {
             $http({
                 url: vm.apiUrls.inviteAuth.url,
-                method: vm.apiUrls.inviteAuth.type,
+                method: vm.apiUrls.inviteAuth.type
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.inviteAuth = res.data.data;
@@ -311,10 +311,16 @@
                             item.extra = JSON.parse(item.extra);
                         }
 
-                        if(vm.userId){
-                            if(item.id === vm.data.module){
-                                vm.roles = item.roleArray;
-                                vm.extraData = item.extra;
+                        if(vm.userId && item.id === vm.data.module){
+                            vm.roles = item.roleArray;
+                            vm.extraData = item.extra;
+                            if(vm.extraData.type ==='business'){
+                                if(vm.extraData.mode === 0){
+                                    vm.choiceType = 'checkbox';
+                                } else if(vm.extraData.mode === 1){
+                                    vm.choiceType = 'radio';
+                                }
+
                             }
                         }
                     });
@@ -351,6 +357,8 @@
                         && vm.business[Object.keys(vm.business)[0]].length === 1){
                         vm.businessShowType = 'single';
                     }
+
+
                 }
                 else{
                     console.error(res.data.msg || '获取业务列表失败');
