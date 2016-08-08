@@ -107,12 +107,11 @@ public class UserController extends BasicController {
         jsonObject.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
 
         try {
-            lunaUserService.inviteUser(user.getUniqueId(), jsonObject);
+            return lunaUserService.inviteUser(user.getUniqueId(), jsonObject);
         } catch (Exception ex) {
             logger.error("邀请用户失败", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
-        return FastJsonUtil.sucess("");
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
