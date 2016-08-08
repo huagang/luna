@@ -37,7 +37,7 @@ public class BusinessRelationController extends BasicController {
     @Autowired
     private ManageBusinessTreeService manageBusinessTreeService;
 
-    @Resource(name="pulldownCtrl")
+    @Autowired
     private PulldownController pulldownController;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
