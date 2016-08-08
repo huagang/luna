@@ -29,7 +29,6 @@ public class TokenController {
     public JSONObject verifyToken(@RequestParam(required = true) String token,
                                   @RequestParam(required = false) String uniqueId) {
 
-
         boolean isValid = false;
         try {
             if (StringUtils.isBlank(uniqueId)) {

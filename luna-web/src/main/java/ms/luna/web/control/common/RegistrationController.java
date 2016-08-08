@@ -21,7 +21,7 @@ import java.io.IOException;
  * Created by greek on 16/8/7.
  */
 @Controller
-@RequestMapping("/common/registration")
+@RequestMapping("/common/register")
 public class RegistrationController extends BasicController {
 
 //    @Autowired
@@ -32,17 +32,11 @@ public class RegistrationController extends BasicController {
 
     private static int TOKEN_LENGTH = 46; //token长度
 
-    @RequestMapping(method = RequestMethod.GET, value = "/token/{token}")
-    public ModelAndView init_regist(
-            @PathVariable("token") String token,
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public ModelAndView register(
+            @RequestParam(required = true, value = "token") String token,
             HttpServletRequest request, HttpServletResponse response){
         try {
-//            JSONObject json = JSONObject.parseObject("{}");
-//            json.put("token", token);
-            // token检查 -- token目前可能会有变化,暂时不做长度检查
-//            if(token.isEmpty() || token.length() != TOKEN_LENGTH){
-//                return new ModelAndView("/error.jsp");
-//            }
 
             JSONObject result = lunaUserService.isTokenValid(token);
             MsLogger.debug("method:isTokenValid, result from service: " + result.toString());

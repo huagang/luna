@@ -31,7 +31,7 @@
                         	点击下面的链接设置账户名密码进行确认，设置成功之后，您就可以登陆皓月平台进行工作管理了：
                     </p>
                     <p style="line-height: 2em;margin: 12px 0;">
-                        <a href="${webAddr}/userRegist.do?method=init_regPage&token=${token}" id="link-address" style="color: #004FA8;text-decoration: none;word-wrap:break-word;word-break:break-all;overflow:hidden;">${webAddr}/userRegist.do?method=init_regPage&token=${token}</a>
+                        <a href="${webAddr}?token=${token}" id="link-address" style="color: #004FA8;text-decoration: none;word-wrap:break-word;word-break:break-all;overflow:hidden;">${webAddr}?token=${token}</a>
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         	如果您的email不支持链接点击，请将上面的地址复制到浏览器（例如IE、Chrome）的地址栏进入皓月平台。
