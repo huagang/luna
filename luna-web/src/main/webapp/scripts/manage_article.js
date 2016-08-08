@@ -152,7 +152,8 @@ function ArticleController($scope, $rootScope, $http) {
         if (this.provinceOptions.length != 0) {
             return;
         }
-        var url = host + '/pulldown.do?method=load_provinces'
+        //var url = host + '/pulldown.do?method=load_provinces'
+        var url = Inter.getApiUrl().pullDownProvinces.url;
         $http.get(url).then(function success(response) {
                 var data = response.data;
                 if ('0' == data.code) {

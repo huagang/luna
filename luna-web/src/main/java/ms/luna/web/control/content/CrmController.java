@@ -7,17 +7,15 @@ import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
 import ms.luna.common.LunaUserSession;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
-import ms.luna.web.control.MerchantRegistCtrl;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.control.common.PulldownController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -41,7 +39,7 @@ public class CrmController extends BasicController {
     public static final String menu = "crm";
 
     @Autowired
-    private PulldownCtrl pulldownCtrl;
+    private PulldownController pulldownController;
     @Autowired
     private ManageMerchantService manageMerchantService;
 
@@ -68,8 +66,8 @@ public class CrmController extends BasicController {
 
         ModelAndView model = new ModelAndView("/manage_crm.jsp");
         model.addObject("basePath", request.getContextPath());
-        model.addObject("categoryMap", pulldownCtrl.loadCategorys());
-        model.addObject("provinces", pulldownCtrl.loadProvinces());
+        model.addObject("categoryMap", pulldownController.loadCategorys());
+        model.addObject("provinces", pulldownController.loadProvinces());
         model.addObject("merchantStatuMaps", this.loadMerchantStatus());
         model.addObject("luna_nm", luna_nm);
 
@@ -98,8 +96,8 @@ public class CrmController extends BasicController {
 
         ModelAndView model = new ModelAndView("/manage_crm_add.jsp");
         model.addObject("basePath", request.getContextPath());
-        model.addObject("categoryMap", pulldownCtrl.loadCategorys());
-        model.addObject("provinces", pulldownCtrl.loadProvinces());
+        model.addObject("categoryMap", pulldownController.loadCategorys());
+        model.addObject("provinces", pulldownController.loadProvinces());
         model.addObject("merchantStatuMaps", this.loadMerchantStatus());
         model.addObject("luna_nm", luna_nm);
 
@@ -130,8 +128,8 @@ public class CrmController extends BasicController {
 
         ModelAndView model = new ModelAndView("/manage_crm_edit.jsp");
         model.addObject("basePath", request.getContextPath());
-        model.addObject("categoryMap", pulldownCtrl.loadCategorys());
-        model.addObject("provinces", pulldownCtrl.loadProvinces());
+        model.addObject("categoryMap", pulldownController.loadCategorys());
+        model.addObject("provinces", pulldownController.loadProvinces());
         model.addObject("merchantStatuMaps", this.loadMerchantStatus());
         model.addObject("luna_nm", luna_nm);
         model.addObject("merchant_id", merchant_id);
@@ -662,7 +660,7 @@ public class CrmController extends BasicController {
         if (!lstMerchantStatus.isEmpty()) {
             return lstMerchantStatus;
         }
-        synchronized (PulldownCtrl.class) {
+        synchronized (PulldownController.class) {
             if (lstMerchantStatus.isEmpty()) {
                 Map<String, String> status5 = new LinkedHashMap<String, String>();
                 status5.put("status_id", VbConstant.MERCHANT_STATUS.CODE.待处理 + "");
