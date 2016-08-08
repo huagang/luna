@@ -157,10 +157,13 @@ video {
 }
 
 .img-wraper {
-    height: 150%;
+    height: 125%;
     width: 150%;
     margin-left: -25%;
-    margin-top: -25%;
+    margin-top: -12.5%;
+}
+.img-wraper img{
+    height:100% !important;
 }
 
 .component-group {
