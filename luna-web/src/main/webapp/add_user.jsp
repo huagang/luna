@@ -37,7 +37,7 @@
             <div class="main">
                 <div class="main-hd"><h3>{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="<%=request.getContextPath()%>/platform/user">&lt;用户管理</a></li>
+                    <li><a href="<%=request.getContextPath()%>/platform/user/invite">&lt;用户管理</a></li>
                     <li class="active">{{user.pagePurpose === 'edit' ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
@@ -112,7 +112,7 @@
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_user.js"></script>
 <script>
-    var roleData = ${roleData};
+    var roleData = "${roleData}";
 </script>
 </body>
 </html>

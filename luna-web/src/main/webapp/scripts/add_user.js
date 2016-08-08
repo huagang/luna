@@ -258,9 +258,10 @@
                 data.push('module_id', vm.data.module);
                 data.push('role_id', parseInt(vm.data.role));
                 data.push('extra', vm.data.extra);
+                var url = vm.userId ? vm.apiUrls.updateUserAuth : vm.apiUrls.inviteUsers;
                 $http({
-                    url: vm.apiUrls.inviteUsers.url,
-                    method: vm.apiUrls.inviteUsers.type,
+                    url: url.url,
+                    method: url.type,
                     headers: {
                         "Content-Type": undefined
                     }
@@ -304,10 +305,10 @@
                 if(res.data.total > 0){
                     vm.business = res.data.rows;
                 } else{
-                    console.error('获取业务列表失败');
+                    console.error(res.data.msg || '获取业务列表失败');
                 }
             }, function(res){
-                console.error('获取业务列表失败');
+                console.error(res.data.msg || '获取业务列表失败');
             })
         }
 

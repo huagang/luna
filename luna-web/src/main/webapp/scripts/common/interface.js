@@ -99,9 +99,12 @@ var Inter = function() {
 
                 // 权限
                 fetchUserAuth: {url: '', type: 'GET'}, // 获取用户权限
+                updateUserAuth: {url: '', type: 'PUT'}, // 更新用户权限
                 inviteUsers: {url: '', type: 'POST'}, // 邀请用户
 
-                inviteAuth: {url: context + '/platform/user/invite', type: 'GET'},
+                inviteAuth: {url: context + '/platform/user/invite?data', type: 'GET'}, // 获取邀请权限
+
+
                 // 省市县\分类下拉列表
                 pullDownProvinces:{url:"/common/pulldown/provinces",type:"GET"}, //省
                 pullDownCitys:{url:"/common/pulldown/citys",type:"GET"}, //市
