@@ -23,6 +23,8 @@
         // 操作 检查填写内容是否合法
         vm._checkValidation = _checkValidation;
 
+        vm.updateFormContent = updateFormContent;
+
         // 事件 点击红叉删除邮箱
         vm.handelDeleteEmail = handelDeleteEmail;
 
@@ -74,15 +76,19 @@
             vm.business = {};
             vm.choiceType = ''; // 'radio' or 'checkbox'
             vm.roles = [];
-            try{
-                vm.userId = location.href.match(/unique_id=(\w+)/)[1];
-            } catch(e){
-                vm.userId = '';
+            if(window.roleData){
+                try{
+                    vm.userId = location.href.match(/user\/(\w+)/)[1];
+                } catch(e){
+                    vm.userId = '';
+                }
             }
             vm.fetchInviteAuthData();
             vm.fetchBusinessData();
             vm.fetchUserData();
-        };
+
+
+        }
 
 
         function initSearch() {
@@ -238,23 +244,22 @@
 
         // 获取编辑用户的信息
         function fetchUserData(){
-            if(vm.userId){
-                $http({
-                    url: vm.apiUrls.fetchUserAuthData.url.format(vm.userId),
-                    type: vm.apiUrls.fetchUserAuthData.type
-                }).then(function(res){
-                    if(res.data.code === '0'){
-                        vm.authData = res.data.data;
-                    } else{
-                        console.error(res.data.msg || '获取用户权限信息失败');
-                    }
-                }, function(res){
-                    console.error(res.data.msg || '获取用户权限信息失败')
-                });
+            if(window.roleData){
+                vm.data.module = roleData.category_id;
+                vm.data.role = roleData.role_id + '';
+                vm.data.extra = roleData.extra;
+                if(vm.data.extra.type === 'business' && vm.data.extra.length > 0){
+                    vm.data.business = {};
+                    vm.data.extra.forEach(function(item){
+                        vm.data.business[item] = 'checked';
+                    });
+                }
             }
         }
 
+        function updateFormContent(){
 
+        }
 
         // 发送邮箱邀请的数据请求
         function handleInviteUser() {
@@ -293,7 +298,7 @@
             }
         }
 
-        // 获取邀请权限信息失败
+        // 获取邀请权限信息
         function fetchInviteAuthData() {
             $http({
                 url: vm.apiUrls.inviteAuth.url,
@@ -301,9 +306,16 @@
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.inviteAuth = res.data.data;
-                    vm.inviteAuth.forEach(function(item,index){
+                    vm.inviteAuth.forEach(function(item){
                         if(item.extra && typeof item.extra === 'string'){
                             item.extra = JSON.parse(item.extra);
+                        }
+
+                        if(vm.userId){
+                            if(item.id === vm.data.module){
+                                vm.roles = item.roleArray;
+                                vm.extraData = item.extra;
+                            }
                         }
                     });
                 } else{
