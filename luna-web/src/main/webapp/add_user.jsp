@@ -111,5 +111,8 @@
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_user.js"></script>
+<script>
+    var roleData = ${roleData};
+</script>
 </body>
 </html>

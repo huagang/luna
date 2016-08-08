@@ -8,6 +8,7 @@ import ms.luna.biz.table.LunaRoleCategoryTable;
 import ms.luna.biz.table.LunaRoleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.CommonURI;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -160,12 +163,41 @@ public class UserController extends BasicController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/invite")
+    @RequestMapping(method = RequestMethod.GET, value = "/invite", params = "data")
     @ResponseBody
     public JSONObject inviteUser(HttpServletRequest request) {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         JSONObject userRoleForCreate = lunaUserService.getUserRoleForCreate(user.getRoleId());
         return userRoleForCreate;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/invite")
+    public ModelAndView createUser() {
+        return buildModelAndView("add_user");
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @ResponseBody
+    public JSONObject submitUpdateUserRole(@PathVariable String id, HttpServletRequest request) {
+
+        return FastJsonUtil.sucess("success");
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "edit")
+    public ModelAndView updateUserRole(@PathVariable String id, HttpServletRequest request,
+                                       HttpServletResponse response) throws IOException {
+
+        ModelAndView modelAndView = buildModelAndView("add_user");
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        JSONObject userRoleForEdit = lunaUserService.getUserRoleForEdit(user.getRoleId(), id);
+        if(! userRoleForEdit.getString("code").equals("0")) {
+            response.sendRedirect(request.getContextPath() + "/500.jsp");
+        }
+        modelAndView.addObject("roleData", userRoleForEdit.getJSONObject("data"));
+        return modelAndView;
+    }
+
+
+
 
 }

@@ -38,7 +38,7 @@ public class BusinessTreeController extends BasicController {
     @Autowired
     private ManagePoiService managePoiService;
 
-    @Resource(name="pulldownCtrl")
+    @Autowired
     private PulldownController pulldownController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/businessTree/{business_id}")

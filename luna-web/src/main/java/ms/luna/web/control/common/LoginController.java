@@ -100,4 +100,11 @@ public class LoginController extends BasicController {
         return buildModelAndView("login");
 
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/authFail")
+    public ModelAndView authFail(HttpServletRequest request) {
+
+        return buildModelAndView("auth_failed");
+
+    }
 }
