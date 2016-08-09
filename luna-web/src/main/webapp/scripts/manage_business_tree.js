@@ -34,9 +34,8 @@ $(document).ready(function () {
 		};
 
 		$.ajax({
-			//url: host + '/manage_business_tree.do?method=async_search_businesses',
 			url: Inter.getApiUrl().bizRelationBizSearch.url,
-			type: 'GET',
+			type: Inter.getApiUrl().bizRelationBizSearch.type,
 			async: false,
 			data: param,
 			dataType: "json",
@@ -90,9 +89,8 @@ function createBusinessTree() {
 		"business_id": business.id
 	};
     $.ajax({
-        //url: host + '/manage_business_tree.do?method=async_create_business_tree',
         url: Util.strFormat(Inter.getApiUrl().bizRelationCreate.url, [param.business_id]),
-        type: 'POST',
+        type: Inter.getApiUrl().bizRelationCreate.type,
         async: true,
         data: param,
         dataType: "json",
@@ -124,9 +122,8 @@ function deleteBusinessTree(business_id) {
 		"business_id": business_id
 	};
 	$.ajax({
-		//url: host + '/manage_business_tree.do?method=delete_business_tree',
 		url: Util.strFormat(Inter.getApiUrl().bizRelationDelete.url, [request_data.business_id]),
-		type: 'DELETE',
+		type: Inter.getApiUrl().bizRelationDelete.type,
 		async: true,
 		data: request_data,
 		dataType: "json",
@@ -155,49 +152,49 @@ function deleteBusinessTree(business_id) {
 }
 
 
-function submit_update_business() {
-	var business_id = $("#business-id-edit").val();
-	var business_name = $("#business-name-edit").val();
-	var business_code = $("#business-name-short-edit").val();
+// function submit_update_business() {
+// 	var business_id = $("#business-id-edit").val();
+// 	var business_name = $("#business-name-edit").val();
+// 	var business_code = $("#business-name-short-edit").val();
 
-	request_data = {
-		"business_id": business_id,
-		"business_name": business_name,
-		"business_code": business_code,
-	};
-	$.ajax({
-		url: host + '/manage/business.do?method=update_business',
-		type: 'POST',
-		async: true,
-		data: request_data,
-		dataType: "json",
-		success: function (returndata) {
-			switch (returndata.code) {
-				case "0":
-					$("#pop-overlay").css("display", "none");
-					$("#pop-edit").css("display", "none");
-					$('#table_business').bootstrapTable("refresh");
-					break;
-	               default:
-					$("#pop-overlay").css("display", "none");
-					$("#pop-edit").css("display", "none");
-					$("#status-message").html(returndata.msg).css('display', 'block');
-					setTimeout(function () {
-						$("#status-message").css('display', 'none');
-					}, 2000);
-			}
-		},
-		error: function (returndata) {
-			$("#pop-overlay").css("display", "none");
-			$("#pop-edit").css("display", "none");
-			$("#status-message").html('更新失败').css('display', 'block');
-			setTimeout(function () {
-				$("#status-message").css('display', 'none');
-			}, 2000);
-		}
-	});
+// 	request_data = {
+// 		"business_id": business_id,
+// 		"business_name": business_name,
+// 		"business_code": business_code,
+// 	};
+// 	$.ajax({
+// 		url: host + '/manage/business.do?method=update_business',
+// 		type: 'POST',
+// 		async: true,
+// 		data: request_data,
+// 		dataType: "json",
+// 		success: function (returndata) {
+// 			switch (returndata.code) {
+// 				case "0":
+// 					$("#pop-overlay").css("display", "none");
+// 					$("#pop-edit").css("display", "none");
+// 					$('#table_business').bootstrapTable("refresh");
+// 					break;
+// 	               default:
+// 					$("#pop-overlay").css("display", "none");
+// 					$("#pop-edit").css("display", "none");
+// 					$("#status-message").html(returndata.msg).css('display', 'block');
+// 					setTimeout(function () {
+// 						$("#status-message").css('display', 'none');
+// 					}, 2000);
+// 			}
+// 		},
+// 		error: function (returndata) {
+// 			$("#pop-overlay").css("display", "none");
+// 			$("#pop-edit").css("display", "none");
+// 			$("#status-message").html('更新失败').css('display', 'block');
+// 			setTimeout(function () {
+// 				$("#status-message").css('display', 'none');
+// 			}, 2000);
+// 		}
+// 	});
 
-}
+// }
 
 //删除按钮弹窗
 function delBusinessTree(obj, business_id) {

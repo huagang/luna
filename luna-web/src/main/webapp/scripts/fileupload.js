@@ -37,7 +37,6 @@ function asyncUploadThumb(obj,fileElementId){
 		$warn.css('display','none');
 		jQuery.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			//url:host+"/add_poi.do?method=upload_thumbnail",
 			url:Inter.getApiUrl().poiThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性
@@ -90,7 +89,6 @@ function asyncUploadAudio(obj,fileElementId){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			//url:host+"/add_poi.do?method=upload_audio",
 			url:Inter.getApiUrl().poiAudioUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性
@@ -134,8 +132,6 @@ function asyncUploadVideo(obj,fileElementId){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-//			url:host+"/manage_poi.do?method=upload_video",
-//			url:host+"/add_poi.do?method=upload_video",
 			url:Inter.getApiUrl().poiVideoUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性

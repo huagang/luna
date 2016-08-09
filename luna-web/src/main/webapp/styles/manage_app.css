@@ -29,7 +29,10 @@
 .pop.pop-show.set-app-name{
 	width: 40%;
 }
-
+.set-app-name .form-group label{
+    height: 30px;
+    line-height: 30px;
+}
 .pop-show:before{
 	content: '.';
     position: fixed;
@@ -52,9 +55,7 @@
 .pop-cont div{
     margin-bottom: 10px;
 }
-.app-name{
-    width: 80%;
-}
+
 .pop-cont{
 	background-color: white;
 }

@@ -259,7 +259,6 @@ $(function(){
 	    				case '0': 
 	    					$("#pop-overlay").css("display","none");
 	    			        $("#pop-editmerchant").css("display","none");
-	    					//window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
 	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
 	    					break;
 	    				case '3':
@@ -305,7 +304,6 @@ function asyncUploadPicEdit(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			//url:host+"/manage_merchant.do?method=upload_thumbnail_edit",
 			url:Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
@@ -336,10 +334,9 @@ function editcrm(obj){
     var $popwindow = $("#pop-editmerchant");
     popWindow($popwindow);
     $.ajax({
-    	//url:host+"/manage_merchant.do?method=load_merchant",
     	url: Util.strFormat(Inter.getApiUrl().crmUserInfo.url,[obj]),
     	async:false,
-    	type:'GET',
+    	type:Inter.getApiUrl().crmUserInfo.type,
     	data:{'merchant_id':obj},
     	dataType:"json",
     	success:function(returndata){

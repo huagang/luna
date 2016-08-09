@@ -43,7 +43,6 @@ function ColumnController($scope, $rootScope, $http) {
         if(! $.isEmptyObject(this.categoryOptions)) {
             return;
         }
-        //var url = host + '/pulldown.do?method=load_categorys'
         var url = Inter.getApiUrl().pullDownCategorys.url;
         $http.get(url).then(function success(response) {
             var data = response.data;

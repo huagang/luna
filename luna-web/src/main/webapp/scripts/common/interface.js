@@ -90,23 +90,17 @@ var Inter = function () {
                 articleEditData: { url: '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
                 articleCreate: { url: '/content/article', type: 'POST' }, //保存文章
                 articleUpdate: { url: '/content/article/{0}', type: 'POST' }, //更新文章
-
-                articlePublish: { url: '/content/article/publish/{0}', type: 'PUT' }, //发布文章
-                readArticle: { url: context + "/manage/article.do?method=read_article", type: '' }, //读取文章数据
-                deleteArticle: { url: context + "/manage/article.do?method=delete_article", type: '' },//删除文章
-
-                //编辑器上传图片
-                //uploadImageInArtcle:{url:  context + "/add_poi.do?method=upload_thumbnail",type:''},//上传图片
-                //uploadVideoInArtcle: {url: context + "/add_poi.do?method=upload_video",type:''},//上传视频
-
                 
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
                 uploadVideoInArtcle: { url: context + "/add_poi.do?method=upload_video", type: '' },//上传视频
 
                 //微景展操作
-                createApp: { url: context + '/manage/app.do?method=create_app', type: '' },  //创建微景展
-                updateApp: { url: context + '/manage/app.do?method=update_app', type: '' },  //更新微景展信息
-                copyApp: { url: context + '/manage/app.do?method=copy_app', type: '' }, //复用app
+                appCreate: { url: context + '/content/app/', type: 'POST' },  //创建微景展
+                appUpdate: { url: context + '/content/app/{0}', type: 'PUT' },  //更新微景展信息
+                appCopy: { url: context + '/content/app/copy', type: 'POST' }, //复用app
+                appDelete:{ url: '/content/app/{0}', type: 'DELETE' }, //删除微景展
+                appEditPage:{ url: '/content/app/{0}', type: 'GET' }, //编辑微景展
+
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              

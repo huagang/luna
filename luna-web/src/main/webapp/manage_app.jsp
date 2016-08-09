@@ -19,11 +19,6 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -55,7 +50,7 @@
                             			 data-toggle="table"
                             			 data-toolbar=""
                             			 data-show-footer=false
-										 data-url="${basePath}/manage/app.do?method=async_search_apps"
+										 data-url="/content/app/search"
 										 data-pagination=true
 										 data-page-size=20
 										 data-side-pagination="server"
@@ -89,9 +84,8 @@
 <!--弹出层 start-->
 <!--模态窗口 -->
 <div id="pop-overlay"></div>
-
 <!-- 业务配置  start-->
-<div class="pop set_business">
+<!--<div class="pop set_business">
 	<div class="pop-title">
 		<h4>业务配置</h4> 
         <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
@@ -103,7 +97,7 @@
 	 	</div>
         
     </div>
-</div>
+</div>-->
 <!-- 业务配置  end -->
 <!-- 微景展配置  start-->
 <div class="pop set-app-name">
@@ -112,17 +106,35 @@
        	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
    	</div>
    	<div class="pop-cont">
-	    <div>
-            <label for="app-name">名称</label>
-            <input type="text" class="app-name" placeholder="输入微景展名称，不超过32个字符"/>          
-        </div>
-        <div class="warn warn-appname">微景展名称不能为空并且不能超过32个字符</div>
+		<form id="appData">
+			<div class="form-group clearfix">
+				<label for="txtBusinessId" class="col-md-3 text-right">业务ID</label>
+				<div class="col-md-7">
+					<input id="txtBusinessId" style="width:100%;" name="business_id" type="text" placeholder=""  readonly="readonly" />    
+				</div>      
+			</div>
+			<div  class="form-group clearfix">
+				<label for="txtBusinessName" class="col-md-3 text-right">业务名称</label>
+				<div class="col-md-7">
+					<input id="txtBusinessName" style="width:100%;" name="business_name" type="text" placeholder="" readonly="readonly"  />
+				</div>
+			</div>
+			<div  class="form-group clearfix">
+				<label for="txtAPPname"  class="col-md-3 text-right">名称</label>
+				<div class="col-md-7">
+					<input id="txtAppName" name="app_name" type="text" class="app-name" style="width:100%;" placeholder="输入微景展名称，不超过32个字符"/>  
+					<div class="warn warn-appname col-md-12">微景展名称不能为空并且不能超过32个字符</div>
+				</div>
+			</div>
+			<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
+			<input type="hidden" id ="source_app_id" name="source_app_id">
+			<input type="hidden" id ="appId" name="appid">
+		</form>
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
-    		<button type="button" class="last">上一步</button>
-    		<button type="button" class="next">下一步</button>
-    		<button type="button" class="cancel button-close hidden">取消</button>
+    		<button type="button" class="next">确定</button>
+    		<button type="button" class="cancel button-close">取消</button>
     	</div>
     	
     </div>
@@ -151,61 +163,15 @@
 </div>
 <a target="_blank" id="open_new_tab" style="display:none" href="#">在新窗口打开新的链接</a>
 <!--弹出层 end-->
-
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script type="text/javascript">
-	var APP_STATUS = {
-			"-1": "已删除",
-			"0": "未发布",
-			"1": "已发布",
-			"2": "已下线"
-	};
-
-	function nameFormatter(value, row, index) {
-		switch(row.app_status) {
-			case 1:
-				return '<a href="{0}" target="_blank">{1}</a>'
-				.format(row.app_addr, row.app_name);
-			default:
-				return row.app_name;
-		}
-	}
-	
-	function statusFormatter(value, row, index) {
-		if(row.app_status === 1){
-			return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
-		}else{
-			return APP_STATUS[row.app_status];
-		}
-		
-	}
-	
-	function timeFormatter(value, row, index) {
-		return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
-		+'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
-	}
-
-	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
-		var editOp = '<a class="property">属性</a>';
-		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}">编辑</a>'
-				.format('${basePath}', row.app_id);
-		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
-		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
-	}
-
-	function queryParams(params) {
-		/* alert(JSON.stringify(params)); */
-		return {
-			limit : params.limit,
-			offset : params.offset,
-			order : params.order,
-			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
-		}
-	};
-</script>
 </body>
 </html>

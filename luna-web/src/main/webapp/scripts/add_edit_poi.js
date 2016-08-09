@@ -256,7 +256,7 @@ $(function () {
 
         $.ajax({
             url: Util.strFormat(Inter.getApiUrl().ayncSearchSubTag.url, [tagid]),
-            type: 'GET',
+            type: Inter.getApiUrl().ayncSearchSubTag.type,
             async: false,
             cache: false,
             // data: { 'subTag': tagid },
@@ -306,7 +306,7 @@ $(function () {
                 // check检查
                 $.ajax({
                     url: Inter.getApiUrl().poiCheckForEnglish.url,
-                    type: 'POST',
+                    type: Inter.getApiUrl().poiCheckForEnglish.type,
                     async: false,
                     cache: true,
                     data: formdata,
@@ -338,7 +338,7 @@ $(function () {
                 $.confirm(msg, function () {
                     $.ajax({
                         url: Inter.getApiUrl().poiEditSave.url,
-                        type: 'POST',
+                        type: Inter.getApiUrl().poiEditSave.type,
                         async: true,
                         cache: true,
                         data: formdata,
@@ -375,7 +375,7 @@ $(function () {
                 // 后台对于提交上来的数据，不再做中文检查
                 $.ajax({
                     url: Inter.getApiUrl().poiEditSave.url,
-                    type: 'POST',
+                    type: Inter.getApiUrl().poiEditSave.type,
                     async: true,
                     cache: true,
                     data: formdata,
@@ -743,7 +743,6 @@ var geocoder = new qq.maps.Geocoder({
         }
         $.ajax({
             type: 'GET',
-            //url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
             url: Inter.getApiUrl().pullDownZoneIds.url,
             cache: false,
             async: false,
@@ -795,10 +794,8 @@ function initEditor() {
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function (action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            //return host + "/add_poi.do?method=upload_thumbnail";
             return Inter.getApiUrl().poiThumbnailUpload.url;
         } else if (action == 'uploadvideo') {
-            //return host + "/add_poi.do?method=upload_video";
             return Inter.getApiUrl().poiVideoUpload.url;
         } else {
             return this._bkGetActionUrl.call(this, action);

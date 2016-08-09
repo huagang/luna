@@ -120,7 +120,6 @@ function setInformation(userName,userPass){
     var warn = $("#warn-error");
     var token = $("#user-token").attr('value'); 
     $.ajax({
-        //url: 'http://luna-test.visualbusiness.cn/luna-web/wechat/hylogin.do?method=check_wjuser',
     	url: host + '/common/register',
         type: 'POST',
         async: false,

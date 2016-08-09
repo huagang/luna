@@ -44,7 +44,6 @@ $(document).ready(function(){
     	};
         $.ajax({
             type: "GET",
-            //url: host+"/business_tree.do?method=searchPoisForBizTree",
             url: Inter.getApiUrl().bizRelationPoiSearch.url,
             data: param,
             dataType: "json",
@@ -100,13 +99,11 @@ $(document).ready(function(){
 				+ searchPoisForBizTree[key]._id + '" poi_id="' + searchPoisForBizTree[key]._id 
 				+ '" poi_tags="'+searchPoisForBizTree[key].tags + '"/>' 
 				+ '<a target="_blank" '
-	            //+ 	'href="./edit_poi.do?method=init&_id='+ searchPoisForBizTree[key]._id  +'">'
 	            + 	'href="'+ Util.strFormat(Inter.getApiUrl().poiEdit.url,[searchPoisForBizTree[key]._id])  +'">'
 	            +   searchPoisForBizTree[key].name   + '</a>'  + tip + '</label>');
         }
 		if($(".list-result-poi").html() == ""){
 //			$(".list-result-poi").append('<span >未找到匹配的POI数据，<a href="#" onclick="">马上添加</a></span>');
-//			var url = host+"/add_poi.do?method=init";
 			var url = Inter.getApiUrl().poiAddPage.url;
 			$(".list-result-poi").append('<div class="text" style=" text-align: center; height: 1px;line-height:'
 					+$(".result")[0].offsetHeight+'px;">未找到匹配的POI数据，<a href="'+url+'" target="_blank" >马上添加</a></div>');
@@ -261,7 +258,6 @@ $(document).ready(function(){
     	var business_id = $('#business_id').val();
         $.ajax({
             type: "GET",
-            //url: host+"/business_tree.do?method=view_business_tree",
             url: Util.strFormat(Inter.getApiUrl().bizRelationBizTreeView.url,[business_id]),
             data: {"business_id" : business_id},
             dataType: "json",
@@ -304,7 +300,6 @@ $(document).ready(function(){
         // console.log(JSON.stringify(treeDate));
         $.ajax({
             type: "POST",
-            //url: host+"/business_tree.do?method=saveBusinessTree",
             url: Inter.getApiUrl().bizRelationBizTreeEdit.url,
             data: {"businessTree":JSON.stringify(treeDate)},
             dataType: "json",
@@ -351,7 +346,6 @@ $(document).ready(function(){
                 treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
                 treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
                    + '<span class="item-title"><p><a target="_blank" '
-                   //+ 	'href="./edit_poi.do?method=init&_id='+ data._id +'">'
                    + 	'href="'+Util.strFormat(Inter.getApiUrl().poiEdit.url,[data._id]) +'">'
                    +     poiDef[data._id].name + '</a></p>' + getTooltip(data._id)
                    + '</span>'

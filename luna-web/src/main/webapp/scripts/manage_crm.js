@@ -3,7 +3,6 @@
 $(function () {
 	//新建商户
     $("#new-built").click(function(){
-//    	window.location.href = host + '/manage_merchant.do?method=init_add';
     	window.open(Inter.getApiUrl().crmAddPage.url);
     });
     //商户名称
@@ -224,7 +223,6 @@ $(function () {
 	    				case '0': 
 	    					$("#pop-overlay").css("display","none");
 	    			        $("#pop-addmerchant").css("display","none");
-	    					//window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
 	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
 	    					break;
 	    				case '3':
@@ -319,7 +317,6 @@ function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			//url:host+"/manage_merchant.do?method=upload_thumbnail_add",
 			url: Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
@@ -755,7 +752,6 @@ function thumbnailDisplay(ImgD,height_s,width_s){
 
 // 跳转到编辑页面
 function editcrm2(merchant_id){
-	//window.location.href = host + '/manage_merchant.do?method=init_edit&&merchant_id='+merchant_id;//0e2X1b3V0C1c3O0F1o2l2T053o2r2r1i
 	window.open(Util.strFormat(Inter.getApiUrl().crmEditPage.url,[merchant_id]));
 }
 
