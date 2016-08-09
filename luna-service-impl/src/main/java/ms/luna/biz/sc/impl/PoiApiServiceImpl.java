@@ -140,4 +140,15 @@ public class PoiApiServiceImpl implements PoiApiService {
 		return jSONObject;
 	}
 
+	@Override
+	public JSONObject retrievePois(String json) {
+		JSONObject jSONObject = null;
+		try {
+			jSONObject = poiApiBL.retrievePois(json);
+		} catch (Exception e) {
+			return FastJsonUtil.error("-1", e);
+		}
+		return jSONObject;
+	}
+
 }

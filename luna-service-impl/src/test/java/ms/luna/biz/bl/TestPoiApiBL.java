@@ -104,4 +104,19 @@ public class TestPoiApiBL {
 
 	}
 
+	/**/
+	@Test
+	public void retrivePois() {
+		String lang = "ALL";
+		Integer limit= 5;
+		String type = "ALL";
+		String filterName = "greek";
+		JSONObject param = new JSONObject();
+		param.put("lang" ,lang);
+		param.put("filterName", filterName);
+		param.put("type",type);
+		param.put("limit",limit);
+		JSONObject result = poiApiBL.retrievePois(param.toString());
+		System.out.println(result.toString());
+	}
 }
