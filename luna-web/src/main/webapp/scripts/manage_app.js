@@ -17,7 +17,7 @@ $(document).ready(function(){
         	$('#table_apps').bootstrapTable("refresh");    
         }  
     }); 
-    window.controller = getAppController(".new-app", ".edit-app");
+    window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
 
 });
@@ -46,29 +46,31 @@ function getCounter(inputSelector, counterSelector, maxNum, curNum){
 				this.updateCounter(curNum);
 			}
 		},
+		// 输入框 onChange事件
 		handleChange:function(event){
 			var value = event.target.value;
-			if(value.length - curNum > 1){
+			if(value.length - curNum === 2 && value[value.length - 1] === '\''){
+				// 如果一次输入了两个字符,那么认定用户正在输入中文,则不更新计数器
 				return;
 			}
-			if(value.length > this.maxNum){
+			if(value.length > this.maxNum){ // 超出最大字数限制
 				event.target.value = value = value.substr(0, this.maxNum);
 			}
 			this.updateCounter(value.length);
 		},
-		updateCounter:function(num){
+		updateCounter:function(num){ // 更新计数器内容到页面上
 			// 更新计数器的值
 			this.curNum = num;
 			this.counter.html([num, '/', this.maxNum].join(''));
 		}
 		
-	}
+	};
 	counter.init();
 	return counter;
 }
 
 
-/* 用于微景展配置常用配置项的设置
+/* 用于编辑微景展时的常用配置项设置
  * @param appSel - 微景展配置框的筛选器
  * @param data - 常用设置数据
  */
@@ -85,9 +87,9 @@ function getNormalController(appSel, data){
 		_appNameCounter: getCounter("input.app-name", "input.app-name + .counter",32),
 		_appDescriptionCounter: getCounter("textarea.app-description", 
 				 "textarea.app-description + .counter",128),
-		
+
+		//事件绑定
 		init: function(){
-			//事件绑定
 			this._appDialog.find('.app-name').on("change",function(event){
 				if(event.target.value.length <= 32){
 					this.data.appName = event.target.value;
@@ -119,6 +121,8 @@ function getNormalController(appSel, data){
 			this._appNameCounter.updateCounter(this.data.appName.length);
 			this._appDescriptionCounter.updateCounter(this.data.appDescription.length);
 		},
+
+		// 检查用户填写的表单是否合法
 		checkValidation: function(){
 			if(this.data.appName){
 				return {error: null};
@@ -127,18 +131,25 @@ function getNormalController(appSel, data){
 				return {error: 'empty', msg: '微景展名称不能为空\n'};
 			}
 		},
+		// 更新信息
 		updateData: function(data){
 			/* 用于更新常用设置信息
 			 * @param data 常用设置信息
 			 */
-			Object.assign(this.data, data);
 			this.reset();
-			this._appDialog.find('.setting-normal .app-name').val(this.data.appName || '');
-			this._appNameCounter.updateCounter(this.data.appName.length);
-			this._appDialog.find('.setting-normal .app-description').val(this.data.appDescription || '');
-			this._appDescriptionCounter.updateCounter(this.data.appDescription.length);
-			this._appDialog.find('.setting-normal .preview-img').attr("src", this.data.coverUrl);
+			this._appDialog.find('.setting-normal .app-name').val(data.appName || '');
+			this._appNameCounter.updateCounter(data.appName.length);
+			this._appDialog.find('.setting-normal .app-description').val(data.appDescription || '');
+			this._appDescriptionCounter.updateCounter(data.appDescription.length);
+			if(data.coverUrl){
+				$('.setting-normal .preview-container').removeClass('hidden');
+				$('.setting-normal .file-uploader').addClass('hidden');
+				$('.file-uploader  .fileupload-tip').html("更换封面");
+			}
+			this._appDialog.find('.setting-normal .preview-img').attr("src", data.coverUrl);
+			this.data = data;
 		},
+		// 重置当前页面效果
 		reset: function(){
 			// 重置常用设置显示效果
 			this.data = {
@@ -151,22 +162,28 @@ function getNormalController(appSel, data){
 			this._appNameCounter.updateCounter(0);
 			this._appDescriptionCounter.updateCounter(0);
 		},
+		// 上传图片
 		uploadImg: function(conSel, previewSel, previewImgSel, event){
 			//上传图片功能以及预览功能
 			$(conSel + ' .fileupload-tip').html("上传中...");
-			FileUploader.uploadFile('thumbnail', event.target.files[0], function(data){
-				$(conSel).addClass('hidden');
-				$(previewSel).removeClass('hidden');
-				if(!previewImgSel){
-					//preview img的默认class名称为 preview-img
-					previewImgSel = previewSel + ' .preview-img';
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: event.target.files[0],
+				success: function(data){
+					$(conSel).addClass('hidden');
+					$(previewSel).removeClass('hidden');
+					if(!previewImgSel){
+						//preview img的默认class名称为 preview-img
+						previewImgSel = previewSel + ' .preview-img';
+					}
+					$(previewImgSel).attr("src", data.data.access_url);
+					this.data.coverUrl = data.data.access_url;
+					$(conSel + ' .fileupload-tip').html("更换封面");
+				}.bind(this),
+				error: function(data) {
+					$(conSel + ' .fileupload-tip').html("更换封面");
+					showMessage(data.msg || '上传图片失败');
 				}
-				$(previewImgSel).attr("src", data.data.access_url);
-				this.data.coverUrl = data.data.access_url;
-				$(conSel + ' .fileupload-tip').html("更换封面");
-			}.bind(this), function(data){
-				$(conSel + ' .fileupload-tip').html("更换封面");
-				showMessage(data.msg || '上传图片失败');
 				
 			});
 		}
@@ -328,17 +345,23 @@ function getShareController(data){
 			//上传图片功能以及预览功能
 			var tipSel = ['.share-item.order-', order, ' .fileupload-tip'].join('');
 			$(tipSel).html("上传中...");
-			
-			FileUploader.uploadFile('thumbnail', event.target.files[0], function(data){
-				var shareEle = $('.share-item.order-' + order);
-				shareEle.find('.file-uploader').addClass('hidden');
-				shareEle.find('.preview-container').removeClass('hidden');
-				shareEle.find('.preview-img').attr("src", data.data.access_url);
-				this.data[order].pic = data.data.access_url;
-				$(tipSel).html("更换缩略图");
-			}.bind(this), function(data){
-				$(tipSel).html("更换缩略图");
-				showMessage(data.msg || '上传图片失败');
+
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: event.target.files[0],
+				success: function(data){
+					var shareEle = $('.share-item.order-' + order);
+					shareEle.find('.file-uploader').addClass('hidden');
+					shareEle.find('.preview-container').removeClass('hidden');
+					shareEle.find('.preview-img').attr("src", data.data.access_url);
+					this.data[order].pic = data.data.access_url;
+					$(tipSel).html("更换缩略图");
+				}.bind(this),
+				error: function(data) {
+					$(tipSel).html("更换缩略图");
+					showMessage(data.msg || '上传图片失败');
+				}
+
 			});
 		},
 		reset:function(){
@@ -409,24 +432,22 @@ function NewAppController() {
 	}
 
 	function show(type, event) {
-		that.data = {};
-		if(type === 'reuse'){
-			var parent = event.target.parentElement;
-			that.data.sourceAppId = parseInt(parent.getAttribute('data-app-id'));
-			that.data.businessId = parseInt(parent.getAttribute('data-business-id'));
-		}
-		console.log(that.data);
-		that.dialog.find('.app-name').val('');
-		that.dialog.find('.template').removeClass('active');
-		that.dialog.addClass('pop-show');
-		return;
 		var business = localStorage.getItem('business');
 		if(business){
 			that.data.businessId = business.id;
+			that.data = {};
+			that.createType = type;
+			if(type === 'reuse'){
+				var parent = event.target.parentElement;
+				that.data.sourceAppId = parseInt(parent.getAttribute('data-app-id'));
+				that.data.businessId = parseInt(parent.getAttribute('data-business-id'));
+			}
+			that.dialog.find('.app-name').val('');
+			that.dialog.find('.template').removeClass('active');
 			that.dialog.addClass('pop-show');
 		}
 		else{
-			alert('您需要先设置业务才能够新建微景展');
+			showMessage('您需要先设置业务才能够新建微景展');
 		}
 	}
 
@@ -463,17 +484,30 @@ function NewAppController() {
 		}
 		else{
 			// 发送请求
+			var req  = that.createType === 'new' ? that.urls.appCreate : that.urls.appCopy;
 			$.ajax({
-				url: that.urls.createApp,
-				type: 'POST',
+				url: req.url,
+				type: req.type,
 				data: {
-					"app_name": that.name,
-					"business_id": that.data.businessId,
-					"source_app_id": that.data.sourceAppId || null
+					app_name: that.name,
+					business_id: that.data.businessId,
+					type: that.data.type,
+					source_app_id: that.data.sourceAppId || null
 				},
 				success: function(data){
 					if(data.code === '0'){
 						that.dialog.removeClass('pop-show');
+						switch(that.data.type){
+							case 'basic':
+								location.href = window.context + '/content/app/{0}?business_id={1}'.format(data.data.appId, that.data.businessId);
+								break;
+							case 'dev':
+								// location.href = window.context + '/';
+								break;
+							case 'data':
+								// location.href = '';
+								break;
+						}
 					} else {
 						console.log(data.msg || '新建微景展失败');
 					}
@@ -487,13 +521,14 @@ function NewAppController() {
 
 }
 
-function getAppController(newAppSelector, editAppSelector){
+function getAppController(editAppSelector){
 	/* 作用  新建微景展、更新微景展、复用微景展时控制配置弹出框的显示以及数据发送
 	 * @param editAppSelector       微景展配置框的选择器
 	 */
-	var urls = Inter.getApiUrl();
 	var controller = {
 		// 相关属性值
+		urls : Inter.getApiUrl(),
+
 		data:{
 			appId:'',        
 			appName:'',
@@ -517,7 +552,7 @@ function getAppController(newAppSelector, editAppSelector){
 			}.bind(this));
 			// 微景展配置框事件绑定
 			
-			this._appDialog.find('.next').click(this._postData.bind(this));
+			this._appDialog.find('.save').click(this._postData.bind(this));
 					
 			var shareMenu = this._appDialog.find('.share'),
 				normalMenu = this._appDialog.find('.normal');
@@ -549,12 +584,18 @@ function getAppController(newAppSelector, editAppSelector){
 
 		fetchAppInfo: function(){
 			$.ajax({
-				url: '',
-				type: 'GET',
+				url: this.urls.appPropInfo.url.format(this.data.appId),
+				type: this.urls.appPropInfo.type,
 				success: function(data){
 					if(data.code === '0'){
-						this.normalController.updateData({});
-						this.shareController.updateData({});
+						this.normalController.updateData({
+							appName: data.data.app_name || '',
+							appDescription:data.data.note || '',
+							coverUrl: data.data.pic_thumb || ''
+						});
+						this.shareController.updateData({
+							data: data.data.shareArray,
+						});
 						this._appDialog.addClass('pop-show');
 					}
 					else{
@@ -563,8 +604,6 @@ function getAppController(newAppSelector, editAppSelector){
 				}.bind(this),
 				error: function(data){
 					showMessage(data.msg || '获取微景展属性信息失败');
-					this._appDialog.addClass('pop-show');
-
 				}.bind(this)
 			})
 		},
@@ -577,7 +616,6 @@ function getAppController(newAppSelector, editAppSelector){
 			this.data.businessId = parseInt(parent.attr('data-business-id'));
 			this.data.appName = parseInt(parent.attr('data-app-name'));
 			this.fetchAppInfo();
-
 		},
 		
 		reset: function(){
@@ -611,22 +649,18 @@ function getAppController(newAppSelector, editAppSelector){
 			var result = this._checkValidation();
 			if(result.error){
 				alert(result.msg);
-			}
-			// 发送请求，包含新建微景展请求，更新微景展信息请求
-			if(!this.normalController.data.appName){
 				return;
 			}
+
 			var data = {
-	            "sourcedata.appId": this.data.appId || null,
 	            "app_name":this.normalController.data.appName,
-	            "description": this.normalController.data.appDescription,
-	            "pic": this.normalController.data.coverUrl,
-	            "share_data": this.shareController.data
+	            "note": this.normalController.data.appDescription,
+	            "pic_thumb": this.normalController.data.coverUrl,
+	            "shareArray": JSON.stringify(this.shareController.data)
 		     };
-			console.log(data);
 			$.ajax({
-	            url: '', // 更新属性信息
-		        type: 'PUT',
+	            url: this.urls.appPropUpdate.url.format(this.data.appId), // 更新属性信息
+		        type: this.urls.appPropUpdate.type,
 				contentType: 'application/x-www-form-urlencoded',
 		        data: data,
 		        dataType:"json",
@@ -635,11 +669,11 @@ function getAppController(newAppSelector, editAppSelector){
 		            	this._appDialog.removeClass('pop-show');
 		            }
 		            else{
-		            	showMessage(data.msg);
+		            	showMessage(data.msg || '保存失败');
 		            }
 		        }.bind(this),
 		        error: function (res) {
-		            showMessage("请求失败");
+		            showMessage("保存失败");
 		        }
 		    });
 		}

@@ -118,6 +118,8 @@ var Inter = function () {
                 appCopy: { url: context + '/content/app/copy', type: 'POST' }, //复用app
                 appDelete:{ url: '/content/app/{0}', type: 'DELETE' }, //删除微景展
                 appEditPage:{ url: '/content/app/{0}', type: 'GET' }, //编辑微景展
+                appPropInfo: {url: context + '/content/app/setting/{0}', type:'GET'},  // 获取微景展属性信息
+                appPropUpdate: {url: context + '/content/app/setting/{0}', type:'POST'}, // 更新微景展属性信息
 
                 //微景展编辑页面操作
                 getAppSummary :{url: '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
@@ -182,6 +184,7 @@ var Inter = function () {
                 singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
                 multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
                 customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+
             };
         }
     };

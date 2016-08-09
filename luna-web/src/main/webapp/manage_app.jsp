@@ -146,10 +146,11 @@
    				</div> 				
    				<div class='preview-container hidden'>
    					<img class='preview-img' src="" />
-   					<div class='file-edit-container'>
+					<div class="mask"></div>
+					<div class='file-edit-container'>
    						<div class='img-wrapper'>
    							<img src='../img/icon-edit.png'/>
-   							<input type='file' name='thumbnail_fileup' accept="image/*" />
+							<input type='file' name='thumbnail_fileup' accept="image/*" />
    						</div>
    						<p class='fileupload-tip'>更换封面</p>
    					</div>
@@ -192,7 +193,8 @@
 	  				</div> 				
 	  				<div class='preview-container hidden'>
 	  					<img class='preview-img' src="" />
-	  					<div class='file-edit-container'>
+						<div class="mask"></div>
+						<div class='file-edit-container'>
 	  						<div class='img-wrapper'>
 	  							<img src='../img/icon-edit.png'/>
 	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
@@ -221,7 +223,7 @@
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
-    		<button type="button" class="next">保存</button>
+    		<button type="button" class="save">保存</button>
     		<button type="button" class="cancel button-close">取消</button>
     	</div>
     	
@@ -261,6 +263,7 @@
 <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script type="text/javascript">
+	window.context = "<%=request.getContextPath() %>";
 	var APP_STATUS = {
 			"-1": "已删除",
 			"0": "未发布",
@@ -295,8 +298,10 @@
 	function operationFormatter(value, row, index) {
 		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
 		var editOp = '<a class="property">属性</a>';
-		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}&business_id={2}">编辑</a>'
-				.format('${basePath}', row.app_id, row.business_id);
+
+		var editUrl = '';
+		var modifyOp = '<a class="modify" target="_blank" href="{0}/content/app/{1}?business_id={2}">编辑</a>'
+				.format(window.context, row.app_id, row.business_id);
 		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
 		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
