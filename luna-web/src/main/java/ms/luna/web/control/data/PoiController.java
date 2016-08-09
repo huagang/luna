@@ -3,10 +3,10 @@ package ms.luna.web.control.data;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
+import ms.luna.common.LunaUserSession;
 import ms.luna.common.MsLunaResource;
 import ms.luna.common.PoiCommon;
 import ms.luna.web.control.common.BasicController;
@@ -331,7 +331,7 @@ public class PoiController extends BasicController {
 
         try {
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            LunaUserSession msUser = (LunaUserSession)session.getAttribute("user");
             JSONObject result = this.savePois(savedExcel, unZipped, msUser);
             MsLogger.info(result.toJSONString());
             return result;
@@ -448,7 +448,7 @@ public class PoiController extends BasicController {
      * @throws InvalidFormatException
      * @throws IOException
      */
-    private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
+    private JSONObject savePois(String savedExcel, String unzipedDir, LunaUserSession msUser)
             throws EncryptedDocumentException, InvalidFormatException, IOException {
 
         JSONObject tagsDef = managePoiService.getInitInfo("{}"); // 获取公共属性定义(tags定义)
@@ -821,7 +821,8 @@ public class PoiController extends BasicController {
 
         JSONObject param = new JSONObject();
         param.put("no_check_errors", noCheckErrorPois);
-        JSONObject addedResult = managePoiService.savePois(param.toString(), msUser);
+        param.put("uniqueId", msUser.getUniqueId());
+        JSONObject addedResult = managePoiService.savePois(param.toString());
         if (!"0".equals(addedResult.getString("code"))) {
             return FastJsonUtil.error("-1", result.getString("msg"));
         }

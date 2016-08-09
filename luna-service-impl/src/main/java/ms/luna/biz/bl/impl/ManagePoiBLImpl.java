@@ -11,12 +11,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +38,6 @@ import ms.luna.biz.dao.custom.MsPoiFieldDAO;
 import ms.luna.biz.dao.custom.MsPoiTagDAO;
 import ms.luna.biz.dao.custom.model.MsTagFieldParameter;
 import ms.luna.biz.dao.custom.model.MsTagFieldResult;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -435,9 +432,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		}
 
 		doc.put("update_hhmmss", date);
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		if (msUser != null) {
-			doc.put("updated_by_unique_id", msUser.getUniqueId());
+		if(param.containsKey("uniqueId")) {
+			doc.put("updated_by_unique_id", param.getString("uniqueId"));
 		}
 		return doc;
 	}

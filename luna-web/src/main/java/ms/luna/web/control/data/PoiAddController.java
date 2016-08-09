@@ -3,10 +3,10 @@ package ms.luna.web.control.data;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
+import ms.luna.common.LunaUserSession;
 import ms.luna.common.PoiCommon;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
@@ -153,8 +153,9 @@ public class PoiAddController extends BasicController {
         try {
             HttpSession session = request.getSession(false);
             JSONObject param = this.param2Json(request);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
-            JSONObject result = managePoiService.addPoi(param.toString(), msUser);
+            LunaUserSession msUser = (LunaUserSession)session.getAttribute("user");
+            param.put("uniqueId", msUser.getUniqueId());
+            JSONObject result = managePoiService.addPoi(param.toString());
 
             if ("0".equals(result.getString("code"))) {
                 return FastJsonUtil.sucess("成功上传");
