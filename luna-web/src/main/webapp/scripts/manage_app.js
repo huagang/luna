@@ -35,6 +35,10 @@ var InitAppPage = function () {
 	var initNewApp = function () {
 		$('#new-built').click(function () {
 			$('.set-app-name').addClass('pop-show');
+			$('#appId').val('');
+			$('#txtAppName').val('');
+			$('#txtBusinessId').val(business.id);
+			$('#txtBusinessName').val(business.name);
 			typeSource = 'create';
 		});
 	};
@@ -126,10 +130,10 @@ var InitAppPage = function () {
 			dataType: "json",
 			success: function (data) {
 				if (data.code === "0") {
-					this._app_dialog.removeClass('pop-show');
-					this.freshAppList();
-					if (this._type === 'create' || this._type === 'reuse') {
-						location.href = '../app.do?method=init&app_id=' + data.data.app_id;
+					$('.set-app-name').removeClass('pop-show');
+					$('#search_apps').trigger('click');
+					if (typeSource === 'create' || typeSource === 'reuse') {
+						location.href = Util.strFormat(Inter.getApiUrl().appEditPage, [data.data.app_id]);
 					}
 				}
 				else {

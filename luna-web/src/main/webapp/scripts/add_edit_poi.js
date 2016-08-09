@@ -351,7 +351,7 @@ $(function () {
                                     $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                     setTimeout(function () {
                                         $("#status-message").css('display', 'none');
-                                        window.location.href = Inter.getApiUrl().poiInit.url;
+                                        // window.location.href = Inter.getApiUrl().poiInit.url;
                                     }, 2000);
                                     break;
                                 default:
@@ -388,7 +388,7 @@ $(function () {
                                 $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                 setTimeout(function () {
                                     $("#status-message").css('display', 'none');
-                                    window.location.href = Inter.getApiUrl().poiInit.url;
+                                    // window.location.href = Inter.getApiUrl().poiInit.url;
                                 }, 2000);
                                 break;
                             default:
@@ -429,7 +429,7 @@ $(function () {
             var formdata = new FormData($("#poiModel")[0]);
             $.ajax({
                 url: Inter.getApiUrl().poiAddSave.url,
-                type: 'POST',
+                type: Inter.getApiUrl().poiAddSave.type,
                 async: false,
                 cache: true,
                 data: formdata,

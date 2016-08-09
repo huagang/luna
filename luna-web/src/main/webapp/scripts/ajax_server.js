@@ -148,10 +148,10 @@ function getPageDataDetail(pageID) {
     };
     $.ajax({
         type: Inter.getApiUrl().appGetPageDetail.type,
-        url: Inter.getApiUrl().appGetPageDetail.url,
-        cache: false,
+        url: Util.strFormat(Inter.getApiUrl().appGetPageDetail.url, [pageID]),
+        // cache: false,
         async: false,
-        data: params,
+        // data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {
