@@ -7,6 +7,7 @@ import com.mongodb.client.model.Filters;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.table.LunaUserRoleTable;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.bson.BsonDateTime;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -26,6 +27,8 @@ import java.util.List;
 
 @Repository("lunaUserRoleDAO")
 public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO {
+
+    private final static Logger logger = Logger.getLogger(LunaUserRoleDAOImpl.class);
 
     private MongoCollection<Document> lunaUserRoleCollection;
 
@@ -60,7 +63,8 @@ public class LunaUserRoleDAOImpl extends MongoBaseDAO implements LunaUserRoleDAO
     public void updateUserRoleInfo(LunaUserRole lunaUserRole) {
 
         Bson query = Filters.eq(LunaUserRoleTable.FIELD_USER_ID, lunaUserRole.getUserId());
-        lunaUserRoleCollection.updateOne(query, userRole2Document(lunaUserRole));
+        Document document = userRole2Document(lunaUserRole);
+        lunaUserRoleCollection.updateOne(query, new Document("$set", document));
     }
 
     @Override

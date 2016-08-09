@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.table.LunaUserRoleTable;
 import ms.luna.common.LunaUserSession;
+import org.bson.BsonDateTime;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -33,18 +36,33 @@ public class MongoTest {
 //		document.append("ctime", new BsonDateTime(System.currentTimeMillis()));
 //		testCollection.insertOne(document);
 //		Bson query = Filters.eq("_id", new ObjectId("57206a16a6a5551473fe8088"));
-		Bson query = Filters.eq("_id", "0ac21e51ed7f4da9bc30176753d550b2");
+		Bson query = Filters.eq("_id", "c01de90951a3484192996c3892c852d7");
+
+		String updateStr = "{ \"role_id\" : 1, \"extra\" : { \"type\" : \"business\", \"value\" : [31, 33, 39, 46] }}";
+		Document updateDocument = userRole2Document(JSON.toJavaObject(JSON.parseObject(updateStr), LunaUserRole.class));
+		System.out.println("update user role info" + updateDocument.toJson());
+		testCollection.updateOne(query, new Document("$set", updateDocument));
+
 		testCollection.find(query).forEach(new Block<Document>() {
 
 			@Override
 			public void apply(Document document) {
 				System.out.println(document);
 				Map<String, Object> extra = document.get(LunaUserRoleTable.FIELD_EXTRA, Document.class);
-				System.out.println(hasBusinessAuth(extra, 12));
+				System.out.println(hasBusinessAuth(extra, 33));
 
 			}
-			
+
 		});
+	}
+
+	private static Document userRole2Document(LunaUserRole lunaUserRole) {
+		Document document = new Document();
+		document.put(LunaUserRoleTable.FIELD_ROLE_ID, lunaUserRole.getRoleId());
+		document.put(LunaUserRoleTable.FIELD_EXTRA, lunaUserRole.getExtra());
+		document.put(LunaUserRoleTable.FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
+		return document;
+
 	}
 
 	public static boolean hasBusinessAuth(Map<String, Object> extra, int businessId) {

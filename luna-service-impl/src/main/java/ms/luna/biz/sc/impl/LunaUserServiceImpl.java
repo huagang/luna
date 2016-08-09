@@ -67,21 +67,12 @@ public class LunaUserServiceImpl implements LunaUserService {
         List<Integer> childRoleIdList = new ArrayList<>();
         // 当前角色不能设定自己角色的权限,但可以管理自己角色下的用户
         childRoleIdList.add(roleId);
-        List<Integer> roleList = Lists.newArrayList(roleId);
         try {
-            while (true) {
-                LunaRoleCriteria lunaRoleCriteria = new LunaRoleCriteria();
-                lunaRoleCriteria.createCriteria().andParentIdIn(roleList);
-                List<LunaRole> lunaRoles = lunaRoleDAO.selectByCriteria(lunaRoleCriteria);
-                if (lunaRoles == null || lunaRoles.size() == 0) {
-                    break;
-                }
-                roleList.clear();
-                for (LunaRole lunaRole : lunaRoles) {
-                    roleList.add(lunaRole.getId());
-                    childRoleIdList.add(lunaRole.getId());
-                }
+            List<LunaRole> childRolesByRoleId = roleCache.getChildRolesByRoleId(roleId);
+            for(LunaRole lunaRole : childRolesByRoleId) {
+                childRoleIdList.add(lunaRole.getId());
             }
+
             List<LunaUserRole> lunaUserRoleList = lunaUserRoleDAO.readUserInfoByRole(childRoleIdList, query, start, limit);
             JSONObject data = new JSONObject();
             int total = lunaUserRoleDAO.countUserByRole(childRoleIdList, query);
