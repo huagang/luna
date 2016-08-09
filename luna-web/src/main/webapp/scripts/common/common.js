@@ -16,10 +16,20 @@
 
 
     function Common(){
-
+        this.getParamObj = getParamObj;
     }
 
+    // 获取url中的参数并将其转化为对象
+    function getParamObj() {
+        var res = location.search.split(/[?=&]/);
+        var search = {};
+        for (var i = 1, len = res.length; i < len; i += 2) {
+            search[res[i]] = res[i + 1];
+        }
+        return search;
+    }
 
+    // 增加format函数到String.prototype中
     function setStrFormat(){
         if (!String.prototype.format) {
             String.prototype.format = function() {

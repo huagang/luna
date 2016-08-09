@@ -34,8 +34,6 @@
         // 操作 检查填写内容是否合法
         vm._checkValidation = _checkValidation;
 
-        vm.updateFormContent = updateFormContent;
-
         // 事件 点击红叉删除邮箱
         vm.handelDeleteEmail = handelDeleteEmail;
 
@@ -102,13 +100,7 @@
         }
 
 
-        function initSearch() {
-            var res = location.search.split(/[?=&]/);
-            vm.search = {};
-            for (var i = 1, len = res.length; i < len; i += 2) {
-                vm.search[res[i]] = res[i + 1];
-            }
-        }
+
 
         // 删除邮箱
         function handelDeleteEmail(index) {
@@ -199,6 +191,7 @@
             }
         }
 
+        // 事件 业务更改
         function handleOptionsChange(){
             var id = event.target.getAttribute('id');
             if(vm.choiceType === 'radio'){
@@ -211,6 +204,7 @@
             vm.businessSelectAll = false;
         }
 
+        // 将business的值填到vm.data.extra.value里面, 进而方便提交数据
         function transformBusinessData(){
             if( vm.extraData && vm.extraData.type === 'business'){
                 vm.data.extra.value = [];
@@ -268,10 +262,6 @@
                 vm.data.role = roleData.role_id + '';
                 vm.data.extra = roleData.extra;
             }
-        }
-
-        function updateFormContent(){
-
         }
 
         // 发送邮箱邀请的数据请求
@@ -335,11 +325,13 @@
                 if(res.data.code === '0'){
                     vm.inviteAuth = res.data.data;
                     vm.inviteAuth.forEach(function(item){
+                        // 由于extra类型为string,需要将其转化为对象
                         if(item.extra && typeof item.extra === 'string'){
                             item.extra = JSON.parse(item.extra);
                         }
 
                         if(vm.userId && item.id === vm.data.module){
+                            // 编辑状态下更新角色选项, exrtaData选项
                             vm.roles = item.roleArray;
                             vm.extraData = item.extra;
                             if(vm.extraData.type ==='business'){
@@ -371,6 +363,7 @@
                     vm.business = res.data.data;
                     vm.data.business = {};
                     if(vm.userId){
+                        // 设置已选中业务
                         Object.keys(vm.business).forEach(function(item, index){
                             (vm.business[item] || []).forEach(function(item, index){
                                 vm.data.business[item.business_id] = item.selected ? 'checked' : '';
@@ -378,6 +371,7 @@
                         });
                      }
 
+                    // 根据业务数量来决定显示多选框(数量大于1)还是只显示文本(数量等于1)
                     if(Object.keys(vm.business).length > 1 ||
                         vm.business[Object.keys(vm.business)[0]].length > 1){
                         vm.businessShowType = 'multiple';
