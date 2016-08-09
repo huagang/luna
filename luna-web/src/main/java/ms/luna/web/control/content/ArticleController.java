@@ -7,6 +7,7 @@ import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
@@ -119,7 +120,8 @@ public class ArticleController extends BasicController {
         }
         try {
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
+//            MsUser msUser = (MsUser)session.getAttribute("msUser");
             articleJson.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
             return ret;
@@ -184,7 +186,8 @@ public class ArticleController extends BasicController {
         try{
             JSONObject jsonObject = pair.getLeft();
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
+//            MsUser msUser = (MsUser)session.getAttribute("msUser");
             jsonObject.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
