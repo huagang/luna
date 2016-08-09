@@ -112,6 +112,8 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_id") String pageId,
 			@RequestParam(required=true, value="page_name") String pageName,
 			@RequestParam(required=true, value="page_code") String pageCode,
+			@RequestParam(required=false, value="page_type" ) Integer pageType,
+			@RequestParam(required=false, value="page_height" ) Integer pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -174,6 +176,8 @@ public class ShowPageCtrl extends BasicCtrl {
 		params.put("page_id", pageId);
 		params.put("page_name", pageName);
 		params.put("page_code", pageCode);
+		params.put("page_type", pageType);
+		params.put("page_height", pageHeight);
 		try {
 			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 			JSONObject result = msShowPageService.updatePageName(params.toString(), user.getLunaName());
@@ -199,6 +203,8 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_name") String pageName,
 			@RequestParam(required=true, value="page_code") String pageCode,
 			@RequestParam(required=true, value="page_order") int pageOrder,
+			@RequestParam(required=true, value="page_type" ) Integer pageType,
+			@RequestParam(required=false, value="page_height" ) Integer pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -251,6 +257,8 @@ public class ShowPageCtrl extends BasicCtrl {
 		params.put("page_name", pageName);
 		params.put("page_code", pageCode);
 		params.put("page_order", pageOrder);
+		params.put("page_type", pageType);
+		params.put("page_height", pageHeight);
 		try {
 			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 			JSONObject result = msShowPageService.createOnePage(params.toString(), user.getLunaName());

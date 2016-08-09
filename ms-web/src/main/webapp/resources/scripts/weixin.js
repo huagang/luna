@@ -87,8 +87,8 @@
 
         this.wx.ready(function() {
 
-            console.log(self.shareData);
-
+            // console.log(self.shareData);
+            // alert(JSON.stringify( self.shareData));
             //分享给朋友
             self.wx.onMenuShareAppMessage(self.shareData);
             //分享到朋友圈

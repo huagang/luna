@@ -11,10 +11,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1346,4 +1348,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		return topTag2SubTagOthersCache;
 	}
 
+	public static void main(String[] args) {
+		String s = "{\"zh\":[{1:\"度假\"},{2:\"商务\"},{3:\"亲子\"},{4:\"特色\"},{5:\"其他\"}],\"en\":[{1:\"Holiday\"},{2:\"Business\"},{3:\"Family\"},{4:\"Feature\"},{5:\"Others\"}]}";
+		JSONObject json = JSONObject.parseObject(s);
+		System.out.println(json.toString());
+	}
 }

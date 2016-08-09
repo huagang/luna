@@ -9,10 +9,8 @@ Servers
 .metadata
 .recommenders
 .xml
-.gitignore
 ReadJson.java
 video.js
 jquery.custmer.extend.js
-cFrontFile.sh
 .vscode
 build

@@ -33,17 +33,19 @@
 			left outer join ms_poi_field f
 				 on r.field_name= f.field_name  
 		 where tag.tag_level=1
-		 ORDER BY ds_order, display_order asc
+		 ORDER BY display_order,ds_order  asc
 	</select>
 	
 	<resultMap id="MsPoiTagInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
 		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
 		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="tag_name_en" property="tagNameEn" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectPoiTags" resultMap="MsPoiTagInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
 		SELECT
 			ms_poi_tag.tag_id as tag_id,
-			ms_poi_tag.tag_name as tag_name
+			ms_poi_tag.tag_name as tag_name,
+			ms_poi_tag.tag_name_en as tag_name_en
 		FROM
 			ms_poi_tag
 	</select>

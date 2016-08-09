@@ -68,7 +68,7 @@ public final class MongoUtility {
 		// 检索:中文名称、中文别名、一级分类、以及二级分类(可能不存在)相同,并且经纬度距离相差不超过50米的POI数据
 		Bson filter = Filters.and(
 				condition
-				,Filters.geoWithinCenter("lnglat", lng, lat, maxDistance)
+				,Filters.geoWithinCenter("lnglat.coordinates", lng, lat, maxDistance)
 				);
 		MongoCursor<Document> mongoCursor = collection.find(filter).limit(1).iterator();
 		if (mongoCursor.hasNext()) {

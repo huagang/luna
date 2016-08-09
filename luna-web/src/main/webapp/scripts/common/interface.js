@@ -8,7 +8,25 @@
  */
 
 var Inter = function () {
-    var context = window.context || "";
+    var context = window.context || "",
+        apiContext = '';
+        
+    var curHost = function() {
+        var host = window.location.host;
+        if(/localhost/.test(host)){
+            return 'local';
+        }else if(/luna-test/.test(host)){
+            return 'test';
+        }else{
+            return 'online';
+        }
+    };
+
+    var apiHost = {
+        'local':'http://localhost:8082/',
+        'test':'http://luna-test.visualbusiness.cn/luna-api/',
+        'online':'http://luna.visualbusiness.cn/luna-api/'
+    };
     return {
         getApiUrl: function () {
             return {
@@ -146,8 +164,24 @@ var Inter = function () {
 
 
                 // 组权限管理
-                updateAuthoritySet: {url: context + '/platform/authority/{0}', type: 'PUT'}
+                updateAuthoritySet: {url: context + '/platform/authority/{0}', type: 'PUT'},
 
+                //文章列表接口
+                articleListApi: apiHost[curHost()]+'article/businessId/{0}',
+
+                //文章栏目列表
+                articleColunmu: context + '/manage/article.do?method=read_column&business_id={0}',
+                articleListByBid: apiHost[curHost()]+'article/businessId/{0}', //通过业务ID获取
+                articleListByBidAndCid: apiHost[curHost()]+'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
+                firstPoiByBid: apiHost[curHost()]+'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
+                poiTypeListByBidAndFPoi: apiHost[curHost()]+'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
+                poiListByBidAndFPoi: apiHost[curHost()]+'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
+                poiListByBidAndFPoiAndPoiTyep: apiHost[curHost()]+'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
+                
+                //全景路径接口
+                singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
+                multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
+                customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
             };
         }
     };

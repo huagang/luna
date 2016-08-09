@@ -814,9 +814,7 @@ function initEditor() {
                 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                 'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
-                'simpleupload',
-                // 'music',
-                'insertvideo',
+                'link', 'simpleupload',/*'music',*/ 'insertvideo',
             ]
         ]
     });

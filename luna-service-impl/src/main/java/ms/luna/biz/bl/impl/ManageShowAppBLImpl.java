@@ -108,6 +108,25 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	}
 
 	@Override
+	public JSONObject getAppInfo(int appId) {
+		try {
+			MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+			if(msShowApp == null) {
+				return FastJsonUtil.error(ErrorCode.NOT_FOUND, "内容不存在");
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put(MsShowAppDAO.FIELD_APP_ID, msShowApp.getAppId());
+			jsonObject.put(MsShowAppDAO.FIELD_APP_NAME, msShowApp.getAppName());
+			jsonObject.put(MsShowAppDAO.FIELD_BUSINESS_ID, msShowApp.getBusinessId());
+			return FastJsonUtil.sucess("", jsonObject);
+		} catch (Exception ex) {
+			logger.error("Failed to get appInfo", ex);
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+		}
+
+	}
+
+	@Override
 	public JSONObject createApp(String json) {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = JSONObject.parseObject(json);
@@ -483,18 +502,19 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		business = msBusinessDAO.selectByPrimaryKey(businessId);
 		
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
-		String businessUrl = msWebUrl + String.format(businessUriTemplate, business.getBusinessCode());
+//		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
+		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
 		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
-		String qrImgUrl = generateQR(businessUrl, businessDir, "QRCode.jpg");
+		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
 		
 		if(StringUtils.isBlank(qrImgUrl)) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
 		}
 		JSONObject data = new JSONObject();
 		data.put("QRImg", qrImgUrl);
-		data.put("link", businessUrl);
+		data.put("link", indexUrl);
 		
 		return FastJsonUtil.sucess("发布成功", data);
 	}

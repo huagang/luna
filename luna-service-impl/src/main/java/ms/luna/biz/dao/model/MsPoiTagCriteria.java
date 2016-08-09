@@ -1,6 +1,10 @@
 package ms.luna.biz.dao.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MsPoiTagCriteria {
     protected String orderByClause;
@@ -819,6 +823,112 @@ public class MsPoiTagCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andTagNameEnIsNull() {
+            addCriterion("tag_name_en is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnIsNotNull() {
+            addCriterion("tag_name_en is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en =", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en <>", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en >", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en >=", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en <", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en <=", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en like", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("tag_name_en not like", value, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("tag_name_en in", values, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("tag_name_en not in", values, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("tag_name_en between", value1, value2, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("tag_name_en not between", value1, value2, "tagNameEn");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(tag_name) like", value.toUpperCase(), "tagName");
+            return (Criteria) this;
+        }
+
+        public Criteria andEditableFlagLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(editable_flag) like", value.toUpperCase(), "editableFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUniqueIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(updated_by_unique_id) like", value.toUpperCase(), "updatedByUniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNameEnLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(tag_name_en) like", value.toUpperCase(), "tagNameEn");
+            return (Criteria) this;
+        }
+
         public Criteria andRegistHhmmssEqualToCurrentDate() {
             addCriterion("regist_hhmmss = ","CURRENT_DATE","registHhmmss");
             return (Criteria)this;
@@ -889,24 +999,6 @@ public class MsPoiTagCriteria {
 
         protected Criteria() {
             super();
-        }
-
-        public Criteria andTagNameLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(tag_name) like", value.toUpperCase(), "tagName");
-            return this;
-        }
-
-        public Criteria andEditableFlagLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(editable_flag) like", value.toUpperCase(), "editableFlag");
-            return this;
-        }
-
-        public Criteria andUpdatedByUniqueIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(updated_by_unique_id) like", value.toUpperCase(), "updatedByUniqueId");
-            return this;
         }
 
         public Criteria setRowNum(String rowNum) {

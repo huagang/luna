@@ -30,6 +30,11 @@ public class ManageShowAppServiceImpl implements ManageShowAppService {
 	}
 
 	@Override
+	public JSONObject getAppInfo(int appId) {
+		return manageShowAppBL.getAppInfo(appId);
+	}
+
+	@Override
 	public JSONObject deleteApp(String json) {
 		// TODO Auto-generated method stub
 		return manageShowAppBL.deleteApp(json);
