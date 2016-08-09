@@ -58,9 +58,6 @@ public class LoginCtrl {
 
 	/**
 	 * 用户名密码登录
-	 * @param request
-	 * @param response
-	 * @throws IOException 
 	 */
 	@RequestMapping(params = "method=logon_pwuser")
 	public ModelAndView logonPwUser(
@@ -69,24 +66,6 @@ public class LoginCtrl {
 			@RequestParam(value="password", required=true)
 			String password,
 			HttpServletRequest request) throws IOException {
-
-		MsLogger.debug("user["+ luna_name +"] was attempt to login!");
-		// check luna_name
-		JSONObject jsonNickNm = CharactorUtil.checkNickNm(luna_name);
-		String nickCode = FastJsonUtil.getString(jsonNickNm,"code");
-		if (!"0".equals(nickCode)) {
-			MsLogger.debug("user["+luna_name +"] format is not correct!");
-			return errorJsonResult("-1", "用户名或者密码错误！");
-		}
-
-		// check密码
-		JSONObject jsonPw = CharactorUtil.checkPw(password);
-		String pwCode = FastJsonUtil.getString(jsonPw, "code");
-		if (!"0".equals(pwCode)) {
-			MsLogger.debug("user' pw ["+password +"] format is not correct!");
-			return errorJsonResult("-1", "用户名或者密码错误！");
-		}
-
 		/*
 		 * 微景用户登录(luna_name,pw)
 		 * @param json

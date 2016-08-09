@@ -23,11 +23,14 @@
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 
+	
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
     <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -55,9 +58,9 @@
                         </div>
                         <!--POI搜索 end-->
                         <div>
-                            <a href="${basePath}/add_poi.do?method=init" id="POI-add" class="add-poi" target="_blank">+添加</a>
+                            <a href="/data/poi/addPage" id="POI-add" class="add-poi" target="_blank">+添加</a>
                             <span>
-                                <a href="${basePath}/manage_poi.do?method=downloadPoiTemplete">下载模板</a>，按模板收集数据后，<a href="#" id="batch-input">批量导入</a>
+                                <a href="/data/poi/templete">下载模板</a>，按模板收集数据后，<a href="#" id="batch-input">批量导入</a>
                             </span>
                         </div>
                         <!--POI列表 start-->
@@ -65,7 +68,7 @@
                         	<table id="table_POI" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/manage_poi.do?method=asyncSearchPois"
+										 data-url="/data/poi/search"
 										 data-pagination="true"
 										 data-side-pagination="server"
 										 data-page-size="20"
@@ -248,8 +251,8 @@
 		});
 	});
 	function operationFormatter(value, row, index) {
-				return '<a class="detail" target="_blank" href="' + host +'/edit_poi.do?method=init&_id=' + row._id +'">详情</a>'
-			   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\')">删除</a>';
+		return '<a class="detail" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().poiEdit.url,[row._id]) +'">详情</a>'
+	   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\')">删除</a>';
 	}
 	function nameformatter(value, row, index) {
 		var lang = '';

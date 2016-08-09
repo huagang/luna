@@ -49,6 +49,15 @@ public class ManageUserCtrl {
 	public ManageUserCtrl() {
 	}
 
+	public static final String INIT = "method=init";
+	public static final String DELETE_USER = "method=del_user";
+	public static final String SEARCH_USER = "method=async_search_users";
+	public static final String LOAD_ROLE = "method=load_roles";
+	public static final String INVITE_USER = "method=invite_users";
+	public static final String EDIT_USER = "method=edit_user";   //添加用户页面
+	public static final String ADD_USER = "method=add_user";
+
+
 	private Map<String, String> loadCategorys() throws Exception {
 		JSONObject result = null;
 		result = pulldownService.loadCategorys();
@@ -71,7 +80,7 @@ public class ManageUserCtrl {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(params = "method=init")
+	@RequestMapping(params = INIT)
 	public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			HttpSession session = request.getSession(false);
@@ -100,6 +109,22 @@ public class ManageUserCtrl {
 		
 	}
 
+	@RequestMapping(params = ADD_USER)
+	public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+				MsLogger.error("session is null");
+				return new ModelAndView("/error.jsp");
+			}
+			session.setAttribute("menu_selected", "user");
+			return new ModelAndView("/add_user.jsp");
+		} catch (Exception e) {
+			MsLogger.error("Failed to init UsersManager page: ", e);
+			return new ModelAndView("/error.jsp");
+		}
+
+	}
 	// /**
 	// * 分类页面初始化
 	// *
@@ -156,7 +181,7 @@ public class ManageUserCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=async_search_users")
+	@RequestMapping(params = SEARCH_USER)
 	public void asyncSearchUsers(String like_filter_nm, String selectedValue,
 			@RequestParam(required = false) Integer offset, 
 			@RequestParam(required = false) Integer limit,
@@ -271,7 +296,7 @@ public class ManageUserCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=load_roles")
+	@RequestMapping(params = LOAD_ROLE)
 	public void loadRolesByModuleCode(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
@@ -311,7 +336,7 @@ public class ManageUserCtrl {
 	 * @throws IOException
 	 *             code 0:成功 1:邮箱格式不正确 4、邮箱已注册 5、
 	 */
-	@RequestMapping(params = "method=invite_users")
+	@RequestMapping(params = INVITE_USER)
 	public void inviteUsers(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
@@ -393,7 +418,7 @@ public class ManageUserCtrl {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(params = "method=edit_user")
+	@RequestMapping(params = EDIT_USER)
 	public void editUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");
@@ -442,7 +467,7 @@ public class ManageUserCtrl {
 		return;
 	}
 
-	@RequestMapping(params = "method=del_user")
+	@RequestMapping(params = DELETE_USER)
 	public void delUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			response.setHeader("Access-Control-Allow-Origin", "*");

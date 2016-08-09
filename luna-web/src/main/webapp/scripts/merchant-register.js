@@ -21,8 +21,8 @@ $(function() {
 		if (!hasError) {
 			var meName = $("#merchant_nm").val();
 			$.ajax({
-				url : host + '/merchantRegist.do?method=checkNm',
-				type : 'POST',
+				url : Inter.getApiUrl().merchantCheckName.url,
+				type : 'GET',
 				async : false,
 				cache : false,
 				data : {
@@ -252,11 +252,10 @@ $(function() {
 				var msg = returndata.msg;
 				switch (status) {
 				case '0':
-					window.location.href = host
-							+ '/merchantRegist.do?method=success';// 成功后调整到页面
+					window.location.href = Inter.getApiUrl().merchantSuccess.url;// 成功后调整到页面
 					break;
 				case '1':
-					window.location.href = host + '/error.jsp';
+					window.location.href = '/error.jsp';
 					break; // 校验失败
 				case '2':
 					$("#status-message").html("图片上传失败!").css('display',
@@ -301,7 +300,7 @@ function asyncUploadPicAdd(obj, fileElementId, warn, license_url) {
 		$warn.css('display', 'none');
 		$.ajaxFileUpload({
 			// 处理文件上传操作的服务器端地址
-			url : host + "/merchantRegist.do?method=upload_thumbnail",
+			url : Inter.getApiUrl().merchantThumbnailUpload.url,
 			secureuri : false, // 是否启用安全提交,默认为false
 			fileElementId : fileElementId,
 			dataType : 'json', // 服务器返回的格式,可以是json或xml等

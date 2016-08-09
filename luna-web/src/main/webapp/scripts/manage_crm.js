@@ -3,8 +3,7 @@
 $(function () {
 	//新建商户
     $("#new-built").click(function(){
-//    	window.location.href = host + '/manage_merchant.do?method=init_add';
-    	window.open(host + '/manage_merchant.do?method=init_add');
+    	window.open(Inter.getApiUrl().crmAddPage.url);
     });
     //商户名称
     $("#merchant_nm").blur(function(){
@@ -12,8 +11,8 @@ $(function () {
         if(!hasError){
         	var meName = $("#merchant_nm").val();
         	$.ajax({
-        		url:host+'/manage_merchant.do?method=checkNm_add',
-        		type:'POST',
+        		url:Inter.getApiUrl().crmCheckName.url,
+        		type:'GET',
         		async:false,
         		cache:false,
         		data:{'merchant_nm':meName},
@@ -56,38 +55,7 @@ $(function () {
 			$("#div-img").css("display","none");
         }
     });
-//    //文件上传
-//    $("#license-upload").change(function(){
-//        var $license= $(this),
-//    		$license_url = $("#license-url");
-//        var url = $license.val();
-//        	$warn = $("#license-upload-warn");
-//        var hasError = licenseVerify($license,url,$warn);
-//        if(!hasError){
-//    		$warn.css('display','none');
-//    		$.ajaxFileUpload({
-//    			//处理文件上传操作的服务器端地址
-//    			url:host+"/manage_merchant.do?method=upload_thumbnail_add",
-//    			secureuri:false,                       //是否启用安全提交,默认为false
-//    			fileElementId: 'license-upload', 
-//    			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-//    			success:function(returndata){        //服务器响应成功时的处理函数
-//    				if (returndata.code=='0') {
-//    					$license_url.val(returndata.data.access_url);
-//    				} else {
-//    					$license_url.val('');
-//    					$warn.html(returndata.msg);
-//    					$warn.css('display','block');
-//    				}
-//    			},
-//    			error:function(returndata){ //服务器响应失败时的处理函数
-//    				$license_url.val('');
-//    				$warn.html('上传失败，请重试！！');
-//    				$warn.css('display','block');
-//    			}
-//    		});
-//    	}
-//    });
+
     //商户地址，select
     $('#province').change(function(){
         var province = $("#province option:checked").val();
@@ -255,7 +223,7 @@ $(function () {
 	    				case '0': 
 	    					$("#pop-overlay").css("display","none");
 	    			        $("#pop-addmerchant").css("display","none");
-	    					window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
+	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
 	    					break;
 	    				case '3':
         					$("#merchant-name-warn").html('商户重名（您下手慢了）').show();
@@ -295,8 +263,8 @@ $(function () {
         var merchant_id = $("#close-row").attr("merchant_id");
 //        var index = $("#close-row").attr("index");
     	$.ajax({
-    		type: 'post',
-    		url: host +'/manage_merchant.do?method=close_merchant',
+			type: 'PUT',
+    		url: Util.strFormat(Inter.getApiUrl().crmDisableUser.url, [merchant_id]),
     		cache: false,
     		async:false,
     		data: {'merchant_id':merchant_id},
@@ -319,13 +287,13 @@ $(function () {
     				},2000)
     			}
     		},
-    		error: function(){
+    		error: function(returndata){
     			$("#close-row").attr("merchant_id","");
     			$("#status-message").html("error").css('display','block');
 				setTimeout(function(){
 					$("#status-message").css('display','none');
 				},2000);
-    		},
+    		}
     	});
     });
     
@@ -349,7 +317,7 @@ function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/manage_merchant.do?method=upload_thumbnail_add",
+			url: Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
@@ -387,8 +355,8 @@ function closecrm(obj,merchant_id){
 //关闭按钮弹窗
 function opencrm(obj,merchant_id){
 	$.ajax({
-		type: 'post',
-		url: host +'/manage_merchant.do?method=open_merchant',
+		type: 'PUT',
+		url: Util.strFormat(Inter.getApiUrl().crmEnableUser.url,[merchant_id]),
 		cache: false,
 		async:false,
 		data: {'merchant_id':merchant_id},
@@ -408,12 +376,12 @@ function opencrm(obj,merchant_id){
 				},2000);
 			}
 		},
-		error: function(){
+		error: function(returndata){
 			$("#status-message").html("error").css('display','block');
 			setTimeout(function(){
 				$("#status-message").css('display','none');
 			},2000);
-		},
+		}
 	});
 }
 
@@ -784,8 +752,7 @@ function thumbnailDisplay(ImgD,height_s,width_s){
 
 // 跳转到编辑页面
 function editcrm2(merchant_id){
-//	window.location.href = host + '/manage_merchant.do?method=init_edit&&merchant_id='+merchant_id;//0e2X1b3V0C1c3O0F1o2l2T053o2r2r1i
-	window.open(host + '/manage_merchant.do?method=init_edit&&merchant_id='+merchant_id);
+	window.open(Util.strFormat(Inter.getApiUrl().crmEditPage.url,[merchant_id]));
 }
 
 // 纯属测试

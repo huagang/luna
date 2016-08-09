@@ -46,7 +46,7 @@
 		                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
 		                </div>
 		                <div class="group article-head-pic">
-		                    <p class="group-title">文章头图 <span>建议尺寸666*666</span> </p>
+		                    <p class="group-title">文章头图 <span>建议尺寸 600x320</span> </p>
 		                    <div class="pic-upload">
 		                        <div class="pic-upload-left">
 		                            <span class="btn fileinput-button" title='文件大小不超过1M'>
@@ -132,9 +132,9 @@
 		    </div>
 		</div>
 		<script type='text/javascript'>
-			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+			window.UEDITOR_HOME_URL =  "/plugins/ueditor/";
 		</script>
+        <script src='<%=request.getContextPath() %>/scripts/lunaweb.js'></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>

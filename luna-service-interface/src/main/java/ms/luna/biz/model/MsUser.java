@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -53,6 +54,8 @@ public class MsUser implements AuthenticatedUser, Serializable {
 
 	/** 角色code */
 	private String msRoleCode;
+
+	private Set<Integer> roleIdSet;
 
 	/**
 	 * 角色名称
@@ -205,4 +208,11 @@ public class MsUser implements AuthenticatedUser, Serializable {
 		this.loginTime = loginTime;
 	}
 
+	public Set<Integer> getRoleIdSet() {
+		return roleIdSet;
+	}
+
+	public void setRoleIdSet(Set<Integer> roleIdSet) {
+		this.roleIdSet = roleIdSet;
+	}
 }

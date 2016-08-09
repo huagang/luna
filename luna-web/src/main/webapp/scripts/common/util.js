@@ -678,7 +678,7 @@ var Util = function() {
             containType = containType || 3;
             for (var i = start; i <= end; i = i + split) {
                 var timeMod = i % 60;
-                timeData = parseInt(i / 60);
+                var timeData = parseInt(i / 60);
                 if (timeData < 10) {
                     timeData = '0' + timeData;
                 }
@@ -796,7 +796,7 @@ var Util = function() {
                 content: '',
                 okCall: function() {},
                 cancelValue: '取消',
-                cancelCall: function() {},
+                cancelCall: function() {}
             };
             var opts = $.extend(defaults, options);
             if (opts.targetObj.length) {

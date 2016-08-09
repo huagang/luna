@@ -29,6 +29,9 @@
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/business_tree.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">

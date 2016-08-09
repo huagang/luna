@@ -1,11 +1,15 @@
 package ms.luna.web.control;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.model.MsUser;
+import ms.luna.biz.sc.ManageShowAppService;
+import ms.luna.biz.sc.MsShowPageService;
+import ms.luna.biz.util.CharactorUtil;
+import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.BasicCtrl;
+import ms.luna.web.common.SessionHelper;
+import ms.luna.web.util.RequestHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import ms.luna.biz.model.MsUser;
-import ms.luna.biz.sc.ManageShowAppService;
-import ms.luna.biz.sc.MsShowPageService;
-import ms.luna.biz.sc.ShowPageComponentService;
-import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.web.common.BasicCtrl;
-import ms.luna.web.util.RequestHelper;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Component
 @Controller
@@ -39,9 +35,7 @@ public class ShowPageCtrl extends BasicCtrl {
 
 	@Autowired
 	private MsShowPageService msShowPageService;
-	
-	@Autowired
-	private ShowPageComponentService showPageComponentService;
+
 	
 	public static final String INIT = "method=init";
 	public static final String ADD_NEW_PAGE = "method=addNewBlankPage";
@@ -96,8 +90,8 @@ public class ShowPageCtrl extends BasicCtrl {
 		}
 
 		try {
-			MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-			JSONObject result = msShowPageService.updatePages(pages, msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			JSONObject result = msShowPageService.updatePages(pages, user.getLunaName());
 			response.getWriter().print(result);
 			response.setStatus(200);
 		} catch (Exception e) {
@@ -118,6 +112,8 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_id") String pageId,
 			@RequestParam(required=true, value="page_name") String pageName,
 			@RequestParam(required=true, value="page_code") String pageCode,
+			@RequestParam(required=false, value="page_type" ) Integer pageType,
+			@RequestParam(required=false, value="page_height" ) Integer pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -180,9 +176,11 @@ public class ShowPageCtrl extends BasicCtrl {
 		params.put("page_id", pageId);
 		params.put("page_name", pageName);
 		params.put("page_code", pageCode);
+		params.put("page_type", pageType);
+		params.put("page_height", pageHeight);
 		try {
-			MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-			JSONObject result = msShowPageService.updatePageName(params.toString(), msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			JSONObject result = msShowPageService.updatePageName(params.toString(), user.getLunaName());
 			response.getWriter().print(result);
 			response.setStatus(200);
 			return;
@@ -205,6 +203,8 @@ public class ShowPageCtrl extends BasicCtrl {
 			@RequestParam(required=true, value="page_name") String pageName,
 			@RequestParam(required=true, value="page_code") String pageCode,
 			@RequestParam(required=true, value="page_order") int pageOrder,
+			@RequestParam(required=true, value="page_type" ) Integer pageType,
+			@RequestParam(required=false, value="page_height" ) Integer pageHeight,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -257,9 +257,11 @@ public class ShowPageCtrl extends BasicCtrl {
 		params.put("page_name", pageName);
 		params.put("page_code", pageCode);
 		params.put("page_order", pageOrder);
+		params.put("page_type", pageType);
+		params.put("page_height", pageHeight);
 		try {
-			MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-			JSONObject result = msShowPageService.createOnePage(params.toString(), msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			JSONObject result = msShowPageService.createOnePage(params.toString(), user.getLunaName());
 			response.getWriter().print(result);
 			response.setStatus(200);
 			return;
@@ -450,9 +452,7 @@ public class ShowPageCtrl extends BasicCtrl {
 			response.setStatus(200);
 			return;
 		}
-		HttpSession session = request.getSession(false);
 		try {
-			MsUser msUser = (MsUser)session.getAttribute("msUser");
 			JSONObject param = new JSONObject();
 			param.put("app_id", app_id);
 			param.put("pic_thumb", CharactorUtil.nullToBlank(pic_thumb));
@@ -461,7 +461,7 @@ public class ShowPageCtrl extends BasicCtrl {
 			param.put("share_info_pic", CharactorUtil.nullToBlank(share_info_pic));
 			param.put("share_info_title", CharactorUtil.nullToBlank(share_info_title));
 			param.put("share_info_des", CharactorUtil.nullToBlank(share_info_des));
-			JSONObject result = msShowAppService.saveSettingOfApp(param.toString(), msUser);
+			JSONObject result = msShowAppService.saveSettingOfApp(param.toString());
 			response.getWriter().print(result);
 			response.setStatus(200);
 		} catch (Exception e) {

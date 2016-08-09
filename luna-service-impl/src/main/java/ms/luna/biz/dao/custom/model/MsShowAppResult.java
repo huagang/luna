@@ -7,6 +7,7 @@ public class MsShowAppResult {
 	private int appId;
 	private String appName;
 	private String appCode;
+	private int type;
 	private Timestamp registhhmmss;
 	private Timestamp uphhmmss;
 	private String owner;
@@ -32,6 +33,15 @@ public class MsShowAppResult {
 	public void setAppCode(String appCode) {
 		this.appCode = appCode;
 	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public Timestamp getRegisthhmmss() {
 		return registhhmmss;
 	}

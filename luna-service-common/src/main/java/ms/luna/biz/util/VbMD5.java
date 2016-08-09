@@ -115,5 +115,9 @@ public final class VbMD5 {
 
 	private VbMD5() {
 	}
+
+    public static void main(String[] args) {
+        System.out.println(VbMD5.convertFixMD5Code("shawn123"));
+    }
 }
 

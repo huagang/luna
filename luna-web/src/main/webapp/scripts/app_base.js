@@ -5,7 +5,6 @@ time:20160504
 */
 $(document).ready(function(){
 
-	var host="../";
 	
 
 	function init(){

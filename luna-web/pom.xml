@@ -246,6 +246,16 @@
 		    <version>1.9.13</version>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
@@ -260,6 +270,11 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>luna-web</finalName>
@@ -273,6 +288,25 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>src/main/webapp/WEB-INF</directory>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</resource>
+						<resource>
+							<directory>src/main/config</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<filtering>true</filtering>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -282,36 +316,20 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<tasks>
-										<delete file="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										<copy
-											file="config/dev/dubbo_consumer.xml"
-											tofile="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										
-										<delete file="src/main/webapp/WEB-INF/web.xml" />
-										<copy
-											file="config/dev/web.xml"
-											tofile="src/main/webapp/WEB-INF/web.xml" />
-										
-										<delete file="src/main/resources/log4j.properties" />
-										<copy
-											file="config/dev/log4j.properties"
-											tofile="src/main/resources/log4j.properties" />
-									</tasks>
-								</configuration>
-							</execution>
-						</executions>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.6</version>
 					</plugin>
 				</plugins>
 			</build>
+			<properties>
+				<zookeeper.address>localhost:2181</zookeeper.address>
+				<cosBaseDir>/dev</cosBaseDir>
+				<vodBaseDir>/dev</vodBaseDir>
+				<redis.host>115.159.87.160</redis.host>
+				<redis.instanceId></redis.instanceId>
+				<redis.password>ssdoiw32237ejcu#R%#@</redis.password>
+			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -319,75 +337,26 @@
 
 		<profile>
 			<id>test</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<tasks>
-										<delete file="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										<copy
-											file="config/test/dubbo_consumer.xml"
-											tofile="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										
-										<delete file="src/main/webapp/WEB-INF/web.xml" />
-										<copy
-											file="config/test/web.xml"
-											tofile="src/main/webapp/WEB-INF/web.xml" />
-										<delete file="src/main/resources/log4j.properties" />
-										<copy
-											file="config/test/log4j.properties"
-											tofile="src/main/resources/log4j.properties" />
-									</tasks>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+			<properties>
+				<zookeeper.address>115.159.87.160:2181</zookeeper.address>
+				<cosBaseDir>/dev</cosBaseDir>
+				<vodBaseDir>/dev</vodBaseDir>
+				<redis.host>10.66.152.87</redis.host>
+				<redis.instanceId>4246cb82-81d6-45f3-8482-a71cbb7015af</redis.instanceId>
+				<redis.password>vb2015redis</redis.password>
+			</properties>
 		</profile>
 
 		<profile>
 			<id>release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<tasks>
-										<delete file="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										<copy
-											file="config/release/dubbo_consumer.xml"
-											tofile="src/main/webapp/WEB-INF/dubbo_consumer.xml" />
-										
-										<delete file="src/main/webapp/WEB-INF/web.xml" />
-										<copy
-											file="config/release/web.xml"
-											tofile="src/main/webapp/WEB-INF/web.xml" />
-											
-										<delete file="src/main/resources/log4j.properties" />
-										<copy
-											file="config/release/log4j.properties"
-											tofile="src/main/resources/log4j.properties" />
-									</tasks>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+			<properties>
+				<zookeeper.address>10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181</zookeeper.address>
+				<cosBaseDir>/dev</cosBaseDir>
+				<vodBaseDir>/dev</vodBaseDir>
+				<redis.host>10.66.172.227</redis.host>
+				<redis.instanceId>11da0ad3-35d8-4925-90bd-6f04fd313162</redis.instanceId>
+				<redis.password>vb2015redis</redis.password>
+			</properties>
 		</profile>
 	</profiles>
 

@@ -1,4 +1,4 @@
-<!--微景展管理页面  author:Demi-->
+<!--微景展管理页 author:Demi-->
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -19,11 +19,6 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -55,7 +50,7 @@
                             			 data-toggle="table"
                             			 data-toolbar=""
                             			 data-show-footer=false
-										 data-url="${basePath}/manage/app.do?method=async_search_apps"
+										 data-url="/content/app/search"
 										 data-pagination=true
 										 data-page-size=20
 										 data-side-pagination="server"
@@ -90,73 +85,146 @@
 <!--模态窗口 -->
 <div id="pop-overlay"></div>
 
-<!-- 业务配置  start-->
-<div class="pop set_business">
+<div class="pop new-app">
 	<div class="pop-title">
-		<h4>业务配置</h4> 
-        <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+		<h4>微景展配置</h4>
+		<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
 	</div>
-	<div class="pop-cont">
-		<div>
-		    <label class="pop-label block">选择业务</label>
-		    <select class="select" id="country" name="country_id" disabled>
-		        <option value="100000" selected="selected">中国</option>
-		    </select>
-		    <select class="select" id="province" onchange="change_province()">
-		   		<option value="ALL">请选择省份</option>
-		   		<c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-		        	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-				</c:forEach>
-	      	</select>
-	      	<select class="select" id="city" onchange="change_city()">
-	          	<option value="ALL">请选择市</option>
-	      	</select>
-	      	<select class="select" id="county">
-	          	<option value="ALL">请选择区县</option>
-	      	</select>
-	        <select class="select" id="cate">
-	       		<option value="ALL">类别</option>
-	       		<c:forEach items="${businessCategories}" var="category">
-					<option value="${category.key}">${category.value}</option>
-				</c:forEach>
-			</select>
-		    <button type="button" id="btn-searchbusiness">搜索</button>
+	<div class="pop-cont ">
+		<div>中文名称</div>
+		<input class="app-name" placeholder="输入二级子分类中文名称" />
+		<div>选择模板类型</div>
+		<div class="template-group">
+			<div class="template basic" data-value="basic">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">基础项目版</p>
+			</div>
+			<div class="template dev" data-value="dev">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">开发版</p>
+			</div>
+			<div class="template data" data-value="data">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">数据版</p>
+			</div>
 		</div>
-	    <div>
-            <label class="pop-label">搜索结果</label>
-            <select class="select business">
-            		<option>无</option>
-            </select>
-        </div>     
-        <p class='warn business-empty'>配置业务项不能为空</p>
 	</div>
 	<div class="pop-fun">
-	 	<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
-	 	<div class='pull-right'>
-	 		<button type="button" class="next">下一步</button>
-	 	</div>
-        
-    </div>
+		<div class="pull-right">
+			<button type="button" class="next">下一步</button>
+			<button type="button" class="cancel button-close">取消</button>
+		</div>
+	</div>
+
 </div>
-<!-- 业务配置  end -->
+
 <!-- 微景展配置  start-->
-<div class="pop set-app-name">
+<div class="pop edit-app">
     <div class="pop-title">
        	<h4>微景展配置</h4>
        	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
    	</div>
-   	<div class="pop-cont">
-	    <div>
-            <label for="app-name">名称</label>
-            <input type="text" class="app-name" placeholder="输入微景展名称，不超过32个字符"/>          
-        </div>
-        <div class="warn warn-appname">微景展名称不能为空并且不能超过32个字符</div>
+   	<ul class='pop-menu'>
+   		<li class='normal active'><a href='#'>常用设置</a></li>
+   		<li class='share '><a href='#'>分享设置</a></li>
+   	</ul>
+   	<div class="pop-cont ">
+   		<div class='setting-normal '>
+   			<div class='part-left'>
+   				<div class='file-uploader'>
+   					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   				<div class='fileup-container'>
+	   					<button class='button-close fileupload-tip'>更换封面</button>
+	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   				</div>
+   				</div> 				
+   				<div class='preview-container hidden'>
+   					<img class='preview-img' src="" />
+					<div class="mask"></div>
+					<div class='file-edit-container'>
+   						<div class='img-wrapper'>
+   							<img src='../img/icon-edit.png'/>
+							<input type='file' name='thumbnail_fileup' accept="image/*" />
+   						</div>
+   						<p class='fileupload-tip'>更换封面</p>
+   					</div>
+   					
+   				</div>
+   				
+   			</div>
+   			<div class='part-right'>
+   				<div class='char-limit-wrapper'>
+   					<input type="text" class="app-name" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+   					<span class='counter'>0/32</span>
+   				</div>
+   				<div class='char-limit-wrapper'>
+   					<textarea type='text' class='app-description' maxlength='128'
+   					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+   					<span class='counter'>0/128</span>
+   				</div>
+   				
+   				
+   			</div>
+   		</div>
+   		<div class='setting-share hidden'>
+   			<p class='newShare'>
+   				<a  href='javascript:void(0)'>+新建分享，</a>
+   				<span>最多五条分享设置,随机呈现</span>
+   			</p>
+   			
+   			<!-- 用于新建分享时复制 -->
+   			<div class='share-item hidden' data-order=''>
+   				<div class='clearfix'>
+   					<img class='share-delete' src='../img/icon-delete-gray.png' />
+   				</div>	
+	   			<div class='part-left'>
+	  				<div class='file-uploader'>
+	  					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   					<div class='fileup-container'>
+	   						<button class='button-close fileupload-tip'>更换缩略图</button>
+	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   					</div>
+	  				</div> 				
+	  				<div class='preview-container hidden'>
+	  					<img class='preview-img' src="" />
+						<div class="mask"></div>
+						<div class='file-edit-container'>
+	  						<div class='img-wrapper'>
+	  							<img src='../img/icon-edit.png'/>
+	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
+	  						</div>
+	  						<p class='fileupload-tip'>更换缩略图</p>
+	  					</div>
+	  				</div>
+	  			</div>
+	  			<div class='part-right'>
+	  				<div class='char-limit-wrapper'>
+	  					<input class='share-title' type="text" class="" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+	  					<span class='counter'>0/32</span>
+	  				</div>
+	  				<div class='char-limit-wrapper'>
+	  					<textarea type='text' class='share-description' maxlength='128'
+	  					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+	  					<span class='counter'>0/128</span>
+	  				</div>	  				
+	  			</div>
+	  			<p class='divider'></p>
+  			</div>
+  			
+   			
+	  		
+   		</div>
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
-    		<button type="button" class="last">上一步</button>
-    		<button type="button" class="next">下一步</button>
-    		<button type="button" class="cancel button-close hidden">取消</button>
+    		<button type="button" class="save">保存</button>
+    		<button type="button" class="cancel button-close">取消</button>
     	</div>
     	
     </div>
@@ -185,11 +253,17 @@
 </div>
 <a target="_blank" id="open_new_tab" style="display:none" href="#">在新窗口打开新的链接</a>
 <!--弹出层 end-->
-
-<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
+<jsp:include page="/templete/message.jsp"/>
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script type="text/javascript">
+	window.context = "<%=request.getContextPath() %>";
 	var APP_STATUS = {
 			"-1": "已删除",
 			"0": "未发布",
@@ -222,10 +296,12 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
+gs		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name)
 		var editOp = '<a class="property">属性</a>';
-		var modifyOp = '<a class="modify" target="_blank" href="{0}/app.do?method=init&app_id={1}&business_id={2}">编辑</a>'
-				.format('${basePath}', row.app_id, row.business_id);
+
+		var editUrl = '';
+		var modifyOp = '<a class="modify" target="_blank" href="{0}/content/app/{1}?business_id={2}">编辑</a>'
+				.format(window.context, row.app_id, row.business_id);
 		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
 		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';

@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
@@ -40,7 +42,7 @@
             	<div class="title-main">
                     <h3编辑商户</h3>
                 </div>
-                <form id="form-edit" action="<%=request.getContextPath() %>/manage_merchant.do?method=edit_merchant" method="post" 
+                <form id="form-edit" action="/content/crm/edit" method="post"
         			onkeydown="if(event.keyCode==13){return false;}">
 
                     <div class="information" >
@@ -82,7 +84,7 @@
 			                    <div id="license-area-edit" style="position:relative;">
 			                   		<input type="text" id="license-url-edit" name="resource_content_edit" readonly="readonly">
 				              		<!-- <input id="license-url-edit" name="resource_content_edit" style="display:none;"/> -->
-				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup_edit" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
+				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
 				                   	<button id="btn-license-upload-edit" >修改</button>
 									<div class="warn" id="license-upload-edit-warn">格式不正确</div>
 			                	</div>
@@ -178,7 +180,7 @@
 			                <div class="item-value">
 			                	<input id="salesman_nm_edit" name="salesman_edit" style="display:none" />
 			                    <span id="agent-edit"></span>
-			                    <span><img src="img/edit.png" id='editagent-edit'/></span>
+			                    <span><img src="/img/edit.png" id='editagent-edit'/></span>
 			                    <div class="warn" id="agent-edit-warn">不能为空</div>
 			                </div>
 			            </div>

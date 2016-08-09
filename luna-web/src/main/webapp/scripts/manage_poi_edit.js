@@ -37,7 +37,7 @@ $(function(){
 	$("#btn-upload").click(function(){
 		var formData = new FormData($("#excel_upload")[0]);
 		$.ajax({
-			url: host+'/manage_poi.do?method=asyncUploadPoisByExcel',
+			url: Inter.getApiUrl().poiDataImport.url,
 			type: 'POST',
             async: false,
             data: formData,
@@ -109,7 +109,7 @@ $(function(){
 });
 
 function reloadpoi() {
-	window.location.href=host + "/manage_poi.do?method=init";
+	window.location.href= Inter.getApiUrl().poiInit.url;
 }
 
 function newBlankFixPoi(str) {
@@ -122,13 +122,13 @@ function newBlankFixPoi(str) {
 	str = str.replace(" ", "&nbsp;");
 	str = str.replace("\\", "\\\\");
 
-	var form = "<form action=\""+ host +"/edit_poi.do?method=initOfPopupFixPoi\"" +"method=\"post\" target=\"_blank\" >"
+	var form = "<form action="+ "\"" +Inter.getApiUrl().poiBatchEdit.url +"\"" + "method=\"post\" target=\"_blank\" >"
 		+ "<input type=\"hidden\" name=\"dataPoi\" value=\""+ str +"\">"
 		+ "</form>";
 	$(form).submit();
 };
 function newBlankPoiReadOnly(_id) {
-	var form = "<form action=\""+ host +"/edit_poi.do?method=newBlankPoiReadOnly\"" +"method=\"post\" target=\"_blank\" >"
+	var form = "<form action="+ "\""+ Inter.getApiUrl().poiReadPage.url+"\"" +"method=\"post\" target=\"_blank\" >"
 		+ "<input type=\"hidden\" name=\"_id\" value=\""+ _id +"\">"
 		+ "</form>";
 	$(form).submit();
@@ -137,10 +137,10 @@ function newBlankPoiReadOnly(_id) {
 //“删除”按钮，删除POI数据
 function delPOI(obj, _id){
 	$.ajax({
-        url: host+'/manage_poi.do?method=checkPoiCanBeDeleteOrNot',
-        type: 'POST',
+        url: Util.strFormat( Inter.getApiUrl().poiCheckDelete.url,[_id]),
+        type: 'GET',
         async: false,
-        data: {"_id":_id},
+        // data: {"_id":_id},
         dataType:"json",
         success: function (returndata) {
             var result = returndata;
@@ -153,8 +153,8 @@ function delPOI(obj, _id){
                     //弹窗中的确定按钮
                     $("#btn-delete").unbind().click(function(){
                         $.ajax({
-                	        url: host+'/manage_poi.do?method=asyncDeletePoi',
-                	        type: 'POST',
+                	        url: Util.strFormat( Inter.getApiUrl().poiDelete.url,[_id]),
+                	        type: 'DELETE',
                 	        async: false,
                 	        data: {"_id":_id},
                 	        dataType:"json",
