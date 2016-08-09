@@ -257,7 +257,7 @@ function getShareController(data){
 			
 		},
 		getOrder: function(target){
-			var order = -1
+			var order = -1;
 			try{
 				order = parseInt($(event.target).parentsUntil(
 				'.setting-share', '.share-item').attr('data-order'));
@@ -407,6 +407,11 @@ function NewAppController() {
 
 	that.init();
 	function init() {
+		that.typeData = {
+			'basic': 0,
+			'dev': 1,
+			'data': 2
+		};
 		that.data = {
 			name: '',
 			type: '', //basic(基础项目版) dev(开发版)  data(数据版)
@@ -432,10 +437,11 @@ function NewAppController() {
 	}
 
 	function show(type, event) {
+		that.data = {};
 		var business = localStorage.getItem('business');
 		if(business){
+			business = JSON.parse(business);
 			that.data.businessId = business.id;
-			that.data = {};
 			that.createType = type;
 			if(type === 'reuse'){
 				var parent = event.target.parentElement;
@@ -489,17 +495,18 @@ function NewAppController() {
 				url: req.url,
 				type: req.type,
 				data: {
-					app_name: that.name,
+					app_name: that.data.name,
 					business_id: that.data.businessId,
-					type: that.data.type,
+					type: that.typeData[that.data.type],
 					source_app_id: that.data.sourceAppId || null
 				},
 				success: function(data){
 					if(data.code === '0'){
+						console.log(data);
 						that.dialog.removeClass('pop-show');
 						switch(that.data.type){
 							case 'basic':
-								location.href = window.context + '/content/app/{0}?business_id={1}'.format(data.data.appId, that.data.businessId);
+								location.href = window.context + '/content/app/{0}?business_id={1}'.format(data.data.app_id, that.data.businessId);
 								break;
 							case 'dev':
 								// location.href = window.context + '/';
