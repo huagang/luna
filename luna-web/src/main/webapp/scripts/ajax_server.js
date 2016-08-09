@@ -143,15 +143,13 @@ function modifyPageName() {
 
 // 获取app单个页面全部详情
 function getPageDataDetail(pageID) {
-    var params = {
-        'page_id': pageID
-    };
+
     $.ajax({
         type: Inter.getApiUrl().appGetPageDetail.type,
-        url: Inter.getApiUrl().appGetPageDetail.url,
+        url: Inter.getApiUrl().appGetPageDetail.url.format(pageID),
         cache: false,
         async: false,
-        data: params,
+       // data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {

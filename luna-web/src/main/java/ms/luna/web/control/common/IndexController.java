@@ -1,6 +1,5 @@
 package ms.luna.web.control.common;
 
-import ms.luna.biz.model.MsUser;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +30,6 @@ public class IndexController extends BasicController {
         if(session == null) {
             return buildModelAndView("login");
         } else {
-//            MsUser msUser = (MsUser) session.getAttribute("msUser");
-//            logger.debug("nick name: " + msUser.getNickName());
             return buildModelAndView("home");
         }
 

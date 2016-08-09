@@ -3,7 +3,6 @@ package ms.luna.web.control.content;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
 import ms.luna.common.LunaUserSession;
@@ -320,7 +319,7 @@ public class CrmController extends BasicController {
 
             // 获得业务员name和Id
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser) session.getAttribute("msUser");
+            LunaUserSession msUser = (LunaUserSession) session.getAttribute("msUser");
             String uniqueId = msUser.getUniqueId();
 
             JSONObject param = JSONObject.parseObject("{}");
