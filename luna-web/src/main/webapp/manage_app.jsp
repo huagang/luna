@@ -90,57 +90,12 @@
 <!--模态窗口 -->
 <div id="pop-overlay"></div>
 
-<!-- 业务配置  start-->
-<div class="pop set_business">
-	<div class="pop-title">
-		<h4>业务配置</h4> 
-        <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
-	</div>
-	<div class="pop-cont">
-		<div>
-		    <label class="pop-label block">选择业务</label>
-		    <select class="select" id="country" name="country_id" disabled>
-		        <option value="100000" selected="selected">中国</option>
-		    </select>
-		    <select class="select" id="province" onchange="change_province()">
-		   		<option value="ALL">请选择省份</option>
-		   		<c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-		        	<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-				</c:forEach>
-	      	</select>
-	      	<select class="select" id="city" onchange="change_city()">
-	          	<option value="ALL">请选择市</option>
-	      	</select>
-	      	<select class="select" id="county">
-	          	<option value="ALL">请选择区县</option>
-	      	</select>
-	        <select class="select" id="cate">
-	       		<option value="ALL">类别</option>
-	       		<c:forEach items="${businessCategories}" var="category">
-					<option value="${category.key}">${category.value}</option>
-				</c:forEach>
-			</select>
-		    <button type="button" id="btn-searchbusiness">搜索</button>
-		</div>
-	    <div>
-            <label class="pop-label">搜索结果</label>
-            <select class="select business">
-            		<option>无</option>
-            </select>
-        </div>     
-        <p class='warn business-empty'>配置业务项不能为空</p>
-	</div>
-	<div class="pop-fun">
-	 	<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
-	 	<div class='pull-right'>
-	 		<button type="button" class="next">下一步</button>
-	 	</div>
-        
-    </div>
+<div class="pop new-app">
+
 </div>
-<!-- 业务配置  end -->
+
 <!-- 微景展配置  start-->
-<div class="pop set-app-name">
+<div class="pop edit-app">
     <div class="pop-title">
        	<h4>微景展配置</h4>
        	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  

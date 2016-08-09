@@ -4,8 +4,7 @@
  *  @update wumengqiang(dean@visualbusiness.com) 2016/6/22 15:20
  *  
  *  TODO LIST by wumengqiang
- *     微景展复用接口对接
- *   
+ *
  */
 
 $(document).ready(function(){
@@ -20,7 +19,7 @@ $(document).ready(function(){
         	$('#table_apps').bootstrapTable("refresh");    
         }  
     }); 
-    window.controller = getAppController(".set_business",".set-app-name");
+    window.controller = getAppController(".new-app", ".edit-app");
 });
 
 
@@ -351,99 +350,9 @@ function getShareController(data){
 	return controller;
 }
 
-/* 用于业务配置弹出框的控制
- * 
- */
-function getBusinessController(businessDialogSelector, data){
-	var urls = Inter.getApiUrl();
-	data = data || {};
-	var controller = {
-		data: {
-			businessId: data.businessId || -1,
-			businessName: data.businessName || '',
-		},
-		_businessDialog: $(businessDialogSelector), 
-		init: function(){
-			this._businessDialog.find('#btn-searchbusiness').click(
-					this.searchBusiness.bind(this));
-			this._businessDialog.find(".business").on("change",function(event){
-				this.data.businessId = parseInt(event.target.value);
-				this.data.businessName = $('.business option[value="' + 
-						event.target.value + '"]').html();
-				if(event.target.value){
-					$(".warn.business-empty").removeClass("show");
-				}
-			}.bind(this));
-		},
-		updateData: function(data){
-			var option = "<option value='{0}'>{1}</option>".format(data.businessId,
-					data.businessName);
-			this._businessDialog.find('.select.business').html(option);
-		},
-		searchBusiness:function() {   
-			/* 点击搜索按钮来筛选业务信息
-			 * 发送请求时需要国家，省，市，县，栏目等信息
-			 * 返回数据为业务列表
-			 */
-		    var request_data = {
-		    		"country_id":  	$("#country").val(),
-		    		"province_id": 	$("#province").val(),
-		    		"city_id": 		$("#city").val(),
-		    		"county_id":	$("#county").val(),
-		    		"category_id": 	$("#cate").val()
-		    };
-			$.ajax({
-		        url: urls.searchBusiness,
-		        type: 'POST',
-		        async:true,
-		        data: request_data,
-		        dataType:"json",
-		        success:function(returndata){
-		            switch (returndata.code){
-		                case "0":
-		                	var items = returndata.data.rows;             
-		            		var search_result_select = this._businessDialog.find('.business');
-		                	search_result_select.empty();
-		                    if(items.length > 0) { 
-		                        search_result_select.append("<option value=''>请选择</option>");
-		                    } else {
-		                        search_result_select.append("<option value=''>无</option>");
-		                    }
-		                    var optionsHtml = "",item;
-		    				for (var i = 0; i < items.length; i++) {
-		    					item = items[i];
-		    					optionsHtml += "<option value = '" +
-		    						item.business_id+"'>"+item.business_name+"</option>";
-		    				}  	
-		    				search_result_select.append(optionsHtml);
-		                    break;
-		                default:
-		                	showMessage("请求失败:" + returndata.msg);
-		                	break;
-		            }
-		        }.bind(this),
-		        error: function (returndata) {
-		            showMessage("请求失败");
-		        }.bind(this)
-		    })
-		},
-		reset: function(){
-			$('#province').val('ALL');
-			$('#city').html('<option value="ALL" selected="selected">请选择市</option>');
-			$('#county').html('<option value="ALL" selected="selected">请选择市</option>');
-			$('#cate').val('ALL');
-			this._businessDialog.find('.select.business').html("<option>无</option>");
-		}
-	
-	};
-	controller.init();
-	return controller;
-}
-
-function getAppController(businessDialogSelector, appDialogSelector){
+function getAppController(newAppSelector, editAppSelector){
 	/* 作用  新建微景展、更新微景展、复用微景展时控制配置弹出框的显示以及数据发送
-	 * @param businessDialogSelector  业务配置框的选择器
-	 * @param appDialogSelector       微景展配置框的选择器
+	 * @param editAppSelector       微景展配置框的选择器
 	 */
 	var urls = Inter.getApiUrl();
 	var controller = {
@@ -456,12 +365,10 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			businessId:'',
 			businessName:'',
 		},
-		businessController: getBusinessController(businessDialogSelector), // 业务配置控制器
 		shareController: getShareController(),  //分享设置控制器
-		normalController: getNormalController(appDialogSelector), // 常用设置控制器
+		normalController: getNormalController(editAppSelector), // 常用设置控制器
 		
-		_businessDialog: $(businessDialogSelector), 
-		_appDialog: $(appDialogSelector),
+		_appDialog: $(editAppSelector),
 		
 		_type:'',  // 操作类型： "create"(新建微景展), "update"(更新微景展信息), "reuse"(服用微景展),
 		
@@ -479,17 +386,11 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			
 			// 业务配置框事件绑定
 			
-			this._businessDialog.find('.btn-close').click(function(){
-				this._businessDialog.removeClass('pop-show');
-			}.bind(this));
 			this._appDialog.find('.btn-close').click(function(){
 				this._appDialog.removeClass('pop-show');
 			}.bind(this));
-			this._businessDialog.find('.next').click(this.setBusinessNextStep.bind(this));	
-						
 			// 微景展配置框事件绑定
 			
-			this._appDialog.find('.last').click(this.setAppNameLastStep.bind(this));
 			this._appDialog.find('.next').click(this._postData.bind(this));
 					
 			var shareMenu = this._appDialog.find('.share'),
@@ -500,7 +401,6 @@ function getAppController(businessDialogSelector, appDialogSelector){
 				if(this.normalController.data.appName){
 					this.shareController.updateDefaultTitle(this.normalController.data.appName);
 				}
-				
 				shareMenu.addClass('active');
 				normalMenu.removeClass('active');
 				$('.setting-share').removeClass('hidden');
@@ -532,13 +432,13 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			if(receive){
 				switch(receive){
 					case "property":
-						this.showBusinessConfigDialog('update',event.target);
+						//this.showBusinessConfigDialog('update',event.target);
 						break;
 					case "reuse":
-						this.showBusinessConfigDialog('reuse',event.target);
+						//this.showBusinessConfigDialog('reuse',event.target);
 						break;
 					case "newApp":
-						this.showBusinessConfigDialog('create',event.target);
+						//this.showBusinessConfigDialog('create',event.target);
 						break;
 				}
 			}	
@@ -551,7 +451,6 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			this._type = this.data.appId = this.data.appName = 
 				this.data.businessId = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
-			this._businessDialog.find(".warn.business-empty").removeClass("show");
 			this._appDialog.find('.last').removeClass('hidden');
 			this._appDialog.find('.next').html("下一步");
 			this._appDialog.find('.cancel').addClass('hidden');
@@ -561,93 +460,10 @@ function getAppController(businessDialogSelector, appDialogSelector){
 			if(this.normalController){
 				this.normalController.reset();
 			}
-			if(this.businessController){
-				this.businessController.reset()
-			}
-			
 		},
-		
-		showBusinessConfigDialog: function(type,target){
-			//  显示业务配置弹出框并初始化相关值
-			if(!type){
-				return;
-			}
-			this.reset();
-			this._type = type || '';
-			//TODO 通过ajax请求来获取app信息
-			var appId = target.parentNode.getAttribute("data-app-id") || '';
-			if(['reuse', 'create'].indexOf(type) > -1){
-				if(type === 'reuse'){
-					node = target.parentNode;
-					this.data.appId = node.getAttribute("data-app-id") || '';
-				}
-				this._businessDialog.addClass("pop-show");
-				this._appDialog.find('input.app-name').val("");
 
-				return;
-			}
-			$.ajax({
-				url: '/xx/xx/xx',
-				type: 'GET',
-				data: {appId: appId},
-				success: function(data){
-					
-				}.bind(this),
-				error: function(data){
-					var node = target.parentNode;
-					data = {
-						businessName : node.getAttribute("data-business-name") || '',
-						businessId : node.getAttribute("data-business-id") || '',
-						appId : node.getAttribute("data-app-id") || '',
-						appName : node.getAttribute("data-app-name") || '',
-						appDescription: '',
-						coverUrl: '',
-						share:[]
-					}
-					
-					this.shareController.updateData(data.share);
-					this.normalController.updateData(data);
-					this.businessController.updateData(data);
-					
-					if(type === 'update'){
-								
-						
-						// 更新data信息
-						this.data.businessName = data.businessName;
-						this.data.businessId = data.businessId;
-						this.data.appId = appId;
-						this.data.appName = data.appName;
-						
-						this._appDialog.addClass("pop-show");
-						this._appDialog.find('.last').addClass('hidden');
-						this._appDialog.find('.next').html('确定');
-						this._appDialog.find('.cancel').removeClass('hidden');
-					} else{
 
-					}
-				}.bind(this)
-			});
-			
-			
-		},
-		
-		setBusinessNextStep: function(){
-			// 业务配置弹出框的“下一步”按钮的点击事件回调函数
-			// 用于验证业务信息是否配置以及显示微景展名称配置弹出框
-			if(this.businessController.data.businessId > 0){
-				this._businessDialog.removeClass('pop-show');
-				this._appDialog.addClass('pop-show');
-			} else{
-				//显示业务信息没有 配置
-				$(".warn.business-empty").addClass("show");
-			}
-		},
-		setAppNameLastStep:function(){
-			// 微景展名称配置弹出框的“上一步”按钮的点击事件回调函数
-			// 用于显示业务配置弹出框
-			this._businessDialog.addClass('pop-show');
-			this._appDialog.removeClass('pop-show');
-		},
+
 		freshAppList:function(){
 			//刷新微景展列表
         	$('#table_apps').bootstrapTable("refresh");
@@ -667,7 +483,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 				alert(result.msg);
 			}
 			// 发送请求，包含新建微景展请求，更新微景展信息请求
-			if(!this.normalController.data.appName || !this.businessController.data.businessId){
+			if(!this.normalController.data.appName){
 				return;
 			}
 			var data = {
@@ -675,12 +491,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 	            "app_name":this.normalController.data.appName,
 	            "description": this.normalController.data.appDescription,
 	            "pic": this.normalController.data.coverUrl,
-	            "business_id": this.businessController.data.businessId,
 	            "share_data": this.shareController.data
-                //"app_id": this._app_id || null,
-                //"source_app_id": this._app_id || null,
-                //"app_name":this._app_name,
-                //"business_id": this._business_id
 		     };
 			console.log(data);
 			$.ajax({
@@ -689,8 +500,8 @@ function getAppController(businessDialogSelector, appDialogSelector){
 		        async:true,
 		        data: data,
 		        dataType:"json",
-		        success:function(data){
-		            if(data.code === "0"){
+		        success:function(res){
+		            if(res.code === "0"){
 		            	this._appDialog.removeClass('pop-show');
 		            	this.freshAppList();
 		            	if(this._type === 'create' || this._type === 'reuse'){
@@ -701,7 +512,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 		            	showMessage(data.msg);
 		            }
 		        }.bind(this),
-		        error: function (data) {
+		        error: function (res) {
 		            showMessage("请求失败");
 		        }
 		    });
