@@ -603,7 +603,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	}
 
 	@Override
-	public JSONObject saveSettingOfApp(String json, MsUser msUser) {
+	public JSONObject saveSettingOfApp(String json) {
 		// TODO Auto-generated method stub
 		
 		JSONObject jsonObject = JSONObject.parseObject(json);

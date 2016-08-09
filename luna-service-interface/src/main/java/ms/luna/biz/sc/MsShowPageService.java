@@ -20,13 +20,13 @@ public interface MsShowPageService {
 		
 	JSONObject getOnePageDetail(String pageId);
 	
-	JSONObject createOnePage(String json, MsUser msUser);
+	JSONObject createOnePage(String json, String lunaName);
 	
-	JSONObject updatePageName(String json, MsUser msUser);
+	JSONObject updatePageName(String json, String lunaName);
 	
-	JSONObject updatePage(String json, MsUser msUser);
+	JSONObject updatePage(String json, String lunaName);
 	
-	JSONObject updatePages(String json, MsUser msUser);
+	JSONObject updatePages(String json, String lunaName);
 	
 	JSONObject deletePageById(String pageId);
 	

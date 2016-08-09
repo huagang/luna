@@ -95,7 +95,7 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 	}
 
 	@Override
-	public JSONObject createOnePage(String json) {
+	public JSONObject createOnePage(String json, String lunaName) {
 		// TODO Auto-generated method stub
 		// check page name & page code not exist
 		MsShowPage page = JSONObject.parseObject(json, MsShowPage.class);
@@ -103,10 +103,7 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 			//给前端返回page detail时，需要含有此字段, 创建时预创建
 			page.setPageContent(new HashMap<String, Object>());
 		}
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		if(msUser != null) {
-			page.setUpdateUser(msUser.getNickName());
-		}
+		page.setUpdateUser(lunaName);
 		String pageId = msShowPageDAO.createOnePage(page);
 		page.setPageId(pageId);
 		return FastJsonUtil.sucess("创建成功", JSON.toJSON(page));
@@ -114,13 +111,13 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 
 	// 前端实现单页面更新复用了多个页面的接口
 	@Override
-	public JSONObject updatePage(String json) {
+	public JSONObject updatePage(String json, String lunaName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JSONObject updatePages(String json) {
+	public JSONObject updatePages(String json, String lunaName) {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject;
 		
@@ -136,6 +133,7 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 			List<MsShowPage> pages = new ArrayList<>(pageJsons.size());
 			for(Object pageJson : pageJsons) {
 				MsShowPage page = (MsShowPage) JSONObject.toJavaObject((JSONObject)pageJson, MsShowPage.class);
+				page.setUpdateUser(lunaName);
 				pages.add(page);
 			}
 			msShowPageDAO.updatePages(pages);
@@ -169,14 +167,11 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 	}
 
 	@Override
-	public JSONObject updatePageName(String json) {
+	public JSONObject updatePageName(String json, String lunaName) {
 		// TODO Auto-generated method stub
 		try{
 			MsShowPage msShowPage = JSON.parseObject(json, MsShowPage.class);
-			MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-			if(msUser != null) {
-				msShowPage.setUpdateUser(msUser.getNickName());
-			}
+			msShowPage.setUpdateUser(lunaName);
 			msShowPageDAO.updatePageName(msShowPage);
 			return FastJsonUtil.sucess("更新页面名称成功");
 		} catch(Exception ex) {

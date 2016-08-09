@@ -8,6 +8,7 @@ import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -74,8 +75,8 @@ public class AppEditController extends BasicController {
         }
 
         try {
-            MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-            JSONObject result = msShowPageService.updatePages(pages, msUser);
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = msShowPageService.updatePages(pages, user.getLunaName());
             return result;
         } catch (Exception e) {
             logger.error("Failed to save page", e);
@@ -132,9 +133,8 @@ public class AppEditController extends BasicController {
         params.put("page_name", pageName);
         params.put("page_code", pageCode);
         try {
-            MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-            JSONObject result = msShowPageService.updatePageName(params.toString(), msUser);
-
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = msShowPageService.updatePageName(params.toString(), user.getLunaName());
             return result;
         } catch (Exception e) {
             logger.error("Failed to modify page name", e);
@@ -191,8 +191,8 @@ public class AppEditController extends BasicController {
         params.put("page_code", pageCode);
         params.put("page_order", pageOrder);
         try {
-            MsUser msUser = (MsUser)request.getSession(false).getAttribute("msUser");
-            JSONObject result = msShowPageService.createOnePage(params.toString(), msUser);
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = msShowPageService.createOnePage(params.toString(), user.getLunaName());
             return result;
         } catch (Exception e) {
             logger.error("Failed to add new page", e);
@@ -327,7 +327,7 @@ public class AppEditController extends BasicController {
         }
         HttpSession session = request.getSession(false);
         try {
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject param = new JSONObject();
             param.put("app_id", appId);
             param.put("pic_thumb", CharactorUtil.nullToBlank(pic_thumb));
@@ -336,7 +336,7 @@ public class AppEditController extends BasicController {
             param.put("share_info_pic", CharactorUtil.nullToBlank(share_info_pic));
             param.put("share_info_title", CharactorUtil.nullToBlank(share_info_title));
             param.put("share_info_des", CharactorUtil.nullToBlank(share_info_des));
-            JSONObject result = msShowAppService.saveSettingOfApp(param.toString(), msUser);
+            JSONObject result = msShowAppService.saveSettingOfApp(param.toString());
             return result;
         } catch (Exception e) {
             logger.error("Failed to save app setting");

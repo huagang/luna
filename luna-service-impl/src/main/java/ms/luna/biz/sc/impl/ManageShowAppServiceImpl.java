@@ -86,9 +86,9 @@ public class ManageShowAppServiceImpl implements ManageShowAppService {
 	}
 
 	@Override
-	public JSONObject saveSettingOfApp(String json, MsUser msUser) {
+	public JSONObject saveSettingOfApp(String json) {
 		// TODO Auto-generated method stub
-		return manageShowAppBL.saveSettingOfApp(json, msUser);
+		return manageShowAppBL.saveSettingOfApp(json);
 	}
 
 	@Override
