@@ -21,14 +21,6 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -208,7 +200,14 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
-
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 <script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
