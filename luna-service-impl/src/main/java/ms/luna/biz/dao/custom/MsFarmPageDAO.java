@@ -11,9 +11,11 @@ public interface MsFarmPageDAO {
 
     String COLLECTION_NAME = "greektest";
 
-    void insertPage(JSONObject data);
+    void insertPage(Document data);
 
-    void updatePage(JSONObject data, Integer appId);
+    void updatePage(Document data, Integer appId);
+
+    void deletePage(Integer appId);
 
     Document selectPageByAppId(Integer app_id);
 

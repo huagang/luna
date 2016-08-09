@@ -2,6 +2,7 @@ package ms.luna.biz.dao.custom;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.springframework.stereotype.Repository;
 
@@ -22,15 +23,19 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
     }
 
     @Override
-    public void insertPage(JSONObject data) {
-        collection.insertOne(convertJson2Document(null, data));
+    public void insertPage(Document data) {
+        collection.insertOne(data);
     }
 
     @Override
-    public void updatePage(JSONObject data, Integer appId) {
+    public void updatePage(Document data, Integer appId) {
         Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId);
-        Document document = collection.find(filter).limit(1).first();
-        collection.updateOne(filter, new Document().append("$set", convertJson2Document(document, data)));
+        collection.updateOne(filter, new Document().append("$set", data));
+    }
+
+    @Override
+    public void deletePage(Integer appId) {
+        collection.deleteMany(Filters.eq(MsShowPageDAO.FIELD_APP_ID, appId));
     }
 
     @Override

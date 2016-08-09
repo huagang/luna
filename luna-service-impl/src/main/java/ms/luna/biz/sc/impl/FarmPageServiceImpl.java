@@ -10,6 +10,8 @@ import ms.luna.biz.dao.custom.MsFarmFieldDAO;
 import ms.luna.biz.dao.custom.MsFarmPageDAO;
 import ms.luna.biz.dao.custom.MsShowAppDAO;
 import ms.luna.biz.dao.custom.MsShowPageDAO;
+import ms.luna.biz.dao.custom.model.FarmFieldParameter;
+import ms.luna.biz.dao.custom.model.FarmFieldResult;
 import ms.luna.biz.dao.model.MsFarmField;
 import ms.luna.biz.dao.model.MsFarmFieldCriteria;
 import ms.luna.biz.dao.model.MsShowApp;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -97,12 +100,12 @@ public class FarmPageServiceImpl implements FarmPageService {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
             }
 
+            Document document = convertJson2DocumentWithFieldDef(param, getFarmFieldsDef());
             // 检查mongo数据是否存在
-            Document document =
             if (this.isPageExist(appId)) { // --exist
-                msFarmPageDAO.updatePage(param, appId);
+                msFarmPageDAO.updatePage(document, appId);
             } else { // --not exit
-                msFarmPageDAO.insertPage(param);
+                msFarmPageDAO.insertPage(document);
             }
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
@@ -114,7 +117,15 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     @Override
     public JSONObject delPage(Integer app_id) {
-        return null;
+        try {
+            msShowAppDAO.deleteByPrimaryKey(app_id);
+        } catch (Exception e) {
+            MsLogger.error("Fail to delete app", e);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to delete app");
+        }
+        msFarmPageDAO.deletePage(app_id);
+        return FastJsonUtil.sucess("success");
     }
 
     @Override
@@ -196,8 +207,17 @@ public class FarmPageServiceImpl implements FarmPageService {
         return fieldArray;
     }
 
-    private JSONObject getFarmFieldsDef() {
+    /**
+     * 获取字段名字
+     */
+    private List<String> getFarmFieldsDef() {
+        List<FarmFieldResult> farmFieldResults = msFarmFieldDAO.selectFieldNames(new FarmFieldParameter());
+        List<String> list = new ArrayList<>();
+        for(FarmFieldResult farmFieldResult : farmFieldResults) {
+            list.add(farmFieldResult.getName());
 
+        }
+        return list;
     }
 
     /**
@@ -316,12 +336,10 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @param fields 字段定义
      * @return Document
      */
-    private Document convertJson2DocumentWithFieldDef(JSONObject param, JSONArray fields) {
+    private Document convertJson2DocumentWithFieldDef(JSONObject param, List<String> fields) {
         Document doc = new Document();
-        for(int i = 0; i < fields.size(); i++) {
-            JSONObject field = fields.getJSONObject(i);
-            String fieldName = field.getJSONObject("definition").getString("name");
-            doc.put("name", param.containsKey(fieldName)? param.get(fieldName) : "");
+        for(String field : fields) {
+            doc.put("name", param.containsKey(field)? param.get(field) : "");
         }
         return doc;
     }
