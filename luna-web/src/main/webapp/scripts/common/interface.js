@@ -25,7 +25,7 @@ var Inter = function () {
     var apiHost = {
         'local':'http://localhost:8082/',
         'test':'http://luna-test.visualbusiness.cn/luna-api/',
-        'online':'http://luna.visualbusiness.cn/luna-api/',
+        'online':'http://luna.visualbusiness.cn/luna-api/'
     };
     return {
         getApiUrl: function () {
