@@ -126,13 +126,14 @@ var Inter = function () {
                 appPropUpdate: {url: context + '/content/app/setting/{0}', type:'POST'}, // 更新微景展属性信息
 
                 //微景展编辑页面操作
+                appSaveData :{url: '/content/app/pages', type: 'PUT'}, //保存页面数据
                 getAppSummary :{url: '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
                 appGetSetting :{url: '/content/app/setting/{0}', type: 'GET'}, //编辑微景展页面的操作
                 appCreatePage :{url: '/content/app/page', type: 'POST'}, //微景展页面
-                appModifyName :{url: '/content/app/page/name/{0}', type: 'POST'}, //修改页面的名字
+                appModifyName :{url: '/content/app/page/name/{0}', type: 'PUT'}, //修改页面的名字
                 appGetPageDetail :{url: '/content/app/page/{0}', type: 'GET'}, //获取单页面的详情
                 appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
-                appUpdatePageOrder :{url: '/content/app/page/order', type: 'PUT'}, //更新页面的顺序
+                appUpdatePageOrder :{url: '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
                 appSaveSetting :{url: '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
 
                 // 业务搜索

@@ -119,7 +119,7 @@ function modifyPageName() {
         };
         $.ajax({
             type: Inter.getApiUrl().appModifyName.type,
-            url: Inter.getApiUrl().appModifyName.url,
+            url: Util.strFormat(Inter.getApiUrl().appModifyName.url, [appModifyName]),
             cache: false,
             async: false,
             data: params,
@@ -135,7 +135,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
-                $('#layermain').css('height',lunaPage.pages[pageId].page_height);
+                $('#layermain').css('height', lunaPage.pages[pageId].page_height);
 
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
@@ -191,13 +191,12 @@ function savePageData(pageID, isPrompt) {
     } else {
         var pageinfo = {};
         pageinfo[pageID] = lunaPage.pages[pageID];
-
         var params = { "data": JSON.stringify(pageinfo) };
     }
     // params=JSON.stringify(params);
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=savePages',
+        type: Inter.getApiUrl().appSaveData.type,
+        url: Inter.getApiUrl().appSaveData.url,
         cache: false,
         async: false,
         data: params,
@@ -230,18 +229,15 @@ function savePageData(pageID, isPrompt) {
     });
 }
 
+/** 
+ * 删除界面
+ */
 function deletePage(pageID) {
-
-    var params = {
-        'page_id': pageID
-    };
-
     $.ajax({
         type: Inter.getApiUrl().appDeletePage.type,
-        url: Inter.getApiUrl().appDeletePage.url,
+        url: Util.strFormat(Inter.getApiUrl().appDeletePage.url, [pageID]),
         cache: false,
         async: false,
-        data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {
