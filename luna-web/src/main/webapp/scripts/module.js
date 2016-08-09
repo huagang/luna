@@ -34,17 +34,7 @@ $(function() {
     $("#textComponent").click(function() {
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-        //删除组件
-        // $("div.componentbox-selected:not([component-type=canvas])").contextmenu({
-        //     target: '#context-menu',
-        //     onItem: function(context,e){
-        //      context.remove();
-        //      $("#context-menu").css("display","none");
-        //      /*$('#context-menu').on('hidden.bs.context',function () {
-        //             $("div.componentbox-selected").remove();
-        //         });*/
-        //     }    
-        // });
+
         lunaPage.creatPageComponents(currentPageId, null, "text");
         currentComponent = jQuery.extend(true, {}, componentTextModelTemplate);
         currentComponent._id = currentComponentId;
@@ -57,19 +47,10 @@ $(function() {
     //图片组件
     $("#imageComponent").click(function() {
         lostFocus($(".componentbox-selected"));
-        // $("#model-url").val("");
-        // $("#thumbnail-model").attr("src",host +'/img/cover1.png');
-        // $("#model-clc").text("");
+
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-        //右键删除组件
-        // $("div.componentbox-selected:not([component-type=canvas])").contextmenu({
-        //     target: '#context-menu',
-        //     onItem: function(context,e){
-        //      context.remove();
-        //      $("#context-menu").css("display","none");
-        //     }    
-        // });
+
         lunaPage.creatPageComponents(currentPageId, null, "img");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgModelTemplate);
         currentComponent._id = currentComponentId;
@@ -85,14 +66,7 @@ $(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-        //右键删除组件
-        // $("div.componentbox-selected:not([component-type=canvas])").contextmenu({
-        //     target: '#context-menu',
-        //     onItem: function(context,e){
-        //         context.remove();
-        //         $("#context-menu").css("display","none");
-        //     }   
-        // });
+
         lunaPage.creatPageComponents(currentPageId, null, "nav");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentNavModelTemplate);
         currentComponent._id = currentComponentId;
@@ -108,14 +82,7 @@ $(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-        //右键删除组件
-        // $("div.componentbox-selected:not([component-type=canvas])").contextmenu({
-        //     target: '#context-menu',
-        //     onItem: function(context,e){
-        //         context.remove();
-        //         $("#context-menu").css("display","none");
-        //     }   
-        // });
+
         lunaPage.creatPageComponents(currentPageId, null, "pano");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentPanoModelTemplate);
         currentComponent._id = currentComponentId;
