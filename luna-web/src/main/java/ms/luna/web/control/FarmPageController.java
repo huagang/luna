@@ -12,9 +12,7 @@ import ms.luna.common.FarmCommon;
 import ms.luna.web.common.BasicCtrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sun.management.snmp.jvminstr.JvmOSImpl;
 
@@ -28,8 +26,8 @@ import java.io.IOException;
  * Created by greek on 16/7/25.
  */
 @Controller("FarmPageCtrl")
-@RequestMapping("/farm.do")
-public class FarmPageCtrl extends BasicCtrl {
+@RequestMapping("/content/app")
+public class FarmPageController extends BasicCtrl {
 
     @Autowired
     private FarmPageService farmPageService;
@@ -48,7 +46,8 @@ public class FarmPageCtrl extends BasicCtrl {
 
 //    private static final String
 
-    @RequestMapping(params = INIT)
+//    @RequestMapping(params = INIT)
+    @RequestMapping(method = RequestMethod.GET, value = "GET")
     public ModelAndView init(
             @RequestParam(required = true, value = "app_name") String app_name,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -94,11 +93,12 @@ public class FarmPageCtrl extends BasicCtrl {
     }
 
 
-    @RequestMapping(params = SAVEPAGE)
+//    @RequestMapping(params = SAVEPAGE)
+    @RequestMapping(method = RequestMethod.PUT, value = "")
     @ResponseBody
     public JSONObject savePage(
-            @RequestParam(required = true, value = "fieldsVal") String fieldsVal,
-            HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(required = true, value = "value") String fieldsVal,
+            HttpServletRequest request, HttpServletResponse response ) {
          try{
              // 获取字段定义
              JSONObject result1 = farmPageService.getFarmFields();
@@ -122,7 +122,8 @@ public class FarmPageCtrl extends BasicCtrl {
 
     }
 
-    @RequestMapping(params = DELPAGE)
+//    @RequestMapping(params = DELPAGE)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{app_id}")
     @ResponseBody
     public JSONObject delPage(
         @RequestParam(required = true, value = "app_id") Integer app_id,
@@ -137,11 +138,12 @@ public class FarmPageCtrl extends BasicCtrl {
         }
     }
 
-    @RequestMapping(params = LOADPAGE)
+//    @RequestMapping(params = LOADPAGE)
+    @RequestMapping(method = RequestMethod.GET, value = "/{app_id}")
     @ResponseBody
     public JSONObject loadPage(
-        @RequestParam(required = true, value = "app_id") Integer app_id,
-        HttpServletRequest request, HttpServletResponse response) {
+            @PathVariable("app_id") Integer app_id,
+            HttpServletRequest request, HttpServletResponse response) {
         try {
             JSONObject result = farmPageService.loadPage(app_id);
             MsLogger.debug(result.toString());
@@ -153,7 +155,8 @@ public class FarmPageCtrl extends BasicCtrl {
 
     }
 
-    @RequestMapping(params = PREVIEW)
+//    @RequestMapping(params = PREVIEW)
+    @RequestMapping(method = RequestMethod.GET, value = "/preview")
     @ResponseBody
     public JSONObject previewPage(
             HttpServletRequest request, HttpServletResponse response) {

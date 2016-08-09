@@ -44,7 +44,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Autowired
     private MsFarmPageDAO msFarmPageDAO;
 
-    private static int[] divider = new int[]{2,4,6,7,8};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
+    private static int[] divider = new int[]{1,3,5,7,8,9};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
     // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
 
     @Override
@@ -195,13 +195,16 @@ public class FarmPageServiceImpl implements FarmPageService {
         // 把{"1":"a"}这种形式变为{"value":"1", "label":"a"}
 
         if (fieldType.RADIO_TEXT.equals(type)) { // eg:全景
-            return this.convertOptions2JSONArray(JSONArray.parseArray(options), "value", "label");
+//            return this.convertOptions2JSONArray(JSONArray.parseArray(options), "value", "label");
+            return JSONArray.parseArray(options);
         }
         if (fieldType.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
-            return this.modifyJSONArray(JSONArray.parseArray(options), "name", "pic");
+//            return this.modifyJSONArray(JSONArray.parseArray(options), "name", "pic");
+            return JSONArray.parseArray(options);
         }
         if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
-            return this.modifyJSONArray(JSONArray.parseArray(options), "value", "label");
+//            return this.modifyJSONArray(JSONArray.parseArray(options), "value", "label");
+            JSONArray.parseArray(options);
         }
         // TODO
         return new JSONArray();
