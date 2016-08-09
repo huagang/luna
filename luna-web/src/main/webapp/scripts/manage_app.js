@@ -74,14 +74,13 @@ function getCounter(inputSelector, counterSelector, maxNum, curNum){
  * @param appSel - 微景展配置框的筛选器
  * @param data - 常用设置数据
  */
-function getNormalController(appSel, data){
-	data = data || {};
+function getNormalController(appSel){
 	var controller = {
 		// 计数器
 		data: {
-			appName: data.appName || '',
-			appDescription: data.appDescription || '',
-			coverUrl: data.coverUrl || ''
+			appName: '',
+			appDescription:'',
+			coverUrl: ''
 		},
 		_appDialog: $(appSel),
 		_appNameCounter: getCounter("input.app-name", "input.app-name + .counter",32),
@@ -144,7 +143,6 @@ function getNormalController(appSel, data){
 			if(data.coverUrl){
 				$('.setting-normal .preview-container').removeClass('hidden');
 				$('.setting-normal .file-uploader').addClass('hidden');
-				$('.file-uploader  .fileupload-tip').html("更换封面");
 			}
 			this._appDialog.find('.setting-normal .preview-img').attr("src", data.coverUrl);
 			this.data = data;
@@ -153,14 +151,16 @@ function getNormalController(appSel, data){
 		reset: function(){
 			// 重置常用设置显示效果
 			this.data = {
-				appName: data.appName || '',
-				appDescription: data.appDescription || '',
-				coverUrl: data.coverUrl || ''
+				appName: '',
+				appDescription: '',
+				coverUrl: ''
 			};
 			this._appDialog.find('.setting-normal .app-name').val('');
 			this._appDialog.find('.setting-normal .app-description').val('');
 			this._appNameCounter.updateCounter(0);
 			this._appDescriptionCounter.updateCounter(0);
+			$('.setting-normal .preview-container').addClass('hidden');
+			$('.setting-normal .file-uploader').removeClass('hidden');
 		},
 		// 上传图片
 		uploadImg: function(conSel, previewSel, previewImgSel, event){
@@ -179,10 +179,8 @@ function getNormalController(appSel, data){
 					}
 					$(previewImgSel).attr("src", data.data.access_url);
 					this.data.coverUrl = data.data.access_url;
-					$(conSel + ' .fileupload-tip').html("更换封面");
 				}.bind(this),
 				error: function(data) {
-					$(conSel + ' .fileupload-tip').html("更换封面");
 					showMessage(data.msg || '上传图片失败');
 				}
 				
@@ -597,6 +595,7 @@ function getAppController(editAppSelector){
 				type: this.urls.appPropInfo.type,
 				success: function(data){
 					if(data.code === '0'){
+						this.reset();
 						this.normalController.updateData({
 							appName: data.data.app_name || '',
 							appDescription:data.data.note || '',
@@ -629,8 +628,10 @@ function getAppController(editAppSelector){
 		
 		reset: function(){
 			//用于重置弹出框
-			this._appDialog.find('.share').removeClass('active');
+			this._appDialog.find('.setting-share').addClass('hidden');
+			this._appDialog.find('.setting-normal').removeClass('hidden');
 			this._appDialog.find('.normal').addClass('active');
+			this._appDialog.find('.share').removeClass('active');
 			this._type = this.data.appId = this.data.appName =
 				this.data.businessId = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
