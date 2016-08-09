@@ -11,16 +11,11 @@ $(function(){
                checkedList.push(parseInt(this.getAttribute('value')));
            }
         });
-        console.log(checkedList);
-        var data = new FormData();
-        data.append('menuArray', JSON.stringify(checkedList));
-        //data: JSON.stringify({menuArray: checkedList}),
-        //contentType: 'application/json',
         $.ajax({
             url: apiUrls.updateAuthoritySet.url.format(id),
             type: apiUrls.updateAuthoritySet.type,
             contentType: 'application/x-www-form-urlencoded',
-            data: data,
+            data: {'menuArray': JSON.stringify(checkedList)},
             dataType: 'json',
             success: function(data){
                 console.log(data);
