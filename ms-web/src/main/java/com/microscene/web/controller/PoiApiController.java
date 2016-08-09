@@ -24,9 +24,9 @@ import ms.luna.biz.util.MsLogger;
 
 @Controller
 @RequestMapping("/servicepoi.do")
-public class PoiApiCtrl {
+public class PoiApiController {
 
-	private final static Logger logger = Logger.getLogger(PoiApiCtrl.class);
+	private final static Logger logger = Logger.getLogger(PoiApiController.class);
 
 	@Autowired
 	private PoiApiService poiApiService;
