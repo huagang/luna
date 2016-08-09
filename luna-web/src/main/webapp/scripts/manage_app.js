@@ -206,11 +206,9 @@ function getShareController(data){
 		updateDefaultTitle: function(value){
 			this._defaultTitle = value;
 			this.data.forEach(function(item, index){
-				if(item.title === ''){
-					this.counters[index].titleCounter.updateCounter(value.length);
-					$(['.share-item.order-',index, ' .share-title' ].join('')).val(value);
-					item.title = value;
-				}
+				this.counters[index].titleCounter.updateCounter(value.length);
+				$('.share-item.order-{0} .share-title'.format(index)).val(item.title || value);
+				item.title = item.title || value;
 			}.bind(this));
 			
 				
@@ -316,6 +314,7 @@ function getShareController(data){
 				$("div[class*='order']").remove();
 				this.num = 0;
 				this.data = [];
+				this.counters = [];
 				data.forEach(function(item, index){
 					this.newShare();
 					var itemSel = '.share-item.order-' + index;
@@ -368,7 +367,7 @@ function getShareController(data){
 			this.counters =[];
 			this.data = [];		
 			this.num = 0;
-			
+			this._defaultTitle = '';
 			// 复原元素
 			$("div[class*='order']").remove();
 			this.newShare();
@@ -601,9 +600,7 @@ function getAppController(editAppSelector){
 							appDescription:data.data.note || '',
 							coverUrl: data.data.pic_thumb || ''
 						});
-						this.shareController.updateData({
-							data: data.data.shareArray,
-						});
+						this.shareController.updateData(data.data.shareArray);
 						this._appDialog.addClass('pop-show');
 					}
 					else{
@@ -618,11 +615,10 @@ function getAppController(editAppSelector){
 
 		handleEditProp: function(event){
 
-			this.reset();
 			var parent = $(event.target.parentElement);
 			this.data.appId = parseInt(parent.attr('data-app-id'));
 			this.data.businessId = parseInt(parent.attr('data-business-id'));
-			this.data.appName = parseInt(parent.attr('data-app-name'));
+			this.data.appName = parent.attr('data-app-name');
 			this.fetchAppInfo();
 		},
 		
@@ -632,8 +628,7 @@ function getAppController(editAppSelector){
 			this._appDialog.find('.setting-normal').removeClass('hidden');
 			this._appDialog.find('.normal').addClass('active');
 			this._appDialog.find('.share').removeClass('active');
-			this._type = this.data.appId = this.data.appName =
-				this.data.businessId = this.data.businessName = '';
+			this._type = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
 			if(this.shareController){
 				this.shareController.reset();
