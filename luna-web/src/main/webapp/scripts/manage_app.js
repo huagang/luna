@@ -3,21 +3,8 @@
  *  @author unknown
  *  @update wumengqiang(dean@visualbusiness.com) 2016/6/22 15:20
  *  
- *  TODO LIST by wumengqiang
- *
  */
 
-//获取当前的业务数据
-var business = {};
-if (window.localStorage.business.length === 0) {
-    window.location.href = Inter.getApiUrl().selectBusinessPage;
-} else {
-    business = JSON.parse(window.localStorage.business);
-	if (business) {
-		$('#txtBusinessId').val(business.id);
-		$('#txtBusinessName').val(business.name);
-	}
-}
 $(document).ready(function(){
     //搜索微景展
     $("#search_apps").click(function() {
@@ -35,140 +22,7 @@ $(document).ready(function(){
 
 });
 
-var APP_STATUS = {
-	"-1": "已删除",
-	"0": "未发布",
-	"1": "已发布",
-	"2": "已下线"
-};
 
-
-
-//初始化页面数据
-var InitAppPage = function () {
-	var typeSource = '';
-	var initNewApp = function () {
-		$('#new-built').click(function () {
-			$('.set-app-name').addClass('pop-show');
-			$('#appId').val('');
-			$('#txtAppName').val('');
-			$('#txtBusinessId').val(business.id);
-			$('#txtBusinessName').val(business.name);
-			typeSource = 'create';
-		});
-	};
-
-	var initPopPage = function () {
-		$('.btn-close').click(function () {
-			$(this).closest('.pop').removeClass('pop-show');
-		});
-
-		//确定代码
-		$('.set-app-name .next').on('click', function (e) {
-			switch (typeSource) {
-				case 'create':
-					appSaveData(Inter.getApiUrl().appCreate);
-					break;
-				case 'property':
-					appSaveData(Inter.getApiUrl().appUpdate);
-					break;
-				case 'reuse':
-					appSaveData(Inter.getApiUrl().appCopy);
-					break;
-
-<<<<<<< HEAD
-			}
-		});
-
-		//取消代码
-		$('.set-app-name .cancel').on('click', function (e) {
-			$(this).closest('.pop').removeClass('pop-show');
-		});
-	};
-
-	//设置表单的点击事件
-	var initTableEvent = function () {
-		$('.app-list').on('click', function (e) {
-			// e.preventDefault();
-			var targetName = e.target.name;
-			switch (targetName) {
-				// case 'appName':
-				// 	console.log('appName');
-				// 	break;
-				case 'property':
-					var appId = e.target.parentNode.dataset.appid,
-						appName = e.target.parentNode.dataset.appname,
-						businessId = e.target.parentNode.dataset.businessid,
-						businessName = e.target.parentNode.dataset.businessname;
-					$('#appId').val(appId);
-					$('#txtAppName').val(appName);
-					$('#txtBusinessId').val(businessId);
-					$('#txtBusinessName').val(businessName);
-					typeSource = 'property';
-
-					$('.set-app-name').addClass('pop-show');
-					e.preventDefault();
-					break;
-				case 'edit':
-					break;
-				case 'reuse':
-					var appId = e.target.parentNode.dataset.appid,
-						appName = e.target.parentNode.dataset.appname,
-						businessId = e.target.parentNode.dataset.businessid,
-						businessName = e.target.parentNode.dataset.businessname;
-					$('#source_app_id').val(appId);
-					$('#txtAppName').val();
-					$('#txtBusinessId').val(businessId);
-					$('#txtBusinessName').val(businessName);
-					typeSource = 'reuse	';
-
-					e.preventDefault();
-					$('.set-app-name').addClass('pop-show');
-					break;
-				case 'delete':
-					break;
-			}
-		});
-
-	};
-
-	//保存数据
-	function appSaveData(inter) {
-		var postData = Util.formToJson($('#appData'));
-		if (!postData.app_name || !postData.business_id) {
-			return;
-		}
-		$.ajax({
-			url: postData.appid ? Util.strFormat(inter.url, [postData.appid]) : inter.url,
-			type: inter.type,
-			async: true,
-			data: postData,
-			dataType: "json",
-			success: function (data) {
-				if (data.code === "0") {
-					$('.set-app-name').removeClass('pop-show');
-					$('#search_apps').trigger('click');
-					if (typeSource === 'create' || typeSource === 'reuse') {
-						location.href = Util.strFormat(Inter.getApiUrl().appEditPage, [data.data.app_id]);
-					}
-				}
-				else {
-					alert(data.msg);
-				}
-			}.bind(this),
-			error: function (data) {
-				alert("请求失败");
-			}
-		});
-	}
-
-
-	return {
-		init: function () {
-			initNewApp();
-			initPopPage();
-			initTableEvent();
-=======
 /* 作用  - 用于计算输入框的字数并显示在输入框右下角
  * 潜在问题 : 由于jquery的change事件是在丢失焦点时触发的，不能满足需求，因而绑定input事件，
  * 		     但是在输入中文时，由于提前输入了字母，会导致在没有达到最大字数时就已经被截断了。
@@ -194,6 +48,9 @@ function getCounter(inputSelector, counterSelector, maxNum, curNum){
 		},
 		handleChange:function(event){
 			var value = event.target.value;
+			if(value.length - curNum > 1){
+				return;
+			}
 			if(value.length > this.maxNum){
 				event.target.value = value = value.substr(0, this.maxNum);
 			}
@@ -222,7 +79,7 @@ function getNormalController(appSel, data){
 		data: {
 			appName: data.appName || '',
 			appDescription: data.appDescription || '',
-			coverUrl: data.coverUrl || '',
+			coverUrl: data.coverUrl || ''
 		},
 		_appDialog: $(appSel),
 		_appNameCounter: getCounter("input.app-name", "input.app-name + .counter",32),
@@ -272,8 +129,9 @@ function getNormalController(appSel, data){
 		},
 		updateData: function(data){
 			/* 用于更新常用设置信息
-			 * @data 常用设置信息
+			 * @param data 常用设置信息
 			 */
+			Object.assign(this.data, data);
 			this.reset();
 			this._appDialog.find('.setting-normal .app-name').val(this.data.appName || '');
 			this._appNameCounter.updateCounter(this.data.appName.length);
@@ -286,7 +144,7 @@ function getNormalController(appSel, data){
 			this.data = {
 				appName: data.appName || '',
 				appDescription: data.appDescription || '',
-				coverUrl: data.coverUrl || '',
+				coverUrl: data.coverUrl || ''
 			};
 			this._appDialog.find('.setting-normal .app-name').val('');
 			this._appDialog.find('.setting-normal .app-description').val('');
@@ -411,7 +269,7 @@ function getShareController(data){
 					desSel = [".share-item.order-", this.num, " .share-description"].join('');
 				this.counters.push({
 					titleCounter: getCounter(titleSel, titleSel + ' + .counter' ,32, data.title.length),
-					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128, data.description.legth),
+					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128, data.description.length)
 				});
 				this.num += 1;
 			}
@@ -503,8 +361,11 @@ function NewAppController() {
 	// 初始化
 	that.init = init;
 
-	// 绑定事件
+	// 操作 绑定事件
 	that._bindEvent = _bindEvent;
+
+	// 操作 刷新微景展列表
+	that.freshAppList = freshAppList;
 
 	// 事件 输入框onChange事件
 	that.handleAppNameChange = handleAppNameChange;
@@ -518,7 +379,6 @@ function NewAppController() {
 	// 事件 隐藏新建app的弹出框
 	that.hide = hide;
 
-
 	// 事件 点击下一步
 	that.handleNext = handleNext;
 
@@ -528,7 +388,7 @@ function NewAppController() {
 			name: '',
 			type: '', //basic(基础项目版) dev(开发版)  data(数据版)
 			businessId: '' || 39,
-			sourceAppId: undefined,
+			sourceAppId: undefined
 		};
 		that.dialog = $('.new-app');
 
@@ -585,6 +445,11 @@ function NewAppController() {
 		that.data.name = event.target.value;
 	}
 
+	function freshAppList(){
+		//刷新微景展列表
+		$('#table_apps').bootstrapTable("refresh");
+	}
+
 	function handleNext(event) {
 		var error = '';
 		if(! that.data.name){
@@ -608,7 +473,7 @@ function NewAppController() {
 				},
 				success: function(data){
 					if(data.code === '0'){
-
+						that.dialog.removeClass('pop-show');
 					} else {
 						console.log(data.msg || '新建微景展失败');
 					}
@@ -635,25 +500,17 @@ function getAppController(newAppSelector, editAppSelector){
 			appDescription:'',
 			coverUrl: '',
 			businessId:'',
-			businessName:'',
+			businessName:''
 		},
 		shareController: getShareController(),  //分享设置控制器
 		normalController: getNormalController(editAppSelector), // 常用设置控制器
 		
 		_appDialog: $(editAppSelector),
-		
 		_type:'',  // 操作类型： "create"(新建微景展), "update"(更新微景展信息), "reuse"(服用微景展),
-		
-		_posturl:{ // 设置相关请求的url
-			create: urls.createApp,  //创建微景展请求 url
-			update: urls.updateApp,  //更新微景展名称请求 url
-			reuse: urls.copyApp,	  //复用微景展请求url
-
-		},
 		
 		_bindEvent:function(){
 			// 绑定事件
-			$('.app-list').on('click', '.property', this.handleEditProp);
+			$('.app-list').on('click', '.property', this.handleEditProp.bind(this));
 			
 			this._appDialog.find('.btn-close').click(function(){
 				this._appDialog.removeClass('pop-show');
@@ -689,14 +546,45 @@ function getAppController(newAppSelector, editAppSelector){
 			}.bind(this));
 
 		},
-		handleEditProp: function(){
-			$('.edit-app').addClass('pop-show');
+
+		fetchAppInfo: function(){
+			$.ajax({
+				url: '',
+				type: 'GET',
+				success: function(data){
+					if(data.code === '0'){
+						this.normalController.updateData({});
+						this.shareController.updateData({});
+						this._appDialog.addClass('pop-show');
+					}
+					else{
+						showMessage(data.msg || '获取微景展属性信息失败');
+					}
+				}.bind(this),
+				error: function(data){
+					showMessage(data.msg || '获取微景展属性信息失败');
+					this._appDialog.addClass('pop-show');
+
+				}.bind(this)
+			})
+		},
+
+		handleEditProp: function(event){
+
+			this.reset();
+			var parent = $(event.target.parentElement);
+			this.data.appId = parseInt(parent.attr('data-app-id'));
+			this.data.businessId = parseInt(parent.attr('data-business-id'));
+			this.data.appName = parseInt(parent.attr('data-app-name'));
+			this.fetchAppInfo();
+
 		},
 		
 		reset: function(){
 			//用于重置弹出框
-			
-			this._type = this.data.appId = this.data.appName = 
+			this._appDialog.find('.share').removeClass('active');
+			this._appDialog.find('.normal').addClass('active');
+			this._type = this.data.appId = this.data.appName =
 				this.data.businessId = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
 			if(this.shareController){
@@ -709,10 +597,6 @@ function getAppController(newAppSelector, editAppSelector){
 
 
 
-		freshAppList:function(){
-			//刷新微景展列表
-        	$('#table_apps').bootstrapTable("refresh");
-		},
 		_checkValidation: function(){
 			var result = this.normalController.checkValidation();
 			var errorMsg = result.error ? result.msg : '';
@@ -720,6 +604,7 @@ function getAppController(newAppSelector, editAppSelector){
 			errorMsg += result.error ? result.msg : '';
 			return {error: errorMsg ? 'empty' : null, msg: errorMsg};
 		},
+
 		_postData:function(){
 			// 微景展名称配置弹出框的“下一步”按钮的点击事件回调函数
 			// 用于验证微景展名称是否填写
@@ -740,18 +625,14 @@ function getAppController(newAppSelector, editAppSelector){
 		     };
 			console.log(data);
 			$.ajax({
-	            url: this._posturl[this._type],
-		        type: 'POST',
-		        async:true,
+	            url: '', // 更新属性信息
+		        type: 'PUT',
+				contentType: 'application/x-www-form-urlencoded',
 		        data: data,
 		        dataType:"json",
 		        success:function(res){
 		            if(res.code === "0"){
 		            	this._appDialog.removeClass('pop-show');
-		            	this.freshAppList();
-		            	if(this._type === 'create' || this._type === 'reuse'){
-		            		location.href = '../app.do?method=init&app_id=' + res.data.app_id +'&business_id=' + data.business_id;
-		            	}
 		            }
 		            else{
 		            	showMessage(data.msg);
@@ -761,127 +642,56 @@ function getAppController(newAppSelector, editAppSelector){
 		            showMessage("请求失败");
 		        }
 		    });
->>>>>>> microscene-opt
 		}
 	};
-} ();
-
-
-
-$(document).ready(function () {
-    //搜索微景展
-    $("#search_apps").click(function () {
-		$('#table_apps').bootstrapTable("refresh");
-    });
-    // 文本框回车搜索
-    $('#like_filter_nm').keypress(function (event) {
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13') {
-			$('#table_apps').bootstrapTable("refresh");
-        }
-    });
-	InitAppPage.init();
-    // var controller = getAppController(".set-app-name");
-});
+	controller._bindEvent(); //调用事件绑定函数，从而实现初始化。
+	return controller;
+};
 
 /**
  * 显示删除区域的对话框
  * @param app_id
  */
-function delApp(obj, app_id) {
+function delApp(obj, app_id){
     var target = $(obj).parent().parent();
-    $popwindow = $('#pop-delete');
+    $popwindow = $("#pop-delete");
     popWindow($popwindow);
     $("#btn-delete").unbind();
     $("#btn-delete").click(function () {
-		submit_delete_app(app_id, target);
-
+    	submit_delete_app(app_id, target);
+        
     });
 }
 /**
  * 发送删除请求给后台服务器
  * @param app_id　要删除的微景展的id
  */
-function submit_delete_app(app_id, target) {
+function submit_delete_app(app_id, target){
 	$.ajax({
-		url: Util.strFormat(Inter.getApiUrl().appDelete.url, [app_id]),
-        type: Inter.getApiUrl().appDelete.type,
+    	url: host +'/manage/app.do?method=delete_app',
+        type: 'POST',
         async: false,
-        // data: {"app_id":app_id},
-        dataType: "json",
+        data: {"app_id":app_id},
+        dataType:"json",
         success: function (returndata) {
-            switch (returndata.code) {
-				case "0":
-					target.remove();
-					$("#pop-overlay").css("display", "none");
-					$("#pop-delete").css("display", "none");
-					$('#table_apps').bootstrapTable("refresh");
-					break;
+            switch (returndata.code){
+               case "0":
+            	   target.remove();
+                   $("#pop-overlay").css("display","none");
+                   $("#pop-delete").css("display","none");
+                   $('#table_apps').bootstrapTable("refresh");
+                   break;
                 default:
-<<<<<<< HEAD
-					alert(returndata.code + ":" + returndata.msg);
-					break;
-            }
-        },
-        error: function (returndata) {
-			alert("请求失败!");
-=======
                 	showMessage(returndata.code + ":" + returndata.msg);
                 break;
             }
         },
         error: function (returndata) {
         	showMessage("请求失败!");
->>>>>>> microscene-opt
         }
     });
 }
 
-<<<<<<< HEAD
-//名字格式化
-function nameFormatter(value, row, index) {
-	switch (row.app_status) {
-		case 1:
-			return '<a href="{0}" name="appName" target="_blank">{1}</a>'.format(row.app_addr, row.app_name);
-		default:
-			return row.app_name;
-	}
-}
-
-//状态字段
-function statusFormatter(value, row, index) {
-	if (row.app_status === 1) {
-		return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
-	} else {
-		return APP_STATUS[row.app_status];
-	}
-
-}
-
-function timeFormatter(value, row, index) {
-	return '创建于：<span class="time-create">' + row.regist_hhmmss + '</span><br>'
-		+ '修改于：<span class="time-create">' + row.up_hhmmss + '</span>';
-}
-
-function operationFormatter(value, row, index) {
-	var wrapperStart = "<div class='wrapper' data-appid='{0}' data-appname='{1}' data-businessid='{2}' data-businessname='{3}'>".format(row.app_id, row.app_name, row.business_id, row.business_name)
-	var editOp = '<a class="property" name="property">属性</a>';
-	var modifyOp = '<a class="modify" name="edit" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().appEditPage.url, [row.app_id]) + '">编辑</a>';
-	var reuseApp = '<a class="reuse" name="reuse" href="javascript:void(0)">复用</a>';
-	var delApp = '<a class="delete" name="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-	return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
-}
-
-function queryParams(params) {
-	/* alert(JSON.stringify(params)); */
-	return {
-		limit: params.limit,
-		offset: params.offset,
-		order: params.order,
-		like_filter_nm: encodeURI($('#like_filter_nm').val())
-	}
-};
-=======
 function showMessage(msg){
 	$("#pop-message .message").text(msg);
 	popWindow($('#pop-message'));
@@ -890,4 +700,3 @@ function showMessage(msg){
 		$('#pop-overlay').css('display', 'none')
 	});
 }
->>>>>>> microscene-opt
