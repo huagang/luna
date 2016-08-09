@@ -181,6 +181,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 				continue;
 			}
 			MsShowPageShare msShowPageShare = jsonObject.toJavaObject(MsShowPageShare.class);
+			msShowPageShare.setAppId(appId);
 			msShowPageShareDAO.updateByPrimaryKeySelective(msShowPageShare);
 		}
 
