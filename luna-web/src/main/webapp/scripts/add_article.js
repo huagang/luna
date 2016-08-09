@@ -310,7 +310,7 @@ var initPage = function() {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function(e) {
             $.ajax({
-                url: Inter.getApiUrl().articlePublish.url,
+                url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
                 type:Inter.getApiUrl().articlePublish.type,
                 async: true,
                 data: { id: articleStore.id },

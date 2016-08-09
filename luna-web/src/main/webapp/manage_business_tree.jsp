@@ -208,8 +208,6 @@
 
 	function operationFormatter(value, row, index) {
 		var business_id = row.business_id;
-
-//		var editOp = '<a target="_blank" class="edit" href="./business_tree.do?method=init&business_id=' + business_id + '">编辑</a>';
 		var editOp = '<a target="_blank" class="edit" href="'+Util.strFormat(Inter.getApiUrl().bizRelationEditPage.url, [business_id])+'">编辑</a>';
 		var deleteOp = '<a class="delete" href="javascript:void(0)" onclick="delBusinessTree(this,' + business_id + ')">删除</a>';
 

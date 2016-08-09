@@ -50,7 +50,7 @@
                             <table id="table_column" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/manage/column.do?method=async_search_column"
+										 data-url="/content/column/search"
 										 data-pagination="true"
 										 data-page-size=20
 										 data-side-pagination="server" 

@@ -85,7 +85,7 @@ var Inter = function () {
                 articleCreatePage: { url: '/content/article?create&business_id={0}', type: 'GET' },
                 articleDelete: { url: '/content/article/{0}', type: 'DELETE' },
                 articleSearch: { url: '/content/article/{0}', type: 'GET' },
-
+q
                 articleEditPage: { url: '/content/article/{0}', type: 'GET' }, //编辑文章界面
                 articleEditData: { url: '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
                 articleCreate: { url: '/content/article', type: 'POST' }, //保存文章
