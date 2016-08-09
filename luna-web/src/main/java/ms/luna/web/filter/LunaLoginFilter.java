@@ -51,7 +51,7 @@ public class LunaLoginFilter implements Filter {
             }
         }
         skipUrlAfterLogin = new HashSet<>();
-        skipUrlAfterLogin.add("/common");
+        skipUrlAfterLogin.add("/inner");
 
     }
 
