@@ -23,27 +23,13 @@
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/pages.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/components.css">
           <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/topic.css">
-          <!-- 脚本文件 -->
-          <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-          <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
-          <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
-          <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
-          <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
-          <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
-          <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
-          <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-          <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
-          <script>
-	        var appId = ${appId};
-      	  </script>
+		      <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
         </head>
-
         <body ng-app="showPage">
-
           <!-- 可视化界面顶部导航 -->
           <div class="header" ng-controller="menuController as menu">
             <nav class="navbar">
-              <a class="navbar-logo-wrap" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+              <a class="navbar-logo-wrap" href="/"><img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
               <div class="component-btn-wrap">
                 <div class="component-btn"  id="textComponent">
                   <i class="icon icon-comp-text"></i><br/>
@@ -943,14 +929,27 @@
 		        <p><a id="publishURL" class="copyed" href="http://luna.visualbusiness.cn/" target="_blank">http://luna.visualbusiness.cn/</a><button type="button" class="copy" id="btn-copy-url">复制链接</button></p>
 	        </div>
         </div>
-		<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+    <!-- 脚本文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
+    <script>
+    var appId = ${appId};
+    </script>
+    <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>    
     <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
     <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>

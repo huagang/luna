@@ -344,7 +344,7 @@ function modify() {
 
 (function($) {
     $.init = function() {
-        getAppData(getUrlParam("app_id"));
+        getAppData(getAppId());
         getAppSetting();
         this.showPageList(this.pages);
         var firstPage = jQuery(".list-page .drop-item:first");
@@ -857,4 +857,10 @@ function showPanoBackground($container, componentData) {
             lunaPage.pages[currentPageId].bgPano = null;
         }
     }
+}
+
+
+//获取应用的id
+function getAppId() {
+    return  window.location.pathname.match(/\d+/);
 }

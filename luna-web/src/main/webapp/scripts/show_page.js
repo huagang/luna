@@ -619,7 +619,7 @@ var initJQueryFun = function() {
     return {
         init: function() {
             $.init = function() {
-                getAppData(getUrlParam("app_id"));
+                getAppData(getAppId());
                 getAppSetting();
                 this.showPageList(this.pages);
                 var firstPage = jQuery(".list-page .drop-item:first");
