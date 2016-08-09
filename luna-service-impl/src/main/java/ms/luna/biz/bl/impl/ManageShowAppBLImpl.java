@@ -142,11 +142,12 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			}
 
 			int appId = createResult.getLeft();
-			JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
-			Pair<Boolean, Pair<Integer, String>> createShareInfo = createShareInfo(appId, jsonArray);
-			if(! createShareInfo.getLeft()) {
-				return FastJsonUtil.error(createShareInfo.getRight().getLeft(), createShareInfo.getRight().getRight());
-			}
+			// 分享信息不是创建时设置,而是单独通过属性设置
+//			JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
+//			Pair<Boolean, Pair<Integer, String>> createShareInfo = updateShareInfo(appId, jsonArray);
+//			if(! createShareInfo.getLeft()) {
+//				return FastJsonUtil.error(createShareInfo.getRight().getLeft(), createShareInfo.getRight().getRight());
+//			}
 			createInitialPage(appId, owner);
 			JSONObject ret = new JSONObject();
 			ret.put(MsShowAppTable.FIELD_APP_ID, appId);
@@ -156,34 +157,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			logger.error("Failed to insert app: " + json, e);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建微景展失败");
 		}
-	}
-
-	public Pair<Boolean, Pair<Integer, String>> createShareInfo(int appId, JSONArray jsonArray) {
-
-		if(jsonArray == null) {
-			logger.warn("share info is null");
-			return Pair.of(true, null);
-		}
-		if(jsonArray.size() > 5) {
-			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "分享设置多于5条"));
-		}
-
-		// if exist share info and use create interface, delete old ones
-		MsShowPageShareCriteria criteria = new MsShowPageShareCriteria();
-		criteria.createCriteria().andAppIdEqualTo(appId);
-		msShowPageShareDAO.deleteByCriteria(criteria);
-
-		for(int i = 0; i < jsonArray.size(); i++) {
-			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject == null) {
-				continue;
-			}
-			MsShowPageShare msShowPageShare = jsonObject.toJavaObject(MsShowPageShare.class);
-			msShowPageShare.setAppId(appId);
-			msShowPageShareDAO.insertSelective(msShowPageShare);
-		}
-
-		return Pair.of(true, null);
 	}
 
 	public Pair<Boolean, Pair<Integer, String>> updateShareInfo(int appId, JSONArray jsonArray) {
@@ -203,7 +176,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			}
 			MsShowPageShare msShowPageShare = jsonObject.toJavaObject(MsShowPageShare.class);
 			msShowPageShare.setAppId(appId);
-			msShowPageShareDAO.updateByPrimaryKeySelective(msShowPageShare);
+			if(msShowPageShare.getId() != null && msShowPageShare.getId() > 0) {
+				msShowPageShareDAO.updateByPrimaryKeySelective(msShowPageShare);
+			} else {
+				msShowPageShareDAO.insertSelective(msShowPageShare);
+			}
 		}
 
 		return Pair.of(true, null);
@@ -651,7 +628,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		msShowApp.setShareInfoPic(shareInfoPic);
 
 		msShowAppDAO.updateByPrimaryKeySelective(msShowApp);
-
+		// 分享信息通过属性创建
 		JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
 		Pair<Boolean,Pair<Integer,String>> createResult = updateShareInfo(appId, jsonArray);
 		if(! createResult.getLeft()) {
