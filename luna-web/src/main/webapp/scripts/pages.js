@@ -1134,7 +1134,7 @@ function showPanoBackground($container, componentData) {
 }
 //获取应用的id
 function getAppId() {
-    return  window.location.pathname.match(/\d+/);
+    return  window.location.pathname.match(/\d+/)[0];
 }
 /**
  * 画布中的点击事件
