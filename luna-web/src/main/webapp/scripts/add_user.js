@@ -274,31 +274,53 @@
                 var data = new FormData();
                 if(! vm.userId){
                     data.append('emails', vm.data.emailList.join(','));
-                }
-                data.append('category_id', vm.data.module);
-                data.append('role_id', parseInt(vm.data.role));
-                if(vm.data.extra && vm.data.extra.type){
-                    data.append('extra', JSON.stringify(vm.data.extra));
-                }
-                var url = vm.userId ? vm.apiUrls.updateUserAuth.url.format(vm.userId) : vm.apiUrls.inviteUsers.url,
-                    type = vm.userId ? vm.apiUrls.updateUserAuth.type : vm.apiUrls.inviteUsers.type;
-
-                $http({
-                    url: url,
-                    method: type,
-                    data: data,
-                    headers: {
-                        "Content-Type": undefined
+                    data.append('category_id', vm.data.module);
+                    data.append('role_id', parseInt(vm.data.role));
+                    if(vm.data.extra && vm.data.extra.type){
+                        data.append('extra', JSON.stringify(vm.data.extra));
                     }
-                }).then(function (res) {
-                    if(res.data.code === '0'){
-                        alert('新建用户成功');
-                    } else{
+                    $http({
+                        url: vm.apiUrls.inviteUsers.url,
+                        method: vm.apiUrls.inviteUsers.type,
+                        data: data,
+                        headers: {
+                            "Content-Type": undefined
+                        }
+                    }).then(function (res) {
+                        if(res.data.code === '0'){
+                            alert('新建用户成功');
+                        } else{
+                            alert(res.data.msg || '新建用户失败');
+                        }
+                    }, function (res) {
                         alert(res.data.msg || '新建用户失败');
+                    });
+                } else{
+                    data = {
+                        category_id: vm.data.module,
+                        role_id: parseInt(vm.data.role),
+                    };
+                    if(vm.data.extra && vm.data.extra.type){
+                        data.extra = JSON.stringify(vm.data.extra);
                     }
-                }, function (res) {
-                    alert(res.data.msg || '新建用户失败');
-                });
+                    $http({
+                        url: vm.apiUrls.updateUserAuth.url.format(vm.userId),
+                        method: vm.apiUrls.updateUserAuth.type,
+                        data: data,
+                        headers:{
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(function(res){
+                        if(res.data.code === '0'){
+                            alert('保存成功');
+                        } else{
+                            alert(res.data.msg || '保存失败');
+                        }
+                    }, function(res){
+                        alert(res.data.msg || '保存失败');
+                    });
+                }
+
             } else {
                 alert(res.msg);
             }
