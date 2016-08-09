@@ -144,7 +144,7 @@ public class BusinessController extends BasicController {
         try {
 
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession)session.getAttribute("msUser");
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
             String businessName = RequestHelper.getString(request, "business_name");
             if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
@@ -159,7 +159,7 @@ public class BusinessController extends BasicController {
                 return FastJsonUtil.error(-1, "商户不能为空");
             }
 
-            String createUser = msUser.getNickName();
+            String createUser = user.getNickName();
             JSONObject param = JSONObject.parseObject("{}");
             param.put("business_name", businessName);
             param.put("business_code", businessCode);

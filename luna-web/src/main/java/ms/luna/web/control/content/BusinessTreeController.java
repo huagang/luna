@@ -8,6 +8,7 @@ import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
@@ -167,8 +168,8 @@ public class BusinessTreeController extends BasicController {
             if(session == null) {
                 throw new Exception("session is null");
             }
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-            String uniqueId = msUser.getUniqueId();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            String uniqueId = user.getUniqueId();
             param.put("uniqueId", uniqueId);
             JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString());
             MsLogger.info(result.toJSONString());

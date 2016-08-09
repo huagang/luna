@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -177,8 +178,8 @@ public class AddPoiCtrl extends BasicCtrl{
 		try {
 			HttpSession session = request.getSession(false);
 			JSONObject param = this.param2Json(request);
-			LunaUserSession msUser = (LunaUserSession)session.getAttribute("user");
-			param.put("uniqueId", msUser.getUniqueId());
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			param.put("uniqueId", user.getUniqueId());
 			JSONObject result = managePoiService.addPoi(param.toString());
 
 			if ("0".equals(result.getString("code"))) {

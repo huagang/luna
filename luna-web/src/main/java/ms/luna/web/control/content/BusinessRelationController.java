@@ -129,8 +129,8 @@ public class BusinessRelationController extends BasicController {
             if (session == null) {
                 throw new Exception("session is null");
             }
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-            String uniqueId = msUser.getUniqueId();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            String uniqueId = user.getUniqueId();
             param.put("uniqueId", uniqueId);
             JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString());
             return result;

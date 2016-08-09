@@ -58,8 +58,8 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-        String luna_nm = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        String luna_nm = user.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm.jsp");
         model.addObject("basePath", request.getContextPath());
@@ -86,8 +86,8 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         session.setAttribute("menu_selected", "crm");
-        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-        String luna_nm = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        String luna_nm = user.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm_add.jsp");
         model.addObject("basePath", request.getContextPath());
@@ -116,8 +116,8 @@ public class CrmController extends BasicController {
             return new ModelAndView("/error.jsp");
         }
         session.setAttribute("menu_selected", "crm");
-        LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-        String luna_nm = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        String luna_nm = user.getNickName();
 
         ModelAndView model = new ModelAndView("/manage_crm_edit.jsp");
         model.addObject("basePath", request.getContextPath());
@@ -319,8 +319,8 @@ public class CrmController extends BasicController {
 
             // 获得业务员name和Id
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("msUser");
-            String uniqueId = msUser.getUniqueId();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            String uniqueId = user.getUniqueId();
 
             JSONObject param = JSONObject.parseObject("{}");
             param.put("salesman_id", uniqueId);

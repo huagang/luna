@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -403,8 +404,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		try {
 			HttpSession session = request.getSession(false);
-			LunaUserSession msUser = (LunaUserSession)session.getAttribute("msUser");
-			JSONObject result = this.savePois(savedExcel, unZipped, msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			JSONObject result = this.savePois(savedExcel, unZipped, user);
 			MsLogger.info(result.toJSONString());
 			response.getWriter().print(result.toJSONString());
 			response.setStatus(200);

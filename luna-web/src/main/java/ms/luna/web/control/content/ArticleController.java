@@ -118,8 +118,8 @@ public class ArticleController extends BasicController {
         }
         try {
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-            articleJson.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
             return ret;
         } catch (Exception ex) {
@@ -183,8 +183,8 @@ public class ArticleController extends BasicController {
         try{
             JSONObject jsonObject = pair.getLeft();
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-            jsonObject.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
             return ret;
