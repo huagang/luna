@@ -3,8 +3,6 @@
  *  @author unknown
  *  @update wumengqiang(dean@visualbusiness.com) 2016/6/22 15:20
  *  
- *  TODO LIST by wumengqiang
- *
  */
 
 $(document).ready(function(){
@@ -50,6 +48,9 @@ function getCounter(inputSelector, counterSelector, maxNum, curNum){
 		},
 		handleChange:function(event){
 			var value = event.target.value;
+			if(value.length - curNum > 1){
+				return;
+			}
 			if(value.length > this.maxNum){
 				event.target.value = value = value.substr(0, this.maxNum);
 			}
@@ -78,7 +79,7 @@ function getNormalController(appSel, data){
 		data: {
 			appName: data.appName || '',
 			appDescription: data.appDescription || '',
-			coverUrl: data.coverUrl || '',
+			coverUrl: data.coverUrl || ''
 		},
 		_appDialog: $(appSel),
 		_appNameCounter: getCounter("input.app-name", "input.app-name + .counter",32),
@@ -143,7 +144,7 @@ function getNormalController(appSel, data){
 			this.data = {
 				appName: data.appName || '',
 				appDescription: data.appDescription || '',
-				coverUrl: data.coverUrl || '',
+				coverUrl: data.coverUrl || ''
 			};
 			this._appDialog.find('.setting-normal .app-name').val('');
 			this._appDialog.find('.setting-normal .app-description').val('');
@@ -268,7 +269,7 @@ function getShareController(data){
 					desSel = [".share-item.order-", this.num, " .share-description"].join('');
 				this.counters.push({
 					titleCounter: getCounter(titleSel, titleSel + ' + .counter' ,32, data.title.length),
-					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128, data.description.legth),
+					descriptionCounter: getCounter(desSel,desSel + ' + .counter',128, data.description.length)
 				});
 				this.num += 1;
 			}
@@ -360,8 +361,11 @@ function NewAppController() {
 	// 初始化
 	that.init = init;
 
-	// 绑定事件
+	// 操作 绑定事件
 	that._bindEvent = _bindEvent;
+
+	// 操作 刷新微景展列表
+	that.freshAppList = freshAppList;
 
 	// 事件 输入框onChange事件
 	that.handleAppNameChange = handleAppNameChange;
@@ -375,7 +379,6 @@ function NewAppController() {
 	// 事件 隐藏新建app的弹出框
 	that.hide = hide;
 
-
 	// 事件 点击下一步
 	that.handleNext = handleNext;
 
@@ -385,7 +388,7 @@ function NewAppController() {
 			name: '',
 			type: '', //basic(基础项目版) dev(开发版)  data(数据版)
 			businessId: '' || 39,
-			sourceAppId: undefined,
+			sourceAppId: undefined
 		};
 		that.dialog = $('.new-app');
 
@@ -442,6 +445,11 @@ function NewAppController() {
 		that.data.name = event.target.value;
 	}
 
+	function freshAppList(){
+		//刷新微景展列表
+		$('#table_apps').bootstrapTable("refresh");
+	}
+
 	function handleNext(event) {
 		var error = '';
 		if(! that.data.name){
@@ -465,7 +473,7 @@ function NewAppController() {
 				},
 				success: function(data){
 					if(data.code === '0'){
-
+						that.dialog.removeClass('pop-show');
 					} else {
 						console.log(data.msg || '新建微景展失败');
 					}
@@ -492,7 +500,7 @@ function getAppController(newAppSelector, editAppSelector){
 			appDescription:'',
 			coverUrl: '',
 			businessId:'',
-			businessName:'',
+			businessName:''
 		},
 		shareController: getShareController(),  //分享设置控制器
 		normalController: getNormalController(editAppSelector), // 常用设置控制器
@@ -500,16 +508,9 @@ function getAppController(newAppSelector, editAppSelector){
 		_appDialog: $(editAppSelector),
 		_type:'',  // 操作类型： "create"(新建微景展), "update"(更新微景展信息), "reuse"(服用微景展),
 		
-		_posturl:{ // 设置相关请求的url
-			create: urls.createApp,  //创建微景展请求 url
-			update: urls.updateApp,  //更新微景展名称请求 url
-			reuse: urls.copyApp	  //复用微景展请求url
-
-		},
-		
 		_bindEvent:function(){
 			// 绑定事件
-			$('.app-list').on('click', '.property', this.handleEditProp);
+			$('.app-list').on('click', '.property', this.handleEditProp.bind(this));
 			
 			this._appDialog.find('.btn-close').click(function(){
 				this._appDialog.removeClass('pop-show');
@@ -545,23 +546,45 @@ function getAppController(newAppSelector, editAppSelector){
 			}.bind(this));
 
 		},
+
+		fetchAppInfo: function(){
+			$.ajax({
+				url: '',
+				type: 'GET',
+				success: function(data){
+					if(data.code === '0'){
+						this.normalController.updateData({});
+						this.shareController.updateData({});
+						this._appDialog.addClass('pop-show');
+					}
+					else{
+						showMessage(data.msg || '获取微景展属性信息失败');
+					}
+				}.bind(this),
+				error: function(data){
+					showMessage(data.msg || '获取微景展属性信息失败');
+					this._appDialog.addClass('pop-show');
+
+				}.bind(this)
+			})
+		},
+
 		handleEditProp: function(event){
+
+			this.reset();
 			var parent = $(event.target.parentElement);
 			this.data.appId = parseInt(parent.attr('data-app-id'));
 			this.data.businessId = parseInt(parent.attr('data-business-id'));
 			this.data.appName = parseInt(parent.attr('data-app-name'));
-			this.normalController.updateData({appName: this.data.appName});
-			this.reset();
-			this._appDialog.find('.share').removeClass('active');
-			this._appDialog.find('.normal').addClass('active');
-			this._appDialog.addClass('pop-show');
+			this.fetchAppInfo();
 
 		},
 		
 		reset: function(){
 			//用于重置弹出框
-			
-			this._type = this.data.appId = this.data.appName = 
+			this._appDialog.find('.share').removeClass('active');
+			this._appDialog.find('.normal').addClass('active');
+			this._type = this.data.appId = this.data.appName =
 				this.data.businessId = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
 			if(this.shareController){
@@ -572,10 +595,8 @@ function getAppController(newAppSelector, editAppSelector){
 			}
 		},
 
-		freshAppList:function(){
-			//刷新微景展列表
-        	$('#table_apps').bootstrapTable("refresh");
-		},
+
+
 		_checkValidation: function(){
 			var result = this.normalController.checkValidation();
 			var errorMsg = result.error ? result.msg : '';
@@ -583,6 +604,7 @@ function getAppController(newAppSelector, editAppSelector){
 			errorMsg += result.error ? result.msg : '';
 			return {error: errorMsg ? 'empty' : null, msg: errorMsg};
 		},
+
 		_postData:function(){
 			// 微景展名称配置弹出框的“下一步”按钮的点击事件回调函数
 			// 用于验证微景展名称是否填写
@@ -603,18 +625,14 @@ function getAppController(newAppSelector, editAppSelector){
 		     };
 			console.log(data);
 			$.ajax({
-	            url: this._posturl[this._type],
-		        type: 'POST',
-		        async:true,
+	            url: '', // 更新属性信息
+		        type: 'PUT',
+				contentType: 'application/x-www-form-urlencoded',
 		        data: data,
 		        dataType:"json",
 		        success:function(res){
 		            if(res.code === "0"){
 		            	this._appDialog.removeClass('pop-show');
-		            	this.freshAppList();
-		            	if(this._type === 'create' || this._type === 'reuse'){
-		            		location.href = '../app.do?method=init&app_id=' + res.data.app_id +'&business_id=' + data.business_id;
-		            	}
 		            }
 		            else{
 		            	showMessage(data.msg);
