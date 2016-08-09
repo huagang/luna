@@ -140,6 +140,10 @@ var Inter = function () {
                 cateUpdate:{url:"/platform/category",type:"PUT"}, // 更新
                 cateDelete:{url:"/platform/category/{0}",type:"DELETE"},//删除
 
+
+                // 组权限管理
+                updateAuthoritySet: {url: context + '/platform/authority/{0}', type: 'PUT'}
+
             };
         }
     };

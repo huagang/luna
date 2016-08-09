@@ -18,13 +18,7 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/authority-set.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -71,19 +65,24 @@
 									</c:forEach>
 	                            </tbody>
 	                        </table>
-
+                        <button class="button save">保存</button>
                     </div>
                 </div>
                 <!--主题内容 end-->
             </div>
         </div>
     </div>
+    <jsp:include page="/templete/bottom.jsp"/>
+    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/authority-set.js"></script>
     <script>
         var moduleAndMenu = ${moduleAndMenu};
     </script>
     <!--中间区域内容 end-->
     <!--底部版权 start-->
-   <jsp:include page="/templete/bottom.jsp"/>
     <!--底部版权 end-->
 </div>
 </body>
