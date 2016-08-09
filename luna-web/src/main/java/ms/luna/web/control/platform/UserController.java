@@ -40,9 +40,11 @@ public class UserController extends BasicController {
 
     @Autowired
     private LunaUserService lunaUserService;
+    private final String menu = "user";
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView indexPage() {
+    public ModelAndView indexPage(HttpServletRequest request) {
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         ModelAndView modelAndView = buildModelAndView("manage_user");
         return modelAndView;
     }
