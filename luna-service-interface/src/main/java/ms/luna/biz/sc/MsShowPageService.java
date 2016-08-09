@@ -2,8 +2,6 @@ package ms.luna.biz.sc;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ms.luna.biz.model.MsUser;
-
 /**
  * 
  * Copyright (C) 2015 - 2016 Microscene Inc., All Rights Reserved.
