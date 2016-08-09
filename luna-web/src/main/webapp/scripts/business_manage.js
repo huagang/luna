@@ -33,8 +33,8 @@ function searchMerchant() {
     };
 
     $.ajax({
-        url: window.urls.searchMerchat,
-        type: 'GET',
+        url: window.urls.searchMerchat.url,
+        type: window.urls.searchMerchat.type,
         async: true,
         data: request_data,
         dataType: "json",
@@ -151,8 +151,8 @@ function submit_business() {
         "merchant_id": $("#result").val()
     };
     $.ajax({
-        url: window.urls.business,
-        type: 'POST',
+        url: window.urls.businessCreate.url,
+        type: window.urls.businessCreate.type,
         async: true,
         data: request_data,
         dataType: "json",
@@ -181,8 +181,8 @@ function submit_business() {
 
 function submit_delete_business(business_id) {
     $.ajax({
-        url: window.urls.business + '/' + business_id,
-        type: 'DELETE',
+        url: window.urls.businessDelete.url + '/' + business_id,
+        type: window.urls.businessDelete.type,
         async: true,
         dataType: "json",
         success: function(returndata) {
@@ -236,8 +236,8 @@ function update_business() {
         "business_code": business_code,
     };
     $.ajax({
-        url: window.urls.business.url + '/' + business_id,
-        type: 'PUT',
+        url: window.urls.businessUpdate.url + '/' + business_id,
+        type: window.urls.businessUpdate.type,
         async: true,
         data: request_data,
         dataType: "json",

@@ -84,10 +84,12 @@ var Inter = function () {
                 bizRelationBizTreeEdit:{url: context + "/content/businessRelation/saveBusinessTree", type:"PUT"}, // 保存编辑的业务关系树
 
                 // 商户
-                searchMerchat: { url: context + '/content/business/searchMerchant', type: '' }, // 搜索商户接口 get 方法
+                searchMerchat: { url: context + '/content/business/searchMerchant', type: 'GET' }, // 搜索商户接口 get 方法
 
                 // 业务
-                business: {url: context + '/content/business',type:''}, // 业务相关 POST PUT
+                businessCreate: {url: context + '/content/business',type:'POST'}, // 业务相关 POST PUT
+                businessUpdate: {url: context + '/content/business',type:'PUT'}, // 业务相关 POST PUT
+                businessDelete: {url: context + '/content/business',type:'DELETE'}, // 业务相关 POST PUT
                 getBusinessList: {url: context + '/content/business/selectForEdit', type:'GET'},
                 getBusinessListForEdit: {url: context + '/content/business/selectForEdit?unique_id={0}', type: 'GET'},
             	
@@ -108,7 +110,9 @@ var Inter = function () {
                 articleEditData: { url: '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
                 articleCreate: { url: '/content/article', type: 'POST' }, //保存文章
                 articleUpdate: { url: '/content/article/{0}', type: 'POST' }, //更新文章
-                
+                articlePublish:{ url: '/content/article/publish/{0}', type: 'PUT' }, //更新发布
+
+
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
                 uploadVideoInArtcle: { url: context + "/add_poi.do?method=upload_video", type: '' },//上传视频
 
