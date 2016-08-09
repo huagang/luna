@@ -2,9 +2,9 @@ package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLDecoder;
 
@@ -67,14 +66,12 @@ public class AppController extends BasicController {
         if(! isValidName(appName)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称不合法");
         }
-        HttpSession session = request.getSession(false);
-        MsUser msUser = (MsUser)session.getAttribute("msUser");
-        String owner = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
         JSONObject jsonObject = JSONObject.parseObject("{}");
         jsonObject.put("app_name", appName);
         jsonObject.put("business_id", businessId);
-        jsonObject.put("owner", owner);
+        jsonObject.put("owner", user.getLunaName());
         JSONObject result = manageShowAppService.createApp(jsonObject.toString());
 
         return result;
@@ -93,15 +90,13 @@ public class AppController extends BasicController {
         if(! isValidName(appName)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称不合法");
         }
-        HttpSession session = request.getSession(false);
-        MsUser msUser = (MsUser)session.getAttribute("msUser");
-        String owner = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
         JSONObject jsonObject = JSONObject.parseObject("{}");
         jsonObject.put("app_id", appId);
         jsonObject.put("app_name", appName);
         jsonObject.put("business_id", businessId);
-        jsonObject.put("update_user", owner);
+        jsonObject.put("update_user", user.getLunaName());
         JSONObject result = manageShowAppService.updateApp(jsonObject.toString());
 
         return result;
@@ -178,15 +173,13 @@ public class AppController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "源微景展不合法");
         }
 
-        HttpSession session = request.getSession(false);
-        MsUser msUser = (MsUser)session.getAttribute("msUser");
-        String owner = msUser.getNickName();
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
         JSONObject jsonObject = JSONObject.parseObject("{}");
         jsonObject.put("app_name", appName);
         jsonObject.put("business_id", businessId);
         jsonObject.put("source_app_id", sourceAppId);
-        jsonObject.put("owner", owner);
+        jsonObject.put("owner", user.getLunaName());
         JSONObject result = manageShowAppService.copyApp(jsonObject.toString());
 
         return result;

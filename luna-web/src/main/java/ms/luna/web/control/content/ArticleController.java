@@ -2,13 +2,11 @@ package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
-import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -120,9 +118,8 @@ public class ArticleController extends BasicController {
         }
         try {
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-//            MsUser msUser = (MsUser)session.getAttribute("msUser");
-            articleJson.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
             return ret;
         } catch (Exception ex) {
@@ -186,9 +183,8 @@ public class ArticleController extends BasicController {
         try{
             JSONObject jsonObject = pair.getLeft();
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-//            MsUser msUser = (MsUser)session.getAttribute("msUser");
-            jsonObject.put(MsArticleTable.FIELD_AUTHOR, msUser.getNickName());
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
             return ret;

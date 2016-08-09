@@ -146,10 +146,17 @@ function getPageDataDetail(pageID) {
 
     $.ajax({
         type: Inter.getApiUrl().appGetPageDetail.type,
+<<<<<<< HEAD
         url: Util.strFormat(Inter.getApiUrl().appGetPageDetail.url, [pageID]),
         // cache: false,
         async: false,
         // data: params,
+=======
+        url: Inter.getApiUrl().appGetPageDetail.url.format(pageID),
+        cache: false,
+        async: false,
+       // data: params,
+>>>>>>> d59ef9e3e7083b0d5373249ae960a6cd00da0683
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {

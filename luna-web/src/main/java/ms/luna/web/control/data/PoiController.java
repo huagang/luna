@@ -9,6 +9,7 @@ import ms.luna.biz.util.*;
 import ms.luna.common.LunaUserSession;
 import ms.luna.common.MsLunaResource;
 import ms.luna.common.PoiCommon;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
@@ -331,8 +332,8 @@ public class PoiController extends BasicController {
 
         try {
             HttpSession session = request.getSession(false);
-            LunaUserSession msUser = (LunaUserSession)session.getAttribute("user");
-            JSONObject result = this.savePois(savedExcel, unZipped, msUser);
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = this.savePois(savedExcel, unZipped, user);
             MsLogger.info(result.toJSONString());
             return result;
         } catch (Exception e) {

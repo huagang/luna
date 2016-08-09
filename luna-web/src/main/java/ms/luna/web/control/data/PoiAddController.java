@@ -8,6 +8,7 @@ import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.*;
 import ms.luna.common.LunaUserSession;
 import ms.luna.common.PoiCommon;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
@@ -153,8 +154,8 @@ public class PoiAddController extends BasicController {
         try {
             HttpSession session = request.getSession(false);
             JSONObject param = this.param2Json(request);
-            LunaUserSession msUser = (LunaUserSession)session.getAttribute("user");
-            param.put("uniqueId", msUser.getUniqueId());
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            param.put("uniqueId", user.getUniqueId());
             JSONObject result = managePoiService.addPoi(param.toString());
 
             if ("0".equals(result.getString("code"))) {

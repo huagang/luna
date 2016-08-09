@@ -2,7 +2,7 @@ package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.model.MsUser;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -145,7 +144,7 @@ public class BusinessController extends BasicController {
         try {
 
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
             String businessName = RequestHelper.getString(request, "business_name");
             if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
@@ -160,7 +159,7 @@ public class BusinessController extends BasicController {
                 return FastJsonUtil.error(-1, "商户不能为空");
             }
 
-            String createUser = msUser.getNickName();
+            String createUser = user.getNickName();
             JSONObject param = JSONObject.parseObject("{}");
             param.put("business_name", businessName);
             param.put("business_code", businessCode);

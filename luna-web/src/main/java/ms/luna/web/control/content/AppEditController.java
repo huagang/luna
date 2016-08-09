@@ -1,9 +1,7 @@
 package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qcloud.vod.Common.Request;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
 import ms.luna.biz.util.CharactorUtil;

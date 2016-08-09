@@ -2,13 +2,13 @@ package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -166,12 +165,11 @@ public class BusinessTreeController extends BasicController {
             JSONObject param = JSON.parseObject(businessTree);
 
             HttpSession session = request.getSession(false);
-//            MsUser msUser = (MsUser) session.getAttribute("msUser");
             if(session == null) {
                 throw new Exception("session is null");
             }
-            LunaUserSession msUser = (LunaUserSession) session.getAttribute("user");
-            String uniqueId = msUser.getUniqueId();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            String uniqueId = user.getUniqueId();
             param.put("uniqueId", uniqueId);
             JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString());
             MsLogger.info(result.toJSONString());
