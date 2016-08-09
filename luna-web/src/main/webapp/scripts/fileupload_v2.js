@@ -90,7 +90,9 @@ var FileUploader = {
 		data.append('type', options.type);
 		data.append('file', options.file);
 		data.append('resource_type', options.resourceType || 'business');
-		data.append('resource_id', options.resourceId || null);
+		if(options.resourceId){
+			data.append('resource_id', options.resourceId);
+		}
 
 		$.ajax({
 			url: this.path.url,

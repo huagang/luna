@@ -128,7 +128,7 @@ var Inter = function () {
                 //微景展编辑页面操作
                 getAppSummary :{url: '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
                 appGetSetting :{url: '/content/app/setting/{0}', type: 'GET'}, //编辑微景展页面的操作
-                appCreatePage :{url: '/content/app/page/{0}', type: 'POST'}, //微景展页面
+                appCreatePage :{url: '/content/app/page', type: 'POST'}, //微景展页面
                 appModifyName :{url: '/content/app/page/name/{0}', type: 'POST'}, //修改页面的名字
                 appGetPageDetail :{url: '/content/app/page/{0}', type: 'GET'}, //获取单页面的详情
                 appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据

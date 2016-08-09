@@ -53,7 +53,7 @@ function isValidPageInfo() {
 }
 // 创建app的一个新的页面
 function creatPageID() {
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
@@ -70,7 +70,7 @@ function creatPageID() {
         $.ajax({
             type: Inter.getApiUrl().appCreatePage.type,
             url: Inter.getApiUrl().appCreatePage.url,
-            cache: false,
+            // cache: false,
             async: false,
             data: params,
             dataType: 'json',
@@ -102,7 +102,7 @@ function creatPageID() {
 
 function modifyPageName() {
 
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
