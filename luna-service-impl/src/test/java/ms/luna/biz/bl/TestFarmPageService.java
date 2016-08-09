@@ -57,7 +57,8 @@ public class TestFarmPageService {
 		param.put("app_name", app_name);
 		param.put("owner", owner);
 
-		JSONObject result = farmPageService.initPage(param.toString());
+		Integer appId = 268;
+		JSONObject result = farmPageService.getPageInfo(appId);
 		logger.debug(result.toString());
 		System.out.println(result.toString());
 
