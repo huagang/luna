@@ -255,6 +255,7 @@ CREATE TABLE `ms_show_app` (
   `app_name` varchar(64) NOT NULL COMMENT '应用名称',
   `app_code` varchar(32) NOT NULL COMMENT '应用简称',
   `business_id` int(11) NOT NULL COMMENT '微景业务id',
+  `type` INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版',
   `share_info_title` varchar(64) DEFAULT NULL,
   `share_info_des` varchar(256) DEFAULT NULL,
   `share_info_pic` varchar(256) DEFAULT NULL,
