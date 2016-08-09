@@ -41,7 +41,6 @@ public class ArticleCtrl {
     public JSONObject getArticleByBusinessAndColumnName(@PathVariable String businessName, @PathVariable String columnNames) {
         try {
             JSONObject jsonObject = manageArticleService.getArticleByBusinessAndColumnName(businessName, columnNames);
-            logger.info(jsonObject);
             return jsonObject;
         } catch (Exception ex) {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");

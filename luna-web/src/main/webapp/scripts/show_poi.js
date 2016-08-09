@@ -14,7 +14,7 @@ function getPoiController() {
             audio = getAudio(".audio");
             audioDom = getAudioDomControl(audio);
             videoDom = getVideoDomControl(audio);
-            host = '/luna-web';
+            host = window.host || '';
             //weixinConfig();
             initData(updateData);
         }

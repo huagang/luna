@@ -17,14 +17,14 @@ public interface MsShowPageBL {
 	JSONObject getAllPageDetail(int appId);
 		
 	JSONObject getOnePageDetail(String pageId);
-	
-	JSONObject createOnePage(String json);
-	
-	JSONObject updatePageName(String json);
-	
-	JSONObject updatePage(String json);
-	
-	JSONObject updatePages(String json);
+
+	JSONObject createOnePage(String json, String lunaName);
+
+	JSONObject updatePageName(String json, String lunaName);
+
+	JSONObject updatePage(String json, String lunaName);
+
+	JSONObject updatePages(String json, String lunaName);
 	
 	JSONObject deletePageById(String pageId);
 	

@@ -8,7 +8,7 @@ function init(lat,lng,latv,lngv,container,lalg) {
     var original_maker;
     var size = new qq.maps.Size(25, 35),
 	    icon = new qq.maps.MarkerImage(
-	    "img/marker_red.png",
+	    "/img/marker_red.png",
 	    size
 	    );
     var center = new qq.maps.LatLng(latv, lngv);
@@ -41,11 +41,11 @@ function init(lat,lng,latv,lngv,container,lalg) {
             });
             var size = new qq.maps.Size(25, 35),
                 icon = new qq.maps.MarkerImage(
-                "img/marker_red.png",
+                "/img/marker_red.png",
                 size
                 );
             var icon_original = new qq.maps.MarkerImage(
-                "img/marker.png",
+                "/img/marker.png",
                 size
             );
             var latlngBounds = new qq.maps.LatLngBounds();

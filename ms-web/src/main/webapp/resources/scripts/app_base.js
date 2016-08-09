@@ -12,9 +12,10 @@ var objdata = {
     destPosition: {
 
     }
-}
+};
 
-String.prototype.format= function() {
+
+String.prototype.format = function () {
     var s = this,
         i = arguments.length;
 
@@ -24,7 +25,7 @@ String.prototype.format= function() {
     return s;
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     function init() {
         var w = $(".app-wrap");
@@ -37,34 +38,42 @@ $(document).ready(function() {
         });
     }
 
-    var iftab = false;
-    if (pageData.data instanceof Array && pageData.data.length>0) {
+    var iftab = false,
+        iflongpage = false;
+    if (pageData.data instanceof Array && pageData.data.length > 0) {
         for (var plist in pageData.data) {
-            for (var con in pageData.data[plist].page_content){
-                if(pageData.data[plist].page_content[con].type=="tab"){
-                    iftab=true;
+            for (var con in pageData.data[plist].page_content) {
+                if (pageData.data[plist].page_content[con].type == "tab") {
+                    iftab = true;
                 }
             }
-        }
-    }else if(typeof pageData.data.page_content == "object"){
-        for (var con in pageData.data.page_content){
-            if(pageData.data.page_content[con].type=="tab"){
-                iftab=true;
+            if (pageData.data[plist].page_type == "2") {
+                iflongpage = true;
             }
         }
+    } else if (typeof pageData.data.page_content == "object") {
+        for (var con in pageData.data.page_content) {
+            if (pageData.data.page_content[con].type == "tab") {
+                iftab = true;
+            }
+        }
+        if (pageData.data.page_type == "2") {
+            iflongpage = true;
+        }
     }
-    if(!iftab){
+    // if (!iftab && !iflongpage) {
+    if (!iftab) {
         init();
     }
-    $(window).resize(function() {
+    $(window).resize(function () {
         // window.location.reload();
     });
 
     $('body').on('touchmove', function (event) {
-        var canscroll=$(event.target).parents(".canscroll");
-        if(canscroll.length>0){
+        var canscroll = $(event.target).parents(".canscroll");
+        if (canscroll.length > 0) {
 
-        }else {
+        } else {
             event.preventDefault();
         }
     });
@@ -73,14 +82,18 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
-    $(".app-wrap").on("click", "[hrefurl]", function(e) {
+    $(".app-wrap").on("click", "[hrefurl]", function (e) {
         e.stopPropagation();
+        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+            //禁止欢迎页面的点击事件
+            return;
+        }
         window.location.href = $(this).attr("hrefurl");
     });
 
 
     //音频播放点击事件
-    $(".app-wrap").on('click', '.btn-playAudio', function(e) {
+    $(".app-wrap").on('click', '.btn-playAudio', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -99,34 +112,34 @@ $(document).ready(function() {
         $(this).toggleClass('playing');
     });
 
-    $(".app-wrap").on("click", ".navimg", function(e) {
+    $(".app-wrap").on("click", ".navimg", function (e) {
         //获取地理位置和导航等信息
         // var myLongitude;
         // var myLatitude;
         e.preventDefault();
         e.stopPropagation();
 
-        var startPosition = $(this).attr("startPosition"), startLng, startLat, navType, error;
-        if(!startPosition){ //没有设定当前位置 因而获取之
+        var startPosition = $(this).closest('.navimg').attr("startPosition"), startLng, startLat, navType, error;
+        if (!startPosition) { //没有设定当前位置 因而获取之
             var that = this;
-            getMyLocation(function(position){
+            getMyLocation(function (position) {
                 var options = {
-                    startLng : position.coords.longitude,
+                    startLng: position.coords.longitude,
                     //纬度
-                    startLat : position.coords.latitude,
-                    navType : 0,
-                    startName : '当前位置'
+                    startLat: position.coords.latitude,
+                    navType: 0,
+                    startName: '当前位置'
                 };
                 handleNav.call(that, e, options);
             });
         }
-        else{
-            handleNav.call(this,e);
+        else {
+            handleNav.call(this, e);
         }
 
     });
 
-    function handleNav(e,options){
+    function handleNav(e, options) {
         options = options || {};
         var detailData = {
             "navStartLat": options.startLat || $(this).attr("startPosition").split(",")[0],
@@ -142,13 +155,13 @@ $(document).ready(function() {
     };
 
     // 弹框视频弹出效果  
-    $(".app-wrap").on("click", ".btn-playVideo", function(e) {
+    $(".app-wrap").on("click", ".btn-playVideo", function (e) {
         var videourl = $(this).data('videourl');
         $('#diaVideo').attr('src', videourl);
         $('.video-modal').show();
     });
 
-    $('.app-wrap').on('click', '.video-modal', function(e) {
+    $('.app-wrap').on('click', '.video-modal', function (e) {
         $(this).hide();
         $(this).find('video')[0].pause();
     });
@@ -160,23 +173,28 @@ $(document).ready(function() {
         // alert(pageData.msg);
         return;
     } else {
-        if(toString.call(pageData.data) === '[object Object]'){
+        if (toString.call(pageData.data) == '[object Object]') {
             pageData.data = [pageData.data];
         }
         var arrPageDatas = pageData.data || [],
             curPageGroup = {};
 
 
-        if(location.href.match(/\?disableWelcome=true/)){
-            if(arrPageDatas.length > 0 && arrPageDatas[0].page_code === 'welcome'){
+        if (location.href.match(/\?disableWelcome=true/)) {
+            if (arrPageDatas.length > 0 && arrPageDatas[0].page_code == 'welcome') {
                 // 过滤welcome页面
-                arrPageDatas.splice(0,1);
+                arrPageDatas.splice(0, 1);
             }
         }
 
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                $comGroup = $('<div class="component-group ' + item.page_code + '"><i class="icon icon-goback goback"></i></div>');
+                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '';
+            if (item.page_type == "2") {
+                $("body").addClass("canscroll");
+            }
+            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"><i class="icon icon-goback goback"></i></div>');
+            console.log(item);
             if (document.querySelector('.component-group')) {
                 $comGroup.css('opacity', 0);
             }
@@ -230,7 +248,7 @@ $(document).ready(function() {
 
     //初始化 欢迎页的视差效果
     var paraScene = [];
-    $('.paraScene').each(function(n, item) {
+    $('.paraScene').each(function (n, item) {
         paraScene[n] = new Parallax(item);
     });
     // var scene = document.querySelector('.scene');
@@ -239,16 +257,23 @@ $(document).ready(function() {
     //设置首页滑动到第一页
 
     if ($('.welcome').length > 0) {
+
+        //修改history 中的内容，来解决goback 中的问题
+
+
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
+            // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
-        setTimeout(function() {
-            $('.welcome').next('.component-group').animate({opacity: 1}, 2000, function() {
+        setTimeout(function () {
+            // window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
             });
-            $('.welcome').animate({opacity: 0},3000, function() {
-                $('.welcome').css('display','none');
+            $('.welcome').animate({ opacity: 0 }, 3000, function () {
+                $('.welcome').css('display', 'none');
                 // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
 
                 //$('.welcome').remove();
@@ -274,25 +299,26 @@ $(document).ready(function() {
 
 
     //用videoJs 初始化
-    $('.video-js').each(function(index, el) {
-        videojs(el, {}, function() {
+    $('.video-js').each(function (index, el) {
+        videojs(el, {}, function () {
             // Player (this) is initialized and ready.
             console.log('视频初始化完成');
         });
     });
-    $(document).on('click','.goback', goback);
+    $(document).on('click', '.goback', goback);
 
-    function goback(){
+    function goback() {
         //返回逻辑
-        if(document.referrer === '' || ! document.referrer.match(location.host)){
-            try{
+        if (document.referrer == '' || !document.referrer.match(location.host)) {
+            try {
                 location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1];
-            } catch(e){
+            } catch (e) {
             }
-        } else{
-            if(document.referrer){
-                location.href = document.referrer + '?disableWelcome=true';
-            } else{
+        } else {
+            if (document.referrer) {
+                window.history.go(-1);
+                // location.href = document.referrer + '?disableWelcome=true';
+            } else {
                 location.href = location.href.match(/^(.*(app|business)\/\w+)/)[1] + '?disableWelcome=true';
             }
         }
@@ -304,17 +330,17 @@ $(document).ready(function() {
         this.html = $('<div class="componentbox"><div class="con con_' + this.value.type + '"></div></div>');
 
         // 组件位置设置
-        this.setPosition = function() {
+        this.setPosition = function () {
 
             this.html.css("position", "absolute");
-            if(this.value.bottom === 0){
+            if (this.value.bottom == 0) {
                 this.html.css("bottom", 0);
-            } else{
+            } else {
                 this.html.css("top", this.value.y + this.value.unit);
             }
-            if(this.value.right === 0){
+            if (this.value.right == 0) {
                 this.html.css("right", 0);
-            } else{
+            } else {
                 this.html.css("left", this.value.x + this.value.unit);
             }
             this.html.css("width", this.value.width + this.value.unit);
@@ -324,7 +350,7 @@ $(document).ready(function() {
         };
 
         // 设置组件基本信息
-        this.setMoreInfo = function() {
+        this.setMoreInfo = function () {
 
             this.html.attr("component-type", this.value.type);
             this.html.attr("component-id", this.value._id); // id
@@ -332,17 +358,17 @@ $(document).ready(function() {
             //this.html.attr("name_value", this.value.name);
             //this.html.attr("default_value",this.value.default_value);
             this.html.css("background-color", this.value.bgc);
-            if (typeof(this.value.bgimg) != "undefined" && this.value.bgimg != "") {
+            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
                 this.html.css("background-image", 'url(' + this.value.bgimg + ')');
             }
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
         // 设置组件行为
-        this.setAction = function() {
-            if (typeof(this.value.action) != "undefined") {
+        this.setAction = function () {
+            if (typeof (this.value.action) != "undefined") {
                 var link, value = this.value.action.href.value;
-                switch(this.value.action.href.type){
+                switch (this.value.action.href.type) {
 
                     case "inner":
                         link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
@@ -364,14 +390,17 @@ $(document).ready(function() {
                         link = 'return';
                         break;
                 }
-                if(link){
+                if (link) {
                     this.html.attr('data-href', link);
-                    this.html.on('click',function(event){
-
+                    this.html.on('click', function (event) {
+                        if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
+                            //禁止欢迎页面的点击事件
+                            return;
+                        }
                         var link = event.currentTarget.getAttribute('data-href');
-                        if(link === 'return'){
+                        if (link == 'return') {
                             goback();
-                        } else{
+                        } else {
                             location.href = link;
                         }
                     });
@@ -388,24 +417,25 @@ $(document).ready(function() {
 
         BaseComponent.call(this);
 
-        this.setCanvasBg = function() {
+        this.setCanvasBg = function () {
             this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                    + this.value.gravity + '"></div>');
+                + this.value.gravity + '"></div>');
         };
 
-        this.setPanoBg = function() {
+        this.setPanoBg = function () {
             this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
-            + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
-            + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll +  '"></div>');
+                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+                + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
         };
 
-        this.setParaBg = function() {
-            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
-            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
+        this.setParaBg = function () {
+            var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
+            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
+            // $scene.append('<li class="layer" data-depth="1.00"><div class="img-wrapeÎr"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
         }
 
-        this.build = function() {
+        this.build = function () {
 
             //this.setPosition();
             // Canvas.prototype.setPosition.call();
@@ -441,7 +471,7 @@ $(document).ready(function() {
 
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
 
             this.setPosition();
             // Text.prototype.setPosition.call();
@@ -461,7 +491,7 @@ $(document).ready(function() {
 
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
 
             this.setPosition();
             // Img.prototype.setPosition.call();
@@ -481,7 +511,7 @@ $(document).ready(function() {
         this.value = data;
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
             this.setPosition();
             // Img.prototype.setPosition.call();
 
@@ -492,7 +522,7 @@ $(document).ready(function() {
             this.setAction();
 
             return this.html;
-        }
+        };
     }
 
     /* 全景组件 */
@@ -500,11 +530,29 @@ $(document).ready(function() {
         this.value = data;
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
+            var panoUrl = '';
+
+            switch (this.value.content.panoType.id) {
+                case 1:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().singlePano, [this.value.content.panoId]);
+                    break;
+                case 2:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
+                    break;
+                case 3:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().customerPano, [this.value.content.panoId]);
+                    break;
+                default:
+                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
+                    break;
+            }
+            console.log();
+
             this.setPosition();
             // Img.prototype.setPosition.call();
 
-            this.html.children("div").append('<a href="http://wap.visualbusiness.cn/vb/?panoID=' + this.value.content.panoId + '"><img src="' + this.value.content.icon + '"/></a>');
+            this.html.children("div").append('<a href="' + panoUrl + '"><img src="' + this.value.content.icon + '"/></a>');
 
             this.setMoreInfo();
 
@@ -519,7 +567,7 @@ $(document).ready(function() {
         this.value = data;
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
             var loopPlay = '';
 
             this.setPosition();
@@ -544,14 +592,16 @@ $(document).ready(function() {
             this.setAction();
 
             return this.html;
-        }
+        };
     }
+
+
     /* 视频组件 */
     function Video(data) {
         this.value = data;
         BaseComponent.call(this);
 
-        this.build = function() {
+        this.build = function () {
             var loopPlay = '',
                 videoWidth = this.value.width ? 'width = "' + this.value.width + this.value.unit + '"' : '',
                 videoHeight = this.value.height ? 'height = "' + this.value.height + this.value.unit + '"' : '',
@@ -576,7 +626,7 @@ $(document).ready(function() {
             this.setAction();
 
             return this.html;
-        }
+        };
     }
 
     /* 菜单页卡 */
@@ -615,7 +665,7 @@ $(document).ready(function() {
 
         BaseComponent.call(that);
 
-        function init(){
+        function init() {
             that.value = data;
             that.hasBuild = false;
             that.data = [];
@@ -636,18 +686,18 @@ $(document).ready(function() {
             that.toolbar = that.html.find('#toolbar');
             that.header = that.html.find('.header');
             that.menu = that.html.find('.topmenu-wrap');
-            if(that.hasBuild === false){
+            if (that.hasBuild == false) {
                 that.hasBuild = true;
                 setTimeout(that.bindEvent, 1);
             }
             that.fetchData();
-            that.html.css('width','100%');
-            that.html.css('height','100%');
+            that.html.css('width', '100%');
+            that.html.css('height', '100%');
             that.html.addClass("canscroll");
             return that.html;
         }
 
-        function bindEvent(){
+        function bindEvent() {
             // clear event
 
             that.html.find('.menulist-wrap').off('click', '.icon');
@@ -656,54 +706,54 @@ $(document).ready(function() {
 
             that.html.find('.menulist-wrap').on('click', '.icon', that.handleMenuClick);
 
+            //scroll = that.html.find('#scroll-wrapper');
 
-
-                //scroll = that.html.find('#scroll-wrapper');
-
-
-            that.html.on('click', '.icon-radio', function(event){
+            that.html.on('click', '.icon-radio', function (event) {
                 var target = $(event.target);
-                try{
-                    if(target.hasClass('icon-radio-on')){
+                try {
+                    if (target.hasClass('icon-radio-on')) {
                         target.siblings('audio')[0].pause()
                         target.removeClass('icon-radio-on');
-                    } else{
+                    } else {
                         target.addClass('icon-radio-on');
                         target.siblings('audio')[0].play();
                     }
-                } catch(e){
+                } catch (e) {
                 }
             });
 
 
-            that.myScroll = new IScroll('#scroll-wrapper',{
+            that.myScroll = new IScroll('#scroll-wrapper', {
                 probeType: 3,
                 mouseWheel: true,
-                click:true,
+                click: true,
                 momentum: true
             });
 
             that.myScroll.on('scroll', that.checkScroll);
             that.myScroll.on('scrollEnd', that.checkScroll);
 
-            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            //因为修复滚动效果，屏蔽该段代码
+            // that.content.on('touchmove', function (e) {
+            //     e.preventDefault();
+            // }, false);
 
-            that.content.on('transitionend', function(event){
-                if(that.content.hasClass('transparent')){
+            that.content.on('transitionend', function (event) {
+                if (that.content.hasClass('transparent')) {
                     that.content.removeClass('transparent');
                     that.toolbar.removeClass('transparent');
                     that.content.html(that.contentInfo);
                     that.toolbar.html(that.toolbarInfo);
                     that.toolbarInfo = '';
                     that.contentInfo = '';
-                    that.myScroll.scrollTo(0,0,0);
+                    that.myScroll.scrollTo(0, 0, 0);
                     that.refreshScroll();
                     that.header.css('transform', "translate(0px, 0px)").css('transition', 'transform .2s');
-                    setTimeout(function(){
-                        that.header.css('transition','');
+                    setTimeout(function () {
+                        that.header.css('transition', '');
                     }, 200)
-                } else{ // opaque
-                    if(that.contentInfo){
+                } else { // opaque
+                    if (that.contentInfo) {
                         that.content.addClass('transparent');
                     }
                 }
@@ -713,54 +763,54 @@ $(document).ready(function() {
 
 
 
-            that.html.on('click', '.icon-video', function(event){
+            that.html.on('click', '.icon-video', function (event) {
                 var radio = that.html.find(".icon-radio");
-                if(radio.hasClass('icon-radio-on')){
+                if (radio.hasClass('icon-radio-on')) {
                     radio.siblings('audio')[0].pause();
                     radio.removeClass('icon-radio-on');
                 }
-                 var url = event.target.parentNode.getAttribute('data-srcurl');
+                var url = event.target.parentNode.getAttribute('data-srcurl');
                 $('.video-modal').css('display', 'block');
                 $('#diaVideo').attr('src', url);
             });
 
         }
-        function fetchData(){
-            that.value.content.tabList.forEach(function(item, index){
+        function fetchData() {
+            that.value.content.tabList.forEach(function (item, index) {
                 that.fetchSingleData(item, index);
             });
         }
 
-        function checkScroll(changePosition){
+        function checkScroll(changePosition) {
             changePosition = changePosition || -100;  //
             var scrollTop = this.y;
-            that.header.css('transform', "translate(0px, "+ (this.y > -100 ? this.y : changePosition) +"px) translateZ(0px)");
+            that.header.css('transform', "translate(0px, " + (this.y > -100 ? this.y : changePosition) + "px) translateZ(0px)");
         }
 
-        function refreshScroll(){
-            setTimeout(function(){
+        function refreshScroll() {
+            setTimeout(function () {
                 that.myScroll.refresh();
             }, 900);
-            if(that.menuType === 'singleArticle'){  // 当图片加载后 内容块会增加高度 因而需要刷新
-                that.content.find('#article img').on('load',function(){
+            if (that.menuType == 'singleArticle') {  // 当图片加载后 内容块会增加高度 因而需要刷新
+                that.content.find('#article img').on('load', function () {
                     that.myScroll.refresh();
                 });
             }
         }
 
-        function fetchSingleData(item, index){
-            switch(item.type){
+        function fetchSingleData(item, index) {
+            switch (item.type) {
                 case 'singlePoi':
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoiById',
                         type: 'GET',
-                        data:{poi_id: item.firstPoiId, lang:'zh'},
-                        success:function(data){
-                            if(data.code === '0'){
-                                if(!that.data[index] && that.menuIndex === index){
+                        data: { poi_id: item.firstPoiId, lang: 'zh' },
+                        success: function (data) {
+                            if (data.code == '0') {
+                                if (!that.data[index] && that.menuIndex == index) {
                                     that.data[index] = data.data.zh;
                                     that.updateContent();
-                                } else{
+                                } else {
                                     that.data[index] = data.data.zh;
                                 }
 
@@ -770,14 +820,14 @@ $(document).ready(function() {
                     break;
                 case 'singleArticle':
                     $.ajax({
-                        url: [host , '/article/data/' , item.articleId].join('') ,
+                        url: [host, '/article/data/', item.articleId].join(''),
                         type: 'GET',
-                        success:function(data){
-                            if(data.code === '0'){
-                                if(!that.data[index] && that.menuIndex === index){
+                        success: function (data) {
+                            if (data.code == '0') {
+                                if (!that.data[index] && that.menuIndex == index) {
                                     that.data[index] = data.data;
                                     that.updateContent();
-                                } else{
+                                } else {
                                     that.data[index] = data.data;
                                 }
                             }
@@ -789,15 +839,17 @@ $(document).ready(function() {
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
                         type: 'GET',
-                        data: {business_id: window.business_id,
-                                poi_id: item.firstPoiId,
-                                category_id: item.poiTypeId},
-                        success: function(data){
-                            if(data.code === '0'){
-                                if(!that.data[index] && that.menuIndex === index){
+                        data: {
+                            business_id: window.business_id,
+                            poi_id: item.firstPoiId,
+                            category_id: item.poiTypeId
+                        },
+                        success: function (data) {
+                            if (data.code == '0') {
+                                if (!that.data[index] && that.menuIndex == index) {
                                     that.data[index] = data.data.zh || data.data.en;
                                     that.updateContent();
-                                } else{
+                                } else {
                                     that.data[index] = data.data.zh || data.data.en;
                                 }
                             }
@@ -806,14 +858,14 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     $.ajax({
-                        url: [host ,  '/article/businessId/' ,  window.business_id , '/columnIds/' , item.columnId].join(''),
+                        url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
                         type: 'GET',
-                        success: function(res){
-                            if(res.code === '0'){
-                                if(!that.data[index] && that.menuIndex === index){
+                        success: function (res) {
+                            if (res.code == '0') {
+                                if (!that.data[index] && that.menuIndex == index) {
                                     that.data[index] = res.data;
                                     that.updateContent();
-                                } else{
+                                } else {
                                     that.data[index] = res.data;
                                 }
                             }
@@ -823,72 +875,80 @@ $(document).ready(function() {
 
         }
 
-        function getTabsHtml(){
+        function getTabsHtml() {
             var labsHtml = '';
 
-            that.value.content.tabList.forEach(function(item, index){
-                var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
-                var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
+            that.value.content.tabList.forEach(function (item, index) {
+                // var defaultStyle = 'background-position:' + item.icon.defaultStyle.bgPosition[0] + ' ' + item.icon.defaultStyle.bgPosition[1];
+                // var currentStyle = 'background-position:' + item.icon.currentStyle.bgPosition[0] + ' ' + item.icon.currentStyle.bgPosition[1];
+                var defaultBgStyle = 'background-color:' + item.icon.bgColor.defaultColor + ';',
+                    currentBgStyle = 'background-color:' + item.icon.bgColor.currentColor + ';',
+                    defaultFontColor = 'color:' + item.icon.iconColor.defaultColor + ';',
+                    currentFontColor = 'color:' + item.icon.iconColor.currentColor + ';';
                 var html =
-                '<div class="menulist ' + (that.menuIndex === index ? 'current':'') + '" item="profile" data-index="'+ index +'">'
-                +   '<div class="menulist-img" >'
-                +       '<i class="icon" style="' + defaultStyle +'"></i>'
-                +       '<i class="icon current" style="'+ currentStyle +'"></i>'
-                +   '</div>'
-                +   '<span class="menulist-title">' + item.name + '</span>'
-                +   '<span class="border"></span>'
-                + '</div>';
+                    '<div class="menulist ' + (that.menuIndex == index ? 'current' : '') + '" item="profile" data-index="' + index + '">'
+                    + '<div class="menulist-img" >'
+                    // + '<div class="menuiconbg"  style="'+defaultBgStyle+'" >'
+                    + '<i class="icon iconfont icon-' + item.icon.code + '" style="' + defaultFontColor + defaultBgStyle + '">' + (item.icon.type == 'text' ? '<div class="icon-title">' + item.name + '</div>' : '') + '</i>'
+                    + '<i class="icon iconfont icon-' + item.icon.code + ' current" style="' + currentFontColor + currentBgStyle + '">' + (item.icon.type == 'text' ? '<div class="icon-title">' + item.name + '</div>' : '') + '</i>'
+                    // + '</div>'
+                    + '</div>'
+                    + '<span class="menulist-title">' + (item.icon.type != 'text' ? item.name : '') + '</span>'
+                    + '<span class="border" style="' + currentBgStyle + '"></span>'
+                    + '</div>';
                 labsHtml += html;
             });
             var html =
-             '<div id="container" class="container">'
-            + '<div class="header">'
-            +   '<div class="topmenu-wrap">'
-            +           '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
-            +                that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
-            +           '<div class="topmenu">'
-            +             '<div class="menulist-wrap canscroll"><div class="menulist-container">'
-            +                labsHtml
-            +             '</div></div>'
-            +         '</div>'
-            +   '</div>'
-            +   '<div id="toolbar"></div>'
-            +  '</div>'
-            +   '<div id="scroll-wrapper">'
-       //     +        '<div class="content-wrapper">'
-            +           '<div id="content" class="canscroll"></div>'
-      //      +        '</div>'
-             +   '</div>'
-            + '</div>'    ;
+                '<div id="container" class="container">'
+                + '<div class="header">'
+                + '<div class="topmenu-wrap">'
+                + '<div class="topmenu-bg topmenu-bg-city fixed-item" style="background: url('
+                + that.value.content.bannerImg + ') center center no-repeat;background-size: cover"></div>'
+                + '<div class="topmenu">'
+                + '<div class="menulist-wrap canscroll"><div class="menulist-container">'
+                + labsHtml
+                + '</div></div>'
+                + '</div>'
+                + '</div>'
+                + '<div id="toolbar"></div>'
+                + '</div>'
+                + '<div id="scroll-wrapper">'
+                //     +        '<div class="content-wrapper">'
+                + '<div id="content" class="canscroll"></div>'
+                //      +        '</div>'
+                + '</div>'
+                + '</div>';
 
             return html;
         }
 
-        function updateContent(){
+        function updateContent() {
             var data = that.data[that.menuIndex];
             var html = '', toolbar = '';
-            var type = that.value.content.tabList[that.menuIndex].type;
+            var type = that.value.content.tabList[that.menuIndex].type,
+                iconStyle = that.value.content.tabList[that.menuIndex].icon,
+                rightIconStyle = 'border-left:7px solid ' + iconStyle.bgColor.currentColor + ';';
             that.menuType = type;
-            switch(type){
+            switch (type) {
                 case 'singlePoi':
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     html =
-                    '<div id="poi">'
-                    +   '<div class="detail-title-wrap">'
-                    +       '<span class="detail-title">'
-                    +            '<i class="icon icon-arr-right"></i>'+ data.poi_name
-                    +       '</span>'
-                    +       '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl="http://200011112.vod.myqcloud.com/200011112_da9ee07a51a611e6963575943c151ece.f0.mp4">'
-                    +           '<i class="icon icon-video"></i>'
-                    +       '</span>'
-                    +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
-                    +           '<i class="icon icon-radio"></i>'
-                    +           '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
-                    +       '</span>'
-                    +   '</div>'
-                    +   '<div class="content-details canscroll clearboth">'+ data.brief_introduction +'</div>'
-                    +'</div>';
+                        '<div id="poi">'
+                        + '<div class="detail-title-wrap">'
+                        + '<span class="detail-title">'
+                        + '<i class="icon icon-arr-right" style="' + rightIconStyle + '"></i>' + data.poi_name
+                        + '</span>'
+                        + '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl="http://200011112.vod.myqcloud.com/200011112_da9ee07a51a611e6963575943c151ece.f0.mp4">'
+                        + '<i class="icon icon-video"></i>'
+                        + '</span>'
+                        + '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                        + '<i class="icon icon-radio"></i>'
+                        + '<audio src="http://material-10002033.file.myqcloud.com/guiyang/city/fbf29fc01bf811e6be71525400a216a4.mp3"></audio>'
+                        + '</span>'
+                        + '</div>'
+                        + '<div class="content-details canscroll clearboth">' + data.brief_introduction + '</div>'
+                        + '</div>';
                     break;
                 case 'singleArticle':
                     var videoClass = data.video ? '' : 'hidden',
@@ -896,19 +956,19 @@ $(document).ready(function() {
                     var title = data.title || '';
                     toolbar =
                         //'<div id="article">'
-                          '<div class="detail-title-wrap">'
-                        +       '<span class="detail-title">'
-                        +            '<i class="icon icon-arr-right"></i>'+ title
-                        +       '</span>'
-                        +       '<span class="btn-wrap video-btn-wrap ' + videoClass +'" data-srcurl=" ' + data.video +' ">'
-                        +           '<i class="icon icon-video"></i>'
-                        +       '</span>'
-                        +       '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
-                        +           '<i class="icon icon-radio"></i>'
-                        +           '<audio src="' + data.audio + '"></audio>'
-                        +       '</span>'
-                        +   '</div>'
-                       html = '<div id="article" class="content-details canscroll clearboth">'+ (data.content)+'</div>';
+                        '<div class="detail-title-wrap">'
+                        + '<span class="detail-title">'
+                        + '<i class="icon icon-arr-right" style="' + rightIconStyle + '"></i>' + title
+                        + '</span>'
+                        + '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl=" ' + data.video + ' ">'
+                        + '<i class="icon icon-video"></i>'
+                        + '</span>'
+                        + '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
+                        + '<i class="icon icon-radio"></i>'
+                        + '<audio src="' + data.audio + '"></audio>'
+                        + '</span>'
+                        + '</div>'
+                    html = '<div id="article" class="content-details canscroll clearboth">' + (data.content) + '</div>';
                     break;
                 case 'poiList':
                     var typeInfo = {
@@ -921,109 +981,112 @@ $(document).ready(function() {
                         '8': 'others'
                     }, type = '';
 
-                    try{
+                    try {
                         type = typeInfo[that.value.content.tabList[that.menuIndex].poiTypeId];
-                    } catch(e){
+                    } catch (e) {
 
                     }
 
-                    switch(type) {
+                    switch (type) {
                         case 'restaurant':
                         case 'hotel':
                             //html = '';
                             var hotelList = '', panoLink;
                             data.pois.forEach(function (item, index) {
+                                // console.log(item);
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
                                             panoLink = 'http://pano.visualbusiness.cn/single/index.html?panoId='
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
                                             break;
                                         case 2: // 相册全景
                                             panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
 
                                             break;
                                         case 3: // 自定义全景
                                             panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
                                             break;
                                     }
                                 }
 
                                 var navClass = '', navAttr = '';
-                                if(! item.lnglat.lng || ! item.lnglat.lat){
-                                    navClass='hidden';
-                                } else{
+                                if (!item.lnglat.lng || !item.lnglat.lat) {
+                                    navClass = 'hidden';
+                                } else {
                                     var address = item.address.city + item.address.county + item.address.detail_address;
                                     navAttr = ' endName="{0}" endPosition="{1},{2}" address="{3}" data-navtype="{4}"'.format(
                                         item.poi_name, item.lnglat.lat, item.lnglat.lng, address, 0);
-                                    console.log(navAttr);
+                                    // console.log(navAttr);
 
                                 }
-                                if(item.contact_phone){
+                                if (item.contact_phone) {
                                     var phonesList = item.contact_phone.split(/[,，]/),
                                         phones = '';
 
-                                    phonesList.forEach(function(item){
-                                        if(item){
-                                            phones += '<a href="tel:' + item +'">' + item + '</a>  ';
+                                    phonesList.forEach(function (item) {
+                                        if (item) {
+                                            phones += '<a href="tel:' + item + '">' + item + '</a>  ';
                                         }
                                     });
-                                    console.log(phones);
+                                    // console.log(phones);
                                 }
                                 hotelList +=
                                     '<div class="hotel-item">'
-                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;'
-                                    + 'background-size: cover;">'
-                                    +    '<div class="nav">'
-                                    +       '<a class="nav-item navimg nav-location ' + navClass +'" '+navAttr+'>'
-                                    +           '<img class="img" src="'+ host + '/resources/images/navigation-white.png"/>'
-                                    +           '<span>导航</span>'
-                                    +       '</a>'
-                                    +       '<a class="nav-item '+ (panoLink ? '': "hidden") +'" href="' + panoLink + '">'
-                                    +           '<img class="img" src="' + host + '../resources/images/pano-white.png"/>'
-                                    +           '<span>全景</span>'
-                                    +       '</a>'
-                                    +   '</div>'
-                                    +   '<div class="footer">'
-                                    +       '<div class="content">'
-                                    +           '<span class="poi-name">' + item.poi_name + '</span>'
-                                    +           '<span class="pull-right price">' + (item.price || '') + '</span>'
-                                    +       '</div>'
-                                    +   '</div>'
+                                    // +'<a href="">',
+                                    + '<div class="house-header" style="background:url(' + item.thumbnail + ') center center no-repeat;background-size: cover;position:relative;">'
+                                    + '<a hrefurl="' + item.preview_url + '" style="height:100%;width:100%;position:absolute;" ></a>'
+                                    + '<div class="nav">'
+                                    + '<a class="nav-item navimg nav-location ' + navClass + '" ' + navAttr + '>'
+                                    + '<img class="img" src="' + host + '/resources/images/navigation-white.png"/>'
+                                    + '<span>导航</span>'
+                                    + '</a>'
+                                    + '<a class="nav-item ' + (panoLink ? '' : "hidden") + '" href="' + panoLink + '">'
+                                    + '<img class="img" src="' + host + '/resources/images/pano-white.png"/>'
+                                    + '<span>全景</span>'
+                                    + '</a>'
                                     + '</div>'
+                                    + '<div class="footer">'
+                                    + '<div class="content">'
+                                    + '<span class="poi-name">' + item.poi_name + '</span>'
+                                    + '<span class="pull-right price">' + (item.price || '') + '</span>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</div>'
+                                    // +'</a>',
                                     + '<div class="hotel-info">'
-                                    +       '<p>' + item.share_desc + '</p>'
-                                    +       '<p class="contact ' + (item.contact_phone?'':'hidden') +'">'
-                                    +           '<i class="icon-phone"></i>'
-                                    +           '<span>' + phones + '</span>'
-                                    +       '</p>'
+                                    + '<p>' + item.share_desc + '</p>'
+                                    + '<p class="contact ' + (item.contact_phone ? '' : 'hidden') + '">'
+                                    + '<i class="icon-phone"></i>'
+                                    + '<span>' + phones + '</span>'
+                                    + '</p>'
                                     + '</div>'
-                                    +'</div>';
+                                    + '</div>';
                             });
                             html = '<div id="poiList-hotel">' + hotelList + '</div>';
                             break;
 
                         default:
                             html = '';
-                            var poiList = '',panoTip, panoLink;
+                            var poiList = '', panoTip, panoLink;
                             data.pois.forEach(function (item, index) {
                                 if (item.panorama.panorama_id) {
                                     panoTip = '点击看全景';
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
                                             panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
                                             break;
                                         case 2: // 相册全景
                                             panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
 
                                             break;
                                         case 3: // 自定义全景
                                             panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
-                                            + item.panorama.panorama_id;
+                                                + item.panorama.panorama_id;
                                             break;
                                     }
                                 } else {
@@ -1060,29 +1123,29 @@ $(document).ready(function() {
                     break;
                 case 'articleList':
                     html = '';
-                    var articleList = '',bg;
-                    data.forEach(function(item, index){
-                        if(item.abstract_pic ){
+                    var articleList = '', bg;
+                    data.forEach(function (item, index) {
+                        if (item.abstract_pic) {
                             bg = "background:url(" + item.abstract_pic + ") center center no-repeat; background-size:cover;";
-                        } else{
-                            bg = "background:url(" + host +"/resources/images/default.png) center center no-repeat;";
+                        } else {
+                            bg = "background:url(" + host + "/resources/images/default.png) center center no-repeat;";
                         }
                         var titleClass = '';
-                        if(item.title && item.title.length > 3){
+                        if (item.title && item.title.length > 3) {
                             titleClass = 'title-sm'
                         }
                         var title = (item.title || '').split(/[,，]/).join('<br/>');
                         articleList +=
-                            '<a target="_blank"  class="article-item" style="' + bg + '" href="'+ host + '/article/' + item.id +'">'
-                            +   '<div class="content">'
-                            +       '<div class="detail-left ' + titleClass + '">'
-                            +           '<span class="title">' + title +'</span>'
-                            +       '</div>'
-                            +       '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
-                            +           item.short_title
-                            +       '</span></p></div>'
-                            +   '</div>'
-                            +'</a>';
+                            '<a target="_blank"  class="article-item" style="' + bg + '" href="' + host + '/article/' + item.id + '">'
+                            + '<div class="content">'
+                            + '<div class="detail-left ' + titleClass + '">'
+                            + '<span class="title">' + title + '</span>'
+                            + '</div>'
+                            + '<div class="detail-right"><p class="info-wrapper"><span class="article-info">'
+                            + item.short_title
+                            + '</span></p></div>'
+                            + '</div>'
+                            + '</a>';
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     break;
@@ -1092,12 +1155,12 @@ $(document).ready(function() {
 
             }
 
-            if(that.content.html()){
+            if (that.content.html()) {
                 that.content.addClass('transparent');
                 that.toolbar.addClass('transparent');
                 that.contentInfo = html;
                 that.toolbarInfo = toolbar;
-            } else{
+            } else {
                 that.content.html(html);
                 that.toolbar.html(toolbar || '');
                 that.contentInfo = '';
@@ -1105,27 +1168,27 @@ $(document).ready(function() {
                 that.refreshScroll();
             }
 
-            if(type === 'singleArticle'){
+            if (type == 'singleArticle') {
                 that.content.addClass('no-padding-bottom').addClass('gray-bg');
-            } else{
+            } else {
                 that.content.removeClass('no-padding-bottom').removeClass('gray-bg');
             }
 
 
         }
 
-        function handleMenuClick(event){
-            var index = parseInt(event.target.parentNode.parentNode.getAttribute('data-index'));
-            if(index === that.menuIndex){
+        function handleMenuClick(event) {
+            var index = $(event.target).closest('.menulist').data('index');
+            if (index == that.menuIndex) {
                 return;
             }
             that.html.find('.menulist').removeClass('current');
             $(that.html.find('.menulist')[index]).addClass('current');
             that.menuIndex = index;
             // 填充数据
-            if(that.data[index]){
+            if (that.data[index]) {
                 that.updateContent();
-            } else{
+            } else {
                 that.fetchSingleData(that.value.content.tabList[that.menuIndex], that.menuIndex);
             }
         }
@@ -1149,7 +1212,7 @@ function initPanoBg(panoBg) {
     pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
     pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
     pano.setAutoplayEnable(false); //自动播放
-    pano.setGravityEnable(gravity === "true"); //重力感应
+    pano.setGravityEnable(gravity == "true"); //重力感应
 }
 
 /**
@@ -1158,27 +1221,41 @@ function initPanoBg(panoBg) {
  * @return {[type]}          [description]
  */
 function showNav(posiData) {
-    if (!is_weixn()) {
+    console.log(posiData);
+    if (!is_weixn() || posiData.navType == "1") {
         var url;
         if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
             objdata.destPosition = posiData;
             getMyLocation();
         } else {
-            url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng  + "%2C"+ posiData.navStartLat + "&dest="+ posiData.navEndLng + "%2C" + posiData.navEndLat   + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+
+            // url = "http://map.qq.com/nav/drive?start=" + posiData.navStartLng + "%2C" + posiData.navStartLat + "&dest=" + posiData.navEndLng + "%2C" + posiData.navEndLat + "&sword=" + posiData.navStartName + "&eword=" + posiData.navEndName;
+            url = Util.strFormat(Inter.getApiUrl().qqNavStoEnd, [posiData.navStartLat, posiData.navStartLng, posiData.navEndLat, posiData.navEndLng, posiData.navEndName]);
             window.location.href = url;
         }
     } else {
         if (wx) {
             try {
-                var locationOptions = {
-                    latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
-                    longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
-                    name: posiData.navEndName, // 位置名
-                    address: posiData.address || '', // 地址详情说明
-                    scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
-                    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-                }
-                wx.openLocation(locationOptions);
+                var geocoder = new qq.maps.Geocoder();
+                var latLng = new qq.maps.LatLng(posiData.navEndLat, posiData.navEndLng);
+                geocoder.getAddress(latLng);
+                //设置服务请求成功的回调函数
+                geocoder.setComplete(function (res) {
+                    var locationOptions = {
+                        latitude: Number(posiData.navEndLat), // 纬度，浮点数，范围为90 ~ -90
+                        longitude: Number(posiData.navEndLng), // 经度，浮点数，范围为180 ~ -180。
+                        name: posiData.navEndName, // 位置名
+                        address: res.detail.address || posiData.navEndName, // 地址详情说明
+                        scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                        infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+                    }
+                    wx.openLocation(locationOptions);
+                });
+                //若服务请求失败，则运行以下函数
+                geocoder.setError(function () {
+                    alert("请检查输入的经纬度是否正确！");
+                    console.log("出错了，请输入正确的经纬度！！！");
+                });
             } catch (e) {
                 console.log(e.msg);
             }
@@ -1215,10 +1292,10 @@ function getMyLocationOnSuccess(position) {
     myLatitude = position.coords.latitude;
     // alert(myLatitude);
     //将经纬度转换成腾讯坐标
-    qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
+    qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function (res) {
         //取出经纬度并且赋值
         latlng = res[0];
-        var url = "http://map.qq.com/nav/drive?start=" + latlng.lng  + "%2C" + latlng.lat + "&dest=" + objdata.destPosition.navEndLng  + "%2C" + objdata.destPosition.navEndLat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
+        var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "%2C" + latlng.lat + "&dest=" + objdata.destPosition.navEndLng + "%2C" + objdata.destPosition.navEndLat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
         // alert(url);
         window.location.href = url;
     });

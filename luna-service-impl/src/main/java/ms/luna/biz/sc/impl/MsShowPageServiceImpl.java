@@ -44,24 +44,24 @@ public class MsShowPageServiceImpl implements MsShowPageService{
 		return msShowPageBL.deletePageByAppId(appId);
 	}
 	@Override
-	public JSONObject createOnePage(String json, MsUser msUser) {
+	public JSONObject createOnePage(String json, String lunaName) {
 		// TODO Auto-generated method stub
-		return msShowPageBL.createOnePage(json);
+		return msShowPageBL.createOnePage(json, lunaName);
 	}
 	@Override
-	public JSONObject updatePage(String json, MsUser msUser) {
+	public JSONObject updatePage(String json, String lunaName) {
 		// TODO Auto-generated method stub
-		return msShowPageBL.updatePage(json);
+		return msShowPageBL.updatePage(json, lunaName);
 	}
 	@Override
-	public JSONObject updatePages(String json, MsUser msUser) {
+	public JSONObject updatePages(String json, String lunaName) {
 		// TODO Auto-generated method stub
-		return msShowPageBL.updatePages(json);
+		return msShowPageBL.updatePages(json, lunaName);
 	}
 	@Override
-	public JSONObject updatePageName(String json, MsUser msUser) {
+	public JSONObject updatePageName(String json, String lunaName) {
 		// TODO Auto-generated method stub
-		return msShowPageBL.updatePageName(json);
+		return msShowPageBL.updatePageName(json, lunaName);
 	}
 	@Override
 	public JSONObject updatePageOrder(String json) {

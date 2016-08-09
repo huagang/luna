@@ -38,7 +38,8 @@
             <div class="vr-line"></div>
         </div>
         <div class="tool-item ">
-            <a id="panorama" href="javascript:;" data-type="pano" ><i class="icon icon-pano"></i><br/>看全景</a>
+            <a id="panorama" href="javascript:;" data-type="pano" class="hide" ><i class="icon icon-pano"></i><br/>看全景</a>
+            <a id="waitPanorama" href="javascript:;" data-type="pano" class="hide" style="margin: 21px auto;display: inline-block;">全景<br>拍摄中</a>
         </div>
     </div>
     <div class="content-wrapper">

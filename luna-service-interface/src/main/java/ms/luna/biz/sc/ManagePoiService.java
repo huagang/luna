@@ -12,7 +12,7 @@ public interface ManagePoiService {
 
 	JSONObject getInitInfo(String json);
 
-	JSONObject addPoi(String json, MsUser msUser);
+	JSONObject addPoi(String json);
 	
 	JSONObject getPois(String json);
 
@@ -20,7 +20,7 @@ public interface ManagePoiService {
 
 	JSONObject initFixPoi(String json);
 
-	JSONObject updatePoi(String json, MsUser msUser);
+	JSONObject updatePoi(String json);
 
 	JSONObject asyncDeletePoi(String json);
 
@@ -28,7 +28,7 @@ public interface ManagePoiService {
 
 	JSONObject downloadPoiTemplete(String json);
 
-	JSONObject savePois(String json, MsUser msUser);
+	JSONObject savePois(String json);
 
 	JSONObject getTagsDef(String json);
 

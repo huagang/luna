@@ -7,7 +7,7 @@
 
 var lunaConfig = function(){
     return {
-    	"host":'/luna-web',
+    	"host":'',
         "imghost":"http://cdn.visualbusiness.cn/public/vb",
     }
 }();

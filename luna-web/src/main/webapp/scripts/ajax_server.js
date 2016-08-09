@@ -5,16 +5,16 @@ function getAppData(appID) {
         return;
     }
     var params = {
-        'app_id': appID
+        app_id: appID
     };
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=getAllPageSummary',
-        cache: false,
+        type: Inter.getApiUrl().getAppSummary.type,
+        url: Util.strFormat(Inter.getApiUrl().getAppSummary.url, [appID]),
+        // cache: false,
         async: false,
-        data: params,
+        // data: params,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 $.alert(returndata.msg);
@@ -23,7 +23,7 @@ function getAppData(appID) {
             data = returndata.data;
             lunaPage.pages = data;
         },
-        error: function() {
+        error: function () {
             $.alert("请求出错，getAllPageSummary数据失败！");
             //        alert("请求出错，getAllPageSummary数据失败！");
             return;
@@ -32,24 +32,28 @@ function getAppData(appID) {
 }
 
 function isValidPageInfo() {
-    var flag_name = true,
-        flag_short = true,
+    var validFlag = true,
         $txtName = $("#txt-name").val();
     if ($txtName.length == 0) {
         $("#warn1").text("不能为空");
-        flag_name = false;
+        validFlag = false;
     }
     var $txtShort = $("#txt-short").val();
     if ($txtShort.length == 0) {
         $("#warn2").text("不能为空");
-        flag_short = false;
+        validFlag = false;
     }
-
-    return flag_name && flag_short;
+    var txtPageHeight = document.querySelector('#txtPageHeight').value,
+        txtPageType = document.querySelector('[name=pageType]:checked').value;
+    if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {
+        document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
+        validFlag = false;
+    }
+    return validFlag;
 }
 // 创建app的一个新的页面
 function creatPageID() {
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
@@ -59,16 +63,18 @@ function creatPageID() {
             'app_id': app_id,
             'page_name': $("#txt-name").val(),
             'page_code': $("#txt-short").val(),
-            'page_order': $(".list-page .drop-item[page_id]").length + 1
+            'page_order': $(".list-page .drop-item[page_id]").length + 1,
+            'page_type': document.querySelector('[name=pageType]:checked').value,
+            'page_height': document.querySelector('#txtPageHeight').value || '617',
         };
         $.ajax({
-            type: 'post',
-            url: host + '/app.do?method=addNewBlankPage',
-            cache: false,
+            type: Inter.getApiUrl().appCreatePage.type,
+            url: Inter.getApiUrl().appCreatePage.url,
+            // cache: false,
             async: false,
             data: params,
             dataType: 'json',
-            success: function(returndata) {
+            success: function (returndata) {
                 if ("0" != returndata.code) {
                     //不等于零说明获取数据失败
                     $.alert(returndata.msg);
@@ -85,7 +91,7 @@ function creatPageID() {
                 $overlay.css("display", "none");
                 $(".list-page .drop-item:last").trigger('click');
             },
-            error: function() {
+            error: function () {
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
                 $.alert("请求出错，新建微景展页面失败！");
@@ -96,7 +102,7 @@ function creatPageID() {
 
 function modifyPageName() {
 
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
@@ -107,16 +113,18 @@ function modifyPageName() {
             'app_id': app_id,
             'page_id': pageId,
             'page_name': $("#txt-name").val(),
-            'page_code': $("#txt-short").val()
+            'page_code': $("#txt-short").val(),
+            'page_type': document.querySelector('[name=pageType]:checked').value,
+            'page_height': document.querySelector('#txtPageHeight').value,
         };
         $.ajax({
-            type: 'post',
-            url: host + '/app.do?method=modifyPageName',
+            type: Inter.getApiUrl().appModifyName.type,
+            url: Util.strFormat(Inter.getApiUrl().appModifyName.url, [appModifyName]),
             cache: false,
             async: false,
             data: params,
             dataType: 'json',
-            success: function(returndata) {
+            success: function (returndata) {
                 if ("0" != returndata.code) {
                     //不等于零说明获取数据失败
                     alert(returndata.msg);
@@ -125,11 +133,15 @@ function modifyPageName() {
                 data = returndata.data;
                 lunaPage.pages[pageId].page_name = $("#txt-name").val();
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
+                lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
+                lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
+                $('#layermain').css('height', lunaPage.pages[pageId].page_height);
+
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
                 $.alert("更新成功！");
             },
-            error: function() {
+            error: function () {
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
                 $.alert("请求出错，修改微景展页面失败！");
@@ -143,17 +155,15 @@ function modifyPageName() {
 
 // 获取app单个页面全部详情
 function getPageDataDetail(pageID) {
-    var params = {
-        'page_id': pageID
-    };
+
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=getOnePageDetail',
-        cache: false,
+        type: Inter.getApiUrl().appGetPageDetail.type,
+        url: Util.strFormat(Inter.getApiUrl().appGetPageDetail.url, [pageID]),
+        // cache: false,
         async: false,
-        data: params,
+        // data: params,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 alert(returndata.msg);
@@ -167,7 +177,7 @@ function getPageDataDetail(pageID) {
             lunaPage.pages[data.page_id] = data;
             // console.log();
         },
-        error: function() {
+        error: function () {
             $.alert("请求出错，新建微景展页面详情数据失败！");
             return;
         }
@@ -181,24 +191,23 @@ function savePageData(pageID, isPrompt) {
     } else {
         var pageinfo = {};
         pageinfo[pageID] = lunaPage.pages[pageID];
-
         var params = { "data": JSON.stringify(pageinfo) };
     }
     // params=JSON.stringify(params);
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=savePages',
+        type: Inter.getApiUrl().appSaveData.type,
+        url: Inter.getApiUrl().appSaveData.url,
         cache: false,
         async: false,
         data: params,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             var nowtime = new Date();
             var strnowtime = nowtime.getHours() + ":" + nowtime.getMinutes();
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 $('.msgTips').text(strnowtime + " " + returndata.msg);
-                setTimeout(function() {
+                setTimeout(function () {
                     $('.msgTips').text("");
                 }, 2000);
                 console.log("保存" + (pageID ? "页面" + pageID : "全部页面") + "失败！");
@@ -207,33 +216,30 @@ function savePageData(pageID, isPrompt) {
                 //点击保存时，保存成功需要给出提示
                 if (isPrompt) {
                     $('.msgTips').text(strnowtime + " 保存页面成功");
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.msgTips').text("");
                     }, 2000);
                 }
             }
         },
-        error: function() {
+        error: function () {
             $.alert("请求出错，保存微景展页面详情数据失败！");
             return;
         }
     });
 }
 
+/** 
+ * 删除界面
+ */
 function deletePage(pageID) {
-
-    var params = {
-        'page_id': pageID
-    };
-
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=deletePage',
+        type: Inter.getApiUrl().appDeletePage.type,
+        url: Util.strFormat(Inter.getApiUrl().appDeletePage.url, [pageID]),
         cache: false,
         async: false,
-        data: params,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 alert(returndata.msg);
@@ -248,7 +254,7 @@ function deletePage(pageID) {
                 // TODO:click the next page if exist, otherwise previous page
             }
         },
-        error: function() {
+        error: function () {
             $.alert("请求出错，保存微景展页面详情数据失败！");
             return;
         }
@@ -258,20 +264,20 @@ function deletePage(pageID) {
 function updatePageOrder(pageOrder) {
     var params = { "data": JSON.stringify(pageOrder) };
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=updatePageOrder',
+        type: Inter.getApiUrl().appUpdatePageOrder.type,
+        url: Inter.getApiUrl().appUpdatePageOrder.url,
         cache: false,
         async: false,
         data: params,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" != returndata.code) {
                 //不等于零说明获取数据失败
                 alert(returndata.msg);
                 return;
             }
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $.alert("请求出错，更新页面顺序出错！");
             return;
         }
@@ -280,12 +286,12 @@ function updatePageOrder(pageOrder) {
 
 function getAppSetting() {
     $.ajax({
-        url: host + "/app.do?method=getSettingOfApp",
-        type: 'POST',
+        url: Util.strFormat(Inter.getApiUrl().appGetSetting.url, [appId]),
+        type: Inter.getApiUrl().appGetSetting.type,
         async: false,
-        data: { "app_id": appId },
+        // data: { "app_id": appId },
         dataType: "json",
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" == returndata.code) {
                 var data = returndata.data;
                 $("#app_name").val(data.app_name);
@@ -311,7 +317,7 @@ function getAppSetting() {
 
             }
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $.alert("请求失败");
         }
     });
@@ -328,12 +334,12 @@ function submitSetting() {
         share_info_des: $("#share_info_des").val()
     };
     $.ajax({
-        url: host + "/app.do?method=saveSettingOfApp",
-        type: 'POST',
+        url: Inter.getApiUrl().appSaveSetting.url,
+        type: Inter.getApiUrl().appSaveSetting.type,
         async: false,
         data: params,
         dataType: "json",
-        success: function(returndata) {
+        success: function (returndata) {
             if ("0" == returndata.code) {
                 $overlay.css("display", "none");
                 $("#pop-set").css("display", "none");
@@ -345,7 +351,7 @@ function submitSetting() {
                 return;
             }
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $overlay.css("display", "none");
             $("#pop-set").css("display", "none");
             $.alert("请求失败");
@@ -378,15 +384,15 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     formdata.append("app_id", appId);
 
     $.ajax({
-        url: host + '/uploadCtrl.do?method=aync_upload_pic',
-        type: 'POST',
+        url: Inter.getApiUrl().uploadPic.url,
+        type: Inter.getApiUrl().uploadPic.type,
         cache: false,
         async: false,
         data: formdata,
         contentType: false,
         processData: false,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if (returndata.code != "0") {
                 $.alert(returndata.msg);
                 return;
@@ -445,7 +451,7 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
             }
 
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $.alert(returndata);
         }
     });
@@ -479,16 +485,15 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
 
 
     $.ajax({
-        // url: host + '/add_poi.do?method=' + fileType2Method[fileType],
-        url: Inter.getApiUrl().uploadPath,
-        type: 'POST',
+        url: Inter.getApiUrl().uploadPath.url,
+        type: Inter.getApiUrl().uploadPath.type,
         cache: false,
         async: false,
         data: formdata,
         contentType: false,
         processData: false,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if (returndata.code != "0") {
                 $.alert(returndata.msg);
                 return;
@@ -539,7 +544,7 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
             //     $(clc).show();
             // }
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $.alert(returndata);
         }
     });
@@ -577,7 +582,7 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
         contentType: false,
         processData: false,
         dataType: 'json',
-        success: function(returndata) {
+        success: function (returndata) {
             if (returndata.code != "0") {
                 $.alert(returndata.msg);
                 return;
@@ -629,7 +634,7 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
             }
 
         },
-        error: function(returndata) {
+        error: function (returndata) {
             $.alert(returndata);
         }
     });

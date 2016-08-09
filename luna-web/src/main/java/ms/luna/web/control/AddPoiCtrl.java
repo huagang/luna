@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
 import ms.luna.biz.util.COSUtil;
@@ -36,8 +37,6 @@ import ms.luna.biz.util.VbUtility;
 import ms.luna.common.PoiCommon;
 import ms.luna.web.common.BasicCtrl;
 import ms.luna.web.common.PulldownCtrl;
-import ms.luna.web.control.api.VodPlayCtrl;
-import ms.luna.web.control.api.VodPlayCtrl.REFRESHMODE;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 @Component("addPoiCtrl")
@@ -179,8 +178,9 @@ public class AddPoiCtrl extends BasicCtrl{
 		try {
 			HttpSession session = request.getSession(false);
 			JSONObject param = this.param2Json(request);
-			MsUser msUser = (MsUser)session.getAttribute("msUser");
-			JSONObject result = managePoiService.addPoi(param.toString(), msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			param.put("uniqueId", user.getUniqueId());
+			JSONObject result = managePoiService.addPoi(param.toString());
 
 			if ("0".equals(result.getString("code"))) {
 				response.getWriter().print(FastJsonUtil.sucess("成功上传"));

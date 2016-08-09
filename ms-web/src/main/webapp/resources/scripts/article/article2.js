@@ -3,7 +3,7 @@
  * Author： Victor Du
  * @return {[type]} [description]
  */
-window.onload = function() {
+window.onload = function () {
     var host = lunaConfig.host;
 
     var audio;
@@ -19,7 +19,7 @@ window.onload = function() {
 
             document.querySelector('.goback').classList.remove('hidden');
 
-            document.querySelector('.goback').addEventListener('click', function(e) {
+            document.querySelector('.goback').addEventListener('click', function (e) {
                 e.preventDefault();
                 window.history.go(-1);
             });
@@ -48,11 +48,11 @@ window.onload = function() {
         if (data.abstract_pic) {
             var img = document.querySelector('.banner img');
             img.src = data.abstract_pic;
-            img.onload = function() {
+            img.onload = function () {
                 var banner = document.querySelector('.banner');
                 if (banner.clientHeight > 100) {
                     var wrapper = document.querySelector('.content-wrapper');
-                    wrapper.addEventListener('scroll', function() {
+                    wrapper.addEventListener('scroll', function () {
                         if (wrapper.scrollTop > 0) {
                             banner.classList.add('sm');
                         } else {
@@ -68,7 +68,7 @@ window.onload = function() {
         // 更新文章视频信息，视频信息可以为空        
         if (data.video) {
             var btnWraper = document.querySelector('.video-btn-wrap');
-            btnWraper.addEventListener('click', function() {
+            btnWraper.addEventListener('click', function () {
                 showVideoModal();
                 if (audio) {
                     audio.pause();
@@ -90,7 +90,7 @@ window.onload = function() {
             audio.src = data.audio;
             audioBtnWraper.classList.remove('hidden');
 
-            audioIcon.on('click', function(e) {
+            audioIcon.on('click', function (e) {
                 if (audioIcon.hasClass('playing')) {
                     document.querySelector('.icon-audio').classList.remove('playing');
                     audio.pause();
@@ -103,6 +103,16 @@ window.onload = function() {
             // audio = getAudio('.audio');
             // audio.src = data.audio;
             // audioBtnWraper.classList.remove('hidden');
+        }
+        
+
+        //设置标题宽度
+        if (!data.video && !data.audio) {
+            document.querySelector('.title-wrapper .title').style.width = '100%';
+        } else if (data.video && data.audio) {
+
+        } else {
+            document.querySelector('.title-wrapper .title').style.width = '80%';
         }
     }
 
@@ -154,11 +164,11 @@ window.onload = function() {
                 this._loaded = false;
                 this._target.addEventListener("canplay", this.handleLoaded.bind(this));
             },
-            handleLoaded: function() {
+            handleLoaded: function () {
                 this._loaded = true;
                 showAudioWrapper();
             },
-            play: function() {
+            play: function () {
                 if (this._loaded && this._src && !this._isPlaying) {
                     this._target.play();
                     this._isPlaying = true;
@@ -166,7 +176,7 @@ window.onload = function() {
                 }
                 return false;
             },
-            pause: function() {
+            pause: function () {
                 if (this._loaded && this._src && this._isPlaying) {
                     this._target.pause();
                     this._isPlaying = false;
@@ -174,7 +184,7 @@ window.onload = function() {
                 }
                 return false;
             },
-            toggle: function() {
+            toggle: function () {
                 if (this._loaded && this._src) {
                     this._isPlaying ? this.pause() : this.play();
                     return true;
@@ -189,7 +199,7 @@ window.onload = function() {
  */
 function filterImgInContent(content) {
     var clientWidth = document.querySelector('.content').clientWidth;
-    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
+    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function (word) {
         var reg = /width="([0-9]*?)"/;
         var widthNum;
         if (word.match(reg)) {
@@ -203,13 +213,13 @@ function filterImgInContent(content) {
         }
         return word;
     });
-    content = content.replace(/width\s*:\s*[0-9.]*/g, function(word) {
+    content = content.replace(/width\s*:\s*[0-9.]*/g, function (word) {
         var reg = /width\s*:\s*([0-9.]*)/;
         var widthNum;
         if (word.match(reg)) {
             widthNum = word.match(reg);
         }
-        if (Number( widthNum[1]) > clientWidth) {
+        if (Number(widthNum[1]) > clientWidth) {
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
             word = word.replace(/width\s*:\s*[0-9.]*/, 'width:' + clientWidth);
             //word = word.replace(/height="[0-9]*"/, '');
@@ -227,7 +237,8 @@ function filterImgInContent(content) {
  */
 function pageScroll(e) {
     //把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
-    window.scrollBy(0, -100);
+    var height = 0 - document.body.clientHeight / 10;
+    window.scrollBy(0, height);
     //延时递归调用，模拟滚动向上效果
     scrolldelay = setTimeout('pageScroll()', 50);
     //获取scrollTop值，声明了DTD的标准网页取document.documentElement.scrollTop，否则取document.body.scrollTop；因为二者只有一个会生效，另一个就恒为0，所以取和值可以得到网页的真正的scrollTop值

@@ -39,5 +39,11 @@ public interface PoiApiBL {
 
 	// 获取poi周边数据
 	JSONObject getPoisAround(String json);
-	
+
+	// 根据活动id获取POI数据列表
+	JSONObject getPoisByActivityId(String json);
+
+	// 纯属测试使用
+	JSONObject test();
+
 }

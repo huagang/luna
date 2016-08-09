@@ -1,18 +1,18 @@
 /*
 增加单条POI数据 author:Demi
 */
-$(function() {
+$(function () {
     var haserror = false;
     var ue;
     if ($('#editor').length > 0) {
         //如果是用了百度地图，则初始化，并回显
         ue = initEditor();
-        ue.ready(function() {
+        ue.ready(function () {
             ue.setContent($('#description').val());
         });
     }
     //名称
-    $("#long_title").bind('keyup', function() {
+    $("#long_title").bind('keyup', function () {
         //        var value = $("#long_title").val();
         //        var flag = $("#short_title").attr('data-fill');
         //        var value_short = $("#short_title").val();
@@ -22,34 +22,34 @@ $(function() {
         //            $("#short_title_warn").css("display","none");
         //        }
     });
-    $("#long_title").blur(function() {
+    $("#long_title").blur(function () {
         checkTitleLong();
     });
     //别名
-    $("#short_title").blur(function() {
+    $("#short_title").blur(function () {
         checkTitleShort();
     });
     //坐标
     //1、粘贴
-    $("#longitude").bind('paste', function(ev) {
+    $("#longitude").bind('paste', function (ev) {
         var target = $(ev.target);
         setTimeout(
-            function() {
+            function () {
                 var lon = $("#longitude").val();
                 lonlatPaste(lon, target);
             }, 5);
     });
-    $("#latitude").bind('paste', function(ev) {
+    $("#latitude").bind('paste', function (ev) {
         var target = $(ev.target);
         setTimeout(
-            function() {
+            function () {
                 var lonlat = $("#latitude").val();
                 lonlatPaste(lonlat, target);
                 asistZone();
             }, 5);
     });
     //2、输入
-    $("#longitude").on('keyup keydown', function(e) {
+    $("#longitude").on('keyup keydown', function (e) {
         if (e.type != 'paste') {
             var input = $("#longitude").val();
             var len_input = input.length;
@@ -62,7 +62,7 @@ $(function() {
             }
         }
     });
-    $("#latitude").on('keyup keydown', function(e) {
+    $("#latitude").on('keyup keydown', function (e) {
         if (e.type != 'paste') {
             var input = $("#latitude").val();
             var len_input = input.length;
@@ -76,22 +76,22 @@ $(function() {
         }
     });
     //编辑POI数据，坐标(纬度)
-    $("#latitude").blur(function() {
+    $("#latitude").blur(function () {
         if (!checkLnglatitude('latitude')) {
             asistZone();
         }
     });
     //编辑POI数据，坐标(经度)
-    $("#longitude").blur(function() {
+    $("#longitude").blur(function () {
         if (!checkLnglatitude('longitude')) {
             asistZone();
         }
     });
     //简介
-    $("#description").blur(function() {
+    $("#description").blur(function () {
         check_description();
     });
-    $("#description").bind('keydown keyup', function(e) {
+    $("#description").bind('keydown keyup', function (e) {
         var $des = $(this),
             des_val = $des.val();
         var len_char = countChineseEn(des_val);
@@ -103,9 +103,9 @@ $(function() {
             }
         }
     });
-    $("#description").bind('paste', function() {
+    $("#description").bind('paste', function () {
         $editor = $(this);
-        setTimeout(function() {
+        setTimeout(function () {
             var content = $editor.html();
             var newContent = content.replace(/<[^>]+>/g, "");
             $editor.html(newContent);
@@ -118,7 +118,7 @@ $(function() {
         }, 1);
     });
     //新增属性是否合法
-    $("#property-name").blur(function() {
+    $("#property-name").blur(function () {
         var hasError = false;
         var values = $("#property-name").val(),
             cLen = countChineseEn(values);
@@ -142,7 +142,7 @@ $(function() {
         }
     });
     //新增属性确定按钮
-    $("#btn-newproperty").click(function() {
+    $("#btn-newproperty").click(function () {
         var value = $("#property-name").val();
         var marker = $("#property-maker").val();
         $.ajax({
@@ -152,7 +152,7 @@ $(function() {
             cache: false,
             data: { 'POIpropertyName': value, 'markerurl': marker },
             dataType: 'JSON',
-            success: function(returndata) {
+            success: function (returndata) {
                 switch (returndata.code) {
                     case "0": //符合规则添加新属性
                         $("#pop-newproperty").css('display', 'none');
@@ -175,7 +175,7 @@ $(function() {
                         break;
                 }
             },
-            error: function(returndata) {
+            error: function (returndata) {
                 $("#warn-newproperty").html("名称超过16个字符");
                 $("#btn-newproperty").attr("disabled", true);
                 $("#warn-newproperty").css("display", "block");
@@ -183,7 +183,7 @@ $(function() {
         });
     });
     //编辑属性名称是否合法
-    $("#property-name-edit").blur(function() {
+    $("#property-name-edit").blur(function () {
         var hasError = false;
         var values = $("#property-name-edit").val(),
             cLen = countChineseEn(values);
@@ -209,7 +209,7 @@ $(function() {
 
 
     //类别添加，增加页卡项
-    $("input:checkbox[name='checkeds']").change(function() {
+    $("input:checkbox[name='checkeds']").change(function () {
         var property = $(this).next().text();
         var len = $("#tabbar").find('span').length;
         var tagid = $(this).val();
@@ -233,7 +233,7 @@ $(function() {
             if (len == 1) {
                 $("#field-show").css("display", "none");
             }
-            $('#tabbar>span').each(function() {
+            $('#tabbar>span').each(function () {
                 if ($(this).text() == property) {
                     if ($(this).hasClass("selected-item")) {
                         $(this).remove();
@@ -250,18 +250,18 @@ $(function() {
         }
     });
 
-    $("#topTag").change(function() {
+    $("#topTag").change(function () {
 
         var tagid = $("#topTag").find("option:selected").val();
 
         $.ajax({
-            url: host + "/manage_poi.do?method=ayncSearchSubTag",
-            type: 'POST',
+            url: Util.strFormat(Inter.getApiUrl().ayncSearchSubTag.url, [tagid]),
+            type: Inter.getApiUrl().ayncSearchSubTag.type,
             async: false,
             cache: false,
-            data: { 'subTag': tagid },
+            // data: { 'subTag': tagid },
             dataType: 'JSON',
-            success: function(returndata) {
+            success: function (returndata) {
                 var $subTag = $("#subTag");
                 $subTag.empty();
                 $subTag.append('<option value="0">请选择二级分类</option>');
@@ -273,14 +273,14 @@ $(function() {
                 // 显示私有字段域
                 displayPrivateField();
             },
-            error: function(returndata) {
+            error: function (returndata) {
                 $.alert("请求失败");
             }
         });
     });
 
     //页卡项选中
-    $("#tabbar").on('click', 'span', function() {
+    $("#tabbar").on('click', 'span', function () {
         $(this).siblings().addClass("selected-item");
         $(this).removeClass("selected-item");
         var tagid = $(this).attr('tagid');
@@ -288,7 +288,7 @@ $(function() {
         fieldshow(tagid, field);
     });
 
-    $("#btn-POI-save").click(function() {
+    $("#btn-POI-save").click(function () {
         $('#description').val(ue.getContent());
         var hasError = false;
         hasError = checkTitleLong() || hasError;
@@ -305,15 +305,15 @@ $(function() {
             if ('en' == lang) {
                 // check检查
                 $.ajax({
-                    url: host + "/edit_poi.do?method=checkPoi",
-                    type: 'POST',
+                    url: Inter.getApiUrl().poiCheckForEnglish.url,
+                    type: Inter.getApiUrl().poiCheckForEnglish.type,
                     async: false,
                     cache: true,
                     data: formdata,
                     processData: false,
                     contentType: false,
                     dataType: 'JSON',
-                    success: function(returndata) {
+                    success: function (returndata) {
                         switch (returndata.code) {
                             case "0":
                                 noerror = true;
@@ -326,82 +326,82 @@ $(function() {
                                 noerror = false;
                         }
                     },
-                    error: function() {
+                    error: function () {
                         $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $("#status-message").css('display', 'none');
                         }, 2000);
                     }
                 });
             }
             if (!noerror) {
-                $.confirm(msg, function() {
+                $.confirm(msg, function () {
                     $.ajax({
-                        url: host + "/edit_poi.do?method=updatePoi",
-                        type: 'POST',
+                        url: Inter.getApiUrl().poiEditSave.url,
+                        type: Inter.getApiUrl().poiEditSave.type,
                         async: true,
                         cache: true,
                         data: formdata,
                         processData: false,
                         contentType: false,
                         dataType: 'JSON',
-                        success: function(returndata) {
+                        success: function (returndata) {
                             switch (returndata.code) {
                                 case "0": //符合规则添加修改属性
                                     $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         $("#status-message").css('display', 'none');
-                                        window.location.href = host + "/manage_poi.do?method=init";
+                                        // window.location.href = Inter.getApiUrl().poiInit.url;
                                     }, 2000);
                                     break;
                                 default:
                                     $("#status-message").html(returndata.msg).css('display', 'block');
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         $("#status-message").css('display', 'none');
                                     }, 2000);
                                     break;
                             }
                         },
-                        error: function() {
+                        error: function () {
                             $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $("#status-message").css('display', 'none');
                             }, 2000);
                         }
                     });
-                }, function() {});
+                }, function () { });
             } else {
                 // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
                 // 后台对于提交上来的数据，不再做中文检查
                 $.ajax({
-                    url: host + "/edit_poi.do?method=updatePoi",
-                    type: 'POST',
+                    url: Inter.getApiUrl().poiEditSave.url,
+                    type: Inter.getApiUrl().poiEditSave.type,
                     async: true,
                     cache: true,
                     data: formdata,
                     processData: false,
                     contentType: false,
                     dataType: 'JSON',
-                    success: function(returndata) {
+                    success: function (returndata) {
                         switch (returndata.code) {
                             case "0": //符合规则添加修改属性
                                 $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $("#status-message").css('display', 'none');
-                                    window.location.href = host + "/manage_poi.do?method=init";
+                                    // window.location.href = Inter.getApiUrl().poiInit.url;
                                 }, 2000);
                                 break;
                             default:
                                 $("#status-message").html(returndata.msg).css('display', 'block');
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $("#status-message").css('display', 'none');
                                 }, 2000);
                                 break;
                         }
                     },
-                    error: function() {
+                    error: function () {
                         $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $("#status-message").css('display', 'none');
                         }, 2000);
                     }
@@ -411,13 +411,13 @@ $(function() {
 
         } else {
             $("#status-message").html('您的输入有误！').css('display', 'block');
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#status-message").css('display', 'none');
             }, 2000);
         }
     });
 
-    $("#btn-POI-save-add").click(function() {
+    $("#btn-POI-save-add").click(function () {
         $('#description').val(ue.getContent());
         var hasError = false;
         hasError = checkTitleLong() || hasError;
@@ -428,40 +428,40 @@ $(function() {
         if (!hasError) {
             var formdata = new FormData($("#poiModel")[0]);
             $.ajax({
-                url: host + "/add_poi.do?method=addPoi",
-                type: 'POST',
+                url: Inter.getApiUrl().poiAddSave.url,
+                type: Inter.getApiUrl().poiAddSave.type,
                 async: false,
                 cache: true,
                 data: formdata,
                 processData: false,
                 contentType: false,
                 dataType: 'JSON',
-                success: function(returndata) {
+                success: function (returndata) {
                     switch (returndata.code) {
                         case "0": //符合规则添加修改属性
                             $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $("#status-message").css('display', 'none');
-                                window.location.href = host + "/manage_poi.do?method=init";
+                                window.location.href = Inter.getApiUrl().poiInit.url;
                             }, 2000);
                             break;
                         default:
                             $("#status-message").html(returndata.msg).css('display', 'block');
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $("#status-message").css('display', 'none');
                             }, 2000);
                     }
                 },
-                error: function() {
+                error: function () {
                     $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $("#status-message").css('display', 'none');
                     }, 2000);
                 }
             });
         } else {
             $("#status-message").html('您的输入有误！').css('display', 'block');
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#status-message").css('display', 'none');
             }, 3000);
         }
@@ -480,7 +480,7 @@ function editProperty(obj) {
     var $popwindow = $("#pop-newproperty-edit");
     popWindow($popwindow);
     //编辑属性确定按钮
-    $("#btn-newproperty-edit").click(function() {
+    $("#btn-newproperty-edit").click(function () {
         var value = $("#property-name-edit").val();
         var marker = $("#property-maker-edit").val();
         $.ajax({
@@ -490,7 +490,7 @@ function editProperty(obj) {
             cache: false,
             data: { 'POIpropertyName': value, 'markerurl': marker },
             dataType: 'JSON',
-            success: function(returndata) {
+            success: function (returndata) {
                 switch (returndata.code) {
                     case "0": //符合规则添加修改属性
                         $("#pop-newproperty").css('display', 'none');
@@ -510,7 +510,7 @@ function editProperty(obj) {
                         break;
                 }
             },
-            error: function() {
+            error: function () {
                 $("#warn-newproperty").html("名称超过16个字符");
                 $("#btn-newproperty").attr("disabled", true);
                 $("#warn-newproperty").css("display", "block");
@@ -524,7 +524,7 @@ function delProperty(obj) {
     var $popwindow = $("#pop-deletePOI");
     popWindow($popwindow);
     //删除类别，“确定”按钮
-    $("#btn-deletePOI").click(function() {
+    $("#btn-deletePOI").click(function () {
         $("#pop-overlay").css("z-index", "100");
         $popwindow.css("display", "none");
         _target.remove();
@@ -665,7 +665,7 @@ function fieldshow(tagid, field) {
 
 function isTagFieldsExist(tag_id) {
     var isExist = false;
-    $('.item-poi').each(function() {
+    $('.item-poi').each(function () {
         var tag_ids = $(this).attr('tag_id');
         if (tag_ids && tagIdMatchedInTagIds(tag_id, tag_ids)) {
             isExist = true;
@@ -725,7 +725,7 @@ function asistZone() {
  */
 var geocoder = new qq.maps.Geocoder({
     // 设置服务请求成功的回调函数
-    complete: function(result) {
+    complete: function (result) {
         var addressComponents = result.detail.addressComponents;
         var province = addressComponents.province;
         var city = addressComponents.city;
@@ -742,13 +742,13 @@ var geocoder = new qq.maps.Geocoder({
             "district": district,
         }
         $.ajax({
-            type: 'post',
-            url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
+            type: 'GET',
+            url: Inter.getApiUrl().pullDownZoneIds.url,
             cache: false,
             async: false,
             data: params,
             dataType: 'json',
-            success: function(returndata) {
+            success: function (returndata) {
                 if (returndata.code == '0') {
                     var provinceId = returndata.data.provinceId;
                     $("#province option[value='" + provinceId + "']").attr("selected", "true");
@@ -765,7 +765,7 @@ var geocoder = new qq.maps.Geocoder({
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 alert("counties请求失败");
                 return;
             }
@@ -773,7 +773,7 @@ var geocoder = new qq.maps.Geocoder({
 
     },
     // 若服务请求失败，则运行以下函数
-    error: function() {
+    error: function () {
         $.alert("请输入正确的经纬度！！！");
     }
 });
@@ -785,7 +785,6 @@ function findZoneIdsWithQQZoneName(lat, lng) {
     //调用获取位置方法
     geocoder.getAddress(latLng);
 }
-
 /**
  * 初始化编辑器
  * @return {[type]} [description]
@@ -793,11 +792,11 @@ function findZoneIdsWithQQZoneName(lat, lng) {
 function initEditor() {
     // /*重置上传附件请求的地址*/
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
-    UE.Editor.prototype.getActionUrl = function(action) {
+    UE.Editor.prototype.getActionUrl = function (action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return host + "/add_poi.do?method=upload_thumbnail";
+            return Inter.getApiUrl().poiThumbnailUpload.url;
         } else if (action == 'uploadvideo') {
-            return host + "/add_poi.do?method=upload_video";
+            return Inter.getApiUrl().poiVideoUpload.url;
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
@@ -815,11 +814,9 @@ function initEditor() {
                 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                 'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
-                'simpleupload',
-                // 'music',
-                'insertvideo',
+                'link', 'simpleupload',/*'music',*/ 'insertvideo',
             ]
-        ],
+        ]
     });
     return ue;
 }

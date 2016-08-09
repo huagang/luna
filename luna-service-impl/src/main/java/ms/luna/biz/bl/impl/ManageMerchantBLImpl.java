@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import ms.luna.biz.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +93,9 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			status_id = param.getString("status_id"); // 商户状态
 		}
 		
-		String merchant_id = genNumService.generateNum("MERCH");
+//		String merchant_id = genNumService.generateNum("MERCH");
+		String merchant_id = UUIDGenerator.generateUUID();
+
 		if (CharactorUtil.isEmpyty(merchant_id)) {
 			MsLogger.debug("编号生成失败：[CRM]");
 			throw new RuntimeException("编号生成失败：[CRM]");

@@ -22,10 +22,13 @@
     <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/styles/common.css">
     <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
+	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+	<script src="${basePath}/scripts/common/interface.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 
     <script src="${basePath}/scripts/lunaweb.js"></script>
     <script src="${basePath}/scripts/ajaxfileupload.js"></script>
@@ -47,12 +50,12 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
                 	<c:if test="${lang == 'zh'}">
-                		<a href="/luna-web/edit_poi.do?method=init&_id=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+                		<a href= "/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
                 	</c:if>
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form commandName="poiModel" method="post" action="${basePath}/edit_poi.do?method=updatePoi" enctype="multipart/form-data">
+            <form:form commandName="poiModel" method="post" action="$/data/poi/edit" enctype="multipart/form-data">
             	<input type="hidden" id="lang" value="${lang}" name="lang"/>
             	<form:input id="poiId" cssStyle="display:none" path="poiId"/>
 	            <div>
@@ -281,8 +284,8 @@
                 </div>
                 <div class='publish-option'>
                 	<input type='checkbox'  id='publish' checked="checked" />
-                	<label for='publish'>同步生成poi详情页</label>
-                	<%-- <a target='_blank' href="./show_poi.do?method=init&_id=${_id}">预览</a>  --%>       
+
+                	<label for='publish'>同步生成poi详情页</label>     
                  	<a target='_blank' href="${preview_url}">预览</a>      	
                 </div>
                 <c:if test="${!poiReadOnly}">
@@ -382,12 +385,11 @@
 </body>
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-	window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+	window.UEDITOR_HOME_URL = window.host + "/plugins/ueditor/";
 </script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
-<script src="${basePath}/scripts/common/interface.js"></script>
 <script src="${basePath}/scripts/add_edit_poi.js"></script>
 <script src="${basePath}/scripts/popup.js"></script>
 <script type="text/javascript">

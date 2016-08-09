@@ -47,16 +47,15 @@
 
 								<table id="table-authority" class="table" data-toggle="table"
 									data-toolbar=""
-									data-url="${basePath}/authority.do?method=async_search_groups"
+									data-url="${basePath}/platform/authority/search"
 									data-pagination="true" data-side-pagination="server"
 									data-page-list="[5,10,20,50]" data-search="false"
 									data-click-to-select="true" data-show-refresh="false"
 									data-query-params="queryParams">
 									<thead>
 										<tr>
-											<th data-field="role_name" data-align="left">用户组</th>
-											<th data-field="module_name" data-align="left">用户组所属业务</th>
-											<th data-field="role_type" data-align="left">类型</th>
+											<th data-field="name" data-align="left">用户组</th>
+											<th data-field="category_name" data-align="left">用户组所属业务</th>
 											<th data-formatter="operationFormatter"
 												data-events="operationEvents" data-align="right">操作</th>
 										</tr>
@@ -93,13 +92,7 @@
 		});
 
 		function operationFormatter(value, row, index) {
-			return'<a class="modify" href="'+ host+ '/authority_set.do?method=init&ms_role_code='+row.role_code+'">权限</a>'
-		}
-		window.operationEvents = {
-			'click .search' : function(e, value, row, index) {
-				permissionSetting(row.wjnm, row.province_id, row.city_id,
-						row.category_id, row.region_id);
-			}
+			return'<a class="modify" href="'+ host+ '/platform/authority/'+row.id+'">权限</a>'
 		}
 
 		function queryParams(params) {

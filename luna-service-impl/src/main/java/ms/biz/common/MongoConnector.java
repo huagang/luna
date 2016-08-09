@@ -136,4 +136,8 @@ public class MongoConnector {
 		}
 	}
 
+	public MongoDatabase getMongoDB() {
+		return db;
+	}
+
 }

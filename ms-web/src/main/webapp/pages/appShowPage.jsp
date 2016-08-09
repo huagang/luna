@@ -16,6 +16,7 @@
     <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/fonts/iconfont.css">
 </head>
 <body>
     <div class="landscape">
@@ -40,7 +41,7 @@
 
 	</div>
     <script type="text/javascript" src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
-    <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
+    <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/vbpano.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
@@ -48,8 +49,6 @@
     <script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="${stat_id}" ></script>
     <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
     <script type="text/javascript">
-        // var shareInfo={"title":"${share_info_title}","desc":"${share_info_des}","link":"${share_info_link}","imgUrl":"${share_info_pic}"};
-        // getShareInfo(window.document.location.href,shareInfo);
 
         var pageData = ${pageData};
 
@@ -57,14 +56,17 @@
         var wechatOptions = {
             title: "${share_info_title}",
             desc: "${share_info_des}",
-            link: window.location.href,
-            imgUrl:"${share_info_pic}"
+            link: "${share_info_link}",
+           // link: window.location.href.split('?')[0],
+            imgUrl:"${share_info_pic}",
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
         var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/interface.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>
 </html>
