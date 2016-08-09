@@ -12,11 +12,15 @@ $(function(){
            }
         });
         console.log(checkedList);
+        var data = new FormData();
+        data.append('menuArray', JSON.stringify(checkedList));
+        //data: JSON.stringify({menuArray: checkedList}),
+        //contentType: 'application/json',
         $.ajax({
             url: apiUrls.updateAuthoritySet.url.format(id),
             type: apiUrls.updateAuthoritySet.type,
-            data: JSON.stringify({menuArray: checkedList}),
-            contentType: 'application/json',
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
             dataType: 'json',
             success: function(data){
                 console.log(data);
