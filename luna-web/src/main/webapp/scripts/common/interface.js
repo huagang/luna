@@ -8,7 +8,7 @@
  */
 
 var Inter = function () {
-    var context = window.context || "";
+    var context = window.context || "",
         apiContext = '';
         
     var curHost = function() {
@@ -25,7 +25,7 @@ var Inter = function () {
     var apiHost = {
         'local':'http://localhost:8082/',
         'test':'http://luna-test.visualbusiness.cn/luna-api/',
-        'online':'http://luna.visualbusiness.cn/luna-api/',
+        'online':'http://luna.visualbusiness.cn/luna-api/'
     };
     return {
         getApiUrl: function () {
@@ -164,7 +164,7 @@ var Inter = function () {
 
 
                 // 组权限管理
-                updateAuthoritySet: {url: context + '/platform/authority/{0}', type: 'PUT'}
+                updateAuthoritySet: {url: context + '/platform/authority/{0}', type: 'PUT'},
 
                 //文章列表接口
                 articleListApi: apiHost[curHost()]+'article/businessId/{0}',
