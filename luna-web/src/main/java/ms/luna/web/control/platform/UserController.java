@@ -145,7 +145,8 @@ public class UserController extends BasicController {
 
         int roleId = RequestHelper.getInteger(request, "role_id");
         String extra = RequestHelper.getString(request, "extra");
-
+        logger.error("role_id" + roleId);
+        logger.error("extra" + extra);
         if(roleId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "角色不合法");
         }

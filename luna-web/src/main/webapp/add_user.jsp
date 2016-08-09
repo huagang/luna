@@ -41,7 +41,7 @@
                     <li class="active">{{user.userId ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
-                <div class='form-input' id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
+                <div class='form-input ng-hide' ng-show="! user.userId" id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
                     <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
                     <span class="text-primary" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
                         <span>{{email}}</span>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="button" ng-click="user.handleInviteUser()">邮箱邀请</button>
+                    <button class="button" ng-click="user.handleInviteUser()">{{user.userId ? '保存' : '邮箱邀请' }}</button>
                 </div>
             </div>
 
@@ -105,14 +105,19 @@
     </div>
 
 </div>
+<script>
+    try{
+        var roleData = [${roleData}][0];
+    } catch(e){
+        roleData = null;
+    }
 
+</script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_user.js"></script>
-<script>
-    var roleData = "${roleData}";
-</script>
+
 </body>
 </html>

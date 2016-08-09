@@ -110,6 +110,8 @@
 <!-- 删除按钮弹出层 end -->
 <!--弹出层 end-->
 
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_user.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script type="text/javascript">
@@ -136,10 +138,8 @@
 		var msUserName = '${sessionScope.msUser.nickName}';
 		var luna_name = row.luna_name;
 		if(msUserName != luna_name){
-			return '<a class="edit" href="./user/invite?unique_id=' + row.unique_id + '">编辑</a>'
-        		+'<a class="delete" href="#" onclick="delUser(this,\''+row.luna_name+'\',\''+row.module_code+'\',\''+row.role_code+'\',\''+msUserName+'\')">删除</a>'
-		} else {
-			return '<a class="delete" href="#" onclick="editUser(\''+row.module_code+'\',\''+row.luna_name+'\',\''+row.role_code+'\',\''+msUserName+'\')">查看</a>'
+			return '<a class="edit" href="./user/' + row.unique_id + '?edit">编辑</a>'
+        		+'<a class="delete" href="#" onclick="delUser(this,\'' +row.luna_name +'\',\'' + row.unique_id+'\',\'' + row.role_name + '\',' + row.index + ')">删除</a>'
 		}
 	}
 	window.operationEvents = {

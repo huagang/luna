@@ -274,8 +274,8 @@ var initPage = function() {
                 short_title:document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
-                url: articleStore.id ? Inter.getApiUrl().articleCreate.url : Inter.getApiUrl().articleCreate.url,
-                type:  articleStore.id ? Inter.getApiUrl().articleCreate.type : Inter.getApiUrl().articleCreate.type,
+                url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
+                type:  articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -310,7 +310,7 @@ var initPage = function() {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function(e) {
             $.ajax({
-                url: Inter.getApiUrl().articlePublish.url,
+                url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
                 type:Inter.getApiUrl().articlePublish.type,
                 async: true,
                 data: { id: articleStore.id },

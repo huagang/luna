@@ -5,6 +5,7 @@
 var manageColumn = angular.module('manageColumn', []);
 manageColumn.run(function($rootScope, $http) {
     $http.defaults.headers.post = {'Content-Type': 'application/x-www-form-urlencoded'};
+    $http.defaults.headers.put = {'Content-Type': 'application/x-www-form-urlencoded'};
     $http.defaults.transformRequest = function(obj) {
         var str = [];
         for(var p in obj) {
