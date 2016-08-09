@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ms.luna.common.LunaUserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -181,8 +181,9 @@ public class EditPoiCtrl extends BasicCtrl{
 			param.put("_id", _id);
 			param.put("lang", lang);
 			HttpSession session = request.getSession(false);
-			MsUser msUser = (MsUser)session.getAttribute("msUser");
-			JSONObject result = managePoiService.updatePoi(param.toString(), msUser);
+			LunaUserSession msUser = (LunaUserSession)session.getAttribute("msUser");
+			param.put("uniqueId", msUser.getUniqueId());
+			JSONObject result = managePoiService.updatePoi(param.toString());
 			MsLogger.error(result.toJSONString());
 			if ("0".equals(result.getString("code"))) {
 				response.getWriter().print(FastJsonUtil.sucess("0"));

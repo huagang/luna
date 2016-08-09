@@ -3,11 +3,11 @@ package ms.luna.web.control.data;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.common.LunaUserSession;
 import ms.luna.common.PoiCommon;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
@@ -159,8 +159,9 @@ public class PoiEditController extends BasicController {
             param.put("_id", _id);
             param.put("lang", lang);
             HttpSession session = request.getSession(false);
-            MsUser msUser = (MsUser)session.getAttribute("msUser");
-            JSONObject result = managePoiService.updatePoi(param.toString(), msUser);
+            LunaUserSession msUser = (LunaUserSession)session.getAttribute("msUser");
+            param.put("uniqueId", msUser.getUniqueId());
+            JSONObject result = managePoiService.updatePoi(param.toString());
             MsLogger.error(result.toJSONString());
             if ("0".equals(result.getString("code"))) {
                 return FastJsonUtil.sucess("0");
