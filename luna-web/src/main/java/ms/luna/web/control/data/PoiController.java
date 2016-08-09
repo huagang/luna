@@ -63,6 +63,8 @@ public class PoiController extends BasicController {
     @Autowired
     private VodPlayService vodPlayService;
 
+    public static final String menu = "poi";
+
     /**
      * 二级菜单缓存
      */
@@ -108,12 +110,7 @@ public class PoiController extends BasicController {
             HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         ModelAndView mav = new ModelAndView();
-        if (session == null) {
-            MsLogger.error("session is null");
-            mav.setViewName("/error.jsp");
-            return mav;
-        }
-        session.setAttribute("menu_selected", "manage_poi");
+        SessionHelper.setSelectedMenu(session, menu);
 
         PoiModel poiModel = new PoiModel();
 

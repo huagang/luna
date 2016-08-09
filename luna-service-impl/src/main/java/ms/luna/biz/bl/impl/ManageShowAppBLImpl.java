@@ -3,6 +3,7 @@ package ms.luna.biz.bl.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import ms.biz.common.CommonQueryParam;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageShowAppBL;
@@ -29,9 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.StringWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 @Transactional(rollbackFor=Exception.class)
@@ -169,6 +168,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "分享设置多于5条"));
 		}
 
+		Set<Integer> latestIdSet = new HashSet<>();
 		for(int i = 0; i < jsonArray.size(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			if(jsonObject == null) {
@@ -178,10 +178,18 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			msShowPageShare.setAppId(appId);
 			if(msShowPageShare.getId() != null && msShowPageShare.getId() > 0) {
 				msShowPageShareDAO.updateByPrimaryKeySelective(msShowPageShare);
+				latestIdSet.add(msShowPageShare.getId());
 			} else {
-				msShowPageShareDAO.insertSelective(msShowPageShare);
+				int id = msShowPageShareDAO.insertSelective(msShowPageShare);
+				latestIdSet.add(id);
 			}
 		}
+
+		// 删除既不更新也不是新增的分享信息
+		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
+		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId)
+				.andIdNotIn(Lists.newArrayList(latestIdSet));
+		msShowPageShareDAO.deleteByCriteria(msShowPageShareCriteria);
 
 		return Pair.of(true, null);
 	}
