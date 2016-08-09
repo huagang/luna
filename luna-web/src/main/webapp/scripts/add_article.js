@@ -274,8 +274,8 @@ var initPage = function() {
                 short_title:document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
-                url: articleStore.id ? Inter.getApiUrl().articleUpdate.url : Inter.getApiUrl().articleCreate.url,
-                type:  articleStore.id ? Inter.getApiUrl().articleUpdate.type : Inter.getApiUrl().articleCreate.type,
+                url: articleStore.id ? Inter.getApiUrl().articleCreate.url : Inter.getApiUrl().articleCreate.url,
+                type:  articleStore.id ? Inter.getApiUrl().articleCreate.type : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -430,7 +430,8 @@ var initPage = function() {
             business_id = null;
         }
         try {
-            id = parseInt(location.href.match(/(\&|\?)id=(\d+)/)[2]);
+            var idx = location.href.lastIndexOf("/");
+            id = parseInt(location.href.substr(idx + 1));
         } catch (e) {
             id = '';
         }
@@ -498,9 +499,8 @@ var initPage = function() {
 
     function updateArticleData(id) {
         $.ajax({
-            url: Inter.getApiUrl().readArticle,
-            type: 'GET',
-            data: { id: id },
+            url: Util.strFormat(Inter.getApiUrl().articleEditData.url, [id]),
+            type: Inter.getApiUrl().articleEditData.type,
             dataType: 'json',
             success: function(data) {
                 if (data.code === '0') {
