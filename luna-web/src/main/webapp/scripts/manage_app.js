@@ -128,8 +128,9 @@ function getNormalController(appSel, data){
 		},
 		updateData: function(data){
 			/* 用于更新常用设置信息
-			 * @data 常用设置信息
+			 * @param data 常用设置信息
 			 */
+			Object.assign(this.data, data);
 			this.reset();
 			this._appDialog.find('.setting-normal .app-name').val(this.data.appName || '');
 			this._appNameCounter.updateCounter(this.data.appName.length);
@@ -497,13 +498,12 @@ function getAppController(newAppSelector, editAppSelector){
 		normalController: getNormalController(editAppSelector), // 常用设置控制器
 		
 		_appDialog: $(editAppSelector),
-		
 		_type:'',  // 操作类型： "create"(新建微景展), "update"(更新微景展信息), "reuse"(服用微景展),
 		
 		_posturl:{ // 设置相关请求的url
 			create: urls.createApp,  //创建微景展请求 url
 			update: urls.updateApp,  //更新微景展名称请求 url
-			reuse: urls.copyApp,	  //复用微景展请求url
+			reuse: urls.copyApp	  //复用微景展请求url
 
 		},
 		
@@ -545,8 +545,17 @@ function getAppController(newAppSelector, editAppSelector){
 			}.bind(this));
 
 		},
-		handleEditProp: function(){
-			$('.edit-app').addClass('pop-show');
+		handleEditProp: function(event){
+			var parent = $(event.target.parentElement);
+			this.data.appId = parseInt(parent.attr('data-app-id'));
+			this.data.businessId = parseInt(parent.attr('data-business-id'));
+			this.data.appName = parseInt(parent.attr('data-app-name'));
+			this.normalController.updateData({appName: this.data.appName});
+			this.reset();
+			this._appDialog.find('.share').removeClass('active');
+			this._appDialog.find('.normal').addClass('active');
+			this._appDialog.addClass('pop-show');
+
 		},
 		
 		reset: function(){
@@ -562,8 +571,6 @@ function getAppController(newAppSelector, editAppSelector){
 				this.normalController.reset();
 			}
 		},
-
-
 
 		freshAppList:function(){
 			//刷新微景展列表
