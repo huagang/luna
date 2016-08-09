@@ -5,6 +5,17 @@
     angular.module('addUser', []);
     angular
         .module("addUser")
+        .run(function($rootScope, $http){
+            $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            $http.defaults.headers.put = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            $http.defaults.transformRequest = function (obj) {
+                var str = [];
+                for (var p in obj) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+                return str.join("&");
+            };
+        })
         .controller('AddUserController', ['$rootScope', '$scope', "$http", AddUserController]);
 
     function AddUserController($rootScope, $scope, $http) {
@@ -271,45 +282,34 @@
             var res = vm._checkValidation();
             if (!res.error) {
                 //发送数据请求
-                var data = new FormData();
+
+                var data = {
+                    category_id: vm.data.module,
+                    role_id: parseInt(vm.data.role),
+                };
+                if(vm.data.extra && vm.data.extra.type){
+                    data.extra = JSON.stringify(vm.data.extra);
+                }
                 if(! vm.userId){
-                    data.append('emails', vm.data.emailList.join(','));
-                    data.append('category_id', vm.data.module);
-                    data.append('role_id', parseInt(vm.data.role));
-                    if(vm.data.extra && vm.data.extra.type){
-                        data.append('extra', JSON.stringify(vm.data.extra));
-                    }
+                    data.emails = vm.data.emailList.join(',');
                     $http({
                         url: vm.apiUrls.inviteUsers.url,
                         method: vm.apiUrls.inviteUsers.type,
-                        data: data,
-                        headers: {
-                            "Content-Type": undefined
-                        }
+                        data: data
                     }).then(function (res) {
                         if(res.data.code === '0'){
-                            alert('新建用户成功');
+                            alert('邀请用户成功');
                         } else{
-                            alert(res.data.msg || '新建用户失败');
+                            alert(res.data.msg || '邀请用户失败');
                         }
                     }, function (res) {
-                        alert(res.data.msg || '新建用户失败');
+                        alert(res.data.msg || '邀请用户失败');
                     });
                 } else{
-                    data = {
-                        category_id: vm.data.module,
-                        role_id: parseInt(vm.data.role),
-                    };
-                    if(vm.data.extra && vm.data.extra.type){
-                        data.extra = JSON.stringify(vm.data.extra);
-                    }
                     $http({
                         url: vm.apiUrls.updateUserAuth.url.format(vm.userId),
                         method: vm.apiUrls.updateUserAuth.type,
-                        data: data,
-                        headers:{
-                            'Content-Type': 'application/json',
-                        }
+                        data: data
                     }).then(function(res){
                         if(res.data.code === '0'){
                             alert('保存成功');
