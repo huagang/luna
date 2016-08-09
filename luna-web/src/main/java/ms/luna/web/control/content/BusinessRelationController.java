@@ -1,7 +1,6 @@
 package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -9,13 +8,11 @@ import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
-import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -44,10 +41,6 @@ public class BusinessRelationController extends BasicController {
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         try {
-//            HttpSession session = request.getSession(false);
-//            if (session != null) {
-//                session.setAttribute("menu_selected", "manage_business_tree");
-//            }
             SessionHelper.setSelectedMenu(request.getSession(false), menu);
             view.addObject("provinces", pulldownController.loadProvinces());
             view.addObject("citys", pulldownController.loadCitys("110000"));
