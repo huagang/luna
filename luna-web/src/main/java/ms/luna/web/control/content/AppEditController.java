@@ -318,14 +318,13 @@ public class AppEditController extends BasicController {
             @RequestParam(required=false, value="share_info_pic") String share_info_pic,
             @RequestParam(required=false, value="share_info_title") String share_info_title,
             @RequestParam(required=false, value="share_info_des") String share_info_des,
+            @RequestParam(required = false, value = "shareArray") String shareArray,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (StringUtils.isBlank(appId)) {
             return FastJsonUtil.error("1", "没有appId!");
         }
-        HttpSession session = request.getSession(false);
         try {
-            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject param = new JSONObject();
             param.put("app_id", appId);
             param.put("pic_thumb", CharactorUtil.nullToBlank(pic_thumb));
@@ -334,6 +333,9 @@ public class AppEditController extends BasicController {
             param.put("share_info_pic", CharactorUtil.nullToBlank(share_info_pic));
             param.put("share_info_title", CharactorUtil.nullToBlank(share_info_title));
             param.put("share_info_des", CharactorUtil.nullToBlank(share_info_des));
+            if(StringUtils.isNotBlank(shareArray)) {
+                param.put("shareArray", JSONObject.parseArray(shareArray));
+            }
             JSONObject result = msShowAppService.saveSettingOfApp(param.toString());
             return result;
         } catch (Exception e) {

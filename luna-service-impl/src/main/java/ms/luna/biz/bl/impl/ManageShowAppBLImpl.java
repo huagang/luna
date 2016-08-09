@@ -261,13 +261,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称已经存在");
 		}
 		String appCode = appName;
-		int businessId = FastJsonUtil.getInteger(jsonObject, "business_id");
 		String updateUser = FastJsonUtil.getString(jsonObject, "update_user");
 		MsShowApp msShowApp = new MsShowApp();
 		msShowApp.setAppId(appId);
 		msShowApp.setAppName(appName);
 		msShowApp.setAppCode(appCode);
-		msShowApp.setBusinessId(businessId);
 		msShowApp.setUpdatedByWjnm(updateUser);
 		try {
 			msShowAppDAO.updateByPrimaryKeySelective(msShowApp);
@@ -614,6 +612,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		}
 		
 		String appName = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_APP_NAME);
+		if(existAppName(appId, appName)) {
+			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "微景展名称已存在");
+		}
 		String picThumb = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_PIC_THUMB);
 		String note = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_NOTE);
 		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);

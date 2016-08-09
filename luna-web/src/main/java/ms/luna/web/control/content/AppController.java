@@ -83,10 +83,6 @@ public class AppController extends BasicController {
     public JSONObject updateApp(@PathVariable int appId, HttpServletRequest request) throws IOException {
 
         String appName = RequestHelper.getString(request, "app_name");
-        int businessId = RequestHelper.getInteger(request, "business_id");
-        if(businessId < 0) {
-            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
-        }
         if(! isValidName(appName)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称不合法");
         }
@@ -95,8 +91,8 @@ public class AppController extends BasicController {
         JSONObject jsonObject = JSONObject.parseObject("{}");
         jsonObject.put("app_id", appId);
         jsonObject.put("app_name", appName);
-        jsonObject.put("business_id", businessId);
         jsonObject.put("update_user", user.getLunaName());
+
         JSONObject result = manageShowAppService.updateApp(jsonObject.toString());
 
         return result;

@@ -11,7 +11,7 @@
 		   <c:forEach items = "${sessionScope.menu}" var="module">
 			   <dl class="menu-box">
 				   <dt class="menu-title">
-					   <img src="<%=request.getContextPath() %>/img/ic_settings_applications_24px.png"/>${module.name}
+					   <img src="<%=request.getContextPath() %>/img/ic_${module.code}_module_24px.png"/>${module.name}
 				   </dt>
 
 				   <c:forEach items="${module.menuArray}" var="menu">
