@@ -169,6 +169,7 @@ function getNormalController(appSel, data){
 			FileUploader.uploadMediaFile({
 				type: 'pic',
 				file: event.target.files[0],
+				resourceType: 'app',
 				success: function(data){
 					$(conSel).addClass('hidden');
 					$(previewSel).removeClass('hidden');
@@ -349,6 +350,7 @@ function getShareController(data){
 			FileUploader.uploadMediaFile({
 				type: 'pic',
 				file: event.target.files[0],
+				resourceType: 'app',
 				success: function(data){
 					var shareEle = $('.share-item.order-' + order);
 					shareEle.find('.file-uploader').addClass('hidden');
@@ -525,8 +527,8 @@ function NewAppController() {
 			});
 		}
 	}
-
 }
+
 
 function getAppController(editAppSelector){
 	/* 作用  新建微景展、更新微景展、复用微景展时控制配置弹出框的显示以及数据发送
