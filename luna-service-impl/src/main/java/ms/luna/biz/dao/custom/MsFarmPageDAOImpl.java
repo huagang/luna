@@ -27,9 +27,8 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
     }
 
     @Override
-    public void updatePage(JSONObject data) {
-        Integer app_id = data.getInteger(MsShowPageDAO.FIELD_APP_ID);
-        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, app_id);
+    public void updatePage(JSONObject data, Integer appId) {
+        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId);
         Document document = collection.find(filter).limit(1).first();
         collection.updateOne(filter, new Document().append("$set", convertJson2Document(document, data)));
     }

@@ -48,22 +48,29 @@ public class FarmPageServiceImpl implements FarmPageService {
     // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
 
     @Override
-    public JSONObject initPage(String json) {
+    public JSONObject getPageInfo(Integer appId) {
 
         // 创建微景展(ms_show_app)
         // 获取页面字段定义和初始值
 
-        JSONObject jsonObject = JSONObject.parseObject(json);
+//        JSONObject jsonObject = JSONObject.parseObject(json);
         try {
-            // 创建微景展(ms_show_app),获取app_id
-            Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
-            if (!createResult.getLeft()) {
-                return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
-            }
-            int appId = msShowAppDAO.selectIdByName(FastJsonUtil.getString(jsonObject, "app_name"));
+//            // 创建微景展(ms_show_app),获取app_id
+//            Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
+//            if (!createResult.getLeft()) {
+//                return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+//            }
+//            int appId = msShowAppDAO.selectIdByName(FastJsonUtil.getString(jsonObject, "app_name"));
 
-            // 获取页面字段定义和初始值
-            JSONObject fields = getFarmFields(null);
+            // 检查app_id是否存在
+            if (!this.isAppIdExist(appId)) {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
+            }
+            // 获取mongo数据
+            Document document = msFarmPageDAO.selectPageByAppId(appId);
+
+            // 获取页面字段定义和数值
+            JSONObject fields = getFarmFields(document);
 
             JSONObject data = new JSONObject();
             data.put(MsShowAppDAO.FIELD_APP_ID, appId);
@@ -74,26 +81,26 @@ public class FarmPageServiceImpl implements FarmPageService {
         } catch (Exception e) {
             MsLogger.error("Failed to create app: " + e.getMessage());
             // 手动添加回滚设置
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to create app");
         }
 
     }
 
     @Override
-    public JSONObject editPage(String json) {
+    public JSONObject updatePage(String json, Integer appId) {
         try {
             JSONObject param = JSONObject.parseObject(json);
-            Integer app_id = param.getInteger("app_id");
 
             // 检查app_id是否创建
-            if (!this.isAppIdExist(app_id)) {
+            if (!this.isAppIdExist(appId)) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
             }
 
             // 检查mongo数据是否存在
-            if (this.isPageExist(app_id)) { // --exist
-                msFarmPageDAO.updatePage(param);
+            Document document =
+            if (this.isPageExist(appId)) { // --exist
+                msFarmPageDAO.updatePage(param, appId);
             } else { // --not exit
                 msFarmPageDAO.insertPage(param);
             }
@@ -141,7 +148,12 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
-    public JSONObject previewPage(String json) {
+    public JSONObject previewPage(Integer appId) {
+        return null;
+    }
+
+    @Override
+    public JSONObject publishPage(Integer appId) {
         return null;
     }
 
@@ -182,6 +194,10 @@ public class FarmPageServiceImpl implements FarmPageService {
         }
         fieldArray.put(MsFarmFieldTable.FIELDS, array);
         return fieldArray;
+    }
+
+    private JSONObject getFarmFieldsDef() {
+
     }
 
     /**
@@ -291,6 +307,23 @@ public class FarmPageServiceImpl implements FarmPageService {
 
         Document result = msFarmPageDAO.selectPageByAppId(app_id);
         return result != null;
+    }
+
+    /**
+     * 将前端数据转化为Document类型数据
+     *
+     * @param param 前端返回数据
+     * @param fields 字段定义
+     * @return Document
+     */
+    private Document convertJson2DocumentWithFieldDef(JSONObject param, JSONArray fields) {
+        Document doc = new Document();
+        for(int i = 0; i < fields.size(); i++) {
+            JSONObject field = fields.getJSONObject(i);
+            String fieldName = field.getJSONObject("definition").getString("name");
+            doc.put("name", param.containsKey(fieldName)? param.get(fieldName) : "");
+        }
+        return doc;
     }
 
     // --------------------------------------------------------------------------------------------

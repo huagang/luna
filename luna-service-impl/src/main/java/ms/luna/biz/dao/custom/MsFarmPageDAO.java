@@ -13,7 +13,7 @@ public interface MsFarmPageDAO {
 
     void insertPage(JSONObject data);
 
-    void updatePage(JSONObject data);
+    void updatePage(JSONObject data, Integer appId);
 
     Document selectPageByAppId(Integer app_id);
 

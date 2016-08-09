@@ -7,16 +7,18 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface FarmPageService {
 
-    JSONObject initPage(String json);
+    JSONObject getPageInfo(Integer appId);
 
-    JSONObject editPage(String json);
+    JSONObject updatePage(String json, Integer appId);
 
-    JSONObject delPage(Integer app_id);
+    JSONObject delPage(Integer appId);
 
     JSONObject getFarmFields();
 
-    JSONObject loadPage(Integer app_id);
+    JSONObject loadPage(Integer appId);
 
-    JSONObject previewPage(String json);
+    JSONObject previewPage(Integer appId);
+
+    JSONObject publishPage(Integer appId);
 
 }

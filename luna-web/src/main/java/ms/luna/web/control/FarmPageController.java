@@ -44,61 +44,95 @@ public class FarmPageController extends BasicCtrl {
 
     private static final String PREVIEW = "method=preview_page";
 
+    public static final String menu = "app";
+
 //    private static final String
 
+//    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
+//    public ModelAndView init(@PathVariable int appId, HttpServletRequest request) {
+//        try {
+////            SessionHelper.setSelectedMenu(request.getSession(false), menu);
+//            ModelAndView modelAndView = buildModelAndView("show_page");
+//            modelAndView.addObject("appId", appId);
+//            return modelAndView;
+//
+//        } catch (Exception e) {
+//            MsLogger.error("Failed to load all pages", e);
+//        }
+//
+//        return new ModelAndView("/error.jsp");
+//    }
+
 //    @RequestMapping(params = INIT)
-    @RequestMapping(method = RequestMethod.GET, value = "GET")
-    public ModelAndView init(
-            @RequestParam(required = true, value = "app_name") String app_name,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        // TODO 初始化页面
-        ModelAndView modelAndView = buildModelAndView("/manage_router");
-
-        try {
-            // TODO 名称检查--基础版,开发版和数据版需要名称检查,应写成同一个.
-            boolean flag = checkAppName();
-            if(!flag) {
-                return buildModelAndView("/error");
-            }
-
-            // TODO 获取业务id--get from session
-            Integer business_id = 46;
-
-            // TODO 获取创建人信息--get from session
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                throw new RuntimeException("session is null");
-            }
-            MsUser msUser = (MsUser) session.getAttribute("msUser");
-            String owner = msUser.getNickName();
-
-            JSONObject param = new JSONObject();
-            param.put("business_id", business_id);
-            param.put("owner", owner);
-            param.put("app_name", app_name);
-
-            JSONObject result = farmPageService.initPage(param.toString());
-            MsLogger.debug(result.toString());
-
-            if ("0".equals(result.get("code"))) {
-                JSONObject data = result.getJSONObject("data");
-                modelAndView.addObject("fields", data.getJSONObject("fields"));
-                return modelAndView;
-            }
+    // 获取初始化页面组件字段信息
+    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
+    @ResponseBody
+    public JSONObject getInitPageInfo(@PathVariable Integer appId) throws IOException {
+        try{
+//            LunaUserSession user = SessionHelper.setSelectedMenu(request.getSession(false), menu);
+            JSONObject result = farmPageService.getPageInfo(appId);
+            return result;
         } catch (Exception e) {
             MsLogger.error("Failed to init MsShow" + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to init MsShow");
         }
-        return buildModelAndView("/error");
+
     }
+
+//    // 页面初始化
+//    public ModelAndView init(
+//            @RequestParam(required = true, value = "app_name") String app_name,
+//            HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//        // TODO 初始化页面
+//        ModelAndView modelAndView = buildModelAndView("/manage_router");
+//
+//        try {
+//            // TODO 名称检查--基础版,开发版和数据版需要名称检查,应写成同一个.
+//            boolean flag = checkAppName();
+//            if(!flag) {
+//                return buildModelAndView("/error");
+//            }
+//
+//            // TODO 获取业务id--get from session
+//            Integer business_id = 46;
+//
+//            // TODO 获取创建人信息--get from session
+//            HttpSession session = request.getSession(false);
+//            if (session == null) {
+//                throw new RuntimeException("session is null");
+//            }
+//            MsUser msUser = (MsUser) session.getAttribute("msUser");
+//            String owner = msUser.getNickName();
+//
+//            JSONObject param = new JSONObject();
+//            param.put("business_id", business_id);
+//            param.put("owner", owner);
+//            param.put("app_name", app_name);
+//
+//            JSONObject result = farmPageService.initPage(param.toString());
+//            MsLogger.debug(result.toString());
+//
+//            if ("0".equals(result.get("code"))) {
+//                JSONObject data = result.getJSONObject("data");
+//                modelAndView.addObject("fields", data.getJSONObject("fields"));
+//                return modelAndView;
+//            }
+//        } catch (Exception e) {
+//            MsLogger.error("Failed to init MsShow" + e.getMessage());
+//        }
+//        return buildModelAndView("/error");
+//    }
 
 
 //    @RequestMapping(params = SAVEPAGE)
-    @RequestMapping(method = RequestMethod.PUT, value = "")
+    // 编辑页面
+    @RequestMapping(method = RequestMethod.PUT, value = "/farm/{appId}")
     @ResponseBody
     public JSONObject savePage(
-            @RequestParam(required = true, value = "value") String fieldsVal,
-            HttpServletRequest request, HttpServletResponse response ) {
+            @PathVariable("appId") Integer appId,
+            @RequestParam(required = true, value = "data") String fieldsVal,
+            HttpServletRequest request, HttpServletResponse response) {
          try{
              // 获取字段定义
              JSONObject result1 = farmPageService.getFarmFields();
@@ -108,11 +142,11 @@ public class FarmPageController extends BasicCtrl {
              JSONObject data = result1.getJSONObject("data");
              JSONArray fields = data.getJSONArray("fields");
 
-             // 检查字段数值
+             // 检查字段数值 -- 暂时先不检查
              FarmCommon.getInStance().checkFieldsVal(JSONObject.parseObject(fieldsVal), fields);
 
              // 保存
-             JSONObject result = farmPageService.editPage(fieldsVal);
+             JSONObject result = farmPageService.updatePage(fieldsVal, appId);
              MsLogger.debug(result.toString());
              return result;
          } catch (Exception e) {
@@ -123,13 +157,13 @@ public class FarmPageController extends BasicCtrl {
     }
 
 //    @RequestMapping(params = DELPAGE)
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{app_id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{appId}")
     @ResponseBody
     public JSONObject delPage(
-        @RequestParam(required = true, value = "app_id") Integer app_id,
+        @RequestParam(required = true, value = "appId") Integer appId,
         HttpServletRequest request, HttpServletResponse response) {
         try{
-            JSONObject result = farmPageService.delPage(app_id);
+            JSONObject result = farmPageService.delPage(appId);
             MsLogger.debug(result.toString());
             return result;
         } catch (Exception e) {
@@ -155,22 +189,36 @@ public class FarmPageController extends BasicCtrl {
 
     }
 
-//    @RequestMapping(params = PREVIEW)
-    @RequestMapping(method = RequestMethod.GET, value = "/preview")
+    //    @RequestMapping(params = PREVIEW)
+    @RequestMapping(method = RequestMethod.GET, value = "/preview/{appId}")
     @ResponseBody
     public JSONObject previewPage(
+            @PathVariable("appId") Integer appId,
             HttpServletRequest request, HttpServletResponse response) {
         return null;
     }
 
-    /**
-     * 检查微景展名称
-     *
-     * @return Boolean
-     */
-    private boolean checkAppName() {
-        // TODO
-        return true;
+    //    @RequestMapping(params = PREVIEW)
+    @RequestMapping(method = RequestMethod.GET, value = "/publish/{appId}")
+    @ResponseBody
+    public JSONObject publishPage(
+            @PathVariable("appId") Integer appId,
+            HttpServletRequest request, HttpServletResponse response) {
+        return null;
     }
+
+
+
+
+
+//    /**
+//     * 检查微景展名称
+//     *
+//     * @return Boolean
+//     */
+//    private boolean checkAppName() {
+//        // TODO
+//        return true;
+//    }
 
 }

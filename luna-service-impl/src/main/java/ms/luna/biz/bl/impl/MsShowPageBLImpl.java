@@ -192,7 +192,7 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 			if(json != null) {
 				Map<String, Integer> pageOrders = JSON.parseObject(json, new TypeReference<Map<String, Integer>>() {});
 				msShowPageDAO.updatePageOrder(pageOrders);
-				return FastJsonUtil.sucess("更新页面顺序保存成功");
+				return FastJsonUtil.sucess("更新页面顺序f保存成功");
 			}
 		} catch(Exception ex) {
 			logger.error("Failed to update page orders", ex);
