@@ -18,7 +18,6 @@ window.onload = function() {
         pageData.data.content = filterImgInContent(pageData.data.content);
         updateData(pageData.data);
 
-
         //$('.edui-upload-video').addClass('video-js vjs-default-skin').attr('data-setup','{}');
 
         //var articleId = null;
@@ -65,6 +64,7 @@ window.onload = function() {
         img.src = data.abstract_pic;
         img.onload = function() {
             var banner = document.querySelector('.banner');
+            banner.classList.remove('hidden');
             if (banner.clientHeight > 100) {
                 var wrapper = document.querySelector('.content-wrapper');
                 wrapper.addEventListener('scroll', function() {

@@ -21,7 +21,7 @@
 	</head>
 	<body>
 		<div class='wrapper'>
-			<div class='banner'>			
+			<div class='banner hidden'>			
 				<img src=''/>
 			</div>
 			<div class='toolbar'>

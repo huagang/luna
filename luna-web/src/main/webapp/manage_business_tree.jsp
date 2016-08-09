@@ -43,22 +43,23 @@
                     <div class="main-hd"><h3>POI数据关系配置</h3></div>
 		    		<div class="region">
 		            	<select class="select" id="province" onchange="change_province()">
+		            	  <option value="ALL">请选择省</option>
 			              <c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-			                   <c:choose>
+			                   <%-- <c:choose>
 			                   		<c:when test="${provinceId==varProvince['province_id']}">
 			                   			<option value="${varProvince['province_id']}" selected >${varProvince['province_nm_zh']}</option>
 			                   		</c:when>
-			                   		<c:otherwise>
+			                   		<c:otherwise> --%>
 			                   			<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-			                   		</c:otherwise>
-			                   </c:choose>
+			                   		<%-- </c:otherwise>
+			                   </c:choose> --%>
 						  </c:forEach>
 			           	</select>
 			           	<select class="select" id="city" onchange="change_city()">
 			               	<option value="ALL">请选择市</option>
-			               	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
+			               	<%-- <c:forEach items="${citys}" var="varCity" varStatus="status"> 
 			                   	<option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option>
-						  </c:forEach>
+						  </c:forEach> --%>
 			           	</select>
 			           <select class="select" id="county" onchange="change_county()">
 			               	<option value="ALL">请选择区/县</option>
@@ -117,22 +118,23 @@
     	<form>
     		<div class="region">
 	              <select class="select" id="province-new-build" onchange="change_province('new-build')">
+	              <option value="ALL">请选择省</option>
 	              <c:forEach items="${provinces}" var="varProvince" varStatus="status"> 
-	                   <c:choose>
+	                  <%--  <c:choose>
 	                   		<c:when test="${provinceId==varProvince['province_id']}">
 	                   			<option value="${varProvince['province_id']}" selected >${varProvince['province_nm_zh']}</option>
 	                   		</c:when>
-	                   		<c:otherwise>
+	                   		<c:otherwise> --%>
 	                   			<option value="${varProvince['province_id']}">${varProvince['province_nm_zh']}</option>
-	                   		</c:otherwise>
-	                   </c:choose>
+	                   		<%-- </c:otherwise>
+	                   </c:choose> --%>
 				  </c:forEach>
 	           	</select>
 	           	<select class="select" id="city-new-build" onchange="change_city('new-build')">
 	               	<option value="ALL">请选择市</option>
-	               	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
+	               <%-- 	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
 	                   	<option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option>
-				  </c:forEach>
+				  </c:forEach> --%>
 	           	</select>
 	           <select class="select" id="county-new-build" onchange="change_county('new-build')">
 	               	<option value="ALL">请选择区/县</option>

@@ -46,6 +46,7 @@ public class ManageBusinessTreeCtrl {
 			}
 			view.addObject("provinces", pulldownCtrl.loadProvinces());
 			view.addObject("citys", pulldownCtrl.loadCitys("110000"));
+			view.addObject("provinceId", "110000");
 			view.setViewName("/manage_business_tree.jsp");
 			return view;
 		} catch (Exception e) {
@@ -59,7 +60,7 @@ public class ManageBusinessTreeCtrl {
 	public void asyncSearchBusinessTrees(
 			@RequestParam(required = false) Integer offset,
 			@RequestParam(required = false) Integer limit,
-			@RequestParam(required = true, value="province_id") String provinceId,
+			@RequestParam(required = false, value="province_id") String provinceId,
 			@RequestParam(required = false, value="city_id") String cityId,
 			@RequestParam(required = false, value="county_id") String countId,
 			@RequestParam(required = false, value="filterLikeName") String keyWord,

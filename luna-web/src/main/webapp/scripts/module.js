@@ -19,7 +19,11 @@ $(document).ready(function() {
         });
 
     });
-
+    $('.btn-slide').on('click',function(e){
+        $(this).closest('.slide-panel').find('.slide-content').toggle();
+        $(this).toggleClass('icon-slideup');
+        $(this).toggleClass('icon-slidedown');
+    });
 });
 
 //组件
@@ -43,8 +47,8 @@ $(function() {
         // });
         lunaPage.creatPageComponents(currentPageId, null, "text");
         currentComponent = jQuery.extend(true, {}, componentTextModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("text");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         $editor.html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
@@ -67,9 +71,9 @@ $(function() {
         //     }    
         // });
         lunaPage.creatPageComponents(currentPageId, null, "img");
-        currentComponent = jQuery.extend(true, {}, componentImgModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("img");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("img");
@@ -90,9 +94,9 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "nav");
-        currentComponent = jQuery.extend(true, {}, componentNavModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentNavModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("nav");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("nav");
@@ -113,9 +117,9 @@ $(function() {
         //     }   
         // });
         lunaPage.creatPageComponents(currentPageId, null, "pano");
-        currentComponent = jQuery.extend(true, {}, componentPanoModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentPanoModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("pano");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("pano");
@@ -127,15 +131,64 @@ $(function() {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
-    
+
         lunaPage.creatPageComponents(currentPageId, null, "audio");
-        currentComponent = jQuery.extend(true, {}, componentAudioModelTemplate);
-        currentComponent["_id"] = currentComponentId;
-        lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentAudioModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("audio");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
         componentPanel.update("audio");
 
+    });
+
+    //视频组件
+    $("#videoComponent").click(function() {
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+
+        lunaPage.creatPageComponents(currentPageId, null, "video");
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentVideoModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
+        componentPanel.init("video");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("video");
+    });
+
+    //页签组件
+    $("#tabComponent").click(function() {
+        if (document.querySelector('.con_tab')) {
+            alert('已经存在一个页签组件，不能重复添加');
+            return;
+        }
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+
+        lunaPage.creatPageComponents(currentPageId, null, "tab");
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentTabModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
+        componentPanel.init("tab");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("tab");
+    });
+
+    //图集组件
+    $("#imageListComponent").click(function() {
+        lostFocus($(".componentbox-selected"));
+        $("div.selected-text").removeClass("selected-text");
+        $("div.componentbox-selected").removeClass("componentbox-selected");
+
+        lunaPage.creatPageComponents(currentPageId, null, "imgList");
+        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgListModelTemplate);
+        currentComponent._id = currentComponentId;
+        lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
+        componentPanel.init("imgList");
+        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        componentPanel.update("imgList");
     });
 
     //右键删除组件
@@ -191,7 +244,7 @@ $(function() {
 
     //按delete按钮删除组件
     $(document).bind('keydown', 'del', function(e) {
-        if(e.target.nodeName=="INPUT"){
+        if (e.target.nodeName == "INPUT") {
             //如果是文本框，删除文本框中的内容，不删除画布中的插件
             return true;
         }
@@ -260,7 +313,7 @@ $(function() {
                 var fontFamily = $(this).text();
                 $("div.selected-text").css("font-family", fontFamily);
                 lunaPage.editPageComponents(currentPageId, currentComponentId);
-            })
+            });
             //字体大小
         $('#size-select li').click(function() {
             var fontSize = $(this).text();
@@ -327,6 +380,10 @@ $(function() {
             var y = $('#elementy').val();
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 1;
                 $target.css("top", position.top + 'px');
@@ -344,6 +401,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 1;
                 $target.css("top", position.top + 'px');
@@ -360,12 +421,15 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 1;
                 $target.css("left", position.left + 'px');
@@ -381,12 +445,16 @@ $(function() {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
             }
-   
+
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 1;
                 $target.css("left", position.left + 'px');
@@ -403,6 +471,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('top') == '0px') {
+                    console.log('已经到顶部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top - 10;
                 $target.css("top", position.top + 'px');
@@ -419,6 +491,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('bottom') == '0px') {
+                    console.log('已经到底部');
+                    return false;
+                }
                 var position = $target.position();
                 position.top = position.top + 10;
                 $target.css("top", position.top + 'px');
@@ -435,6 +511,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('left') == '0px') {
+                    console.log('已经到左侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left - 10;
                 $target.css("left", position.left + 'px');
@@ -451,6 +531,10 @@ $(function() {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
+                if ($target.css('right') == '0px') {
+                    console.log('已经到右侧');
+                    return false;
+                }
                 var position = $target.position();
                 position.left = position.left + 10;
                 $target.css("left", position.left + 'px');
@@ -460,8 +544,13 @@ $(function() {
                 return false;
             }
         });
+
+        //清空文件上传的值，解决同一文件不能重复上传问题
+        $('input[type=file]').on('click', function(e) {
+            $(this).val('');
+        });
     }
-})
+});
 
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
@@ -474,7 +563,7 @@ $.fn.getHexBackgroundColor = function(id, property) {
     }
     rgb = "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
     return rgb;
-}
+};
 
 
 //组件初始化,绑定支持的操作动作
@@ -516,6 +605,14 @@ function initBind(comid) {
                     });
                 }
             }
+
+            //TODO: 为右部吸边做准备
+            if (parseFloat($(this).css('left')) + $(this).width() == $('#layermain').width()) {
+                $(this).css({
+                    left: 'auto',
+                    right: '0px'
+                });
+            }
             $(this).removeClass("newcomponentbox");
             // drag允许组件处于未点击选中状态，模拟选中，并切换当前组件为活动组件
             getEleFocus($(this));
@@ -542,7 +639,7 @@ function getEleFocus(_this) {
 
     currentComponentId = _this.attr('id');
 
-};
+}
 //平移、旋转时外边框消失
 function lostFocus(_this) {
     _this.find('.ui-resizable-handle').hide();

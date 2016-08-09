@@ -114,6 +114,7 @@ $(document).ready(function(){
     	$(this).siblings().removeClass("current");
     	$(this).addClass("current");
     	showSearchPois($(this).attr("tag_id"));
+        $('#chkbox-selcet-all').attr("checked",false);
 //    	searchPois();
     });
 
@@ -191,7 +192,7 @@ $(document).ready(function(){
         var ps_li=[];
         var chk_value=[];
         $('.list-result-poi input:checked').each(function(){ 
-        	chk_value.push([$(this).attr("poi_id"),$(this).attr("poi_tags"),$(this).parent().text()]); 
+        	chk_value.push([$(this).attr("poi_id"),$(this).attr("poi_tags"),$(this).parent().find('a').text()]);
     	}); 
         if(chk_value.length>0){
         	for(var c=0;c<chk_value.length;c++){

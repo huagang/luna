@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
  *
@@ -73,6 +75,7 @@ public class QCosUtil {
             if(overwrite) {
                 cosCloud.deleteFile(bucket, remoteFilePath);
             }
+            logger.debug("remoteFilePath: " + remoteFilePath);
             String ret = cosCloud.uploadFile(bucket, remoteFilePath, inputStream);
             logger.debug(ret);
             JSONObject retJson = JSON.parseObject(ret);
@@ -160,7 +163,7 @@ public class QCosUtil {
             logger.error("Failed to delete folder: " + remotePath, e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除文件夹失败");
         }
-        return FastJsonUtil.sucess("删除成功");
+        return FastJsonUtil.sucess("删除文件夹成功");
     }
 
 
@@ -191,11 +194,11 @@ public class QCosUtil {
                 context = dataJson.getString("context");
                 hasMore = dataJson.getBoolean("has_more");
                 if (dataJson.getIntValue("dircount") > 0 || dataJson.getIntValue("filecount") > 0) {
-                    JSONArray names = dataJson.getJSONArray("infos");
-                    for (int i = 0; i < names.size(); i++) {
-                        JSONObject o = names.getJSONObject(i);
-                        String name = o.getString("name");
-                        if (o.containsKey("filesize")) {
+                    JSONArray infos = dataJson.getJSONArray("infos");
+                    for (int i = 0; i < infos.size(); i++) {
+                        JSONObject info = infos.getJSONObject(i);
+                        String name = info.getString("name");
+                        if (info.containsKey("filesize")) {
                             // it's a file
                             String filePath = remotePath + name;
                             logger.debug("Delete file: " + filePath);
@@ -210,12 +213,18 @@ public class QCosUtil {
                     deleteFolder(bucket, remotePath);
                 }
             }
+            deleteFolder(bucket, remotePath);
         } catch (Exception e) {
             logger.error("Failed to delete folder", e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除文件夹失败");
         }
 
         return FastJsonUtil.sucess("删除文件夹成功");
+    }
+
+    public static void main(String[] args) {
+        String remoteDirectory = "/luna/dev";
+        JSONObject jsonObject = QCosUtil.getInstance().deleteFolderRecursive(QCosConfig.LUNA_BUCKET, remoteDirectory);
     }
 
 }

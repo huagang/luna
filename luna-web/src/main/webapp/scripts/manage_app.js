@@ -677,6 +677,10 @@ function getAppController(businessDialogSelector, appDialogSelector){
 	            "pic": this.normalController.data.coverUrl,
 	            "business_id": this.businessController.data.businessId,
 	            "share_data": this.shareController.data
+                //"app_id": this._app_id || null,
+                //"source_app_id": this._app_id || null,
+                //"app_name":this._app_name,
+                //"business_id": this._business_id
 		     };
 			console.log(data);
 			$.ajax({
@@ -690,7 +694,7 @@ function getAppController(businessDialogSelector, appDialogSelector){
 		            	this._appDialog.removeClass('pop-show');
 		            	this.freshAppList();
 		            	if(this._type === 'create' || this._type === 'reuse'){
-		            		location.href = '../app.do?method=init&app_id=' + data.data.app_id;
+		            		location.href = '../app.do?method=init&app_id=' + res.data.app_id +'&business_id=' + data.business_id;
 		            	}
 		            }
 		            else{

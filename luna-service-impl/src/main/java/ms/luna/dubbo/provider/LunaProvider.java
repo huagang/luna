@@ -3,6 +3,7 @@ package ms.luna.dubbo.provider;
 import java.io.IOException;
 import java.util.Properties;
 
+import ms.luna.biz.bl.PoiApiBL;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
@@ -37,6 +38,8 @@ public class LunaProvider extends Thread {
 		}
 		MsZoneCacheBL msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
 		msZoneCacheBL.init();
+		PoiApiBL poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
+		poiApiBL.init();
 		System.out.println("LunaProvider Service is started!");
 		try {
 			while(true) {

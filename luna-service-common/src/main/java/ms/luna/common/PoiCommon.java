@@ -168,6 +168,15 @@ public class PoiCommon {
 		public static final String EN = "en";
 
 		public static final Integer 公共TAGID = 1;
+		
+		public static final Integer TOPTAG_DEFAULT = 8; // 一级分类id默认值为8--其他
+		
+		public static final Integer PANORAMA_TYPE_DEFAULT = 2; // 全景类型id默认为2
+
+		public static final Integer RADIUS_AROUND_DEFAULT = 1000; // 周边,默认范围
+
+		public static final Integer NUM_AROUND_DEFAULT = 20; // 周边POI数据(由近到远),默认20条
+
 		/*
 		 *公共部分 
 		 */
@@ -241,6 +250,48 @@ public class PoiCommon {
 		return checkPoiOtherName(param == null || param.length == 0 ? null : param[0]);
 	}
 
+	/**
+	 * 检测POI一级分类是否合法
+	 * @param param
+	 * @return
+	 */
+	public String checkPoiTopTag(String param) {
+		if("0".equals(param)) {// "0"表示未选择
+			return MsLunaMessage.getInstance().getMessage("LUNA.E0017", "一级类别");
+		}
+		return null;
+	}
+	
+	/**
+	 * 检测POI一级分类是否合法
+	 * @param param
+	 * @return
+	 */
+	public String checkPoiTopTag(String[] param ) {
+		return checkPoiTopTag(param == null || param.length == 0 ? null : param[0]);
+	}
+	
+	/**
+	 * 检测POI二级分类是否合法
+	 * @param param
+	 * @return
+	 */
+	public String checkPoiSubTag(String param) {
+		if("0".equals(param)) {// "0"表示未选择
+			return MsLunaMessage.getInstance().getMessage("LUNA.E0017", "二级类别");
+		}
+		return null;
+	}
+	
+	/**
+	 * 检测POI二级分类是否合法
+	 * @param param
+	 * @return
+	 */
+	public String checkPoiSubTag(String[] param ) {
+		return checkPoiSubTag(param == null || param.length == 0 ? null : param[0]);
+	}
+	
 	/**
 	 * 检查纬度是否合法<p>
 	 * 1.必须是合法的数字格式<br>
@@ -566,9 +617,20 @@ public class PoiCommon {
 			throw new IllegalArgumentException(msg);
 		}
 
-		// 3.一级类别（topTag）// 免查
-		// 3.二级类别(subTag) // 免查
-
+		// 3.一级类别（topTag）
+		msg = checkPoiTopTag(paramMaps.get("topTag"));
+		if(msg != null) {
+			MsLogger.debug(msg);
+			throw new IllegalArgumentException(msg);
+		}
+		
+		// 3.二级类别(subTag)
+		msg = checkPoiSubTag(paramMaps.get("subTag"));
+		if(msg != null) {
+			MsLogger.debug(msg);
+			throw new IllegalArgumentException(msg);
+		}
+		
 		// 4.坐标（lat,lng）
 		msg = checkLat(paramMaps.get("lat"));
 		if (msg != null) {

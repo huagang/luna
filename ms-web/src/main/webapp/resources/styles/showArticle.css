@@ -31,7 +31,7 @@ html,body{
 	line-height: 28px;
 	margin: 10px 10px;
 	padding-bottom: 70px;
-	overflow: scroll;
+	/* overflow: scroll; */
 }
 .content img,.content video{
 	width: 100%;
@@ -87,7 +87,11 @@ html,body{
 .toolbar .icon-audio{
 	width: 33px;
     height: 33px;
+    background: url(../images/icons-2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 504px;
     background-position: -132px -100px;
+
 }
 
 .toolbar .icon-audio.playing{
@@ -96,7 +100,11 @@ html,body{
 .toolbar .icon-video{
 	width: 33px;
     height: 33px;
-    background-position: -99px -100px;
+    background: url(../images/icons-2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 504px;
+    background-position: -98px -100px;;
+
 }
 
 .video-dialog{

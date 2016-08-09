@@ -33,29 +33,31 @@
 			left outer join ms_poi_field f
 				 on r.field_name= f.field_name  
 		 where tag.tag_level=1
-		 ORDER BY ds_order, display_order asc
+		 ORDER BY display_order,ds_order  asc
 	</select>
 	
 	<resultMap id="MsPoiTagInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
 		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
 		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="tag_name_en" property="tagNameEn" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectPoiTags" resultMap="MsPoiTagInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
 		SELECT
 			ms_poi_tag.tag_id as tag_id,
-			ms_poi_tag.tag_name as tag_name
+			ms_poi_tag.tag_name as tag_name,
+			ms_poi_tag.tag_name_en as tag_name_en
 		FROM
 			ms_poi_tag
 	</select>
 	
-	<resultMap id="MsTagFieldInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+	<resultMap id="MsFieldNames" class="ms.luna.biz.dao.custom.model.MsPoiFieldNameResult">
 		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
-		<result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+		<result column="field_alias" property="fieldAlias" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectFieldNames" resultMap="MsTagFieldInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+	<select id="selectFieldNames" resultMap="MsFieldNames">
 		SELECT
 			ms_poi_field.field_name as field_name,
-			ms_poi_field.field_show_name as field_show_name
+			ms_poi_field.field_alias as field_alias
 		FROM
 			ms_poi_field
 	</select>

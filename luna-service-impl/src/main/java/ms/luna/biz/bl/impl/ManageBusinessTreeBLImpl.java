@@ -217,7 +217,8 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		String provinceId = FastJsonUtil.getString(param, "provinceId");
 		String cityId = FastJsonUtil.getString(param, "cityId");
 		String countyId = FastJsonUtil.getString(param, "countyId");
-		provinceId = "ALL".equals(provinceId) ? "110000" : provinceId;
+//		provinceId = "ALL".equals(provinceId) ? "110000" : provinceId;
+		provinceId = "ALL".equals(provinceId) ? null : provinceId;
 		cityId = "ALL".equals(cityId) ? null : cityId;
 		countyId = "ALL".equals(countyId) ? null : countyId;
 
@@ -245,12 +246,12 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		}
 
 		// zone地域(过滤)
-		if (countyId != null) {
+		if(provinceId != null) {
+			condition.append("province_id", provinceId);
+		} else if (countyId != null) {
 			condition.append("county_id", countyId);
 		} else if (cityId != null) {
 			condition.append("city_id", cityId);
-		} else {
-			condition.append("province_id", provinceId);
 		}
 
 		// 标签(过滤)
@@ -445,10 +446,11 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		String provinceId = FastJsonUtil.getString(param, "provinceId");
 		String cityId = FastJsonUtil.getString(param, "cityId");
 		String countyId = FastJsonUtil.getString(param, "countyId");
-		if (CharactorUtil.isEmpyty(provinceId) || "ALL".equals(provinceId)) {
-			throw new IllegalArgumentException(MsLunaMessage.getInstance().getMessage("LUNA.E0017", "省份"));
-		}
-
+//		if (CharactorUtil.isEmpyty(provinceId) || "ALL".equals(provinceId)) {
+//			throw new IllegalArgumentException(MsLunaMessage.getInstance().getMessage("LUNA.E0017", "省份"));
+//		}
+		
+		provinceId = "ALL".equals(provinceId) ? null: provinceId;
 		cityId = "ALL".equals(cityId) ? null: cityId;
 		countyId = "ALL".equals(countyId) ? null: countyId;
 		msBusinessParameter.setProvinceId(provinceId);

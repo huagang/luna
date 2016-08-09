@@ -32,5 +32,6 @@
 	<dubbo:reference id="vodPlayService" interface="ms.luna.biz.sc.VodPlayService" />
 	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService" />
 	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService" />
-	
+	<dubbo:reference id="poiApiService" interface="ms.luna.biz.sc.PoiApiService" />
+
 </beans>

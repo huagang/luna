@@ -67,6 +67,7 @@ public class AppController extends BaseController {
             String shareInfoTitle = data.getString("share_info_title");
             String shareInfoDes = data.getString("share_info_des");
             String shareInfoPic = data.getString("share_info_pic");
+            modelAndView.addObject("appName", appName);
             modelAndView.addObject("share_info_title", StringUtils.isBlank(shareInfoTitle) ? appName : shareInfoTitle);
             modelAndView.addObject("share_info_des", StringUtils.isBlank(shareInfoDes) ? note : shareInfoDes);
             modelAndView.addObject("share_info_pic", StringUtils.isBlank(shareInfoPic) ? picThumb : shareInfoPic);
@@ -74,6 +75,12 @@ public class AppController extends BaseController {
         JSONObject businessJson = manageBusinessService.getBusinessByAppId(appId);
         if(businessJson.getString("code").equals("0")) {
             modelAndView.addObject("stat_id", businessJson.getJSONObject("data").getInteger("stat_id"));
+        }
+        JSONObject appInfoJson = manageShowAppService.getAppInfo(appId);
+        if(appInfoJson.getString("code").equals("0")) {
+            modelAndView.addObject("business_id", appInfoJson.getJSONObject("data").getInteger("business_id"));
+        } else {
+            modelAndView.addObject("business_id", 0);
         }
     }
 }

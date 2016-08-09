@@ -31,7 +31,7 @@ var FileUploader = {
 		},
 		video: {
 			format:['RM','RMVB','AVI','MP4','3GP'],
-			size: 5000000  //(5M)
+			size: 20000000  //(20M)
 		}
 	},
 	_formNamesForFile: {

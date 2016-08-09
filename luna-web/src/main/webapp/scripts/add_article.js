@@ -4,14 +4,14 @@
  * Date:2016-6-22
  */
 
-var initPage = function() {
+var initPage = function () {
     var ue;
     var articleStore = getArticleStore();
     /**
      * 初始化编辑器
      * @return {[type]} [description]
      */
-    var initEditor = function() {
+    var initEditor = function () {
         //插入全景
         // var createVb = function(ueDom, i) {
         //     ueDom.execCommand('inserthtml', '', true);
@@ -210,7 +210,7 @@ var initPage = function() {
 
         // /*重置上传附件请求的地址*/
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
-        UE.Editor.prototype.getActionUrl = function(action) {
+        UE.Editor.prototype.getActionUrl = function (action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
                 return Inter.getApiUrl().uploadImageInArtcle;
             } else if (action == 'uploadvideo') {
@@ -229,11 +229,10 @@ var initPage = function() {
                 ['fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent','|',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-                    'simpleupload',
-                    // 'insertmusic',
-                    'insertvideo',
+                    'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
+                    'link','simpleupload', /*'insertmusic',*/ 'insertvideo',
                 ]
             ],
         });
@@ -244,9 +243,9 @@ var initPage = function() {
      * 初始化保存、发布、预览时间
      * @return {[type]} [description]
      */
-    var initEvent = function() {
+    var initEvent = function () {
         // 事件绑定  保存按钮点击事件
-        document.querySelector('.save').addEventListener('click', function(e) {
+        document.querySelector('.save').addEventListener('click', function (e) {
             articleStore.content = ue.getContent();
             var error = articleStore.checkEmpty().error;
             if (error) {
@@ -263,35 +262,34 @@ var initPage = function() {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category
+                column_id: articleStore.category,
+                short_title: document.querySelector('input[name="short_title"]').value,
             };
-            console.log(data);
             $.ajax({
                 url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
                 type: 'POST',
                 async: true,
                 data: data,
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            articleStore.previewUrl = "../show_article.do?method=init&article_id=" + articleStore.id;
-
+                            articleStore.previewUrl = data.data.url + '?preview';
                         }
                         alert("保存文章成功");
                     } else {
                         alert(data.msg || "保存失败");
                     }
                 },
-                error: function(data) {
+                error: function (data) {
                     alert("保存失败");
                 }
             });
         });
 
         // 事件绑定 预览按钮点击事件
-        document.querySelector('.preview').addEventListener('click', function(e) {
+        document.querySelector('.preview').addEventListener('click', function (e) {
             if (articleStore.previewUrl) {
                 window.open(articleStore.previewUrl);
                 console.log("预览事件");
@@ -301,14 +299,14 @@ var initPage = function() {
         });
 
         // 事件绑定 发布按钮点击事件
-        document.querySelector('.publish').addEventListener('click', function(e) {
+        document.querySelector('.publish').addEventListener('click', function (e) {
             $.ajax({
                 url: Inter.getApiUrl().publishArticle,
                 type: 'POST',
                 async: true,
                 data: { id: articleStore.id },
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     if (data.code == "0") {
                         alert("发布成功");
                         console.log("发布成功");
@@ -317,7 +315,7 @@ var initPage = function() {
                         alert("发布失败");
                     }
                 },
-                error: function(data) {
+                error: function (data) {
                     alert("发布失败");
                 }
             });
@@ -330,7 +328,7 @@ var initPage = function() {
         });
 
         // 事件绑定 文章正文富文本编辑器contentChange事件
-        ue.addListener('contentChange', function() {
+        ue.addListener('contentChange', function () {
             var content = ue.getContent();
             articleStore.content = content;
         });
@@ -363,11 +361,12 @@ var initPage = function() {
             var preview = document.querySelector('#thumbnail_show');
             preview.src = '';
             showLoadingTip('.pic_tip');
-            FileUploader.uploadFile('thumbnail', event.target.files[0], function(data) {
+            FileUploader.uploadFile('thumbnail', event.target.files[0], function (data) {
                 preview.src = articleStore.thumbnail = data.data.access_url;
                 clearWarn('#pic_warn');
                 hideLoadingTip('.pic_tip');
-            }, function(data) {
+                document.querySelector('#clearHeadImg').classList.remove('hide');
+            }, function (data) {
                 document.querySelector('#pic_warn').innerHTML = data.msg;
                 hideLoadingTip('.pic_tip');
             });
@@ -377,12 +376,13 @@ var initPage = function() {
         document.querySelector('#video_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
-            FileUploader.uploadFile('video', event.target.files[0], function(data) {
+            FileUploader.uploadFile('video', event.target.files[0], function (data) {
                 console.log(data);
                 document.querySelector('#video').value = articleStore.video = data.url;
                 clearWarn('#video_warn');
                 hideLoadingTip('.video_tip');
-            }, function(data) {
+                document.querySelector('#clearVideo').classList.remove('hide');
+            }, function (data) {
                 document.querySelector('#video_warn').innerHTML = data.msg;
                 hideLoadingTip('.video_tip');
             });
@@ -392,11 +392,12 @@ var initPage = function() {
         document.querySelector('#audio_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
-            FileUploader.uploadFile('audio', event.target.files[0], function(data) {
+            FileUploader.uploadFile('audio', event.target.files[0], function (data) {
                 document.querySelector('#audio').value = articleStore.audio = data.data.access_url;
                 clearWarn('#audio_warn');
                 hideLoadingTip('.audio_tip');
-            }, function(data) {
+                document.querySelector('#clearAudio').classList.remove('hide');
+            }, function (data) {
                 document.querySelector('#audio_warn').innerHTML = data.msg;
                 hideLoadingTip('.audio_tip');
             });
@@ -438,8 +439,8 @@ var initPage = function() {
             video: '',
             category: $("#category option:first-child").val() || '',
             business_id: business_id,
-            previewUrl: id ? "../show_article.do?method=init&article_id=" + id : '',
-            checkEmpty: function() {
+            previewUrl: '',
+            checkEmpty: function () {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
                  *                          如果没有错误返回的是{"error": null}。 
@@ -452,7 +453,7 @@ var initPage = function() {
                     // { id: 'summary', name: '摘要' },
                     // { id: 'category', name: '栏目' }
                 ];
-                checkList.map(function(item) {
+                checkList.map(function (item) {
                     if (!this[item.id]) {
                         error += '\n ' + item.name + '项不能为空  ';
                     }
@@ -495,7 +496,7 @@ var initPage = function() {
             type: 'GET',
             data: { id: id },
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 if (data.code === '0') {
                     console.log("请求文章数据成功");
                     var nameMapping = [
@@ -506,17 +507,20 @@ var initPage = function() {
                         { serverName: 'column_id', storeName: 'category' },
                         { serverName: 'abstract_pic', storeName: 'thumbnail' },
                         { serverName: 'abstract_content', storeName: 'summary' },
+                        { serverName: 'short_title', storeName: 'short_title' },
+                        { serverName: 'url', storeName: 'previewUrl' },
                     ];
                     data = data.data;
-                    nameMapping.forEach(function(item) {
+                    nameMapping.forEach(function (item) {
                         articleStore[item.storeName] = data[item.serverName];
                     });
+                    articleStore.previewUrl += '?preview';
                     insertArticleData();
                 } else {
                     console.log("请求文章数据失败");
                 }
             },
-            error: function() {
+            error: function () {
                 console.log("请求文章数据失败");
             }
         })
@@ -524,7 +528,8 @@ var initPage = function() {
 
     function insertArticleData() {
         $('#title').val(articleStore.title);
-        ue.ready(function() {
+        $('#shortTitle').val(articleStore.short_title);
+        ue.ready(function () {
             ue.setContent(articleStore.content);
         });
         // var intervalId = setInterval(function() {
@@ -534,13 +539,45 @@ var initPage = function() {
         //     }
         // }, 500);
         $("#summary").val(articleStore.summary);
-        $("#thumbnail_show").attr('src', articleStore.thumbnail);
-        $("#audio").val(articleStore.audio);
-        $("#video").val(articleStore.video);
+        if (articleStore.thumbnail) {
+            $("#thumbnail_show").attr('src', articleStore.thumbnail);
+            document.querySelector('#clearHeadImg').classList.remove('hide');
+        }
+        if (articleStore.audio) {
+            $("#audio").val(articleStore.audio);
+            document.querySelector('#clearAudio').classList.remove('hide');
+        }
+        if (articleStore.audio) {
+            $("#video").val(articleStore.video);
+            document.querySelector('#clearVideo').classList.remove('hide');
+        }
         $("#category option[value='" + articleStore.category + "']").attr("selected", "selected")
     }
+
     return {
-        init: function() {
+        init: function () {
+            $('.cleanInput').on('click', 'a', function (e) {
+                e.preventDefault();
+                var dataFor = $(this).data('for');
+                switch (dataFor) {
+                    case 'img':
+                        $('#thumbnail_show').attr('src', '');
+                        $('[name=thumbnail_fileup]').val('');
+                        articleStore.thumbnail = '';
+                        break;
+                    case 'audio':
+                        $('[name=audioName]').val('');
+                        $('[name=audio_fileup]').val('');
+                        articleStore.audio = '';
+                        break;
+                    case 'video':
+                        $('[name=videoName]').val('');
+                        $('[name=video_fileup]').val('');
+                        articleStore.video = '';
+                        break;
+                }
+                $(this).closest('.cleanInput').addClass('hide');
+            });
             initEditor();
             initEvent();
             if (articleStore.id) {
@@ -549,9 +586,10 @@ var initPage = function() {
             }
         }
     }
-}();
+} ();
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     initPage.init();
+
 });

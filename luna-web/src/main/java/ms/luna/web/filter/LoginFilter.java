@@ -33,7 +33,7 @@ public class LoginFilter implements Filter {
 
 	public static final String webRoot = "/luna-web";
 //	private static final String LOGIN_URI = webRoot + "/login.jsp";
-	private static final String ERROR_URI = webRoot + "/error.jsp";
+	private static final String ERROR_URI = webRoot + "/auth_failed.jsp";
 	/**
 	 * 无需登录就可以访问的URI
 	 */

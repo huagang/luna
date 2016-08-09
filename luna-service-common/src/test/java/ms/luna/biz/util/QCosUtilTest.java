@@ -45,7 +45,7 @@ public class QCosUtilTest {
     public void testUploadFileFromStream() throws FileNotFoundException {
         FileInputStream fis = new FileInputStream(localFilePath);
         JSONObject jsonObject = QCosUtil.uploadFileFromStream(bucket, remoteFilePath, fis, true);
-        assertEquals("Upload file from stream failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Upload file from stream failed", 0, jsonObject.getIntValue("code"));
         QCosUtil.deleteFile(bucket, remoteFilePath);
     }
 
@@ -54,17 +54,17 @@ public class QCosUtilTest {
         String remoteFilePath = remoteDirectory + "/" + remoteFileName;
         String localFilePath = localDirectory + "/" + localFileName;
         JSONObject jsonObject = QCosUtil.uploadFileFromLocalFile(bucket, remoteFilePath, localFilePath, true);
-        assertEquals("Upload file from local file failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Upload file from local file failed", 0, jsonObject.getIntValue("code"));
         jsonObject = QCosUtil.deleteFile(bucket, remoteFilePath);
-        assertEquals("Delete file failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Delete file failed", 0, jsonObject.getIntValue("code"));
     }
 
     @Test
     public void testCreateAndDeleteFolder() {
         JSONObject jsonObject = QCosUtil.createFolder(bucket, remoteDirectory);
-        assertEquals("Create folder failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Create folder failed", 0, jsonObject.getIntValue("code"));
         jsonObject = QCosUtil.deleteFolder(bucket, remoteDirectory);
-        assertEquals("Delete folder failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Delete folder failed", 0, jsonObject.getIntValue("code"));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class QCosUtilTest {
             QCosUtil.uploadFileFromLocalFile(bucket, remoteFilePath, localFilePath, true);
         }
         JSONObject jsonObject = QCosUtil.deleteFolderRecursive(bucket, remoteDirectory);
-        assertEquals("Delete folder recursively failed", jsonObject.getIntValue("code"), 0);
+        assertEquals("Delete folder recursively failed", 0, jsonObject.getIntValue("code"));
     }
 
 }

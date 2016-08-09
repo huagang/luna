@@ -134,7 +134,7 @@ public class UploadCtrl {
 			}
 			// 后缀名获取和检查
 			String ext = UploadFileRule.getFileExtention(file.getOriginalFilename());
-			if (UploadFileRule.isValidFormat(type, ext)) {
+			if (! UploadFileRule.isValidFormat(type, ext)) {
 				response.getWriter().print(FastJsonUtil.error("-1", "文件格式不支持"));
 				response.setStatus(200);
 				return;
@@ -152,12 +152,13 @@ public class UploadCtrl {
 			}
 			String fileName = generateFileName(ext);
 			JSONObject result = uploadFile2Cloud(file, type, QCosConfig.LUNA_BUCKET, resourceType, resourceId, fileName);
-			MsLogger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
+			logger.debug("method:uploadFile2Cloud, result from server: " + result.toString());
 			
 			response.getWriter().print(result);
 			response.setStatus(200);
 		} catch(Exception e){
-			response.getWriter().print(FastJsonUtil.error("-1", "Failed to upload file: " + e));
+			logger.error("Failed to upload file", e);
+			response.getWriter().print(FastJsonUtil.error("-1", "上传文件失败"));
 			response.setStatus(200);
 		}
 			
@@ -167,28 +168,32 @@ public class UploadCtrl {
 			String type, String bucket, String resourceType, String resourceId, String filename) throws Exception {
 		JSONObject result = new JSONObject();
 		if(type.equals(UploadFileRule.TYPE_PIC) || type.equals(UploadFileRule.TYPE_AUDIO)) {
-			String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, type, resourceType);
+			String realPath = String.format("%s/%s/%s", QCosConfig.ENV, type, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
+			realPath += "/" + filename;
 			// current naming rule can ensure that file will not exist on cos
 			result = qCosUtil.uploadFileFromStream(bucket, realPath, file.getInputStream(), false);
-			if(type.equals(UploadFileRule.TYPE_PIC)) {
-				BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-				if(result.containsKey("data")) {
-					JSONObject data = result.getJSONObject("data");
-					data.put("height", bufferedImage.getHeight());
-					data.put("width", bufferedImage.getWidth());
+			if(result.getString("code").equals("0")) {
+				if (type.equals(UploadFileRule.TYPE_PIC)) {
+					BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+					if (result.containsKey("data")) {
+						JSONObject data = result.getJSONObject("data");
+						data.put("height", bufferedImage.getHeight());
+						data.put("width", bufferedImage.getWidth());
+					}
 				}
+				// replace access url
+				LunaQCosUtil.replaceAccessUrl(result);
 			}
-			// replace access url
-			LunaQCosUtil.replaceAccessUrl(result);
 
 		} else if(type.equals(UploadFileRule.TYPE_VIDEO)){
-			String realPath = String.format("/%s%s/%s", bucket, QCosConfig.ENV, resourceType);
+			String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, resourceType);
 			if(StringUtils.isNotBlank(resourceId)) {
 				realPath += "/" + resourceId;
 			}
+			realPath += "/" + filename;
 			JSONObject vodResult = VODUtil.getInstance().upload2Cloud(file, realPath, filename, "", 0);
 
 			JSONObject retData = new JSONObject();
@@ -234,7 +239,7 @@ public class UploadCtrl {
 	 */
 	private String generateFileName(String ext) {
 		String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10) + ext;
+		String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10, '0') + ext;
 		return fileNameInCloud;
 	}
 	

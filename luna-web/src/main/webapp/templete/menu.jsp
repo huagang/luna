@@ -60,6 +60,9 @@
 	             	<c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','merchant_admin','luna_admin','luna_operator','poi_admin','poi_operator')}">
 	             		<ms:a cssClass="${sessionScope.menu_selected=='manage_business_tree'}" href="${basePath}/manage_business_tree.do?method=init" value="POI数据关系配置"></ms:a>
 	             	</c:if>
+				  	<c:if test="${webHelper.hasRoles(msUser, 'luna_senior_admin','merchant_admin','luna_admin','luna_operator','poi_admin','poi_operator')}">
+						<ms:a cssClass="${sessionScope.menu_selected=='manage_router'}" href="${basePath}/manage_router.do?method=init" value="线路管理"></ms:a>
+					</c:if>
 	          </dl>
           </c:if>
 
