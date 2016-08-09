@@ -103,7 +103,7 @@ html,body{
 }
 #txt-name,
 #txt-short{width:290px;}
-#txt-short{margin-top:15px;}
+#txt-short{/* margin-top:15px; */}
 /*中间区域内容*/
 /*.page-manage,
 .control-manage{

@@ -16,7 +16,8 @@ h3{
 body{
     background: #F5F5F5;
 }
-input[type=text]{
+input[type=text],
+input[type=number]{
     height: 30px;
     border: 1px solid #C3C3C3;
     padding: 5px 10px;

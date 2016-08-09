@@ -19,7 +19,7 @@ import java.util.TreeMap;
 public class MtaWrapper {
 	private final static Logger logger = Logger.getLogger(MtaWrapper.class);
 
-	private static final String MS_SECRET_KEY ="PQ0&(2mAs5Ns1!@M";
+	private static final String MS_SECRET_KEY ="yi)CKE^-j2q(D3+H";
 	private static final String REGISTER_URL = "http://mta.qq.com/h5/api/ctr_register/register";
 	private static final String DELETE_URL = "http://mta.qq.com/h5/api/ctr_register/delete_app";
 	private static final String SOURCE = "4";
@@ -105,7 +105,7 @@ public class MtaWrapper {
 	public void test() throws Exception {
 
 		String ret = null;
-		ret = MtaWrapper.createApp("mta",2, "luna.visualbusiness.com", 3463673430l);
+		ret = MtaWrapper.createApp("new_app_test",2, "luna.visualbusiness.com", 3463673430l);
         System.out.println("result: " + ret);
 
 //		ret = MtaWrapper.deleteApp(500145273, "4a1c6998022f828856464e6f6d94d754");

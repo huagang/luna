@@ -31,20 +31,21 @@
     </div>
     <div class="toolsbar">
         <div class="tool-item hidden">
-            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i></a>
+            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i><br/>联系电话</a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i></a>
+        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i><br/>到这去</a>
             <div class="vr-line"></div>
         </div>
         <div class="tool-item ">
-            <a id="panorama" href="javascript:;" data-type="pano" ><i class="icon icon-pano"></i></a>
+            <a id="panorama" href="javascript:;" data-type="pano" class="hide" ><i class="icon icon-pano"></i><br/>看全景</a>
+            <a id="waitPanorama" href="javascript:;" data-type="pano" class="hide" style="margin: 21px auto;display: inline-block;">全景<br>拍摄中</a>
         </div>
     </div>
     <div class="content-wrapper">
        <div id="content" class='content'></div>
     </div>
-    <div class="footer">
+    <div class="footer hidden">
         <div class="go-top"></div>
     </div>
 </div>
@@ -65,7 +66,14 @@
         title: "${title}",
         desc: "${description}",
         link: window.location.href,
-        imgUrl:poiData.data.thumbnail
+        imgUrl:poiData.data.thumbnail,
+        dest:{
+            lat:poiData.data.lat,
+            lng:poiData.data.lng,//经度
+            name:poiData.data.long_title,//名字
+            address:poiData.data.city+poiData.data.city.county, // 地址
+            debug:true,
+        }
     };
 </script>
 <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>

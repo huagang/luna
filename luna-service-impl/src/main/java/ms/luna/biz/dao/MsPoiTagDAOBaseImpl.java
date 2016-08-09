@@ -1,10 +1,9 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.biz.common.MsBaseDAO;
 import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
-
-import java.util.List;
 
 public abstract class MsPoiTagDAOBaseImpl extends MsBaseDAO implements MsPoiTagDAOBase {
 
@@ -29,12 +28,14 @@ public abstract class MsPoiTagDAOBaseImpl extends MsBaseDAO implements MsPoiTagD
         return rows;
     }
 
-    public void insert(MsPoiTag record) {
-        getSqlMapClientTemplate().insert("ms_poi_tag.insert", record);
+    public Integer insert(MsPoiTag record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_poi_tag.insert", record);
+        return (Integer) newKey;
     }
 
-    public void insertSelective(MsPoiTag record) {
-        getSqlMapClientTemplate().insert("ms_poi_tag.insertSelective", record);
+    public Integer insertSelective(MsPoiTag record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_poi_tag.insertSelective", record);
+        return (Integer) newKey;
     }
 
     @SuppressWarnings("unchecked")

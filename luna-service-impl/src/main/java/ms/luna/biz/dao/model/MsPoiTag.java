@@ -22,6 +22,8 @@ public class MsPoiTag implements Serializable {
 
     private String updatedByUniqueId;
 
+    private String tagNameEn;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getTagId() {
@@ -96,6 +98,14 @@ public class MsPoiTag implements Serializable {
         this.updatedByUniqueId = updatedByUniqueId == null ? null : updatedByUniqueId.trim();
     }
 
+    public String getTagNameEn() {
+        return tagNameEn;
+    }
+
+    public void setTagNameEn(String tagNameEn) {
+        this.tagNameEn = tagNameEn == null ? null : tagNameEn.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -116,7 +126,8 @@ public class MsPoiTag implements Serializable {
             && (this.getEditableFlag() == null ? other.getEditableFlag() == null : this.getEditableFlag().equals(other.getEditableFlag()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
-            && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()));
+            && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()))
+            && (this.getTagNameEn() == null ? other.getTagNameEn() == null : this.getTagNameEn().equals(other.getTagNameEn()));
     }
 
     @Override
@@ -132,11 +143,12 @@ public class MsPoiTag implements Serializable {
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getUpdatedByUniqueId() == null) ? 0 : getUpdatedByUniqueId().hashCode());
+        result = prime * result + ((getTagNameEn() == null) ? 0 : getTagNameEn().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsPoiTag [tagId=" + tagId + ",tagName=" + tagName + ",dsOrder=" + dsOrder + ",tagLevel=" + tagLevel + ",parentTagId=" + parentTagId + ",editableFlag=" + editableFlag + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + "]";
+        return "MsPoiTag [tagId=" + tagId + ",tagName=" + tagName + ",dsOrder=" + dsOrder + ",tagLevel=" + tagLevel + ",parentTagId=" + parentTagId + ",editableFlag=" + editableFlag + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tagNameEn=" + tagNameEn + "]";
     }
 }
