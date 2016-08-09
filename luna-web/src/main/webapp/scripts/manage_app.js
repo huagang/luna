@@ -133,7 +133,7 @@ var InitAppPage = function () {
 					$('.set-app-name').removeClass('pop-show');
 					$('#search_apps').trigger('click');
 					if (typeSource === 'create' || typeSource === 'reuse') {
-						location.href = Util.strFormat(Inter.getApiUrl().appEditPage, [data.data.app_id]);
+						location.href = Util.strFormat(Inter.getApiUrl().appEditPage.url, [data.data.app_id]);
 					}
 				}
 				else {

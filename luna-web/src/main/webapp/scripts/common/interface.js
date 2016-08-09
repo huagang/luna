@@ -92,7 +92,9 @@ var Inter = function () {
                 articleEditData: { url: '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
                 articleCreate: { url: '/content/article', type: 'POST' }, //保存文章
                 articleUpdate: { url: '/content/article/{0}', type: 'POST' }, //更新文章
-                
+                articlePublish:{ url: '/content/article/publish/{0}', type: 'PUT' }, //更新发布
+
+
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
                 uploadVideoInArtcle: { url: context + "/add_poi.do?method=upload_video", type: '' },//上传视频
 
