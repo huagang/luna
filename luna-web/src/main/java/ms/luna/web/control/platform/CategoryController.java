@@ -9,6 +9,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.PulldownController;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import java.util.Map;
 @RequestMapping("/platform/category")
 public class CategoryController {
 
+    private final static Logger logger = Logger.getLogger(CategoryController.class);
     private static String menu = "category";
 
     @Autowired
@@ -168,6 +170,7 @@ public class CategoryController {
         try {
             String category_nm_zh = request.getParameter("category_nm_zh");
             String category_nm_en = request.getParameter("category_nm_en");
+            logger.info("category name: " + category_nm_zh);
             String msg = checkCategoryNm(category_nm_zh, category_nm_en);
             if (msg != null) {
                 return FastJsonUtil.error("-1", msg);
