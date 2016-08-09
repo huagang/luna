@@ -312,7 +312,7 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @return Boolean
      */
     private boolean isAppIdExist(Integer app_id) {
-        return msShowAppDAO.selectByPrimaryKey(app_id) == null;
+        return msShowAppDAO.selectByPrimaryKey(app_id) != null;
     }
 
     /**
