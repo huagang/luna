@@ -20,6 +20,8 @@ $(document).ready(function(){
         }  
     }); 
     window.controller = getAppController(".new-app", ".edit-app");
+	window.newAppController = new NewAppController();
+
 });
 
 
@@ -165,11 +167,12 @@ function getNormalController(appSel, data){
 				showMessage(data.msg || '上传图片失败');
 				
 			});
-		},
+		}
 	};
 	controller.init();
 	return controller;
 }
+
 
 /*
  * 用于微景展配置分享配置项的设置
@@ -350,6 +353,131 @@ function getShareController(data){
 	return controller;
 }
 
+function NewAppController() {
+	var that = this;
+
+	// 初始化
+	that.init = init;
+
+	// 绑定事件
+	that._bindEvent = _bindEvent;
+
+	// 事件 输入框onChange事件
+	that.handleAppNameChange = handleAppNameChange;
+
+	// 事件 点击模板选项
+	that.handleOptionsClick = handleOptionsClick;
+
+	// 事件 显示新建app的弹出框
+	that.show = show;
+
+	// 事件 隐藏新建app的弹出框
+	that.hide = hide;
+
+
+	// 事件 点击下一步
+	that.handleNext = handleNext;
+
+	that.init();
+	function init() {
+		that.data = {
+			name: '',
+			type: '', //basic(基础项目版) dev(开发版)  data(数据版)
+			businessId: '' || 39,
+			sourceAppId: undefined,
+		};
+		that.dialog = $('.new-app');
+
+		that.urls = Inter.getApiUrl();
+
+		that._bindEvent();
+	}
+
+
+	function _bindEvent() {
+		$('#new-built').on('click', that.show.bind(that, 'new'));
+		$('.app-list').on('click', '.reuse', that.show.bind(that, 'reuse'));
+		that.dialog.on('click', '.template', that.handleOptionsClick);
+		that.dialog.on('click', '.next', that.handleNext);
+		that.dialog.find('.app-name').on('change', that.handleAppNameChange);
+		that.dialog.on('click', '.btn-close', that.hide);
+		that.dialog.on('click', '.cancel', that.hide);
+	}
+
+	function show(type, event) {
+		that.data = {};
+		if(type === 'reuse'){
+			var parent = event.target.parentElement;
+			that.data.sourceAppId = parseInt(parent.getAttribute('data-app-id'));
+			that.data.businessId = parseInt(parent.getAttribute('data-business-id'));
+		}
+		console.log(that.data);
+		that.dialog.find('.app-name').val('');
+		that.dialog.find('.template').removeClass('active');
+		that.dialog.addClass('pop-show');
+		return;
+		var business = localStorage.getItem('business');
+		if(business){
+			that.data.businessId = business.id;
+			that.dialog.addClass('pop-show');
+		}
+		else{
+			alert('您需要先设置业务才能够新建微景展');
+		}
+	}
+
+	function hide(){
+		that.dialog.removeClass('pop-show');
+	}
+
+	function handleOptionsClick(event) {
+		that.dialog.find('.template').removeClass('active');
+		$(event.currentTarget).addClass('active');
+		that.data.type = $(event.currentTarget).attr('data-value');
+		console.log('hello');
+	}
+
+	function handleAppNameChange(event){
+		that.data.name = event.target.value;
+	}
+
+	function handleNext(event) {
+		var error = '';
+		if(! that.data.name){
+			error += '微景展名称没有填写   \n';
+		}
+		if(! that.data.type){
+			error += '微景展类型没有选择   \n';
+		}
+		if(error){
+			alert(error);
+		}
+		else{
+			// 发送请求
+			$.ajax({
+				url: that.urls.createApp,
+				type: 'POST',
+				data: {
+					"app_name": that.name,
+					"business_id": that.data.businessId,
+					"source_app_id": that.data.sourceAppId || null
+				},
+				success: function(data){
+					if(data.code === '0'){
+
+					} else {
+						console.log(data.msg || '新建微景展失败');
+					}
+				},
+				error: function(data){
+					console.log(data.msg || '新建微景展失败');
+				}
+			});
+		}
+	}
+
+}
+
 function getAppController(newAppSelector, editAppSelector){
 	/* 作用  新建微景展、更新微景展、复用微景展时控制配置弹出框的显示以及数据发送
 	 * @param editAppSelector       微景展配置框的选择器
@@ -381,10 +509,7 @@ function getAppController(newAppSelector, editAppSelector){
 		
 		_bindEvent:function(){
 			// 绑定事件
-			$('.newApp').click(this.handleClick.bind(this));
-			$('.app-list').click(this.handleClick.bind(this));
-			
-			// 业务配置框事件绑定
+			$('.app-list').on('click', '.property', this.handleEditProp);
 			
 			this._appDialog.find('.btn-close').click(function(){
 				this._appDialog.removeClass('pop-show');
@@ -420,30 +545,9 @@ function getAppController(newAppSelector, editAppSelector){
 			}.bind(this));
 
 		},
-		
-		handleClick:function(event){ 
-			//点击事件回调函数 可能是点击了"属性"，"复用"，"新建微景展"等标签
-			var classList = ['property', 'reuse', "newApp"], receive = '';
-			classList.forEach(function(className){
-				if(event.target.className.indexOf(className) > -1){
-					receive = className;
-				}
-			});
-			if(receive){
-				switch(receive){
-					case "property":
-						//this.showBusinessConfigDialog('update',event.target);
-						break;
-					case "reuse":
-						//this.showBusinessConfigDialog('reuse',event.target);
-						break;
-					case "newApp":
-						//this.showBusinessConfigDialog('create',event.target);
-						break;
-				}
-			}	
+		handleEditProp: function(){
+			$('.edit-app').addClass('pop-show');
 		},
-		
 		
 		reset: function(){
 			//用于重置弹出框
@@ -451,9 +555,6 @@ function getAppController(newAppSelector, editAppSelector){
 			this._type = this.data.appId = this.data.appName = 
 				this.data.businessId = this.data.businessName = '';
 			this._appDialog.find(".warn-appname").removeClass('show');
-			this._appDialog.find('.last').removeClass('hidden');
-			this._appDialog.find('.next').html("下一步");
-			this._appDialog.find('.cancel').addClass('hidden');
 			if(this.shareController){
 				this.shareController.reset();
 			}

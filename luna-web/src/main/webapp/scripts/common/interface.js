@@ -71,6 +71,7 @@ var Inter = function() {
                 multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
                 customerPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
 
+
             };
         }
     };

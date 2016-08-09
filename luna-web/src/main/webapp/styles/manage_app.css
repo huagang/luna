@@ -34,12 +34,12 @@
 	left: 0;
     right: 0;
     top: 7%;
-    width: 66%;
+    width: 44%;
     margin: auto;
     display: block;
 }
 
-.pop.pop-show.set-app-name{
+.pop.pop-show.edit-app{
 	width: 560px;
 }
 
@@ -305,4 +305,89 @@ img.abstract-pic{
 /* 设置删除弹框按钮向右对齐 */
 #pop-delete .pop-fun{
 	width: auto;
+}
+
+/* 新建微景展弹出框 */
+.new-app .pop-cont{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.new-app .pop-fun{
+    padding-right: 30px;
+}
+
+.pop.pop-show.new-app{
+    width: 400px;
+}
+
+.new-app .app-name{
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+    margin-bottom: 18px;
+}
+
+.template {
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.template + .template{
+    margin-left: 14px;
+}
+
+.template .img-container {
+    height: 40px;
+    width: 40px;
+    margin: 20px auto 10px;
+    border-radius: 50%;
+
+}
+
+.template.basic .img-container{
+    background-color: #3250c1;
+}
+.template.dev .img-container{
+    background-color: #ffae00;
+}
+.template.data .img-container{
+    background-color: #00c3c5;
+}
+
+.template .img{
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin: 0 auto -12px auto;
+}
+
+.template.basic .img{
+    background: url(../img/basic.png) center center no-repeat;
+    background-size: contain;
+}
+.template.dev .img{
+    background: url(../img/dev.png) center center no-repeat;
+    background-size: contain;
+}
+.template.data .img{
+    background: url(../img/data.png) center center no-repeat;
+    background-size: contain;
+}
+
+.template.basic.active{
+    border-color: #3250c1;
+}
+.template.dev.active{
+    border-color: #ffae00;
+}
+.template.data.active{
+    border-color: #00c3c5;
+}
+.template .spec{
+    padding-bottom: 14px;
 }

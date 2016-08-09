@@ -91,6 +91,41 @@
 <div id="pop-overlay"></div>
 
 <div class="pop new-app">
+	<div class="pop-title">
+		<h4>微景展配置</h4>
+		<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+	</div>
+	<div class="pop-cont ">
+		<div>中文名称</div>
+		<input class="app-name" placeholder="输入二级子分类中文名称" />
+		<div>选择模板类型</div>
+		<div class="template-group">
+			<div class="template basic" data-value="basic">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">基础项目版</p>
+			</div>
+			<div class="template dev" data-value="dev">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">开发版</p>
+			</div>
+			<div class="template data" data-value="data">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">数据版</p>
+			</div>
+		</div>
+	</div>
+	<div class="pop-fun">
+		<div class="pull-right">
+			<button type="button" class="next">下一步</button>
+			<button type="button" class="cancel button-close">取消</button>
+		</div>
+	</div>
 
 </div>
 
@@ -191,9 +226,8 @@
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
-    		<button type="button" class="last">上一步</button>
-    		<button type="button" class="next">下一步</button>
-    		<button type="button" class="cancel button-close hidden">取消</button>
+    		<button type="button" class="next">保存</button>
+    		<button type="button" class="cancel button-close">取消</button>
     	</div>
     	
     </div>
