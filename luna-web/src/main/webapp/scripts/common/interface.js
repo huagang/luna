@@ -94,19 +94,29 @@ var Inter = function () {
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
                 uploadVideoInArtcle: { url: context + "/add_poi.do?method=upload_video", type: '' },//上传视频
 
-                //微景展操作
+                //微景展管理页面操作
                 appCreate: { url: context + '/content/app/', type: 'POST' },  //创建微景展
                 appUpdate: { url: context + '/content/app/{0}', type: 'PUT' },  //更新微景展信息
                 appCopy: { url: context + '/content/app/copy', type: 'POST' }, //复用app
                 appDelete:{ url: '/content/app/{0}', type: 'DELETE' }, //删除微景展
                 appEditPage:{ url: '/content/app/{0}', type: 'GET' }, //编辑微景展
 
+                //微景展编辑页面操作
+                getAppSummary :{url: '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
+                appGetSetting :{url: '/content/app/setting/{0}', type: 'GET'}, //编辑微景展页面的操作
+                appCreatePage :{url: '/content/app/page/{0}', type: 'POST'}, //微景展页面
+                appModifyName :{url: '/content/app/page/name/{0}', type: 'POST'}, //修改页面的名字
+                appGetPageDetail :{url: '/content/app/page/{0}', type: 'GET'}, //获取单页面的详情
+                appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
+                appUpdatePageOrder :{url: '/content/app/page/order', type: 'PUT'}, //更新页面的顺序
+                appSaveSetting :{url: '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
 
                 // 上传路径
-                uploadPath: { url: context + '/uploadCtrl.do?method=uploadFile2Cloud', type: '' }, //统一上传接口
+                uploadPath: { url: context + '/common/upload', type: 'POST' }, //统一上传接口
+                uploadPic: { url: context + '/common/uploadPic', type: 'POST' }, //图片上传接口
 
                 login: { url: context + '/common/login', type: 'POST' },  //登录提交接口
 
