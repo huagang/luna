@@ -102,10 +102,10 @@ $(document).ready(function () {
 
         //如果是播放状态
         if ($(this).hasClass('pausing')) {
-            $(this).find('img').attr('src', pauseIcon);
+            $(this).find('img').attr('src', playIcon);
             $(this).find('audio')[0].play();
         } else {
-            $(this).find('img').attr('src', playIcon);
+            $(this).find('img').attr('src', pauseIcon);
             $(this).find('audio')[0].pause();
         }
         $(this).toggleClass('pausing');
@@ -577,14 +577,14 @@ $(document).ready(function () {
             this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
 
             if (this.value.content.loopPlay == '1') {
-                loopPlay = 'loopPlay="loopPlay"';
+                loopPlay = 'loop="loop"';
             }
 
             // 自动播放
             if (this.value.content.autoPlay == "1") {
-                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio playing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.pauseIcon + '" /> <audio style="display:none;" src="' + this.value.content.file + '" autoplay="autoplay" controls ' + loopPlay + '></audio></a> ');
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio playing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.playIcon + '" /> <audio style="display:none;" src="' + this.value.content.file + '" autoplay="autoplay" controls ' + loopPlay + '></audio></a> ');
             } else {
-                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio pausing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.playIcon + '" />  <audio style="display:none;" src="' + this.value.content.file + '"  controls ' + loopPlay + '></audio></a>');
+                this.html.children("div").append('<a href="javascript:;" class="btn btn-playAudio pausing" data-playIcon = "' + this.value.content.playIcon + '" data-pauseIcon = "' + this.value.content.pauseIcon + '"><img  src="' + this.value.content.pauseIcon + '" />  <audio style="display:none;" src="' + this.value.content.file + '"  controls ' + loopPlay + '></audio></a>');
             }
 
             this.setMoreInfo();
