@@ -46,7 +46,7 @@
 		                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
 		                </div>
 		                <div class="group article-head-pic">
-		                    <p class="group-title">文章头图 <span>建议尺寸666*666</span> </p>
+		                    <p class="group-title">文章头图 <span>建议尺寸 600x320</span> </p>
 		                    <div class="pic-upload">
 		                        <div class="pic-upload-left">
 		                            <span class="btn fileinput-button" title='文件大小不超过1M'>
@@ -62,10 +62,9 @@
 		                            <div id="imgPreview" class="files">
 		                            	<img id='thumbnail_show' />
 		                            </div>		               
-		                                     
 		                            <!-- <img src="img/preview.jpeg"> -->
 		                        </div>
-
+								<div id="clearHeadImg" class="cleanInput hide"><a href="" data-for="img">删除</a></div>
 		                        <p id='pic_warn' class='warn'></p>
 		                    </div>
 		                </div>
@@ -87,6 +86,7 @@
 		                            	<div class="loader">Loading...</div>
 		                            </div> 
 		                        </span>
+								<div id="clearAudio" class="cleanInput hide"><a href="" data-for="audio">删除</a></div>
 		                        <p id='audio_warn' class='warn'></p>
 		                    </div>
 		                </div>
@@ -102,6 +102,7 @@
 		                            	<div class="loader">Loading...</div>
 		                            </div> 
 		                        </span>
+		                        <div id="clearVideo" class="cleanInput hide"><a href="" data-for="video">删除</a></div>
 		                        <p id='video_warn' class='warn'></p>
 		                    </div>
 		                </div>

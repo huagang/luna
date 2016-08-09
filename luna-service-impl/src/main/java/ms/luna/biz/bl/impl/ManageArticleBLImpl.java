@@ -53,39 +53,55 @@ public class ManageArticleBLImpl implements ManageArticleBL {
 
         MsArticleWithBLOBs msArticle = new MsArticleWithBLOBs();
         String title = articleObj.getString(MsArticleTable.FIELD_TITLE);
-        if(StringUtils.isNotBlank(title)) {
-            msArticle.setTitle(title);
+        if(StringUtils.isBlank(title)) {
+            title = "";
         }
+        msArticle.setTitle(title);
+
         String shortTitle = articleObj.getString(MsArticleTable.FIELD_SHORT_TITLE);
-        if(StringUtils.isNotBlank(shortTitle)) {
-            msArticle.setShortTitle(shortTitle);
+        if(StringUtils.isBlank(shortTitle)) {
+            shortTitle = "";
         }
+        msArticle.setShortTitle(shortTitle);
+
         String content = articleObj.getString(MsArticleTable.FIELD_CONTENT);
-        if(StringUtils.isNotBlank(content)) {
-            msArticle.setContent(content);
+        if (StringUtils.isBlank(content)) {
+            content = "";
         }
+        msArticle.setContent(content);
+
         String abstractContent = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_CONTENT);
-        if(StringUtils.isNotBlank(abstractContent)) {
-            msArticle.setAbstractContent(abstractContent);
+        if(StringUtils.isBlank(abstractContent)) {
+            abstractContent = "";
         }
+        msArticle.setAbstractContent(abstractContent);
+
         String abstractPic = articleObj.getString(MsArticleTable.FIELD_ABSTRACT_PIC);
-        if(StringUtils.isNotBlank(abstractPic)) {
-            msArticle.setAbstractPic(abstractPic);
+        if(StringUtils.isBlank(abstractPic)) {
+            abstractPic = "";
         }
+        msArticle.setAbstractPic(abstractPic);
+
         String audio = articleObj.getString(MsArticleTable.FIELD_AUDIO);
-        if(StringUtils.isNotBlank(audio)) {
-            msArticle.setAudio(audio);
+        if(StringUtils.isBlank(audio)) {
+            audio = "";
         }
+        msArticle.setAudio(audio);
+
         String video = articleObj.getString(MsArticleTable.FIELD_VIDEO);
-        if(StringUtils.isNotBlank(video)) {
-            msArticle.setVideo(video);
+        if(StringUtils.isBlank(video)) {
+            video = "";
         }
+        msArticle.setVideo(video);
+
         String author = articleObj.getString(MsArticleTable.FIELD_AUTHOR);
-        if(StringUtils.isNotBlank(author)) {
-            msArticle.setAuthor(author);
+        if(StringUtils.isBlank(author)) {
+            author = "";
         }
+        msArticle.setAuthor(author);
+
         int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
-        if(column > 0) {
+        if(column >= 0) {
             msArticle.setColumnId(column);
         }
 
@@ -107,6 +123,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
+        jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
         // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
         jsonObject.put(MsArticleTable.FIELD_STATUS, msArticle.getStatus() ? 1 : 0);
 
@@ -131,6 +148,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             if(msArticles != null && msArticles.size() == 1) {
                 JSONObject ret = new JSONObject();
                 ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
+                ret.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticles.get(0).getId());
                 return FastJsonUtil.sucess("新建文章成功", ret);
             }
         } catch (Exception ex) {
@@ -379,11 +397,13 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             for(MsArticleWithBLOBs msArticleWithBLOBs : msArticleWithBLOBses) {
                 columnIdSet.add(msArticleWithBLOBs.getColumnId());
             }
-            MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-            msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
-            List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
-            for (MsColumn msColumn : msColumns) {
-                columnInfoMap.put(msColumn.getId(), msColumn.getName());
+            if(columnIdSet.size() > 0) {
+                MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+                msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+                List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
+                for (MsColumn msColumn : msColumns) {
+                    columnInfoMap.put(msColumn.getId(), msColumn.getName());
+                }
             }
         }
         if(msArticleWithBLOBses == null) {
@@ -427,7 +447,9 @@ public class ManageArticleBLImpl implements ManageArticleBL {
         }
 
         MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-        msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+        if(columnIdSet.size() > 0) {
+            msArticleCriteria.createCriteria().andIdIn(Lists.newArrayList(columnIdSet));
+        }
         List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
         for (MsColumn msColumn : msColumns) {
             columnInfoMap.put(msColumn.getId(), msColumn.getName());

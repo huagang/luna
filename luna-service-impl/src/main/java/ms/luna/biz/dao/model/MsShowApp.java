@@ -38,6 +38,8 @@ public class MsShowApp implements Serializable {
 
     private String updatedByWjnm;
 
+    private Integer type;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getAppId() {
@@ -176,6 +178,14 @@ public class MsShowApp implements Serializable {
         this.updatedByWjnm = updatedByWjnm == null ? null : updatedByWjnm.trim();
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -204,7 +214,8 @@ public class MsShowApp implements Serializable {
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getDelFlg() == null ? other.getDelFlg() == null : this.getDelFlg().equals(other.getDelFlg()))
-            && (this.getUpdatedByWjnm() == null ? other.getUpdatedByWjnm() == null : this.getUpdatedByWjnm().equals(other.getUpdatedByWjnm()));
+            && (this.getUpdatedByWjnm() == null ? other.getUpdatedByWjnm() == null : this.getUpdatedByWjnm().equals(other.getUpdatedByWjnm()))
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()));
     }
 
     @Override
@@ -228,11 +239,12 @@ public class MsShowApp implements Serializable {
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getDelFlg() == null) ? 0 : getDelFlg().hashCode());
         result = prime * result + ((getUpdatedByWjnm() == null) ? 0 : getUpdatedByWjnm().hashCode());
+        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsShowApp [appId=" + appId + ",appName=" + appName + ",appCode=" + appCode + ",businessId=" + businessId + ",shareInfoTitle=" + shareInfoTitle + ",shareInfoDes=" + shareInfoDes + ",shareInfoPic=" + shareInfoPic + ",appStatus=" + appStatus + ",appAddr=" + appAddr + ",owner=" + owner + ",publishTime=" + publishTime + ",picThumb=" + picThumb + ",note=" + note + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + ",delFlg=" + delFlg + ",updatedByWjnm=" + updatedByWjnm + "]";
+        return "MsShowApp [appId=" + appId + ",appName=" + appName + ",appCode=" + appCode + ",businessId=" + businessId + ",shareInfoTitle=" + shareInfoTitle + ",shareInfoDes=" + shareInfoDes + ",shareInfoPic=" + shareInfoPic + ",appStatus=" + appStatus + ",appAddr=" + appAddr + ",owner=" + owner + ",publishTime=" + publishTime + ",picThumb=" + picThumb + ",note=" + note + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + ",delFlg=" + delFlg + ",updatedByWjnm=" + updatedByWjnm + ",type=" + type + "]";
     }
 }

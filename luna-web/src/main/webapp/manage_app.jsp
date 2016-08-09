@@ -84,56 +84,146 @@
 <!--弹出层 start-->
 <!--模态窗口 -->
 <div id="pop-overlay"></div>
-<!-- 业务配置  start-->
-<!--<div class="pop set_business">
+
+<div class="pop new-app">
 	<div class="pop-title">
-		<h4>业务配置</h4> 
-        <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+		<h4>微景展配置</h4>
+		<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+	</div>
+	<div class="pop-cont ">
+		<div>中文名称</div>
+		<input class="app-name" placeholder="输入二级子分类中文名称" />
+		<div>选择模板类型</div>
+		<div class="template-group">
+			<div class="template basic" data-value="basic">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">基础项目版</p>
+			</div>
+			<div class="template dev" data-value="dev">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">开发版</p>
+			</div>
+			<div class="template data" data-value="data">
+				<div class="img-container">
+					<div class="img"></div>
+				</div>
+				<p class="spec">数据版</p>
+			</div>
+		</div>
 	</div>
 	<div class="pop-fun">
-	 	<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
-	 	<div class='pull-right'>
-	 		<button type="button" class="next">下一步</button>
-	 	</div>
-        
-    </div>
-</div>-->
-<!-- 业务配置  end -->
+		<div class="pull-right">
+			<button type="button" class="next">下一步</button>
+			<button type="button" class="cancel button-close">取消</button>
+		</div>
+	</div>
+
+</div>
+
 <!-- 微景展配置  start-->
-<div class="pop set-app-name">
+<div class="pop edit-app">
     <div class="pop-title">
        	<h4>微景展配置</h4>
        	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
    	</div>
-   	<div class="pop-cont">
-		<form id="appData">
-			<div class="form-group clearfix">
-				<label for="txtBusinessId" class="col-md-3 text-right">业务ID</label>
-				<div class="col-md-7">
-					<input id="txtBusinessId" style="width:100%;" name="business_id" type="text" placeholder=""  readonly="readonly" />    
-				</div>      
-			</div>
-			<div  class="form-group clearfix">
-				<label for="txtBusinessName" class="col-md-3 text-right">业务名称</label>
-				<div class="col-md-7">
-					<input id="txtBusinessName" style="width:100%;" name="business_name" type="text" placeholder="" readonly="readonly"  />
-				</div>
-			</div>
-			<div  class="form-group clearfix">
-				<label for="txtAPPname"  class="col-md-3 text-right">名称</label>
-				<div class="col-md-7">
-					<input id="txtAppName" name="app_name" type="text" class="app-name" style="width:100%;" placeholder="输入微景展名称，不超过32个字符"/>  
-					<div class="warn warn-appname col-md-12">微景展名称不能为空并且不能超过32个字符</div>
-				</div>
-			</div>
-			<p class='warn-tip'>备注：一旦与业务建立联系，将不可修改，请仔细核对</p>
-			<input type="hidden" id ="source_app_id" name="source_app_id">
-			<input type="hidden" id ="appId" name="appid">
-		</form>
+   	<ul class='pop-menu'>
+   		<li class='normal active'><a href='#'>常用设置</a></li>
+   		<li class='share '><a href='#'>分享设置</a></li>
+   	</ul>
+   	<div class="pop-cont ">
+   		<div class='setting-normal '>
+   			<div class='part-left'>
+   				<div class='file-uploader'>
+   					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   				<div class='fileup-container'>
+	   					<button class='button-close fileupload-tip'>更换封面</button>
+	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   				</div>
+   				</div> 				
+   				<div class='preview-container hidden'>
+   					<img class='preview-img' src="" />
+					<div class="mask"></div>
+					<div class='file-edit-container'>
+   						<div class='img-wrapper'>
+   							<img src='../img/icon-edit.png'/>
+							<input type='file' name='thumbnail_fileup' accept="image/*" />
+   						</div>
+   						<p class='fileupload-tip'>更换封面</p>
+   					</div>
+   					
+   				</div>
+   				
+   			</div>
+   			<div class='part-right'>
+   				<div class='char-limit-wrapper'>
+   					<input type="text" class="app-name" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+   					<span class='counter'>0/32</span>
+   				</div>
+   				<div class='char-limit-wrapper'>
+   					<textarea type='text' class='app-description' maxlength='128'
+   					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+   					<span class='counter'>0/128</span>
+   				</div>
+   				
+   				
+   			</div>
+   		</div>
+   		<div class='setting-share hidden'>
+   			<p class='newShare'>
+   				<a  href='javascript:void(0)'>+新建分享，</a>
+   				<span>最多五条分享设置,随机呈现</span>
+   			</p>
+   			
+   			<!-- 用于新建分享时复制 -->
+   			<div class='share-item hidden' data-order=''>
+   				<div class='clearfix'>
+   					<img class='share-delete' src='../img/icon-delete-gray.png' />
+   				</div>	
+	   			<div class='part-left'>
+	  				<div class='file-uploader'>
+	  					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	   					<div class='fileup-container'>
+	   						<button class='button-close fileupload-tip'>更换缩略图</button>
+	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
+	   					</div>
+	  				</div> 				
+	  				<div class='preview-container hidden'>
+	  					<img class='preview-img' src="" />
+						<div class="mask"></div>
+						<div class='file-edit-container'>
+	  						<div class='img-wrapper'>
+	  							<img src='../img/icon-edit.png'/>
+	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
+	  						</div>
+	  						<p class='fileupload-tip'>更换缩略图</p>
+	  					</div>
+	  				</div>
+	  			</div>
+	  			<div class='part-right'>
+	  				<div class='char-limit-wrapper'>
+	  					<input class='share-title' type="text" class="" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+	  					<span class='counter'>0/32</span>
+	  				</div>
+	  				<div class='char-limit-wrapper'>
+	  					<textarea type='text' class='share-description' maxlength='128'
+	  					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+	  					<span class='counter'>0/128</span>
+	  				</div>	  				
+	  			</div>
+	  			<p class='divider'></p>
+  			</div>
+  			
+   			
+	  		
+   		</div>
     </div>
     <div class="pop-fun">
     	<div class='pull-right'>
-    		<button type="button" class="next">确定</button>
+    		<button type="button" class="save">保存</button>
     		<button type="button" class="cancel button-close">取消</button>
     	</div>
     	
@@ -163,15 +253,69 @@
 </div>
 <a target="_blank" id="open_new_tab" style="display:none" href="#">在新窗口打开新的链接</a>
 <!--弹出层 end-->
+<jsp:include page="/templete/message.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_app.js"></script>
+<script type="text/javascript">
+	window.context = "<%=request.getContextPath() %>";
+	var APP_STATUS = {
+			"-1": "已删除",
+			"0": "未发布",
+			"1": "已发布",
+			"2": "已下线"
+	};
+
+	function nameFormatter(value, row, index) {
+		switch(row.app_status) {
+			case 1:
+				return '<a href="{0}" target="_blank">{1}</a>'
+				.format(row.app_addr, row.app_name);
+			default:
+				return row.app_name;
+		}
+	}
+	
+	function statusFormatter(value, row, index) {
+		if(row.app_status === 1){
+			return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+		}else{
+			return APP_STATUS[row.app_status];
+		}
+		
+	}
+	
+	function timeFormatter(value, row, index) {
+		return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
+		+'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
+	}
+
+	function operationFormatter(value, row, index) {
+		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name) 
+		var editOp = '<a class="property">属性</a>';
+
+		var editUrl = '';
+		var modifyOp = '<a class="modify" target="_blank" href="{0}/content/app/{1}?business_id={2}">编辑</a>'
+				.format(window.context, row.app_id, row.business_id);
+		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
+		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
+		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
+	}
+
+	function queryParams(params) {
+		/* alert(JSON.stringify(params)); */
+		return {
+			limit : params.limit,
+			offset : params.offset,
+			order : params.order,
+			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
+		}
+	};
+</script>
 </body>
 </html>

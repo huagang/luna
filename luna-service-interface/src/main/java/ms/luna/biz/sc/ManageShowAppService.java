@@ -16,6 +16,8 @@ public interface ManageShowAppService {
 
 	JSONObject loadApps(String json);
 
+	JSONObject getAppInfo(int appId);
+
 	JSONObject deleteApp(String json);
 	
 	JSONObject createApp(String json);

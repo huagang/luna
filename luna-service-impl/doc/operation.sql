@@ -1,15 +1,3 @@
-CREATE TABLE `ms_show_page_share`(
-  `id` int(11) AUTO_INCREMENT,
-  `app_id` INT(11) NOT NULL,
-  `title` varchar(32) NOT NULL ,
-  `description` VARCHAR(128) NOT NULL,
-  `pic` VARCHAR(128) NOT NULL,
-  `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY (app_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '微景展分享信息';
-
-
 INSERT INTO ms_function(ms_function_code, ms_function_name, ms_function_status, biz_module_code, ds_order, `status`, note, regist_hhmmss, up_hhmmss, updated_by_unique_id)
 VALUES ('manage_router', '线路管理', 0, 'poi', 9, 0, '信息数据', '2016-07-11 22:57:17', '2016-07-11 22:57:17', 'system');
 
@@ -107,3 +95,5 @@ create table luna_role_category(
   update_time timestamp default current_timestamp on update current_timestamp,
   primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色类别表';
+
+alter table ms_show_app add column type INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版';

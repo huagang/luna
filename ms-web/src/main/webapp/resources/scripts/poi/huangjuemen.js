@@ -29,7 +29,8 @@ var initHJMPoiPage = function() {
             province: poiData.data.province ,
             city: poiData.data.city,
             county: poiData.data.county,
-            phone: poiData.data.contact_phone
+            phone: poiData.data.contact_phone,
+            detail_address:poiData.data.detail_address,
         };
 
         // 更新文章头图
@@ -86,8 +87,9 @@ var initHJMPoiPage = function() {
                     break;
             }
             $('#panorama').attr('href', url);
+            document.querySelector('#panorama').classList.remove('hide');
         }else{
-            $('#panorama .icon').addClass('icon-wait-pano');
+            document.querySelector('#waitPanorama').classList.remove('hide');
         }
 
         //更新导航信息
@@ -95,6 +97,7 @@ var initHJMPoiPage = function() {
             e.stopPropagation();
             e.preventDefault();
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
+            // console.log(data.city+data.county+ data.detail_address);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
@@ -103,7 +106,7 @@ var initHJMPoiPage = function() {
                             latitude: Number(data.lat), // 纬度，浮点数，范围为90 ~ -90
                             longitude: Number(data.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: data.poi_name, // 位置名
-                            address: '', // 地址详情说明
+                            address: data.city+data.county+ data.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                             infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                         });
@@ -122,13 +125,12 @@ var initHJMPoiPage = function() {
      * 初始化回退控件
      */
     var initGoBack = function() {
-        var refUrl = Util.location('ref');
         /**
          * 判断是否有url 中是否有ref,如果有则显示返回按钮
          * @param  {[type]} refUrl [description]
          * @return {[type]}        [description]
          */
-        if (refUrl) {
+        if (document.referrer) {
             document.querySelector('.goback').classList.remove('hidden');
             document.querySelector('.goback a').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -142,8 +144,10 @@ var initHJMPoiPage = function() {
      * 返回顶部功能
      */
     var initGoTop = function() {
-
-        document.querySelector('.go-top').addEventListener('click', pageScroll);
+        if (document.body.scrollHeight > document.body.clientHeight) {
+            document.querySelector('.footer').classList.remove('hidden');
+            document.querySelector('.go-top').addEventListener('click', pageScroll);
+        }
     };
 
     // HTML填充信息窗口内容
@@ -181,7 +185,7 @@ var initHJMPoiPage = function() {
         qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
             //取出经纬度并且赋值
             latlng = res[0];
-            var url = "http://map.qq.com/nav/drive?start=" + latlng.lat + "%2C" + latlng.lng + "&dest=" + objdata.destPosition.lat + "%2C" + objdata.destPosition.lng + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
+            var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + objdata.destPosition.lng + "%2C" + objdata.destPosition.lat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
             // alert(url);
             window.location.href = url;
         });
@@ -234,10 +238,27 @@ function filterImgInContent(content) {
     var clientWidth = document.querySelector('.content').clientWidth;
     content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
         var reg = /width="([0-9]*?)"/;
-        var widthNum = word.match(reg);
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
         if (widthNum[1] > clientWidth) {
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
-            word = word.replace(/width\s*:\s*[0-9]*px/, 'width:' + clientWidth + 'px');
+            word = word.replace(/width\s*:\s*[0-9]*.[0-9]*px/, 'width:' + clientWidth + 'px');
+            //word = word.replace(/height="[0-9]*"/, '');
+            //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
+        }
+        return word;
+    });
+    content = content.replace(/width\s*:\s*[0-9.]*/g, function(word) {
+        var reg = /width\s*:\s*([0-9.]*)/;
+        var widthNum;
+        if (word.match(reg)) {
+            widthNum = word.match(reg);
+        }
+        if (Number( widthNum[1]) > clientWidth) {
+            word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
+            word = word.replace(/width\s*:\s*[0-9.]*/, 'width:' + clientWidth);
             //word = word.replace(/height="[0-9]*"/, '');
             //word = word.replace(/height\s*:\s*[0-9]*px;/, '');
         }
@@ -245,6 +266,8 @@ function filterImgInContent(content) {
     });
     return content;
 }
+
+
 $(document).ready(function() {
     /**
      * 初始化微信环境
@@ -261,7 +284,8 @@ $(document).ready(function() {
  */
 function pageScroll(e) {
     //把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
-    window.scrollBy(0, -100);
+    var height = 0 - document.body.clientHeight / 10;
+    window.scrollBy(0, height);
     //延时递归调用，模拟滚动向上效果
     scrolldelay = setTimeout('pageScroll()', 50);
     //获取scrollTop值，声明了DTD的标准网页取document.documentElement.scrollTop，否则取document.body.scrollTop；因为二者只有一个会生效，另一个就恒为0，所以取和值可以得到网页的真正的scrollTop值
