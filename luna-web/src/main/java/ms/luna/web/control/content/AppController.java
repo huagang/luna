@@ -9,6 +9,7 @@ import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
+import ms.luna.web.util.TokenUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,17 +69,28 @@ public class AppController extends BasicController {
         if(! isValidName(appName)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展名称不合法");
         }
-        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        String token = null;
+        //高级版调用子系统
+        if(type == 1) {
+            try {
+                token = TokenUtil.generateRandomToken();
+            } catch (Exception ex) {
+                logger.error("Failed to generate token", ex);
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成开发版认证失败");
+            }
+        }
 
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         JSONObject jsonObject = JSONObject.parseObject("{}");
         jsonObject.put(MsShowAppTable.FIELD_APP_NAME, appName);
         jsonObject.put(MsShowAppTable.FIELD_BUSINESS_ID, businessId);
         jsonObject.put(MsShowAppTable.FIELD_TYPE, type);
         jsonObject.put("owner", user.getLunaName());
         JSONObject result = manageShowAppService.createApp(jsonObject.toString());
-
+        if(result.getString("code").equals("0") && token != null) {
+            result.getJSONObject("data").put("token", token);
+        }
         return result;
-
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{appId}")
