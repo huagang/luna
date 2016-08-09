@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class LunaUserRole {
 
-    @JSONField(name="unique_id")
+    @JSONField(name= LunaUserRoleTable.FIELD_USER_ID_ALIAS)
     private String userId;
     @JSONField(name = LunaUserRoleTable.FIELD_LUNA_NAME)
     private String lunaName;

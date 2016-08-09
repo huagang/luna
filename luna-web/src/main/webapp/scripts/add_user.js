@@ -28,9 +28,6 @@
         // 操作 更新业务信息到vm.data.extra对象中
         vm.transformBusinessData = transformBusinessData;
 
-        // 操作 解析url中search信息并将其转化为对象
-        vm.initSearch = initSearch;
-
         // 操作 检查填写内容是否合法
         vm._checkValidation = _checkValidation;
 

@@ -1,6 +1,7 @@
 package ms.luna.web.control.platform;
 
 import com.alibaba.dubbo.common.json.JSONArray;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaUserService;
@@ -145,8 +146,6 @@ public class UserController extends BasicController {
 
         int roleId = RequestHelper.getInteger(request, "role_id");
         String extra = RequestHelper.getString(request, "extra");
-        logger.error("role_id" + roleId);
-        logger.error("extra" + extra);
         if(roleId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "角色不合法");
         }
@@ -154,9 +153,9 @@ public class UserController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "选项不合法");
         }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(LunaUserRoleTable.FIELD_USER_ID, id);
+        jsonObject.put(LunaUserRoleTable.FIELD_USER_ID_ALIAS, id);
         jsonObject.put(LunaUserRoleTable.FIELD_ROLE_ID, roleId);
-        jsonObject.put(LunaUserRoleTable.FIELD_EXTRA, extra);
+        jsonObject.put(LunaUserRoleTable.FIELD_EXTRA, JSON.parseObject(extra));
         try {
             return lunaUserService.updateUserRole(jsonObject);
         } catch (Exception ex) {

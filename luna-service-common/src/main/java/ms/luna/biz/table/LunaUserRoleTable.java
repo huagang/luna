@@ -15,4 +15,6 @@ public class LunaUserRoleTable {
     public static final String FIELD_ROLE_ID = "role_id";
     public static final String FIELD_EXTRA = "extra";
     public static final String FIELD_UPDATE_TIME = "update_time";
+
+    public static final String FIELD_USER_ID_ALIAS = "unique_id";
 }
