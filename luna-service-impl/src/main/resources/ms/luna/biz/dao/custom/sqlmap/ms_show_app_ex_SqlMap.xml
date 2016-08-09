@@ -5,6 +5,7 @@
 		<result column="app_id" property="appId" jdbcType="INTEGER" />
 		<result column="app_name" property="appName" jdbcType="VARCHAR" />
 		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
 		<result column="regist_hhmmss" property="registhhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
 		<result column="up_hhmmss" property="uphhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
 		<result column="owner" property="owner" jdbcType="VARCHAR" />
@@ -18,6 +19,7 @@
 			a.app_id app_id,
 			a.app_name app_name,
 			a.app_code app_code,
+			a.type type,
 			a.regist_hhmmss regist_hhmmss,
 			a.up_hhmmss up_hhmmss, 
 			a.owner owner,

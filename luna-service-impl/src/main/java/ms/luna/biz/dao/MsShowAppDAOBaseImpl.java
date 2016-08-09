@@ -1,10 +1,9 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.biz.common.MsBaseDAO;
 import ms.luna.biz.dao.model.MsShowApp;
 import ms.luna.biz.dao.model.MsShowAppCriteria;
-
-import java.util.List;
 
 public abstract class MsShowAppDAOBaseImpl extends MsBaseDAO implements MsShowAppDAOBase {
 
@@ -29,12 +28,14 @@ public abstract class MsShowAppDAOBaseImpl extends MsBaseDAO implements MsShowAp
         return rows;
     }
 
-    public void insert(MsShowApp record) {
-        getSqlMapClientTemplate().insert("ms_show_app.insert", record);
+    public Integer insert(MsShowApp record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_show_app.insert", record);
+        return (Integer) newKey;
     }
 
-    public void insertSelective(MsShowApp record) {
-        getSqlMapClientTemplate().insert("ms_show_app.insertSelective", record);
+    public Integer insertSelective(MsShowApp record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_show_app.insertSelective", record);
+        return (Integer) newKey;
     }
 
     @SuppressWarnings("unchecked")
@@ -70,6 +71,24 @@ public abstract class MsShowAppDAOBaseImpl extends MsBaseDAO implements MsShowAp
     public int updateByPrimaryKey(MsShowApp record) {
         int rows = getSqlMapClientTemplate().update("ms_show_app.updateByPrimaryKey", record);
         return rows;
+    }
+
+    public MsShowApp selectByPrimaryKeyWithoutDeleted(Integer appId) {
+        MsShowAppCriteria criteria = new MsShowAppCriteria();
+        criteria.createCriteria()
+        .andAppIdEqualTo(appId)
+        .andDelFlgEqualTo("0");
+        MsShowApp record = (MsShowApp) getSqlMapClientTemplate().queryForObject("ms_show_app.selectByExample", criteria);
+        return record;
+    }
+
+    public int selectCountByPrimaryKeyWithoutDeleted(Integer appId) {
+        MsShowAppCriteria criteria = new MsShowAppCriteria();
+        criteria.createCriteria()
+        .andAppIdEqualTo(appId)
+        .andDelFlgEqualTo("0");
+        Integer count = (Integer) getSqlMapClientTemplate().queryForObject("ms_show_app.countByExample", criteria);
+        return count;
     }
 
     protected static class UpdateByExampleParms extends MsShowAppCriteria {

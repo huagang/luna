@@ -16,6 +16,7 @@ import ms.luna.biz.dao.custom.model.*;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.table.MsBusinessTable;
+import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.table.MsShowPageShareTable;
 import ms.luna.biz.util.*;
 import org.apache.commons.lang.StringUtils;
@@ -83,16 +84,17 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 				String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 				for(MsShowAppResult result : results) {
 					JSONObject row = JSONObject.parseObject("{}");
-					row.put(MsShowAppDAO.FIELD_APP_ID, result.getAppId());
-					row.put(MsShowAppDAO.FIELD_APP_NAME,result.getAppName());
-					row.put(MsShowAppDAO.FIELD_APP_CODE, result.getAppCode());
+					row.put(MsShowAppTable.FIELD_APP_ID, result.getAppId());
+					row.put(MsShowAppTable.FIELD_APP_NAME,result.getAppName());
+					row.put(MsShowAppTable.FIELD_APP_CODE, result.getAppCode());
 					String indexUrl = msWebUrl + String.format(showPageUriTemplate, result.getAppId());
-					row.put(MsShowAppDAO.FIELD_APP_ADDR, indexUrl);
-					row.put(MsShowAppDAO.FIELD_CREATE_TIME, DateUtil.format(new Date(result.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
-					row.put(MsShowAppDAO.FIELD_UPDATE_TIME, DateUtil.format(new Date(result.getUphhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
-					row.put(MsShowAppDAO.FIELD_OWNER, result.getOwner());
-					row.put(MsShowAppDAO.FIELD_APP_STATUS, result.getAppStatus());
-					row.put(MsShowAppDAO.FIELD_BUSINESS_ID, result.getBusinessId());
+					row.put(MsShowAppTable.FIELD_APP_ADDR, indexUrl);
+					row.put(MsShowAppTable.FIELD_TYPE, result.getType());
+					row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(result.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+					row.put(MsShowAppTable.FIELD_UPDATE_TIME, DateUtil.format(new Date(result.getUphhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+					row.put(MsShowAppTable.FIELD_OWNER, result.getOwner());
+					row.put(MsShowAppTable.FIELD_APP_STATUS, result.getAppStatus());
+					row.put(MsShowAppTable.FIELD_BUSINESS_ID, result.getBusinessId());
 					row.put(MsBusinessTable.FIELD_BUSINESS_NAME, result.getBusinessName() == null ? "" : result.getBusinessName());
 					rows.add(row);
 				}
@@ -115,9 +117,10 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 				return FastJsonUtil.error(ErrorCode.NOT_FOUND, "内容不存在");
 			}
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(MsShowAppDAO.FIELD_APP_ID, msShowApp.getAppId());
-			jsonObject.put(MsShowAppDAO.FIELD_APP_NAME, msShowApp.getAppName());
-			jsonObject.put(MsShowAppDAO.FIELD_BUSINESS_ID, msShowApp.getBusinessId());
+			jsonObject.put(MsShowAppTable.FIELD_APP_ID, msShowApp.getAppId());
+			jsonObject.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
+			jsonObject.put(MsShowAppTable.FIELD_BUSINESS_ID, msShowApp.getBusinessId());
+			jsonObject.put(MsShowAppTable.FIELD_TYPE, msShowApp.getType());
 			return FastJsonUtil.sucess("", jsonObject);
 		} catch (Exception ex) {
 			logger.error("Failed to get appInfo", ex);
@@ -130,24 +133,23 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	public JSONObject createApp(String json) {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = JSONObject.parseObject(json);
-		String appName = FastJsonUtil.getString(jsonObject, "app_name");
 		String owner = FastJsonUtil.getString(jsonObject, "owner");
 
 		try {
-			Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
-			if(! createResult.getLeft()) {
+			Pair<Integer, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
+			if(createResult.getLeft() < 0) {
 				return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
 			}
 
-			int appId = msShowAppDAO.selectIdByName(appName);
+			int appId = createResult.getLeft();
 			JSONArray jsonArray = jsonObject.getJSONArray("shareArray");
-			createResult = createShareInfo(appId, jsonArray);
-			if(! createResult.getLeft()) {
-				return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
+			Pair<Boolean, Pair<Integer, String>> createShareInfo = createShareInfo(appId, jsonArray);
+			if(! createShareInfo.getLeft()) {
+				return FastJsonUtil.error(createShareInfo.getRight().getLeft(), createShareInfo.getRight().getRight());
 			}
 			createInitialPage(appId, owner);
 			JSONObject ret = new JSONObject();
-			ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
+			ret.put(MsShowAppTable.FIELD_APP_ID, appId);
 			return FastJsonUtil.sucess("成功添加微景展", ret);
 
 		} catch (Exception e) {
@@ -207,29 +209,31 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		return Pair.of(true, null);
 	}
 
-	private Pair<Boolean, Pair<Integer, String>> createAppInfo(JSONObject jsonObject) {
-		String appName = FastJsonUtil.getString(jsonObject, "app_name");
-		int businessId = FastJsonUtil.getInteger(jsonObject, "business_id");
+	private Pair<Integer, Pair<Integer, String>> createAppInfo(JSONObject jsonObject) {
+		String appName = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_APP_NAME);
+		int businessId = FastJsonUtil.getInteger(jsonObject, MsShowAppTable.FIELD_BUSINESS_ID);
+		int type = jsonObject.getInteger(MsShowAppTable.FIELD_TYPE);
 		//用于存储用户微景展资源路径
 		String appCode = appName;
 		String owner = FastJsonUtil.getString(jsonObject, "owner");
 
 		if(existAppName(appName)) {
-			return Pair.of(false, Pair.of(ErrorCode.INVALID_PARAM, "微景展名称已经存在"));
+			return Pair.of(-1, Pair.of(ErrorCode.INVALID_PARAM, "微景展名称已经存在"));
 		}
 		MsShowApp msShowApp = new MsShowApp();
 		msShowApp.setAppName(appName);
 		msShowApp.setAppCode(appCode);
 		msShowApp.setBusinessId(businessId);
+		msShowApp.setType(type);
 		msShowApp.setOwner(owner);
 		msShowApp.setAppStatus(MsShowAppConfig.AppStatus.NOT_AUDIT);
 		try {
-			msShowAppDAO.insertSelective(msShowApp);
+			int appId = msShowAppDAO.insertSelective(msShowApp);
+			return Pair.of(appId, null);
 		} catch (Exception ex) {
 			logger.error("Failed to create app", ex);
-			return Pair.of(false, Pair.of(ErrorCode.INTERNAL_ERROR, "创建微景展失败"));
+			return Pair.of(-1 , Pair.of(ErrorCode.INTERNAL_ERROR, "创建微景展失败"));
 		}
-		return Pair.of(true, null);
 	}
 
 	private boolean createInitialPage(int appId, String owner) {
@@ -292,7 +296,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		} catch(Exception e) {
 			logger.error("Failed to update app: " + json, e);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新失败");
-			
 		}
 		
 		return FastJsonUtil.sucess("更新成功");
@@ -387,26 +390,22 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		JSONObject jsonObject = JSON.parseObject(json);
 		int sourceAppId = jsonObject.getInteger("source_app_id");
-		Pair<Boolean, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
-		if(! createResult.getLeft()) {
+		Pair<Integer, Pair<Integer, String>> createResult = createAppInfo(jsonObject);
+		if(createResult.getLeft() < 0) {
 			return FastJsonUtil.error(createResult.getRight().getLeft(), createResult.getRight().getRight());
 		}
 
-		String appName = jsonObject.getString("app_name");
 		String owner = jsonObject.getString("owner");
-		int appId = msShowAppDAO.selectIdByName(appName);
-
+		int appId = createResult.getLeft();
 		try {
-			if (appId > 0) {
-				msShowPageDAO.copyAllPages(sourceAppId, appId, owner);
-			}
+			msShowPageDAO.copyAllPages(sourceAppId, appId, owner);
 		} catch (Exception ex) {
 			logger.error("Failed to copy app", ex);
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "复用微景展失败");
 		}
 
 		JSONObject ret = new JSONObject();
-		ret.put(MsShowAppDAO.FIELD_APP_ID, appId);
+		ret.put(MsShowAppTable.FIELD_APP_ID, appId);
 		return FastJsonUtil.sucess("", ret);
 	}
 
@@ -600,9 +599,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		criteria.andAppIdEqualTo(appId);
 		MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
 		JSONObject data = JSONObject.parseObject("{}");
-		data.put(MsShowAppDAO.FIELD_APP_NAME, msShowApp.getAppName());
-		data.put(MsShowAppDAO.FIELD_PIC_THUMB, msShowApp.getPicThumb());
-		data.put(MsShowAppDAO.FIELD_NOTE, msShowApp.getNote());
+		data.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
+		data.put(MsShowAppTable.FIELD_PIC_THUMB, msShowApp.getPicThumb());
+		data.put(MsShowAppTable.FIELD_NOTE, msShowApp.getNote());
 
 		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
@@ -612,9 +611,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
 		// TODO: new version will not use these share_info fields, delete me later
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
-		data.put(MsShowAppDAO.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
+		data.put(MsShowAppTable.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
+		data.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
+		data.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
 
 		data.put("shareArray", jsonArray);
 		
@@ -632,15 +631,15 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}
 		
-		String appName = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_APP_NAME);
+		String appName = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_APP_NAME);
 		if(existAppName(appId, appName)) {
 			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "微景展名称已存在");
 		}
-		String picThumb = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_PIC_THUMB);
-		String note = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_NOTE);
-		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_TITLE);
-		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_DES);
-		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppDAO.FIELD_SHARE_INFO_PIC);
+		String picThumb = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_PIC_THUMB);
+		String note = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_NOTE);
+		String shareInfoTitle = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_SHARE_INFO_TITLE);
+		String shareInfoDes = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_SHARE_INFO_DES);
+		String shareInfoPic = FastJsonUtil.getString(jsonObject, MsShowAppTable.FIELD_SHARE_INFO_PIC);
 		
 		MsShowApp msShowApp = new MsShowApp();
 		msShowApp.setAppId(appId);

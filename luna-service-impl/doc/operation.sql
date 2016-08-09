@@ -95,3 +95,5 @@ create table luna_role_category(
   update_time timestamp default current_timestamp on update current_timestamp,
   primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色类别表';
+
+alter table ms_show_app add column type INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版';

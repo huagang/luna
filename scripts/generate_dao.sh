@@ -12,14 +12,19 @@ cd $generator_dir
 mvn clean mybatis-generator:generate
 cd ../../
 
-# copy to luna-service-generator
+# copy to luna-service-impl
 cp -r $base_dao_dir/ms/luna/biz/dao/*.java luna-service-impl/src/main/java/ms/luna/biz/dao/
 cp -r $base_dao_dir/ms/luna/biz/dao/model/*.java luna-service-impl/src/main/java/ms/luna/biz/dao/model/
 
-# copy to luna-service-implement
 cp -r $base_dao_dir/ms/luna/biz/dao/sqlmap/*.xml luna-service-impl/src/main/resources/ms/luna/biz/dao/sqlmap/
-cp -r $custom_dao_dir/ms/luna/biz/dao/custom/sqlmap/*.xml luna-service-impl/src/main/resources/ms/luna/biz/dao/custom/sqlmap/ 
-cp -r $custom_dao_dir/ms/luna/biz/dao/custom/*.java luna-service-impl/src/main/java/ms/luna/biz/dao/custom/
+if [ $# = 1 ];then
+    action=$1
+    if [ $action = "new" ];then
+        echo "create new dao"
+        cp -r $custom_dao_dir/ms/luna/biz/dao/custom/sqlmap/*.xml luna-service-impl/src/main/resources/ms/luna/biz/dao/custom/sqlmap/ 
+        cp -r $custom_dao_dir/ms/luna/biz/dao/custom/*.java luna-service-impl/src/main/java/ms/luna/biz/dao/custom/
+    fi
+fi
 
 # copy sqlMapConfig manually
 echo "WARN: copy the following to luna-service-impl/src/main/resources/SqlMapConfig.xml"

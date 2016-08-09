@@ -3,6 +3,7 @@ package ms.luna.web.control.content;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageShowAppService;
+import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
@@ -58,8 +59,9 @@ public class AppController extends BasicController {
     @ResponseBody
     public JSONObject createApp(HttpServletRequest request) throws IOException {
 
-        String appName = RequestHelper.getString(request, "app_name");
-        int businessId = RequestHelper.getInteger(request, "business_id");
+        String appName = RequestHelper.getString(request, MsShowAppTable.FIELD_APP_NAME);
+        int businessId = RequestHelper.getInteger(request, MsShowAppTable.FIELD_BUSINESS_ID);
+        int type = RequestHelper.getInteger(request, MsShowAppTable.FIELD_TYPE);
         if(businessId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
         }
@@ -69,8 +71,9 @@ public class AppController extends BasicController {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
         JSONObject jsonObject = JSONObject.parseObject("{}");
-        jsonObject.put("app_name", appName);
-        jsonObject.put("business_id", businessId);
+        jsonObject.put(MsShowAppTable.FIELD_APP_NAME, appName);
+        jsonObject.put(MsShowAppTable.FIELD_BUSINESS_ID, businessId);
+        jsonObject.put(MsShowAppTable.FIELD_TYPE, type);
         jsonObject.put("owner", user.getLunaName());
         JSONObject result = manageShowAppService.createApp(jsonObject.toString());
 
