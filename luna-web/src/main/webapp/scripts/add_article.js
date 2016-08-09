@@ -274,8 +274,8 @@ var initPage = function() {
                 short_title:document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
-                url: articleStore.id ? Inter.getApiUrl().articleCreate.url : Inter.getApiUrl().articleCreate.url,
-                type:  articleStore.id ? Inter.getApiUrl().articleCreate.type : Inter.getApiUrl().articleCreate.type,
+                url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
+                type:  articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
