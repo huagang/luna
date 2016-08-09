@@ -3,72 +3,6 @@
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
       <html>
-
-<<<<<<< HEAD
-        <head>
-          <meta charset="utf-8" />
-          <meta name="renderer" content="webkit" />
-          <meta http-equiv="Content-Language" content="zh-cn" />
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-          <meta name="author" content="vb" />
-          <meta name="Copyright" content="visualbusiness" />
-          <meta name="description" content="皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。" />
-          <meta name="keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
-          <title>皓月平台</title>
-          <!-- 样式表文件 -->
-          <link href="<%=request.getContextPath()%>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-          <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/global.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/common.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/pages_icon.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/pages.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/components.css">
-          <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/topic.css">
-		      <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-        </head>
-        <body ng-app="showPage">
-          <!-- 可视化界面顶部导航 -->
-          <div class="header" ng-controller="menuController as menu">
-            <nav class="navbar">
-              <a class="navbar-logo-wrap" href="/"><img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
-              <div class="component-btn-wrap">
-                <div class="component-btn"  id="textComponent">
-                  <i class="icon icon-comp-text"></i><br/>
-                  <span>文本</span>
-                </div>
-                <div class="component-btn"  id="imageComponent">
-                  <i class="icon icon-comp-img"></i><br/>
-                  <span>图片</span>
-                </div>
-                <div class="component-btn" id="shapeComponentGroup">
-                  <i class="icon icon-comp-shape"></i><br/>
-                  <span>形状</span>
-                </div>
-                <div class="component-btn" id="panoComponent">
-                  <i class="icon icon-comp-vpano"></i><br/>
-                  <span>全景</span>
-                </div>
-                <div class="component-btn" id="navComponent">
-                  <i class="icon icon-comp-nav"></i><br/>
-                  <span>导航</span>
-                </div>
-                <div class="component-btn" id="audioComponent">
-                  <i class="icon icon-comp-audio"></i><br/>
-                  <span>音频</span>
-                </div>
-                <div class="component-btn" id="videoComponent">
-                  <i class="icon icon-comp-video"></i><br/>
-                  <span>视频</span>
-                </div>
-                <div class="component-btn" id="menuComponent">
-                  <i class="icon icon-comp-video"></i><br/>
-                  <span>视频</span>
-                </div>
-                <div class="component-btn" id="moreComponents">
-                  <i class="icon icon-comp-more"></i><br/>
-                  <span>更多</span>
-                </div>
-=======
       <head>
         <meta charset="utf-8" />
         <meta name="renderer" content="webkit" />
@@ -92,22 +26,8 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select2.css">
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
         <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
-        <!-- 脚本文件 -->
-        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
-        <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular-sanitize-1.5.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/selectui/select.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
-        <script>
-          var appId = ${appId};
-          var host = "<%=request.getContextPath()%>";
-        </script>
+        <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+
       </head>
 
       <body ng-app="showPage">
@@ -122,7 +42,6 @@
                 <i class="icon icon-comp-text"></i>
                 <br/>
                 <span>文本</span>
->>>>>>> microscene-opt
               </div>
               <div class="component-btn" id="imageComponent">
                 <i class="icon icon-comp-img"></i>
@@ -1570,38 +1489,22 @@
             </p>
           </div>
         </div>
-<<<<<<< HEAD
-    <!-- 脚本文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
-    <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
-    <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
-    <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
-    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
-    <script>
-    var appId = ${appId};
-    </script>
-    <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
-		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-		<script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
-		<script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
-    <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>    
-    <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
-    <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
-    <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
-    <!-- 删除用户弹出层 -->    
-    </body>
-  </html>
-=======
-        <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+        <!-- 脚本文件 -->
+        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
+        <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular-sanitize-1.5.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/selectui/select.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
+        <script>
+          var appId = ${appId};
+          var host = "<%=request.getContextPath()%>";
+        </script>
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
@@ -1617,7 +1520,6 @@
         <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
         <!-- 删除用户弹出层 -->
-      </body>
+</body>
 
-      </html>
->>>>>>> microscene-opt
+</html>
