@@ -14,6 +14,7 @@ var objdata = {
     }
 };
 
+
 String.prototype.format = function () {
     var s = this,
         i = arguments.length;
@@ -428,8 +429,9 @@ $(document).ready(function () {
         };
 
         this.setParaBg = function () {
-            var $scene = $('<ul class="paraScene" data-scalar-x="10" data-scalar-y="2"></ul>');
-            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper"><img src="' + this.value.bgimg + '"></div></li>');
+            var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
+            $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
+            // $scene.append('<li class="layer" data-depth="1.00"><div class="img-wrapeÎr"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
         }
 
