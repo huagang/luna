@@ -32,6 +32,7 @@
         }
     </style>
 
+
     <body>
         <div class="container">
             <div style="margin:100px 0 35px 0;">
@@ -39,9 +40,13 @@
             </div>
             <p style="text-align:center;font-size:17px;color:#212121;">抱歉了，加载页面失败了</p>
             <div style="text-align:center;margin:100px 0;">
-                <button class="btn btn-primary" style="width:188px;height:44px;font-size:17px;">重新加载</button>
+                <button id="refresh" class="btn btn-primary" style="width:188px;height:44px;font-size:17px;">重新加载</button>
             </div>
         </div>
     </body>
-
+    <script>
+        document.querySelector('#refresh').addEventListener('click', function(e) {
+            location.reload();
+        });
+    </script>
 </html>
