@@ -1,4 +1,4 @@
-package ms.luna.web.control.common;
+package ms.luna.web.control.inner;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
@@ -35,7 +35,7 @@ import java.util.Set;
  */
 
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/inner")
 public class UploadController {
 
     private final static Logger logger = Logger.getLogger(UploadController.class);

@@ -1,8 +1,15 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import ms.luna.biz.table.MsArticleTable;
+
 import java.io.Serializable;
 import java.util.Date;
 
+@JSONType(includes = {MsArticleTable.FIELD_ID})
 public class MsArticle implements Serializable {
     /**
      * Database Column Remarks:
@@ -13,6 +20,7 @@ public class MsArticle implements Serializable {
      *
      * @mbggenerated Tue Jul 12 17:41:53 CST 2016
      */
+    @JSONField(name = MsArticleTable.FIELD_ID)
     private Integer id;
 
     /**
@@ -24,6 +32,7 @@ public class MsArticle implements Serializable {
      *
      * @mbggenerated Tue Jul 12 17:41:53 CST 2016
      */
+    @JSONField(name = MsArticleTable.FIELD_TITLE)
     private String title;
 
     /**
@@ -33,6 +42,7 @@ public class MsArticle implements Serializable {
      *
      * @mbggenerated Tue Jul 12 17:41:53 CST 2016
      */
+    @JSONField(name = MsArticleTable.FIELD_SHORT_TITLE, serialize = false)
     private String shortTitle;
 
     /**
@@ -216,6 +226,7 @@ public class MsArticle implements Serializable {
      *
      * @mbggenerated Tue Jul 12 17:41:53 CST 2016
      */
+    @JSONField(name = MsArticleTable.FIELD_SHORT_TITLE)
     public String getShortTitle() {
         return shortTitle;
     }
@@ -228,6 +239,7 @@ public class MsArticle implements Serializable {
      *
      * @mbggenerated Tue Jul 12 17:41:53 CST 2016
      */
+    @JSONField(name = MsArticleTable.FIELD_SHORT_TITLE)
     public void setShortTitle(String shortTitle) {
         this.shortTitle = shortTitle == null ? null : shortTitle.trim();
     }
@@ -560,5 +572,15 @@ public class MsArticle implements Serializable {
     @Override
     public String toString() {
         return "MsArticle [id=" + id + ",title=" + title + ",shortTitle=" + shortTitle + ",abstractPic=" + abstractPic + ",audio=" + audio + ",video=" + video + ",businessId=" + businessId + ",columnId=" + columnId + ",author=" + author + ",type=" + type + ",refId=" + refId + ",upHhmmss=" + upHhmmss + ",registHhmmss=" + registHhmmss + ",status=" + status + "]";
+    }
+
+    public static void main(String[] args) {
+        MsArticle msArticle = new MsArticle();
+        msArticle.setId(12);
+        msArticle.setShortTitle("short title");
+        msArticle.setTitle("title");
+//        SimplePropertyPreFilter filter = new SimplePropertyPreFilter(MsArticle.class, "id");
+//        System.out.println(JSON.toJSONString(msArticle, filter));
+        System.out.println(JSON.toJSON(msArticle));
     }
 }
