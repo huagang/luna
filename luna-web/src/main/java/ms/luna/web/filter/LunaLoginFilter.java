@@ -83,6 +83,7 @@ public class LunaLoginFilter implements Filter {
                 chain.doFilter(request, response);
                 return;
             }
+            logger.trace("login filter request session id: " + httpServletRequest.getRequestedSessionId());
             HttpSession session = httpServletRequest.getSession(false);
             if(session == null || SessionHelper.getUser(session) == null) {
                 if(session == null) {

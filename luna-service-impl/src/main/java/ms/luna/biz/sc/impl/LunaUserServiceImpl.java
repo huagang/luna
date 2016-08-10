@@ -399,7 +399,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             lunaRegEmailCriteria.createCriteria().andTokenEqualTo(token);
             List<LunaRegEmail> lunaRegEmailList = lunaRegEmailDAO.selectByCriteriaWithBLOBs(lunaRegEmailCriteria);
             if (lunaRegEmailList == null) {
-                logger.warn("user already exist:" + lunaName);
+                logger.warn("token invalid :" + token);
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "非法邀请码");
             } else if (lunaRegEmailList.get(0).getStatus()){
                 return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "该账户已被注册");
