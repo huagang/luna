@@ -350,7 +350,7 @@ public class FarmPageServiceImpl implements FarmPageService {
         }
         if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
 //            return this.modifyJSONArray(JSONArray.parseArray(options), "value", "label");
-            JSONArray.parseArray(options);
+            return JSONArray.parseArray(options);
         }
         // TODO
         return new JSONArray();
