@@ -27,7 +27,16 @@ var Inter = function () {
         'test': 'http://luna-test.visualbusiness.cn/luna-api/',
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
+
+
+    apiContext =  apiHost[curHost()];
+
     return {
+        getPageUrl: function(){
+            return {
+
+            };
+        },
         getApiUrl: function () {
             return {
                 //选择业务的数据
@@ -49,9 +58,9 @@ var Inter = function () {
                 poiCheckForEnglish: { url: context + '/data/poi/checkPoi', type: 'POST' },//英文poi检查
                 poiConfirmArea: '',//确认poi所在区域是否正确
 
-                poiThumbnailUpload: { url: "/data/poi/thumbnail/upload", type: "POST" }, //poi缩略图上传
-                poiAudioUpload: { url: "/data/poi/audio/upload", type: "POST" }, //poi音频上传
-                poiVideoUpload: { url: "/data/poi/video/upload", type: "POST" }, //poi视频上传
+                poiThumbnailUpload:{url: context + "/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
+                poiAudioUpload:{url: context + "/data/poi/audio/upload",type:"POST"}, //poi音频上传
+                poiVideoUpload:{url: context + "/data/poi/video/upload",type:"POST"}, //poi视频上传
 
                 //CRM管理
                 crmInit: { url: context + "/content/crm", type: "GET" },//CRM管理页面
@@ -137,6 +146,10 @@ var Inter = function () {
                 appSaveSetting: { url: context + '/content/app/setting/{0}', type: 'POST' }, //保存页面设置
                 appPreview: { url: context + '/content/app/preview/{0}', type: 'GET' }, //微景展预览界面
                 appPublish: { url: context + '/content/app/publish/{0}', type: 'PUT' }, //微景展发布界面
+                farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
+                saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
+                farmHousePreview: {url: context + '/content/app/preview/{0}', type: 'GET'}, // 获取预览二维码图片
+                farmHousePublish: {url: context + '/content/app/publish/{0}', type: 'PUT'}, // 获取预览二维码图片
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
@@ -186,7 +199,8 @@ var Inter = function () {
                 poiTypeListByBidAndFPoi: apiHost[curHost()] + 'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
                 poiListByBidAndFPoi: apiHost[curHost()] + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
                 poiListByBidAndFPoiAndPoiTyep: apiHost[curHost()] + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
-
+                poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
+                poiFilter:{url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}', type: 'GET'},
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
                 multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径

@@ -3,24 +3,23 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.biz.common.ServiceConfig;
+import ms.luna.biz.bl.impl.ManageShowAppBLImpl;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.cons.VbConstant.fieldType;
-import ms.luna.biz.dao.custom.MsFarmFieldDAO;
-import ms.luna.biz.dao.custom.MsFarmPageDAO;
-import ms.luna.biz.dao.custom.MsShowAppDAO;
-import ms.luna.biz.dao.custom.MsShowPageDAO;
+import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.FarmFieldParameter;
 import ms.luna.biz.dao.custom.model.FarmFieldResult;
-import ms.luna.biz.dao.model.MsFarmField;
-import ms.luna.biz.dao.model.MsFarmFieldCriteria;
-import ms.luna.biz.dao.model.MsShowApp;
-import ms.luna.biz.dao.model.MsShowAppCriteria;
+import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
+import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.VbUtility;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,8 +48,15 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Autowired
     private MsFarmPageDAO msFarmPageDAO;
 
+    @Autowired
+    private MsBusinessDAO msBusinessDAO;
+
     private static int[] divider = new int[]{1,3,5,7,8,9};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
     // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
+
+    private static String showPageUriTemplate = "/farm/app/%d";
+
+    private final static String LOGO_PATH = "/data1/luna/resources/logo.jpg";
 
     @Override
     public JSONObject getPageInfo(Integer appId) {
@@ -92,21 +99,23 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
-    public JSONObject updatePage(String json, Integer appId) {
+    public JSONObject updatePage(String json, Integer appId, String lunaName) {
         try {
             JSONObject param = JSONObject.parseObject(json);
-
+            System.out.println(param.toString());
             // 检查app_id是否创建
             if (!this.isAppIdExist(appId)) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
             }
 
             Document document = convertJson2DocumentWithFieldDef(param, getFarmFieldsDef());
+            document.put(MsShowAppTable.FIELD_APP_ID, appId);
+
             // 检查mongo数据是否存在
             if (this.isPageExist(appId)) { // --exist
-                msFarmPageDAO.updatePage(document, appId);
+                msFarmPageDAO.updatePage(document, appId, lunaName);
             } else { // --not exit
-                msFarmPageDAO.insertPage(document);
+                msFarmPageDAO.insertPage(document, lunaName);
             }
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
@@ -131,7 +140,14 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     @Override
     public JSONObject getFarmFields() {
-        return getFarmFields(null);
+        try {
+            JSONObject fields = getFarmFields(null);
+            return FastJsonUtil.sucess("success", fields);
+        } catch (Exception e) {
+            MsLogger.error("Failed to get farm fields def", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get farm fields def");
+        }
+
     }
 
     @Override
@@ -161,12 +177,107 @@ public class FarmPageServiceImpl implements FarmPageService {
 
     @Override
     public JSONObject previewPage(Integer appId) {
-        return null;
+        if(appId < 0) {
+            return FastJsonUtil.error("-1", "appId不合法");
+        }
+
+        MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+        if (msShowApp == null) {
+            return FastJsonUtil.error("-1", "微景展不存在");
+        }
+
+        if(VbConstant.MsShowAppConfig.AppStatus.DELETE == msShowApp.getAppStatus()) {
+            return FastJsonUtil.error("-1", "微景展已经被删除");
+        }
+
+        String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
+        String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
+        String appDir = getAppCosDir(appId);
+        String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
+
+        if(StringUtils.isBlank(qrImgUrl)) {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
+        }
+        JSONObject data = new JSONObject();
+        data.put("QRImg", qrImgUrl);
+        return FastJsonUtil.sucess("", data);
     }
 
     @Override
-    public JSONObject publishPage(Integer appId) {
-        return null;
+    public JSONObject publishPage(String json) {
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        int appId = FastJsonUtil.getInteger(jsonObject, "app_id", -1);
+        if(appId < 0) {
+            return FastJsonUtil.error(-1, "appId不合法");
+        }
+        int forceFlag = FastJsonUtil.getInteger(jsonObject, "force", -1);
+        MsShowApp record = msShowAppDAO.selectByPrimaryKey(appId);
+        if(record == null) {
+            return FastJsonUtil.error(-1, "appId不合法");
+        }
+
+        int businessId = record.getBusinessId();
+        //自己已在线的可以重新发布并覆盖
+//		if(record.getAppStatus() == MsShowAppConfig.AppStatus.ONLINE) {
+//			return FastJsonUtil.error("-1", "此微景展已经在线");
+//		}
+
+        if(forceFlag == 1) {
+            MsShowAppCriteria example = new MsShowAppCriteria();
+            MsShowAppCriteria.Criteria criteria = example.createCriteria();
+            //不管是否已有在线的微景展，都操作发布
+            criteria.andBusinessIdEqualTo(businessId)
+                    .andAppStatusEqualTo(VbConstant.MsShowAppConfig.AppStatus.ONLINE);
+            record = new MsShowApp();
+            record.setAppStatus(VbConstant.MsShowAppConfig.AppStatus.OFFLINE);
+            msShowAppDAO.updateByCriteriaSelective(record, example);
+
+            example.clear();
+            criteria = example.createCriteria();
+            criteria.andAppIdEqualTo(appId);
+            record = new MsShowApp();
+            record.setAppStatus(VbConstant.MsShowAppConfig.AppStatus.ONLINE);
+            record.setPublishTime(new Date());
+            msShowAppDAO.updateByCriteriaSelective(record, example);
+
+        } else {
+            //判断是否存在
+            if(existOnlineAppByAppId(appId)) {
+                return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "已存在在线微景展");
+            }
+            //不存在则上线此微景展
+            MsShowAppCriteria example = new MsShowAppCriteria();
+            MsShowAppCriteria.Criteria criteria = example.createCriteria();
+            criteria.andAppIdEqualTo(appId);
+            record = new MsShowApp();
+            record.setAppStatus(VbConstant.MsShowAppConfig.AppStatus.ONLINE);
+            record.setPublishTime(new Date());
+            msShowAppDAO.updateByCriteriaSelective(record, example);
+        }
+        // 更新business对应的appId
+        MsBusiness business = new MsBusiness();
+        business.setBusinessId(businessId);
+        business.setAppId(appId);
+        msBusinessDAO.updateByPrimaryKeySelective(business);
+
+        business = msBusinessDAO.selectByPrimaryKey(businessId);
+
+        String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
+//		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
+        String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
+        String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
+
+        // TODO:已经存在二维码不一定每次都重新生成，url是固定的
+        String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
+
+        if(StringUtils.isBlank(qrImgUrl)) {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
+        }
+        JSONObject data = new JSONObject();
+        data.put("QRImg", qrImgUrl);
+        data.put("link", indexUrl);
+
+        return FastJsonUtil.sucess("发布成功", data);
     }
 
 
@@ -340,7 +451,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     private Document convertJson2DocumentWithFieldDef(JSONObject param, List<String> fields) {
         Document doc = new Document();
         for(String field : fields) {
-            doc.put("name", param.containsKey(field)? param.get(field) : "");
+            doc.put(field, param.containsKey(field)? param.get(field) : "");
         }
         return doc;
     }
@@ -380,6 +491,48 @@ public class FarmPageServiceImpl implements FarmPageService {
         criteria.andAppNameEqualTo(appName);
         int count = msShowAppDAO.countByCriteria(msShowAppCriteria);
         return count != 0;
+    }
+
+    private String getAppCosDir(int appId) {
+        String appDir = String.format("/%s/app/%d", COSUtil.getLunaH5RootPath(), appId);
+        return appDir;
+    }
+
+    private String generateQR(String url, String cosDir, String cosFileName) {
+
+        byte[] bytes = VbUtility.createQRCode(url, LOGO_PATH);
+        if(bytes == null) {
+            return null;
+        }
+        com.alibaba.fastjson.JSONObject result;
+        try {
+            result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, "QRCode.jpg");
+            if("0".equals(result.getString("code"))) {
+                return result.getJSONObject("data").getString(COSUtil.ACCESS_URL);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            MsLogger.error("Failed to generate QR: ", e);
+        }
+
+        return null;
+    }
+
+    private boolean existOnlineAppByAppId(int appId) {
+        MsShowApp record = msShowAppDAO.selectByPrimaryKey(appId);
+        if(record == null) {
+            return false;
+        }
+        int businessId = record.getBusinessId();
+        MsShowAppCriteria example = new MsShowAppCriteria();
+        MsShowAppCriteria.Criteria criteria = example.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId)
+                .andAppIdNotEqualTo(appId)
+                .andAppStatusEqualTo(VbConstant.MsShowAppConfig.AppStatus.ONLINE);
+        int count = msShowAppDAO.countByCriteria(example);
+
+        return count > 0;
     }
 
 }

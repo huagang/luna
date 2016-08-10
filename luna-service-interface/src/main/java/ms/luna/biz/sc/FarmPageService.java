@@ -9,7 +9,7 @@ public interface FarmPageService {
 
     JSONObject getPageInfo(Integer appId);
 
-    JSONObject updatePage(String json, Integer appId);
+    JSONObject updatePage(String json, Integer appId, String lunaName);
 
     JSONObject delPage(Integer appId);
 
@@ -19,6 +19,6 @@ public interface FarmPageService {
 
     JSONObject previewPage(Integer appId);
 
-    JSONObject publishPage(Integer appId);
+    JSONObject publishPage(String json);
 
 }
