@@ -127,16 +127,16 @@ public class FarmPageController {
 
 //    @RequestMapping(params = SAVEPAGE)
     // 编辑页面
-    @RequestMapping(method = RequestMethod.PUT, value = "/farm/{appId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/farm/{appId}")
     @ResponseBody
     public JSONObject savePage(
             @PathVariable("appId") Integer appId,
-            @RequestParam(required = true, value = "data") String fieldsVal,
+            @RequestParam(required = false, value = "data") String fieldsVal,
             HttpServletRequest request, HttpServletResponse response) {
          try{
              // 获取字段定义
              JSONObject result1 = farmPageService.getFarmFields();
-             if (!"0".equals(result1)) {
+             if (!"0".equals(result1.getString("code"))) {
                  return result1;
              }
              JSONObject data = result1.getJSONObject("data");
@@ -195,7 +195,13 @@ public class FarmPageController {
     public JSONObject previewPage(
             @PathVariable("appId") Integer appId,
             HttpServletRequest request, HttpServletResponse response) {
-        return null;
+        try {
+            JSONObject result = farmPageService.previewPage(appId);
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to preview", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Faile to preview");
+        }
     }
 
     //    @RequestMapping(params = PREVIEW)
@@ -204,7 +210,13 @@ public class FarmPageController {
     public JSONObject publishPage(
             @PathVariable("appId") Integer appId,
             HttpServletRequest request, HttpServletResponse response) {
-        return null;
+        try {
+            JSONObject result = farmPageService.publishPage(appId);
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to preview", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Faile to preview");
+        }
     }
 
 
