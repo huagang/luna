@@ -33,3 +33,50 @@
     cursor: pointer;
     padding-right: 10px;
 }
+
+.qrcode-container {
+    position: absolute;
+    background-color: white;
+    padding: 15px 20px 5px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 4px 6px #999;
+}
+
+.qrcode-container .button{
+    display: block;
+    height: 20px;
+    font-size: 12px;
+    line-height: 12px;
+    width: 40px;
+    padding: 0 5px;
+    margin: 10px auto;
+}
+.pop.publish-info{
+    position: absolute;
+    width: 500px;
+    left: 0;
+    right: 0;
+    margin:auto
+}
+
+.pop.pop-show{
+    display: block;
+}
+
+.publish-info .pop-cont{
+    padding: 20px 30px;
+    text-align: center;
+}
+
+.publish-info .qrcode-tip{
+    line-height: 32px;
+    font-size: 16px;
+}
+
+.publish-info .link-container{
+    margin-top: 5px;
+}
+
+.publish-info .link-container .copy{
+
+}

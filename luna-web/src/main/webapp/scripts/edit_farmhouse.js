@@ -18,6 +18,12 @@ $(function(){
         // 初始化表单内容
         that.initComponents = initComponents;
 
+        // 隐藏二维码
+        that.hideQRcode = hideQRcode;
+
+        // 隐藏发布弹出框
+        that.hidePublishDialog = hidePublishDialog;
+
         that.getFields = getFields;
 
         // 事件 保存表单信息
@@ -32,9 +38,6 @@ $(function(){
         // 请求 获取表单信息
         that.fetchFormData = fetchFormData;
 
-        // 请求 获取农家乐信息
-        that.fetchFarmhouseData = fetchFarmhouseData;
-
         that.init();
 
         // 初始化函数
@@ -45,6 +48,7 @@ $(function(){
             that.appId = location.href.match(/farm\/(\w+)/)[1]; //获取app id
             that._bindEvent();
             that.fetchFormData();
+            new Clipboard('.publish-info .copy');
 
         }
 
@@ -52,6 +56,9 @@ $(function(){
             $('.operation.save').on('click', that.handleSave);
             $('.operation.preview').on('click', that.handlePreview);
             $('.operation.publish').on('click', that.handlePublish);
+            $('.qrcode-container .button').on('click', that.hideQRcode);
+            $('.publish-info .btn-close').on('click' ,that.hidePublishDialog);
+            $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
 
         }
 
@@ -126,36 +133,70 @@ $(function(){
         }
 
         function handlePreview(){
-            $.ajax({
-                url: that.apiUrls.farmHousePreview.url.format(that.appId),
-                type: that.apiUrls.farmHousePreview.type,
-                success: function(res){
-                    if(res.code === '0'){
-                        that.previewImg = res.data.QRImg;
-                        var container = $('.qrcode-container');
-                        container.removeClass('hidden');
-                        container.find('.qrcode').attr('src', that.previewImg);
-                        // 显示图片
-                    } else{
+            if(! that.previewImg){
+                $.ajax({
+                    url: that.apiUrls.farmHousePreview.url.format(that.appId),
+                    type: that.apiUrls.farmHousePreview.type,
+                    success: function(res){
+                        if(res.code === '0'){
+                            that.previewImg = res.data.QRImg;
+                            var container = $('.qrcode-container');
+                            container.removeClass('hidden');
+                            container.find('.qrcode').attr('src', that.previewImg);
+                            // 显示图片
+                        } else{
+                            alert(res.msg || '获取预览信息失败');
+                        }
+                    },
+                    error: function(res){
                         alert(res.msg || '获取预览信息失败');
                     }
-                },
-                error: function(res){
-                    alert(res.msg || '获取预览信息失败');
-                }
-            });
+                });
+            } else {
+                $('.qrcode-container').removeClass('hidden');
+            }
+
         }
 
+        function hideQRcode(){
+            $('.qrcode-container').addClass('hidden');
+        }
 
         function handlePublish(){
-
+            if(! that.publishImg){
+                $.ajax({
+                    url: that.apiUrls.farmHousePublish.url.format(that.appId),
+                    type: that.apiUrls.farmHousePublish.type,
+                    success: function(res){
+                        if(res.code === '0'){
+                            that.publishUrl = res.data.link;
+                            that.publishImg = res.data.QRImg;
+                            $('.publish-info .publish-qrcode').attr('src', that.publishImg);
+                            $('.publish-info .publish-link').attr('href', that.publishUrl).html(that.publishUrl);
+                            $('.publish-pop-wrapper .mask').removeClass('hidden');
+                            $('.publish-info.pop').addClass('pop-show');
+                            $(document.body).addClass('modal-open');
+                        } else{
+                            alert(res.msg || '发布失败')
+                        }
+                    },
+                    error: function(res){
+                        alert(res.msg || '发布失败')
+                    }
+                });
+            }
+            else{
+                $('.publish-pop-wrapper .mask').removeClass('hidden');
+                $('.publish-info.pop').addClass('pop-show');
+                $(document.body).addClass('modal-open');
+            }
         }
 
-        // 请求 提交表单信息
-        function fetchFarmhouseData(){
-
+        function hidePublishDialog(){
+            $('.publish-info.pop').removeClass('pop-show');
+            $(document.body).removeClass('modal-open');
+            $('.publish-pop-wrapper .mask').addClass('hidden');
         }
-
 
     }
 

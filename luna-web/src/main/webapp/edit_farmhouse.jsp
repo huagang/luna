@@ -37,12 +37,36 @@
               <a href="javascript:void(0)" class="operation publish">发布</a>
               <div class="qrcode-container hidden">
                  <img class="qrcode" height='100' src="" />
-                 <span class="close glyphicon glyphicon-remove"></span>
+                 <button class="button">关闭</>
               </div>
 
         </div>
       </div>
     </nav>
+      <div class="publish-pop-wrapper">
+          <div class="mask hidden"></div>
+          <div class="pop publish-info">
+              <div class="pop-title">
+                  <h4>发布成功</h4>
+                  <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+              </div>
+              <div class="pop-cont ">
+                  <p class="qrcode-tip">扫一扫分享给更多人</p>
+                  <img class="publish-qrcode" src="" height="150"/>
+                  <p>使用微景展地址分享</p>
+                  <div class="link-container">
+                      <span>分享地址</span>
+                      <a class="publish-link" href=""></a>
+                  </div>
+              </div>
+              <div class="pop-fun">
+                <div class="pull-right">
+                    <button class="button">确定</button>
+                    <button class="button copy" data-clipboard-target=".publish-link">复制链接</button>
+                </div>
+              </div>
+          </div>
+      </div>
   <!--通用导航栏 end-->
   <!--中间区域内容 start-->
   <div class="content">
@@ -60,6 +84,7 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/deep-diff/deep-diff-0.3.3.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/clipboardJs/clipboard.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/formComponent.js"></script>

@@ -766,7 +766,7 @@
                 }
 
                 if (that.value) {
-                    that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', true);
+                    that.element.find('.radio-item[value="{0}"]'.format(that.value)).prop('checked', true);
                 }
                 that._bindEvent();
             }
@@ -841,7 +841,7 @@
 
             if(that.definition.options){
                 that._children.radioList = new RadioList({
-                    value: '',
+                    value: that.value.value || '',
                     definition: {
                         options: that.definition.options,
                         name: 'value'
@@ -859,8 +859,8 @@
                             limits: that.definition.limits, name: 'text'
                     },
                     placeholder: that.definition.placeholder || {'TEXT': ''},
-                    value: ''
-                });
+                    value: that.value.text || ''
+            });
 
         }
 
@@ -947,8 +947,9 @@
                 });
                 curOrder = 2;
             }
+
             that._children.input = new Input({
-                value: '',   // text
+                value: that.value.text || '',   // text
                 definition: {
                     limits: that.definition.limits || that.defaultLimits,
                     placeholder: '',
@@ -957,7 +958,7 @@
                 }
             });
             that._children.picUploader = new FileUploader({
-                value: '', // url
+                value: that.value.pic || '', // url
                 definition: {
                     limits: that.definition.limits || that.defaultLimits,
                     placeholder: '',
@@ -967,6 +968,8 @@
                     hideDeleteButton: that.definition.hideDeleteButton
                 }
             });
+
+
         }
 
         function updateComponent(data){
@@ -1023,11 +1026,21 @@
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
             that.itemNum = (that.definition.limits.num || {}).min || 1;
 
+            if(that.value){
+                that.itemNum = that.value.length;
+            }
+
             // 初始化子组件
             that._children = [];
+            var value = '';
             for(var i = 0 ; i< that.itemNum ; i++){
+                if(that.value && that.value.length > 0){
+                    value = that.value[i];
+                } else{
+                    value = '';
+                }
                 that._children.push(new TextPic({
-                    value:'',
+                    value: value,
                     definition: {
                         display_order: i + 1,
                         name: i,
@@ -1239,7 +1252,16 @@
 
                 that.element.find('.pic-upload').append(that._children.picUploader.render());
                 that._bindEvent();
+            }
 
+            if(that.value.length > 0){
+                that.value.forEach(function(item){
+                    that.addItem({
+                        value: item.value,
+                        name: item.name,
+                        pic: item.pic || ''
+                    });
+                });
             }
             return that._component;
         }
@@ -1405,9 +1427,11 @@
                     that.element.prepend(this._children.label.render());
                 }
 
-                if(that.value){
+                if(that.value.length > 0){
                     // 如果有值 :)
-
+                    that.value.forEach(function(item){
+                       that.element.find('input[value="{0}"]'.format(item)).prop('checked',true);
+                    });
                 }
                 that._bindEvent();
             }
@@ -1530,6 +1554,11 @@
                 }
                 that._bindEvent();
             }
+            if(that.value){
+                var value = that.value;
+                that.value = '';
+                that.handleSelect(value);
+            }
 
             return that._component;
 
@@ -1562,7 +1591,6 @@
                         alert(res.msg || '获取poi筛选列表失败');
                     }
                 });
-                return;
             }
         }
 

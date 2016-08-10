@@ -147,7 +147,8 @@ var Inter = function () {
 
                 farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
                 saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
-                farmHousePreview: {url: context + '/content/app/farm/preview/{0}', type: 'GET'}, // 获取预览二维码图片
+                farmHousePreview: {url: context + '/content/app/preview/{0}', type: 'GET'}, // 获取预览二维码图片
+                farmHousePublish: {url: context + '/content/app/publish/{0}', type: 'PUT'}, // 获取预览二维码图片
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
