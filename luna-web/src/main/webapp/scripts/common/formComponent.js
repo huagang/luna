@@ -155,7 +155,6 @@
                     var notEmpty = true;
                 }
 
-
                 if(! notEmpty){
                     isEmpty =true;
                 }
@@ -194,6 +193,15 @@
         }
 
         return this.formValue;
+    };
+
+    // 更新label信息 由于几乎所有组件都可能有label, 因而将其抽出来单独列成一个函数
+    BaseComponent.prototype.updateLabel = function(){
+        if(this._children.label && data.definition &&
+            data.definition.show_name !== undefined && this.definition.show_name !== data.definition.show_name){
+            this.definition.show_name = data.definition.show_name;
+            this._children.label.updateComponent(this.definition.show_name);
+        }
     };
 
     // 组件的限制条件
@@ -473,11 +481,7 @@
                 that.element.find('.media').val(that.value);
                 that.element.find('.cleanInput').removeClass('hidden');
             }
-            if(that._children.label && data.definition &&
-                data.definition.show_name !== undefined && that.definition.show_name !== data.definition.show_name){
-                that.definition.show_name = data.definition.show_name
-                that._children.label.updateComponent(that.definition.show_name);
-            }
+
         }
 
         function clear(){
@@ -527,6 +531,7 @@
             if (that.definition.show_name) {
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
             }
+
         }
 
         function render() {
@@ -573,6 +578,7 @@
                 that.value = data.value;
                 that.element.find('textarea').val(that.value);
             }
+
         }
     }
 
