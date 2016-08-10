@@ -143,8 +143,8 @@ var Inter = function () {
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
 
                 // 上传路径
-                uploadPath: { url: context + '/common/upload', type: 'POST' }, //统一上传接口
-                uploadPic: { url: context + '/common/uploadPic', type: 'POST' }, //图片上传接口
+                uploadPath: { url: context + '/inner/upload', type: 'POST' }, //统一上传接口
+                uploadPic: { url: context + '/inner/uploadPic', type: 'POST' }, //图片上传接口
 
                 login: { url: context + '/common/login', type: 'POST' },  //登录提交接口
 
