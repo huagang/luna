@@ -6,9 +6,9 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-
 var Inter = function () {
-    var context = window.context || "",
+    var host = "/luna-web";
+    var context = window.context || "/luna-web",
         apiContext = '';
 
     var curHost = function () {
