@@ -1255,7 +1255,9 @@
             }
 
             if(that.value.length > 0){
-                that.value.forEach(function(item){
+                var value = that.value;
+                that.value = [];
+                value.forEach(function(item){
                     that.addItem({
                         value: item.value,
                         name: item.name,

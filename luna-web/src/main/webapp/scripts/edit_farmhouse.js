@@ -5,7 +5,6 @@ $(function(){
 
     var controller = new Controller();
     function Controller() {
-        window.t = this;
 
         var that = this;
 
