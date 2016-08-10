@@ -56,6 +56,7 @@ public class LoginController extends BasicController {
         if(session != null && session.getAttribute(SessionHelper.KEY_USER) != null) {
             // 重新登录不要求显式退出,自动退出
             session.invalidate();
+            logger.trace("invalid exist session, session id: " + session.getId());
 //            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
         }
         if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
