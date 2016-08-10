@@ -42,6 +42,7 @@ showPage.factory('menuTabIcon', function ($rootScope) {
  */
 showPage.run(function ($rootScope, $http) {
     $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    $http.defaults.headers.put = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function (obj) {
         var str = [];
         for (var p in obj) {
