@@ -298,42 +298,46 @@ public class FarmPageServiceImpl implements FarmPageService {
 
             // poi_info 字段, facility字段只存取了id,需要额外读取信息
             // 获取POI详细信息
-//            if (fields.contains(MsFarmPageDAO.POI_INFO) && StringUtils.isBlank(document.getString(MsFarmPageDAO.POI_INFO))) {
-//                String poiId = document.getString(MsFarmPageDAO.POI_INFO);
-//                JSONObject param = new JSONObject();
-//                param.put("poi_id", poiId);
-//                param.put("lang", "zh");
-//                JSONObject poiInfo = poiApiService.getPoiInfoById(param.toString());
-//                if (!"0".equals(poiInfo.getString("code"))) {
-//                    return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, poiInfo.getString("msg"));
-//                }
-//                json.put(MsFarmPageDAO.POI_INFO, poiInfo.getJSONObject("data").get("zh"));
-//            }
-//
-//            // 获取场地设施信息
-//            if (fields.contains(MsFarmPageDAO.FACILITY)) {
-//                // 先拿options数据,再选择
-//                MsFarmFieldCriteria msFarmFieldCriteria = new MsFarmFieldCriteria();
-//                MsFarmFieldCriteria.Criteria criteria = msFarmFieldCriteria.createCriteria();
-//                criteria.andNameEqualTo(MsFarmPageDAO.FACILITY);
-//                List<MsFarmField> list = msFarmFieldDAO.selectByCriteria(msFarmFieldCriteria);
-//                if (list != null && list.size() != 0) {
-//                    JSONArray res = new JSONArray();
-//
-//                    JSONArray array1 = JSONArray.parseArray(list.get(1).getOptions());
-//
-//                    JSONArray array = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
-//                    Set<String> facilityIds = getFacilityValues(array);
-//
-//                    for (int i = 0; i < array1.size(); i++) {
-//                        String value = array1.getJSONObject(i).getString("value");
-//                        if (facilityIds.contains(value)) {
-//                            res.add(array1);
-//                        }
-//                    }
-//                    json.put(MsFarmPageDAO.FACILITY, res);
-//                }
-//            }
+            if (fields.contains(MsFarmPageDAO.POI_INFO) && !StringUtils.isBlank(document.getString(MsFarmPageDAO.POI_INFO))) {
+                String poiId = document.getString(MsFarmPageDAO.POI_INFO);
+                JSONObject param = new JSONObject();
+                param.put("poi_id", poiId);
+                param.put("lang", "zh");
+                JSONObject poiInfo = poiApiService.getPoiInfoById(param.toString());
+                System.out.print(poiInfo.toString());
+                if (!"0".equals(poiInfo.getString("code"))) {
+                    return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, poiInfo.getString("msg"));
+                }
+                json.put(MsFarmPageDAO.POI_INFO, poiInfo.getJSONObject("data").get("zh"));
+            }
+
+            // 获取场地设施信息
+            if (fields.contains(MsFarmPageDAO.FACILITY)) {
+                // 先拿options数据,再选择
+                MsFarmFieldCriteria msFarmFieldCriteria = new MsFarmFieldCriteria();
+                MsFarmFieldCriteria.Criteria criteria = msFarmFieldCriteria.createCriteria();
+                criteria.andNameEqualTo(MsFarmPageDAO.FACILITY);
+                List<MsFarmField> list = msFarmFieldDAO.selectByCriteria(msFarmFieldCriteria);
+                if (list != null && list.size() != 0) {
+                    JSONArray res = new JSONArray();
+
+                    System.out.println(list.get(0).getOptions());
+                    JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());
+                    System.out.println("----------" + array1.toString());
+
+                    JSONArray array = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
+                    System.out.println("+++++++++++" +array.toString());
+                    Set<String> facilityIds = getFacilityValues(array);
+
+                    for (int i = 0; i < array1.size(); i++) {
+                        String value = array1.getJSONObject(i).getString("value");
+                        if (facilityIds.contains(value)) {
+                            res.add(array1.getJSONObject(i));
+                        }
+                    }
+                    json.put(MsFarmPageDAO.FACILITY, res);
+                }
+            }
             return FastJsonUtil.sucess("success", json);
         } catch (Exception e) {
             MsLogger.error("Failed to get page info", e);

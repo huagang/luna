@@ -13,7 +13,7 @@ public interface MsFarmPageDAO {
 
     String COLLECTION_NAME = "greektest";
 
-    String POI_INFO = "poI_info";
+    String POI_INFO = "poi_info";
 
     String FACILITY = "facility";
 
