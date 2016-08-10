@@ -31,7 +31,7 @@ var Inter = function () {
         getApiUrl: function () {
             return {
                 //选择业务的数据
-                selectBusinessPage: '/content/business/select',//选择业务的页面 
+                selectBusinessPage:  context + '/content/business/select',//选择业务的页面 
 
                 //数据管理
                 poiInit: { url: context + "/data/poi", type: "GET" },

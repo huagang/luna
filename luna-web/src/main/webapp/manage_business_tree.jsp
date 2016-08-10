@@ -77,7 +77,7 @@
                             <table id="table_business_tree" class="table"
 										data-toggle="table"
 										data-toolbar=""
-										data-url="/content/businessRelation/businessTree/search"
+										data-url="<%=request.getContextPath() %>/content/businessRelation/businessTree/search"
 										data-pagination="true"
 										data-side-pagination="server"
 										data-page-size="20"

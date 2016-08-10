@@ -50,7 +50,7 @@
                             			 data-toggle="table"
                             			 data-toolbar=""
                             			 data-show-footer=false
-										 data-url="/content/app/search"
+										 data-url="<%=request.getContextPath() %>/content/app/search"
 										 data-pagination=true
 										 data-page-size=20
 										 data-side-pagination="server"
