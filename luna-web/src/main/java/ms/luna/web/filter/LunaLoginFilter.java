@@ -29,6 +29,8 @@ public class LunaLoginFilter implements Filter {
 
     private final static Logger logger = Logger.getLogger(LunaLoginFilter.class);
 
+    private final String CONTEXT_PATH = "/luna-web";
+
     private Set<String> skipUrlAfterLogin;
 
     private List<Pattern> excludePatternList;
@@ -88,6 +90,9 @@ public class LunaLoginFilter implements Filter {
                 return;
             }
 
+            logger.debug("contextPath: " + contextPath);
+            logger.debug("servletPath: " + servletPath);
+            
             if(servletPath.equals("/") || servletPath.equals("")) {
                 chain.doFilter(httpServletRequest, httpServletResponse);
                 return;
