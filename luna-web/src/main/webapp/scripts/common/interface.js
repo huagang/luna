@@ -34,13 +34,18 @@ var Inter = function () {
     return {
         getPageUrl: function(){
             return {
-
+                basicAppEdit: context + '/content/app/{0}?business_id={1}',
+                devAppEdit: 'http://webapp.visualbusiness.cn/app/createapp?appId={0}&token={1}',
+                dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
             };
         },
         getApiUrl: function () {
             return {
                 //选择业务的数据
                 selectBusinessPage:  context + '/content/business/select',//选择业务的页面 
+
+                // token
+                appToken: {url: context + '/content/app/token', type: 'GET'},
 
                 //数据管理
                 poiInit: { url: context + "/data/poi", type: "GET" },

@@ -21,7 +21,7 @@ $(document).ready(function(){
 	window.newAppController = new NewAppController();
 
 });
-
+var pageUrls = Inter.getPageUrl(), apiUrls = Inter.getApiUrl();
 
 /* 作用  - 用于计算输入框的字数并显示在输入框右下角
  * 潜在问题 : 由于jquery的change事件是在丢失焦点时触发的，不能满足需求，因而绑定input事件，
@@ -505,13 +505,13 @@ function NewAppController() {
 						that.dialog.removeClass('pop-show');
 						switch(that.data.type){
 							case 'basic':
-								location.href = window.context + '/content/app/{0}?business_id={1}'.format(data.data.app_id, that.data.businessId);
+								location.href = pageUrls.basicAppEdit.format(data.data.app_id, that.data.businessId);
 								break;
 							case 'dev':
-								// location.href = window.context + '/';
+								location.href = pageUrls.devAppEdit.format(data.data.app_id, data.data.token);
 								break;
 							case 'data':
-								location.href = window.context + '/content/app/farm/{0}?business_id={1}'.format(data.data.app_id, that.data.businessId);
+								location.href = pageUrls.dataAppEdit.format(data.data.app_id, that.data.businessId);
 								// location.href = '';
 								break;
 						}
@@ -708,10 +708,8 @@ function delApp(obj, app_id){
  */
 function submit_delete_app(app_id, target){
 	$.ajax({
-    	url: host +'/manage/app.do?method=delete_app',
-        type: 'POST',
-        async: false,
-        data: {"app_id":app_id},
+    	url: apiUrls.appDelete.url.format(app_id),
+        type: apiUrls.appDelete.type,
         dataType:"json",
         success: function (returndata) {
             switch (returndata.code){
@@ -730,6 +728,24 @@ function submit_delete_app(app_id, target){
         	showMessage("请求失败!");
         }
     });
+}
+
+function editDevApp(appId){
+
+	$.ajax({
+		url: apiUrls.appToken.url,
+		type: apiUrls.appToken.type,
+		success: function(res){
+			if(res.code === '0'){
+				location.href = pageUrls.devAppEdit.format(appId, res.data.token);
+			} else{
+				alert(res.msg || '获取token失败')
+			}
+		},
+		error: function(res){
+			alert(res.msg || '获取token失败')
+		}
+	})
 }
 
 function showMessage(msg){
