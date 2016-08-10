@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface FarmPageService {
 
-    JSONObject getPageInfo(Integer appId);
+    JSONObject getPageDefAndInfo(Integer appId);
 
     JSONObject updatePage(String json, Integer appId, String lunaName);
 
@@ -20,5 +20,7 @@ public interface FarmPageService {
     JSONObject previewPage(Integer appId);
 
     JSONObject publishPage(String json);
+
+    JSONObject getPageInfo(Integer appId);
 
 }

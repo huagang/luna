@@ -150,7 +150,6 @@ var Inter = function () {
                 appSaveSetting: { url: context + '/content/app/setting/{0}', type: 'POST' }, //保存页面设置
                 appPreview: { url: context + '/content/app/preview/{0}', type: 'GET' }, //微景展预览界面
                 appPublish: { url: context + '/content/app/publish/{0}', type: 'PUT' }, //微景展发布界面
-
                 farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
                 saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
                 farmHousePreview: {url: context + '/content/app/preview/{0}', type: 'GET'}, // 获取预览二维码图片

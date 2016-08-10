@@ -1,9 +1,11 @@
 package com.microscene.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
+import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -27,6 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 public class AppController extends BaseController {
 
     private final static Logger logger = Logger.getLogger(AppController.class);
+
+    @Autowired
+    private FarmPageService farmPageService;
 
     @Autowired
     private ManageShowAppService manageShowAppService;
@@ -55,6 +61,18 @@ public class AppController extends BaseController {
         modelAndView.addObject("share_info_link", requestURL.substring(0, requestURL.indexOf("/page/")));
         return modelAndView;
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
+    public ModelAndView showpage(
+            @PathVariable("appId") Integer appId,
+            HttpServletRequest request, HttpServletResponse response) {
+
+        ModelAndView modelAndView = buildModelAndView("showFarmHouse");
+        JSONObject result = farmPageService.getPageInfo(appId);
+        modelAndView.addObject("pageData", result.getJSONObject("data"));
+        modelAndView.addObject("appId", appId);
+        return modelAndView;
     }
 
     private void fillAppShareInfo(int appId, ModelAndView modelAndView) {

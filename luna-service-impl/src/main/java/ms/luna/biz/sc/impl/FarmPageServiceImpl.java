@@ -13,6 +13,7 @@ import ms.luna.biz.dao.custom.model.FarmFieldParameter;
 import ms.luna.biz.dao.custom.model.FarmFieldResult;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.FarmPageService;
+import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.COSUtil;
@@ -27,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by greek on 16/7/25.
@@ -51,6 +49,9 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Autowired
     private MsBusinessDAO msBusinessDAO;
 
+    @Autowired
+    private PoiApiService poiApiService;
+
     private static int[] divider = new int[]{1,3,5,7,8,9};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
     // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
 
@@ -59,7 +60,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     private final static String LOGO_PATH = "/data1/luna/resources/logo.jpg";
 
     @Override
-    public JSONObject getPageInfo(Integer appId) {
+    public JSONObject getPageDefAndInfo(Integer appId) {
 
         // 创建微景展(ms_show_app)
         // 获取页面字段定义和初始值
@@ -280,8 +281,87 @@ public class FarmPageServiceImpl implements FarmPageService {
         return FastJsonUtil.sucess("发布成功", data);
     }
 
+    @Override
+    public JSONObject getPageInfo(Integer appId) {
+        try {
+
+            // 检查app_id是否存在
+            if (!this.isAppIdExist(appId)) {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
+            }
+            // 获取mongo数据
+            Document document = msFarmPageDAO.selectPageByAppId(appId);
+
+            // 获取农+页面数据.考虑到后续新的字段的添加和更改,需要传入需求字段信息
+            List<String> fields = getFarmFieldsDef();
+            JSONObject json = msFarmPageDAO.getPageInfo(document, fields);
+
+            // poi_info 字段, facility字段只存取了id,需要额外读取信息
+            // 获取POI详细信息
+            if (fields.contains(MsFarmPageDAO.POI_INFO) && !StringUtils.isBlank(document.getString(MsFarmPageDAO.POI_INFO))) {
+                String poiId = document.getString(MsFarmPageDAO.POI_INFO);
+                JSONObject param = new JSONObject();
+                param.put("poi_id", poiId);
+                param.put("lang", "zh");
+                JSONObject poiInfo = poiApiService.getPoiInfoById(param.toString());
+                System.out.print(poiInfo.toString());
+                if (!"0".equals(poiInfo.getString("code"))) {
+                    return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, poiInfo.getString("msg"));
+                }
+                json.put(MsFarmPageDAO.POI_INFO, poiInfo.getJSONObject("data").get("zh"));
+            }
+
+            // 获取场地设施信息
+            if (fields.contains(MsFarmPageDAO.FACILITY)) {
+                // 先拿options数据,再选择
+                MsFarmFieldCriteria msFarmFieldCriteria = new MsFarmFieldCriteria();
+                MsFarmFieldCriteria.Criteria criteria = msFarmFieldCriteria.createCriteria();
+                criteria.andNameEqualTo(MsFarmPageDAO.FACILITY);
+                List<MsFarmField> list = msFarmFieldDAO.selectByCriteria(msFarmFieldCriteria);
+                if (list != null && list.size() != 0) {
+                    JSONArray res = new JSONArray();
+
+                    System.out.println(list.get(0).getOptions());
+                    JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());
+                    System.out.println("----------" + array1.toString());
+
+                    JSONArray array = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
+                    System.out.println("+++++++++++" +array.toString());
+                    Set<String> facilityIds = getFacilityValues(array);
+
+                    for (int i = 0; i < array1.size(); i++) {
+                        String value = array1.getJSONObject(i).getString("value");
+                        if (facilityIds.contains(value)) {
+                            res.add(array1.getJSONObject(i));
+                        }
+                    }
+                    json.put(MsFarmPageDAO.FACILITY, res);
+                }
+            }
+            return FastJsonUtil.sucess("success", json);
+        } catch (Exception e) {
+            MsLogger.error("Failed to get page info", e);
+            System.out.println(e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get page info");
+        }
+    }
+
 
     //-----------------------------------------------------------------------------------------------
+
+    /**
+     * 获取产地设施id集合
+     *
+     * @param array
+     * @return
+     */
+    Set<String> getFacilityValues(JSONArray array) {
+        Set<String> list = new HashSet<>();
+        for(int i = 0 ; i<array.size() ; i++) {
+            list.add(array.getString(i));
+        }
+        return list;
+    }
 
     /**
      * 获得农+字段定义和数值

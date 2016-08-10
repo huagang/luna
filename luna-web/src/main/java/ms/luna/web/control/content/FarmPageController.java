@@ -75,7 +75,7 @@ public class FarmPageController extends BasicController {
     public JSONObject getInitPageInfo(@PathVariable Integer appId) throws IOException {
         try{
 //            LunaUserSession user = SessionHelper.setSelectedMenu(request.getSession(false), menu);
-            JSONObject result = farmPageService.getPageInfo(appId);
+            JSONObject result = farmPageService.getPageDefAndInfo(appId);
             return result;
         } catch (Exception e) {
             MsLogger.error("Failed to init MsShow" + e.getMessage());
