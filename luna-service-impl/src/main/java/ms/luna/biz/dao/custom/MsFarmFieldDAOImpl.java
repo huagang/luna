@@ -11,6 +11,6 @@ import java.util.List;
 public class MsFarmFieldDAOImpl extends MsFarmFieldDAOBaseImpl implements MsFarmFieldDAO {
     @Override
     public List<FarmFieldResult> selectFieldNames(FarmFieldParameter farmFieldParameter) {
-        return getSqlMapClientTemplate().queryForList("ms_farm_field.searchFieldNames", farmFieldParameter);
+        return getSqlMapClientTemplate().queryForList("ms_farm_field.selectFieldNames", farmFieldParameter);
     }
 }

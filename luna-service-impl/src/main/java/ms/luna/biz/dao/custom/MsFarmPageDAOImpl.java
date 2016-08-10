@@ -3,10 +3,14 @@ package ms.luna.biz.dao.custom;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import ms.luna.biz.table.MsFarmFieldTable;
+import ms.luna.biz.table.MsShowAppTable;
+import ms.luna.biz.util.DateUtil;
 import org.bson.Document;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -23,14 +27,19 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
     }
 
     @Override
-    public void insertPage(Document data) {
-        collection.insertOne(data);
+    public void insertPage(Document document, String lunaName) {
+        document.put(MsFarmFieldTable.CREATE_TIME, new Date());
+        document.put(MsFarmFieldTable.UPDATE_TIME, new Date());
+        document.put(MsFarmFieldTable.UPDATE_USER, lunaName);
+        collection.insertOne(document);
     }
 
     @Override
-    public void updatePage(Document data, Integer appId) {
+    public void updatePage(Document document, Integer appId, String lunaName) {
+        document.put(MsFarmFieldTable.UPDATE_TIME, new Date());
+        document.put(MsFarmFieldTable.UPDATE_USER, lunaName);
         Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId);
-        collection.updateOne(filter, new Document().append("$set", data));
+        collection.updateOne(filter, new Document().append("$set", document));
     }
 
     @Override

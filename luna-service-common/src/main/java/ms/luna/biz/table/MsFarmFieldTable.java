@@ -5,6 +5,12 @@ package ms.luna.biz.table;
  */
 public class MsFarmFieldTable {
 
+    public static final String CREATE_TIME = "create_time";
+
+    public static final String UPDATE_TIME = "update_time";
+
+    public static final String UPDATE_USER = "update_user";
+
     public static final String DIVIDER = "divider";
 
     public static final String FIELDS = "fields";

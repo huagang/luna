@@ -4,13 +4,19 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.FarmPageService;
+import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.FarmCommon;
+import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.BasicCtrl;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.util.RequestHelper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -126,7 +132,7 @@ public class FarmPageController extends BasicController {
 
 //    @RequestMapping(params = SAVEPAGE)
     // 编辑页面
-    @RequestMapping(method = RequestMethod.POST, value = "/farm/{appId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/farm/{appId}")
     @ResponseBody
     public JSONObject savePage(
             @PathVariable("appId") Integer appId,
@@ -134,6 +140,10 @@ public class FarmPageController extends BasicController {
             HttpServletRequest request, HttpServletResponse response) {
          try{
              // 获取字段定义
+//             String fieldsVal = RequestHelper.getString(request, "data");
+             if (StringUtils.isBlank(fieldsVal)) {
+                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "page数据不能为空!");
+             }
              JSONObject result1 = farmPageService.getFarmFields();
              if (!"0".equals(result1.getString("code"))) {
                  return result1;
@@ -144,8 +154,11 @@ public class FarmPageController extends BasicController {
              // 检查字段数值 -- 暂时先不检查
              FarmCommon.getInStance().checkFieldsVal(JSONObject.parseObject(fieldsVal), fields);
 
+             // 获取用户信息
+             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+
              // 保存
-             JSONObject result = farmPageService.updatePage(fieldsVal, appId);
+             JSONObject result = farmPageService.updatePage(fieldsVal, appId, user.getLunaName());
              MsLogger.debug(result.toString());
              return result;
          } catch (Exception e) {
