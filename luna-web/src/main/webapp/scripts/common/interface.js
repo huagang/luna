@@ -46,7 +46,7 @@ var Inter = function () {
                 poiReadPage:{url:  context + '/data/poi/batch/initReadPage',type:"POST"},//poi只读页面
                 poiBatchEdit:{url: context + "/data/poi/batch/initEditPage",type:"POST"},//poi 批量导入 编辑
 
-                poiCheckForEnglish:{url:  context + '/data/poi/checkPoi?poiId={0}&lang={1}',type:'GET'},//英文poi检查
+                poiCheckForEnglish:{url:  context + '/data/poi/checkPoi',type:'POST'},//英文poi检查
                 poiConfirmArea:'',//确认poi所在区域是否正确
 
                 poiThumbnailUpload:{url:"/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
@@ -135,6 +135,8 @@ var Inter = function () {
                 appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
                 appUpdatePageOrder :{url: '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
                 appSaveSetting :{url: '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
+                appPreview :{url: '/content/app/preview/{0}', type: 'GET'}, //微景展预览界面
+                appPublish :{url: '/content/app/publish/{0}', type: 'PUT'}, //微景展发布界面
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
