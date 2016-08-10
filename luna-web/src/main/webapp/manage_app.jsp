@@ -39,7 +39,7 @@
                         <!--微景展搜索 start-->
                         <div class="search">
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" placeholder="输入微景展名称进行查询"/>
-                            <img class="search-icon" src="${basePath}/img/ic_search.png"/>
+                            <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="search_apps" class="btn-search" >搜 索</button>
                         </div>
                         <button type="button" id="new-built" class="newApp" >+新建微景展</button>
@@ -88,7 +88,7 @@
 <div class="pop new-app">
 	<div class="pop-title">
 		<h4>微景展配置</h4>
-		<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+		<a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
 	</div>
 	<div class="pop-cont ">
 		<div>中文名称</div>
@@ -128,7 +128,7 @@
 <div class="pop edit-app">
     <div class="pop-title">
        	<h4>微景展配置</h4>
-       	<a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>  
+       	<a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>  
    	</div>
    	<ul class='pop-menu'>
    		<li class='normal active'><a href='#'>常用设置</a></li>
@@ -138,7 +138,7 @@
    		<div class='setting-normal '>
    			<div class='part-left'>
    				<div class='file-uploader'>
-   					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+   					<img class='abstract-pic' src="<%=request.getContextPath() %>/img/pure-logo2x.png" />
 	   				<div class='fileup-container'>
 	   					<button class='button-close fileupload-tip'>更换封面</button>
 	   					<input type='file' name='thumbnail_fileup' accept="image/*" />
@@ -149,7 +149,7 @@
 					<div class="mask"></div>
 					<div class='file-edit-container'>
    						<div class='img-wrapper'>
-   							<img src='../img/icon-edit.png'/>
+   							<img src='<%=request.getContextPath() %>/img/icon-edit.png'/>
 							<input type='file' name='thumbnail_fileup' accept="image/*" />
    						</div>
    						<p class='fileupload-tip'>更换封面</p>
@@ -181,11 +181,11 @@
    			<!-- 用于新建分享时复制 -->
    			<div class='share-item hidden' data-order=''>
    				<div class='clearfix'>
-   					<img class='share-delete' src='../img/icon-delete-gray.png' />
+   					<img class='share-delete' src='<%=request.getContextPath() %>/img/icon-delete-gray.png' />
    				</div>	
 	   			<div class='part-left'>
 	  				<div class='file-uploader'>
-	  					<img class='abstract-pic' src="../img/pure-logo2x.png" />
+	  					<img class='abstract-pic' src="<%=request.getContextPath() %>/img/pure-logo2x.png" />
 	   					<div class='fileup-container'>
 	   						<button class='button-close fileupload-tip'>更换缩略图</button>
 	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
@@ -196,7 +196,7 @@
 						<div class="mask"></div>
 						<div class='file-edit-container'>
 	  						<div class='img-wrapper'>
-	  							<img src='../img/icon-edit.png'/>
+	  							<img src='<%=request.getContextPath() %>/img/icon-edit.png'/>
 	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
 	  						</div>
 	  						<p class='fileupload-tip'>更换缩略图</p>
@@ -283,7 +283,7 @@
 	
 	function statusFormatter(value, row, index) {
 		if(row.app_status === 1){
-			return "<img class='published' src='../img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
+			return "<img class='published' src='<%=request.getContextPath() %>/img/published.png' alt='" + APP_STATUS[row.app_status] + "'/>";
 		}else{
 			return APP_STATUS[row.app_status];
 		}

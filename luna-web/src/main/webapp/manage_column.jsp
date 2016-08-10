@@ -50,7 +50,7 @@
                             <table id="table_column" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="/content/column/search"
+										 data-url="<%=request.getContextPath() %>/content/column/search"
 										 data-pagination="true"
 										 data-page-size=20
 										 data-side-pagination="server" 
@@ -91,7 +91,7 @@
 <div class="pop ng-hide" id="newColumnDialog" ng-show="column.newColumnShow">
     <div class="pop-title">
         <h4>新建栏目</h4>
-        <a href="#" class="btn-close" ng-click="column.hideNewColumnDialog()"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" ng-click="column.hideNewColumnDialog()"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
     	<form name="newColumnForm">
@@ -128,7 +128,7 @@
 <div class="pop ng-hide" id="updateColumnDialog" ng-show="column.updateColumnShow">
     <div class="pop-title">
         <h4>更新栏目</h4>
-        <a href="#" class="btn-close" ng-click="column.hideUpdateColumnDialog()"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" ng-click="column.hideUpdateColumnDialog()"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         <form name="updateColumnForm">
@@ -163,7 +163,7 @@
 <div class="pop" id="pop-delete" class="ng-hide" style="max-width:370px;" ng-show="column.deleteColumnShow">
     <div class="pop-title">
         <h4>删除</h4>
-        <a href="#" class="btn-close" ng-click="column.hideDeleteDialog()"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" ng-click="column.hideDeleteDialog()"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
