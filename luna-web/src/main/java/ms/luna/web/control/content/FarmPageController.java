@@ -10,6 +10,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.FarmCommon;
 import ms.luna.web.common.BasicCtrl;
+import ms.luna.web.control.common.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/content/app")
-public class FarmPageController {
+public class FarmPageController extends BasicController {
 
     @Autowired
     private FarmPageService farmPageService;
@@ -46,22 +47,20 @@ public class FarmPageController {
 
     public static final String menu = "app";
 
-//    private static final String
+    @RequestMapping(method = RequestMethod.GET, value = "/farm/page/{appId}")
+    public ModelAndView init(@PathVariable int appId, HttpServletRequest request) {
+        try {
+//            SessionHelper.setSelectedMenu(request.getSession(false), menu);
+            ModelAndView modelAndView = buildModelAndView("edit_farmhouse");
+            modelAndView.addObject("appId", appId);
+            return modelAndView;
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
-//    public ModelAndView init(@PathVariable int appId, HttpServletRequest request) {
-//        try {
-////            SessionHelper.setSelectedMenu(request.getSession(false), menu);
-//            ModelAndView modelAndView = buildModelAndView("show_page");
-//            modelAndView.addObject("appId", appId);
-//            return modelAndView;
-//
-//        } catch (Exception e) {
-//            MsLogger.error("Failed to load all pages", e);
-//        }
-//
-//        return new ModelAndView("/error.jsp");
-//    }
+        } catch (Exception e) {
+            MsLogger.error("Failed to load all pages", e);
+        }
+
+        return new ModelAndView("/error.jsp");
+    }
 
 //    @RequestMapping(params = INIT)
     // 获取初始化页面组件字段信息
@@ -127,16 +126,16 @@ public class FarmPageController {
 
 //    @RequestMapping(params = SAVEPAGE)
     // 编辑页面
-    @RequestMapping(method = RequestMethod.PUT, value = "/farm/{appId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/farm/{appId}")
     @ResponseBody
     public JSONObject savePage(
             @PathVariable("appId") Integer appId,
-            @RequestParam(required = true, value = "data") String fieldsVal,
+            @RequestParam(required = false, value = "data") String fieldsVal,
             HttpServletRequest request, HttpServletResponse response) {
          try{
              // 获取字段定义
              JSONObject result1 = farmPageService.getFarmFields();
-             if (!"0".equals(result1)) {
+             if (!"0".equals(result1.getString("code"))) {
                  return result1;
              }
              JSONObject data = result1.getJSONObject("data");
@@ -195,17 +194,29 @@ public class FarmPageController {
     public JSONObject previewPage(
             @PathVariable("appId") Integer appId,
             HttpServletRequest request, HttpServletResponse response) {
-        return null;
+        try {
+            JSONObject result = farmPageService.previewPage(appId);
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to preview", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Faile to preview");
+        }
     }
 
-    //    @RequestMapping(params = PREVIEW)
-    @RequestMapping(method = RequestMethod.GET, value = "/farm/publish/{appId}")
-    @ResponseBody
-    public JSONObject publishPage(
-            @PathVariable("appId") Integer appId,
-            HttpServletRequest request, HttpServletResponse response) {
-        return null;
-    }
+//    //    @RequestMapping(params = PREVIEW)
+//    @RequestMapping(method = RequestMethod.GET, value = "/farm/publish/{appId}")
+//    @ResponseBody
+//    public JSONObject publishPage(
+//            @PathVariable("appId") Integer appId,
+//            HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            JSONObject result = farmPageService.publishPage(appId);
+//            return result;
+//        } catch (Exception e) {
+//            MsLogger.error("Failed to preview", e);
+//            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Faile to preview");
+//        }
+//    }
 
 
 

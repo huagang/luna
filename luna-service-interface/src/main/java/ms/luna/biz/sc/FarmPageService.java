@@ -19,6 +19,6 @@ public interface FarmPageService {
 
     JSONObject previewPage(Integer appId);
 
-    JSONObject publishPage(Integer appId);
+    JSONObject publishPage(String json);
 
 }

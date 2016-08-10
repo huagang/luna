@@ -518,7 +518,7 @@
                         </div>
                         <a class="imgList-clc" id="model-clc" ng-hide="imgList.isEmptyStr(img.currentComponent.content)" ng-click='imgList.removeImg()'>删除
                                 </a>
-                        <img class="thumbnail" id="thumbnail-bg" ng-hide="imgList.isEmptyStr(imgList.currentComponent.content)" src="{{imgList.currentComponent.content}}" style="position:absolute; top:228px;width:110px;height:100px;padding:0;">
+                        <!--<img class="thumbnail" id="thumbnail-bg" ng-hide="imgList.isEmptyStr(imgList.currentComponent.content)" src="{{imgList.currentComponent.content}}" style="position:absolute; top:228px;width:110px;height:100px;padding:0;">-->
                       </div>
                     </form>
                     <button class="btn btn-confirm hide" id="btn-model">确定</button>
