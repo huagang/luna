@@ -53,9 +53,6 @@ public class LoginController extends BasicController {
 
 
         HttpSession session = request.getSession(false);
-        if(session != null) {
-            logger.trace("invalid exist session, session id: " + session.getId());
-        }
         if(session != null && session.getAttribute(SessionHelper.KEY_USER) != null) {
             // 重新登录不要求显式退出,自动退出
             session.invalidate();
@@ -78,14 +75,8 @@ public class LoginController extends BasicController {
         JSONObject data = result.getJSONObject("data");
         LunaUserSession lunaUserSession = JSON.toJavaObject(data, LunaUserSession.class);
         session = request.getSession(true);
-        if(session == null) {
-            logger.trace("create session failed");
-        } else {
-            logger.trace("create session success");
-        }
         SessionHelper.setUser(session, lunaUserSession);
-        logger.trace("session user: " + JSON.toJSON(SessionHelper.getUser(session)));
-        logger.trace("session id: " + session.getId());
+
         JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
         logger.trace(moduleAndMenuByRoleId);
         if(moduleAndMenuByRoleId.getString("code").equals("0")) {
