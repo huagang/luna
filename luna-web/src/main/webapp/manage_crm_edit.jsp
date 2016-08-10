@@ -180,7 +180,7 @@
 			                <div class="item-value">
 			                	<input id="salesman_nm_edit" name="salesman_edit" style="display:none" />
 			                    <span id="agent-edit"></span>
-			                    <span><img src="/img/edit.png" id='editagent-edit'/></span>
+			                    <span><img src="<%=request.getContextPath() %>/img/edit.png" id='editagent-edit'/></span>
 			                    <div class="warn" id="agent-edit-warn">不能为空</div>
 			                </div>
 			            </div>

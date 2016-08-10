@@ -53,7 +53,7 @@
                      <!--POI搜索 start-->
                         <div class="search">
                             <input type="text" id="filterName" class="search-txt" placeholder="请输入关键字进行搜索">
-                            <img class="search-icon" src="${basePath}/img/ic_search.png"/>
+                            <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button id="condition_search" type="button" class="btn-search">搜 索</button>
                         </div>
                         <!--POI搜索 end-->
@@ -68,7 +68,7 @@
                         	<table id="table_POI" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="/data/poi/search"
+										 data-url="<%=request.getContextPath() %>/data/poi/search"
 										 data-pagination="true"
 										 data-side-pagination="server"
 										 data-page-size="20"
@@ -110,7 +110,7 @@
 <div class="pop pop-input" id="pop-input">
     <div class="pop-title">
         <h4>批量录入</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png"/></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
     </div>
     <div class="pop-cont">
 	    <form id="excel_upload" method="post" enctype="multipart/form-data">
@@ -213,7 +213,7 @@
 <div class="pop pop-delete" id="pop-delete">
     <div class="pop-title">
         <h4>删除</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png"/></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
     </div>
     <div class="pop-cont">
         删除POI数据后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？

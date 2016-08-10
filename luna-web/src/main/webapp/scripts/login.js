@@ -68,7 +68,7 @@ $(function(){
                     case "0":
 					case '403':
 						// 登录成功
-                    	window.location.href=host + "/content/business/select";
+                    	window.location.href= Inter.getApiUrl().selectBusinessPage;
                         break;
                     default:
                     	// 登录失败的错误消息

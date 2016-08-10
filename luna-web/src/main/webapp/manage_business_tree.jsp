@@ -77,7 +77,7 @@
                             <table id="table_business_tree" class="table"
 										data-toggle="table"
 										data-toolbar=""
-										data-url="/content/businessRelation/businessTree/search"
+										data-url="<%=request.getContextPath() %>/content/businessRelation/businessTree/search"
 										data-pagination="true"
 										data-side-pagination="server"
 										data-page-size="20"
@@ -113,7 +113,7 @@
 <div class="pop" id="pop-newbusiness-tree">
     <div class="pop-title">
         <h4>新建数据配置</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
     	<div style="margin-bottom:15px;">选择业务</div>
@@ -170,7 +170,7 @@
 <div class="pop" id="pop-delete" style="max-width:370px;">
     <div class="pop-title">
         <h4>删除</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         	删除数据记录，将解除数据关系与业务之间的关联，您确定要进行此操作么？

@@ -88,7 +88,7 @@
 <div class="pop" id="pop-cata">
     <div class="pop-title">
         <h4>类别</h4>
-        <a href="#" class="btn-close" onclick="clcWindow_cate(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow_cate(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
     	<form>
@@ -118,7 +118,7 @@
 <div class="pop" id="pop-modify">
     <div class="pop-title">
         <h4>类别</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
     	<form>
@@ -152,7 +152,7 @@
 <div class="pop" id="pop-delete">
     <div class="pop-title">
         <h4>删除类别</h4>
-        <a href="#" class="btn-close" onclick="clcWindow_cate(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow_cate(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cnt">
         <div class="pop-tips">

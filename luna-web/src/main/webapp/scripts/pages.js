@@ -11,7 +11,6 @@ var lunaPage = {},
 var currentComponent = {};
 var currentPage = null;
 
-setCookie('businessId', 48);
 var objdata = {
     businessId: Util.location().business_id || 0,
     articleListData: null,

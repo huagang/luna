@@ -169,7 +169,7 @@
 			                <div class="item-label"><span class="superscript">*</span>受理业务员：</div>
 			                <div class="item-value">
 			                    <span id="agent" >${luna_nm}</span>
-			                    <span><img src="/img/edit.png" id="editagent"/></span>
+			                    <span><img src="<%=request.getContextPath() %>/img/edit.png" id="editagent"/></span>
 			                    <div class="warn" id="agent-warn">必须填写</div>
 			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
 			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>

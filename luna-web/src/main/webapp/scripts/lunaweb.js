@@ -5,7 +5,7 @@
 //f.submit();
 //return;
 //}
-var host = '';
+var host = '/luna-web';
 
 $(document).ready(function(){
 	$("dd").each(function(index){

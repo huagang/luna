@@ -18,19 +18,19 @@
     <meta name="Description" content="皓月平台致力于拉近个人、企业、政府之间的距离，为旅游行业提供一站式的解决方案并提供全方位的运营数据支撑，让百姓的世界不再孤单。" />
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
-    <link href="${basePath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="${basePath}/styles/common.css">
-    <link rel="stylesheet" href="${basePath}/styles/add_edit_poi.css">
+    <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
     <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-    <script src="${basePath}/plugins/jquery.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
     <script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
-    <script src="${basePath}/scripts/lunaweb.js"></script>
-    <script src="${basePath}/scripts/ajaxfileupload.js"></script>
-    <script src="${basePath}/scripts/fileupload.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/fileupload.js"></script>
 </head>
 
 <body>
@@ -76,8 +76,8 @@
 		                            <form:checkbox path="checkeds" value="${varTag['value']}" label="${varTag['label']}"/>
 		                        </label>
 		                        <input type="text" style="display: none;"/>
-		                        <img class="edit-property" src="${basePath}/img/edit.png" onclick="editProperty(this)"/>
-		                        <img class="del-property" src="${basePath}/img/delete.png" onclick="delProperty(this)"/>
+		                        <img class="edit-property" src="<%=request.getContextPath() %>/img/edit.png" onclick="editProperty(this)"/>
+		                        <img class="del-property" src="<%=request.getContextPath() %>/img/delete.png" onclick="delProperty(this)"/>
 		                  	  </span>
 		                   </c:forEach> --%>
 		
@@ -215,7 +215,7 @@
 	<div class="pop" id="pop-newproperty">
 	    <div class="pop-title">
 	        <h4>新建类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png"/></a>
+	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
 	    </div>
 	    <form>
 	    	<div class="pop-cont" id="pop-cont-property">
@@ -248,7 +248,7 @@
 	<div class="pop" id="pop-newproperty-edit">
 	    <div class="pop-title">
 	        <h4>编辑类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png"/></a>
+	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
 	    </div>
 	    <form>
 		    <div class="pop-cont" id="pop-cont-property-edit">
@@ -281,7 +281,7 @@
 	<div class="pop pop-delete" id="pop-deletePOI">
 	    <div class="pop-title">
 	        <h4>删除</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png"/></a>
+	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
 	    </div>
 	    <div class="pop-cont">
 	       	 删除类别后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？
@@ -303,7 +303,7 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 
-<script src="${basePath}/scripts/add_edit_poi.js"></script>
-<script src="${basePath}/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/add_edit_poi.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 
 </html>

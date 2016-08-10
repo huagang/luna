@@ -48,7 +48,7 @@
                             <table id="table_business" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/content/business/search"
+										 data-url="<%=request.getContextPath() %>/content/business/search"
 										 data-pagination="true"
 										 data-page-size=20
 										 data-side-pagination="server" 
@@ -89,7 +89,7 @@
 <div class="pop" id="pop-newbusiness">
     <div class="pop-title">
         <h4>新建业务</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
     	<div style="margin-bottom:15px;">关联商户</div>
@@ -148,7 +148,7 @@
 <div class="pop" id="pop-edit">
     <div class="pop-title">
         <h4>编辑业务</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
      	<form>
@@ -186,7 +186,7 @@
 <div class="pop" id="pop-delete" style="max-width:370px;">
     <div class="pop-title">
         <h4>删除</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="${basePath}/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         	删除业务，业务下的所有数据将会被清空且不可恢复，确定进行此操作么？

@@ -341,7 +341,7 @@
 				<zookeeper.address>115.159.87.160:2181</zookeeper.address>
 				<cosBaseDir>/dev</cosBaseDir>
 				<vodBaseDir>/dev</vodBaseDir>
-				<redis.host>10.66.152.87</redis.host>
+				<redis.host>10.66.165.223</redis.host>
 				<redis.instanceId>4246cb82-81d6-45f3-8482-a71cbb7015af</redis.instanceId>
 				<redis.password>vb2015redis</redis.password>
 			</properties>

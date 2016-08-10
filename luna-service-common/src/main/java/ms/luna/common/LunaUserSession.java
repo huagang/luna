@@ -5,6 +5,7 @@ import com.alibaba.fastjson.annotation.JSONType;
 import ms.luna.biz.table.LunaUserRoleTable;
 import ms.luna.biz.table.LunaUserTable;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
  * @Date: 2016-08-05
  */
 @JSONType
-public class LunaUserSession {
+public class LunaUserSession implements Serializable {
 
     @JSONField(name = LunaUserTable.FIELD_ID)
     private String uniqueId;

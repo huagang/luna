@@ -47,7 +47,7 @@
                      <div class="main-bd">
                         <!--CRM搜索 start-->
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
-							<img class="search-icon" src="/img/ic_search.png"/>
+							<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="condition_search" class="btn-search">搜 索</button>
                         </div>
                         <button type="button" id="new-built">新建</button>
@@ -56,7 +56,7 @@
 	                         <table id="table_business" class="table"
 	                         			 data-toggle="table"
 	                         			 data-toolbar=""
-								 data-url="/content/crm/search"
+								 data-url="<%=request.getContextPath() %>/content/crm/search"
 								 data-pagination="true"
 								 data-side-pagination="server" 
 								 data-page-size="20"
@@ -100,7 +100,7 @@
 <div class="pop" id="pop-addmerchant">
     <div class="pop-title">
         <h4>新建商户</h4>
-        <a href="#" class="btn-close" onclick="clcContent(this)"><img src="/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcContent(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
 </div>
 
@@ -108,7 +108,7 @@
 <div class="pop" id="pop-delete">
     <div class="pop-title">
         <h4>关闭</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="/img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         <div class="pop-tips">

@@ -44,7 +44,7 @@
                             <!--用户搜索 start-->
                             <div class="search">
                                 <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
-								<img class="search-icon" src="${basePath}/img/ic_search.png"/>
+								<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                                 <button type="button" id="condition_search" class="btn-search">搜 索</button>
                             </div>
                             <!--用户搜索 end-->
@@ -56,7 +56,7 @@
                             <table id="table_users" class="table"
                             			 data-toggle="table"
                             			 data-toolbar=""
-										 data-url="${basePath}/platform/user/search"
+										 data-url="<%=request.getContextPath() %>/platform/user/search"
 										 data-side-pagination="server" 
 										 data-page-size="20"
 										 data-pagination="true"

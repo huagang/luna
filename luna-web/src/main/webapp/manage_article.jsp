@@ -43,7 +43,7 @@
                             <table id="table_article" class="table"
                                    data-toggle="table"
                                    data-toolbar=""
-                                   data-url="${basePath}/content/article/search"
+                                   data-url="<%=request.getContextPath() %>/content/article/search"
                                    data-pagination="true"
                                    data-page-size=20
                                    data-side-pagination="server"

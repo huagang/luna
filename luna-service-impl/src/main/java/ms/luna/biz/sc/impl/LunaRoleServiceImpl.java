@@ -167,11 +167,11 @@ public class LunaRoleServiceImpl implements LunaRoleService {
         }
         try {
             List<LunaRole> lunaRoles = roleCache.getAllRoles();
-            if(offset > lunaRoles.size()) {
+            if(offset >= lunaRoles.size()) {
                 offset = lunaRoles.size() - 1;
             }
             if(offset + limit >= lunaRoles.size()) {
-                limit = lunaRoles.size() - offset - 1;
+                limit = lunaRoles.size() - offset;
             }
             List<LunaRole> subRoles = lunaRoles.subList(offset, offset + limit);
             Map<Integer, String> categoryId2NameMap = roleCategoryCache.getCategoryId2NameMap();
@@ -183,7 +183,7 @@ public class LunaRoleServiceImpl implements LunaRoleService {
             }
 
             JSONObject result = new JSONObject();
-            result.put("total", subRoles.size());
+            result.put("total", lunaRoles.size());
             result.put("rows", jsonArray);
 
             return FastJsonUtil.sucess("", result);
