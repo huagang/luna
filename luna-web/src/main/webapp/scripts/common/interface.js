@@ -135,6 +135,8 @@ var Inter = function () {
                 appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
                 appUpdatePageOrder :{url: '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
                 appSaveSetting :{url: '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
+                appPreview :{url: '/content/app/preview/{0}', type: 'GET'}, //微景展预览界面
+                appPublish :{url: '/content/app/publish/{0}', type: 'PUT'}, //微景展发布界面
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              

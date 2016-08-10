@@ -88,9 +88,9 @@ function MenuController($scope, $rootScope, $http) {
     //预览数据，生成二维码
     this.previewQR = function () {
         var request = {
-            method: 'POST',
-            url: host + '/app.do?method=preview',
-            data: { 'app_id': appId }
+            method: Inter.getApiUrl().appPreview.type,
+            url: Util.strFormat( Inter.getApiUrl().appPreview.url,[appId]),
+            // data: { 'app_id': appId }
         };
         $http(request).then(function success(response) {
             var data = response.data;
@@ -125,7 +125,7 @@ function MenuController($scope, $rootScope, $http) {
         });
         //给弹出的二维码框复制按钮绑定复制方法
         $(".copy").zclip({
-            path: host + "/plugins/jquery.zclip/ZeroClipboard.swf",
+            path: "/plugins/jquery.zclip/ZeroClipboard.swf",
             copy: function () {
                 return $(this).siblings(".copyed").text();
             },
@@ -141,9 +141,8 @@ function MenuController($scope, $rootScope, $http) {
     //发布微景展响应函数
     this.publishApp = function () {
         var request = {
-            method: 'POST',
-            url: host + '/app.do?method=publishApp',
-            data: { 'app_id': appId }
+            method: Inter.getApiUrl().appPublish.type,
+            url: Util.strFormat(Inter.getApiUrl().appPublish.url, [appId]),
         };
 
         $http(request).then(function success(response) {
@@ -155,9 +154,9 @@ function MenuController($scope, $rootScope, $http) {
                 //already exist online app
                 $.confirm('此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作？', function () {
                     var request = {
-                        method: 'POST',
-                        url: host + '/app.do?method=publishApp',
-                        data: { 'app_id': appId, 'force': 1 }
+                        method: Inter.getApiUrl().appPublish.type,
+                        url: Util.strFormat(Inter.getApiUrl().appPublish.url, [appId]),
+                        data: { 'force': 1 }
                     };
 
                     $http(request).then(function success(response) {
@@ -788,7 +787,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
                 name: '地理特征',
                 code: 'dilitezheng',
                 type: 'default',
-            },{
+            }, {
                 name: '风情',
                 code: 'fengqing',
                 type: 'default',
