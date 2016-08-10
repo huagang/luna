@@ -93,6 +93,21 @@ public class AppController extends BasicController {
         return result;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "token")
+    @ResponseBody
+    public JSONObject generateToken(HttpServletRequest request) {
+        try {
+            String token = TokenUtil.generateRandomToken();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("token", token);
+            return FastJsonUtil.sucess("", jsonObject);
+
+        } catch (Exception ex) {
+            logger.error("Failed to generate token", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成开发版认证失败");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.PUT, value = "/{appId}")
     @ResponseBody
     public JSONObject updateApp(@PathVariable int appId, HttpServletRequest request) throws IOException {

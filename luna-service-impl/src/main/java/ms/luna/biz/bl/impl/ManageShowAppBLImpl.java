@@ -600,6 +600,10 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
 
+		Integer businessId = msShowApp.getBusinessId();
+		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+		data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
+
 		data.put("shareArray", jsonArray);
 		
 		return FastJsonUtil.sucess("", data);
