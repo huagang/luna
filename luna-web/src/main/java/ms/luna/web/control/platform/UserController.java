@@ -58,7 +58,8 @@ public class UserController extends BasicController {
             logger.warn("user not login, should not happen");
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "用户未登录");
         }
-        String keyword = RequestHelper.getString(request, "keyword");
+        String keyword = RequestHelper.getString(request, "like_filter_nm");
+        logger.info("keyword: " + keyword);
 
         int offset = RequestHelper.getInteger(request, "offset");
         int limit = RequestHelper.getInteger(request, "limit");
