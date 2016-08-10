@@ -66,6 +66,11 @@
 	z-index:101;
 }
 
+.pop-show .pop-cont{
+    overflow-y: visible !important;
+}
+
+
 .pop-cont div{
     margin-bottom: 10px;
 }
@@ -349,7 +354,7 @@ img.abstract-pic{
 }
 
 .template + .template{
-    margin-left: 14px;
+    margin-left: 10px;
 }
 
 .template .img-container {

@@ -511,6 +511,7 @@ function NewAppController() {
 								// location.href = window.context + '/';
 								break;
 							case 'data':
+								location.href = window.context + '/content/app/farm/{0}?business_id={1}'.format(data.data.app_id, that.data.businessId);
 								// location.href = '';
 								break;
 						}

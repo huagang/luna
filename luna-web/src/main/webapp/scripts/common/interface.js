@@ -27,7 +27,16 @@ var Inter = function () {
         'test': 'http://luna-test.visualbusiness.cn/luna-api/',
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
+
+
+    apiContext =  apiHost[curHost()];
+
     return {
+        getPageUrl: function(){
+            return {
+
+            };
+        },
         getApiUrl: function () {
             return {
                 //选择业务的数据
@@ -112,7 +121,6 @@ var Inter = function () {
                 articleUpdate: { url: context + '/content/article/{0}', type: 'POST' }, //更新文章
                 articlePublish: { url: context + '/content/article/publish/{0}', type: 'PUT' }, //更新发布
 
-
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
                 uploadVideoInArtcle: { url: context + "/add_poi.do?method=upload_video", type: '' },//上传视频
 
@@ -137,6 +145,11 @@ var Inter = function () {
                 appSaveSetting: { url: context + '/content/app/setting/{0}', type: 'POST' }, //保存页面设置
                 appPreview: { url: context + '/content/app/preview/{0}', type: 'GET' }, //微景展预览界面
                 appPublish: { url: context + '/content/app/publish/{0}', type: 'PUT' }, //微景展发布界面
+
+                farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
+                saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
+                farmHousePreview: {url: context + '/content/app/preview/{0}', type: 'GET'}, // 获取预览二维码图片
+                farmHousePublish: {url: context + '/content/app/publish/{0}', type: 'PUT'}, // 获取预览二维码图片
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
@@ -171,21 +184,25 @@ var Inter = function () {
                 cateUpdate: { url: context + "/platform/category", type: "PUT" }, // 更新
                 cateDelete: { url: context + "/platform/category/{0}", type: "DELETE" },//删除
 
-
                 // 组权限管理
                 updateAuthoritySet: { url: context + '/platform/authority/{0}', type: 'PUT' },
 
                 //文章列表接口
-                articleListApi: apiHost[curHost()] + 'article/businessId/{0}',
+                articleListApi: apiContext +'article/businessId/{0}',
 
                 //文章栏目列表
                 articleColunmu: context + '/manage/article.do?method=read_column&business_id={0}',
-                articleListByBid: apiHost[curHost()] + 'article/businessId/{0}', //通过业务ID获取
-                articleListByBidAndCid: apiHost[curHost()] + 'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
-                firstPoiByBid: apiHost[curHost()] + 'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
-                poiTypeListByBidAndFPoi: apiHost[curHost()] + 'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
-                poiListByBidAndFPoi: apiHost[curHost()] + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
-                poiListByBidAndFPoiAndPoiTyep: apiHost[curHost()] + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
+                articleListByBid: apiContext +'article/businessId/{0}', //通过业务ID获取
+                articleListByBidAndCid: apiContext +'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
+
+
+                // poi
+                firstPoiByBid:apiContext +'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
+                poiTypeListByBidAndFPoi: apiContext +'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
+                poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
+                poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
+                poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
+                poiFilter:{url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}', type: 'GET'},
 
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径

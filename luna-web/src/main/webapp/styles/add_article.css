@@ -3,6 +3,7 @@
 }
 p.warn{
     display:block;
+	padding-left: 100px;
 }
 textarea{
 	resize: none;
@@ -218,8 +219,4 @@ input[type='text'] {
 .article-audio>div,.article-video>div,.article-head-pic>div{
 	position:relative;
 }
-.cleanInput{
-	position: absolute;
-	right: -40px;
-	top: 7px;
-}
+
