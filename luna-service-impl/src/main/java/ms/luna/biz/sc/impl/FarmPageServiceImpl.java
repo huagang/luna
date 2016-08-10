@@ -99,21 +99,23 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
-    public JSONObject updatePage(String json, Integer appId) {
+    public JSONObject updatePage(String json, Integer appId, String lunaName) {
         try {
             JSONObject param = JSONObject.parseObject(json);
-
+            System.out.println(param.toString());
             // 检查app_id是否创建
             if (!this.isAppIdExist(appId)) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "app_id not found");
             }
 
             Document document = convertJson2DocumentWithFieldDef(param, getFarmFieldsDef());
+            document.put(MsShowAppTable.FIELD_APP_ID, appId);
+
             // 检查mongo数据是否存在
             if (this.isPageExist(appId)) { // --exist
-                msFarmPageDAO.updatePage(document, appId);
+                msFarmPageDAO.updatePage(document, appId, lunaName);
             } else { // --not exit
-                msFarmPageDAO.insertPage(document);
+                msFarmPageDAO.insertPage(document, lunaName);
             }
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
@@ -449,7 +451,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     private Document convertJson2DocumentWithFieldDef(JSONObject param, List<String> fields) {
         Document doc = new Document();
         for(String field : fields) {
-            doc.put("name", param.containsKey(field)? param.get(field) : "");
+            doc.put(field, param.containsKey(field)? param.get(field) : "");
         }
         return doc;
     }

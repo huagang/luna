@@ -11,9 +11,9 @@ public interface MsFarmPageDAO {
 
     String COLLECTION_NAME = "greektest";
 
-    void insertPage(Document data);
+    void insertPage(Document data, String lunaName);
 
-    void updatePage(Document data, Integer appId);
+    void updatePage(Document data, Integer appId, String lunaName);
 
     void deletePage(Integer appId);
 
