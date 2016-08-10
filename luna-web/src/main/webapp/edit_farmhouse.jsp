@@ -32,9 +32,14 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
         <div class="navbar-right ">
-              <a href="javscript:void(0)" class="operation save">保存</a>
-              <a href="javscript:void(0)" class="operation preview">预览</a>
-              <a href="javscript:void(0)" class="operation publish">发布</a>
+              <a href="javascript:void(0)" class="operation save">保存</a>
+              <a href="javascript:void(0)" class="operation preview">预览</a>
+              <a href="javascript:void(0)" class="operation publish">发布</a>
+              <div class="qrcode-container hidden">
+                 <img class="qrcode" height='100' src="" />
+                 <span class="close glyphicon glyphicon-remove"></span>
+              </div>
+
         </div>
       </div>
     </nav>

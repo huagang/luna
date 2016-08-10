@@ -20,18 +20,20 @@ $(function(){
 
         that.getFields = getFields;
 
+        // 事件 保存表单信息
+        that.handleSave = handleSave;
+
+        // 事件 预览页面
+        that.handlePreview = handlePreview;
+
+        // 事件 发布页面
+        that.handlePublish = handlePublish;
+
         // 请求 获取表单信息
         that.fetchFormData = fetchFormData;
 
         // 请求 获取农家乐信息
         that.fetchFarmhouseData = fetchFarmhouseData;
-
-        // 请求 提交表单信息
-        that.postFormData = postFormData;
-
-        // 请求 测试函数
-        that.getTestData = getTestData;
-
 
         that.init();
 
@@ -40,7 +42,7 @@ $(function(){
             that.apiUrls = Inter.getApiUrl();
             that.fields = null; //表单信息
             that.farmhouseData = null; // 表单数据
-            //that.appId = location.href.match('') ; //获取app id
+            that.appId = location.href.match(/farm\/(\w+)/)[1]; //获取app id
             that._bindEvent();
             that.fetchFormData();
 
@@ -48,8 +50,8 @@ $(function(){
 
         function _bindEvent(){
             $('.operation.save').on('click', that.handleSave);
-            $('.operation.save').on('click', that.handlePreview);
-            $('.operation.save').on('click', that.handlePublish);
+            $('.operation.preview').on('click', that.handlePreview);
+            $('.operation.publish').on('click', that.handlePublish);
 
         }
 
@@ -63,20 +65,9 @@ $(function(){
 
         // 请求 获取表单信息
         function fetchFormData() {
+
             $.ajax({
-                url: '/fdsafdsa/fdsafda',
-                type: 'GET',
-                data: {},
-                success: function () {
-
-                },
-                error: function () {
-
-
-                }
-            });
-            $.ajax({
-                url: that.apiUrls.farmHouseFormInfo.url.format(285),
+                url: that.apiUrls.farmHouseFormInfo.url.format(that.appId),
                 type: that.apiUrls.farmHouseFormInfo.type,
                 success: function(data){
                     if(data.code === '0'){
@@ -91,7 +82,6 @@ $(function(){
                 error: function(data){
                     alert('获取微景展信息失败,请刷新重试');
                 }
-
             });
         }
 
@@ -109,20 +99,55 @@ $(function(){
         }
 
         function handleSave(){
+            var validation = that._component.checkValidation();
+            if(validation){
+                alert(validation);
+                return;
+            }
+            var data = that._component.getFormValue();
+            console.log(data);
+            $.ajax({
+                url: that.apiUrls.saveFarmHouseFormInfo.url.format(that.appId),
+                type: that.apiUrls.saveFarmHouseFormInfo.type,
+                data: {'data': JSON.stringify(data)},
+                dataType: 'json',
+                success: function(res){
+                    if(res.code === '0'){
+                        alert('保存成功');
+                    } else{
+                        alert(res.msg || '保存失败');
+                    }
+                },
+                error: function(res){
+                    alert(res.msg || '保存失败');
+                }
+            });
 
         }
 
         function handlePreview(){
-
+            $.ajax({
+                url: that.apiUrls.farmHousePreview.url.format(that.appId),
+                type: that.apiUrls.farmHousePreview.type,
+                success: function(res){
+                    if(res.code === '0'){
+                        that.previewImg = res.data.QRImg;
+                        var container = $('.qrcode-container');
+                        container.removeClass('hidden');
+                        container.find('.qrcode').attr('src', that.previewImg);
+                        // 显示图片
+                    } else{
+                        alert(res.msg || '获取预览信息失败');
+                    }
+                },
+                error: function(res){
+                    alert(res.msg || '获取预览信息失败');
+                }
+            });
         }
+
 
         function handlePublish(){
-            
-        }
-
-        // 请求 获取农家乐信息
-        function postFormData(){
-
 
         }
 

@@ -28,9 +28,15 @@ var Inter = function () {
         'online':'http://luna.visualbusiness.cn/luna-api/'
     };
 
-    var apiContext =  apiHost[curHost()];
+
+    apiContext =  apiHost[curHost()];
 
     return {
+        getPageUrl: function(){
+            return {
+
+            };
+        },
         getApiUrl: function () {
             return {
                 //选择业务的数据
@@ -139,9 +145,9 @@ var Inter = function () {
                 appUpdatePageOrder :{url: context + '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
                 appSaveSetting :{url: context + '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
 
-                farmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'GET'},      // 获取农家表单信息
+                farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
                 saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
-
+                farmHousePreview: {url: context + '/content/app/farm/preview/{0}', type: 'GET'}, // 获取预览二维码图片
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
@@ -187,11 +193,15 @@ var Inter = function () {
                 articleColunmu: context + '/manage/article.do?method=read_column&business_id={0}',
                 articleListByBid: apiContext +'article/businessId/{0}', //通过业务ID获取
                 articleListByBidAndCid: apiContext +'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
+
+
+                // poi
                 firstPoiByBid:apiContext +'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
                 poiTypeListByBidAndFPoi: apiContext +'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
                 poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
                 poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
                 poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
+                poiFilter:{url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}', type: 'GET'},
 
                 //全景路径接口
                 singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径

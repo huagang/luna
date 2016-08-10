@@ -12,7 +12,6 @@
             script/common/interface.js
 
 */
-
 /*
        注意事项
             需要在设置window.context, 否则可能有些图片加载不了
@@ -76,9 +75,12 @@
     // 根据定义初始化子组件
     BaseComponent.prototype.initChildren = function () {
         (this.definition || []).forEach(function (item, index) {
-            this._children[index] = new this.nameMapping[item.definition.type](item);
-        }.bind(this));
+            try{
+                this._children[index] = new this.nameMapping[item.definition.type](item);
+            } catch(e){
 
+            }
+        }.bind(this));
     };
 
     // 渲染组件 返回组件的DOM 如果selector已经设置,那么将组件渲染到该 $(selector)的尾部
@@ -127,15 +129,20 @@
         if(this._type === 'baseComponent'){
             this.validation = '';
         }
-        var hasChildren = false;
+        var hasChildren = false, childrenLength = 0;
         for(var i in this._children){
             var name = this._children[i].definition.name;
             if(name || (this.formType === 'array' && parseInt(name) === 0)){
+                childrenLength += 1;
                 hasChildren  = true;
                 if(! this._children[i].definition.empty){
                     if(this._type === 'baseComponent') {
                         if(! this._children[i].checkValidation()){
-                            this.validation += this._children[i].definition.show_name + '不能为空   \n';
+                            if(this._children[i].formType === 'array'){
+                                this.validation += this._children[i].definition.show_name + '没有填写完毕或数量不符合要求   \n';
+                            } else if(this._children[i].formType === 'object'){
+                                this.validation += this._children[i].definition.show_name + '没有填写完毕   \n';
+                            }
                         }
                     }
                     else if(this.validation && ! this._children[i].checkValidation()) {
@@ -146,6 +153,19 @@
             }
         }
 
+        // 对于有子节点且值是数组类型的组件,需要查看是否满足数量限制
+        if(hasChildren === true && this.formType === 'array'){
+            if((this.definition.limits || {}).num){
+                if(this.definition.limits.num.max && childrenLength > this.definition.limits.num.max ){
+                    this.validation = false;
+                }
+                if(this.definition.limits.num.min && childrenLength < this.definition.limits.num.min ){
+                    this.validation = false;
+                }
+            }
+        }
+
+        // 没有子节点的组件
         if(!hasChildren){
             var isEmpty = false;
             if(! this.value){
@@ -335,12 +355,14 @@
 
             that.definition = that.data.definition || {};
 
-            that.definition.limit = (that.definition.limits || that.defaultLimits)[that.definition.type];  // 如果没有传入限制参数, 则使用默认限制参数
-
+            that.definition.limit = that.definition.limits[that.definition.type] || that.defaultLimits[that.definition.type];  // 如果没有传入限制参数, 则使用默认限制参数
+            if(toString.call(that.definition.limit) === '[object Array]'){
+                that.definition.limit = that.definition.limit[0];
+            }
 
             that._template =
                 "<div class='fileup'> \
-                    <input type='text' readonly='true' class='media' placeholder='请输入{0}介绍地址'> \
+                    <input type='text' readonly='true' class='media' placeholder='{0}介绍地址'> \
                     <span class='btn fileinput-button' title='文件大小不超过{1}M'> \
                         <input class='media-fileup' type='file' name='media_fileup'> \
                         <span>本地上传</span> \
@@ -348,9 +370,9 @@
                             <div class='loader'>Loading...</div> \
                         </div> \
                     </span> \
-                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{0}</a></div> \
+                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{1}</a></div> \
                  </div>\
-                 <p class='warn'></p>".format(that.definition.hideDeleteButton ? '' : '删除');
+                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除');
 
             that._children = {};
             if (that.definition.show_name) {
@@ -429,8 +451,8 @@
             data.append('type', that.definition.type.toLocaleLowerCase());
             data.append('resource_type', 'app');
             $.ajax({
-                url: apiUrls.uploadPath,
-                type: 'POST',
+                url: apiUrls.uploadPath.url,
+                type: apiUrls.uploadPath.type,
                 data: data,
                 contentType: false,
                 dataType:'json',                       //服务器返回的格式,可以是json或xml等
@@ -526,6 +548,11 @@
             that.definition = that.data.definition || {};
 
             that.definition.limit = (that.definition.limits || that.defaultLimits)['TEXTAREA'];  // 如果没有传入限制参数, 则使用默认限制参数
+            if(toString.call(that.definition.limit) === '[object Array]'){
+                that.definition.limit = that.definition.limit[0];
+            }
+
+
             that._children = {};
             if (that.definition.show_name) {
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
@@ -609,7 +636,11 @@
 
             that.definition = that.data.definition || {};
 
-            that.definition.limit = (that.definition.limits || that.defaultLimits)['TEXT'];  // 如果没有传入限制参数, 则使用默认限制参数
+            that.definition.limit = that.definition.limits['TEXT'] || that.defaultLimits['TEXT'];  // 如果没有传入限制参数, 则使用默认限制参数
+            if(toString.call(that.definition.limit) === '[object Array]'){
+                that.definition.limit = that.definition.limit[0];
+            }
+
             that._children = {};
             if (that.definition.show_name) {
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
@@ -746,10 +777,9 @@
 
         function getTemplate() {
             that._template = '';
-            var now = Date.now();
-            that.definition.options.forEach(function (item, index) {
-                that._template += "<input id='{0}'  class='radio-item' type='radio'  value='{1}'/><label class='radio-label' for='{0}'>{2}</label>".
-                    format(now + '-' + index,item.value, item.text);
+            that.definition.options.forEach(function (item) {
+                that._template += "<label class='radio-label'><input class='radio-item' type='radio'  value='{0}'/> {1}</label>".
+                    format(item.value, item.label);
             });
             that._template = "<div class='radio-container'>{0}</div>".format(that._template);
         }
@@ -757,8 +787,10 @@
         function _bindEvent() {
             if(! that.binded) { //防止二次绑定
                 that.binded = true;
-                this.element.find('.radio-item').on('change', function (event) {
+                that.element.find('.radio-item').on('change', function (event) {
                     that.value = event.target.value;
+                    that.element.find('.radio-item').prop('checked',false);
+                    $(event.target).prop('checked', true);
                 });
             }
         }
@@ -766,15 +798,14 @@
         function updateComponent(data) {
             if (data.definition && data.definition.options !== undefined && DeepDiff.diff(data.definition.options, that.definition.options)) {
                 that.getTemplate();
+                that.definition.options = data.definition.options;
                 that.element.find('.radio-container').replaceWith(that._template);
-                if(that.value){
-                    that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', 'checked');
-                }
             }
 
             if (data.value !== undefined && data.value !== that.value) {
                 that.value = data.value;
-                that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', 'checked');
+                that.element.find('.radio-item').attr('checked',false);
+                that._component.find('.radio-item[value="{0}"]'.format(that.value)).prop('checked', true);
             }
         }
     }
@@ -811,10 +842,9 @@
             if(that.definition.options){
                 that._children.radioList = new RadioList({
                     value: '',
-
                     definition: {
                         options: that.definition.options,
-                        name: 'value',
+                        name: 'value'
                     }
 
                 });
@@ -824,7 +854,13 @@
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
             }
 
-            that._children.input = new Input({definition:{limits: that.definition.limits, name: 'text'},  value: ''});
+            that._children.input = new Input({
+                    definition: {
+                            limits: that.definition.limits, name: 'text'
+                    },
+                    placeholder: that.definition.placeholder || {'TEXT': ''},
+                    value: ''
+                });
 
         }
 
@@ -896,7 +932,8 @@
             that.data.value = that.data.value || {};
             that.value = that.data.value;
             that.definition = that.data.definition || {};
-            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+            that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
+
             that.definition.type = 'TEXT_PIC';
             that._children = {};
 
@@ -977,19 +1014,18 @@
         that.init();
         function init() {
             that._type = 'textPicGroup';
-
             that.formType = 'array';  // 返回的表单数据类型是数组
-            that.defautNum = 3;
 
-            that.data.value = that.data.value || {};
+            that.data.value = that.data.value || [];
             that.value = that.data.value;
+
             that.definition = that.data.definition || {};
-            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
-            that.definition.limits.num = that.definition.limits.num || that.defautNum;
+            that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
+            that.itemNum = (that.definition.limits.num || {}).min || 1;
 
             // 初始化子组件
             that._children = [];
-            for(var i = 0 ; i< that.definition.limits.num; i++){
+            for(var i = 0 ; i< that.itemNum ; i++){
                 that._children.push(new TextPic({
                     value:'',
                     definition: {
@@ -998,8 +1034,7 @@
                         show_name: that.definition.show_name + (i + 1),
                         limits: that.definition.limits,
                         placeholder: that.definition.placeholder || '',
-                        hideDeleteButton: true,
-
+                        hideDeleteButton: true
                     }
                 }));
             }
@@ -1037,7 +1072,7 @@
 
 
         function _handleAddItem(){
-            if(that._children.length === that.definition.limits.maxNum){
+            if((that.definition.limits.num || {}).max && that._children.length === that.definition.limits.num.max){
                 return;
             }
 
@@ -1122,8 +1157,8 @@
             that.data.value = that.data.value || [];
             that.value = that.data.value;
             that.definition = that.data.definition || {};
-            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
-            that.definition.limits.num = that.definition.limits.num || that.defautNum;
+            that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
+
             that._template =
                     '<select class="text-select"></select> \
                     <div class="mask hidden"></div>\
@@ -1190,17 +1225,16 @@
                 that._component.className = 'country-enjoyment component';
                 that._component.innerHTML = that._template;
                 that.element.prepend(that._children.label.render());
-                if(that.definition.options){
-                    if(! that.selectize){
-                        that.selectize = that.element.find('.text-select').selectize({
-                            options: that.definition.options,
-                            labelField: 'name',
-                            searchField: ['name'],
-                            onChange: that.handleSelect,
-                            highlight: false
-                        });
-                        that.selectize =  that.selectize[0].selectize;
-                    }
+                console.log(that.definition.options);
+                if(that.definition.options && ! that.selectize){
+                    that.selectize = that.element.find('.text-select').selectize({
+                        options: that.definition.options,
+                        labelField: 'name',
+                        searchField: ['name'],
+                        onChange: that.handleSelect,
+                        highlight: false
+                    });
+                    that.selectize =  that.selectize[0].selectize;
                 }
 
                 that.element.find('.pic-upload').append(that._children.picUploader.render());
@@ -1273,7 +1307,6 @@
             that.curObj.pic = that._children.picUploader.value;
             that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
                 'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
-
             that.handleClose();
         }
 
@@ -1294,7 +1327,7 @@
                 }
                 return false;
             });
-            if(order){
+            if(typeof order === 'number'){
                 that.value.splice(order, 1);
             }
 
@@ -1342,7 +1375,7 @@
             that.data.value = that.data.value || [];
             that.value = that.data.value;
             that.definition = that.data.definition || {};
-            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+            that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
             that._children = {};
             if(that.definition.show_name){
                 that._children.label = new Label({
@@ -1491,7 +1524,7 @@
                     });
                     that.selectize =  that.selectize[0].selectize;
                 }
-                var placeholder = (that.definition.placeholder || {})['TEXT'];
+                var placeholder = (that.definition.placeholder || {'TEXT': ['请输入POI id或名称']})['TEXT'][0];
                 if(placeholder){
                     that.element.find('.selectize-input input').attr('placeholder', placeholder);
                 }
@@ -1511,27 +1544,26 @@
         }
 
         function  fetchPoiList(){
-            if(! that.data.filter.text){
+            if(that.data.filter.text){
+                $.ajax({
+                    url: apiUrls.poiFilter.url.format(that.data.filter.type, that.data.filter.text, '', ''),
+                    type: apiUrls.poiFilter.type,
+                    success: function(res){
+                        if(res.code === '0'){
+                            that.options = res.data.pois;
+                            that.selectize.clearOptions();
+                            that.selectize.addOption(that.options);
+                            that.selectize.open();
+                        } else{
+                            alert(res.msg || '获取poi筛选列表失败');
+                        }
+                    },
+                    error: function(){
+                        alert(res.msg || '获取poi筛选列表失败');
+                    }
+                });
                 return;
             }
-            setTimeout(function(){
-                that.options = that.definition.options.reduce(function(mem, cur, index){
-                    var type =that.data.filter.type, text = that.data.filter.text;
-                    if(type === 'name' && cur.poi_name.indexOf(text) !== -1){
-                        mem.push(cur);
-                    }
-
-                    else if(type === 'id' && cur.poi_id.indexOf(text) !== -1){
-                        mem.push(cur);
-                    }
-                    return mem;
-                }, []) || [];
-                console.log(that.options);
-                that.selectize.clearOptions();
-                that.selectize.addOption(that.options);
-                that.selectize.open();
-            }, 500);
-
         }
 
         function handleInputChange(event){
