@@ -17,12 +17,16 @@
        注意事项
             需要在设置window.context, 否则可能有些图片加载不了
             功能不太完善, 没有的功能要自己加 :)
+
+
+       相关函数说明:
+            - updateComponent 的参数只传需要更新的参数, 不需要更新的参数不用传, 判断参数中某一项是否需要更新应该用 data.attr !== undefined
+            -
  */
 
 (function() {
     // 设置context
     window.context = window.context || '';
-
 
     if (!String.prototype.format) {
         String.prototype.format = function () {
@@ -39,6 +43,7 @@
     var apiUrls = Inter.getApiUrl();
 
 
+    // data包含组件信息和相关值
     function BaseComponent(data) {
         this.data = data;
         if (data) {
@@ -46,6 +51,7 @@
         }
     }
 
+    // 信息初始化
     BaseComponent.prototype.init = function () {
         this.data = this.data || {};
         this.data.value = this.data.value || {};
@@ -57,8 +63,6 @@
 
         this.definition = this.data.definition || {};
 
-        this.handleChangeCallback = this.data.onChange || null;
-
         // 其他的回调函数扩展
 
         this._component = null; // 当前组件
@@ -69,6 +73,7 @@
         this.initChildren();
     };
 
+    // 根据定义初始化子组件
     BaseComponent.prototype.initChildren = function () {
         (this.definition || []).forEach(function (item, index) {
             this._children[index] = new this.nameMapping[item.definition.type](item);
@@ -76,6 +81,7 @@
 
     };
 
+    // 渲染组件 返回组件的DOM 如果selector已经设置,那么将组件渲染到该 $(selector)的尾部
     BaseComponent.prototype.render = function (selector) {
         // 1.获取子组件render结果
         // 2.渲染当前组件
@@ -99,6 +105,7 @@
         return this._component;
     };
 
+    // 根据组件的display_order来将组件顺序排列
     BaseComponent.prototype.getOrderedChildren = function () {
         var _children = [];
         if (this._children) {
@@ -109,21 +116,12 @@
         return _children;
     };
 
-
-   /* BaseComponent.prototype.afterMount = function () { // 组件第一次渲染结束后调用
-
-    };*/
-
+    // 更新组件内容
     BaseComponent.updateComponent = function (data) { // 更新组件内容 只传递需要更改的内容
 
     };
 
-
-    /*BaseComponent.prototype.willUnMount = function () { //组件即将销毁时调用, 可能需要解除事件绑定
-
-    };*/
-
-
+    // 用于提交表单是检查表单的值是否合乎要求
     BaseComponent.prototype.checkValidation = function(){
         this.validation = true;
         if(this._type === 'baseComponent'){
@@ -176,6 +174,7 @@
 
     BaseComponent.prototype.formType = 'object';  //object array 为了区分返回给后台值的类型,是对象还是数组
 
+    // 获取组件的表单值
     BaseComponent.prototype.getFormValue = function(){
         var hasChildren = false;
         if(this.formType === 'object'){
@@ -195,8 +194,9 @@
         }
 
         return this.formValue;
-    }
+    };
 
+    // 组件的限制条件
     BaseComponent.prototype.defaultLimits = {
         PIC: {
             ext: ['png', 'jpg'],
@@ -218,6 +218,7 @@
         }
     };
 
+    // 关联组件名称和构造函数
     BaseComponent.prototype.nameMapping = {
         'TEXT': '',
         'TEXTAREA': Textarea,
@@ -243,15 +244,7 @@
 
     /************* label组件 start ***********************/
     function Label(data) {
-        /* data format
-         {
-         value:{
-         label:'文章头图'
-         }
 
-         }
-
-         */
         var that = this;
         that.data = data;
 
@@ -277,7 +270,7 @@
         }
 
         function updateComponent(data) {
-            if (data.definition.show_name !== that.definition.show_name) {
+            if (data.definition.show_name !== undefined && data.definition.show_name !== that.definition.show_name) {
                 that._component.innerHTML = that.definition.show_name = data.definition.show_name;
             }
         }
@@ -475,10 +468,15 @@
         }
 
         function updateComponent(data) {
-            if (data.value && data.value !== that.value) {
+            if (data.value !== undefined && data.value !== that.value) {
                 that.value = data.value;
                 that.element.find('.media').val(that.value);
                 that.element.find('.cleanInput').removeClass('hidden');
+            }
+            if(that._children.label && data.definition &&
+                data.definition.show_name !== undefined && that.definition.show_name !== data.definition.show_name){
+                that.definition.show_name = data.definition.show_name
+                that._children.label.updateComponent(that.definition.show_name);
             }
         }
 
@@ -582,7 +580,7 @@
     /*************** TEXTAREA组件 end*******************/
 
 
-/*************** input 组件 start*******************/
+/*************** input[type='text'] 组件 start*******************/
     function Input(data){
         var that = this;
         that.data = data;
@@ -659,10 +657,15 @@
             }
         }
 
+        // 更新组件内容
         function updateComponent(data){
             if(that.value !== data.value){
                 that.value = data.value;
                 that.element.find('input').val(that.value);
+            }
+            if(that._children.label && that.definition.show_name !== data.definition.show_name ){
+                that.definition.show_name = data.definition.show_name
+                that._children.label.updateComponent({definition: {show_name: that.definition.show_name }});
             }
         }
     }
@@ -679,10 +682,8 @@
                 this.element = $(this._component);
                 this._component.innerHTML = "<div class='divider'></div>";
             }
-
             return this._component;
         }
-
     }
     Divider.prototype = new BaseComponent();
 
@@ -715,7 +716,6 @@
             if (that.definition.show_name) {
                 that._children.label = new Label({definition: {show_name: that.definition.show_name}});
             }
-
         }
 
         function render() {
@@ -759,17 +759,17 @@
         }
 
         function updateComponent(data) {
-            if (data.definition && DeepDiff.diff(data.definition.options, that.definition.options)) {
+            if (data.definition && data.definition.options !== undefined && DeepDiff.diff(data.definition.options, that.definition.options)) {
                 that.getTemplate();
                 that.element.find('.radio-container').replaceWith(that._template);
                 if(that.value){
-                    that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', true);
+                    that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', 'checked');
                 }
             }
 
-            if (data.value && data.value !== that.value) {
+            if (data.value !== undefined && data.value !== that.value) {
                 that.value = data.value;
-                that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', true);
+                that._component.find('.radio-item[value="{0}"]'.format(that.value)).attr('checked', 'checked');
             }
         }
     }
