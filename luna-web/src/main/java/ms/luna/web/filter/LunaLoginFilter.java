@@ -51,7 +51,7 @@ public class LunaLoginFilter implements Filter {
             }
         }
         skipUrlAfterLogin = new HashSet<>();
-        skipUrlAfterLogin.add("/common");
+        skipUrlAfterLogin.add("/inner");
 
     }
 
@@ -82,11 +82,23 @@ public class LunaLoginFilter implements Filter {
                 return;
             }
             HttpSession session = httpServletRequest.getSession(false);
-            if(session == null) {
+            if(session == null || SessionHelper.getUser(session) == null) {
+                logger.trace("redirect to login");
                 httpServletResponse.sendRedirect(contextPath + CommonURI.LOGIN_SERVLET_PATH);
                 return;
             }
 
+            if(servletPath.equals("/") || servletPath.equals("")) {
+                chain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+
+            for(String uri : skipUrlAfterLogin) {
+                if(servletPath.startsWith(uri)) {
+                    chain.doFilter(httpServletRequest, httpServletResponse);
+                    return;
+                }
+            }
             LunaUserSession user = SessionHelper.getUser(session);
             Set<String> uriSet = user.getUriSet();
 

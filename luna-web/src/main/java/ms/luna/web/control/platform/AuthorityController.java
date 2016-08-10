@@ -37,8 +37,11 @@ public class AuthorityController extends BasicController {
     @Autowired
     private LunaRoleService lunaRoleService;
 
+    private final String menu = "authority";
+
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView init() {
+    public ModelAndView init(HttpServletRequest request) {
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         ModelAndView modelAndView = buildModelAndView("authority");
         return modelAndView;
     }
@@ -51,7 +54,6 @@ public class AuthorityController extends BasicController {
             logger.warn("user not login, should not happen");
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "用户未登录");
         }
-
 
         int offset = RequestHelper.getInteger(request, "offset");
         int limit = RequestHelper.getInteger(request, "limit");
