@@ -241,11 +241,11 @@
         'TEXT_PIC_GROUP': TextPicGroup,
         'COUNTRY_ENJOYMENT': CountryEnjoyment,
         'RADIO_TEXT': RadioText,
-        'FileUploader': Divider,
+        'FileUploader': FileUploader,
         'RadioList': RadioList,
         'INPUT': Input,
         'DIVIDER': Divider,
-        'POI_SEARCH': PoiSearch
+        'POI': PoiSearch
 
     };
 
@@ -274,7 +274,6 @@
                 that._component.innerHTML = that.definition.show_name;
                 return that._component;
             }
-
         }
 
         function updateComponent(data) {

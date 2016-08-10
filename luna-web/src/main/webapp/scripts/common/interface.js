@@ -25,7 +25,7 @@ var Inter = function () {
     var apiHost = {
         'local':'http://localhost:8082/',
         'test':'http://luna-test.visualbusiness.cn/luna-api/',
-        'online':'http://luna.visualbusiness.cn/luna-api/',
+        'online':'http://luna.visualbusiness.cn/luna-api/'
     };
 
     var apiContext =  apiHost[curHost()];
@@ -52,9 +52,9 @@ var Inter = function () {
                 poiCheckForEnglish:{url:  context + '/data/poi/checkPoi?poiId={0}&lang={1}',type:'GET'},//英文poi检查
                 poiConfirmArea:'',//确认poi所在区域是否正确
 
-                poiThumbnailUpload:{url:"/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
-                poiAudioUpload:{url:"/data/poi/audio/upload",type:"POST"}, //poi音频上传
-                poiVideoUpload:{url:"/data/poi/video/upload",type:"POST"}, //poi视频上传
+                poiThumbnailUpload:{url: context + "/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
+                poiAudioUpload:{url: context + "/data/poi/audio/upload",type:"POST"}, //poi音频上传
+                poiVideoUpload:{url: context + "/data/poi/video/upload",type:"POST"}, //poi视频上传
 
                 //CRM管理
                 crmInit:{url: context + "/content/crm",type:"GET"},//CRM管理页面
@@ -98,22 +98,22 @@ var Inter = function () {
             	
 
                 //栏目管理
-                columnCreate: { url: '/content/column', type: 'POST' },
-                columnUpdate: { url: '/content/column/{0}', type: 'PUT' },
-                columnDelete: { url: '/content/column/{0}', type: 'DELETE' },
+                columnCreate: { url: context + '/content/column', type: 'POST' },
+                columnUpdate: { url: context + '/content/column/{0}', type: 'PUT' },
+                columnDelete: { url: context + '/content/column/{0}', type: 'DELETE' },
 
                 //文章操作
                 article: { url: context + '/content/article', type: '' },
 
-                articleCreatePage: { url: '/content/article?create&business_id={0}', type: 'GET' },
-                articleDelete: { url: '/content/article/{0}', type: 'DELETE' },
-                articleSearch: { url: '/content/article/{0}', type: 'GET' },
+                articleCreatePage: { url: context + '/content/article?create&business_id={0}', type: 'GET' },
+                articleDelete: { url: context + '/content/article/{0}', type: 'DELETE' },
+                articleSearch: { url: context + '/content/article/{0}', type: 'GET' },
 
-                articleEditPage: { url: '/content/article/{0}', type: 'GET' }, //编辑文章界面
-                articleEditData: { url: '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
-                articleCreate: { url: '/content/article', type: 'POST' }, //保存文章
-                articleUpdate: { url: '/content/article/{0}', type: 'POST' }, //更新文章
-                articlePublish:{ url: '/content/article/publish/{0}', type: 'PUT' }, //更新发布
+                articleEditPage: { url: context + '/content/article/{0}', type: 'GET' }, //编辑文章界面
+                articleEditData: { url: context + '/content/article/{0}?data', type: 'GET' }, //编辑文章界面的数据
+                articleCreate: { url: context + '/content/article', type: 'POST' }, //保存文章
+                articleUpdate: { url: context + '/content/article/{0}', type: 'POST' }, //更新文章
+                articlePublish:{ url: context + '/content/article/publish/{0}', type: 'PUT' }, //更新发布
 
 
                 uploadImageInArtcle: { url: context + "/add_poi.do?method=upload_thumbnail", type: '' },//上传图片
@@ -123,21 +123,25 @@ var Inter = function () {
                 appCreate: { url: context + '/content/app/', type: 'POST' },  //创建微景展
                 appUpdate: { url: context + '/content/app/{0}', type: 'PUT' },  //更新微景展信息
                 appCopy: { url: context + '/content/app/copy', type: 'POST' }, //复用app
-                appDelete:{ url: '/content/app/{0}', type: 'DELETE' }, //删除微景展
-                appEditPage:{ url: '/content/app/{0}', type: 'GET' }, //编辑微景展
+                appDelete:{ url: context + '/content/app/{0}', type: 'DELETE' }, //删除微景展
+                appEditPage:{ url: context + '/content/app/{0}', type: 'GET' }, //编辑微景展
                 appPropInfo: {url: context + '/content/app/setting/{0}', type:'GET'},  // 获取微景展属性信息
                 appPropUpdate: {url: context + '/content/app/setting/{0}', type:'POST'}, // 更新微景展属性信息
 
                 //微景展编辑页面操作
-                appSaveData :{url: '/content/app/pages', type: 'PUT'}, //保存页面数据
-                getAppSummary :{url: '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
-                appGetSetting :{url: '/content/app/setting/{0}', type: 'GET'}, //编辑微景展页面的操作
-                appCreatePage :{url: '/content/app/page', type: 'POST'}, //微景展页面
-                appModifyName :{url: '/content/app/page/name/{0}', type: 'PUT'}, //修改页面的名字
-                appGetPageDetail :{url: '/content/app/page/{0}', type: 'GET'}, //获取单页面的详情
-                appDeletePage :{url: '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
-                appUpdatePageOrder :{url: '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
-                appSaveSetting :{url: '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
+                appSaveData :{url: context + '/content/app/pages', type: 'PUT'}, //保存页面数据
+                getAppSummary :{url: context + '/content/app/pages/summary?app_id={0}', type: 'GET'}, //获取微景展概览数据
+                appGetSetting :{url: context + '/content/app/setting/{0}', type: 'GET'}, //编辑微景展页面的操作
+                appCreatePage :{url: context + '/content/app/page', type: 'POST'}, //微景展页面
+                appModifyName :{url: context + '/content/app/page/name/{0}', type: 'PUT'}, //修改页面的名字
+                appGetPageDetail :{url: context + '/content/app/page/{0}', type: 'GET'}, //获取单页面的详情
+                appDeletePage :{url: context + '/content/app/page/{0}', type: 'DELETE'}, //删除单页面的数据
+                appUpdatePageOrder :{url: context + '/content/app/pages/order', type: 'PUT'}, //更新页面的顺序
+                appSaveSetting :{url: context + '/content/app/setting/{0}', type: 'POST'}, //保存页面设置
+
+                farmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'GET'},      // 获取农家表单信息
+                saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
+
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
@@ -149,8 +153,8 @@ var Inter = function () {
                 login: { url: context + '/common/login', type: 'POST' },  //登录提交接口
 
                 // 用户注册
-                registrationPage: { url: "/comomon/registration/token/{0}", type: "GET" },//注册页面
-                registrationRegist: { url: "/comomon/registration", type: "POST" }, // 注册
+                registrationPage: { url: context + "/comomon/registration/token/{0}", type: "GET" },//注册页面
+                registrationRegist: { url: context + "/comomon/registration", type: "POST" }, // 注册
 
                 // 权限
                 updateUserAuth: {url: context + '/platform/user/{0}', type: 'PUT'}, // 更新用户权限
@@ -160,17 +164,17 @@ var Inter = function () {
                 delUser: {url: context + '/platform/user/{0}', type: 'DELETE'},
 
                 // 省市县\分类下拉列表
-                pullDownProvinces:{url:"/common/pulldown/provinces",type:"GET"}, //省
-                pullDownCitys:{url:"/common/pulldown/citys",type:"GET"}, //市
-                pullDownCounties:{url:"/common/pulldown/counties",type:"GET"}, //县
-                pullDownCategorys:{url:"/common/pulldown/categorys",type:"GET"}, //分类
-                pullDownZoneIds:{url:"/common/pulldown/zoneIds",type:"GET"}, //分类
+                pullDownProvinces:{url: context + "/common/pulldown/provinces",type:"GET"}, //省
+                pullDownCitys:{url: context + "/common/pulldown/citys",type:"GET"}, //市
+                pullDownCounties:{url: context + "/common/pulldown/counties",type:"GET"}, //县
+                pullDownCategorys:{url: context + "/common/pulldown/categorys",type:"GET"}, //分类
+                pullDownZoneIds:{url: context + "/common/pulldown/zoneIds",type:"GET"}, //分类
 
                 // 类别管理
-                cateInit:{url:"/platform/category",type:"GET"}, //初始化
-                cateCreate:{url:"/platform/category",type:"POST"}, // 创建
-                cateUpdate:{url:"/platform/category",type:"PUT"}, // 更新
-                cateDelete:{url:"/platform/category/{0}",type:"DELETE"},//删除
+                cateInit:{url:context + "/platform/category",type:"GET"}, //初始化
+                cateCreate:{url: context + "/platform/category",type:"POST"}, // 创建
+                cateUpdate:{url: context + "/platform/category",type:"PUT"}, // 更新
+                cateDelete:{url: context + "/platform/category/{0}",type:"DELETE"},//删除
 
 
                 // 组权限管理
