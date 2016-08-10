@@ -46,7 +46,7 @@ var Inter = function () {
                 poiReadPage:{url:  context + '/data/poi/batch/initReadPage',type:"POST"},//poi只读页面
                 poiBatchEdit:{url: context + "/data/poi/batch/initEditPage",type:"POST"},//poi 批量导入 编辑
 
-                poiCheckForEnglish:{url:  context + '/data/poi/checkPoi?poiId={0}&lang={1}',type:'GET'},//英文poi检查
+                poiCheckForEnglish:{url:  context + '/data/poi/checkPoi',type:'POST'},//英文poi检查
                 poiConfirmArea:'',//确认poi所在区域是否正确
 
                 poiThumbnailUpload:{url:"/data/poi/thumbnail/upload",type:"POST"}, //poi缩略图上传
