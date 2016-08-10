@@ -47,7 +47,7 @@ public class FarmPageController extends BasicController {
 
     public static final String menu = "app";
 
-    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/farm/page/{appId}")
     public ModelAndView init(@PathVariable int appId, HttpServletRequest request) {
         try {
 //            SessionHelper.setSelectedMenu(request.getSession(false), menu);
