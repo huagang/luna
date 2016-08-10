@@ -17,7 +17,7 @@ import java.util.UUID;
 public class TokenUtil {
 
     public final static Logger logger = Logger.getLogger(TokenUtil.class);
-    public final static Long DEFAULT_EXPIRE_TIME_MILLIS = 5000l;
+    public final static Long DEFAULT_EXPIRE_TIME_MILLIS = 10000l;
 
     public static String generateTokenByUserId(String uniqueId, long timeMillis) throws Exception {
 
