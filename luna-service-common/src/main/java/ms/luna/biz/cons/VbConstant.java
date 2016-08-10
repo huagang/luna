@@ -390,4 +390,19 @@ public final class VbConstant {
 		}
 	}
 
+	public static final class fieldType {
+		public static final String TEXT = "TEXT";
+		public static final String TEXTAREA = "TEXTAREA";
+		public static final String PIC = "PIC";
+		public static final String AUDIO = "AUDIO";
+		public static final String VIDEO = "VIDEO";
+		public static final String RADIOBUTTON = "RADIOBUTTON";
+		public static final String CHECKBOX = "CHECKBOX";
+		public static final String POINT = "POINT";
+		public static final String SELECT = "SELECT";
+		public static final String TEXT_PIC = "TEXT_PIC_GROUP";
+		public static final String COUNTRY_ENJOYMENT = "COUNTRY_ENJOYMENT";
+		public static final String RADIO_TEXT = "RADIO_TEXT";
+	}
+
 }

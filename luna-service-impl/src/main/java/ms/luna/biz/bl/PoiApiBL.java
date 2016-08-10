@@ -46,4 +46,7 @@ public interface PoiApiBL {
 	// 纯属测试使用
 	JSONObject test();
 
+	// poi检索
+	JSONObject retrievePois(String json);
+	
 }

@@ -25,11 +25,13 @@
     </nav>
     <script>
         document.addEventListener('DOMContentLoaded',function(){
-            var business = localStorage.getItem('business');
+            var business = localStorage.getItem('business'), businessName = '点击右侧箭头选择业务';
             if(business){
                 business = JSON.parse(business);
-                document.querySelector('.navbar-business .navbar-business-name').innerHTML = business.name;
+                businessName = business.name;
             }
+            document.querySelector('.navbar-business .navbar-business-name').innerHTML = businessName;
+
         });
 
     </script>

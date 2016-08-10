@@ -50,6 +50,8 @@ public class PoiAddController extends BasicController {
     @Autowired
     private PoiController poiController;
 
+    public static final String menu = "poi";
+
     /**
      * 非共有字段（由程序控制）；共有字段，由维护人员修改代码。
      */
@@ -64,12 +66,7 @@ public class PoiAddController extends BasicController {
             HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         ModelAndView mav = new ModelAndView();
-        if (session == null) {
-            MsLogger.error("session is null");
-            mav.setViewName("/error.jsp");
-            return mav;
-        }
-        session.setAttribute("menu_selected", "manage_poi");
+        SessionHelper.setSelectedMenu(session, menu);
         PoiModel poiModel = new PoiModel();
 
         JSONObject params = new JSONObject();

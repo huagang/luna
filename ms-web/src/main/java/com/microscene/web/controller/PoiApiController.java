@@ -33,6 +33,8 @@ public class PoiApiController {
 
 	private static String[] LANG = {PoiCommon.POI.ZH, PoiCommon.POI.EN}; // 语言
 
+	private static String[] RetrieveType = {"name", "id"}; // 检索类型
+
 	/**
 	 * 根据业务获取一个层级的poi数据列表
 	 * @param biz_id 业务树id
@@ -446,6 +448,7 @@ public class PoiApiController {
 	}
 
 	/**
+<<<<<<< HEAD:ms-web/src/main/java/com/microscene/web/controller/PoiApiController.java
 	 * 获取周边poi数据
 	 *
 	 * @param longitude 经度
@@ -556,11 +559,49 @@ public class PoiApiController {
 		} catch (Exception e) {
 			MsLogger.debug("Fail to get pois by activity id." + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to get pois by activity id");
+=======
+	 * POI检索(目前可根据名称或者id进行检索).返回结果中包含poi的名称和id
+	 *
+	 * @param filterName 过滤名称
+	 * @param limit 返回数量上限
+	 * @param lang 语言
+	 * @param type 搜索类型,如名称,id等
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(params = "method=retrievePois")
+	@ResponseBody
+	public JSONObject retrievePois(
+			@RequestParam(required = false, value = "filterName", defaultValue = "") String filterName,
+			@RequestParam(required = false, value = "limit", defaultValue = "10") Integer limit,
+			@RequestParam(required = false, value = "lang") String lang,
+			@RequestParam(required = false, value = "type") String type,
+			HttpServletRequest request, HttpServletResponse response) throws IOException{
+		try {
+			if(type == null || !checkParamExist(type, RetrieveType)) {
+				type = "ALL";
+			}
+			if(lang == null || !checkParamExist(lang, LANG)) {
+				lang = "ALL";
+			}
+			JSONObject param = new JSONObject();
+			param.put("filterName", filterName);
+			param.put("limit", limit);
+			param.put("lang", lang);
+			param.put("type", type);
+			JSONObject result = poiApiService.retrievePois(param.toString());
+			MsLogger.debug(result.toString());
+			return result;
+		} catch (Exception e) {
+			MsLogger.error("Failed to retrieve pois. " + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to retrieve pois.");
+>>>>>>> merge-test:ms-web/src/main/java/com/microscene/web/controller/PoiApiCtrl.java
 		}
 
 	}
 
 	/**
+<<<<<<< HEAD:ms-web/src/main/java/com/microscene/web/controller/PoiApiController.java
 	 * 获取符合要求的字段
 	 *
 	 * @param fields 字段
@@ -579,6 +620,19 @@ public class PoiApiController {
 	private boolean checkActivityId(String activity_id) {
 		activity_id = activity_id.trim();
 		return activity_id.length() != 0;
+=======
+	 * 检查参数是否符合要求
+	 *
+	 * @param type 检索类型
+	 */
+	private boolean checkParamExist(String type, String[] container) {
+		for(String tp : container) {
+			if (tp.equals(type)) {
+				return true;
+			}
+		}
+		return false;
+>>>>>>> merge-test:ms-web/src/main/java/com/microscene/web/controller/PoiApiCtrl.java
 	}
 
 	/**
@@ -640,3 +694,4 @@ public class PoiApiController {
 				"UTF-8");
 	}
 }
+
