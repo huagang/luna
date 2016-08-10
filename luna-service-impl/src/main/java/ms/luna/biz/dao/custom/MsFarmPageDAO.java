@@ -7,11 +7,11 @@ import org.bson.Document;
 import java.util.List;
 
 /**
- * Created by greek on 16/7/28.
+ * Created: by greek on 16/7/28.
  */
 public interface MsFarmPageDAO {
 
-    String COLLECTION_NAME = "greektest";
+    String COLLECTION_NAME = "farm_page";
 
     String POI_INFO = "poi_info";
 

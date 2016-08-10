@@ -64,22 +64,4 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
         return result;
     }
 
-    /**
-     * JSON数据转化为Document
-     *
-     * @param document 需要更新的数据ß
-     * @param data 更新数据
-     * @return Document
-     */
-    private Document convertJson2Document(Document document, JSONObject data) {
-        if(document == null) {
-            document = new Document();
-        }
-        Set<String> keys = data.keySet();
-        for(String key : keys) {
-            document.put(key, data.get(key));
-        }
-        return document;
-    }
-
 }

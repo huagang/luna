@@ -63,6 +63,7 @@ public class AppController extends BaseController {
 
     }
 
+    // 方便前端开发,临时代码.
     @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
     public ModelAndView showpage(
             @PathVariable("appId") Integer appId,
