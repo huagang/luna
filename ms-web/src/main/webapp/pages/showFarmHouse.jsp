@@ -176,12 +176,14 @@
     <div class="to-top" ng-click="farm.scrollToTop()">返回顶部</div>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
+    <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/common.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
 
     <script>
         window.context = '<%=request.getContextPath()%>';
+        var pageData = ${pageData};
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>
 

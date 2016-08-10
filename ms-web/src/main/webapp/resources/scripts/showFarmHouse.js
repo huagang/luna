@@ -4,8 +4,7 @@
 
 
 (function(){
-    angular.module('farmHouse',[]);
-    angular.module('farmHouse')
+    angular.module('farmHouse',[])
         .config(['$compileProvider', function ($compileProvider) {
            // $compileProvider.debugInfoEnabled(false);
         }])
@@ -126,6 +125,7 @@
         // 请求 获取周围poi点
         vm.fetchPoisAround = fetchPoisAround;
 
+        // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
         // 获取两个poi点之间的距离
@@ -141,7 +141,7 @@
 
         // 数据初始化
         function init(){
-
+            vm.apiUrls = Inter.getApiUrl();
 
 
 
@@ -174,8 +174,8 @@
                 '4': 'restaurant',      //餐饮
                 '5': 'entertainment',   // 娱乐
                 '6': 'mart',            //购物
-                '7': 'facility',         //基础设施
-                '8': 'others'
+               // '7': 'facility',         //基础设施
+               // '8': 'others'
             };
 
             vm.testData = vm.getTestData();
@@ -198,6 +198,7 @@
             // 数据请求
             vm.fetchPoiData();
             vm.fetchFarmHouseData();
+
 
 
 
@@ -295,14 +296,20 @@
         function updateMapMarkers(){
             if(vm.poiList){
                 vm.poiList.forEach(function(item, index){
+
+                    if(! vm.poiType[item.category.category_id]){
+                        return;
+                    }
                     var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
+
+
                     item.marker = new qq.maps.Marker({
                         position: position,
                         map: vm.map,
                         clickable: true,
                         draggable: false,
                         flat: true,
-                        icon: new qq.maps.MarkerImage(vm.markerImg[vm.poiType[item.type]].normal,
+                        icon: new qq.maps.MarkerImage(vm.markerImg[vm.poiType[item.category.category_id]].normal,
                             undefined, undefined, undefined, new qq.maps.Size(20,20)),
                         shape: new qq.maps.MarkerShape([-5,-5,25,25], 'rect'),
                         visible: true
@@ -328,7 +335,7 @@
                 vm.clearActiveMarker();
                 vm.curMarkerIndex = index;
                 var poi = vm.poiList[vm.curMarkerIndex];
-                poi.marker.setIcon(new qq.maps.MarkerImage(vm.markerImg[vm.poiType[poi.type]].active,
+                poi.marker.setIcon(new qq.maps.MarkerImage(vm.markerImg[vm.poiType[poi.category.category_id]].active,
                     undefined, undefined, undefined, new qq.maps.Size(20,20)));
                 poi.markerTip.setVisible(true);
             }
@@ -394,7 +401,7 @@
         function clearActiveMarker(){
             if(vm.curMarkerIndex > -1){
                 var poi = vm.poiList[vm.curMarkerIndex];
-                poi.marker.setIcon(new qq.maps.MarkerImage(vm.markerImg[vm.poiType[poi.type]].normal,
+                poi.marker.setIcon(new qq.maps.MarkerImage(vm.markerImg[vm.poiType[poi.category.category_id]].normal,
                     undefined, undefined, undefined, new qq.maps.Size(20,20)));
                 poi.markerTip.setVisible(false);
             }
@@ -406,6 +413,20 @@
         }
         // 请求 获取poi数据信息
         function fetchPoiData(){
+            /*$http({
+                url: vm.apiUrls.poiInfo.url.format(),
+                method: vm.apiUrls.poiInfo.type,
+            }).then(function(res){
+                if(res.data.code === '0'){
+
+                } else{
+                    alert(res.msg || '获取poi信息失败');
+                }
+            }, function(res){
+                alert(res.msg || '获取poi信息失败');
+            });
+
+            return;*/
             setTimeout(function(){
                 vm.poiData = vm.testData.poiData;
                 vm.initMap();
@@ -416,6 +437,20 @@
 
         // 请求 获取农家信息
         function fetchFarmHouseData(){
+            /*$http({
+                url: vm.apiUrls,
+                method: vm.apiUrls,
+            }).then(function(res){
+                if(res.data.code === '0'){
+
+                } else{
+                    alert(res.msg || '获取微景展信息失败');
+                }
+            }, function(res){
+                alert(res.msg || '获取微景展信息失败');
+            });
+
+            return;*/
             setTimeout(function(){
                 vm.farmData = vm.testData.farmData;
                 vm.setPano();
@@ -425,11 +460,29 @@
 
         // 请求 获取周围poi点
         function fetchPoisAround(){
+            $http({
+                url: vm.apiUrls.aroundPois.url.format(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng, 'poi_name,address,lnglat,category', '', 5000),
+                method: vm.apiUrls.aroundPois.type,
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    console.log(res.data);
+                    vm.poiList = res.data.data.zh.pois;
+                    vm.updateAllDistance();
+                    vm.updateMapMarkers();
+                } else{
+                    alert(res.msg || '获取周围poi点信息失败');
+                }
+            }, function(res){
+               alert(res.msg || '获取周围poi点信息失败');
+            });
+
+            return;
             setTimeout(function(){
                 vm.poiList = vm.testData.poiList;
                 vm.updateAllDistance();
                 vm.updateMapMarkers();
             }, 600);
+
         }
 
 

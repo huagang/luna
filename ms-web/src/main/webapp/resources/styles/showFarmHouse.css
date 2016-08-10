@@ -418,6 +418,7 @@ body{
 
 .marker-tip{
     position: relative;
+    z-index: 10;
     width: 180px;
     height: 45px;
 
@@ -440,6 +441,9 @@ body{
     color: #373737;
     line-height: 18px;
     margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .marker-tip .tip-right{
