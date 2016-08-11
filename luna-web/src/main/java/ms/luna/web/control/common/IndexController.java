@@ -31,6 +31,7 @@ public class IndexController extends BasicController {
         if(SessionHelper.getUser(session) == null) {
             return buildModelAndView("login");
         } else {
+            SessionHelper.setSelectedMenu(session, "");
             return buildModelAndView("home");
         }
 
