@@ -162,6 +162,24 @@
     <script>
         window.context = '<%=request.getContextPath()%>';
         var pageData = ${pageData};
+        var wechatOptions = {
+            title: "${title}" || pageData.poi_info.poi_name,
+            desc: "${description}" || pageData.poi_info.share_desc,
+            link: window.location.href,
+            imgUrl: pageData.poi_info.thumbnail,
+            dest:{
+                lat: pageData.poi_info.lnglat.lat,
+                lng:pageData.poi_info.lnglat.lng,//经度
+                name:pageData.poi_info.poi_name,//名字
+                address:pageData.poi_info.address.city+pageData.poi_info.address.city.county, // 地址
+                debug:false
+            }
+        };
+        $(function(){
+            var wechat = new weChat(wx, wechatOptions);
+
+        });
+
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>
 

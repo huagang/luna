@@ -232,12 +232,10 @@
                     clearTimeout(vm.timeoutId);
                 }
                 vm.timeoutId = setTimeout(vm.checkPanoPosition, 200);
-                console.log('listen scroll');
             });
         }
 
         function checkPanoPosition(){
-            console.log('update');
             var pano = $('.room-info main'),
                 offsetTop = pano.offset().top,
                 height = pano.height(),
@@ -515,7 +513,6 @@
                 method: vm.apiUrls.aroundPois.type,
             }).then(function (res) {
                 if (res.data.code === '0') {
-                    console.log(res.data);
                     vm.poiList = res.data.data.zh.pois;
                     vm.updateAllDistance();
                     vm.updateMapMarkers();
@@ -531,16 +528,16 @@
 
         function navigate() {
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
-            // console.log(data.city+data.county+ data.detail_address);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
                     try {
+                        var address = vm.poiData.address;
                         wx.openLocation({
-                            latitude: Number(data.lat), // 纬度，浮点数，范围为90 ~ -90
-                            longitude: Number(data.lng), // 经度，浮点数，范围为180 ~ -180。
-                            name: data.poi_name, // 位置名
-                            address: data.city + data.county + data.detail_address, // 地址详情说明
+                            latitude: Number(vm.poiData.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
+                            longitude: Number(vm.poiData.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
+                            name: vm.poiData.poi_name, // 位置名
+                            address: address.city + address.county + address.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                             infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                         });

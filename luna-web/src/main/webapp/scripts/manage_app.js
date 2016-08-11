@@ -501,7 +501,6 @@ function NewAppController() {
 				},
 				success: function (data) {
 					if (data.code === '0') {
-						console.log(data);
 						that.dialog.removeClass('pop-show');
 						switch (that.data.type) {
 							case 'basic':
