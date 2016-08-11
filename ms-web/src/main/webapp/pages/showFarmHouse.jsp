@@ -41,18 +41,18 @@
             </div>
         </header>
         <nav>
-            <div class="nav-item phone">
+            <a class="nav-item phone" href="tel:{{farm.poiData.contact_phone}}">
                 <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/phone.png"/>
                 <p class="tip">电话预定</p>
-            </div>
-            <div class="nav-item navigation">
+            </a>
+            <div class="nav-item navigation" ng-click="farm.navigate()">
                 <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/navigation.png"/>
                 <p class="tip">到这去</p>
             </div>
-            <div class="nav-item pano">
+            <a class="nav-item pano" target="_blank" href="{{farm.poiData.panoUrl}}">
                 <img class='img' src="<%=request.getContextPath()%>/resources/images/farmhouse/pano.png"/>
                 <p class="tip">看全景</p>
-            </div>
+            </a>
         </nav>
         <main>
             <div class="portrait" style="background:url({{farm.farmData.portrait}}) center center no-repeat;
@@ -64,7 +64,7 @@
     <div class="room-info" >
         <header>
             <span>房间</span>
-            <a class='room-all' href="">
+            <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}">
                 全部
                 <div class="icon-arrow"></div>
             </a>
@@ -80,7 +80,7 @@
 
             </div>
         </main>
-        <footer class="ng-hide" ng-show="farm.farmData.panorama.panorama_type_id === 2">
+        <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
             <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
                  ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
                  style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
@@ -99,7 +99,7 @@
                     </div>
                 </div>
             </main>
-            <footer class="ng-hide" ng-show="farm.farmData.panorama.panorama_type_id === 2">
+            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
                 <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
                      ng-class="{active: $index===farm.fullPanoIndex}" ng-click="farm.setPano($index)"
                      style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
@@ -119,7 +119,7 @@
             <div class="food-item" ng-repeat="food in farm.farmData.food"
                  style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
                 <div class="name-wrapper">
-                    <p class="food-name">{{food.name}}</p>
+                    <p class="food-name">{{food.text}}</p>
                 </div>
             </div>
         </main>
@@ -148,7 +148,7 @@
         <main>
             <div class="facility-item" ng-repeat="facility in farm.farmData.facilities">
                 <span class="list-style"></span>
-                <span class="facility-name">{{facility.name}}</span>
+                <span class="facility-name">{{facility.label}}</span>
             </div>
         </main>
     </div>
@@ -174,8 +174,14 @@
     </div>
     <div class="block-split"></div>
     <div class="to-top" ng-click="farm.scrollToTop()">返回顶部</div>
+    <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV"></script>
+
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
+
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/common.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
