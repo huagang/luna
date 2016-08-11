@@ -1313,7 +1313,7 @@
         function handleEdit(event){
             var value = $(event.target).parentsUntil('.item-container', '.item').attr('data-value');
             that.value.some(function(item, index){
-                if(item.value === value){
+                if(item.value === parseInt(value)){
                     that.curObj = item;
                     return true;
                 }

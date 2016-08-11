@@ -9,6 +9,27 @@
 
 var Inter = function() {
     var context = '';
+
+    var curHost = function () {
+        var host = window.location.host;
+        if (/localhost/.test(host)) {
+            return 'local';
+        } else if (/luna-test/.test(host)) {
+            return 'test';
+        } else {
+            return 'online';
+        }
+    };
+
+    var apiHost = {
+        'local': 'http://localhost:8082/',
+        'test': 'http://luna-test.visualbusiness.cn/luna-api/',
+        'online': 'http://luna.visualbusiness.cn/luna-api/'
+    };
+
+
+    var apiContext =  apiHost[curHost()];
+
     return {
         getApiUrl: function() {
             return {
@@ -38,8 +59,8 @@ var Inter = function() {
 
 
                 // poi around
-                poiInfo: {url: context + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET'},
-                aroundPois: { url: context + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
+                poiInfo: {url: apiContext + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET'},
+                aroundPois: { url: apiContext + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
                               type: 'GET'},
 
 
