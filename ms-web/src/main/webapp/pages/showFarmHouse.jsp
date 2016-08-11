@@ -64,7 +64,7 @@
     <div class="room-info" >
         <header>
             <span>房间</span>
-            <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}">
+            <a class='room-all' target="_blank" href="{{farm.farmData.allPanorama.panoUrl}}">
                 全部
                 <div class="icon-arrow"></div>
             </a>
@@ -89,26 +89,6 @@
                 </div>
             </div>
         </footer>
-        <div id='fullscreen-pano' ng-class="{'full-show':farm.isFullScreen}">
-            <main>
-                <div id="fullscreen-panoContainer"></div>
-                <div class="operation">
-                    <div class="icon-scale-wrapper">
-                        <img src="<%=request.getContextPath()%>/resources/images/farmhouse/scale.png"
-                             class="icon-scale" ng-click="farm.handleQuitFullScreen()"/>
-                    </div>
-                </div>
-            </main>
-            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
-                <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
-                     ng-class="{active: $index===farm.fullPanoIndex}" ng-click="farm.setPano($index)"
-                     style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
-                    <div class="pano-name">
-                        <span>{{pano.panoName}}</span>
-                    </div>
-                </div>
-            </footer>
-        </div>
     </div>
     <div class="block-split"></div>
     <div class="food-info">

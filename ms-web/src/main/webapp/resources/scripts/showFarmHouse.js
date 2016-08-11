@@ -192,7 +192,6 @@
 
             // 全景相关
             vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
-            vm.fullpano = new com.vbpano.Panorama(document.getElementById("fullscreen-panoContainer"));
 
             vm.curPanoIndex = 0;
             vm.isFullScreen = false;
@@ -212,41 +211,20 @@
 
         // 初始化全景
         function setPano(index) {
-            var pano = vm.isFullScreen ? vm.fullpano : vm.pano;
-            if (vm.isFullScreen) {
-                vm.fullPanoIndex = index > -1 ? index : vm.curPanoIndex;
-
-            } else {
-                vm.curPanoIndex = index > -1 ? index : vm.curPanoIndex;
-            }
+            var pano = vm.pano;
+            vm.curPanoIndex = index > -1 ? index : vm.curPanoIndex;
             var data = vm.farmData.panorama.panoList[vm.curPanoIndex];
             if (data) {
                 pano.setPanoId(data.panoId);
                 pano.setHeading(data.panoHeading);
                 pano.setPitch(data.panoPitch);
                 pano.setRoll(0);
-                pano.setAutoplayEnable(false);
+                pano.setAutoplayEnable(true);
                 pano.setGravityEnable(false);
             }
         }
 
 
-        // 初始化轮播组件
-        function initSlideshow() {
-
-        }
-
-
-        // 显示全屏全景
-        function handleFullScreen() {
-            vm.isFullScreen = true;
-            vm.setPano();
-        }
-
-        // 退出全屏全景
-        function handleQuitFullScreen() {
-            vm.isFullScreen = false;
-        }
 
         // 初始化地图
         function initMap() {
