@@ -604,7 +604,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		Integer businessId = msShowApp.getBusinessId();
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-		data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
+		if(msBusiness != null) {
+			data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
+		} else {
+			logger.warn("no business info for app: " + appId);
+		}
 		
 		return FastJsonUtil.sucess("", data);
 	}

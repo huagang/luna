@@ -34,6 +34,7 @@ import java.util.Random;
 public class AppController extends BaseController {
 
     private final static Logger logger = Logger.getLogger(AppController.class);
+    private Random random = new Random();
 
     @Autowired
     private FarmPageService farmPageService;
@@ -48,7 +49,7 @@ public class AppController extends BaseController {
     @RequestMapping(method = RequestMethod.GET, value = "/{appId}")
     public ModelAndView indexPage(@PathVariable int appId, HttpServletRequest request) {
 
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = buildModelAndView("appShowPage");
         fillAppShareInfo(appId, modelAndView);
         int type = Integer.parseInt(modelAndView.getModel().get(MsShowAppTable.FIELD_TYPE).toString());
         if(type == 0) {
@@ -91,9 +92,9 @@ public class AppController extends BaseController {
             JSONArray shareArray = data.getJSONArray("shareArray");
 
             //新的分享规则, app中带的老的继续兼容
-            if(shareArray != null) {
+            if(shareArray != null && shareArray.size() > 0) {
                 int size = shareArray.size();
-                Random random = new Random();
+
                 int idx = random.nextInt(size);
                 JSONObject jsonObject = shareArray.getJSONObject(idx);
                 shareInfoTitle = jsonObject.getString(MsShowPageShareTable.FIELD_TITLE);
