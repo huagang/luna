@@ -8,6 +8,7 @@ import ms.luna.biz.sc.MenuService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.CommonURI;
 import ms.luna.web.common.SessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -53,10 +56,10 @@ public class LoginController extends BasicController {
 
 
         HttpSession session = request.getSession(false);
-        if(session != null && session.getAttribute(SessionHelper.KEY_USER) != null) {
-            // 重新登录不要求显式退出,自动退出
-            session.invalidate();
-//            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
+        if(session != null && SessionHelper.getUser(session) != null) {
+            logger.warn("login without logout, should not happen");
+//            session.invalidate();
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "已经登录");
         }
         if(StringUtils.isBlank(lunaName) || StringUtils.isBlank(password)) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码不能为空");
@@ -87,15 +90,13 @@ public class LoginController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
-    public ModelAndView logout(HttpServletRequest request) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession(false);
         if(session != null) {
             session.invalidate();
         }
-
-        return buildModelAndView("login");
-
+        response.sendRedirect(CommonURI.getUriForServlet(request, CommonURI.LOGIN_SERVLET_PATH));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/authFail")

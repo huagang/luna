@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CommonURI {
 
-    public static final String LOGIN_SERVLET_PATH = "/common/login";
+    public static final String LOGIN_SERVLET_PATH = "/";
     public static final String AUTH_FAIL_SERVLET_PATH = "/common/authFail";
     public static final String REGITSTER_SERVLET_PATH = "/common/register";
 

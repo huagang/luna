@@ -61,49 +61,6 @@ public class BusinessController extends BasicController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/select")
-    public ModelAndView selectBusiness(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null) {
-            logger.warn("User not login, should not happen");
-            return buildModelAndView("login");
-        }
-        LunaUserSession user = SessionHelper.getUser(session);
-        if(user == null) {
-            logger.warn("User info not set, should not happen");
-            return buildModelAndView("login");
-        }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(LunaUserTable.FIELD_ID, user.getUniqueId());
-        JSONObject businessForSelect = manageBusinessService.getBusinessForSelect(jsonObject);
-        if(businessForSelect.getString("code").equals("0")) {
-            ModelAndView modelAndView = buildModelAndView("select_business");
-            modelAndView.addObject("businessMap", businessForSelect.getJSONObject("data"));
-            return modelAndView;
-        } else {
-            return buildModelAndView("500");
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/selectForEdit")
-    @ResponseBody
-    public JSONObject selectBusinessForEdit(@RequestParam(required = false, value = "unique_id") String slaveUserId,
-                                            HttpServletRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-        jsonObject.put("loginUserId", user.getUniqueId());
-        if(StringUtils.isNotBlank(slaveUserId)) {
-            jsonObject.put("slaveUserId", slaveUserId);
-        }
-        try {
-            return manageBusinessService.getBusinessForEdit(jsonObject);
-        } catch (Exception ex) {
-            logger.error("Failed to get business for edit", ex);
-
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
-        }
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject asyncSearchBusiness(@RequestParam(required = false) Integer offset,
@@ -114,7 +71,7 @@ public class BusinessController extends BasicController {
         resJSON.put("total", 0);
         try {
 
-            JSONObject param = JSONObject.parseObject("{}");
+            JSONObject param = new JSONObject();
 
             if (offset != null) {
                 param.put("min", offset);
@@ -143,7 +100,6 @@ public class BusinessController extends BasicController {
 
         try {
 
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
             String businessName = RequestHelper.getString(request, "business_name");
