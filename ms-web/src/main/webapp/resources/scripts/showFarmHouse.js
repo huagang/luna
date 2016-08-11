@@ -1,7 +1,26 @@
 /**
  * Created by wumengqiang on 16/7/22.
  */
+$(function(){
+    $('.page-back .fg').velocity({opacity: 1},
+        {
+            duration: 3000,
+            easing: "ease-out",
+        });
+    setTimeout(function(){
+        $('.page-back').velocity({opacity: 0},
+            {
+                duration: 3000,
+                easing: "ease-out",
+            });
+        $('.page-main').velocity({opacity: 1},
+            {
+                duration: 2500,
+                easing: 'ease-in'
+            });
+    }, 5000);
 
+});
 
 (function() {
     angular.module('farmHouse', [])
@@ -9,7 +28,7 @@
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController])
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController]);
 
 
     function getMarkerTip() {
@@ -458,6 +477,7 @@
                 funny: pageData.country_enjoyment,
                 facilities: pageData.facility,
                 selfIntroduce: pageData.manager_self_introduction
+
             };
             switch (vm.farmData.allPanorama.panorama_type_id) {
                 case 1:
@@ -499,10 +519,10 @@
                     vm.listenScroll();
 
                 } else {
-                    alert('获取全景信息失败,若想观看全景,请刷新重试');
+                    //alert('获取全景信息失败,若想观看全景,请刷新重试');
                 }
             }, function () {
-                alert('获取全景信息失败,若想观看全景,请刷新重试');
+                //alert('获取全景信息失败,若想观看全景,请刷新重试');
             });
         }
 
