@@ -8,6 +8,7 @@ import ms.luna.biz.cons.QRedisConfig;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.QRedisUtil;
 import ms.luna.biz.util.VODUtil;
+import ms.luna.web.control.api.AppApiController;
 import ms.luna.web.util.WebHelper;
 import org.apache.log4j.Logger;
 
@@ -31,6 +32,7 @@ public class ApplicationListener implements ServletContextListener {
 		QCosConfig.ENV = cosBaseDir;
 		String vodBaseDir = event.getServletContext().getInitParameter("vodBaseDir");
 		VODUtil.vodBaseDir = vodBaseDir;
+		AppApiController.APP_DEVELOP_ADDRESS = event.getServletContext().getInitParameter("appDevelopAddr");
 
 		try {
 			QRedisConfig.loadRedisConf();
