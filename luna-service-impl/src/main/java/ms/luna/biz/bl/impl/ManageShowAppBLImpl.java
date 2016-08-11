@@ -9,10 +9,7 @@ import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageShowAppBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant.MsShowAppConfig;
-import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.custom.MsShowAppDAO;
-import ms.luna.biz.dao.custom.MsShowPageDAO;
-import ms.luna.biz.dao.custom.MsShowPageShareDAO;
+import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.*;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.model.MsUser;
@@ -48,6 +45,8 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	private MsShowPageDAO msShowPageDAO;
 	@Autowired
 	private MsShowPageShareDAO msShowPageShareDAO;
+	@Autowired
+	private MsFarmPageDAO msFarmPageDAO;
 	
 	private String showPageUriTemplate = "/app/%d"; 
 	private String businessUriTemplate = "/business/%s";
@@ -301,8 +300,18 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "非法微景展Id");
 		}
 		try {
+			// 获取微景展类型(type),操作不同数据库
+			MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+			if(msShowApp == null) {
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展Id不存在");
+			}
+			Integer type = msShowApp.getType();
 			msShowAppDAO.deleteByPrimaryKey(appId);
-			msShowPageDAO.deletePagesByAppId(appId);
+			if(type == 0) {
+				msShowPageDAO.deletePagesByAppId(appId);
+			} else if(type == 2) {
+				msFarmPageDAO.deletePage(appId);
+			}
 			deleteCosResource(appId);
 		} catch (Exception e) {
 			logger.error("Failed to delete app: " + json, e);

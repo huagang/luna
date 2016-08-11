@@ -8,6 +8,7 @@
 #email-input{
     border: none;
     outline: none;
+    padding-left: 10px;
 }
 
 .placeholder{
@@ -100,4 +101,11 @@
 .glyphicon-remove {
     color: #C3C3C3;
     font-weight: 100;
+}
+
+.email-item{
+    background: #EEE;
+    color: #212121;
+    padding: 3px 6px;
+    border-radius: 10px;
 }

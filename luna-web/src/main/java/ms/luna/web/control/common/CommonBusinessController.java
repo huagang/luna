@@ -37,15 +37,12 @@ public class CommonBusinessController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/select")
     public ModelAndView selectBusiness(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session == null) {
-            logger.warn("User not login, should not happen");
-            return buildModelAndView("login");
-        }
         LunaUserSession user = SessionHelper.getUser(session);
         if(user == null) {
             logger.warn("User info not set, should not happen");
             return buildModelAndView("login");
         }
+        SessionHelper.setSelectedMenu(session, "");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(LunaUserTable.FIELD_ID, user.getUniqueId());
         JSONObject businessForSelect = manageBusinessService.getBusinessForSelect(jsonObject);
