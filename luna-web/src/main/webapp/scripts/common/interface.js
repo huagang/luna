@@ -42,7 +42,7 @@ var Inter = function () {
         getApiUrl: function () {
             return {
                 //选择业务的数据
-                selectBusinessPage:  context + '/content/business/select',//选择业务的页面 
+                selectBusinessPage:  context + '/common/business/select',//选择业务的页面 
 
                 // token
                 appToken: {url: context + '/content/app/token', type: 'GET'},
@@ -105,7 +105,7 @@ var Inter = function () {
                 businessUpdate: { url: context + '/content/business', type: 'PUT' }, // 业务相关 POST PUT
                 businessDelete: { url: context + '/content/business', type: 'DELETE' }, // 业务相关 POST PUT
                 getBusinessList: { url: context + '/common/business/selectForEdit', type: 'GET' },
-                getBusinessListForEdit: { url: context + '/content/business/selectForEdit?unique_id={0}', type: 'GET' },
+                getBusinessListForEdit: { url: context + '/common/business/selectForEdit?unique_id={0}', type: 'GET' },
 
 
                 //栏目管理
