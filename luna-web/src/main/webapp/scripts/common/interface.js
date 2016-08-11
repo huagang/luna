@@ -104,7 +104,7 @@ var Inter = function () {
                 businessCreate: { url: context + '/content/business', type: 'POST' }, // 业务相关 POST PUT
                 businessUpdate: { url: context + '/content/business', type: 'PUT' }, // 业务相关 POST PUT
                 businessDelete: { url: context + '/content/business', type: 'DELETE' }, // 业务相关 POST PUT
-                getBusinessList: { url: context + '/content/business/selectForEdit', type: 'GET' },
+                getBusinessList: { url: context + '/common/business/selectForEdit', type: 'GET' },
                 getBusinessListForEdit: { url: context + '/content/business/selectForEdit?unique_id={0}', type: 'GET' },
 
 
