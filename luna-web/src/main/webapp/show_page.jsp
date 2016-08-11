@@ -34,7 +34,7 @@
         <!-- 可视化界面顶部导航 -->
         <div class="header" ng-controller="menuController as menu">
           <nav class="navbar">
-            <a class="navbar-logo-wrap" href="<%=request.getContextPath() %>/menu.do?method=goHome">
+            <a class="navbar-logo-wrap" href="<%=request.getContextPath() %>/">
                 <img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand">
             </a>
             <div class="component-btn-wrap">
