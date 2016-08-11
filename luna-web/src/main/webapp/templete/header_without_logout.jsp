@@ -5,7 +5,7 @@
     <!--通用导航栏 start-->
     <nav class="navbar">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+            <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
         </div>
     </nav>
     <!--通用导航栏 end-->

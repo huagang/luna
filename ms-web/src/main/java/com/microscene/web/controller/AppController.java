@@ -1,10 +1,13 @@
 package com.microscene.web.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
+import ms.luna.biz.table.MsShowAppTable;
+import ms.luna.biz.table.MsShowPageShareTable;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -43,11 +47,21 @@ public class AppController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{appId}")
     public ModelAndView indexPage(@PathVariable int appId, HttpServletRequest request) {
-        ModelAndView modelAndView = buildModelAndView("appShowPage");
-        JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
-        modelAndView.addObject("pageData", indexPageJson.toJSONString());
+
+        ModelAndView modelAndView = new ModelAndView();
         fillAppShareInfo(appId, modelAndView);
+        int type = Integer.parseInt(modelAndView.getModel().get(MsShowAppTable.FIELD_TYPE).toString());
+        if(type == 0) {
+            JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
+            modelAndView.addObject("pageData", indexPageJson.toJSONString());
+            modelAndView.setViewName("appShowPage.jsp");
+        } else if(type == 2) {
+            JSONObject result = farmPageService.getPageInfo(appId);
+            modelAndView.addObject("pageData", result.getJSONObject("data"));
+            modelAndView.setViewName("showFarmHouse.jsp");
+        }
         modelAndView.addObject("share_info_link", request.getRequestURL());
+
         return modelAndView;
     }
 
@@ -63,19 +77,6 @@ public class AppController extends BaseController {
 
     }
 
-    // 方便前端开发,临时代码.
-    @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
-    public ModelAndView showpage(
-            @PathVariable("appId") Integer appId,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        ModelAndView modelAndView = buildModelAndView("showFarmHouse");
-        JSONObject result = farmPageService.getPageInfo(appId);
-        modelAndView.addObject("pageData", result.getJSONObject("data"));
-        modelAndView.addObject("appId", appId);
-        return modelAndView;
-    }
-
     private void fillAppShareInfo(int appId, ModelAndView modelAndView) {
         JSONObject appSettingJson = manageShowAppService.getSettingOfApp(appId);
         if(appSettingJson.getString("code").equals("0")) {
@@ -86,7 +87,21 @@ public class AppController extends BaseController {
             String shareInfoTitle = data.getString("share_info_title");
             String shareInfoDes = data.getString("share_info_des");
             String shareInfoPic = data.getString("share_info_pic");
+
+            JSONArray shareArray = data.getJSONArray("shareArray");
+
+            //新的分享规则, app中带的老的继续兼容
+            if(shareArray != null) {
+                int size = shareArray.size();
+                Random random = new Random();
+                int idx = random.nextInt(size);
+                JSONObject jsonObject = shareArray.getJSONObject(idx);
+                shareInfoTitle = jsonObject.getString(MsShowPageShareTable.FIELD_TITLE);
+                shareInfoDes = jsonObject.getString(MsShowPageShareTable.FIELD_DESCRIPTION);
+                shareInfoPic = jsonObject.getString(MsShowPageShareTable.FIELD_PIC);
+            }
             modelAndView.addObject("appName", appName);
+            modelAndView.addObject(MsShowAppTable.FIELD_TYPE, data.getIntValue(MsShowAppTable.FIELD_TYPE));
             modelAndView.addObject("share_info_title", StringUtils.isBlank(shareInfoTitle) ? appName : shareInfoTitle);
             modelAndView.addObject("share_info_des", StringUtils.isBlank(shareInfoDes) ? note : shareInfoDes);
             modelAndView.addObject("share_info_pic", StringUtils.isBlank(shareInfoPic) ? picThumb : shareInfoPic);

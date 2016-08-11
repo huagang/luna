@@ -32,9 +32,10 @@ public class AppApiController {
     private final static Logger logger = Logger.getLogger(AppApiController.class);
     @Autowired
     private AppEditController appEditController;
-    private final static String TOKEN_VERIRY_URL = "http://webapp.visualbusiness.cn/app/api/verifyToken.do";
+    // TODO: set value in application listener, should provide a config service to do such thing
+    public static String APP_DEVELOP_ADDRESS = "";
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/app/publish/{appId}")
+    @RequestMapping(value = "/app/publish/{appId}")
     @ResponseBody
     public JSONObject publishApp(@PathVariable int appId,
                                  @RequestParam(required = true, value = "token") String token,
@@ -57,7 +58,8 @@ public class AppApiController {
     private Pair<Boolean, JSONObject> verifyToken(String token) {
 
         HttpClient httpClient = new HttpClient();
-        GetMethod getMethod = new GetMethod(TOKEN_VERIRY_URL + "?token=" + token);
+        String tokenVerifyUrl = String.format("http://%s/app/api/verifyToken.do", APP_DEVELOP_ADDRESS);
+        GetMethod getMethod = new GetMethod(tokenVerifyUrl + "?token=" + token);
         HttpMethodParams params = new HttpMethodParams();
         params.setSoTimeout(1000);
         getMethod.setParams(params);
