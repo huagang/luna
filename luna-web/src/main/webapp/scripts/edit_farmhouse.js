@@ -110,11 +110,12 @@ $(function(){
         }
 
         function handleSave(){
+            /*
             var validation = that._component.checkValidation();
             if(validation){
                 alert(validation);
                 return;
-            }
+            }*/
             var data = that._component.getFormValue();
             console.log(data);
             $.ajax({
