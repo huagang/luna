@@ -9,7 +9,7 @@
             <div class="navbar-right info-user">
                 <span class="navbar-business">
                     <span class="navbar-business-name"></span>
-                    <a href="<%=request.getContextPath() %>/content/business/select"><span class="select-business"></span></a>
+                    <a href="<%=request.getContextPath() %>/common/business/select"><span class="select-business"></span></a>
                     <span class="sep">|</span>
                 </span>
                 <img src="<%=request.getContextPath() %>/img/ic_person.png">

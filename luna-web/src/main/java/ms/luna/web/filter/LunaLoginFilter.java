@@ -83,8 +83,12 @@ public class LunaLoginFilter implements Filter {
                 chain.doFilter(request, response);
                 return;
             }
+            if(servletPath.equals("/") || servletPath.equals("")) {
+                chain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
             HttpSession session = httpServletRequest.getSession(false);
-            if(session == null || SessionHelper.getUser(session) == null) {
+            if(SessionHelper.getUser(session) == null) {
                 httpServletResponse.sendRedirect(contextPath + CommonURI.LOGIN_SERVLET_PATH);
                 return;
             }
@@ -92,10 +96,7 @@ public class LunaLoginFilter implements Filter {
             logger.debug("contextPath: " + contextPath);
             logger.debug("servletPath: " + servletPath);
 
-            if(servletPath.equals("/") || servletPath.equals("")) {
-                chain.doFilter(httpServletRequest, httpServletResponse);
-                return;
-            }
+
 
             for(String uri : skipUrlAfterLogin) {
                 if(servletPath.startsWith(uri)) {
