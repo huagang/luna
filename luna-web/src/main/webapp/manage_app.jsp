@@ -63,6 +63,7 @@
 						                <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
                                     	<th data-field="business_name" data-align="left">所属业务</th>
+						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
 						                <th data-formatter="operationFormatter" data-align="right">操作</th>
 						            </tr>
@@ -257,6 +258,7 @@
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
@@ -297,7 +299,7 @@
 
 	function operationFormatter(value, row, index) {
 		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name)
-		var editOp = '<a class="property">属性</a>';
+		var editOp = '<a class="property" href="javascript:void(0)">属性</a>';
 		var href = '', clickEvent = '';
 		switch(row.type){
 			case 1:  // 开发版
@@ -326,7 +328,8 @@
 			order : params.order,
 			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
 		}
-	};
+	}
+
 </script>
 </body>
 </html>

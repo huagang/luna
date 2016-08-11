@@ -176,7 +176,7 @@ public class UploadController {
             }
 
         } else if(type.equals(VbConstant.UploadFileRule.TYPE_VIDEO)){
-            String realPath = String.format("/%s/%s/%s", bucket, QCosConfig.ENV, resourceType);
+            String realPath = String.format("/%s%s/%s", bucket, QCosConfig.ENV, resourceType);
             if(StringUtils.isNotBlank(resourceId)) {
                 realPath += "/" + resourceId;
             }
