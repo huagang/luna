@@ -96,3 +96,8 @@
     margin-top: -10px;
     margin-bottom: 20px;
 }
+
+.glyphicon-remove {
+    color: #C3C3C3;
+    font-weight: 100;
+}
