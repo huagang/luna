@@ -234,6 +234,7 @@
 		<profile>
 			<id>dev</id>
 			<properties>
+				<log4j.level>DEBUG</log4j.level>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 				<jdbc.url>jdbc:mysql://115.159.67.120:3306/luna_dev</jdbc.url>
 				<jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>
@@ -290,6 +291,7 @@
 		<profile>
 			<id>test</id>
 			<properties>
+				<log4j.level>DEBUG</log4j.level>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 				<jdbc.url>jdbc:mysql://115.159.67.120:3306/hydb2</jdbc.url>
 				<jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>
@@ -343,6 +345,7 @@
 		<profile>
 			<id>release</id>
 			<properties>
+				<log4j.level>INFO</log4j.level>
 				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 				<jdbc.url>jdbc:mysql://10.66.152.86:3306/luna</jdbc.url>
 				<jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>

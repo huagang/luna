@@ -324,6 +324,7 @@
 			</build>
 			<properties>
 				<zookeeper.address>localhost:2181</zookeeper.address>
+				<log4j.level>DEBUG</log4j.level>
 				<cosBaseDir>/dev</cosBaseDir>
 				<vodBaseDir>/dev</vodBaseDir>
 				<redis.host>115.159.87.160</redis.host>
@@ -339,6 +340,7 @@
 			<id>test</id>
 			<properties>
 				<zookeeper.address>115.159.87.160:2181</zookeeper.address>
+				<log4j.level>DEBUG</log4j.level>
 				<cosBaseDir>/dev</cosBaseDir>
 				<vodBaseDir>/dev</vodBaseDir>
 				<redis.host>10.66.165.223</redis.host>
@@ -351,6 +353,7 @@
 			<id>release</id>
 			<properties>
 				<zookeeper.address>10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181</zookeeper.address>
+				<log4j.level>INFO</log4j.level>
 				<cosBaseDir>/dev</cosBaseDir>
 				<vodBaseDir>/dev</vodBaseDir>
 				<redis.host>10.66.172.227</redis.host>

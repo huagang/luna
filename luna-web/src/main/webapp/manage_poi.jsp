@@ -43,7 +43,7 @@
         <div class="inner-wrap">
             <div class="main-content">
                 <!--侧边菜单 start-->
-                	<jsp:include page="<%=request.getContextPath() %>/templete/menu.jsp"></jsp:include>
+                	<jsp:include page="/templete/menu.jsp"></jsp:include>
                 <!--侧边菜单 end-->
                 <!--主题内容 start-->
                 <div class="main">
