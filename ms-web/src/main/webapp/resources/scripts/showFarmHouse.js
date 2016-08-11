@@ -91,12 +91,6 @@
         // 设置全景
         vm.setPano = setPano;
 
-        // 点击全景变为全屏
-        vm.handleFullScreen = handleFullScreen;
-
-        // 退出全屏全景
-        vm.handleQuitFullScreen = handleQuitFullScreen;
-
         // 初始化地图
         vm.initMap = initMap;
 
@@ -134,6 +128,9 @@
         // 获取两个poi点之间的距离 成功回调
         vm.getRouteDistanceSuccess = getRouteDistanceSuccess;
 
+        // 监听事件
+        vm.listenScroll = listenScroll;
+
         vm.fetchPanoDetail = fetchPanoDetail;
 
         vm.navigate = navigate;
@@ -143,6 +140,8 @@
         vm.getMyLocationOnError = getMyLocationOnError;
 
         vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
+
+        vm.checkPanoPosition = checkPanoPosition;
 
         vm.init();
 
@@ -204,9 +203,7 @@
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
 
-            $(document.body).on('scroll', function(){
 
-            });
 
         }
 
@@ -222,9 +219,44 @@
                 pano.setHeading(data.panoHeading);
                 pano.setPitch(data.panoPitch);
                 pano.setRoll(0);
-                pano.setAutoplayEnable(true);
+                pano.setAutoplayEnable(vm.panoAutoPlay || false);
                 pano.setGravityEnable(false);
             }
+
+
+        }
+
+        function listenScroll(){
+            $(document).on('scroll', function(){
+                if(vm.timeoutId){
+                    clearTimeout(vm.timeoutId);
+                }
+                vm.timeoutId = setTimeout(vm.checkPanoPosition, 200);
+                console.log('listen scroll');
+            });
+        }
+
+        function checkPanoPosition(){
+            console.log('update');
+            var pano = $('.room-info main'),
+                offsetTop = pano.offset().top,
+                height = pano.height(),
+                scrollTop = document.body.scrollTop;
+
+            if(scrollTop > offsetTop + height * .7 || screen.height + scrollTop < offsetTop + height * .4){
+                if(vm.panoAutoPlay) {
+                    vm.panoAutoPlay = false;
+                    vm.pano.setAutoplayEnable(false);
+                }
+            } else{
+                if( ! vm.panoAutoPlay){
+                    vm.panoAutoPlay = true;
+                    vm.pano.setAutoplayEnable(true);
+                }
+            }
+
+
+
         }
 
 
@@ -464,7 +496,10 @@
                             });
                         });
                     });
+                    vm.panoAutoPlay = false;
                     vm.setPano();
+                    vm.listenScroll();
+
                 } else {
                     alert('获取全景信息失败,若想观看全景,请刷新重试');
                 }

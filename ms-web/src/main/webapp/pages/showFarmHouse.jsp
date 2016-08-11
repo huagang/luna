@@ -26,7 +26,7 @@
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/angular/angular.min.js'></script>
 
 </head>
-<body ng-app="farmHouse"  ng-controller="FarmHouseController as farm">
+<body ng-app="farmHouse" class="ng-cloak"  ng-controller="FarmHouseController as farm">
     <div class="page-back"></div>
     <div class="farmhouse-info">
         <header style="background:url({{farm.poiData.thumbnail}}) top left no-repeat;background-size: cover;" >
@@ -71,14 +71,6 @@
         </header>
         <main>
             <div id="panoContainer"></div>
-            <div class="operation">
-                <label>全屏查看可拖拽浏览</label>
-                <div class="icon-scale-wrapper">
-                    <img src="<%=request.getContextPath()%>/resources/images/farmhouse/scale.png"
-                         class="icon-scale" ng-click="farm.handleFullScreen()"/>
-                </div>
-
-            </div>
         </main>
         <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
             <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
