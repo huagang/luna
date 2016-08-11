@@ -315,7 +315,7 @@
 		}
 		var modifyOp = '<a class="modify" target="_blank" href="{0}" {1} >编辑</a>'.format(href, clickEvent);
 
-		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
+		var reuseApp = row.type==0 ?  '<a class="reuse" href="javascript:void(0)">复用</a>':'';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
 		return wrapperStart  + modifyOp + reuseApp + delApp+ editOp + '</div>';
 	}
