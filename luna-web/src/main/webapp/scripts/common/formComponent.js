@@ -789,6 +789,9 @@
                 that.binded = true;
                 that.element.find('.radio-item').on('change', function (event) {
                     that.value = event.target.value;
+                    if(typeof that.definition.options[0].value === 'number'){
+                        that.value = parseInt(that.value);
+                    }
                     that.element.find('.radio-item').prop('checked',false);
                     $(event.target).prop('checked', true);
                 });
@@ -1241,7 +1244,7 @@
                 console.log(that.definition.options);
                 if(that.definition.options && ! that.selectize){
                     that.selectize = that.element.find('.text-select').selectize({
-                        options: that.definition.options,
+                        options: JSON.parse(JSON.stringify(that.definition.options)),
                         labelField: 'name',
                         searchField: ['name'],
                         onChange: that.handleSelect,
@@ -1283,14 +1286,18 @@
 
         function handleSelect(value){
             var notFound = that.value.every(function(item){
-                if(item.value === value){
+                if(parseInt(item.value) === parseInt(value)){
                     return false;
                 }
                 return true;
             });
             if(notFound){
                 that.definition.options.some(function(item){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     if(item.value === value){
+                        that.selectize.removeOption(value);
                         that.addItem({
                             value: value,
                             name: item.name,
@@ -1307,7 +1314,7 @@
         function handleEdit(event){
             var value = $(event.target).parentsUntil('.item-container', '.item').attr('data-value');
             that.value.some(function(item, index){
-                if(item.value === value){
+                if(item.value === parseInt(value)){
                     that.curObj = item;
                     return true;
                 }
@@ -1343,9 +1350,14 @@
 
         function handleDelete(event){
             var parent = $(event.target).parentsUntil('.item-container', '.item'),
-                value = parent.attr('data-value'), order;
+                value = parseInt(parent.attr('data-value')), order;
             that.value.some(function(item, index){
+
                 if(item.value === value){
+                    that.selectize.addOption({
+                        name: item.name,
+                        value: item.value
+                    });
                     order = index;
                     return true;
                 }
@@ -1446,6 +1458,9 @@
                 var value = that.definition.options[order].value;
                 var index = that.value.indexOf(value);
                 if(index  === -1 ){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     that.value.push(value);
                 } else{
                     that.value.splice(index, 1);

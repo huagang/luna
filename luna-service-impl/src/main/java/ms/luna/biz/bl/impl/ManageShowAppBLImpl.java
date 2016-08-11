@@ -587,6 +587,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
 		data.put(MsShowAppTable.FIELD_PIC_THUMB, msShowApp.getPicThumb());
 		data.put(MsShowAppTable.FIELD_NOTE, msShowApp.getNote());
+		data.put(MsShowAppTable.FIELD_TYPE, msShowApp.getType());
 
 		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
@@ -595,6 +596,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		List<MsShowPageShare> msShowPageShares = msShowPageShareDAO.selectByCriteria(msShowPageShareCriteria);
 
 		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
+		data.put("shareArray", jsonArray);
 		// TODO: new version will not use these share_info fields, delete me later
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
@@ -602,9 +604,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		Integer businessId = msShowApp.getBusinessId();
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-		data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
-
-		data.put("shareArray", jsonArray);
+		if(msBusiness != null) {
+			data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
+		} else {
+			logger.warn("no business info for app: " + appId);
+		}
 		
 		return FastJsonUtil.sucess("", data);
 	}

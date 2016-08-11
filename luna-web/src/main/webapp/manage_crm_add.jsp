@@ -35,7 +35,7 @@
                     <h3>新建商户</h3>
                 </div>
                 <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>
-			    <form id="form-add" action="/content/crm" method="post"
+			    <form id="form-add" action="<%=request.getContextPath() %>/content/crm" method="post"
 			        onkeydown="if(event.keyCode==13){return false;}" >
 
                     <div class="information" >

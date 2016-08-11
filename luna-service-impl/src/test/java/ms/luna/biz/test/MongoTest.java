@@ -31,26 +31,18 @@ public class MongoTest {
 		
 		MongoConnector mongoConnector = new MongoConnector("mongo.properties");
 		
-		MongoCollection<Document> testCollection = mongoConnector.getDBCollection("luna_user_role");
+		MongoCollection<Document> testCollection = mongoConnector.getDBCollection("show_page");
 //		Document document = new Document();
 //		document.append("ctime", new BsonDateTime(System.currentTimeMillis()));
 //		testCollection.insertOne(document);
 //		Bson query = Filters.eq("_id", new ObjectId("57206a16a6a5551473fe8088"));
-		Bson query = Filters.eq("_id", "c01de90951a3484192996c3892c852d7");
-
-		String updateStr = "{ \"role_id\" : 1, \"extra\" : { \"type\" : \"business\", \"value\" : [31, 33, 39, 46] }}";
-		Document updateDocument = userRole2Document(JSON.toJavaObject(JSON.parseObject(updateStr), LunaUserRole.class));
-		System.out.println("update user role info" + updateDocument.toJson());
-		testCollection.updateOne(query, new Document("$set", updateDocument));
+		Bson query = Filters.eq("_id", "5756367f5971a164164fcc51");
 
 		testCollection.find(query).forEach(new Block<Document>() {
 
 			@Override
 			public void apply(Document document) {
 				System.out.println(document);
-				Map<String, Object> extra = document.get(LunaUserRoleTable.FIELD_EXTRA, Document.class);
-				System.out.println(hasBusinessAuth(extra, 33));
-
 			}
 
 		});

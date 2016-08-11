@@ -28,15 +28,22 @@ var Inter = function () {
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
 
+    var lunaEditor = {
+        'local': 'http://simon-test.visualbusiness.cn',
+        'test': 'http://simon-test.visualbusiness.cn',
+        'online': 'http://luna-test.visualbusiness.cn '
+    };
 
     apiContext =  apiHost[curHost()];
+
 
     return {
         getPageUrl: function(){
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: 'http://webapp.visualbusiness.cn/app/createapp?appId={0}&token={1}',
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
+                manageApp: context + '/platform/user'
             };
         },
         getApiUrl: function () {
@@ -63,9 +70,9 @@ var Inter = function () {
                 poiCheckForEnglish: { url: context + '/data/poi/checkPoi', type: 'POST' },//英文poi检查
                 poiConfirmArea: '',//确认poi所在区域是否正确
 
-                poiThumbnailUpload: { url: "/data/poi/thumbnail/upload", type: "POST" }, //poi缩略图上传
-                poiAudioUpload: { url: "/data/poi/audio/upload", type: "POST" }, //poi音频上传
-                poiVideoUpload: { url: "/data/poi/video/upload", type: "POST" }, //poi视频上传
+                poiThumbnailUpload: { url: context + "/data/poi/thumbnail/upload", type: "POST" }, //poi缩略图上传
+                poiAudioUpload: { url: context + "/data/poi/audio/upload", type: "POST" }, //poi音频上传
+                poiVideoUpload: { url: context + "/data/poi/video/upload", type: "POST" }, //poi视频上传
 
                 //CRM管理
                 crmInit: { url: context + "/content/crm", type: "GET" },//CRM管理页面
@@ -84,7 +91,7 @@ var Inter = function () {
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
                 merchantSuccess: { url: context + "common/merchant/successPage", type: "GET" }, //注册成功页面
-                crmThumbnailUpload: { url: "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
+                crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
                 bizRelationInit: { url: context + "/content/businessRelation", type: "GET" }, // 管理页面初始化

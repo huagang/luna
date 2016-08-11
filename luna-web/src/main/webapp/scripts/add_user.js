@@ -286,6 +286,7 @@
                     }).then(function (res) {
                         if(res.data.code === '0'){
                             alert('邀请用户成功');
+                            location.href = Inter.getPageUrl().manageApp;
                         } else{
                             alert(res.data.msg || '邀请用户失败');
                         }

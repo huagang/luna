@@ -43,7 +43,7 @@
                 <h3>POI数据基本信息</h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form id="poiModel" commandName="poiModel" method="post" action="/data/poi" enctype="multipart/form-data">
+            <form:form id="poiModel" commandName="poiModel" method="post" enctype="multipart/form-data">
                 <div>
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript">*</span>名称</div>

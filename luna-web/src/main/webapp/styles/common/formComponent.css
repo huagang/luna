@@ -1,4 +1,4 @@
-textarea{
+ textarea{
     resize: none;
     width: 650px;
     vertical-align: top;
@@ -20,7 +20,7 @@ a{
     height: 100%;
     width: 100%;
     background-color: rgba(0,0,0,.4);
-    z-index: 10;
+    z-index: 1;
 }
 
 .hidden{
@@ -395,4 +395,8 @@ p.warn{
 
 .poi-search img.form-value {
     vertical-align: top;
+}
+
+.publish-pop-wrapper .mask{
+    z-index: 2;
 }

@@ -58,9 +58,9 @@
                         </div>
                         <!--POI搜索 end-->
                         <div>
-                            <a href="/data/poi/addPage" id="POI-add" class="add-poi" target="_blank">+添加</a>
+                            <a href="<%=request.getContextPath() %>/data/poi/addPage" id="POI-add" class="add-poi" target="_blank">+添加</a>
                             <span>
-                                <a href="/data/poi/templete">下载模板</a>，按模板收集数据后，<a href="#" id="batch-input">批量导入</a>
+                                <a href="<%=request.getContextPath() %>/data/poi/templete">下载模板</a>，按模板收集数据后，<a href="#" id="batch-input">批量导入</a>
                             </span>
                         </div>
                         <!--POI列表 start-->

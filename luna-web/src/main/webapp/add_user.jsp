@@ -37,13 +37,13 @@
             <div class="main">
                 <div class="main-hd"><h3>{{user.userId ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="<%=request.getContextPath()%>/platform/user/invite">&lt;用户管理</a></li>
+                    <li><a href="<%=request.getContextPath()%>/platform/user">&lt;用户管理</a></li>
                     <li class="active">{{user.userId ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
                 <div class='form-input ng-hide' ng-show="! user.userId" id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
                     <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
-                    <span class="text-primary" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
+                    <span ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
                         <span>{{email}}</span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="user.handelDeleteEmail($index)" ></span>
                     </span>
@@ -111,7 +111,7 @@
     } catch(e){
         roleData = null;
     }
-
+    window.context = '<%=request.getContextPath() %>';
 </script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
