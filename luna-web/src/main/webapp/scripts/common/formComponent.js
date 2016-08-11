@@ -1244,7 +1244,7 @@
                 console.log(that.definition.options);
                 if(that.definition.options && ! that.selectize){
                     that.selectize = that.element.find('.text-select').selectize({
-                        options: that.definition.options,
+                        options: JSON.parse(JSON.stringify(that.definition.options)),
                         labelField: 'name',
                         searchField: ['name'],
                         onChange: that.handleSelect,
@@ -1297,6 +1297,7 @@
                         value = parseInt(value);
                     }
                     if(item.value === value){
+                        that.selectize.removeOption(value);
                         that.addItem({
                             value: value,
                             name: item.name,
@@ -1349,9 +1350,14 @@
 
         function handleDelete(event){
             var parent = $(event.target).parentsUntil('.item-container', '.item'),
-                value = parent.attr('data-value'), order;
+                value = parseInt(parent.attr('data-value')), order;
             that.value.some(function(item, index){
+
                 if(item.value === value){
+                    that.selectize.addOption({
+                        name: item.name,
+                        value: item.value
+                    });
                     order = index;
                     return true;
                 }
