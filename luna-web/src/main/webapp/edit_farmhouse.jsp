@@ -63,7 +63,7 @@
               <div class="pop-fun">
                 <div class="pull-right">
                     <button class="button confirm">确定</button>
-                    <button class="button copy" data-clipboard-target=".publish-link">复制链接</button>
+                    <button class="button-close copy" data-clipboard-target=".publish-link">复制链接</button>
                 </div>
               </div>
           </div>
