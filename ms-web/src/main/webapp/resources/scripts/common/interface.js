@@ -22,8 +22,8 @@ var Inter = function() {
                 //编辑器上传图片
                 //uploadImageInArtcle: context + "/add_poi.do?method=upload_thumbnail",//上传图片
                 //uploadVideoInArtcle: context + "/add_poi.do?method=upload_video",//上传视频
-                uploadImageInArtcle: "/data/poi/thumbnail/upload",//上传图片
-                uploadVideoInArtcle: "/data/poi/video/upload",//上传视频
+                uploadImageInArtcle: context + "/data/poi/thumbnail/upload",//上传图片
+                uploadVideoInArtcle: context + "/data/poi/video/upload",//上传视频
 
                 //微景展操作
                 createApp: context + '/manage/app.do?method=create_app',  //创建微景展

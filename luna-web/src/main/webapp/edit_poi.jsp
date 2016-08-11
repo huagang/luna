@@ -55,7 +55,7 @@
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form commandName="poiModel" method="post" action="$/data/poi/edit" enctype="multipart/form-data">
+            <form:form commandName="poiModel" method="post" action="<%=request.getContextPath()%>/data/poi/edit" enctype="multipart/form-data">
             	<input type="hidden" id="lang" value="${lang}" name="lang"/>
             	<form:input id="poiId" cssStyle="display:none" path="poiId"/>
 	            <div>

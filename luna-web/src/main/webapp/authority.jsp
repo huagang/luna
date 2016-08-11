@@ -47,7 +47,7 @@
 
 								<table id="table-authority" class="table" data-toggle="table"
 									data-toolbar=""
-									data-url="${basePath}/platform/authority/search"
+									data-url="<%=request.getContextPath()%>/platform/authority/search"
 									data-pagination="true" data-side-pagination="server"
 									data-page-list="[5,10,20,50]" data-search="false"
 									data-click-to-select="true" data-show-refresh="false"
@@ -92,7 +92,8 @@
 		});
 
 		function operationFormatter(value, row, index) {
-			return'<a class="modify" href="'+ host+ '/platform/authority/'+row.id+'">权限</a>'
+			var context = window.context || "/luna-web";
+			return'<a class="modify" href="'+ context+ '/platform/authority/'+row.id+'">权限</a>'
 		}
 
 		function queryParams(params) {

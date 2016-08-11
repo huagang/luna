@@ -42,7 +42,7 @@
             	<div class="title-main">
                     <h3编辑商户</h3>
                 </div>
-                <form id="form-edit" action="/content/crm/edit" method="post"
+                <form id="form-edit" action="<%=request.getContextPath() %>/content/crm/edit" method="post"
         			onkeydown="if(event.keyCode==13){return false;}">
 
                     <div class="information" >
