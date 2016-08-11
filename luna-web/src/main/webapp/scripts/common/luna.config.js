@@ -11,8 +11,9 @@ var lunaConfig = function(){
         "imghost":"http://cdn.visualbusiness.cn/public/vb",
         'microPanoType':{
             '0':'基础版',
-            '1':'数据版',
-            '2':'开发版',
+            '1':'开发版',
+            '2':'数据版',
+
         }
     }
 }();

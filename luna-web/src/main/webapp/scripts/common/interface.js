@@ -28,14 +28,20 @@ var Inter = function () {
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
 
+    var lunaEditor = {
+        'local': 'http://simon-test.visualbusiness.cn',
+        'test': 'http://simon-test.visualbusiness.cn',
+        'online': 'http://luna-test.visualbusiness.cn '
+    };
 
     apiContext =  apiHost[curHost()];
+
 
     return {
         getPageUrl: function(){
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: 'http://webapp.visualbusiness.cn/app/{0}?appId={1}&token={2}', // {0} create or edit
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
             };
         },
