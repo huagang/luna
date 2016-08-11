@@ -1029,7 +1029,7 @@
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
             that.itemNum = (that.definition.limits.num || {}).min || 1;
 
-            if(that.value){
+            if(that.value.length > 0){
                 that.itemNum = that.value.length;
             }
 
@@ -1068,7 +1068,7 @@
                     var row = document.createElement('div');
 
                     row.className = 'textpic-row';
-                    row.innerHTML = "<a href='javascript:void(0)' data-order='{0}' class='delete-item'>删除</a>".format(index);
+                    row.innerHTML = "<a href='javascript:void(0)' data-order='{0}' class='delete-item'>删除</a>".format(index + 1);
                     row.insertBefore(item.render(), row.firstChild);
                     that._component.insertBefore(row, that._component.lastChild);
                 });
@@ -1116,6 +1116,8 @@
             if(that._children.length === 1) return;
 
             var order = parseInt(event.target.getAttribute('data-order'));
+            order = order - 1;
+            console.log(order, that._children.length);
             that._children.splice(order, 1);
             $('.textpic-group')[0].children[order].remove();
             for(var i = order; i < that._children.length; i++){
@@ -1125,6 +1127,9 @@
                      display_order: i + 1
                 });
             }
+            $('.delete-item').each(function(i){
+                this.setAttribute('data-order', i + 1);
+            });
         }
 
         function updateComponent(data){
