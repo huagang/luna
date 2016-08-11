@@ -5,14 +5,14 @@ function getAppData(appID) {
         return;
     }
     var params = {
-        'app_id': appID
+        app_id: appID
     };
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=getAllPageSummary',
-        cache: false,
+        type: Inter.getApiUrl().getAppSummary.type,
+        url: Util.strFormat(Inter.getApiUrl().getAppSummary.url, [appID]),
+        // cache: false,
         async: false,
-        data: params,
+        // data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {
@@ -53,7 +53,7 @@ function isValidPageInfo() {
 }
 // 创建app的一个新的页面
 function creatPageID() {
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
@@ -68,9 +68,9 @@ function creatPageID() {
             'page_height': document.querySelector('#txtPageHeight').value || '617',
         };
         $.ajax({
-            type: 'post',
-            url: host + '/app.do?method=addNewBlankPage',
-            cache: false,
+            type: Inter.getApiUrl().appCreatePage.type,
+            url: Inter.getApiUrl().appCreatePage.url,
+            // cache: false,
             async: false,
             data: params,
             dataType: 'json',
@@ -102,7 +102,7 @@ function creatPageID() {
 
 function modifyPageName() {
 
-    var app_id = getUrlParam("app_id");
+    var app_id = getAppId();
     if (!app_id) {
         $.alert("请先创建app");
         return;
@@ -118,8 +118,8 @@ function modifyPageName() {
             'page_height': document.querySelector('#txtPageHeight').value,
         };
         $.ajax({
-            type: 'post',
-            url: host + '/app.do?method=modifyPageName',
+            type: Inter.getApiUrl().appModifyName.type,
+            url: Util.strFormat(Inter.getApiUrl().appModifyName.url, [appModifyName]),
             cache: false,
             async: false,
             data: params,
@@ -135,7 +135,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
-                $('#layermain').css('height',lunaPage.pages[pageId].page_height);
+                $('#layermain').css('height', lunaPage.pages[pageId].page_height);
 
                 $("#pop-add").css("display", "none");
                 $overlay.css("display", "none");
@@ -155,15 +155,13 @@ function modifyPageName() {
 
 // 获取app单个页面全部详情
 function getPageDataDetail(pageID) {
-    var params = {
-        'page_id': pageID
-    };
+
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=getOnePageDetail',
-        cache: false,
+        type: Inter.getApiUrl().appGetPageDetail.type,
+        url: Util.strFormat(Inter.getApiUrl().appGetPageDetail.url, [pageID]),
+        // cache: false,
         async: false,
-        data: params,
+        // data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {
@@ -193,13 +191,12 @@ function savePageData(pageID, isPrompt) {
     } else {
         var pageinfo = {};
         pageinfo[pageID] = lunaPage.pages[pageID];
-
         var params = { "data": JSON.stringify(pageinfo) };
     }
     // params=JSON.stringify(params);
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=savePages',
+        type: Inter.getApiUrl().appSaveData.type,
+        url: Inter.getApiUrl().appSaveData.url,
         cache: false,
         async: false,
         data: params,
@@ -232,18 +229,15 @@ function savePageData(pageID, isPrompt) {
     });
 }
 
+/** 
+ * 删除界面
+ */
 function deletePage(pageID) {
-
-    var params = {
-        'page_id': pageID
-    };
-
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=deletePage',
+        type: Inter.getApiUrl().appDeletePage.type,
+        url: Util.strFormat(Inter.getApiUrl().appDeletePage.url, [pageID]),
         cache: false,
         async: false,
-        data: params,
         dataType: 'json',
         success: function (returndata) {
             if ("0" != returndata.code) {
@@ -270,8 +264,8 @@ function deletePage(pageID) {
 function updatePageOrder(pageOrder) {
     var params = { "data": JSON.stringify(pageOrder) };
     $.ajax({
-        type: 'post',
-        url: host + '/app.do?method=updatePageOrder',
+        type: Inter.getApiUrl().appUpdatePageOrder.type,
+        url: Inter.getApiUrl().appUpdatePageOrder.url,
         cache: false,
         async: false,
         data: params,
@@ -292,10 +286,10 @@ function updatePageOrder(pageOrder) {
 
 function getAppSetting() {
     $.ajax({
-        url: host + "/app.do?method=getSettingOfApp",
-        type: 'POST',
+        url: Util.strFormat(Inter.getApiUrl().appGetSetting.url, [appId]),
+        type: Inter.getApiUrl().appGetSetting.type,
         async: false,
-        data: { "app_id": appId },
+        // data: { "app_id": appId },
         dataType: "json",
         success: function (returndata) {
             if ("0" == returndata.code) {
@@ -340,8 +334,8 @@ function submitSetting() {
         share_info_des: $("#share_info_des").val()
     };
     $.ajax({
-        url: host + "/app.do?method=saveSettingOfApp",
-        type: 'POST',
+        url: Inter.getApiUrl().appSaveSetting.url,
+        type: Inter.getApiUrl().appSaveSetting.type,
         async: false,
         data: params,
         dataType: "json",
@@ -390,8 +384,8 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     formdata.append("app_id", appId);
 
     $.ajax({
-        url: host + '/uploadCtrl.do?method=aync_upload_pic',
-        type: 'POST',
+        url: Inter.getApiUrl().uploadPic.url,
+        type: Inter.getApiUrl().uploadPic.type,
         cache: false,
         async: false,
         data: formdata,
@@ -491,9 +485,8 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
 
 
     $.ajax({
-        // url: host + '/add_poi.do?method=' + fileType2Method[fileType],
-        url: Inter.getApiUrl().uploadPath,
-        type: 'POST',
+        url: Inter.getApiUrl().uploadPath.url,
+        type: Inter.getApiUrl().uploadPath.type,
         cache: false,
         async: false,
         data: formdata,

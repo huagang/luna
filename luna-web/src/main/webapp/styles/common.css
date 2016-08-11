@@ -35,7 +35,18 @@ textarea{
     border: 1px solid #C3C3C3;
     padding: 5px 10px;
 }
-button{
+
+
+a:link,
+a:visited,
+a:hover,
+a:active{
+    color:#445FA8;
+    text-decoration:none;
+}
+
+button,
+a.button{
     background: #445FA8;
     color: #FFFFFF;
     padding: 4px 18px;
@@ -45,7 +56,8 @@ button{
     border-radius: 3px;
 }
 
-button:hover{
+button:hover,
+a.button:hover{
     background: #476AC6;
     border: 1px solid #476AC6;
     -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
@@ -58,18 +70,15 @@ button:hover{
     transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button.disable, button.disable:hover{
+button.disable,
+button.disable:hover,
+a.button.disable,
+a.button.disable:hover{
     background: #666;
     border: 1px solid #666;
 }
 
-a:link,
-a:visited,
-a:hover,
-a:active{
-    color:#445FA8;
-    text-decoration:none;
-}
+
 /*字体相关配置*/
 .fw-normal{
     font-weight: normal;
@@ -115,6 +124,23 @@ a:active{
     height: 64px;
     padding: 12px 0;
 }
+.navbar .navbar-business-name,
+.navbar .navbar-business-name:hover
+{
+    color: white;
+}
+
+.navbar .select-business {
+    display: inline-block;
+    border-width: 1px 1px 0 0;
+    border-color: white white transparent transparent;
+    border-style: solid;
+    height: 6px;
+    width: 6px;
+    margin: 0 0 2px 6px;
+    transform: rotate(135deg);
+}
+
 .info-user{
     height: 64px;
     padding: 22px 3px;
@@ -368,4 +394,9 @@ a:active{
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.breadcrumb{
+    background-color: white;
+    padding-left: 0;
 }

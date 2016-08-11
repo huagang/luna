@@ -40,5 +40,8 @@ public interface PoiApiService {
 
 	// 根据活动id获取POI数据列表
 	JSONObject getPoisByActivityId(String json);
-	
+
+	// poi检索
+	JSONObject retrievePois(String json);
+
 }

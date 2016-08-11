@@ -31,8 +31,8 @@ public class LoginFilter implements Filter {
 	
 	private Pattern[] patterns;
 
-	public static final String webRoot = "/luna-web";
-//	private static final String LOGIN_URI = webRoot + "/login.jsp";
+	public static final String webRoot = "";
+	private static final String LOGIN_URI = webRoot + "/login.jsp";
 	private static final String ERROR_URI = webRoot + "/auth_failed.jsp";
 	/**
 	 * 无需登录就可以访问的URI
@@ -48,6 +48,10 @@ public class LoginFilter implements Filter {
 				webRoot + "/show_article.do",
 				webRoot + "/api_vodPlay.do",
 				webRoot + "/fileUpload.do",
+				//前端开发需要 暂时添加
+				webRoot + "/manage_user.do",
+				webRoot + "/select_bussiness.do",
+				//end
 				webRoot + "/menu.do"));
 
 		skipUris.addAll(Arrays.asList(
@@ -74,13 +78,14 @@ public class LoginFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain chain)
 			throws IOException, ServletException {
+
 		if (arg0 instanceof HttpServletRequest && arg1 instanceof HttpServletResponse ) {
 
 			HttpServletRequest request = (HttpServletRequest) arg0;
 			HttpServletResponse response = (HttpServletResponse) arg1;
 			// String userId = (String)request.getParameter("userId");
 			String uri = new String(request.getRequestURI());
-			
+
 			//开放api暂时不做任何过滤
 			if(uri.startsWith(API_URI)) {
 				chain.doFilter(request, response);
@@ -101,7 +106,7 @@ public class LoginFilter implements Filter {
 			if (session != null && session.getAttribute("openid") != null) {
 				chain.doFilter(request, response);
 				return;
-				
+
 				// 用户名密码登录(未登录)
 			} else if (session == null || session.getAttribute("msUser") == null) {
 				// 检查URI资源访问权限
@@ -110,7 +115,7 @@ public class LoginFilter implements Filter {
 					return;
 				}
 				// 没有访问权限,跳转到登录页面
-				response.sendRedirect(LoginCtrl.HTTP_DOMAIN);
+				response.sendRedirect(LoginCtrl.LOGIN_URI);
 				response.setStatus(200);
 				return;
 
@@ -129,7 +134,7 @@ public class LoginFilter implements Filter {
 					chain.doFilter(arg0, arg1);
 					return;
 				}
-				
+
 				if(skipUriAfterLogin.contains(uri)){
 					chain.doFilter(request, response);
 					return;
@@ -148,8 +153,10 @@ public class LoginFilter implements Filter {
 				}
 				// TODO：[调试阶段]暂时不清理会话
 //				session.invalidate();
-				response.sendRedirect(ERROR_URI);
-				response.setStatus(200);
+				// TODO:暂时禁用权限认证
+				chain.doFilter(request, response);
+//				response.sendRedirect(ERROR_URI);
+//				response.setStatus(200);
 				return;
 			}
 		} else {

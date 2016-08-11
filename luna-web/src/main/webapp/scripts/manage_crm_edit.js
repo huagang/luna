@@ -6,20 +6,21 @@ $(function(){
 	window.onload = function() {
 		var merchant_id = $("#merchant_id_edit").attr("val");
 		editcrm(merchant_id);
-	}
+	};
+
     $("#merchant_nm_edit").blur(function(){
     	var hasError=merchantNameEdit();
         if(!hasError){
         	var meName = $("#merchant_nm_edit").val();
         	var meId = $("#merchant_id_edit").val();
         	$.ajax({
-        		url:host+'/manage_merchant.do?method=checkNm_edit',
-        		type:'POST',
+        		url:Inter.getApiUrl().crmCheckName.url,
+        		type:Inter.getApiUrl().crmCheckName.type,
         		async:false,
         		cache:false,
         		data:{
-        			'merchant_nm_edit':meName,
-        			'merchant_id_edit':meId
+        			'merchant_nm':meName,
+        			'merchant_id':meId
         		},
         		dataType:'JSON',
         		success:function(returndata){
@@ -258,7 +259,7 @@ $(function(){
 	    				case '0': 
 	    					$("#pop-overlay").css("display","none");
 	    			        $("#pop-editmerchant").css("display","none");
-	    					window.location.href= host+'/manage_merchant.do?method=init';//成功后更新列表
+	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
 	    					break;
 	    				case '3':
         					$("#merchant-name-edit-warn").html('商户重名（您下手慢了）').show();
@@ -303,7 +304,7 @@ function asyncUploadPicEdit(obj,fileElementId,warn,license_url){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/manage_merchant.do?method=upload_thumbnail_edit",
+			url:Inter.getApiUrl().crmThumbnailUpload.url,
 			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId: fileElementId, 
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
@@ -333,9 +334,9 @@ function editcrm(obj){
     var $popwindow = $("#pop-editmerchant");
     popWindow($popwindow);
     $.ajax({
-    	url:host+"/manage_merchant.do?method=load_merchant",
+    	url: Util.strFormat(Inter.getApiUrl().crmUserInfo.url,[obj]),
     	async:false,
-    	type:'POST',
+    	type:Inter.getApiUrl().crmUserInfo.type,
     	data:{'merchant_id':obj},
     	dataType:"json",
     	success:function(returndata){

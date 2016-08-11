@@ -3,7 +3,6 @@
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
       <html>
-
       <head>
         <meta charset="utf-8" />
         <meta name="renderer" content="webkit" />
@@ -27,22 +26,8 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/selectui/select2.css">
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
         <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
-        <!-- 脚本文件 -->
-        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
-        <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular-sanitize-1.5.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/selectui/select.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
-        <script>
-          var appId = ${appId};
-          var host = "<%=request.getContextPath()%>";
-        </script>
+        <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+
       </head>
 
       <body ng-app="showPage">
@@ -533,7 +518,7 @@
                         </div>
                         <a class="imgList-clc" id="model-clc" ng-hide="imgList.isEmptyStr(img.currentComponent.content)" ng-click='imgList.removeImg()'>删除
                                 </a>
-                        <img class="thumbnail" id="thumbnail-bg" ng-hide="imgList.isEmptyStr(imgList.currentComponent.content)" src="{{imgList.currentComponent.content}}" style="position:absolute; top:228px;width:110px;height:100px;padding:0;">
+                        <!--<img class="thumbnail" id="thumbnail-bg" ng-hide="imgList.isEmptyStr(imgList.currentComponent.content)" src="{{imgList.currentComponent.content}}" style="position:absolute; top:228px;width:110px;height:100px;padding:0;">-->
                       </div>
                     </form>
                     <button class="btn btn-confirm hide" id="btn-model">确定</button>
@@ -1504,7 +1489,22 @@
             </p>
           </div>
         </div>
-        <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+        <!-- 脚本文件 -->
+        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/contextmenu/bootstrap-contextmenu.js"></script>
+        <script src="<%=request.getContextPath()%>/scripts/lunaweb.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/plugins/hotkey/jquery.hotkeys.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/angular/js/angular-sanitize-1.5.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/selectui/select.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/plugins/minicolors/jquery.minicolors.js"></script>
+        <script>
+          var appId = ${appId};
+          var host = "<%=request.getContextPath()%>";
+        </script>
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
@@ -1520,6 +1520,6 @@
         <script src="<%=request.getContextPath()%>/scripts/module.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/page_controller.js" charset="utf-8"></script>
         <!-- 删除用户弹出层 -->
-      </body>
+</body>
 
-      </html>
+</html>

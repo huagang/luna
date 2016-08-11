@@ -255,11 +255,11 @@ $(function () {
         var tagid = $("#topTag").find("option:selected").val();
 
         $.ajax({
-            url: host + "/manage_poi.do?method=ayncSearchSubTag",
-            type: 'POST',
+            url: Util.strFormat(Inter.getApiUrl().ayncSearchSubTag.url, [tagid]),
+            type: Inter.getApiUrl().ayncSearchSubTag.type,
             async: false,
             cache: false,
-            data: { 'subTag': tagid },
+            // data: { 'subTag': tagid },
             dataType: 'JSON',
             success: function (returndata) {
                 var $subTag = $("#subTag");
@@ -305,8 +305,8 @@ $(function () {
             if ('en' == lang) {
                 // check检查
                 $.ajax({
-                    url: host + "/edit_poi.do?method=checkPoi",
-                    type: 'POST',
+                    url: Inter.getApiUrl().poiCheckForEnglish.url,
+                    type: Inter.getApiUrl().poiCheckForEnglish.type,
                     async: false,
                     cache: true,
                     data: formdata,
@@ -337,8 +337,8 @@ $(function () {
             if (!noerror) {
                 $.confirm(msg, function () {
                     $.ajax({
-                        url: host + "/edit_poi.do?method=updatePoi",
-                        type: 'POST',
+                        url: Inter.getApiUrl().poiEditSave.url,
+                        type: Inter.getApiUrl().poiEditSave.type,
                         async: true,
                         cache: true,
                         data: formdata,
@@ -351,7 +351,7 @@ $(function () {
                                     $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                     setTimeout(function () {
                                         $("#status-message").css('display', 'none');
-                                        window.location.href = host + "/manage_poi.do?method=init";
+                                        // window.location.href = Inter.getApiUrl().poiInit.url;
                                     }, 2000);
                                     break;
                                 default:
@@ -374,8 +374,8 @@ $(function () {
                 // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
                 // 后台对于提交上来的数据，不再做中文检查
                 $.ajax({
-                    url: host + "/edit_poi.do?method=updatePoi",
-                    type: 'POST',
+                    url: Inter.getApiUrl().poiEditSave.url,
+                    type: Inter.getApiUrl().poiEditSave.type,
                     async: true,
                     cache: true,
                     data: formdata,
@@ -388,7 +388,7 @@ $(function () {
                                 $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                                 setTimeout(function () {
                                     $("#status-message").css('display', 'none');
-                                    window.location.href = host + "/manage_poi.do?method=init";
+                                    // window.location.href = Inter.getApiUrl().poiInit.url;
                                 }, 2000);
                                 break;
                             default:
@@ -428,8 +428,8 @@ $(function () {
         if (!hasError) {
             var formdata = new FormData($("#poiModel")[0]);
             $.ajax({
-                url: host + "/add_poi.do?method=addPoi",
-                type: 'POST',
+                url: Inter.getApiUrl().poiAddSave.url,
+                type: Inter.getApiUrl().poiAddSave.type,
                 async: false,
                 cache: true,
                 data: formdata,
@@ -442,7 +442,7 @@ $(function () {
                             $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
                             setTimeout(function () {
                                 $("#status-message").css('display', 'none');
-                                window.location.href = host + "/manage_poi.do?method=init";
+                                window.location.href = Inter.getApiUrl().poiInit.url;
                             }, 2000);
                             break;
                         default:
@@ -742,8 +742,8 @@ var geocoder = new qq.maps.Geocoder({
             "district": district,
         }
         $.ajax({
-            type: 'post',
-            url: host + '/pulldown.do?method=findZoneIdsWithQQZoneName',
+            type: 'GET',
+            url: Inter.getApiUrl().pullDownZoneIds.url,
             cache: false,
             async: false,
             data: params,
@@ -785,7 +785,6 @@ function findZoneIdsWithQQZoneName(lat, lng) {
     //调用获取位置方法
     geocoder.getAddress(latLng);
 }
-
 /**
  * 初始化编辑器
  * @return {[type]} [description]
@@ -795,9 +794,9 @@ function initEditor() {
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function (action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return host + "/add_poi.do?method=upload_thumbnail";
+            return Inter.getApiUrl().poiThumbnailUpload.url;
         } else if (action == 'uploadvideo') {
-            return host + "/add_poi.do?method=upload_video";
+            return Inter.getApiUrl().poiVideoUpload.url;
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
@@ -817,7 +816,7 @@ function initEditor() {
                 'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
                 'link', 'simpleupload',/*'music',*/ 'insertvideo',
             ]
-        ],
+        ]
     });
     return ue;
 }

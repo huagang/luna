@@ -8,18 +8,18 @@
 $(function(){
 	$("input[type=file][file_type=image]").change(function(){
 		asyncUploadThumb(this);
-	})
+	});
 	$("input[type=file][file_type=audio]").change(function(){
 		asyncUploadAudio(this);
-	})
+	});
 	$("input[type=file][file_type=video]").change(function(){
 		asyncUploadVideo(this);
-	})
-})
+	});
+});
 
 //上传图片
 function asyncUploadThumb(obj,fileElementId){
-	var host = '/luna-web';
+	var host = window.host || '';
 	var $thumb = $(obj); //当前触发事件的元素
 	var thumbId = $thumb.attr("id"),
 		globalId = thumbId.indexOf("_");
@@ -37,12 +37,12 @@ function asyncUploadThumb(obj,fileElementId){
 		$warn.css('display','none');
 		jQuery.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/add_poi.do?method=upload_thumbnail",
-			secureuri:false,                       //是否启用安全提交,默认为false 
+			url:Inter.getApiUrl().poiThumbnailUpload.url,
+			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
 			success:function(returndata){          //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
+					if (returndata.code=='0') {
 					$thumburl.val(returndata.data.access_url);
 					//----------------------------
 					$("#thumbnail-show").attr("src",returndata.data.access_url);
@@ -89,8 +89,8 @@ function asyncUploadAudio(obj,fileElementId){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-			url:host+"/add_poi.do?method=upload_audio",
-			secureuri:false,                       //是否启用安全提交,默认为false 
+			url:Inter.getApiUrl().poiAudioUpload.url,
+			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
 			success:function(returndata){        //服务器响应成功时的处理函数
@@ -132,9 +132,8 @@ function asyncUploadVideo(obj,fileElementId){
 		$warn.css('display','none');
 		$.ajaxFileUpload({
 			//处理文件上传操作的服务器端地址
-//			url:host+"/manage_poi.do?method=upload_video",
-			url:host+"/add_poi.do?method=upload_video",
-			secureuri:false,                       //是否启用安全提交,默认为false 
+			url:Inter.getApiUrl().poiVideoUpload.url,
+			secureuri:false,                       //是否启用安全提交,默认为false
 			fileElementId:fileElementId,           //文件选择框的id属性
 			dataType:'json',                       //服务器返回的格式,可以是json或xml等
 			success:function(returndata){        //服务器响应成功时的处理函数

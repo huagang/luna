@@ -26,7 +26,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		return result;
 	}
 	@Override
-	public JSONObject addPoi(String json, MsUser msUser) {
+	public JSONObject addPoi(String json) {
 		JSONObject result = null;
 		try {
 			result = managePoiBL.addPoi(json);
@@ -56,7 +56,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		return result;
 	}
 	@Override
-	public JSONObject updatePoi(String json, MsUser msUser) {
+	public JSONObject updatePoi(String json) {
 		JSONObject result = null;
 		try {
 			result = managePoiBL.updatePoi(json);
@@ -96,7 +96,7 @@ public class ManagePoiServiceImpl implements ManagePoiService {
 		return result;
 	}
 	@Override
-	public JSONObject savePois(String json, MsUser msUser) {
+	public JSONObject savePois(String json) {
 		JSONObject result = null;
 		try {
 			result = managePoiBL.savePois(json);

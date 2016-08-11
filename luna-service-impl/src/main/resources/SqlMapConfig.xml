@@ -56,4 +56,20 @@
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_article_ex_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_show_page_share_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_show_page_share_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_module_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_module_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_menu_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_menu_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_role_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_role_menu_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_menu_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_user_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_user_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_reg_email_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_reg_email_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_role_category_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_role_category_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_farm_field_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_farm_field_ex_SqlMap.xml" />
 </sqlMapConfig>

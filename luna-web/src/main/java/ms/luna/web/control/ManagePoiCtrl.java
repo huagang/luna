@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -44,7 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.CharactorUtil;
@@ -403,8 +404,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		try {
 			HttpSession session = request.getSession(false);
-			MsUser msUser = (MsUser)session.getAttribute("msUser");
-			JSONObject result = this.savePois(savedExcel, unZipped, msUser);
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+			JSONObject result = this.savePois(savedExcel, unZipped, user);
 			MsLogger.info(result.toJSONString());
 			response.getWriter().print(result.toJSONString());
 			response.setStatus(200);
@@ -469,7 +470,7 @@ public class ManagePoiCtrl extends BasicCtrl{
 	 * @throws InvalidFormatException
 	 * @throws IOException
 	 */
-	private JSONObject savePois(String savedExcel, String unzipedDir, MsUser msUser)
+	private JSONObject savePois(String savedExcel, String unzipedDir, LunaUserSession msUser)
 			throws EncryptedDocumentException, InvalidFormatException, IOException {
 
 		JSONObject tagsDef = managePoiService.getInitInfo("{}"); // 获取公共属性定义(tags定义)
@@ -842,7 +843,8 @@ public class ManagePoiCtrl extends BasicCtrl{
 
 		JSONObject param = new JSONObject();
 		param.put("no_check_errors", noCheckErrorPois);
-		JSONObject addedResult = managePoiService.savePois(param.toString(), msUser);
+		param.put("uniqueId", msUser.getUniqueId());
+		JSONObject addedResult = managePoiService.savePois(param.toString());
 		if (!"0".equals(addedResult.getString("code"))) {
 			return FastJsonUtil.error("-1", result.getString("msg"));
 		}

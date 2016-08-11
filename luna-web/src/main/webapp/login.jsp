@@ -15,12 +15,9 @@
     <title>皓月平台</title>
     <link rel="icon" href="http://luna.visualbusiness.cn/favicon.ico" type="image/x-icon" />
 	<link rel="shortcut icon" href="http://luna.visualbusiness.cn/favicon.ico" type="image/x-icon" />
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/login.css">
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -38,11 +35,11 @@
 	                         <h1>登录</h1>
 	                     </div>
 	                     <p class="register">
-	                         <span>首次使用？</span><span class="signin"><a class="link-url" href="/luna-web/merchantRegist.do?method=init_regPage">马上入驻</a></span>
+	                         <span>首次使用？</span><span class="signin"><a class="link-url" href="/common/merchant/registPage">马上入驻</a></span>
 	                     </p>
 	                </div>
 	                <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>
-	                <form method="post" action="<%=request.getContextPath() %>/login.do?method=logon_pwuser">
+	                <form method="post">
 	                 <div class="input-name">
 	                     <input type="text" name="luna_name" id="name-login" placeholder="请输入用户名">
 	                 </div>
@@ -85,6 +82,15 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
+<script>
+    window.context = "<%=request.getContextPath()%>";
+</script>
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/login.js"></script>
 </body>
 </html>

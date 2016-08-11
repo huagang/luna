@@ -3,15 +3,11 @@
  */
 package ms.luna.biz.sc.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.bl.ManageShowAppBL;
+import ms.luna.biz.sc.ManageShowAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
-
-import ms.luna.biz.bl.ManageShowAppBL;
-import ms.luna.biz.model.MsUser;
-import ms.luna.biz.sc.ManageShowAppService;
-import ms.luna.biz.util.FastJsonUtil;
 
 /**
  * 
@@ -91,9 +87,9 @@ public class ManageShowAppServiceImpl implements ManageShowAppService {
 	}
 
 	@Override
-	public JSONObject saveSettingOfApp(String json, MsUser msUser) {
+	public JSONObject saveSettingOfApp(String json) {
 		// TODO Auto-generated method stub
-		return manageShowAppBL.saveSettingOfApp(json, msUser);
+		return manageShowAppBL.saveSettingOfApp(json);
 	}
 
 	@Override

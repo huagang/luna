@@ -132,9 +132,9 @@
 		    </div>
 		</div>
 		<script type='text/javascript'>
-			// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-			window.UEDITOR_HOME_URL = "/luna-web/plugins/ueditor/";
+			window.UEDITOR_HOME_URL =  "/plugins/ueditor/";
 		</script>
+        <script src='<%=request.getContextPath() %>/scripts/lunaweb.js'></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>

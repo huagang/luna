@@ -463,9 +463,9 @@ function modify() {
 /**
  * 界面的初始化状态
  */
-(function ($) {
-    $.init = function () {
-        getAppData(getUrlParam("app_id"));
+(function($) {
+    $.init = function() {
+        getAppData(getAppId());
         getAppSetting();
         this.showPageList(this.pages);
         var firstPage = jQuery(".list-page .drop-item:first");
@@ -1131,6 +1131,10 @@ function showPanoBackground($container, componentData) {
             currentBgPano = null;
         }
     }
+}
+//获取应用的id
+function getAppId() {
+    return  window.location.pathname.match(/\d+/)[0];
 }
 /**
  * 画布中的点击事件

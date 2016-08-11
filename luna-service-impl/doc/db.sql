@@ -251,19 +251,20 @@ CREATE TABLE `ms_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ms_show_app` (
-  `app_id` int(11) NOT NULL AUTO_INCREMENT,
-  `app_name` varchar(64) NOT NULL,
-  `app_code` varchar(32) NOT NULL,
+  `app_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '应用id',
+  `app_name` varchar(64) NOT NULL COMMENT '应用名称',
+  `app_code` varchar(32) NOT NULL COMMENT '应用简称',
   `business_id` int(11) NOT NULL COMMENT '微景业务id',
+  `type` INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版',
   `share_info_title` varchar(64) DEFAULT NULL,
   `share_info_des` varchar(256) DEFAULT NULL,
   `share_info_pic` varchar(256) DEFAULT NULL,
   `app_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '微景展状态，-1：删除, 0:未上线，1：已上线',
-  `app_addr` varchar(256) DEFAULT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `publish_time` timestamp NULL DEFAULT NULL,
-  `pic_thumb` varchar(256) DEFAULT NULL,
-  `note` varchar(512) DEFAULT NULL,
+  `app_addr` varchar(256) DEFAULT NULL COMMENT '微景展发布地址',
+  `owner` varchar(32) DEFAULT NULL COMMENT '微景展负责人',
+  `publish_time` timestamp NULL DEFAULT NULL COMMENT '微景展发布时间',
+  `pic_thumb` varchar(256) DEFAULT NULL COMMENT '应用列表头图',
+  `note` varchar(512) DEFAULT NULL COMMENT '应用列表分享信息',
   `up_hhmmss` timestamp NULL DEFAULT NULL,
   `regist_hhmmss` timestamp NULL DEFAULT NULL,
   `del_flg` varchar(1) NOT NULL DEFAULT '0',
@@ -355,3 +356,86 @@ CREATE TABLE `ms_show_page_share`(
   PRIMARY KEY (id),
   KEY (app_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '微景展分享信息';
+
+CREATE TABLE `luna_user` (
+  `unique_id` char(32) NOT NULL,
+  `luna_name` varchar(64) NOT NULL,
+  `nick_name` varchar(64),
+  `pw_luna_md5` varchar(32) NOT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL COMMENT '''头像地址''',
+  `email` varchar(32) DEFAULT NULL,
+  `regist_hhmmss` timestamp NULL DEFAULT NULL,
+  `up_hhmmss` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`unique_id`),
+  UNIQUE KEY `luna_name` (`luna_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table luna_module(
+  id int(11) auto_increment,
+  name varchar(10) not null comment '模块名称',
+  code varchar(16) not null comment '模块编码，对应restful中模块路径',
+  display_order int(11) not null comment '展示顺序',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  unique(name),
+  unique(code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块表';
+
+create table luna_menu(
+  id int(11) auto_increment,
+  name varchar(10) not null comment '菜单名称',
+  code varchar(16) not null comment '菜单编码，对应restful中菜单路径',
+  url varchar(256) default null comment '外部系统url，内部为空',
+  auth varchar(256) default null comment '权限描述',
+  module_id int(11) not null comment '模块名称',
+  display_order int(11) not null comment '展示顺序',
+  status tinyint(1) not null default 1 comment '是否有效',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  key(module_id),
+  unique(name),
+  unique(code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单表';
+
+create table luna_role(
+  id int(11) auto_increment,
+  name varchar(16) not null comment '角色名称',
+  code varchar(32) not null comment '角色编码',
+  is_admin tinyint(1) not null default 0 comment '是否管理员',
+  parent_id int not null comment '父角色',
+  category_id int(11) not null comment '角色类别id',
+  extra_value int(11) not null default -1 COMMENT '角色模块下拉默认值',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id),
+  key(parent_id),
+  unique(name),
+  unique(code)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+
+create table luna_role_menu(
+  role_id int(11) not null,
+  menu_id int(11) not null,
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(role_id, menu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色菜单对应表';
+
+CREATE TABLE `luna_reg_email` (
+  `token` varchar(64) NOT NULL COMMENT '邮件注册码',
+  `role_id`  int(11) NOT NULL COMMENT '权限Id',
+  `email` varchar(32) NOT NULL COMMENT '邮箱地址',
+  extra text comment '模块下拉选项',
+  `status` tinyint(1) DEFAULT 0 COMMENT '0：未过期，未注册 1：注册',
+  `regist_hhmmss` timestamp NULL DEFAULT NULL COMMENT '注册时间',
+  `up_hhmmss` timestamp NULL DEFAULT NULL,
+  `invite_unique_id` varchar(32) NOT NULL COMMENT '邀请人',
+  PRIMARY KEY (`token`),
+  UNIQUE (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮箱注册';
+
+create table luna_role_category(
+  id int(11) not null auto_increment comment '类别id',
+  name varchar(16) not null comment '类别名称',
+  extra text comment '类别下拉选项',
+  update_time timestamp default current_timestamp on update current_timestamp,
+  primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色类别表';

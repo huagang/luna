@@ -3,6 +3,7 @@ author：Demi*/
 var flag1 =false,
 	flag2=false;
 $(function(){
+	var apiUrls = Inter.getApiUrl();
 //	登陆页面,用户名实时校验是否为空
     $("#name-login").blur(function(){
 //		验证是否为空
@@ -57,16 +58,17 @@ $(function(){
     	$warn.css('display','none');
     	
         $.ajax({
-            url: host + '/login.do?method=logon_pwuser',
-            type: 'POST',
+            url: apiUrls.login.url,
+            type: apiUrls.login.type,
             async: true,
             data: {"luna_name":userName,"password":passWord},
             dataType:"json",
             success: function (returndata) {
                 switch (returndata.code){
                     case "0":
-                    	// 登录成功
-                    	window.location.href=host + "/menu.do?method=goHome";
+					case '403':
+						// 登录成功
+                    	window.location.href=host + "/content/business/select";
                         break;
                     default:
                     	// 登录失败的错误消息

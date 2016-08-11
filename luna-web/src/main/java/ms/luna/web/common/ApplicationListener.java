@@ -4,23 +4,24 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import ms.luna.biz.cons.QCosConfig;
+import ms.luna.biz.cons.QRedisConfig;
 import ms.luna.biz.util.COSUtil;
+import ms.luna.biz.util.QRedisUtil;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.web.util.WebHelper;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 public class ApplicationListener implements ServletContextListener {
 
-	/*
-	 * (non-Javadoc)
-	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-	 */
+	private final static Logger logger = Logger.getLogger(ApplicationListener.class);
+
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
+		QRedisUtil.close();
 	}
-	/*
-	 * (non-Javadoc)
-	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-	 */
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		// webHelper
@@ -29,6 +30,15 @@ public class ApplicationListener implements ServletContextListener {
 		COSUtil.cosBaseDir = cosBaseDir;
 		QCosConfig.ENV = cosBaseDir;
 		String vodBaseDir = event.getServletContext().getInitParameter("vodBaseDir");
-		VODUtil.vodBaseDir = vodBaseDir; 
+		VODUtil.vodBaseDir = vodBaseDir;
+
+		try {
+			QRedisConfig.loadRedisConf();
+			QRedisUtil.init();
+			logger.info("init redis: " + QRedisConfig.HOST);
+		} catch (IOException e) {
+			logger.error("Failed to load redis conf");
+			throw new RuntimeException("Failed to load conf");
+		}
 	}
 }

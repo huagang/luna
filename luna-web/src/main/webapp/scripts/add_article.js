@@ -3,6 +3,13 @@
  * author:wumengqiang & duyutao
  * Date:2016-6-22
  */
+//获取当前的业务数据
+var business = {};
+if (window.localStorage.business.length === 0) {
+    window.location.href = Inter.getApiUrl().selectBusinessPage;
+} else {
+    business = JSON.parse(window.localStorage.business);
+}
 
 var initPage = function () {
     var ue;
@@ -212,9 +219,9 @@ var initPage = function () {
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function (action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-                return Inter.getApiUrl().uploadImageInArtcle;
+                return Inter.getApiUrl().uploadImageInArtcle.url;
             } else if (action == 'uploadvideo') {
-                return Inter.getApiUrl().uploadVideoInArtcle;
+                return Inter.getApiUrl().uploadVideoInArtcle.url;
             } else {
                 return this._bkGetActionUrl.call(this, action);
             }
@@ -236,8 +243,7 @@ var initPage = function () {
                 ]
             ],
         });
-
-    }
+    };
 
     /**
      * 初始化保存、发布、预览时间
@@ -255,7 +261,7 @@ var initPage = function () {
 
             var data = {
                 id: articleStore.id || null,
-                business_id: articleStore.business_id || -1,
+                business_id: business.id,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -266,8 +272,8 @@ var initPage = function () {
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
             $.ajax({
-                url: articleStore.id ? Inter.getApiUrl().updateArticle : Inter.getApiUrl().createArticle,
-                type: 'POST',
+                url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
+                type:  articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -301,8 +307,8 @@ var initPage = function () {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function (e) {
             $.ajax({
-                url: Inter.getApiUrl().publishArticle,
-                type: 'POST',
+                url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
+                type:Inter.getApiUrl().articlePublish.type,
                 async: true,
                 data: { id: articleStore.id },
                 dataType: "json",
@@ -323,7 +329,7 @@ var initPage = function () {
 
         // 事件绑定  文章标题输入框onChange事件 
         // 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
-        document.querySelector('#title').addEventListener('change', function () {
+        document.querySelector('#title').addEventListener('change', function(event) {
             articleStore.title = event.target.value;
         });
 
@@ -334,29 +340,29 @@ var initPage = function () {
         });
 
         // 事件绑定  文章摘要输入框onChange事件
-        document.querySelector('#summary').addEventListener('change', function () {
+        document.querySelector('#summary').addEventListener('change', function(event) {
             articleStore.summary = event.target.value;
         });
 
         // 事件绑定  文章栏目选择框onChange事件
-        document.querySelector('#category').addEventListener('change', function () {
+        document.querySelector('#category').addEventListener('change', function(event) {
             articleStore.category = event.target.value;
         });
 
         // 事件绑定  音频url输入框onChange事件
-        document.querySelector('#audio').addEventListener('change', function () {
+        document.querySelector('#audio').addEventListener('change', function(event) {
             articleStore.audio = event.target.value;
             clearWarn('#audio_warn');
         });
 
         // 事件绑定  视频url输入框onChange事件
-        document.querySelector('#video').addEventListener('change', function () {
+        document.querySelector('#video').addEventListener('change', function(event) {
             articleStore.video = event.target.value;
             clearWarn('#video_warn');
         });
 
         // 事件绑定  文章头图文件onChange事件 
-        document.querySelector('#pic_fileup').addEventListener('change', function () {
+        document.querySelector('#pic_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             var preview = document.querySelector('#thumbnail_show');
             preview.src = '';
@@ -373,7 +379,7 @@ var initPage = function () {
         });
 
         // 事件绑定  视频文件onChange事件 
-        document.querySelector('#video_fileup').addEventListener('change', function () {
+        document.querySelector('#video_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
             FileUploader.uploadFile('video', event.target.files[0], function (data) {
@@ -389,7 +395,7 @@ var initPage = function () {
         });
 
         // 事件绑定  音频文件onChange事件 
-        document.querySelector('#audio_fileup').addEventListener('change', function () {
+        document.querySelector('#audio_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
             FileUploader.uploadFile('audio', event.target.files[0], function (data) {
@@ -419,12 +425,13 @@ var initPage = function () {
          * */
         var business_id, id;
         try {
-            business_id = parseInt(location.href.match(/business_id=(\d+)/)[1]);
+            business_id = parseInt(location.href.match(/content\/article\/(\d+)/)[1]);
         } catch (e) {
             business_id = null;
         }
         try {
-            id = parseInt(location.href.match(/(\&|\?)id=(\d+)/)[2]);
+            var idx = location.href.lastIndexOf("/");
+            id = parseInt(location.href.substr(idx + 1));
         } catch (e) {
             id = '';
         }
@@ -492,9 +499,8 @@ var initPage = function () {
 
     function updateArticleData(id) {
         $.ajax({
-            url: Inter.getApiUrl().readArticle,
-            type: 'GET',
-            data: { id: id },
+            url: Util.strFormat(Inter.getApiUrl().articleEditData.url, [id]),
+            type: Inter.getApiUrl().articleEditData.type,
             dataType: 'json',
             success: function (data) {
                 if (data.code === '0') {
@@ -585,8 +591,8 @@ var initPage = function () {
                 updateArticleData(articleStore.id);
             }
         }
-    }
-} ();
+    };
+}();
 
 
 $(document).ready(function () {

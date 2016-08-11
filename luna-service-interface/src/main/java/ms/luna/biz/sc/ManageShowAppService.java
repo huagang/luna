@@ -38,6 +38,6 @@ public interface ManageShowAppService {
 
 	JSONObject getSettingOfApp(int appId);
 
-	JSONObject saveSettingOfApp(String json, MsUser msUser);
+	JSONObject saveSettingOfApp(String json);
 
 }

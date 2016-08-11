@@ -148,7 +148,7 @@ public class ManageBusinessTreeCtrl {
 			param.put("businessId", businessId);
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
-			JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString(), msUser);
+			JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString());
 
 			response.getWriter().print(result.toString());
 			response.setStatus(200);

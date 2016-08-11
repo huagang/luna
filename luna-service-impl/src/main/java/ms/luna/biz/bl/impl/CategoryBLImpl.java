@@ -1,17 +1,16 @@
 package ms.luna.biz.bl.impl;
 
 import java.util.List;
+import java.util.UUID;
 
+import ms.luna.biz.util.*;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.visualbusiness.gennum.service.GenNumService;
 
-import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.DateUtil;
-import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.MsLogger;
 import ms.luna.biz.dao.custom.MsCategoryDAO;
 import ms.luna.biz.dao.model.MsCategory;
 import ms.luna.biz.dao.model.MsCategoryCriteria;
@@ -93,7 +92,8 @@ public class CategoryBLImpl implements CategoryBL {
 			return FastJsonUtil.error("2", "category_nm_en重名");
 		}
 
-		String num = genNumService.generateNum("CATE", 1L, 16);
+//		String num = genNumService.generateNum("CATE", 1L, 16);
+		String num = UUIDGenerator.generateUUID();
 		if (CharactorUtil.isEmpyty(num)) {
 			MsLogger.debug("编号生成失败：[CATE]");
 			throw new RuntimeException("编号生成失败：[CATE]");

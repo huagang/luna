@@ -1,9 +1,8 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.luna.biz.dao.model.MsShowApp;
 import ms.luna.biz.dao.model.MsShowAppCriteria;
-
-import java.util.List;
 
 public interface MsShowAppDAOBase {
     int countByCriteria(MsShowAppCriteria example);
@@ -12,9 +11,9 @@ public interface MsShowAppDAOBase {
 
     int deleteByPrimaryKey(Integer appId);
 
-    void insert(MsShowApp record);
+    Integer insert(MsShowApp record);
 
-    void insertSelective(MsShowApp record);
+    Integer insertSelective(MsShowApp record);
 
     List<MsShowApp> selectByCriteria(MsShowAppCriteria example);
 
@@ -27,4 +26,8 @@ public interface MsShowAppDAOBase {
     int updateByPrimaryKeySelective(MsShowApp record);
 
     int updateByPrimaryKey(MsShowApp record);
+
+    MsShowApp selectByPrimaryKeyWithoutDeleted(Integer appId);
+
+    int selectCountByPrimaryKeyWithoutDeleted(Integer appId);
 }

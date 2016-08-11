@@ -1,6 +1,8 @@
 package ms.luna.biz.dao.custom;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import ms.luna.biz.dao.MsBusinessDAOBase;
 import ms.luna.biz.dao.custom.model.MerchantsParameter;
@@ -13,6 +15,8 @@ public interface MsBusinessDAO extends MsBusinessDAOBase {
 	
 	public List<MsBusinessResult> selectBusinessWithFilter(MsBusinessParameter parameter);
 	
-	public int readTotalBusinessCount();	
+	public int readTotalBusinessCount();
+
+	public Map<Integer, String> readBusinessCategoryId(Collection<Integer> businessIds);
 	
 }

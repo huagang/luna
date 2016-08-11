@@ -40,7 +40,7 @@ $(document).ready(function(){
 	    }
 	    
 	    $.ajax({
-	        url: host+'/manage/category.do?method=add_category',
+	        url: Inter.getApiUrl().cateCreate.url,
 	        type: 'POST',
 	        async: false,
 	        data: {"category_nm_zh":category_nm_zh,"category_nm_en":category_nm_en},
@@ -52,8 +52,7 @@ $(document).ready(function(){
 	                	// 正常添加
 	                	$("#pop-cata").css("display","none");
 	                	$("#pop-overlay").css("display","none");
-//					    message(result.msg, null, host +'/manage/category.do?method=init_categorys');
-	                	window.location.href=host +'/manage/category.do?method=init_categorys';
+	                	window.location.href=Inter.getApiUrl().cateInit.url;
 						break;
 	                case "1":
 	                	$("#warn1").html("名称已存在").css('display','block');
@@ -98,8 +97,8 @@ $(document).ready(function(){
 	    }
 	    
 	    $.ajax({
-	        url: host+'/manage/category.do?method=update_category',
-	        type: 'POST',
+	        url: Inter.getApiUrl().cateUpdate.url,
+	        type: 'PUT',
 	        async: false,
 	        data: {"category_id":category_id,"category_nm_zh":category_nm_zh,"category_nm_en":category_nm_en},
 	        dataType:"json",
@@ -110,8 +109,7 @@ $(document).ready(function(){
 	                	// 正常更新
 	                	$("#pop-modify").css("display","none");
 	                	$("#pop-overlay").css("display","none");
-//						message(result.msg, null, host +'/manage/category.do?method=init_categorys');
-	                	window.location.href=host +'/manage/category.do?method=init_categorys';
+	                	window.location.href=Inter.getApiUrl().cateInit.url;
 						break;
 	                case "1":
 	                	$("#warn3").html("名称已存在").css('display','block');
@@ -188,8 +186,8 @@ function verifyDel(){
     var category_id =$("#category_id_delete").val();
     var ev= $(event.target).parent().parent();  //获取当前弹出窗口
     $.ajax({
-        url: host+'/manage/category.do?method=delete_category',
-        type: 'POST',
+        url: Util.strFormat(Inter.getApiUrl().cateDelete.url,[category_id]),
+        type: 'DELETE',
         async: false,
         data: {"category_id":category_id},
         dataType:"json",
@@ -200,8 +198,7 @@ function verifyDel(){
                 	// 正常删除
                 	$("#pop-delete").css("display","none");
                 	$("#pop-overlay").css("display","none");
-//                	message(result.msg, null, host +'/manage/category.do?method=init_categorys');
-                	window.location.href=host +'/manage/category.do?method=init_categorys';
+                	window.location.href=Inter.getApiUrl().cateInit.url;
 					break;
                 default:
                 	$("#pop-delete").css("display","none");

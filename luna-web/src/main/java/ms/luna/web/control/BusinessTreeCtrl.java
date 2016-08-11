@@ -191,7 +191,7 @@ public class BusinessTreeCtrl {
 			HttpSession session = request.getSession(false);
 			MsUser msUser = (MsUser)session.getAttribute("msUser");
 
-			JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString(), msUser);
+			JSONObject result = manageBusinessTreeService.saveBusinessTree(param.toString());
 			MsLogger.info(result.toJSONString());
 			response.getWriter().print(result.toJSONString());
 			response.setStatus(200);

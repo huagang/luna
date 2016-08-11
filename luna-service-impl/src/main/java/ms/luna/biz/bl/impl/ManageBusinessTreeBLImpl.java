@@ -27,7 +27,6 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
-import ms.biz.common.AuthenticatedUserHolder;
 import ms.biz.common.MongoConnector;
 import ms.luna.biz.bl.ManageBusinessTreeBL;
 import ms.luna.biz.cons.VbConstant;
@@ -40,7 +39,6 @@ import ms.luna.biz.dao.model.MsBusiness;
 import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.dao.model.MsPoiTag;
 import ms.luna.biz.dao.model.MsPoiTagCriteria;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -87,8 +85,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		Date date = new Date();
 		document.put("c_list", param.get("c_list"));
 		document.put("update_hhmmss", date);
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		document.put("updated_by_unique_id", msUser.getUniqueId());
+		document.put("updated_by_unique_id", param.getString("uniqueId"));
 
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("$set", document);
@@ -173,8 +170,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		document.put("c_list", JSONObject.parse("{}"));
 		document.put("regist_hhmmss", date);
 		document.put("update_hhmmss", date);
-		MsUser msUser = (MsUser)AuthenticatedUserHolder.get();
-		document.put("updated_by_unique_id", msUser.getUniqueId());
+		document.put("updated_by_unique_id", param.getString("uniqueId"));
 
 		// mongo中有唯一性约束，所以直接插入即可
 		try {

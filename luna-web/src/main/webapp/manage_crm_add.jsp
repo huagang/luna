@@ -21,12 +21,6 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -41,7 +35,7 @@
                     <h3>新建商户</h3>
                 </div>
                 <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>
-			    <form id="form-add" action="<%=request.getContextPath() %>/manage_merchant.do?method=create_merchant" method="post" 
+			    <form id="form-add" action="/content/crm" method="post"
 			        onkeydown="if(event.keyCode==13){return false;}" >
 
                     <div class="information" >
@@ -79,7 +73,7 @@
 				                <label><input type="radio" id="license" name="license" value="否" />否</label>
 			                    <div id="license-area" style="position:relative;">
 				              		<input id="license-url" name="resource_content" style="display:none;"/>
-				                   	<input type="file" id="license-upload" name="thumbnail_fileup_add" data_upload="true" onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
+				                   	<input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
 				                   	<button id="btn-license-upload" >营业执照副本电子版</button><span class="info-add">*需要保证图片中文字清晰可见</span>
 									<div class="warn" id="license-upload-warn">必须填写</div>
 			                	</div>
@@ -175,7 +169,7 @@
 			                <div class="item-label"><span class="superscript">*</span>受理业务员：</div>
 			                <div class="item-value">
 			                    <span id="agent" >${luna_nm}</span>
-			                    <span><img src="img/edit.png" id="editagent"/></span>
+			                    <span><img src="/img/edit.png" id="editagent"/></span>
 			                    <div class="warn" id="agent-warn">必须填写</div>
 			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
 			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
@@ -206,7 +200,14 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
-
+<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 <script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>

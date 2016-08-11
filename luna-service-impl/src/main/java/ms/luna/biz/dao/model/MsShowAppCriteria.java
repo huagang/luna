@@ -1,6 +1,10 @@
 package ms.luna.biz.dao.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MsShowAppCriteria {
     protected String orderByClause;
@@ -1475,6 +1479,142 @@ public class MsShowAppCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppNameLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(app_name) like", value.toUpperCase(), "appName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppCodeLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(app_code) like", value.toUpperCase(), "appCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andShareInfoTitleLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(share_info_title) like", value.toUpperCase(), "shareInfoTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andShareInfoDesLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(share_info_des) like", value.toUpperCase(), "shareInfoDes");
+            return (Criteria) this;
+        }
+
+        public Criteria andShareInfoPicLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(share_info_pic) like", value.toUpperCase(), "shareInfoPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppAddrLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(app_addr) like", value.toUpperCase(), "appAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(owner) like", value.toUpperCase(), "owner");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicThumbLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(pic_thumb) like", value.toUpperCase(), "picThumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andNoteLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(note) like", value.toUpperCase(), "note");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlgLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(del_flg) like", value.toUpperCase(), "delFlg");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByWjnmLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(UPDATED_BY_WJNM) like", value.toUpperCase(), "updatedByWjnm");
+            return (Criteria) this;
+        }
+
         public Criteria andPublishTimeEqualToCurrentDate() {
             addCriterion("publish_time = ","CURRENT_DATE","publishTime");
             return (Criteria)this;
@@ -1575,72 +1715,6 @@ public class MsShowAppCriteria {
 
         protected Criteria() {
             super();
-        }
-
-        public Criteria andAppNameLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(app_name) like", value.toUpperCase(), "appName");
-            return this;
-        }
-
-        public Criteria andAppCodeLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(app_code) like", value.toUpperCase(), "appCode");
-            return this;
-        }
-
-        public Criteria andShareInfoTitleLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(share_info_title) like", value.toUpperCase(), "shareInfoTitle");
-            return this;
-        }
-
-        public Criteria andShareInfoDesLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(share_info_des) like", value.toUpperCase(), "shareInfoDes");
-            return this;
-        }
-
-        public Criteria andShareInfoPicLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(share_info_pic) like", value.toUpperCase(), "shareInfoPic");
-            return this;
-        }
-
-        public Criteria andAppAddrLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(app_addr) like", value.toUpperCase(), "appAddr");
-            return this;
-        }
-
-        public Criteria andOwnerLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(owner) like", value.toUpperCase(), "owner");
-            return this;
-        }
-
-        public Criteria andPicThumbLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(pic_thumb) like", value.toUpperCase(), "picThumb");
-            return this;
-        }
-
-        public Criteria andNoteLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(note) like", value.toUpperCase(), "note");
-            return this;
-        }
-
-        public Criteria andDelFlgLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(del_flg) like", value.toUpperCase(), "delFlg");
-            return this;
-        }
-
-        public Criteria andUpdatedByWjnmLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(UPDATED_BY_WJNM) like", value.toUpperCase(), "updatedByWjnm");
-            return this;
         }
 
         public Criteria setRowNum(String rowNum) {
