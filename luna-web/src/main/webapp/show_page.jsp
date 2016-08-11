@@ -103,9 +103,6 @@
               <div class="app-set-btn">
                 <span id="btn-publish" ng-click="menu.publishApp()">发布</span>
               </div>
-              <div class="app-set-btn">
-                <span id="btn-set" ng-click="menu.appSetting()">设置</span>
-              </div>
             </div>
           </nav>
         </div>
