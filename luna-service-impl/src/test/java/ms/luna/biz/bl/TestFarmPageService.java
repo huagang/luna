@@ -70,7 +70,7 @@ public class TestFarmPageService {
 
 	@Test
 	public void getPageInfo(){
-		Integer appId = 287;
+		Integer appId = 298;
 		JSONObject result = farmPageService.getPageInfo(appId);
 		System.out.println(result.toString());
 

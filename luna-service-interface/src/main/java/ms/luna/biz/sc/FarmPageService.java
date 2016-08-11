@@ -19,7 +19,7 @@ public interface FarmPageService {
     // 获取页面字段定义
     JSONObject getFarmFields();
 
-    // 获取页面数据
+    // 获取页面数据 -- preview and publish
     JSONObject getPageInfo(Integer appId);
 
     // 预览

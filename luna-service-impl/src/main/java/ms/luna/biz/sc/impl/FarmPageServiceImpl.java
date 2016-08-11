@@ -175,11 +175,12 @@ public class FarmPageServiceImpl implements FarmPageService {
                 criteria.andNameEqualTo(MsFarmPageDAO.FACILITY);
                 List<MsFarmField> list = msFarmFieldDAO.selectByCriteria(msFarmFieldCriteria);
                 if (list != null && list.size() != 0) {
-                    JSONArray res = new JSONArray();
-                    JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());
-                    JSONArray array = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
-                    Set<String> facilityIds = getFacilityValues(array);
+                    JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());// 场地设施总集合
 
+                    JSONArray array2 = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
+                    Set<String> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
+
+                    JSONArray res = new JSONArray();
                     for (int i = 0; i < array1.size(); i++) {
                         String value = array1.getJSONObject(i).getString("value");
                         if (facilityIds.contains(value)) {
