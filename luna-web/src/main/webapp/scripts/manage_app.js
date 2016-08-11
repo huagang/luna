@@ -516,11 +516,11 @@ function NewAppController() {
 								break;
 						}
 					} else {
-						console.log(data.msg || '新建微景展失败');
+						showMessage(data.msg || '新建微景展失败');
 					}
 				},
 				error: function (data) {
-					console.log(data.msg || '新建微景展失败');
+					showMessage(data.msg || '新建微景展失败');
 				}
 			});
 		}

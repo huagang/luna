@@ -789,6 +789,9 @@
                 that.binded = true;
                 that.element.find('.radio-item').on('change', function (event) {
                     that.value = event.target.value;
+                    if(typeof that.definition.options[0].value === 'number'){
+                        that.value = parseInt(that.value);
+                    }
                     that.element.find('.radio-item').prop('checked',false);
                     $(event.target).prop('checked', true);
                 });
@@ -1290,6 +1293,9 @@
             });
             if(notFound){
                 that.definition.options.some(function(item){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     if(item.value === value){
                         that.addItem({
                             value: value,
@@ -1446,6 +1452,9 @@
                 var value = that.definition.options[order].value;
                 var index = that.value.indexOf(value);
                 if(index  === -1 ){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     that.value.push(value);
                 } else{
                     that.value.splice(index, 1);
