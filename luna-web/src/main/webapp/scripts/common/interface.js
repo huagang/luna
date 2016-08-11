@@ -35,7 +35,7 @@ var Inter = function () {
         getPageUrl: function(){
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: 'http://webapp.visualbusiness.cn/app/createapp?appId={0}&token={1}',
+                devAppEdit: 'http://webapp.visualbusiness.cn/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
             };
         },

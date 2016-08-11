@@ -502,12 +502,13 @@ function NewAppController() {
 				success: function (data) {
 					if (data.code === '0') {
 						that.dialog.removeClass('pop-show');
+						that.freshAppList();
 						switch (that.data.type) {
 							case 'basic':
 								location.href = pageUrls.basicAppEdit.format(data.data.app_id, that.data.businessId);
 								break;
 							case 'dev':
-								location.href = pageUrls.devAppEdit.format(data.data.app_id, data.data.token);
+								location.href = pageUrls.devAppEdit.format('createapp', data.data.app_id, data.data.token);
 								break;
 							case 'data':
 								location.href = pageUrls.dataAppEdit.format(data.data.app_id, that.data.businessId);
@@ -736,7 +737,7 @@ function editDevApp(appId) {
 		type: apiUrls.appToken.type,
 		success: function (res) {
 			if (res.code === '0') {
-				location.href = pageUrls.devAppEdit.format(appId, res.data.token);
+				location.href = pageUrls.devAppEdit.format('editapp',appId, res.data.token);
 			} else {
 				alert(res.msg || '获取token失败')
 			}
