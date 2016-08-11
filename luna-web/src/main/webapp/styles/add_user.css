@@ -8,6 +8,7 @@
 #email-input{
     border: none;
     outline: none;
+    padding-left: 10px;
 }
 
 .placeholder{
@@ -103,6 +104,8 @@
 }
 
 .email-item{
-    background: #EEEEEE;
+    background: #EEE;
     color: #212121;
+    padding: 3px 6px;
+    border-radius: 10px;
 }
