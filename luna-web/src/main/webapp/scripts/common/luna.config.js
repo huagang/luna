@@ -9,5 +9,10 @@ var lunaConfig = function(){
     return {
     	"host":'',
         "imghost":"http://cdn.visualbusiness.cn/public/vb",
+        'microPanoType':{
+            '0':'基础版',
+            '1':'数据版',
+            '2':'开发版',
+        }
     }
 }();
