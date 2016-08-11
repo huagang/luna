@@ -5,7 +5,7 @@ $(function(){
 
     var controller = new Controller();
     function Controller() {
-
+        window.t = this;
         var that = this;
 
         // 初始化函数
