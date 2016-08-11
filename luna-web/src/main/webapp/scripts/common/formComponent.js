@@ -1286,7 +1286,7 @@
 
         function handleSelect(value){
             var notFound = that.value.every(function(item){
-                if(item.value === value){
+                if(parseInt(item.value) === parseInt(value)){
                     return false;
                 }
                 return true;
