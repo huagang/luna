@@ -204,6 +204,9 @@
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
 
+            $(document.body).on('scroll', function(){
+
+            });
 
         }
 
