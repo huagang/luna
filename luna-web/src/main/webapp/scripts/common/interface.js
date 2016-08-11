@@ -43,6 +43,7 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
+                manageApp: context + '/platform/user'
             };
         },
         getApiUrl: function () {
