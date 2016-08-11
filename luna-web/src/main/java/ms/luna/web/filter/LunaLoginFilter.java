@@ -85,13 +85,6 @@ public class LunaLoginFilter implements Filter {
             }
             HttpSession session = httpServletRequest.getSession(false);
             if(session == null || SessionHelper.getUser(session) == null) {
-                if(session == null) {
-                    logger.trace("session is null");
-                }
-                if(SessionHelper.getUser(session) == null) {
-                    logger.trace("user info is null");
-                }
-                logger.trace("redirect to login");
                 httpServletResponse.sendRedirect(contextPath + CommonURI.LOGIN_SERVLET_PATH);
                 return;
             }

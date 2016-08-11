@@ -1,6 +1,7 @@
 package com.microscene.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.sc.MsShowPageService;
@@ -31,6 +32,9 @@ public class AppController extends BaseController {
     private final static Logger logger = Logger.getLogger(AppController.class);
 
     @Autowired
+    private FarmPageService farmPageService;
+
+    @Autowired
     private ManageShowAppService manageShowAppService;
     @Autowired
     private MsShowPageService msShowPageService;
@@ -59,20 +63,17 @@ public class AppController extends BaseController {
 
     }
 
+    // 方便前端开发,临时代码.
     @RequestMapping(method = RequestMethod.GET, value = "/farm/{appId}")
     public ModelAndView showpage(
             @PathVariable("appId") Integer appId,
             HttpServletRequest request, HttpServletResponse response) {
-        try {
-            ModelAndView modelAndView = buildModelAndView("showFarmHouse");
-            modelAndView.addObject("appId", appId);
-            return modelAndView;
 
-        } catch (Exception e) {
-            MsLogger.error("Failed to load all pages", e);
-        }
-
-        return new ModelAndView("/error.jsp");
+        ModelAndView modelAndView = buildModelAndView("showFarmHouse");
+        JSONObject result = farmPageService.getPageInfo(appId);
+        modelAndView.addObject("pageData", result.getJSONObject("data"));
+        modelAndView.addObject("appId", appId);
+        return modelAndView;
     }
 
     private void fillAppShareInfo(int appId, ModelAndView modelAndView) {

@@ -28,8 +28,10 @@ public class IndexController extends BasicController {
         HttpSession session = request.getSession(false);
 
         if(session == null) {
+            logger.trace("go to login");
             return buildModelAndView("login");
         } else {
+            logger.trace("go to home " + session.getId());
             return buildModelAndView("home");
         }
 

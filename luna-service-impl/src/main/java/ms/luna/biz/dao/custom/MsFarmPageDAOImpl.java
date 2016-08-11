@@ -6,11 +6,13 @@ import com.mongodb.client.model.Filters;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.DateUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,22 +55,13 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
         return collection.find(filter).limit(1).first();
     }
 
-    /**
-     * JSON数据转化为Document
-     *
-     * @param document 需要更新的数据ß
-     * @param data 更新数据
-     * @return Document
-     */
-    private Document convertJson2Document(Document document, JSONObject data) {
-        if(document == null) {
-            document = new Document();
+    @Override
+    public JSONObject getPageInfo(Document document, List<String> fields) {
+        JSONObject result = new JSONObject();
+        for(String field : fields) {
+            result.put(field, document.containsKey(field)? document.get(field) : null);
         }
-        Set<String> keys = data.keySet();
-        for(String key : keys) {
-            document.put(key, data.get(key));
-        }
-        return document;
+        return result;
     }
 
 }
