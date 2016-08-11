@@ -315,7 +315,7 @@
 
 		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
+		return wrapperStart  + modifyOp + reuseApp + delApp+ editOp + '</div>';
 	}
 
 	function queryParams(params) {
