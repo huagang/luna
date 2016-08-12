@@ -26,7 +26,7 @@ function showAnimation(){
     $('.page-back .fg').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: "ease-out",
+            easing: "ease-in",
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
@@ -35,13 +35,16 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-                    $(document.body).removeClass('modal-open');
+
                 }
             });
         $('.page-main').velocity({opacity: 1},
             {
-                duration: 2500,
-                easing: 'ease-in'
+                duration: 2000,
+                easing: 'ease-in',
+                complete: function(){
+                    $(document.body).removeClass('modal-open');
+                }
             });
     }, 5000);
 };
@@ -58,6 +61,7 @@ function showAnimation(){
     function getMarkerTip() {
         function MarkerTip(data) {
             //this.construct(data);
+            this.data = data;
             this.position = data.position;
             this.distance = data.distance || '';
             this.markerName = data.markerName || '';
@@ -77,8 +81,9 @@ function showAnimation(){
             this.div.classList.add('hidden');
             this.div.getElementsByClassName('marker-name')[0].innerHTML = this.markerName;
             this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + this.distance + 'km';
-            this.div.getElementsByTagName('a')[0].href = this.href;
-
+            $(this.div).find('.tip-right').on('click', function(){
+                this.data.onClick();
+            }.bind(this));
             //将dom添加到覆盖物层
             var panes = this.getPanes();
             //设置panes的层级，overlayMouseTarget可接收点击事件
@@ -339,7 +344,7 @@ function showAnimation(){
                     display: 'block', 'text-align': 'center', width: '100px'
                 },
                 clickable: true,
-                content: vm.poiData.poi_name || ''
+                content: vm.poiData.poi_name || '',
             });
 
 
@@ -354,7 +359,7 @@ function showAnimation(){
             if (vm.poiList) {
                 vm.poiList.forEach(function (item, index) {
 
-                    if (!vm.poiType[item.category.category_id]) {
+                    if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
                         return;
                     }
                     var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
@@ -377,7 +382,7 @@ function showAnimation(){
                         distance: item.distance,
                         position: position,
                         visible: false,
-                        href: encodeURI("http://map.qq.com/nav/drive?start=" + vm.poiData.lnglat.lng + "," + vm.poiData.lnglat.lat + "&dest=" + item.lnglat.lng + "," + item.lnglat.lat + "&sword=" + vm.poiData.poi_name + "&eword=" + item.poi_name)
+                        onClick: vm.navigate.bind(vm,item)
                     });
 
                     item.markerTip.setMap(vm.map);
@@ -523,7 +528,6 @@ function showAnimation(){
             $http({
                 url: vm.apiUrls.multiplyPanoInfo.format(vm.farmData.panorama.text),
                 method: 'GET',
-
             }).then(function (res) {
                 if (res.data.result === 0) {
                     vm.farmData.panorama.panoList = [];
@@ -580,16 +584,17 @@ function showAnimation(){
 
         }
 
-        function navigate() {
+        function navigate(navInfo) {
+            navInfo = navInfo || vm.poiData;
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
                     try {
-                        var address = vm.poiData.address;
+                        var address = navInfo.address;
                         wx.openLocation({
-                            latitude: Number(vm.poiData.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
-                            longitude: Number(vm.poiData.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
+                            latitude: Number(navInfo.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
+                            longitude: Number(navInfo.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: vm.poiData.poi_name, // 位置名
                             address: address.city + address.county + address.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
@@ -637,7 +642,7 @@ function showAnimation(){
             qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function (res) {
                 //取出经纬度并且赋值
                 latlng = res[0];
-                var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + vm.poiData.lnglat.lng + "%2C" + vm.poiData.lnglat.lat + "&sword=我的位置&eword=" + vm.poiData.poi_name + "&ref=mobilemap&referer=";
+                var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + vm.navInfo.lnglat.lng + "%2C" + vm.navInfo.lnglat.lat + "&sword=我的位置&eword=" + vm.navInfo.poi_name + "&ref=mobilemap&referer=";
                 // alert(url);
                 window.location.href = url;
             });
