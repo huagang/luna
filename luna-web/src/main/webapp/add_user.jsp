@@ -63,6 +63,7 @@
                 <div class='form-input'>
                     <label>选择角色:</label>
                     <select class="ng-hide" ng-model="user.data.role" ng-change="user.handleRoleChange()" ng-show="user.roles.length !== 1">
+                        <option value="">请选择角色</option>
                         <option class="ng-hide" ng-show="user.roles.length === 0" disabled="disabled">无</option>
                         <option class="ng-hide" ng-repeat="role in user.roles" value="{{role.id}}" ng-show="user.roles.length>0">{{role.name}}</option>
 
@@ -103,7 +104,9 @@
             <!--主题内容 end-->
         </div>
     </div>
-
+    <div class="message-wrapper hidden">
+        <div class="message"></div>
+    </div>
 </div>
 <script>
     try{

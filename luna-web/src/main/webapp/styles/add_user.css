@@ -45,7 +45,7 @@
 }
 
 .footer{
-    margin: 50px 0 0 0;
+    margin: 25px 0 0 0;
 }
 
 .bussiness-container{
@@ -116,4 +116,28 @@
     border-radius: 10px;
     display: inline-block;
     margin: 0 6px 6px 0;
+}
+
+.message-wrapper {
+    position: fixed;
+    display: inline-block;
+    width: 400px;
+    top: 45%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.message-wrapper .message{
+    display: inline-block;
+    margin: auto;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    background-color: rgba(0,0,0, .4);
+    border-radius: 4px;
+    color: white;
 }

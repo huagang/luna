@@ -34,6 +34,9 @@
         // 操作 检查填写内容是否合法
         vm._checkValidation = _checkValidation;
 
+        // 操作 显示信息
+        vm.showMessage = showMessage;
+
         // 事件 点击红叉删除邮箱
         vm.handelDeleteEmail = handelDeleteEmail;
 
@@ -68,6 +71,7 @@
 
         function init() {
             vm.apiUrls = Inter.getApiUrl();
+            vm.msgManager = angular.element('.message-wrapper');
             vm.data = {
                 email: '',
                 emailFocus: false,
@@ -301,13 +305,12 @@
                         data: data
                     }).then(function (res) {
                         if(res.data.code === '0'){
-                            alert('邀请用户成功');
-                            location.href = Inter.getPageUrl().manageApp;
+                            vm.showMessage('邀请用户成功');
                         } else{
-                            alert(res.data.msg || '邀请用户失败');
+                            vm.showMessage(res.data.msg || '邀请用户失败');
                         }
                     }, function (res) {
-                        alert(res.data.msg || '邀请用户失败');
+                            vm.showMessage(res.data.msg || '邀请用户失败');
                     });
                 } else{
                     $http({
@@ -402,6 +405,14 @@
             }, function(res){
                 console.error(res.data.msg || '获取业务列表失败');
             })
+        }
+
+        function showMessage(msg){
+            vm.msgManager.removeClass('hidden');
+            vm.msgManager.find('.message').html(msg);
+            setTimeout(function(){
+                vm.msgManager.addClass('hidden');
+            }, 2000);
         }
 
 
