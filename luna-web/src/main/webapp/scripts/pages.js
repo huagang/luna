@@ -1057,8 +1057,8 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
-    console.log(component.position.changeTrigger.horizontal);
-    console.log(component.position.changeTrigger.vertial);
+    // console.log(component.position.changeTrigger.horizontal);
+    // console.log(component.position.changeTrigger.vertial);
     if (component.position.changeTrigger.horizontal == 'right') {
         comobj.css("left", 'auto');
         comobj.css("right", component.right + unit);

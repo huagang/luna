@@ -1222,7 +1222,7 @@
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
                         <div>栏目名称:
                           <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
-                              <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}
+                              <option ng-repeat='articleColumn in menuTab.articleColumnList track by articleColumn.columnId' value='{{articleColumn.columnId}}'>{{articleColumn.columnName}}
                                             </option>
                           </select>
                         </div>

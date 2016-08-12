@@ -3,6 +3,7 @@ package ms.luna.web.control.content;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.MsColumnTable;
 import ms.luna.biz.util.FastJsonUtil;
@@ -38,6 +39,8 @@ public class ColumnController extends BasicController {
 
     @Autowired
     private ManageColumnService manageColumnService;
+    @Autowired
+    private ManageArticleService manageArticleService;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -161,5 +164,17 @@ public class ColumnController extends BasicController {
             return FastJsonUtil.error("-1", "删除失败");
         }
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value="/listByBusiness/{businessId}")
+    @ResponseBody
+    public JSONObject readColumnByBusinessId(@PathVariable int businessId ) throws IOException {
+
+        JSONObject columnJsonData = manageArticleService.getColumnByBusinessId(businessId);
+        if(columnJsonData.getString("code").equals("0")) {
+            return columnJsonData;
+        } else {
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目失败");
+        }
     }
 }
