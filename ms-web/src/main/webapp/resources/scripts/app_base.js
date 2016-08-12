@@ -156,14 +156,21 @@ $(document).ready(function () {
 
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         var videourl = $(this).data('videourl');
         $('#diaVideo').attr('src', videourl);
         $('.video-modal').show();
     });
 
     $('.app-wrap').on('click', '.video-modal', function (e) {
-        $(this).hide();
-        $(this).find('video')[0].pause();
+        var curDom = $(e.target),
+            videoModalDom = curDom.closest('.video-dialog');
+        if(videoModalDom.length>0){
+        }else{
+            $('.video-modal').hide();
+            $('.video-modal').find('video')[0].pause();
+        }
     });
     // 弹框视频弹出效果  End
 

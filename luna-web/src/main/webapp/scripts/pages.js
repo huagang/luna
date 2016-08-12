@@ -130,9 +130,9 @@ componentAudioModelTemplate = {
     "content": {
         "icon": "",
         "panoId": "",
-        "autoPlay": '',
+        "autoPlay": '0',
         "file": "",
-        "loopPlay": "",
+        "loopPlay": "0",
         "pauseIcon": "",
         "playIcon": ""
     },
@@ -150,7 +150,7 @@ componentVideoModelTemplate = {
     "content": {
         "icon": "",
         "panoId": "",
-        "videoShowType": '', //视频展示类型
+        "videoShowType": '1', //视频展示类型
         "videoUrl": "",
         "videoIcon": "",
     },
