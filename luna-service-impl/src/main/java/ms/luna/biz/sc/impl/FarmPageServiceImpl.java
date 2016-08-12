@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.cons.VbConstant.fieldType;
+import ms.luna.biz.cons.VbConstant.FieldTypes;
 import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.FarmFieldParameter;
 import ms.luna.biz.dao.custom.model.FarmFieldResult;
@@ -178,11 +178,13 @@ public class FarmPageServiceImpl implements FarmPageService {
                     JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());// 场地设施总集合
 
                     JSONArray array2 = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
-                    Set<String> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
+//                    Set<String> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
+                    Set<Integer> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
 
                     JSONArray res = new JSONArray();
                     for (int i = 0; i < array1.size(); i++) {
-                        String value = array1.getJSONObject(i).getString("value");
+//                        String value = array1.getJSONObject(i).getString("value");
+                        Integer value = array1.getJSONObject(i).getInteger("vaule");
                         if (facilityIds.contains(value)) {
                             res.add(array1.getJSONObject(i));
                         }
@@ -200,15 +202,15 @@ public class FarmPageServiceImpl implements FarmPageService {
     //-----------------------------------------------------------------------------------------------
 
     /**
-     * 获取场地设施id集合
+     * 获取场地设施id集合(mongo)
      *
      * @param array
      * @return
      */
-    Set<String> getFacilityValues(JSONArray array) {
-        Set<String> list = new HashSet<>();
+    Set<Integer> getFacilityValues(JSONArray array) {
+        Set<Integer> list = new HashSet<>();
         for (int i = 0; i < array.size(); i++) {
-            list.add(array.getString(i));
+            list.add(array.getInteger(i));
         }
         return list;
     }
@@ -233,12 +235,13 @@ public class FarmPageServiceImpl implements FarmPageService {
             String field_limit = field.getLimits();
             String field_placeholder = field.getPlaceholder();
             String extension_attrs = field.getOptions();
+            String default_value = field.getDefaultValue();
             field_def.put(MsFarmFieldTable.FIELD_LIMITS, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
             field_def.put(MsFarmFieldTable.FIELD_PLACEHOLDER, JSONObject.parseObject(field_placeholder));
             field_def.put(MsFarmFieldTable.FIELD_OPTIONS, convertOptionsString2Json(extension_attrs, field_type));
 
             // 添加字段值
-            Object field_val = getFieldValFromDoc(document, field_name, field_type);
+            Object field_val = getFieldValFromDoc(document, field_name, field_type, default_value);
 
             JSONObject json = new JSONObject();
             json.put(MsFarmFieldTable.FIELD_DEFINITION, field_def);
@@ -270,13 +273,13 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @return Object
      */
     private Object convertOptionsString2Json(String options, String type) {
-        if (fieldType.RADIO_TEXT.equals(type)) { // eg:全景
+        if (FieldTypes.RADIO_TEXT.equals(type)) { // eg:全景
             return JSONArray.parseArray(options);
         }
-        if (fieldType.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
+        if (FieldTypes.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
             return JSONArray.parseArray(options);
         }
-        if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
+        if (FieldTypes.CHECKBOX.equals(type)) { // eg:场地设施
             return JSONArray.parseArray(options);
         }
         // TODO 不同类型需要不同处理方式
@@ -318,27 +321,23 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @param document   mongodb 信息
      * @param field_name 字段名称
      * @param field_type 字段类型
+     * @param default_value 默认值
      * @return Object
      */
-    private Object getFieldValFromDoc(Document document, String field_name, String field_type) {
+    private Object getFieldValFromDoc(Document document, String field_name, String field_type, String default_value) {
         if (document != null && document.containsKey(field_name)) {
             return document.get(field_name);
         }
-
         // 初始化或者不含字段信息
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        if (fieldType.RADIO_TEXT.equals(field_type)) {
-            return jsonObject;
-        } else if (fieldType.TEXT_PIC.equals(field_type)) {
-            return jsonArray;
-        } else if (fieldType.COUNTRY_ENJOYMENT.equals(field_type)) {
-            return jsonArray;
-        } else if (fieldType.CHECKBOX.equals(field_type)) {
-            return jsonArray;
-        } else {
-            return "";
-        }
+        if (FieldTypes.RADIO_TEXT.equals(field_type))
+            return JSONObject.parseObject(default_value);
+        if (FieldTypes.TEXT_PIC.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        if (FieldTypes.COUNTRY_ENJOYMENT.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        if (FieldTypes.CHECKBOX.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        return "";
     }
 
     /**

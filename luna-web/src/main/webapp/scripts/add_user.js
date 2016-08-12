@@ -25,11 +25,17 @@
         // 数据初始化
         vm.init = init;
 
+        // 事件绑定
+        vm._bindEvent = _bindEvent;
+
         // 操作 更新业务信息到vm.data.extra对象中
         vm.transformBusinessData = transformBusinessData;
 
         // 操作 检查填写内容是否合法
         vm._checkValidation = _checkValidation;
+
+        // 操作 显示信息
+        vm.showMessage = showMessage;
 
         // 事件 点击红叉删除邮箱
         vm.handelDeleteEmail = handelDeleteEmail;
@@ -65,6 +71,7 @@
 
         function init() {
             vm.apiUrls = Inter.getApiUrl();
+            vm.msgManager = angular.element('.message-wrapper');
             vm.data = {
                 email: '',
                 emailFocus: false,
@@ -93,10 +100,21 @@
             vm.fetchBusinessData();
             vm.fetchUserData();
 
-
+            vm._bindEvent();
         }
 
+        function _bindEvent(){
+            $(document.body).click(function(){
+                if(vm.data.emailFocus ){
+                    vm.data.emailFocus = false;
+                    try{
+                        $scope.$apply();
+                    } catch(e){
 
+                    }
+                }
+            });
+        }
 
 
         // 删除邮箱
@@ -124,6 +142,8 @@
         function handleEmailFocus() {
             vm.data.emailFocus = true;
             angular.element("#email-input").focus();
+            event.stopPropagation();
+            event.preventDefault();
 
         }
 
@@ -285,13 +305,12 @@
                         data: data
                     }).then(function (res) {
                         if(res.data.code === '0'){
-                            alert('邀请用户成功');
-                            location.href = Inter.getPageUrl().manageApp;
+                            vm.showMessage('邀请用户成功');
                         } else{
-                            alert(res.data.msg || '邀请用户失败');
+                            vm.showMessage(res.data.msg || '邀请用户失败');
                         }
                     }, function (res) {
-                        alert(res.data.msg || '邀请用户失败');
+                            vm.showMessage(res.data.msg || '邀请用户失败');
                     });
                 } else{
                     $http({
@@ -386,6 +405,14 @@
             }, function(res){
                 console.error(res.data.msg || '获取业务列表失败');
             })
+        }
+
+        function showMessage(msg){
+            vm.msgManager.removeClass('hidden');
+            vm.msgManager.find('.message').html(msg);
+            setTimeout(function(){
+                vm.msgManager.addClass('hidden');
+            }, 2000);
         }
 
 

@@ -993,6 +993,10 @@
                 that.definition.name = data.definition.name;
             }
 
+            if(data.definition.display_order){
+                that.definition.display_order = data.definition.display_order;
+            }
+
         }
     }
     TextPic.prototype = new BaseComponent();
@@ -1121,11 +1125,14 @@
             that._children.splice(order, 1);
             $('.textpic-group')[0].children[order].remove();
             for(var i = order; i < that._children.length; i++){
-                that._children[i].updateComponent({'definition':
-                    {'show_name': that.definition.show_name + (i+1)},
-                     name: i,
-                     display_order: i + 1
-                });
+                that._children[i].updateComponent(
+                    {'definition':
+                        {
+                            show_name: that.definition.show_name + (i+1),
+                            name: i,
+                            display_order: i + 1
+                        }
+                    });
             }
             $('.delete-item').each(function(i){
                 this.setAttribute('data-order', i + 1);

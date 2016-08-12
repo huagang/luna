@@ -2,6 +2,52 @@
  * Created by wumengqiang on 16/7/22.
  */
 
+$(function(){
+    var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
+    bgImg.onload = function(){
+        if(fgLoaded){
+            showAnimation();
+        }
+        bgLoaded = true;
+    };
+    fgImg.onload = function(){
+        if(bgLoaded){
+            showAnimation();
+        }
+        fgLoaded = true;
+    };
+
+    fgImg.src = pageData.start_page_foreground_pic;
+    bgImg.src = pageData.start_page_background_pic;
+
+});
+
+function showAnimation(){
+    $('.page-back .fg').velocity({opacity: 1},
+        {
+            duration: 3000,
+            easing: "ease-in",
+        });
+    setTimeout(function(){
+        $('.page-back').velocity({opacity: 0},
+            {
+                duration: 3000,
+                easing: "ease-out",
+                complete: function(){
+                    $('.page-back').css('display', 'none');
+
+                }
+            });
+        $('.page-main').velocity({opacity: 1},
+            {
+                duration: 2000,
+                easing: 'ease-in',
+                complete: function(){
+                    $(document.body).removeClass('modal-open');
+                }
+            });
+    }, 5000);
+};
 
 (function() {
     angular.module('farmHouse', [])
@@ -9,12 +55,13 @@
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController])
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController]);
 
 
     function getMarkerTip() {
         function MarkerTip(data) {
             //this.construct(data);
+            this.data = data;
             this.position = data.position;
             this.distance = data.distance || '';
             this.markerName = data.markerName || '';
@@ -34,8 +81,9 @@
             this.div.classList.add('hidden');
             this.div.getElementsByClassName('marker-name')[0].innerHTML = this.markerName;
             this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + this.distance + 'km';
-            this.div.getElementsByTagName('a')[0].href = this.href;
-
+            $(this.div).find('.tip-right').on('click', function(){
+                this.data.onClick();
+            }.bind(this));
             //将dom添加到覆盖物层
             var panes = this.getPanes();
             //设置panes的层级，overlayMouseTarget可接收点击事件
@@ -296,7 +344,7 @@
                     display: 'block', 'text-align': 'center', width: '100px'
                 },
                 clickable: true,
-                content: vm.poiData.poi_name || ''
+                content: vm.poiData.poi_name || '',
             });
 
 
@@ -311,7 +359,7 @@
             if (vm.poiList) {
                 vm.poiList.forEach(function (item, index) {
 
-                    if (!vm.poiType[item.category.category_id]) {
+                    if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
                         return;
                     }
                     var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
@@ -334,7 +382,7 @@
                         distance: item.distance,
                         position: position,
                         visible: false,
-                        href: encodeURI("http://map.qq.com/nav/drive?start=" + vm.poiData.lnglat.lng + "," + vm.poiData.lnglat.lat + "&dest=" + item.lnglat.lng + "," + item.lnglat.lat + "&sword=" + vm.poiData.poi_name + "&eword=" + item.poi_name)
+                        onClick: vm.navigate.bind(vm,item)
                     });
 
                     item.markerTip.setMap(vm.map);
@@ -458,6 +506,7 @@
                 funny: pageData.country_enjoyment,
                 facilities: pageData.facility,
                 selfIntroduce: pageData.manager_self_introduction
+
             };
             switch (vm.farmData.allPanorama.panorama_type_id) {
                 case 1:
@@ -479,10 +528,18 @@
             $http({
                 url: vm.apiUrls.multiplyPanoInfo.format(vm.farmData.panorama.text),
                 method: 'GET',
-
             }).then(function (res) {
                 if (res.data.result === 0) {
                     vm.farmData.panorama.panoList = [];
+                    (res.data.data.panoList || []).forEach(function(pano){
+                        vm.farmData.panorama.panoList.push({
+                            panoId: pano.panoId,
+                            panoName: pano.panoName,
+                            pic: pano.thumbnailUrl,
+                            panoPitch: pano.panoPitch,
+                            panoHeading: pano.panoHeading
+                        });
+                    });
                     res.data.data.albumList.forEach(function (album) {
                         album.panoList.forEach(function (pano) {
                             vm.farmData.panorama.panoList.push({
@@ -494,15 +551,16 @@
                             });
                         });
                     });
+
                     vm.panoAutoPlay = false;
                     vm.setPano();
                     vm.listenScroll();
 
                 } else {
-                    alert('获取全景信息失败,若想观看全景,请刷新重试');
+                    //alert('获取全景信息失败,若想观看全景,请刷新重试');
                 }
             }, function () {
-                alert('获取全景信息失败,若想观看全景,请刷新重试');
+                //alert('获取全景信息失败,若想观看全景,请刷新重试');
             });
         }
 
@@ -526,16 +584,17 @@
 
         }
 
-        function navigate() {
+        function navigate(navInfo) {
+            navInfo = navInfo || vm.poiData;
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
                     try {
-                        var address = vm.poiData.address;
+                        var address = navInfo.address;
                         wx.openLocation({
-                            latitude: Number(vm.poiData.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
-                            longitude: Number(vm.poiData.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
+                            latitude: Number(navInfo.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
+                            longitude: Number(navInfo.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: vm.poiData.poi_name, // 位置名
                             address: address.city + address.county + address.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
@@ -583,7 +642,7 @@
             qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function (res) {
                 //取出经纬度并且赋值
                 latlng = res[0];
-                var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + vm.poiData.lnglat.lng + "%2C" + vm.poiData.lnglat.lat + "&sword=我的位置&eword=" + vm.poiData.poi_name + "&ref=mobilemap&referer=";
+                var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + vm.navInfo.lnglat.lng + "%2C" + vm.navInfo.lnglat.lat + "&sword=我的位置&eword=" + vm.navInfo.poi_name + "&ref=mobilemap&referer=";
                 // alert(url);
                 window.location.href = url;
             });

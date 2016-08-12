@@ -99,7 +99,7 @@ a.button.disable:hover{
     border: 1px solid #C3C3C3;
     padding: 0;
     display: table-cell;
-    background: #FFFFFF;
+    background: #FDFDFD;
 }
 /*导航条样式*/
 .navbar{
@@ -399,4 +399,9 @@ a.button.disable:hover{
 .breadcrumb{
     background-color: white;
     padding-left: 0;
+}
+
+
+.transparent{
+    opacity: 0 !important;
 }

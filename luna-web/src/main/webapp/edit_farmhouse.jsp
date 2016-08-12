@@ -30,7 +30,7 @@
   <!--通用导航栏 start-->
     <nav class="navbar">
       <div class="navbar-header">
-        <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+        <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
         <div class="navbar-right ">
               <a href="javascript:void(0)" class="operation save">保存</a>
               <a href="javascript:void(0)" class="operation preview">预览</a>

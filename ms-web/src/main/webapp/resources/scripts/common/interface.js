@@ -14,7 +14,10 @@ var Inter = function() {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        } else if (/luna-test/.test(host)) {
+        } else if(/(192\.168\.\d+\.\d+)/.test(host)){
+            return 'local-mobile';
+        }
+        else if (/luna-test/.test(host)) {
             return 'test';
         } else {
             return 'online';
@@ -26,9 +29,13 @@ var Inter = function() {
         'test': 'http://luna-test.visualbusiness.cn/luna-api/',
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
-
-
-    var apiContext =  apiHost[curHost()];
+    var apiContext;
+    if(curHost() === 'local-mobile'){
+        apiContext = 'http://' + location.host + '/';
+    }
+    else{
+        apiContext =  apiHost[curHost()];
+    }
 
     return {
         getApiUrl: function() {

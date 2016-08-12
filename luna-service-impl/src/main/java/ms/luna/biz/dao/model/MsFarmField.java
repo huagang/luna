@@ -6,8 +6,7 @@ import ms.luna.biz.table.MsFarmFieldTable;
 
 import java.io.Serializable;
 import java.util.Date;
-
-@JSONType(ignores={"registHhmmss","upHhmmss","options","placeholder","limits"})
+@JSONType(ignores={"registHhmmss","upHhmmss","defaultValue","options","placeholder","limits"})
 public class MsFarmField implements Serializable {
     @JSONField(name = MsFarmFieldTable.FIELD_NAME)
     private String name;
@@ -23,6 +22,8 @@ public class MsFarmField implements Serializable {
     private String placeholder;
     @JSONField(name = MsFarmFieldTable.FIELD_OPTIONS)
     private String options;
+    @JSONField(name = MsFarmFieldTable.FIELD_DEFAULT_VALUE)
+    private String defaultValue;
     @JSONField(name = MsFarmFieldTable.FIELD_REGIST_HHMMSS)
     private Date registHhmmss;
     @JSONField(name = MsFarmFieldTable.FIELD_UP_HHMMSS)
@@ -86,6 +87,14 @@ public class MsFarmField implements Serializable {
         this.options = options == null ? null : options.trim();
     }
 
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue == null ? null : defaultValue.trim();
+    }
+
     public Date getRegistHhmmss() {
         return registHhmmss;
     }
@@ -115,12 +124,13 @@ public class MsFarmField implements Serializable {
         }
         MsFarmField other = (MsFarmField) that;
         return (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getShowName() == null ? other.getShowName() == null : this.getShowName().equals(other.getShowName()))
+                && (this.getShowName() == null ? other.getShowName() == null : this.getShowName().equals(other.getShowName()))
             && (this.getDisplayOrder() == null ? other.getDisplayOrder() == null : this.getDisplayOrder().equals(other.getDisplayOrder()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
-            && (this.getLimits() == null ? other.getLimits() == null : this.getLimits().equals(other.getLimits()))
+                && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getLimits() == null ? other.getLimits() == null : this.getLimits().equals(other.getLimits()))
             && (this.getPlaceholder() == null ? other.getPlaceholder() == null : this.getPlaceholder().equals(other.getPlaceholder()))
-            && (this.getOptions() == null ? other.getOptions() == null : this.getOptions().equals(other.getOptions()))
+                && (this.getOptions() == null ? other.getOptions() == null : this.getOptions().equals(other.getOptions()))
+            && (this.getDefaultValue() == null ? other.getDefaultValue() == null : this.getDefaultValue().equals(other.getDefaultValue()))
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()));
     }
@@ -136,6 +146,7 @@ public class MsFarmField implements Serializable {
         result = prime * result + ((getLimits() == null) ? 0 : getLimits().hashCode());
         result = prime * result + ((getPlaceholder() == null) ? 0 : getPlaceholder().hashCode());
         result = prime * result + ((getOptions() == null) ? 0 : getOptions().hashCode());
+        result = prime * result + ((getDefaultValue() == null) ? 0 : getDefaultValue().hashCode());
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         return result;
@@ -143,6 +154,6 @@ public class MsFarmField implements Serializable {
 
     @Override
     public String toString() {
-        return "MsFarmField [name=" + name + ",showName=" + showName + ",displayOrder=" + displayOrder + ",type=" + type + ",limits=" + limits + ",placeholder=" + placeholder + ",options=" + options + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + "]";
+        return "MsFarmField [name=" + name + ",showName=" + showName + ",displayOrder=" + displayOrder + ",type=" + type + ",limits=" + limits + ",placeholder=" + placeholder + ",options=" + options + ",defaultValue=" + defaultValue + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + "]";
     }
 }
