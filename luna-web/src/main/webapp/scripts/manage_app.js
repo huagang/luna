@@ -211,7 +211,6 @@ function getShareController(data) {
 				item.title = item.title || value;
 			}.bind(this));
 
-
 		},
 		init: function () {
 			// 事件绑定
@@ -292,8 +291,8 @@ function getShareController(data) {
 			this.data.splice(order, 1);
 			$(".share-item.order-" + order).remove();
 			for (var i = order + 1; i < this.num; i += 1) {
-				$('.share-item.order-' + i).attr('data-order', i).
-					removeClass('order-' + (i - 1)).addClass('order-' + i);
+				$('.share-item.order-' + i).attr('data-order', i-1).
+					removeClass('order-' + i).addClass('order-' + (i-1));
 			}
 			this.num -= 1;
 		},

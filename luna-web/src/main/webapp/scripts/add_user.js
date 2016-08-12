@@ -227,12 +227,17 @@
                 vm.data.extra.value = [];
                 if(vm.businessSelectAll){
                     vm.data.extra.value = [0];
-                } else{
-                    Object.keys(vm.data.business).forEach(function(item, index) {
-                        if(vm.data.business[item]){
-                            vm.data.extra.value.push(parseInt(item));
-                        }
-                    });
+                    return;
+                }
+                var length = 0;
+                Object.keys(vm.data.business).forEach(function(item, index) {
+                    if(vm.data.business[item]){
+                        vm.data.extra.value.push(parseInt(item));
+                        length += 1;
+                    }
+                });
+                if(length === vm.businessLength){
+                    vm.data.extra.value = [0];
                 }
             }
         }
@@ -379,25 +384,16 @@
                 if(res.data.code === '0'){
                     vm.business = res.data.data;
                     vm.data.business = {};
-                    if(vm.userId){
-                        // 设置已选中业务
-                        Object.keys(vm.business).forEach(function(item, index){
-                            (vm.business[item] || []).forEach(function(item, index){
+                    // 设置已选中业务
+                    vm.businessLength = 0;
+                    Object.keys(vm.business).forEach(function(item, index){
+                        (vm.business[item] || []).forEach(function(item, index){
+                            if(vm.userId){
                                 vm.data.business[item.business_id] = item.selected ? 'checked' : '';
-                            });
+                            }
+                            vm.businessLength += 1;
                         });
-                     }
-
-                    // 根据业务数量来决定显示多选框(数量大于1)还是只显示文本(数量等于1)
-                    if(Object.keys(vm.business).length > 1 ||
-                        vm.business[Object.keys(vm.business)[0]].length > 1){
-                        vm.businessShowType = 'multiple';
-                    } else if(Object.keys(vm.business).length === 1
-                        && vm.business[Object.keys(vm.business)[0]].length === 1){
-                        vm.businessShowType = 'single';
-                    }
-
-
+                    });
                 }
                 else{
                     console.error(res.data.msg || '获取业务列表失败');

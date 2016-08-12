@@ -44,10 +44,14 @@
 
 .pop.pop-show.edit-app{
 	width: 560px;
-	/* height: auto; */
-	position: absolute;
-	/* overflow: hidden; */
 }
+
+.edit-app .pop-cont{
+    max-height: 400px;
+    overflow: auto;
+}
+
+
 .set-app-name .form-group label{
     height: 30px;
     line-height: 30px;
@@ -253,8 +257,12 @@ img.abstract-pic{
 /* 通用设置部分  css end*/
 
 /* 分享设置部分 start */
+.setting-share {
+    margin-top: -15px;
+}
+
 .setting-share .newShare{
-	margin: -19px 0 15px 0;
+    margin-bottom: 10px;
 }
 
 .setting-share div.share-item {
