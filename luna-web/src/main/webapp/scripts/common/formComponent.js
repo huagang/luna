@@ -1254,9 +1254,21 @@
                 that._component.innerHTML = that._template;
                 that.element.prepend(that._children.label.render());
                 console.log(that.definition.options);
+                var options = JSON.parse(JSON.stringify(that.definition.options));
+                that.value.forEach(function(selectItem){
+                    options.some(function(item,index){
+                        if(selectItem.value === item.value){
+                            options.splice(index, 1);
+                            return true;
+                        }
+                        return false
+                    });
+                });
+
+
                 if(that.definition.options && ! that.selectize){
                     that.selectize = that.element.find('.text-select').selectize({
-                        options: JSON.parse(JSON.stringify(that.definition.options)),
+                        options: options,
                         labelField: 'name',
                         searchField: ['name'],
                         onChange: that.handleSelect,
