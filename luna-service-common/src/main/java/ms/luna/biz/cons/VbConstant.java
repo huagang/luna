@@ -390,7 +390,7 @@ public final class VbConstant {
 		}
 	}
 
-	public static final class fieldType {
+	public static final class FieldTypes {
 		public static final String TEXT = "TEXT";
 		public static final String TEXTAREA = "TEXTAREA";
 		public static final String PIC = "PIC";

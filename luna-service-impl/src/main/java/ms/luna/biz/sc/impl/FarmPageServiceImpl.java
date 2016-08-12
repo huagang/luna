@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.cons.VbConstant.fieldType;
+import ms.luna.biz.cons.VbConstant.FieldTypes;
 import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.FarmFieldParameter;
 import ms.luna.biz.dao.custom.model.FarmFieldResult;
@@ -235,12 +235,13 @@ public class FarmPageServiceImpl implements FarmPageService {
             String field_limit = field.getLimits();
             String field_placeholder = field.getPlaceholder();
             String extension_attrs = field.getOptions();
+            String default_value = field.getDefaultValue();
             field_def.put(MsFarmFieldTable.FIELD_LIMITS, JSONObject.parseObject(field_limit)); // field_limit 数据为json格式数据
             field_def.put(MsFarmFieldTable.FIELD_PLACEHOLDER, JSONObject.parseObject(field_placeholder));
             field_def.put(MsFarmFieldTable.FIELD_OPTIONS, convertOptionsString2Json(extension_attrs, field_type));
 
             // 添加字段值
-            Object field_val = getFieldValFromDoc(document, field_name, field_type);
+            Object field_val = getFieldValFromDoc(document, field_name, field_type, default_value);
 
             JSONObject json = new JSONObject();
             json.put(MsFarmFieldTable.FIELD_DEFINITION, field_def);
@@ -272,13 +273,13 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @return Object
      */
     private Object convertOptionsString2Json(String options, String type) {
-        if (fieldType.RADIO_TEXT.equals(type)) { // eg:全景
+        if (FieldTypes.RADIO_TEXT.equals(type)) { // eg:全景
             return JSONArray.parseArray(options);
         }
-        if (fieldType.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
+        if (FieldTypes.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
             return JSONArray.parseArray(options);
         }
-        if (fieldType.CHECKBOX.equals(type)) { // eg:场地设施
+        if (FieldTypes.CHECKBOX.equals(type)) { // eg:场地设施
             return JSONArray.parseArray(options);
         }
         // TODO 不同类型需要不同处理方式
@@ -320,32 +321,23 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @param document   mongodb 信息
      * @param field_name 字段名称
      * @param field_type 字段类型
+     * @param default_value 默认值
      * @return Object
      */
-    private Object getFieldValFromDoc(Document document, String field_name, String field_type) {
+    private Object getFieldValFromDoc(Document document, String field_name, String field_type, String default_value) {
         if (document != null && document.containsKey(field_name)) {
             return document.get(field_name);
         }
         // 初始化或者不含字段信息
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        if("well_chosen_room_panorama_type".equals(field_name)){
-            jsonObject.put("text", "");
-            jsonObject.put("value", "2");
-            return jsonObject;
-        }
-
-        if (fieldType.RADIO_TEXT.equals(field_type)) {
-            return jsonObject;
-        } else if (fieldType.TEXT_PIC.equals(field_type)) {
-            return jsonArray;
-        } else if (fieldType.COUNTRY_ENJOYMENT.equals(field_type)) {
-            return jsonArray;
-        } else if (fieldType.CHECKBOX.equals(field_type)) {
-            return jsonArray;
-        } else {
-            return "";
-        }
+        if (FieldTypes.RADIO_TEXT.equals(field_type))
+            return JSONObject.parseObject(default_value);
+        if (FieldTypes.TEXT_PIC.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        if (FieldTypes.COUNTRY_ENJOYMENT.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        if (FieldTypes.CHECKBOX.equals(field_type))
+            return JSONObject.parseArray(default_value);
+        return "";
     }
 
     /**
@@ -387,11 +379,5 @@ public class FarmPageServiceImpl implements FarmPageService {
         return doc;
     }
 
-    public static void main(String[] args) {
-        JSONArray array = new JSONArray();
-        array.add(null);
-        array.add(null);
-        System.out.println(array.size());
-    }
 
 }
