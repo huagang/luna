@@ -785,7 +785,7 @@ var Util = function() {
                             }
                         }
                     }]
-                })
+                });
             }
         },
         confirm: function(options) {
@@ -833,6 +833,28 @@ var Util = function() {
                     buttons: buttons
                 })
             }
-        }
-    }
+        },
+        /**
+         * 排序函数
+         */
+        arraySortBy: function (key) {
+            return function (o, p) {
+                var a, b;
+                if (typeof o === "object" && typeof p === "object" && o && p) {
+                    a = o[key];
+                    b = p[key];
+                    if (a === b) {
+                        return 0;
+                    }
+                    if (typeof a === typeof b) {
+                        return a < b ? -1 : 1;
+                    }
+                    return typeof a < typeof b ? -1 : 1;
+                }
+                else {
+                    throw ("error");
+                }
+            };
+        },
+    };
 }();
