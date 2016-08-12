@@ -719,6 +719,88 @@ public class MsFarmFieldCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andDefaultValueIsNull() {
+            addCriterion("default_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueIsNotNull() {
+            addCriterion("default_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value =", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value <>", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value >", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value >=", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value <", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value <=", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value like", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("default_value not like", value, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("default_value in", values, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("default_value not in", values, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("default_value between", value1, value2, "defaultValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("default_value not between", value1, value2, "defaultValue");
+            return (Criteria) this;
+        }
+
         public Criteria andRegistHhmmssIsNull() {
             addCriterion("regist_hhmmss is null");
             return (Criteria) this;
@@ -892,6 +974,12 @@ public class MsFarmFieldCriteria {
         public Criteria andOptionsLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(options) like", value.toUpperCase(), "options");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultValueLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(default_value) like", value.toUpperCase(), "defaultValue");
             return (Criteria) this;
         }
 
