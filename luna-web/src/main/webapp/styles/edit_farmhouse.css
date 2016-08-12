@@ -89,3 +89,17 @@
 .publish-info .pull-right{
     padding-right: 93px;
 }
+
+#pop-message{
+    position: fixed;
+    max-width: 500px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 20%;
+}
+
+#pop-message .message{
+    white-space: pre-wrap;
+    text-align: center;
+}

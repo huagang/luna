@@ -91,6 +91,7 @@
         </div>
     </div>
   </div>
+          <jsp:include page="/templete/message.jsp"/>
     <script>
       window.context = "<%=request.getContextPath() %>";
     </script>

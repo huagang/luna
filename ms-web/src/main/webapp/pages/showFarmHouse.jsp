@@ -17,16 +17,24 @@
     <meta name="author" content="vb" />
     <meta name="Copyright" content="visualbusiness" />
     <meta name="Description" content="${description}" />
-    <title>${share_info_title}</title>
+    <title>${pageData.poi_info.poi_name}</title>
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <link href="<%=request.getContextPath()%>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/plugins/normalize/normalize.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/showFarmHouse.css">
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/angular/angular.min.js'></script>
 
 </head>
 <body ng-app="farmHouse" class="ng-cloak modal-open"  ng-controller="FarmHouseController as farm" >
+    <div class="landscape">
+
+        <div class="iphone">
+        </div>
+        <div class="iphone_text">
+            请将屏幕竖向浏览</div>
+    </div>
     <div class="page-back">
         <div class="bg" style="background: url(${pageData.start_page_background_pic}) top left no-repeat; background-size: cover;">
             <div class="fg transparent" style="background: url(${pageData.start_page_foreground_pic}) top center no-repeat; background-size: cover; ">
@@ -176,10 +184,10 @@
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail,
             dest:{
-                lat: pageData.poi_info.lnglat.lat,
-                lng:pageData.poi_info.lnglat.lng,//经度
-                name:pageData.poi_info.poi_name,//名字
-                address:pageData.poi_info.address.city+pageData.poi_info.address.city.county, // 地址
+                lat: (pageData.poi_info.lnglat || {}).lat,
+                lng: (pageData.poi_info.lnglat || {}).lng,//经度
+                name: pageData.poi_info.poi_name || '',//名字
+                address: (pageData.poi_info.address || {}).city + (pageData.poi_info.address || {}).county, // 地址
                 debug:false
             }
         };

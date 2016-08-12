@@ -405,3 +405,34 @@ a.button.disable:hover{
 .transparent{
     opacity: 0 !important;
 }
+
+#pop-message:before{
+    content: '.';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: #b2b2b2;
+    opacity: 0.5;
+    z-index: 10;
+}
+
+#pop-message .pop-title,
+#pop-message .pop-cont,
+#pop-message .pop-fun{
+    position: relative;
+    z-index: 20;
+}
+#pop-message .pop-cont{
+    background-color: white;
+}
+#pop-message .pop-fun {
+    width: 100%;
+    text-align: center;
+    padding-right: 0;
+    width: 100%;
+    background-color: white;
+}
+

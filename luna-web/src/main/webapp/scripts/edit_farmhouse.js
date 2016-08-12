@@ -39,6 +39,8 @@ $(function(){
 
         that.handleForcePublish = handleForcePublish;
 
+        that.showMessage = showMessage;
+
         that.init();
 
         // 初始化函数
@@ -139,6 +141,12 @@ $(function(){
 
         function handlePreview(){
             if(! that.previewImg){
+                var error = that._component.checkValidation();
+                if(error){
+                    //error
+                    that.showMessage('信息未填写完毕,不能预览。详细错误信息如下\n' + error );
+                    return;
+                }
                 $.ajax({
                     url: that.apiUrls.farmHousePreview.url.format(that.appId),
                     type: that.apiUrls.farmHousePreview.type,
@@ -173,6 +181,12 @@ $(function(){
         }
 
         function handlePublish(){
+            var error = that._component.checkValidation();
+            if(error){
+                //error
+                that.showMessage('信息未填写完毕,不能发布。详细错误信息如下\n' + error );
+                return;
+            }
             $.ajax({
                 url: that.apiUrls.appPublish.url.format(that.appId),
                 type: that.apiUrls.appPublish.type,
@@ -209,6 +223,18 @@ $(function(){
             $('.publish-pop-wrapper .mask').addClass('hidden');
         }
 
+        function showMessage(msg) {
+            $("#pop-message .message").text(msg);
+            $('#pop-message').css('display', "block");
+            $("#pop-message  #btn-mes").click(function () {
+                $("#pop-message").css('display', "none");
+            });
+            $("#pop-message .btn-close").click(function () {
+                $("#pop-message").css('display', "none");
+            });
+
+        }
+
     }
 
 
@@ -216,3 +242,7 @@ $(function(){
 
 
 });
+
+function clcWindow(){
+
+}
