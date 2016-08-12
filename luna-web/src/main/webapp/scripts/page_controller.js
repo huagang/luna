@@ -667,15 +667,15 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         });
 
         //根绝业务Id 获取栏目列表
-        this.articleColunmuList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
-        $http.get(apiUrlFormat(Inter.getApiUrl().articleColunmu, [objdata.businessId])).success(function (res) {
+        this.articleColumnList = [{ 'columnName': '请选择', 'columnId': '' }]; //栏目列表
+        $http.get(Util.strFormat(Inter.getApiUrl().articleColumn.url, [objdata.businessId])).success(function (res) {
             if (res.code == '0') {
                 if (res.data) {
                     var reArr = [{ 'columnName': '请选择', 'columnId': '' }];
                     for (var key in res.data) {
                         reArr.push({ 'columnName': key, 'columnId': res.data[key] });
                     }
-                    _self.articleColunmuList = reArr;
+                    _self.articleColumnList = reArr;
                 }
             } else {
                 alert(ErrCode.get(res.code));
@@ -685,7 +685,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         });
 
         this.articleList = [{ 'articleName': '请选择', 'articleId': '' }]; //栏目列表
-        $http.get(apiUrlFormat(Inter.getApiUrl().articleListByBid, [objdata.businessId])).success(function (response) {
+        $http.get(Util.strFormat(Inter.getApiUrl().articleListByBid, [objdata.businessId])).success(function (response) {
             if (response.code == '0') {
                 if (response.data) {
                     var reArr = [{ 'articleName': '请选择', 'articleId': '' }];
@@ -702,7 +702,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         });
 
         //获取Poi 一级数
-        $http.get(apiUrlFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId])).success(function (response) {
+        $http.get(Util.strFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId])).success(function (response) {
             if (response.code == '0') {
                 if (response.data) {
                     var reArr = [{ 'poiName': '请选择', 'poiId': '' }];
@@ -970,7 +970,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
     this.initPoiType = function (firstPoiId) {
         var _self = this;
         //获取Poi类别
-        $http.get(apiUrlFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [objdata.businessId, firstPoiId])).success(function (response) {
+        $http.get(Util.strFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [objdata.businessId, firstPoiId])).success(function (response) {
             if (response.code == '0') {
                 if (response.data) {
                     var reArr = [{ 'name': '请选择', 'id': '' }];

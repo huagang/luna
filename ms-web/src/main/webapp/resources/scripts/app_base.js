@@ -166,8 +166,8 @@ $(document).ready(function () {
     $('.app-wrap').on('click', '.video-modal', function (e) {
         var curDom = $(e.target),
             videoModalDom = curDom.closest('.video-dialog');
-        if(videoModalDom.length>0){
-        }else{
+        if (videoModalDom.length > 0) {
+        } else {
             $('.video-modal').hide();
             $('.video-modal').find('video')[0].pause();
         }
@@ -207,10 +207,19 @@ $(document).ready(function () {
             }
             $(".app-wrap").append($comGroup);
 
-            for (var n in item.page_content) {
-                var value = item.page_content[n];
+            //对组件的显示顺序重新排序
+            var componentArr = [];
+            for (var key in item.page_content) {
+                componentArr.push(item.page_content[key]);
+            }
+            componentArr.sort(Util.arraySortBy('timestamp'));
+
+
+
+            for (var n in componentArr) {
+                var value = componentArr[n];
                 var componentHtml = "",
-                    headName = n.match(/^[a-zA-Z]*/);
+                    headName = value._id.match(/^[a-zA-Z]*/);
 
                 switch (headName[0]) {
                     case 'canvas':

@@ -184,7 +184,7 @@ public class FarmPageServiceImpl implements FarmPageService {
                     JSONArray res = new JSONArray();
                     for (int i = 0; i < array1.size(); i++) {
 //                        String value = array1.getJSONObject(i).getString("value");
-                        Integer value = array1.getJSONObject(i).getInteger("vaule");
+                        Integer value = array1.getJSONObject(i).getInteger("value");
                         if (facilityIds.contains(value)) {
                             res.add(array1.getJSONObject(i));
                         }

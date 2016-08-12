@@ -1,6 +1,6 @@
 // var colorSet;
-$(document).ready(function() {
-    $('.color-set').each(function() {
+$(document).ready(function () {
+    $('.color-set').each(function () {
         $(this).minicolors({
             control: $(this).attr('data-control') || 'hue',
             defaultValue: $(this).attr('data-defaultValue') || '',
@@ -8,7 +8,7 @@ $(document).ready(function() {
             letterCase: $(this).attr('data-letterCase') || 'lowercase',
             opacity: $(this).attr('data-opacity'),
             position: $(this).attr('data-position') || 'bottom left',
-            change: function(hex, opacity) {
+            change: function (hex, opacity) {
                 // if( !hex ) return;
                 // if( opacity ) hex += ', ' + opacity;
                 // try {
@@ -19,7 +19,7 @@ $(document).ready(function() {
         });
 
     });
-    $('.btn-slide').on('click',function(e){
+    $('.btn-slide').on('click', function (e) {
         $(this).closest('.slide-panel').find('.slide-content').toggle();
         $(this).toggleClass('icon-slideup');
         $(this).toggleClass('icon-slidedown');
@@ -27,17 +27,18 @@ $(document).ready(function() {
 });
 
 //组件
-$(function() {
+$(function () {
     initToolbarBootstrapBindings(); //初始化富文本编辑器
     var $editor = $("#editor");
     //文本
-    $("#textComponent").click(function() {
+    $("#textComponent").click(function () {
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         lunaPage.creatPageComponents(currentPageId, null, "text");
         currentComponent = jQuery.extend(true, {}, componentTextModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("text");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -45,7 +46,7 @@ $(function() {
         componentPanel.update("text");
     });
     //图片组件
-    $("#imageComponent").click(function() {
+    $("#imageComponent").click(function () {
         lostFocus($(".componentbox-selected"));
 
         $("div.selected-text").removeClass("selected-text");
@@ -54,6 +55,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "img");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("img");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -62,7 +64,7 @@ $(function() {
     });
 
     //导航组件
-    $("#navComponent").click(function() {
+    $("#navComponent").click(function () {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -70,6 +72,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "nav");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentNavModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("nav");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -78,7 +81,7 @@ $(function() {
     });
 
     //全景组件
-    $("#panoComponent").click(function() {
+    $("#panoComponent").click(function () {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -86,6 +89,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "pano");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentPanoModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("pano");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -94,7 +98,7 @@ $(function() {
     });
 
     //音频组件
-    $("#audioComponent").click(function() {
+    $("#audioComponent").click(function () {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -102,6 +106,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "audio");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentAudioModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("audio");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -110,7 +115,7 @@ $(function() {
     });
 
     //视频组件
-    $("#videoComponent").click(function() {
+    $("#videoComponent").click(function () {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -118,6 +123,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "video");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentVideoModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("video");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -125,7 +131,7 @@ $(function() {
     });
 
     //页签组件
-    $("#tabComponent").click(function() {
+    $("#tabComponent").click(function () {
         if (document.querySelector('.con_tab')) {
             alert('已经存在一个页签组件，不能重复添加');
             return;
@@ -137,6 +143,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "tab");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentTabModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("tab");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -144,7 +151,7 @@ $(function() {
     });
 
     //图集组件
-    $("#imageListComponent").click(function() {
+    $("#imageListComponent").click(function () {
         lostFocus($(".componentbox-selected"));
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -152,6 +159,7 @@ $(function() {
         lunaPage.creatPageComponents(currentPageId, null, "imgList");
         currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentImgListModelTemplate);
         currentComponent._id = currentComponentId;
+        currentComponent.timestamp = new Date().getTime();
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         componentPanel.init("imgList");
         lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -161,7 +169,7 @@ $(function() {
     //右键删除组件
     $("#layermain").contextmenu({
         target: '#context-menu',
-        onItem: function(context, e) {
+        onItem: function (context, e) {
             if ($('#' + currentComponentId).length > 0) {
                 $('#' + currentComponentId).remove();
             }
@@ -174,12 +182,12 @@ $(function() {
     fontSets();
 
     //编辑器处于选中状态
-    $editor.on('click', function() {
+    $editor.on('click', function () {
         var $component = $("div.componentbox");
     });
 
     //富文本编辑器输入
-    $editor.on('keyup keydown', function(e) {
+    $editor.on('keyup keydown', function (e) {
         var content = $editor.html();
         var len_input = $editor.text().length;
         if (len_input > 512) {
@@ -193,8 +201,8 @@ $(function() {
 
     });
     //粘贴时去除样式
-    $editor.on('paste', function() {
-        setTimeout(function() {
+    $editor.on('paste', function () {
+        setTimeout(function () {
             var content = $editor.html();
             var newContent = content.replace(/<[^>]+>/g, "");
             $editor.html(newContent);
@@ -210,7 +218,7 @@ $(function() {
     });
 
     //按delete按钮删除组件
-    $(document).bind('keydown', 'del', function(e) {
+    $(document).bind('keydown', 'del', function (e) {
         if (e.target.nodeName == "INPUT") {
             //如果是文本框，删除文本框中的内容，不删除画布中的插件
             return true;
@@ -227,7 +235,7 @@ $(function() {
 
     //画布内组件
 
-    $('#canvas').on('click', '*[component-type]', function(e) {
+    $('#canvas').on('click', '*[component-type]', function (e) {
         var target = $(this);
         $("div.selected-text").removeClass("selected-text");
         $("div.componentbox-selected").removeClass("componentbox-selected");
@@ -262,13 +270,13 @@ $(function() {
             $sizeTarget = $('#size-select');
         var line_height = ['12px', '13px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '40px', '48px', '64px', '72px'],
             $heightTarget = $('#lineheight-select');
-        $.each(fonts, function(idx, fontName) {
+        $.each(fonts, function (idx, fontName) {
             $fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
         });
-        $.each(font_size, function(idx, fontSize) {
+        $.each(font_size, function (idx, fontSize) {
             $sizeTarget.append($('<li><a data-edit="fontSize ' + fontSize + '" style="font-size:\'' + fontSize + '\'">' + fontSize + '</a></li>'));
         });
-        $.each(line_height, function(idx, lineHeight) {
+        $.each(line_height, function (idx, lineHeight) {
             $heightTarget.append($('<li><a data-edit="lineHeight' + lineHeight + '" style="line-height:\'' + lineHeight + '\'">' + lineHeight + '</a></li>'));
         });
     }
@@ -276,19 +284,19 @@ $(function() {
     //字体组件样式设定
     function fontSets() {
         //字体
-        $('#font-select li').click(function() {
-                var fontFamily = $(this).text();
-                $("div.selected-text").css("font-family", fontFamily);
-                lunaPage.editPageComponents(currentPageId, currentComponentId);
-            });
-            //字体大小
-        $('#size-select li').click(function() {
+        $('#font-select li').click(function () {
+            var fontFamily = $(this).text();
+            $("div.selected-text").css("font-family", fontFamily);
+            lunaPage.editPageComponents(currentPageId, currentComponentId);
+        });
+        //字体大小
+        $('#size-select li').click(function () {
             var fontSize = $(this).text();
             $("div.selected-text").css("font-size", fontSize);
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //粗细
-        $('#bold-select').click(function() {
+        $('#bold-select').click(function () {
             var $tarSelect = $("div.selected-text");
             var fontWeight = $tarSelect.css("font-weight");
             if (fontWeight == "bold") {
@@ -299,7 +307,7 @@ $(function() {
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //斜体
-        $('#italic-select').click(function() {
+        $('#italic-select').click(function () {
             var $tarSelect = $("div.selected-text");
             var fontStyle = $tarSelect.css("font-style");
             if (fontStyle == "italic") {
@@ -310,29 +318,29 @@ $(function() {
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //颜色
-        $('#color-select').change(function() {
+        $('#color-select').change(function () {
             // $("div.selected-text").css("color","'" + colorSet + "'");
             $("div.selected-text").css("color", this.value);
 
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //左对齐
-        $("#left-select").click(function() {
+        $("#left-select").click(function () {
             $("div.selected-text").css("text-align", "left");
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //居中
-        $("#center-select").click(function() {
+        $("#center-select").click(function () {
             $("div.selected-text").css("text-align", "center");
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //右对齐
-        $("#right-select").click(function() {
+        $("#right-select").click(function () {
             $("div.selected-text").css("text-align", "right");
             lunaPage.editPageComponents(currentPageId, currentComponentId);
         });
         //行高
-        $('#lineheight-select li').click(function() {
+        $('#lineheight-select li').click(function () {
             var lineHeight = $(this).text();
             $(".selected-text").css("line-height", lineHeight);
             lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -341,7 +349,7 @@ $(function() {
     //上下左右键进行位置调整
     function positionSet() {
         //按up键上移1px
-        $(document).bind('keydown', 'up', function(e) {
+        $(document).bind('keydown', 'up', function (e) {
             var $target = $("div.componentbox-selected");
             var target_exist = $target.length;
             var y = $('#elementy').val();
@@ -362,7 +370,7 @@ $(function() {
             }
         });
         //按down键下移1px
-        $(document).bind('keydown', 'down', function(e) {
+        $(document).bind('keydown', 'down', function (e) {
             var $target = $("div.componentbox-selected");
             var y = $('#elementy').val();
             var target_exist = $target.length;
@@ -383,7 +391,7 @@ $(function() {
             }
         });
         //按left键左移1px
-        $(document).bind('keydown', 'left', function(e) {
+        $(document).bind('keydown', 'left', function (e) {
             if (e.target.nodeName == 'INPUT') {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
@@ -407,7 +415,7 @@ $(function() {
             }
         });
         //按right键右移1px
-        $(document).bind('keydown', 'right', function(e) {
+        $(document).bind('keydown', 'right', function (e) {
             if (e.target.nodeName == 'INPUT') {
                 //如果是文本框，不操作空间位置，直接返回true
                 return true;
@@ -432,7 +440,7 @@ $(function() {
             }
         });
         //按shift+up键上移10px
-        $(document).bind('keydown', 'shift+up', function(e) {
+        $(document).bind('keydown', 'shift+up', function (e) {
             var $target = $("div.componentbox-selected");
             var y = $('#elementy').val();
             var target_exist = $target.length;
@@ -452,7 +460,7 @@ $(function() {
             }
         });
         //按shift+down键下移10px
-        $(document).bind('keydown', 'shift+down', function(e) {
+        $(document).bind('keydown', 'shift+down', function (e) {
             var $target = $("div.componentbox-selected");
             var y = $('#elementy').val();
             var target_exist = $target.length;
@@ -472,7 +480,7 @@ $(function() {
             }
         });
         //按shift+left键左移10px
-        $(document).bind('keydown', 'shift+left', function(e) {
+        $(document).bind('keydown', 'shift+left', function (e) {
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
@@ -492,7 +500,7 @@ $(function() {
             }
         });
         //按shift+right键右移10px
-        $(document).bind('keydown', 'shift+right', function(e) {
+        $(document).bind('keydown', 'shift+right', function (e) {
             var $target = $("div.componentbox-selected");
             var x = $('#elementx').val();
             var target_exist = $target.length;
@@ -513,7 +521,7 @@ $(function() {
         });
 
         //清空文件上传的值，解决同一文件不能重复上传问题
-        $('input[type=file]').on('click', function(e) {
+        $('input[type=file]').on('click', function (e) {
             $(this).val('');
         });
     }
@@ -521,7 +529,7 @@ $(function() {
 
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
-$.fn.getHexBackgroundColor = function(id, property) {
+$.fn.getHexBackgroundColor = function (id, property) {
     var rgb = $(id).css(property);
     rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
 
@@ -540,24 +548,24 @@ function initBind(comid) {
         minWidth: 20,
         aspectRatio: false,
         containment: "#layermain",
-        start: function(event, ui) {
+        start: function (event, ui) {
             //console.log("start");
             $(ui.element).css({
                 'max-width': ''
             });
         },
-        resize: function(event, ui) {
+        resize: function (event, ui) {
             ui.element.height(ui.element.find('.con').height());
         },
-        stop: function() {
+        stop: function () {
             lunaPage.editPageComponents(currentPageId, $(this).attr("component-id"));
             componentPanel.update($(this).attr("component-type"));
         }
     }).draggable({
         containment: "#layermain",
-        start: function() {},
-        drag: function(event, ui) {},
-        stop: function() {
+        start: function () { },
+        drag: function (event, ui) { },
+        stop: function () {
             // TODO: 修复调整高度逻辑bug
             if (parseFloat($(this).css('top')) + $(this).height() == $('#layermain').height()) {
                 if ($(this).height() > 460) {
@@ -590,9 +598,9 @@ function initBind(comid) {
             componentPanel.update($(this).attr("component-type"));
         }
     }).rotatable({
-        start: function(event, ui) {},
-        rotate: function(event, ui) {},
-        stop: function(event, ui) {},
+        start: function (event, ui) { },
+        rotate: function (event, ui) { },
+        stop: function (event, ui) { },
         rotationCenterX: 50.0,
         rotationCenterY: 50.0
     });

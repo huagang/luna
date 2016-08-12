@@ -202,7 +202,7 @@ var Inter = function () {
                 articleListApi: apiContext +'article/businessId/{0}',
 
                 //文章栏目列表
-                articleColunmu: context + '/manage/article.do?method=read_column&business_id={0}',
+                articleColumn: {url: context + '/content/column/listByBusiness/{0}' ,type:'PUT'} ,
                 articleListByBid: apiContext +'article/businessId/{0}', //通过业务ID获取
                 articleListByBidAndCid: apiContext +'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
 
