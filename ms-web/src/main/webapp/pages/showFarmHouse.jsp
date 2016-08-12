@@ -142,11 +142,11 @@
                         <i class="icon-triangle-bottom"></i>
                         <p class="marker-name">森林公园</p>
                         <span class="distance"></span>
-                    </div><a target="_blank" href=""><div class="tip-right">
+                    </div><div class="tip-right">
                         <i class="icon-navigation"></i>
                         <br>
                         <span>路线</span>
-                    </div></a>
+                    </div>
                 </div>
             </main>
         </div>
