@@ -473,6 +473,12 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
         urlElement = document.getElementById(url_id);
     }
 
+    var validInfo = uploadFileValidate.valid(file_obj.files[0],fileType);
+    if (validInfo.length > 0) {
+        $.alert(validInfo.join('\n'));
+        return;
+    }
+
     var formdata = new FormData(formobj);
     formdata.append('type', fileType);
     formdata.append('resource_type', resourceType);
@@ -483,6 +489,14 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
     //     'video': 'upload_video'
     // };
 
+    if (fileType == "video") {
+        var fileSize = file_obj.files[0].size,
+            fileNameArr = file_obj.files[0].name.split('.'),
+            fileExt = fileNameArr[fileNameArr.length - 1];
+
+    } else {
+
+    }
 
     $.ajax({
         url: Inter.getApiUrl().uploadPath.url,
@@ -639,3 +653,45 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
         }
     });
 }
+
+/**
+ * 上传文件的验证
+ */
+var uploadFileValidate = function () {
+
+    return {
+        fileLimit : {
+            thumbnail: {
+                format: ['PNG', 'JPG'],
+                size: 1000000 //(1M)
+            },
+            pic: {
+                format: ['PNG', 'JPG'],
+                size: 1000000 //(1M)
+            },
+            audio: {
+                format: ['MP3', 'WAV', 'WMA'],
+                size: 5242880 //(5M)
+            },
+            video: {
+                format: ['RM', 'RMVB', 'AVI', 'MP4', '3GP'],
+                size: 20971520  //(20M)
+            },
+        },
+        valid: function (file, fileType) {
+            var fileSize = file.size,
+                fileNameArr = file.name.split('.'),
+                fileExt = fileNameArr[fileNameArr.length - 1].toUpperCase();
+            var errMsg = [];
+            if (fileSize > this.fileLimit[fileType].size) {
+                errMsg.push('上传文件不能大于' + this.fileLimit[fileType].size / 1000000 + 'M');
+            }
+            if (this.fileLimit[fileType].format.indexOf(fileExt) == -1) {
+                errMsg.push('上传文件格式仅限于' + this.fileLimit[fileType].format.join(','));
+            }
+            return errMsg;
+        }
+    };
+
+
+} ();
