@@ -17,7 +17,7 @@
     <meta name="author" content="vb" />
     <meta name="Copyright" content="visualbusiness" />
     <meta name="Description" content="${description}" />
-    <title>微景展</title>
+    <title>${share_info_title}</title>
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <link href="<%=request.getContextPath()%>/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/plugins/normalize/normalize.css"/>

@@ -473,7 +473,7 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
         urlElement = document.getElementById(url_id);
     }
 
-    var validInfo = uploadFileValidate.valid(file_obj.files[0],fileType);
+    var validInfo = uploadFileValidate.valid(file_obj.files[0], fileType);
     if (validInfo.length > 0) {
         $.alert(validInfo.join('\n'));
         return;
@@ -660,7 +660,7 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
 var uploadFileValidate = function () {
 
     return {
-        fileLimit : {
+        fileLimit: {
             thumbnail: {
                 format: ['PNG', 'JPG'],
                 size: 1000000 //(1M)
@@ -684,7 +684,7 @@ var uploadFileValidate = function () {
                 fileExt = fileNameArr[fileNameArr.length - 1].toUpperCase();
             var errMsg = [];
             if (fileSize > this.fileLimit[fileType].size) {
-                errMsg.push('上传文件不能大于' + this.fileLimit[fileType].size / 1000000 + 'M');
+                errMsg.push('上传文件不能大于' + Math.floor(this.fileLimit[fileType].size / 1000000) + 'M');
             }
             if (this.fileLimit[fileType].format.indexOf(fileExt) == -1) {
                 errMsg.push('上传文件格式仅限于' + this.fileLimit[fileType].format.join(','));

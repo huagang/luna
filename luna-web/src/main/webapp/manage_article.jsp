@@ -35,7 +35,7 @@
                 <!--侧边菜单 end-->
                 <!--主题内容 start-->
                 <div class="main">
-                    <div class="main-hd"><h3>内容管理</h3></div>
+                    <div class="main-hd"><h3>文章管理</h3></div>
                     <button type="button" ng-click="article.showCreateArticlePage()">+新建文章</button>
                     <div class="main-bd">
                         <!--业务列表 start-->
