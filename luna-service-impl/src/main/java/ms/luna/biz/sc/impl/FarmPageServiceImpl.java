@@ -178,11 +178,13 @@ public class FarmPageServiceImpl implements FarmPageService {
                     JSONArray array1 = JSONArray.parseArray(list.get(0).getOptions());// 场地设施总集合
 
                     JSONArray array2 = FastJsonUtil.parse2Array(document.get(MsFarmPageDAO.FACILITY));
-                    Set<String> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
+//                    Set<String> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
+                    Set<Integer> facilityIds = getFacilityValues(array2);// 农家页场地设施id集合
 
                     JSONArray res = new JSONArray();
                     for (int i = 0; i < array1.size(); i++) {
-                        String value = array1.getJSONObject(i).getString("value");
+//                        String value = array1.getJSONObject(i).getString("value");
+                        Integer value = array1.getJSONObject(i).getInteger("vaule");
                         if (facilityIds.contains(value)) {
                             res.add(array1.getJSONObject(i));
                         }
@@ -200,15 +202,15 @@ public class FarmPageServiceImpl implements FarmPageService {
     //-----------------------------------------------------------------------------------------------
 
     /**
-     * 获取场地设施id集合
+     * 获取场地设施id集合(mongo)
      *
      * @param array
      * @return
      */
-    Set<String> getFacilityValues(JSONArray array) {
-        Set<String> list = new HashSet<>();
+    Set<Integer> getFacilityValues(JSONArray array) {
+        Set<Integer> list = new HashSet<>();
         for (int i = 0; i < array.size(); i++) {
-            list.add(array.getString(i));
+            list.add(array.getInteger(i));
         }
         return list;
     }
@@ -324,10 +326,15 @@ public class FarmPageServiceImpl implements FarmPageService {
         if (document != null && document.containsKey(field_name)) {
             return document.get(field_name);
         }
-
         // 初始化或者不含字段信息
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
+        if("well_chosen_room_panorama_type".equals(field_name)){
+            jsonObject.put("text", "");
+            jsonObject.put("value", "2");
+            return jsonObject;
+        }
+
         if (fieldType.RADIO_TEXT.equals(field_type)) {
             return jsonObject;
         } else if (fieldType.TEXT_PIC.equals(field_type)) {
@@ -380,5 +387,11 @@ public class FarmPageServiceImpl implements FarmPageService {
         return doc;
     }
 
+    public static void main(String[] args) {
+        JSONArray array = new JSONArray();
+        array.add(null);
+        array.add(null);
+        System.out.println(array.size());
+    }
 
 }
