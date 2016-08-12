@@ -11,12 +11,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.alibaba.dubbo.common.json.JSON;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,6 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
-import ms.biz.common.AuthenticatedUserHolder;
 import ms.biz.common.MongoConnector;
 import ms.biz.common.MongoUtility;
 import ms.biz.common.ServiceConfig;
@@ -454,14 +451,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Document document = null;
 		// 保证插入数据，在判重策略下是唯一的
 		synchronized (MongoConnector.class) {
-			document = MongoUtility.findOnePoi(poi_collection, param);
+			document = MongoUtility.findOnePoi(poi_collection, param, null);
 			if (document == null) {
 				poi_collection.insertOne(doc);
 				inserted = true;
 			}
 		}
 		if (document == null) {
-			document = MongoUtility.findOnePoi(poi_collection, param);
+			document = MongoUtility.findOnePoi(poi_collection, param, null);
 		}
 		if (document != null) {
 			if (inserted) {
@@ -625,6 +622,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		// 英文
 		if (PoiCommon.POI.EN.equals(lang)) {
 			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
+
+			// 检查POI是否重复
+			Document checkResult = MongoUtility.findOnePoi(poi_collection, param, _id);
+			if(checkResult != null) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0007", "POI[" + param.getString("long_title") + "]");
+			}
+
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() == 0) {
 				updateDocument = new BasicDBObject();
@@ -639,6 +643,13 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			// 中文
 		} else {
 			poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
+
+			// 检查POI是否重复
+			Document checkResult = MongoUtility.findOnePoi(poi_collection, param, _id);
+			if(checkResult != null) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0007", "POI[" + param.getString("long_title") + "]");
+			}
+
 			UpdateResult updateResult = poi_collection.updateOne(keyId, updateDocument);
 			if (updateResult.getModifiedCount() > 0) {
 				// 尝试同步更新英文表
@@ -1143,14 +1154,14 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 				Document document = null;
 				// 保证插入数据，在判重策略下是唯一的
 				synchronized (MongoConnector.class) {
-					document = MongoUtility.findOnePoi(poi_collection, poiJson);// 返回相似POI
+					document = MongoUtility.findOnePoi(poi_collection, poiJson, null);// 返回相似POI
 					if (document == null) {
 						poi_collection.insertOne(doc);
 						inserted = true;
 					}
 				}
 				if (document == null) {
-					document = MongoUtility.findOnePoi(poi_collection, poiJson);
+					document = MongoUtility.findOnePoi(poi_collection, poiJson, null);
 				}
 				if (document != null) {
 					if (!inserted) {
