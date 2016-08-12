@@ -47,7 +47,7 @@
                         <span>{{email}}</span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="user.handelDeleteEmail($index)" ></span>
                     </span>
-                    <input id="email-input" ng-model="user.data.email" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
+                    <input id="email-input" ng-model="user.data.email" ng-class="{transparent: ! user.data.emailFocus}" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
                 </div>
                 <p class="warn">{{user.data.invalidEmail ? '邮箱格式不正确' : ''}}</p>
                 <div class='form-input'>

@@ -13,6 +13,9 @@
     padding-left: 10px;
     width: 200px;
 }
+#email-input.transparent{
+    cursor: default;
+}
 
 .placeholder{
     color: #999;

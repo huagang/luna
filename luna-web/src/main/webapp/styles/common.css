@@ -400,3 +400,8 @@ a.button.disable:hover{
     background-color: white;
     padding-left: 0;
 }
+
+
+.transparent{
+    opacity: 0 !important;
+}
