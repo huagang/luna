@@ -581,7 +581,7 @@ $(document).ready(function () {
 
             this.value.content.playIcon = this.value.content.playIcon || 'http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png';
             this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+            this.value.content.file = this.value.content.file || '';
 
             if (this.value.content.loopPlay == '1') {
                 loopPlay = 'loop="loop"';
@@ -618,7 +618,7 @@ $(document).ready(function () {
             this.setPosition();
 
             this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+            this.value.content.file = this.value.content.file || '';
 
             if (showType == '1') {
                 //弹框组件

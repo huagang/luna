@@ -133,8 +133,8 @@ componentAudioModelTemplate = {
         "autoPlay": '0',
         "file": "",
         "loopPlay": "0",
-        "pauseIcon": "",
-        "playIcon": ""
+        "pauseIcon": "http://cdn.visualbusiness.cn/public/vb/img/audiopause.png",
+        "playIcon": "http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png"
     },
     "action": {
         "href": {
