@@ -7,7 +7,7 @@ import ms.luna.biz.util.MsLogger;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by greek on 16/7/28.
+ * Created: by greek on 16/7/28.
  */
 public class FarmCommon {
     private FarmCommon (){}
@@ -38,6 +38,7 @@ public class FarmCommon {
      * @param fieldsVal 字段值
      * @param fieldsDef 字段定义
      */
+    // 目前认为没有必要做.不同于权限,商户注册,农+页只是一些展示的信息,而且前端已经做了检查
     public void checkFieldsVal(JSONObject fieldsVal, JSONArray fieldsDef) {
 
     }

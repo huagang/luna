@@ -428,10 +428,10 @@
                     that.value = event.target.value;
                     that.setWarn('');
                 });
-                that.element.find('.cleanInput').on('click', function (event) {
+                that.element.find('.cleanInput').on('click', function () {
                     that.value = '';
                     that.element.find('.media').val('');
-                    $(event.target).addClass('hidden');
+                    that.element.find('.cleanInput').addClass('hidden');
                 });
             }
 
@@ -1347,9 +1347,12 @@
         }
 
         function confirmEdit(){
-            that.curObj.pic = that._children.picUploader.value;
-            that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
-                'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
+            if(that._children.picUploader.value){
+                that.curObj.pic = that._children.picUploader.value;
+                that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
+                    'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
+            }
+
             that.handleClose();
         }
 
