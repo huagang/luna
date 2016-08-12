@@ -35,15 +35,18 @@
 .pop.pop-show{
 	position: fixed;
 	left: 0;
-    right: 0;
-    top: 7%;
-    width: 44%;
-    margin: auto;
-    display: block;
+	right: 0;
+	top: 7%;
+	width: 44%;
+	margin: auto;
+	display: block;
 }
 
 .pop.pop-show.edit-app{
 	width: 560px;
+	/* height: auto; */
+	position: absolute;
+	/* overflow: hidden; */
 }
 .set-app-name .form-group label{
     height: 30px;
@@ -70,7 +73,7 @@
 }
 
 .pop-show .pop-cont{
-    overflow-y: visible !important;
+    /* overflow-y: visible !important; */
 }
 
 
@@ -286,8 +289,7 @@ img.abstract-pic{
 /* 分享设置部分 end */
 
 .pop-cont{
-	max-height: 400px;
-    overflow-y: scroll;
+	overflow-y: scroll;
 	background-color: white;
 }
 .pop-cont select{
