@@ -168,6 +168,7 @@
 
     <script>
         window.context = '<%=request.getContextPath()%>';
+        document.body.scrollTop = 0;
         var pageData = ${pageData};
         var wechatOptions = {
             title: "${share_info_title}" || pageData.poi_info.poi_name,

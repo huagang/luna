@@ -1,7 +1,28 @@
 /**
  * Created by wumengqiang on 16/7/22.
  */
+
 $(function(){
+    var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
+    bgImg.onload = function(){
+        if(fgLoaded){
+            showAnimation();
+        }
+        bgLoaded = true;
+    };
+    fgImg.onload = function(){
+        if(bgLoaded){
+            showAnimation();
+        }
+        fgLoaded = true;
+    };
+    
+    fgImg.src = pageData.start_page_foreground_pic;
+    bgImg.src = pageData.start_page_background_pic;
+
+});
+
+function showAnimation(){
     $('.page-back .fg').velocity({opacity: 1},
         {
             duration: 3000,
@@ -12,6 +33,10 @@ $(function(){
             {
                 duration: 3000,
                 easing: "ease-out",
+                complete: function(){
+                    $('.page-back').css('display', 'none');
+                    $(document.body).removeClass('modal-open');
+                }
             });
         $('.page-main').velocity({opacity: 1},
             {
@@ -19,8 +44,7 @@ $(function(){
                 easing: 'ease-in'
             });
     }, 5000);
-
-});
+};
 
 (function() {
     angular.module('farmHouse', [])
@@ -503,6 +527,15 @@ $(function(){
             }).then(function (res) {
                 if (res.data.result === 0) {
                     vm.farmData.panorama.panoList = [];
+                    (res.data.data.panoList || []).forEach(function(pano){
+                        vm.farmData.panorama.panoList.push({
+                            panoId: pano.panoId,
+                            panoName: pano.panoName,
+                            pic: pano.thumbnailUrl,
+                            panoPitch: pano.panoPitch,
+                            panoHeading: pano.panoHeading
+                        });
+                    });
                     res.data.data.albumList.forEach(function (album) {
                         album.panoList.forEach(function (pano) {
                             vm.farmData.panorama.panoList.push({
@@ -514,6 +547,7 @@ $(function(){
                             });
                         });
                     });
+
                     vm.panoAutoPlay = false;
                     vm.setPano();
                     vm.listenScroll();

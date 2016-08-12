@@ -1,13 +1,32 @@
 html{
     font-size: 14px;
+
 }
 body{
     font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+
+}
+body.modal-open{
+    overflow: hidden;
+}
+
+.modal-open .page-main{
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+
 }
 
 .page-back{
     position: absolute;
     z-index:2;
+}
+.page-main{
+    width: 100vw;
 }
 
 .bg{
