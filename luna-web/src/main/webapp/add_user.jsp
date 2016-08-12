@@ -42,7 +42,7 @@
                 </ol>
 
                 <div class='form-input ng-hide' ng-show="! user.userId" id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
-                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
+                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，输入完毕后按回车键或者空格键结束单条邮箱输入</span>
                     <span class="email-item" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
                         <span>{{email}}</span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="user.handelDeleteEmail($index)" ></span>

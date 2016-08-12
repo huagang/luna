@@ -16,7 +16,7 @@ $(function(){
         }
         fgLoaded = true;
     };
-    
+
     fgImg.src = pageData.start_page_foreground_pic;
     bgImg.src = pageData.start_page_background_pic;
 

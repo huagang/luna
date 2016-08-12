@@ -25,6 +25,9 @@
         // 数据初始化
         vm.init = init;
 
+        // 事件绑定
+        vm._bindEvent = _bindEvent;
+
         // 操作 更新业务信息到vm.data.extra对象中
         vm.transformBusinessData = transformBusinessData;
 
@@ -93,10 +96,21 @@
             vm.fetchBusinessData();
             vm.fetchUserData();
 
-
+            vm._bindEvent();
         }
 
+        function _bindEvent(){
+            $(document.body).click(function(){
+                if(vm.data.emailFocus ){
+                    vm.data.emailFocus = false;
+                    try{
+                        $scope.$apply();
+                    } catch(e){
 
+                    }
+                }
+            });
+        }
 
 
         // 删除邮箱
@@ -124,6 +138,8 @@
         function handleEmailFocus() {
             vm.data.emailFocus = true;
             angular.element("#email-input").focus();
+            event.stopPropagation();
+            event.preventDefault();
 
         }
 
