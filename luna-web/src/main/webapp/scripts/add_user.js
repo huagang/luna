@@ -157,6 +157,10 @@
                         vm.roles = item.roleArray;
                         vm.data.business = {};
                         vm.data.role = '';
+                        if(vm.roles.length === 1){
+                            vm.data.role = vm.roles[0].id;
+                        }
+
 
                         if(item.extra.type === 'business'){
                             if(item.extra.mode === 0){
@@ -176,7 +180,6 @@
                             }
 
                         }
-
 
                         return true;
                     }
@@ -299,8 +302,13 @@
                     category_id: vm.data.module,
                     role_id: parseInt(vm.data.role),
                 };
-                if(vm.data.extra && vm.data.extra.type){
-                    data.extra = JSON.stringify(vm.data.extra);
+                if(vm.data.extra){
+                    if(['string', 'number'].indexOf(typeof data.extra) === -1){
+                        data.extra = JSON.stringify(vm.data.extra.value);
+                    }
+                    else{
+                        data.extra = vm.data.extra.value;
+                    }
                 }
                 if(! vm.userId){
                     data.emails = vm.data.emailList.join(',');
@@ -346,17 +354,34 @@
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.inviteAuth = res.data.data;
+                    if(vm.inviteAuth.length === 1){
+                        vm.data.module = vm.inviteAuth[0].id;
+                    }
+
+
+
                     vm.inviteAuth.forEach(function(item){
                         // 由于extra类型为string,需要将其转化为对象
                         if(item.extra && typeof item.extra === 'string'){
                             item.extra = JSON.parse(item.extra);
                         }
 
-                        if(vm.userId && item.id === vm.data.module){
+                        if(item.id === vm.data.module){
                             // 编辑状态下更新角色选项, exrtaData选项
-                            vm.roles = item.roleArray;
                             vm.extraData = item.extra;
-                            if(vm.extraData.type ==='business'){
+                            vm.roles = item.roleArray;
+                            if(vm.roles.length === 1){
+                                vm.data.role = vm.roles[0].id;
+                            }
+                            if(vm.extraData.type !== 'business'){
+                                var keys = Object.keys(vm.extraData.options);
+                                vm.extraData.optionLength = keys.length;
+                                if(vm.extraData.optionLength === 1){
+                                    vm.data.extra.value = parseInt(keys[0]);
+                                    vm.data.extra.type = vm.extraData.type;
+                                    vm.extraData.option = vm.extraData.options[keys[0]];
+                                }
+                            } else{
                                 if(vm.extraData.mode === 0){
                                     vm.choiceType = 'checkbox';
                                 } else if(vm.extraData.mode === 1){
@@ -394,6 +419,9 @@
                             vm.businessLength += 1;
                         });
                     });
+                    if(vm.businessLength === 1){
+                        vm.data.extra.value = [vm.business[Object.keys(vm.business)[0]][0].business_id];
+                    }
                 }
                 else{
                     console.error(res.data.msg || '获取业务列表失败');
