@@ -126,7 +126,7 @@ function MenuController($scope, $rootScope, $http) {
         });
         //给弹出的二维码框复制按钮绑定复制方法
         $(".copy").zclip({
-            path: "/plugins/jquery.zclip/ZeroClipboard.swf",
+            path:  Inter.getApiUrl().zclipSWFPath,
             copy: function () {
                 return $(this).siblings(".copyed").text();
             },
