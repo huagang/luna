@@ -45,7 +45,7 @@ componentCanvasModelTemplate = {
     "bgc": "#FFFFFF",
     "bgimg": "",
     "type": "canvas",
-    'gravity': 'false',
+    'gravity': false,
     'panoId': '',
     'pano': {
         heading: 180,

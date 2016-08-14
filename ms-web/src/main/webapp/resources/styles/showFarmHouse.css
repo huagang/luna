@@ -122,34 +122,29 @@ body.modal-open{
     background: linear-gradient(0deg, rgba(0,0,0,.6), rgba(0,0,0,0));
     color: white;
     padding:  0 0 10px 16px;
-
-}
-
-.info-wrapper{
     font-size: 16px;
-    margin-bottom: 3px;
-
 }
 
 .location{
     font-size: 12px;
 }
 
-.farmhouse-info nav{
-    display: table;
+.nav-container{
+    display: flex;
+    align-items: center;
     width: 100%;
     font-size: 12px;
     border-bottom: 1px solid #dee0e3;
 }
 
+
 .nav-item{
-    display: table-cell;
-    width: 33%;
     text-align: center;
     height: 75px;
     vertical-align: middle;
     position: relative;
-
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .nav-item.phone,
@@ -169,6 +164,7 @@ body.modal-open{
 .nav-item .img{
     height: 25px;
     margin-bottom: 6px;
+    margin-top: 15px;
 }
 
 
@@ -371,6 +367,7 @@ body.modal-open{
     height: 48vw;
     width: 80vw;
     margin-right: 5px;
+    margin-bottom: 10px;
 }
 
 .food-info .food-item:last-child{

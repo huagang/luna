@@ -182,7 +182,7 @@
                   </div>
                   <div class="form-group">
                     <input type="checkbox" id="chkGsensor" ng-model="canvas.gravity" ng-click="canvas.changePano()">
-                    <lable for="chkGsensor">开启重力感应</lable>
+                    <lable for="chkGsensor" for="chkGsensor">开启重力感应</lable>
                   </div>
                 </div>
               </div>

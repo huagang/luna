@@ -3,22 +3,29 @@
  */
 
 $(function(){
-    var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
-    bgImg.onload = function(){
-        if(fgLoaded){
-            showAnimation();
-        }
-        bgLoaded = true;
-    };
-    fgImg.onload = function(){
-        if(bgLoaded){
-            showAnimation();
-        }
-        fgLoaded = true;
-    };
+    if(! /disableWelcome=true/.test(location.href)){
+        var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
+        bgImg.onload = function(){
+            if(fgLoaded){
+                showAnimation();
+            }
+            bgLoaded = true;
+        };
+        fgImg.onload = function(){
+            if(bgLoaded){
+                showAnimation();
+            }
+            fgLoaded = true;
+        };
 
-    fgImg.src = pageData.start_page_foreground_pic;
-    bgImg.src = pageData.start_page_background_pic;
+        fgImg.src = pageData.start_page_foreground_pic;
+        bgImg.src = pageData.start_page_background_pic;
+    } else{
+        $('.page-back').css('display', 'none');
+        $(document.body).removeClass('modal-open');
+        $('.page-main').removeClass('transparent');
+    }
+
 
 });
 
@@ -35,7 +42,13 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-
+                    var href = '';
+                    if(location.search){
+                        href = '&disableWelcome=true';
+                    } else{
+                        href = '?disableWelcome=true';
+                    }
+                    history.replaceState({}, 'disableWelcome', location.href + href);
                 }
             });
         $('.page-main').velocity({opacity: 1},
@@ -251,6 +264,15 @@ function showAnimation(){
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
 
+            if(! pageData.poi_info.contact_phone){
+                $('.nav-item.phone').addClass('hidden');
+            }
+            if(! pageData.poi_info.panorama.panorama_id){
+                $('.nav-item.pano .tip').html('全景拍摄中');
+                setTimeout(function(){
+                    $('.nav-item.pano').attr('href', 'javascript:void(0)')
+                },200)
+            }
 
 
         }
@@ -360,6 +382,9 @@ function showAnimation(){
                 vm.poiList.forEach(function (item, index) {
 
                     if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
+                        return;
+                    }
+                    if(item.category.category_id === 3 && item.sub_category.sub_category_id === 21){
                         return;
                     }
                     var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
@@ -475,20 +500,26 @@ function showAnimation(){
         // 请求 获取poi数据信息
         function fetchPoiData() {
             vm.poiData = pageData.poi_info;
-            switch (vm.poiData.panorama.panorama_type_id) {
-                case 1:
-                    vm.poiData.panoUrl = vm.apiUrls.singlePano.format(vm.poiData.panorama.panorama_id);
-                    break;
-                case 2:
-                    vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
-                    break;
-                case 3:
-                    vm.poiData.panoUrl = vm.apiUrls.customerPano.format(vm.poiData.panorama.panorama_id);
-                    break;
-                default:
-                    vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
-                    break;
+
+            if(vm.poiData.panorama.panorama_id) {
+                switch (vm.poiData.panorama.panorama_type_id) {
+                    case 1:
+                        vm.poiData.panoUrl = vm.apiUrls.singlePano.format(vm.poiData.panorama.panorama_id);
+                        break;
+                    case 2:
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        break;
+                    case 3:
+                        vm.poiData.panoUrl = vm.apiUrls.customerPano.format(vm.poiData.panorama.panorama_id);
+                        break;
+                    default:
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        break;
+                }
+            } else{
+                vm.poiData.panoUrl = 'javascript:void(0)';
             }
+
             vm.initMap();
             vm.fetchPoisAround();
 
@@ -565,7 +596,7 @@ function showAnimation(){
         // 请求 获取周围poi点
         function fetchPoisAround() {
             $http({
-                url: vm.apiUrls.aroundPois.url.format(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng, 'poi_name,address,lnglat,category', '', 5000),
+                url: vm.apiUrls.aroundPois.url.format(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng, 'poi_name,address,lnglat,category,sub_category', '', 5000),
                 method: vm.apiUrls.aroundPois.type,
             }).then(function (res) {
                 if (res.data.code === '0') {
