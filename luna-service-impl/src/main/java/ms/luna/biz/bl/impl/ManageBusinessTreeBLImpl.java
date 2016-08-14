@@ -380,7 +380,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		BasicDBObject condition = new BasicDBObject();
 		if (lstMsBusinessResult == null || lstMsBusinessResult.isEmpty()) {
 			JSONObject data = new JSONObject();
-			data.put("bizTrees", bizTrees);
+			data.put("rows", bizTrees);
 			data.put("total", total);
 			return FastJsonUtil.sucess("success", data);
 		}
