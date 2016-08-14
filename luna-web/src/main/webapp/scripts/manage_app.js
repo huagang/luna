@@ -291,8 +291,8 @@ function getShareController(data) {
 			this.data.splice(order, 1);
 			$(".share-item.order-" + order).remove();
 			for (var i = order + 1; i < this.num; i += 1) {
-				$('.share-item.order-' + i).attr('data-order', i-1).
-					removeClass('order-' + i).addClass('order-' + (i-1));
+				$('.share-item.order-' + i).attr('data-order', i - 1).
+					removeClass('order-' + i).addClass('order-' + (i - 1));
 			}
 			this.num -= 1;
 		},
@@ -487,6 +487,11 @@ function NewAppController() {
 			alert(error);
 		}
 		else {
+			var business = localStorage.getItem('business');
+			if (business) {
+				business = JSON.parse(business);
+			}
+
 			// 发送请求
 			var req = that.createType === 'new' ? that.urls.appCreate : that.urls.appCopy;
 			$.ajax({
@@ -494,7 +499,7 @@ function NewAppController() {
 				type: req.type,
 				data: {
 					app_name: that.data.name,
-					business_id: that.data.businessId,
+					business_id: business.id,
 					type: that.typeData[that.data.type],
 					source_app_id: that.data.sourceAppId || null
 				},
@@ -736,7 +741,7 @@ function editDevApp(appId) {
 		type: apiUrls.appToken.type,
 		success: function (res) {
 			if (res.code === '0') {
-				location.href = pageUrls.devAppEdit.format('editapp',appId, res.data.token);
+				location.href = pageUrls.devAppEdit.format('editapp', appId, res.data.token);
 			} else {
 				alert(res.msg || '获取token失败')
 			}
