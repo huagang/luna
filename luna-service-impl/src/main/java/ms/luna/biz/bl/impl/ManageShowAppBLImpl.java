@@ -497,8 +497,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
 		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
-		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
-		businessDir = getAppCosDir(appId);
+//		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
+		// TODO 将二维码地址放在/app 目录下,不放在 /business下,则不会出现在切换上线app后二维码图片不及时跟新的情况
+		String businessDir = getAppCosDir(appId);
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
 		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
