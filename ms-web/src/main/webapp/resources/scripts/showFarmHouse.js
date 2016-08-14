@@ -92,7 +92,7 @@ function showAnimation(){
 
         MarkerTip.prototype.setDistance = function (distance) {
             this.distance = distance;
-            this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + data.distance + 'km';
+            this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
         };
 
         MarkerTip.prototype.hide = function () {
@@ -439,13 +439,11 @@ function showAnimation(){
         function getRouteDistanceSuccess(item, res) {
             console.log('success', res);
             if (res.type == qq.maps.ServiceResultType.MULTI_DESTINATION) {
-                // console.log("起终点不唯一");
             } else {
                 try {
                     item.distance = (res.detail.distance / 1000).toFixed(1);
                     localStorage.setItem(vm.poiData.poi_id + '&' + item.poi_id, item.distance);
-                    console.log(item.distance);
-                    item.markerTip.setDistance('距离' + item.distance + 'km');
+                    item.markerTip.setDistance(item.distance);
                 } catch (e) {
                 }
             }
@@ -595,7 +593,7 @@ function showAnimation(){
                         wx.openLocation({
                             latitude: Number(vm.navInfo.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
                             longitude: Number(vm.navInfo.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
-                            name: vm.poiData.poi_name, // 位置名
+                            name: vm.navInfo.poi_name, // 位置名
                             address: address.city + address.county + address.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                             infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
