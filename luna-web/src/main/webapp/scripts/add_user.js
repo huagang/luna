@@ -364,6 +364,9 @@
                         if(item.id === vm.data.module){
                             // 编辑状态下更新角色选项, exrtaData选项
                             vm.extraData = item.extra;
+                            if(vm.inviteAuth.length === 1){
+                                vm.data.extra.type = vm.extraData.type;
+                            }
                             vm.roles = item.roleArray;
                             if(vm.roles.length === 1){
                                 vm.data.role = vm.roles[0].id;
@@ -373,7 +376,6 @@
                                 vm.extraData.optionLength = keys.length;
                                 if(vm.extraData.optionLength === 1){
                                     vm.data.extra.value = parseInt(keys[0]);
-                                    vm.data.extra.type = vm.extraData.type;
                                     vm.extraData.option = vm.extraData.options[keys[0]];
                                 }
                             } else{
