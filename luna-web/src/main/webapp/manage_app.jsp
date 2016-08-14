@@ -93,7 +93,7 @@
 	</div>
 	<div class="pop-cont ">
 		<div>中文名称</div>
-		<input class="app-name" placeholder="输入二级子分类中文名称" />
+		<input class="app-name" placeholder="请输入微景展中文名称" />
 		<div>选择模板类型</div>
 		<div class="template-group">
 			<div class="template basic" data-value="basic">
