@@ -1363,9 +1363,11 @@
                 that.curObj.pic = that._children.picUploader.value;
                 that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
                     'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
+                that.handleClose();
+            } else{
+                that.element.find('.warn').html('您没有设置图片');
             }
 
-            that.handleClose();
         }
 
         function handleClose(){

@@ -356,6 +356,11 @@ p.warn{
     direction: rtl;
 }
 
+.country-enjoyment .warn{
+    padding-left: 65px;
+    margin-top: 5px;
+}
+
 
 /******** poi绑定 *********/
 .poi-search{
