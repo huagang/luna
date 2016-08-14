@@ -38,6 +38,7 @@ var Inter = function () {
 
 
     return {
+        context:context,
         getPageUrl: function () {
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
