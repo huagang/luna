@@ -37,17 +37,17 @@
             <div class="main">
                 <div class="main-hd"><h3>{{user.userId ? '编辑用户' : '添加用户' }}</h3></div>
                 <ol class="breadcrumb" style="/* background-color: #fff; */">
-                    <li><a href="<%=request.getContextPath()%>/platform/user/invite">&lt;用户管理</a></li>
+                    <li><a href="<%=request.getContextPath()%>/platform/user">&lt;用户管理</a></li>
                     <li class="active">{{user.userId ? '编辑用户' : '添加用户' }}</li>
                 </ol>
 
                 <div class='form-input ng-hide' ng-show="! user.userId" id="user-email"  ng-click="user.handleEmailFocus()" ng-class="{'invalid-email': user.data.invalidEmail}">
-                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，多个用户空格 或者回车进行分割</span>
-                    <span class="text-primary" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
+                    <span id="info" class="placeholder" ng-show="user.data.emailList.length === 0 && ! user.data.emailFocus">请输入用户的邮箱地址，输入完毕后按回车键或者空格键结束单条邮箱输入</span>
+                    <span class="email-item" ng-repeat="email in user.data.emailList track by $index" data-order="{{$index}}">
                         <span>{{email}}</span>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true" ng-click="user.handelDeleteEmail($index)" ></span>
                     </span>
-                    <input id="email-input" ng-model="user.data.email" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
+                    <input id="email-input" ng-model="user.data.email" ng-class="{transparent: ! user.data.emailFocus}" ng-keydown="user.handleEmailKeyDown()" ng-blur="user.handleEmailBlur()"/>
                 </div>
                 <p class="warn">{{user.data.invalidEmail ? '邮箱格式不正确' : ''}}</p>
                 <div class='form-input'>
@@ -63,6 +63,7 @@
                 <div class='form-input'>
                     <label>选择角色:</label>
                     <select class="ng-hide" ng-model="user.data.role" ng-change="user.handleRoleChange()" ng-show="user.roles.length !== 1">
+                        <option value="">请选择角色</option>
                         <option class="ng-hide" ng-show="user.roles.length === 0" disabled="disabled">无</option>
                         <option class="ng-hide" ng-repeat="role in user.roles" value="{{role.id}}" ng-show="user.roles.length>0">{{role.name}}</option>
 
@@ -81,17 +82,18 @@
                 <div class="form-input" ng-show="user.choiceType">
                     <label>{{user.extraData.label}}</label>
                     <div class="bussiness-container">
-                        <div class="ng-hide" ng-show="user.businessShowType === 'multiple'">
+                        <div class="ng-hide" ng-show="user.businessLength > 1">
                             <div class='business-group' ng-repeat="(label,business) in user.business">
                                 <label>{{label}}</label>
                                 <span class="business-wrapper" ng-repeat="item in business" >
                                     <input class='business' type="{{user.choiceType}}" ng-checked="(user.data.business[item.business_id] || '')"
                                            ng-click="user.handleOptionsChange()" id="{{item.business_id}}"/>
-                                    <label for="{{item.business_id}}" class="business-name" title="{{item.business_name}}">{{item.business_name}}</label>
+                                    <label for="{{item.business_id}}" class="business-name"">{{item.business_name}}</label>
+                                    <div class="full-name">{{item.business_name}}</div>
                                 </span>
                             </div>
                         </div>
-                        <span class="ng-hide" ng-show="user.businessShowType === 'single'">
+                        <span class="ng-hide" ng-show="user.businessLength === 1">
                             {{user.business[Object.keys(user.business)[0]].business_name}}</span>
                     </div>
                 </div>
@@ -103,7 +105,9 @@
             <!--主题内容 end-->
         </div>
     </div>
-
+    <div class="message-wrapper hidden">
+        <div class="message"></div>
+    </div>
 </div>
 <script>
     try{
@@ -111,7 +115,7 @@
     } catch(e){
         roleData = null;
     }
-
+    window.context = '<%=request.getContextPath() %>';
 </script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>

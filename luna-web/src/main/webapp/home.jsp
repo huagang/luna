@@ -19,12 +19,20 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+    <style>
+        .main{
+            vertical-align:middle;
+            text-align:center;
+        }
+        .menu{
+            padding:37px 0 0 0;
+        }
+        </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -40,13 +48,15 @@
                 <!--侧边菜单 end-->
                 <!--主题内容 start-->
                 <div class="main">
-                    <div class="main-hd"><h3>欢迎使用皓月平台</h3></div>
+                    <div class="main-bd"><img src="<%=request.getContextPath() %>/img/welcome.png" alt=""></div>
                 </div>
                 <!--主题内容 end-->
             </div>
         </div>
     </div>
-
+    <!--底部版权 start-->
+    <jsp:include page="/templete/bottom.jsp"/>
+    <!--底部版权 end-->
 
 </body>
 </html>

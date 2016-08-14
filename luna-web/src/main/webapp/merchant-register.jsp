@@ -37,7 +37,7 @@
                     <h3>商户入驻</h3>
                 </div>
                 <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>
-                <form id="form-information" action="/common/merchant" method="post"
+                <form id="form-information" action="<%=request.getContextPath() %>/common/merchant" method="post"
                 	onkeydown="if(event.keyCode==13){return false;}">
                     <div class="information" id="information">
                         <div class="title-info">

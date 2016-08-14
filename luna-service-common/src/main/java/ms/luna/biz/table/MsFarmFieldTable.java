@@ -33,6 +33,8 @@ public class MsFarmFieldTable {
 
     public static final String FIELD_OPTIONS = "options";
 
+    public static final String FIELD_DEFAULT_VALUE = "default_value";
+
     public static final String FIELD_REGIST_HHMMSS = "regist_hhmmss";
 
     public static final String FIELD_UP_HHMMSS = "up_hhmmss";

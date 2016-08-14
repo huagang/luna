@@ -1,4 +1,4 @@
-textarea{
+ textarea{
     resize: none;
     width: 650px;
     vertical-align: top;
@@ -20,7 +20,7 @@ a{
     height: 100%;
     width: 100%;
     background-color: rgba(0,0,0,.4);
-    z-index: 10;
+    z-index: 1;
 }
 
 .hidden{
@@ -334,13 +334,17 @@ p.warn{
 .country-enjoyment .pop-fun {
     width: 100%;
     float: none;
+    padding-bottom: 24px;
+    overflow: hidden;
 
 }
 .country-enjoyment .pop-fun .button-container {
     float: right;
     padding-right: 20px;
 }
-
+.country-enjoyment .selectize-input input{
+    width: 150px !important;
+}
 
 
 .country-enjoyment .fileInput .fileup {
@@ -352,6 +356,11 @@ p.warn{
 .country-enjoyment .fileInput .component-label{
     width: 66px;
     direction: rtl;
+}
+
+.country-enjoyment .warn{
+    padding-left: 65px;
+    margin-top: 5px;
 }
 
 
@@ -395,4 +404,8 @@ p.warn{
 
 .poi-search img.form-value {
     vertical-align: top;
+}
+
+.publish-pop-wrapper .mask{
+    z-index: 2;
 }

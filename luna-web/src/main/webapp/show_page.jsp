@@ -34,7 +34,7 @@
         <!-- 可视化界面顶部导航 -->
         <div class="header" ng-controller="menuController as menu">
           <nav class="navbar">
-            <a class="navbar-logo-wrap" href="<%=request.getContextPath() %>/menu.do?method=goHome">
+            <a class="navbar-logo-wrap" href="<%=request.getContextPath() %>/">
                 <img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand">
             </a>
             <div class="component-btn-wrap">
@@ -102,9 +102,6 @@
               </div>
               <div class="app-set-btn">
                 <span id="btn-publish" ng-click="menu.publishApp()">发布</span>
-              </div>
-              <div class="app-set-btn">
-                <span id="btn-set" ng-click="menu.appSetting()">设置</span>
               </div>
             </div>
           </nav>
@@ -185,7 +182,7 @@
                   </div>
                   <div class="form-group">
                     <input type="checkbox" id="chkGsensor" ng-model="canvas.gravity" ng-click="canvas.changePano()">
-                    <lable for="chkGsensor">开启重力感应</lable>
+                    <lable for="chkGsensor" for="chkGsensor">开启重力感应</lable>
                   </div>
                 </div>
               </div>
@@ -1225,7 +1222,7 @@
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'singleArticle' || menuTab.currentTab.type == 'articleList'">
                         <div>栏目名称:
                           <select name="" id="" ng-model="menuTab.currentTab.columnId" ng-change="menuTab.changeColumn()">
-                              <option ng-repeat='articleColunmu in menuTab.articleColunmuList track by articleColunmu.columnId' value='{{articleColunmu.columnId}}'>{{articleColunmu.columnName}}
+                              <option ng-repeat='articleColumn in menuTab.articleColumnList track by articleColumn.columnId' value='{{articleColumn.columnId}}'>{{articleColumn.columnName}}
                                             </option>
                           </select>
                         </div>

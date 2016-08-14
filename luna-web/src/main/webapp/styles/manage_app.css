@@ -21,27 +21,37 @@
 .search{
     margin-bottom: 18px;
 }
-.property,
-.modify,
-.reuse{
-    padding-right: 10px;
-    cursor: pointer;
+.wrapper a{
+	cursor:pointer;
+	margin-left:10px;
+} 
+
+.wrapper a:first-child{
+	margin-left:0;
 }
+
 
 /*弹出层，独有，新建微景展*/
 .pop.pop-show{
 	position: fixed;
 	left: 0;
-    right: 0;
-    top: 7%;
-    width: 44%;
-    margin: auto;
-    display: block;
+	right: 0;
+	top: 7%;
+	width: 44%;
+	margin: auto;
+	display: block;
 }
 
 .pop.pop-show.edit-app{
 	width: 560px;
 }
+
+.edit-app .pop-cont{
+    max-height: 400px;
+    overflow: auto;
+}
+
+
 .set-app-name .form-group label{
     height: 30px;
     line-height: 30px;
@@ -247,8 +257,12 @@ img.abstract-pic{
 /* 通用设置部分  css end*/
 
 /* 分享设置部分 start */
+.setting-share {
+    margin-top: -15px;
+}
+
 .setting-share .newShare{
-	margin: -19px 0 15px 0;
+    margin-bottom: 10px;
 }
 
 .setting-share div.share-item {
@@ -283,8 +297,7 @@ img.abstract-pic{
 /* 分享设置部分 end */
 
 .pop-cont{
-	max-height: 400px;
-    overflow-y: scroll;
+	overflow-y: scroll;
 	background-color: white;
 }
 .pop-cont select{

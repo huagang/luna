@@ -359,12 +359,15 @@
             if(toString.call(that.definition.limit) === '[object Array]'){
                 that.definition.limit = that.definition.limit[0];
             }
-
+            var accept='';
+            if(that.definition.type === 'PIC'){
+                accept = "accept='image/*'";
+            }
             that._template =
                 "<div class='fileup'> \
                     <input type='text' readonly='true' class='media' placeholder='{0}介绍地址'> \
                     <span class='btn fileinput-button' title='文件大小不超过{1}M'> \
-                        <input class='media-fileup' type='file' name='media_fileup'> \
+                        <input class='media-fileup' type='file' name='media_fileup' {2}> \
                         <span>本地上传</span> \
                         <div class='load-container loading-tip load8 hidden'> \
                             <div class='loader'>Loading...</div> \
@@ -372,7 +375,7 @@
                     </span> \
                     <div class='cleanInput hidden'><a href='javascript:void(0)'>{1}</a></div> \
                  </div>\
-                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除');
+                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除',accept);
 
             that._children = {};
             if (that.definition.show_name) {
@@ -428,10 +431,10 @@
                     that.value = event.target.value;
                     that.setWarn('');
                 });
-                that.element.find('.cleanInput').on('click', function (event) {
+                that.element.find('.cleanInput').on('click', function () {
                     that.value = '';
                     that.element.find('.media').val('');
-                    $(event.target).addClass('hidden');
+                    that.element.find('.cleanInput').addClass('hidden');
                 });
             }
 
@@ -655,7 +658,7 @@
 
                 that.element = $(that._component);
                 that.element.html('<input type="text" class="input-text" placeholder="{0}" maxlength="{1}"/>'.format(
-                    that.definition.placeholder || '', that.definition.limit.max || 255));
+                    that.definition.placeholder.TEXT || '', that.definition.limit.max || 255));
 
                 if (that._children.label) {
                     var label = that._children.label.render();
@@ -789,6 +792,9 @@
                 that.binded = true;
                 that.element.find('.radio-item').on('change', function (event) {
                     that.value = event.target.value;
+                    if(typeof that.definition.options[0].value === 'number'){
+                        that.value = parseInt(that.value);
+                    }
                     that.element.find('.radio-item').prop('checked',false);
                     $(event.target).prop('checked', true);
                 });
@@ -856,9 +862,11 @@
 
             that._children.input = new Input({
                     definition: {
-                            limits: that.definition.limits, name: 'text'
+                        limits: that.definition.limits,
+                        name: 'text',
+                        placeholder: that.definition.placeholder || {'TEXT': ['']},
+
                     },
-                    placeholder: that.definition.placeholder || {'TEXT': ''},
                     value: that.value.text || ''
             });
 
@@ -952,7 +960,7 @@
                 value: that.value.text || '',   // text
                 definition: {
                     limits: that.definition.limits || that.defaultLimits,
-                    placeholder: '',
+                    placeholder: that.definition.placeholder || {TEXT: ['']},
                     display_order: curOrder,
                     name: 'text'
                 }
@@ -988,6 +996,10 @@
 
             if(data.definition.name || data.definition.name === 0){
                 that.definition.name = data.definition.name;
+            }
+
+            if(data.definition.display_order){
+                that.definition.display_order = data.definition.display_order;
             }
 
         }
@@ -1026,7 +1038,7 @@
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
             that.itemNum = (that.definition.limits.num || {}).min || 1;
 
-            if(that.value){
+            if(that.value.length > 0){
                 that.itemNum = that.value.length;
             }
 
@@ -1065,7 +1077,7 @@
                     var row = document.createElement('div');
 
                     row.className = 'textpic-row';
-                    row.innerHTML = "<a href='javascript:void(0)' data-order='{0}' class='delete-item'>删除</a>".format(index);
+                    row.innerHTML = "<a href='javascript:void(0)' data-order='{0}' class='delete-item'>删除</a>".format(index + 1);
                     row.insertBefore(item.render(), row.firstChild);
                     that._component.insertBefore(row, that._component.lastChild);
                 });
@@ -1097,7 +1109,7 @@
                     show_name: that.definition.show_name + (that._children.length + 1),
                     limits: that.definition.limits,
                     placeholder: that.definition.placeholder || '',
-                    hideDeleteButton: true,
+                    hideDeleteButton: true
                 }
             });
             that._children.push(child);
@@ -1113,15 +1125,23 @@
             if(that._children.length === 1) return;
 
             var order = parseInt(event.target.getAttribute('data-order'));
+            order = order - 1;
+            console.log(order, that._children.length);
             that._children.splice(order, 1);
             $('.textpic-group')[0].children[order].remove();
             for(var i = order; i < that._children.length; i++){
-                that._children[i].updateComponent({'definition':
-                    {'show_name': that.definition.show_name + (i+1)},
-                     name: i,
-                     display_order: i + 1
-                });
+                that._children[i].updateComponent(
+                    {'definition':
+                        {
+                            show_name: that.definition.show_name + (i+1),
+                            name: i,
+                            display_order: i + 1
+                        }
+                    });
             }
+            $('.delete-item').each(function(i){
+                this.setAttribute('data-order', i + 1);
+            });
         }
 
         function updateComponent(data){
@@ -1239,9 +1259,21 @@
                 that._component.innerHTML = that._template;
                 that.element.prepend(that._children.label.render());
                 console.log(that.definition.options);
+                var options = JSON.parse(JSON.stringify(that.definition.options));
+                that.value.forEach(function(selectItem){
+                    options.some(function(item,index){
+                        if(selectItem.value === item.value){
+                            options.splice(index, 1);
+                            return true;
+                        }
+                        return false
+                    });
+                });
+
+
                 if(that.definition.options && ! that.selectize){
                     that.selectize = that.element.find('.text-select').selectize({
-                        options: that.definition.options,
+                        options: options,
                         labelField: 'name',
                         searchField: ['name'],
                         onChange: that.handleSelect,
@@ -1251,6 +1283,9 @@
                 }
 
                 that.element.find('.pic-upload').append(that._children.picUploader.render());
+                if(that.definition.placeholder && that.definition.placeholder.TEXT && that.definition.placeholder.TEXT.length > 0){
+                    that.element.find('.selectize-input input').attr('placeholder', that.definition.placeholder.TEXT[0]);
+                }
                 that._bindEvent();
             }
 
@@ -1283,14 +1318,18 @@
 
         function handleSelect(value){
             var notFound = that.value.every(function(item){
-                if(item.value === value){
+                if(parseInt(item.value) === parseInt(value)){
                     return false;
                 }
                 return true;
             });
             if(notFound){
                 that.definition.options.some(function(item){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     if(item.value === value){
+                        that.selectize.removeOption(value);
                         that.addItem({
                             value: value,
                             name: item.name,
@@ -1307,7 +1346,7 @@
         function handleEdit(event){
             var value = $(event.target).parentsUntil('.item-container', '.item').attr('data-value');
             that.value.some(function(item, index){
-                if(item.value === value){
+                if(item.value === parseInt(value)){
                     that.curObj = item;
                     return true;
                 }
@@ -1328,10 +1367,15 @@
         }
 
         function confirmEdit(){
-            that.curObj.pic = that._children.picUploader.value;
-            that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
-                'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
-            that.handleClose();
+            if(that._children.picUploader.value){
+                that.curObj.pic = that._children.picUploader.value;
+                that.element.find('.item[data-value="{0}"] .pic'.format(that.curObj.value)).attr('style',
+                    'background: url({0}) center center no-repeat;background-size: cover'.format(that.curObj.pic));
+                that.handleClose();
+            } else{
+                that.element.find('.warn').html('您没有设置图片');
+            }
+
         }
 
         function handleClose(){
@@ -1343,9 +1387,14 @@
 
         function handleDelete(event){
             var parent = $(event.target).parentsUntil('.item-container', '.item'),
-                value = parent.attr('data-value'), order;
+                value = parseInt(parent.attr('data-value')), order;
             that.value.some(function(item, index){
+
                 if(item.value === value){
+                    that.selectize.addOption({
+                        name: item.name,
+                        value: item.value
+                    });
                     order = index;
                     return true;
                 }
@@ -1446,6 +1495,9 @@
                 var value = that.definition.options[order].value;
                 var index = that.value.indexOf(value);
                 if(index  === -1 ){
+                    if(typeof that.definition.options[0].value === 'number'){
+                        value = parseInt(value);
+                    }
                     that.value.push(value);
                 } else{
                     that.value.splice(index, 1);
@@ -1589,7 +1641,7 @@
                             alert(res.msg || '获取poi筛选列表失败');
                         }
                     },
-                    error: function(){
+                    error: function(res){
                         alert(res.msg || '获取poi筛选列表失败');
                     }
                 });

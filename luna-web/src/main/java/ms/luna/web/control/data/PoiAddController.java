@@ -238,7 +238,7 @@ public class PoiAddController extends BasicController {
                 String vod_file_id = data.getString("vod_file_id");
                 JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
 
-                if("0".equals(result.getString("code"))){
+                if("0".equals(vodResult.getString("code"))){
                     phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
                 }
                 JSONObject param = new JSONObject();

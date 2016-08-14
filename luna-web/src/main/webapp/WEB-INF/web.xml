@@ -62,6 +62,10 @@
 		<param-value>${vodBaseDir}</param-value>
 	</context-param>
 	<context-param>
+		<param-name>appDevelopAddr</param-name>
+		<param-value>${app.develop}</param-value>
+	</context-param>
+	<context-param>
 		<param-name>loggingLevel</param-name>
 		<param-value>INFO</param-value>
 	</context-param>

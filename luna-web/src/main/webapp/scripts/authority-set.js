@@ -18,9 +18,8 @@ $(function(){
             data: {'menuArray': JSON.stringify(checkedList)},
             dataType: 'json',
             success: function(data){
-                console.log(data);
                 if(data.code === '0'){
-
+                    history.back(-1);
                 } else{
                     alert(data.msg || '保存过程中出错了');
                 }

@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
@@ -107,7 +104,7 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			selectedBusiness = getBusinessForUser(slaveUserId);
 		}
 
-		if(allValidBusiness == null) {
+		if(allValidBusiness == null || allValidBusiness.isEmpty()) {
 			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
 		}
 
@@ -172,14 +169,16 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			return null;
 		}
 		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		List<MsBusiness> msBusinessList = null;
 		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
 		if(businessIdList.size() == 1 && businessIdList.get(0) == 0) {
 			// select all business
-		} else {
+			msBusinessList = msBusinessDAO.selectByCriteria(msBusinessCriteria);
+		} else if(businessIdList.size() > 0){
 			msBusinessCriteria.createCriteria().andBusinessIdIn(businessIdList);
+			msBusinessList = msBusinessDAO.selectByCriteria(msBusinessCriteria);
 		}
-		List<MsBusiness> msBusinessList = msBusinessDAO.selectByCriteria(msBusinessCriteria);
-
+		// if no business, just return null
 		return msBusinessList;
 
 	}
@@ -192,7 +191,7 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}
 		List<MsBusiness> msBusinessList = getBusinessForUser(userId);
-		if(msBusinessList == null) {
+		if(msBusinessList == null || msBusinessList.isEmpty()) {
 			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
 		}
 		Set<Integer> businessIdSet = new HashSet<>(msBusinessList.size());

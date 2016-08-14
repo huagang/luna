@@ -303,7 +303,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			resultdata.put("sub_category_name",  sbu.toString());
 			return resultdata;
 		} else {
-			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:"+biz_id+"）");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务关系树（business_id:" + biz_id + "）");
 		}
 	}
 
@@ -555,107 +555,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 
 	}
 
-	/**
-	 * 通过id进行poi检索
-	 *
-	 * @param collection 数据库collection
-	 * @param filterName 检索条件
-	 * @param count 数量上限
-	 * @return
-	 */
-	private JSONArray retrivePoisByPoiId(MongoCollection<Document> collection, String filterName, int count) {
-		if(filterName.length() != 24) { // ObjectId 一定是24位
-			return new JSONArray();
-		}
-		Document filter = new Document().append("_id",new ObjectId(filterName));
-		List<String> includes = new ArrayList<>();
-		includes.add("_id");
-		includes.add("long_title");
-		MongoCursor<Document> cursor = collection.find(filter).projection(Projections.include(includes)).limit(1).iterator();
 
-		JSONArray array = new JSONArray();
-		while (cursor.hasNext()) {
-			JSONObject meta = new JSONObject();
-			Document document = cursor.next();
-			meta.put("poi_id", document.getObjectId("_id").toString());
-			meta.put("poi_name", document.getString("long_title"));
-			array.add(meta);
-		}
-		return array;
-
-	}
-
-	/**
-	 * 通过名称进行poi检索
-	 *
-	 * @param collection 数据库collection
-	 * @param filterName 检索条件
-	 * @param count 数量上限
-	 * @return
-	 */
-	private JSONArray retrievePoisByName(MongoCollection<Document> collection, String filterName, int count) {
-//		Document filter = new Document().append("long_title", "/" + filterName + "/");
-		List<String> includes = new ArrayList<>();
-		includes.add("_id");
-		includes.add("long_title");
-		Pattern pattern = Pattern.compile("^.*" + filterName + ".*$", Pattern.CASE_INSENSITIVE);
-		MongoCursor<Document> cursor = collection.find(Filters.regex("long_title",pattern)).
-				projection(Projections.include(includes)).limit(count).iterator();
-
-		JSONArray array = new JSONArray();
-		while (cursor.hasNext()) {
-			JSONObject meta = new JSONObject();
-			Document document = cursor.next();
-			meta.put("poi_id", document.getObjectId("_id").toString());
-			meta.put("poi_name", document.getString("long_title"));
-			array.add(meta);
-		}
-		return array;
-	}
-
-	/**
-	 * 获取不同语言版本对应的数据库(目前只有中,英文版)
-	 *
-	 * @param lang 语言
-	 */
-	private MongoCollection<Document> getPoiCollectionByLang(String lang) {
-		if("en".equals(lang)) {
-			return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
-		}
-		return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
-	}
-
-	/**
-	 * 获取所要检索的语言版本
-	 *
-	 * @param lang 语言
-	 */
-	private List<String> getLangLst(String lang) {
-		List<String> langLst = new ArrayList<>();
-		if("ALL".equals(lang)) {
-			langLst.add("zh");
-//			langLst.add("en"); // 不搜索英文
-		} else {
-			langLst.add(lang);
-		}
-		return langLst;
-	}
-
-	/**
-	 * 获取所要检索的类型集合
-	 *
-	 * @param type 检索类型
-	 */
-	private List<String> getRetriveTypeLst(String type) {
-		List<String> typeLst = new ArrayList<>();
-		if("ALL".equals(type)) {
-			typeLst.add("name");
-			typeLst.add("id");
-		} else {
-			typeLst.add(type);
-		}
-		return typeLst;
-	}
 
 	// 获取poi周边数据
 	@Override
@@ -1764,7 +1664,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 	 * @param ctgrIds 一级类别字符串。eg: 2,3,4
 	 * @return List
 	 */
-	public List<Integer> getCtgrIdLst(String ctgrIds){
+	private List<Integer> getCtgrIdLst(String ctgrIds){
 		String[] ctgrArr = ctgrIds.split(",");
 		List<Integer> ctgrlst = new ArrayList<>();
 		for(int i = 0; i < ctgrArr.length; i++) {
@@ -1864,6 +1764,107 @@ public class PoiApiBLImpl implements PoiApiBL {
 			poiArray.add(poiInfo);
 		}
 		return poiArray;
+	}
+	/**
+	 * 通过id进行poi检索
+	 *
+	 * @param collection 数据库collection
+	 * @param filterName 检索条件
+	 * @param count 数量上限
+	 * @return
+	 */
+	private JSONArray retrivePoisByPoiId(MongoCollection<Document> collection, String filterName, int count) {
+		if(filterName.length() != 24) { // ObjectId 一定是24位
+			return new JSONArray();
+		}
+		Document filter = new Document().append("_id",new ObjectId(filterName));
+		List<String> includes = new ArrayList<>();
+		includes.add("_id");
+		includes.add("long_title");
+		MongoCursor<Document> cursor = collection.find(filter).projection(Projections.include(includes)).limit(1).iterator();
+
+		JSONArray array = new JSONArray();
+		while (cursor.hasNext()) {
+			JSONObject meta = new JSONObject();
+			Document document = cursor.next();
+			meta.put("poi_id", document.getObjectId("_id").toString());
+			meta.put("poi_name", document.getString("long_title"));
+			array.add(meta);
+		}
+		return array;
+
+	}
+
+	/**
+	 * 通过名称进行poi检索
+	 *
+	 * @param collection 数据库collection
+	 * @param filterName 检索条件
+	 * @param count 数量上限
+	 * @return
+	 */
+	private JSONArray retrievePoisByName(MongoCollection<Document> collection, String filterName, int count) {
+		List<String> includes = new ArrayList<>();
+		includes.add("_id");
+		includes.add("long_title");
+		Pattern pattern = Pattern.compile("^.*" + filterName + ".*$", Pattern.CASE_INSENSITIVE);
+		Document sort = new Document().append("regist_hhmmss",1); // 注册时间升序排列
+		MongoCursor<Document> cursor = collection.find(Filters.regex("long_title",pattern)).
+				projection(Projections.include(includes)).sort(sort).limit(count).iterator();
+
+		JSONArray array = new JSONArray();
+		while (cursor.hasNext()) {
+			JSONObject meta = new JSONObject();
+			Document document = cursor.next();
+			meta.put("poi_id", document.getObjectId("_id").toString());
+			meta.put("poi_name", document.getString("long_title"));
+			array.add(meta);
+		}
+		return array;
+	}
+
+	/**
+	 * 获取不同语言版本对应的数据库(目前只有中,英文版)
+	 *
+	 * @param lang 语言
+	 */
+	private MongoCollection<Document> getPoiCollectionByLang(String lang) {
+		if("en".equals(lang)) {
+			return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_EN);
+		}
+		return mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
+	}
+
+	/**
+	 * 获取所要检索的语言版本
+	 *
+	 * @param lang 语言
+	 */
+	private List<String> getLangLst(String lang) {
+		List<String> langLst = new ArrayList<>();
+		if("ALL".equals(lang)) {
+			langLst.add("zh");
+//			langLst.add("en"); // 不搜索英文
+		} else {
+			langLst.add(lang);
+		}
+		return langLst;
+	}
+
+	/**
+	 * 获取所要检索的类型集合
+	 *
+	 * @param type 检索类型
+	 */
+	private List<String> getRetriveTypeLst(String type) {
+		List<String> typeLst = new ArrayList<>();
+		if("ALL".equals(type)) {
+			typeLst.add("name");
+			typeLst.add("id");
+		} else {
+			typeLst.add(type);
+		}
+		return typeLst;
 	}
 
 	@Override

@@ -176,7 +176,7 @@ public class UploadController {
             }
 
         } else if(type.equals(VbConstant.UploadFileRule.TYPE_VIDEO)){
-            String realPath = String.format("/%s%s/%s/%s", bucket, QCosConfig.ENV, resourceType);
+            String realPath = String.format("/%s%s/%s", bucket, QCosConfig.ENV, resourceType);
             if(StringUtils.isNotBlank(resourceId)) {
                 realPath += "/" + resourceId;
             }
@@ -202,13 +202,13 @@ public class UploadController {
                     vodPlayService.createVodRecord(param.toString());
                     retData.put(QCosConfig.ACCESS_URL, originFileUrl);
                     retData.put("status", "SUCCESS");
-                    result = FastJsonUtil.sucess("", retData);
+                    result = FastJsonUtil.sucess("success", retData);
                     success = true;
                 }
             }
             if(! success) {
                 retData.put("status", "FAIL");
-                result = FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "");
+                result = FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to upload video");
                 result.put("data", retData);
             }
 

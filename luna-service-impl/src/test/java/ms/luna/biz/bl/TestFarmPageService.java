@@ -23,6 +23,8 @@ public class TestFarmPageService {
 	private MsZoneCacheBL msZoneCacheBL;
 
 	private FarmPageService farmPageService;
+
+	private PoiApiBL poiApiBL;
 	
 	@Before
 	public void setUp() {
@@ -42,6 +44,8 @@ public class TestFarmPageService {
 		
 		msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
 		msZoneCacheBL.init();
+		poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
+		poiApiBL.init();
 		farmPageService = (FarmPageService)context.getBean("farmPageService");
 	}
 	
@@ -61,6 +65,16 @@ public class TestFarmPageService {
 		JSONObject result = farmPageService.getPageInfo(appId);
 		logger.debug(result.toString());
 		System.out.println(result.toString());
+
+	}
+
+	@Test
+	public void getPageInfo(){
+		Integer appId = 298;
+		JSONObject result = farmPageService.getPageInfo(appId);
+		System.out.println(result.toString());
+
+
 
 	}
 

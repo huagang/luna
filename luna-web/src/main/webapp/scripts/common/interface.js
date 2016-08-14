@@ -28,19 +28,32 @@ var Inter = function () {
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
 
+    var lunaEditor = {
+        'local': 'http://simon-test.visualbusiness.cn',
+        'test': 'http://simon-test.visualbusiness.cn',
+        'online': 'http://luna-test.visualbusiness.cn '
+    };
 
-    apiContext =  apiHost[curHost()];
+    apiContext = apiHost[curHost()];
+
 
     return {
-        getPageUrl: function(){
+        context:context,
+        getPageUrl: function () {
             return {
-
+                basicAppEdit: context + '/content/app/{0}?business_id={1}',
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
+                dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
+                manageApp: context + '/platform/user'
             };
         },
         getApiUrl: function () {
             return {
                 //选择业务的数据
-                selectBusinessPage:  context + '/content/business/select',//选择业务的页面 
+                selectBusinessPage: context + '/common/business/select',//选择业务的页面 
+
+                // token
+                appToken: { url: context + '/content/app/token', type: 'GET' },
 
                 //数据管理
                 poiInit: { url: context + "/data/poi", type: "GET" },
@@ -58,9 +71,9 @@ var Inter = function () {
                 poiCheckForEnglish: { url: context + '/data/poi/checkPoi', type: 'POST' },//英文poi检查
                 poiConfirmArea: '',//确认poi所在区域是否正确
 
-                poiThumbnailUpload: { url: "/data/poi/thumbnail/upload", type: "POST" }, //poi缩略图上传
-                poiAudioUpload: { url: "/data/poi/audio/upload", type: "POST" }, //poi音频上传
-                poiVideoUpload: { url: "/data/poi/video/upload", type: "POST" }, //poi视频上传
+                poiThumbnailUpload: { url: context + "/data/poi/thumbnail/upload", type: "POST" }, //poi缩略图上传
+                poiAudioUpload: { url: context + "/data/poi/audio/upload", type: "POST" }, //poi音频上传
+                poiVideoUpload: { url: context + "/data/poi/video/upload", type: "POST" }, //poi视频上传
 
                 //CRM管理
                 crmInit: { url: context + "/content/crm", type: "GET" },//CRM管理页面
@@ -79,7 +92,7 @@ var Inter = function () {
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
                 merchantSuccess: { url: context + "common/merchant/successPage", type: "GET" }, //注册成功页面
-                crmThumbnailUpload: { url: "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
+                crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
                 bizRelationInit: { url: context + "/content/businessRelation", type: "GET" }, // 管理页面初始化
@@ -99,8 +112,8 @@ var Inter = function () {
                 businessCreate: { url: context + '/content/business', type: 'POST' }, // 业务相关 POST PUT
                 businessUpdate: { url: context + '/content/business', type: 'PUT' }, // 业务相关 POST PUT
                 businessDelete: { url: context + '/content/business', type: 'DELETE' }, // 业务相关 POST PUT
-                getBusinessList: { url: context + '/content/business/selectForEdit', type: 'GET' },
-                getBusinessListForEdit: { url: context + '/content/business/selectForEdit?unique_id={0}', type: 'GET' },
+                getBusinessList: { url: context + '/common/business/selectForEdit', type: 'GET' },
+                getBusinessListForEdit: { url: context + '/common/business/selectForEdit?unique_id={0}', type: 'GET' },
 
 
                 //栏目管理
@@ -140,16 +153,15 @@ var Inter = function () {
                 appCreatePage: { url: context + '/content/app/page', type: 'POST' }, //微景展页面
                 appModifyName: { url: context + '/content/app/page/name/{0}', type: 'PUT' }, //修改页面的名字
                 appGetPageDetail: { url: context + '/content/app/page/{0}', type: 'GET' }, //获取单页面的详情
-                appDeletePage: { url:context +  '/content/app/page/{0}', type: 'DELETE' }, //删除单页面的数据
+                appDeletePage: { url: context + '/content/app/page/{0}', type: 'DELETE' }, //删除单页面的数据
                 appUpdatePageOrder: { url: context + '/content/app/pages/order', type: 'PUT' }, //更新页面的顺序
                 appSaveSetting: { url: context + '/content/app/setting/{0}', type: 'POST' }, //保存页面设置
                 appPreview: { url: context + '/content/app/preview/{0}', type: 'GET' }, //微景展预览界面
                 appPublish: { url: context + '/content/app/publish/{0}', type: 'PUT' }, //微景展发布界面
-
-                farmHouseFormInfo: {url: context + '/content/app/farm/page/{0}', type: 'GET'},      // 获取农家表单信息
-                saveFarmHouseFormInfo: {url: context + '/content/app/farm/{0}', type: 'PUT'},  // 保存农家表单信息
-                farmHousePreview: {url: context + '/content/app/preview/{0}', type: 'GET'}, // 获取预览二维码图片
-                farmHousePublish: {url: context + '/content/app/publish/{0}', type: 'PUT'}, // 获取预览二维码图片
+                farmHouseFormInfo: { url: context + '/content/app/farm/page/{0}', type: 'GET' },      // 获取农家表单信息
+                saveFarmHouseFormInfo: { url: context + '/content/app/farm/{0}', type: 'PUT' },  // 保存农家表单信息
+                farmHousePreview: { url: context + '/content/app/preview/{0}', type: 'GET' }, // 获取预览二维码图片
+                farmHousePublish: { url: context + '/content/app/publish/{0}', type: 'PUT' }, // 获取预览二维码图片
 
                 // 业务搜索
                 searchBusiness: { url: context + '/manage/app.do?method=search_business', type: '' }, //搜索业务请求              
@@ -176,11 +188,11 @@ var Inter = function () {
                 pullDownCitys: { url: context + "/common/pulldown/citys", type: "GET" }, //市
                 pullDownCounties: { url: context + "/common/pulldown/counties", type: "GET" }, //县
                 pullDownCategorys: { url: context + "/common/pulldown/categorys", type: "GET" }, //分类
-                pullDownZoneIds: { url:context +  "/common/pulldown/zoneIds", type: "GET" }, //分类
+                pullDownZoneIds: { url: context + "/common/pulldown/zoneIds", type: "GET" }, //分类
 
                 // 类别管理
                 cateInit: { url: context + "/platform/category", type: "GET" }, //初始化
-                cateCreate: { url:context +  "/platform/category", type: "POST" }, // 创建
+                cateCreate: { url: context + "/platform/category", type: "POST" }, // 创建
                 cateUpdate: { url: context + "/platform/category", type: "PUT" }, // 更新
                 cateDelete: { url: context + "/platform/category/{0}", type: "DELETE" },//删除
 
@@ -188,26 +200,29 @@ var Inter = function () {
                 updateAuthoritySet: { url: context + '/platform/authority/{0}', type: 'PUT' },
 
                 //文章列表接口
-                articleListApi: apiContext +'article/businessId/{0}',
+                articleListApi: apiContext + 'article/businessId/{0}',
 
                 //文章栏目列表
-                articleColunmu: context + '/manage/article.do?method=read_column&business_id={0}',
-                articleListByBid: apiContext +'article/businessId/{0}', //通过业务ID获取
-                articleListByBidAndCid: apiContext +'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
+                articleColumn: { url: context + '/content/column/listByBusiness/{0}', type: 'PUT' },
+                articleListByBid: apiContext + 'article/businessId/{0}', //通过业务ID获取
+                articleListByBidAndCid: apiContext + 'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
 
 
                 // poi
-                firstPoiByBid:apiContext +'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
-                poiTypeListByBidAndFPoi: apiContext +'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
+                firstPoiByBid: apiContext + 'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
+                poiTypeListByBidAndFPoi: apiContext + 'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
                 poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
                 poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
                 poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
-                poiFilter:{url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}', type: 'GET'},
+                poiFilter: { url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}', type: 'GET' },
 
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
                 multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
                 customerPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+
+                //zclip路径
+                zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
             };
         }

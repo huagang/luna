@@ -1,0 +1,548 @@
+html{
+    font-size: 14px;
+
+}
+body{
+    font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+
+}
+body.modal-open{
+    overflow: hidden;
+}
+
+.modal-open .page-main{
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+
+}
+
+.page-back{
+    position: absolute;
+    z-index:2;
+}
+.page-main{
+    width: 100vw;
+}
+
+.bg{
+    width: 100vw;
+    height: 100vh;
+}
+
+.page-main{
+    position: absolute;
+    z-index: 1;
+}
+
+.fg{
+    position: absolute;
+    left: 30%;
+    top: 15%;
+    height: 55vh;
+    width: 40vw;
+}
+
+.transparent{
+    opacity: 0;
+}
+
+.hidden{
+    display: none !important;
+}
+
+.icon-location{
+    display: inline-block;
+    background: url(../../resources/images/farmhouse/location.png) center center no-repeat;
+    height: 10px;
+    width:8px;
+    vertical-align: middle;
+    background-size: contain;
+}
+
+.icon-arrow{
+    height: 9px;
+    width: 5px;
+    background: url(../../resources/images/farmhouse/arrow.png) left center no-repeat;
+    background-size: contain;
+    display: inline-block;
+}
+
+.food-info,
+.room-info,
+.funny-info,
+.facilities-info,
+.neighborhood-info{
+    border-top: 1px solid #d8d7dc;
+    border-bottom: 1px solid #d8d7dc;
+}
+
+.room-info header,
+.food-info header,
+.funny-info header,
+.facilities-info header,
+.neighborhood-info header
+{
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    padding: 0 16px;
+}
+
+
+.block-split{
+    height: 13px;
+    width: 100%;
+    background-color: #efeff4;
+}
+
+.farmhouse-info{
+    border-bottom: 1px solid #d8d7dc;
+
+}
+
+.farmhouse-info header{
+    position: relative;
+    width: 100vw;
+    height: 53vw;
+    overflow: hidden;
+
+}
+
+.info-wrapper{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 30%;
+    width: 100%;
+    background: linear-gradient(0deg, rgba(0,0,0,.6), rgba(0,0,0,0));
+    color: white;
+    padding:  0 0 10px 16px;
+    font-size: 16px;
+}
+
+.location{
+    font-size: 12px;
+}
+
+.nav-container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 12px;
+    border-bottom: 1px solid #dee0e3;
+}
+
+
+.nav-item{
+    text-align: center;
+    height: 75px;
+    vertical-align: middle;
+    position: relative;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.nav-item.phone,
+.nav-item.pano{
+    color: #333;
+}
+
+.nav-item + .nav-item:before{
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    height: 25px;
+    border-left: 1px solid #e5e5e5;
+}
+
+.nav-item .img{
+    height: 25px;
+    margin-bottom: 6px;
+    margin-top: 15px;
+}
+
+
+.farmhouse-info main{
+    padding: 16px;
+}
+.portrait{
+    width: 26.6vw;
+    height: 26.6vw;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+
+}
+
+.self-introduce{
+    white-space: pre-wrap;
+}
+
+/* 房间 start */
+
+.room-info header .room-all{
+    color: #6f6f6f;
+    font-size: 13px;
+    float: right;
+
+}
+
+.room-info main{
+    position: relative;
+}
+
+.room-info #panoContainer{
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    pointer-events: none;
+    transition: height 1s;
+}
+
+#panoContainer:before{
+    content: ' ';
+    position: absolute;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity:0;
+
+}
+
+.room-info .operation{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.room-info .operation label{
+    font-size: 12px;
+    line-height: 24px;
+    vertical-align: middle;
+    color: white;
+    font-weight: normal;
+    padding: 0 14px 0 10px;
+    margin: 0;
+    background: url(../images/farmhouse/rectangle-radius.png) top left no-repeat;
+    background-size: contain;
+
+}
+
+.room-info .icon-scale-wrapper{
+    display: inline-block;
+    vertical-align: middle;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.room-info .icon-scale{
+    height: 16px;
+    margin: 7px 0 0 7px;
+}
+
+.room-info footer{
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.room-info .pano-thumbnail{
+    position: relative;
+    display: inline-block;
+    height: 18.6vw;
+    width: 26.6vw;
+    margin: 8px 5px 8px 0 ;
+
+}
+
+.room-info .pano-thumbnail .pano-name{
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-size: 10px;
+    background-color: rgba(0,0,0,0.4);
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.room-info .pano-thumbnail:last-child{
+    margin-right: 15px;
+}
+
+.pano-thumbnail.active {
+    position: relative;
+    border: 2px solid #0068b7;
+    box-sizing: content-box;
+    margin-bottom: 6px;
+    border-radius: 2px;
+}
+
+.pano-thumbnail.active:before {
+    content: ' ';
+    position: absolute;
+    left: 50%;
+    top: -7px;
+    margin-left: -8px;
+    border-bottom: 5px solid #0068b7;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+}
+
+
+#fullscreen-pano{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0;
+    background-color: white;
+
+}
+
+#fullscreen-pano.full-show {
+    z-index: 100;
+    opacity:1;
+    
+}
+
+#fullscreen-pano main{
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+}
+
+#fullscreen-pano footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.4);
+}
+
+#fullscreen-panoContainer{
+    height: 100%;
+    width:100%
+}
+
+
+/* 房间 end */
+
+
+/* 美食 start */
+
+
+
+.food-info main{
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+
+}
+
+.food-info .food-item{
+    position: relative;
+    display: inline-block;
+    height: 48vw;
+    width: 80vw;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+.food-info .food-item:last-child{
+    margin-right: 15px;
+}
+
+.food-info .name-wrapper{
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0));
+}
+
+.food-info .food-name{
+    margin-top: 30px;
+    width: 100%;
+    line-height: 30px;
+    font-size: 15px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 美食 end */
+
+/* 乡村野趣 start */
+
+.funny-info main{
+    margin: 0 3vw 20px 5vw;
+}
+
+.funny-info .funny-item{
+    position: relative;
+    display: inline-block;
+    width: 21vw;
+    height: 21vw;
+    border-radius: 50%;
+    margin-right: 2vw;
+    margin-top: 3.5vw;
+    overflow: hidden;
+}
+.funny-name-wrapper{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 7vw;
+    width: 100%;
+    line-height: 7vw;
+    font-size: 13px;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.shadow-circle{
+    width: 21vw;
+    height: 21vw;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,.3);
+    margin-top: -14vw;
+}
+.funny-name{
+    padding-top: 13.5vw;
+    width: 13vw;
+    margin: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+/* 乡村野趣 end */
+
+/* 场地设施 start */
+.facilities-info main{
+    margin: 5px 30px 15px;
+}
+
+.facility-item {
+    display: inline-block;
+    width: 50%;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+.facility-item .list-style {
+    display: inline-block;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background-color: #aaa;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+/* 场地设施 end */
+
+/* 周边 start */
+#map-container{
+    width: 100%;
+    height: 72vw;
+}
+
+.marker-tip{
+    position: relative;
+    z-index: 10;
+    width: 180px;
+    height: 45px;
+
+}
+
+.marker-tip .tip-left{
+    display: inline-block;
+    height: 40px;
+    width: 105px;
+    padding: 5px 0 0 10px;
+    background-color: white;
+    border-radius: 4px 0 0 4px;
+    color: #6f6f6f;
+    font-size: 9px;
+
+}
+
+.marker-tip .tip-left .marker-name{
+    font-size: 14px;
+    color: #373737;
+    line-height: 18px;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.marker-tip .tip-right{
+    display: inline-block;
+    vertical-align: top;
+    width: 65px;
+    height: 40px;
+    color: white;
+    font-size: 9px;
+    text-align: center;
+    background-color: #0068b7;
+    border-radius: 0 4px 4px 0;
+    padding-top: 3px;
+    line-height: 9px;
+}
+.marker-tip .tip-right .icon-navigation{
+    display: inline-block;
+    background: url(../images/farmhouse/navigation-white.png) center center no-repeat;
+    background-size: contain;
+    height: 22px;
+    width: 19px;
+}
+
+.marker-tip .distance {
+    font-size: 9px;
+    line-height: 9px;
+}
+
+.icon-triangle-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 75px;
+    border-top: 5px solid white;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+/* 周边 end */
+
+.to-top {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #d8d7dc;
+    background-color: white;
+}
+

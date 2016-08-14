@@ -128,6 +128,7 @@ var FileUploader = {
 		 * errorCallback调用时的参数格式为{error：''，msg:''} 对于上传失败的情况参数中还有data属性
 		 */  
 		var result = this._checkValidation(type, file);
+		var context = window.context || "/luna-web"
 		if(result.error && window.toString.call(errorCallback) === "[object Function]"){
 			errorCallback(result);
 			return;
@@ -136,7 +137,7 @@ var FileUploader = {
 		data.append(this._formNamesForFile[type],file);
 		$.ajax({
 			//处理文件上传操作的服务器端地址
-			url: "/data/poi/" + type + "/upload",
+			url: context + "/data/poi/" + type + "/upload",
 			type:'POST',
 			contentType: false,
 			data: data,

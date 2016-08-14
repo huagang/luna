@@ -55,7 +55,7 @@
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form commandName="poiModel" method="post" action="$/data/poi/edit" enctype="multipart/form-data">
+            <form:form commandName="poiModel" method="post"  enctype="multipart/form-data">
             	<input type="hidden" id="lang" value="${lang}" name="lang"/>
             	<form:input id="poiId" cssStyle="display:none" path="poiId"/>
 	            <div>
@@ -385,7 +385,7 @@
 </body>
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-	window.UEDITOR_HOME_URL = window.host + "/plugins/ueditor/";
+	window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
 </script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>

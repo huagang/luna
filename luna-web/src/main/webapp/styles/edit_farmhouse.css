@@ -1,4 +1,7 @@
 
+
+
+
 .inner-wrap{
     padding-bottom: 30px;
 }
@@ -51,11 +54,13 @@
     padding: 0 5px;
     margin: 10px auto;
 }
-.pop.publish-info{
+.pop.publish-info,
+.pop.publish-confirm{
     position: absolute;
     width: 500px;
     left: 0;
     right: 0;
+    top: 20%;
     margin:auto
 }
 
@@ -79,4 +84,22 @@
 
 .publish-info .link-container .copy{
 
+}
+
+.publish-info .pull-right{
+    padding-right: 93px;
+}
+
+#pop-message{
+    position: fixed;
+    max-width: 500px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 20%;
+}
+
+#pop-message .message{
+    white-space: pre-wrap;
+    text-align: center;
 }

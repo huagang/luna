@@ -63,6 +63,7 @@
 						                <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
                                     	<th data-field="business_name" data-align="left">所属业务</th>
+						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
 						                <th data-formatter="operationFormatter" data-align="right">操作</th>
 						            </tr>
@@ -92,7 +93,7 @@
 	</div>
 	<div class="pop-cont ">
 		<div>中文名称</div>
-		<input class="app-name" placeholder="输入二级子分类中文名称" />
+		<input class="app-name" placeholder="请输入微景展中文名称" />
 		<div>选择模板类型</div>
 		<div class="template-group">
 			<div class="template basic" data-value="basic">
@@ -101,7 +102,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev" data-value="dev">
+			<div class="template dev hidden" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>
@@ -257,6 +258,7 @@
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
@@ -297,23 +299,25 @@
 
 	function operationFormatter(value, row, index) {
 		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name)
-		var editOp = '<a class="property">属性</a>';
-		var href = '';
+		var editOp = '<a class="property" href="javascript:void(0)">发布设置</a>';
+		var href = '', clickEvent = '';
 		switch(row.type){
 			case 1:  // 开发版
+				href = 'javascript:void(0)';
+				clickEvent = 'onclick="editDevApp({0})"'.format(row.app_id);
 				break;
 			case 2: // 数据版
-				href = '{0}/content/app/farm/{1}?business_id={2}'.format(window.context, row.app_id, row.business_id);
+				href = pageUrls.dataAppEdit.format(row.app_id, row.business_id);
 				break;
 			default: // 默认基础版
-				href = '{0}/content/app/{1}?business_id={2}'.format(window.context, row.app_id, row.business_id);
+				href = pageUrls.basicAppEdit.format(row.app_id, row.business_id);
 
 		}
-		var editUrl = '';
-		var modifyOp = '<a class="modify" target="_blank" href="{0}">编辑</a>'.format(href);
-		var reuseApp = '<a class="reuse" href="javascript:void(0)">复用</a>';
+		var modifyOp = '<a class="modify" target="_blank" href="{0}" {1} >编辑</a>'.format(href, clickEvent);
+
+		var reuseApp = row.type==0 ?  '<a class="reuse" href="javascript:void(0)">复用</a>':'';
 		var delApp = '<a class="delete" href="javascript:void(0)" onclick="delApp(this,\'{0}\');">删除</a>'.format(row.app_id);
-		return wrapperStart + editOp + modifyOp + reuseApp + delApp + '</div>';
+		return wrapperStart  + modifyOp + reuseApp + delApp+ editOp + '</div>';
 	}
 
 	function queryParams(params) {
@@ -324,7 +328,8 @@
 			order : params.order,
 			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
 		}
-	};
+	}
+
 </script>
 </body>
 </html>

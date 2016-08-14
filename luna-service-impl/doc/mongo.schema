@@ -6,4 +6,6 @@ extra map comment '模块相关额外选项',
 update_time timestamp
 )
 
+db.createCollection("luna_user_role");
+sh.shardCollection("luna.luna_user_role", {"_id":1});
 db.luna_user_role.ensureIndex({luna_name:"text"});

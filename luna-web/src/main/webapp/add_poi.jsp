@@ -43,7 +43,7 @@
                 <h3>POI数据基本信息</h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
-            <form:form id="poiModel" commandName="poiModel" method="post" action="/data/poi" enctype="multipart/form-data">
+            <form:form id="poiModel" commandName="poiModel" method="post" enctype="multipart/form-data">
                 <div>
                     <div class="item-poi">
                         <div class="label-poi"><span class="superscript">*</span>名称</div>
@@ -297,7 +297,7 @@
 </body>
 <script type='text/javascript'>
     // 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-    window.UEDITOR_HOME_URL = window.host + "/plugins/ueditor/";
+    window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
 </script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>

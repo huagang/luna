@@ -30,6 +30,7 @@ componentBaseModelTemplate = {
     width: '',
     height: '',
     unit: '',
+    timestamp: '',
     position: {
         changeTrigger: {
             vertial: '', //纵向方向
@@ -44,7 +45,7 @@ componentCanvasModelTemplate = {
     "bgc": "#FFFFFF",
     "bgimg": "",
     "type": "canvas",
-    'gravity': 'false',
+    'gravity': false,
     'panoId': '',
     'pano': {
         heading: 180,
@@ -130,11 +131,11 @@ componentAudioModelTemplate = {
     "content": {
         "icon": "",
         "panoId": "",
-        "autoPlay": '',
+        "autoPlay": '0',
         "file": "",
-        "loopPlay": "",
-        "pauseIcon": "",
-        "playIcon": ""
+        "loopPlay": "0",
+        "pauseIcon": "http://cdn.visualbusiness.cn/public/vb/img/audiopause.png",
+        "playIcon": "http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png"
     },
     "action": {
         "href": {
@@ -150,7 +151,7 @@ componentVideoModelTemplate = {
     "content": {
         "icon": "",
         "panoId": "",
-        "videoShowType": '', //视频展示类型
+        "videoShowType": '1', //视频展示类型
         "videoUrl": "",
         "videoIcon": "",
     },
@@ -375,11 +376,11 @@ function getUrlParam(name) {
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
     var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
-    for(var i =0 ;i<radioDom.length;i++){
+    for (var i = 0; i < radioDom.length; i++) {
         radioDom[i].removeAttribute('checked');
         radioDom[i].removeAttribute('disabled');
     }
-    
+
     // $("#modify_page_id").val('');
     // $("#txt-name").val('');
     // $("#txt-short").val('');
@@ -462,8 +463,8 @@ function modify() {
 /**
  * 界面的初始化状态
  */
-(function($) {
-    $.init = function() {
+(function ($) {
+    $.init = function () {
         getAppData(getAppId());
         getAppSetting();
         this.showPageList(this.pages);
@@ -628,6 +629,7 @@ function createCanvas() {
     lunaPage.creatPageComponents(currentPageId, null, "canvas");
     currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
     currentComponent["_id"] = currentComponentId;
+    currentComponent.timestamp = new Date().getTime();
     lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
     componentPanel.init("canvas");
     lunaPage.editPageComponents(currentPageId, currentComponentId);
@@ -653,14 +655,20 @@ function setPageHtml(pageID) {
         var componentArr = [];
         $.each(jsonData, function (n, value) {
             // move canvas first
-            if (n.startsWith("canvas")) {
-                componentArr = [n].concat(componentArr);
-            } else {
-                componentArr.push(n);
+            if (!value.timestamp) {
+                value.timestamp = new Date().getTime();
             }
+            if (n.startsWith("canvas")) {
+                componentArr = [value].concat(componentArr);
+            } else {
+                componentArr.push(value);
+            }
+            // componentArr.push(value);
         });
+        //对组件的显示顺序重新排序
+        componentArr.sort(Util.arraySortBy('timestamp'));
         componentArr.forEach(function (element) {
-            setPageComponentsHtml(pageID, element);
+            setPageComponentsHtml(pageID, element._id);
         });
     }
 }
@@ -1049,8 +1057,8 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
-    console.log(component.position.changeTrigger.horizontal);
-    console.log(component.position.changeTrigger.vertial);
+    // console.log(component.position.changeTrigger.horizontal);
+    // console.log(component.position.changeTrigger.vertial);
     if (component.position.changeTrigger.horizontal == 'right') {
         comobj.css("left", 'auto');
         comobj.css("right", component.right + unit);
@@ -1133,7 +1141,7 @@ function showPanoBackground($container, componentData) {
 }
 //获取应用的id
 function getAppId() {
-    return  window.location.pathname.match(/\d+/)[0];
+    return window.location.pathname.match(/\d+/)[0];
 }
 /**
  * 画布中的点击事件

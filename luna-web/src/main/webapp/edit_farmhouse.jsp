@@ -30,25 +30,26 @@
   <!--通用导航栏 start-->
     <nav class="navbar">
       <div class="navbar-header">
-        <a class="navbar-brand" href="<%=request.getContextPath() %>/menu.do?method=goHome"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+        <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
         <div class="navbar-right ">
               <a href="javascript:void(0)" class="operation save">保存</a>
               <a href="javascript:void(0)" class="operation preview">预览</a>
               <a href="javascript:void(0)" class="operation publish">发布</a>
               <div class="qrcode-container hidden">
                  <img class="qrcode" height='100' src="" />
-                 <button class="button">关闭</>
+                 <button class="button">关闭</button>
               </div>
 
         </div>
       </div>
     </nav>
+
       <div class="publish-pop-wrapper">
           <div class="mask hidden"></div>
           <div class="pop publish-info">
               <div class="pop-title">
                   <h4>发布成功</h4>
-                  <a href="#" class="btn-close"><img src="${basePath}/img/close.png" /></a>
+                  <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
               </div>
               <div class="pop-cont ">
                   <p class="qrcode-tip">扫一扫分享给更多人</p>
@@ -61,11 +62,23 @@
               </div>
               <div class="pop-fun">
                 <div class="pull-right">
-                    <button class="button">确定</button>
-                    <button class="button copy" data-clipboard-target=".publish-link">复制链接</button>
+                    <button class="button confirm">确定</button>
+                    <button class="button-close copy" data-clipboard-target=".publish-link">复制链接</button>
                 </div>
               </div>
           </div>
+          <div class="pop publish-confirm">
+              <div class="pop-title">
+                  <h4>确认信息</h4>
+                  <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+              </div>
+              <div class="pop-cont ">
+                  <p class="">此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作</p>
+              </div>
+              <div class="pop-fun">
+                  <button class="button">确定</button>
+                  <button class="button-close">取消</button>
+              </div>
       </div>
   <!--通用导航栏 end-->
   <!--中间区域内容 start-->
@@ -78,6 +91,7 @@
         </div>
     </div>
   </div>
+          <jsp:include page="/templete/message.jsp"/>
     <script>
       window.context = "<%=request.getContextPath() %>";
     </script>

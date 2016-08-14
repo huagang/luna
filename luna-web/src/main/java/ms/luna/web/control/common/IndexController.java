@@ -1,5 +1,6 @@
 package ms.luna.web.control.common;
 
+import ms.luna.web.common.SessionHelper;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +28,10 @@ public class IndexController extends BasicController {
 
         HttpSession session = request.getSession(false);
 
-        if(session == null) {
-            logger.trace("go to login");
+        if(SessionHelper.getUser(session) == null) {
             return buildModelAndView("login");
         } else {
-            logger.trace("go to home " + session.getId());
+            SessionHelper.setSelectedMenu(session, "");
             return buildModelAndView("home");
         }
 

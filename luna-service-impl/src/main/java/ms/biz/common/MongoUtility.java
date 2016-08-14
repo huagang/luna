@@ -14,6 +14,7 @@ import ms.luna.biz.util.FastJsonUtil;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.bson.types.ObjectId;
 
 public final class MongoUtility {
 
@@ -26,17 +27,23 @@ public final class MongoUtility {
 	 * @return
 	 */
 	public static boolean isPoiExsit(MongoCollection<Document> collection, JSONObject param) {
-		return findOnePoi(collection, param) != null;
+		return findOnePoi(collection, param, null) != null;
 	}
 
 	/**
-	 * 查询长别名相同，并且距离相差不超过50米的POI
+	 * 查询长别名相同，并且距离相差不超过50米的POI.如果是添加poi,则id为null
 	 * @param collection
 	 * @param param
 	 * @return
 	 */
-	public static Document findOnePoi(MongoCollection<Document> collection, JSONObject param) {
+	public static Document findOnePoi(MongoCollection<Document> collection, JSONObject param, String id) {
 		BasicDBObject condition = new BasicDBObject();
+		// id
+		if(id != null) {
+			BasicDBObject poiId = new BasicDBObject().append("$ne", new ObjectId(id));
+			condition.append("_id", poiId);
+		}
+
 		// 名称
 		String long_title = param.getString("long_title");
 		condition.append("long_title", long_title);

@@ -156,14 +156,21 @@ $(document).ready(function () {
 
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         var videourl = $(this).data('videourl');
         $('#diaVideo').attr('src', videourl);
         $('.video-modal').show();
     });
 
     $('.app-wrap').on('click', '.video-modal', function (e) {
-        $(this).hide();
-        $(this).find('video')[0].pause();
+        var curDom = $(e.target),
+            videoModalDom = curDom.closest('.video-dialog');
+        if (videoModalDom.length > 0) {
+        } else {
+            $('.video-modal').hide();
+            $('.video-modal').find('video')[0].pause();
+        }
     });
     // 弹框视频弹出效果  End
 
@@ -200,10 +207,19 @@ $(document).ready(function () {
             }
             $(".app-wrap").append($comGroup);
 
-            for (var n in item.page_content) {
-                var value = item.page_content[n];
+            //对组件的显示顺序重新排序
+            var componentArr = [];
+            for (var key in item.page_content) {
+                componentArr.push(item.page_content[key]);
+            }
+            componentArr.sort(Util.arraySortBy('timestamp'));
+
+
+
+            for (var n in componentArr) {
+                var value = componentArr[n];
                 var componentHtml = "",
-                    headName = n.match(/^[a-zA-Z]*/);
+                    headName = value._id.match(/^[a-zA-Z]*/);
 
                 switch (headName[0]) {
                     case 'canvas':
@@ -574,7 +590,7 @@ $(document).ready(function () {
 
             this.value.content.playIcon = this.value.content.playIcon || 'http://cdn.visualbusiness.cn/public/vb/img/sampleaudio.png';
             this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+            this.value.content.file = this.value.content.file || '';
 
             if (this.value.content.loopPlay == '1') {
                 loopPlay = 'loop="loop"';
@@ -611,7 +627,7 @@ $(document).ready(function () {
             this.setPosition();
 
             this.value.content.pauseIcon = this.value.content.pauseIcon || 'http://cdn.visualbusiness.cn/public/vb/img/audiopause.png';
-            this.value.content.file = this.value.content.file || 'http://view.luna.visualbusiness.cn/dev/poi/pic/20160708/2Y1I3K3y2j1W3c2u2s2s0W0q0t1j2f34.mp3';
+            this.value.content.file = this.value.content.file || '';
 
             if (showType == '1') {
                 //弹框组件

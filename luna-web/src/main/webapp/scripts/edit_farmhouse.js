@@ -5,7 +5,7 @@ $(function(){
 
     var controller = new Controller();
     function Controller() {
-
+        window.t = this;
         var that = this;
 
         // 初始化函数
@@ -37,6 +37,10 @@ $(function(){
         // 请求 获取表单信息
         that.fetchFormData = fetchFormData;
 
+        that.handleForcePublish = handleForcePublish;
+
+        that.showMessage = showMessage;
+
         that.init();
 
         // 初始化函数
@@ -57,8 +61,11 @@ $(function(){
             $('.operation.publish').on('click', that.handlePublish);
             $('.qrcode-container .button').on('click', that.hideQRcode);
             $('.publish-info .btn-close').on('click' ,that.hidePublishDialog);
+            $('.publish-info .button.confirm').on('click' ,that.hidePublishDialog);
             $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
-
+            $('.publish-confirm .button').on('click', that.handleForcePublish);
+            $('.publish-confirm .button-close').on('click', that.hidePublishDialog);
+            $('.publish-confirm .btn-close').on('click', that.hidePublishDialog);
         }
 
         function initComponents() {
@@ -105,11 +112,12 @@ $(function(){
         }
 
         function handleSave(){
+            /*
             var validation = that._component.checkValidation();
             if(validation){
                 alert(validation);
                 return;
-            }
+            }*/
             var data = that._component.getFormValue();
             console.log(data);
             $.ajax({
@@ -133,6 +141,12 @@ $(function(){
 
         function handlePreview(){
             if(! that.previewImg){
+                var error = that._component.checkValidation();
+                if(error){
+                    //error
+                    that.showMessage('信息未填写完毕,不能预览。详细错误信息如下\n' + error );
+                    return;
+                }
                 $.ajax({
                     url: that.apiUrls.farmHousePreview.url.format(that.appId),
                     type: that.apiUrls.farmHousePreview.type,
@@ -161,40 +175,64 @@ $(function(){
             $('.qrcode-container').addClass('hidden');
         }
 
+        function handleForcePublish(){
+            that.forcePublish = true;
+            that.handlePublish();
+        }
+
         function handlePublish(){
-            if(! that.publishImg){
-                $.ajax({
-                    url: that.apiUrls.farmHousePublish.url.format(that.appId),
-                    type: that.apiUrls.farmHousePublish.type,
-                    success: function(res){
-                        if(res.code === '0'){
-                            that.publishUrl = res.data.link;
-                            that.publishImg = res.data.QRImg;
-                            $('.publish-info .publish-qrcode').attr('src', that.publishImg);
-                            $('.publish-info .publish-link').attr('href', that.publishUrl).html(that.publishUrl);
-                            $('.publish-pop-wrapper .mask').removeClass('hidden');
-                            $('.publish-info.pop').addClass('pop-show');
-                            $(document.body).addClass('modal-open');
-                        } else{
-                            alert(res.msg || '发布失败')
-                        }
-                    },
-                    error: function(res){
+            var error = that._component.checkValidation();
+            if(error){
+                //error
+                that.showMessage('信息未填写完毕,不能发布。详细错误信息如下\n' + error );
+                return;
+            }
+            $.ajax({
+                url: that.apiUrls.appPublish.url.format(that.appId),
+                type: that.apiUrls.appPublish.type,
+                data: {force: that.forcePublish ? 1 : -1},
+                success: function(res){
+                    if(res.code === '0'){
+                        that.publishUrl = res.data.link;
+                        that.publishImg = res.data.QRImg;
+                        $('.publish-info .publish-qrcode').attr('src', that.publishImg);
+                        $('.publish-info .publish-link').attr('href', that.publishUrl).html(that.publishUrl);
+                        $('.publish-pop-wrapper .mask').removeClass('hidden');
+                        $('.publish-confirm.pop').removeClass('pop-show');
+                        $('.publish-info.pop').addClass('pop-show');
+                        $(document.body).addClass('modal-open');
+                        that.forcePublish = false;
+                    } else if(res.code === '409'){
+                        $('.publish-confirm.pop').addClass('pop-show');
+                        $('.publish-pop-wrapper .mask').removeClass('hidden');
+                        $(document.body).addClass('modal-open');
+                    } else{
                         alert(res.msg || '发布失败')
                     }
-                });
-            }
-            else{
-                $('.publish-pop-wrapper .mask').removeClass('hidden');
-                $('.publish-info.pop').addClass('pop-show');
-                $(document.body).addClass('modal-open');
-            }
+                },
+                error: function(res){
+                    alert(res.msg || '发布失败')
+                }
+            });
         }
 
         function hidePublishDialog(){
             $('.publish-info.pop').removeClass('pop-show');
+            $('.publish-confirm.pop').removeClass('pop-show');
             $(document.body).removeClass('modal-open');
             $('.publish-pop-wrapper .mask').addClass('hidden');
+        }
+
+        function showMessage(msg) {
+            $("#pop-message .message").text(msg);
+            $('#pop-message').css('display', "block");
+            $("#pop-message  #btn-mes").click(function () {
+                $("#pop-message").css('display', "none");
+            });
+            $("#pop-message .btn-close").click(function () {
+                $("#pop-message").css('display', "none");
+            });
+
         }
 
     }
@@ -204,3 +242,7 @@ $(function(){
 
 
 });
+
+function clcWindow(){
+
+}

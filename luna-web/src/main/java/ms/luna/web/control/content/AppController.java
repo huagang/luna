@@ -93,6 +93,21 @@ public class AppController extends BasicController {
         return result;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "token")
+    @ResponseBody
+    public JSONObject generateToken(HttpServletRequest request) {
+        try {
+            String token = TokenUtil.generateRandomToken();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("token", token);
+            return FastJsonUtil.sucess("", jsonObject);
+
+        } catch (Exception ex) {
+            logger.error("Failed to generate token", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成开发版认证失败");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.PUT, value = "/{appId}")
     @ResponseBody
     public JSONObject updateApp(@PathVariable int appId, HttpServletRequest request) throws IOException {
@@ -174,6 +189,7 @@ public class AppController extends BasicController {
         String appName = RequestHelper.getString(request, "app_name");
         int businessId = RequestHelper.getInteger(request, "business_id");
         int sourceAppId = RequestHelper.getInteger(request, "source_app_id");
+        String type = RequestHelper.getString(request, "type");
         if(businessId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
         }
@@ -191,6 +207,7 @@ public class AppController extends BasicController {
         jsonObject.put("business_id", businessId);
         jsonObject.put("source_app_id", sourceAppId);
         jsonObject.put("owner", user.getLunaName());
+        jsonObject.put("type", type);
         JSONObject result = manageShowAppService.copyApp(jsonObject.toString());
 
         return result;

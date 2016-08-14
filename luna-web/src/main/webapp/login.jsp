@@ -1,4 +1,4 @@
-﻿<!--登录页面-->
+<!--登录页面-->
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page session="false" %>
@@ -36,7 +36,7 @@
 	                         <h1>登录</h1>
 	                     </div>
 	                     <p class="register">
-	                         <span>首次使用？</span><span class="signin"><a class="link-url" href="/common/merchant/registPage">马上入驻</a></span>
+	                         <span>首次使用？</span><span class="signin"><a class="link-url" href="<%=request.getContextPath() %>/common/merchant/registPage">马上入驻</a></span>
 	                     </p>
 	                </div>
 	                <div class="remind" id="remind-login"><span id="remind-text" >${red_msg}</span></div>

@@ -120,6 +120,7 @@
 
         //通过error接口处理失败验证
         this.wx.error(function(obj) {
+            //alert('微信认证失败');
             var props = "";
             // 开始遍历 
             for (var p in obj) { // 方法 

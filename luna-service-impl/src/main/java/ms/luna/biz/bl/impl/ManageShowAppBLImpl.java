@@ -9,10 +9,7 @@ import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageShowAppBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant.MsShowAppConfig;
-import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.custom.MsShowAppDAO;
-import ms.luna.biz.dao.custom.MsShowPageDAO;
-import ms.luna.biz.dao.custom.MsShowPageShareDAO;
+import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.*;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.model.MsUser;
@@ -48,6 +45,8 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	private MsShowPageDAO msShowPageDAO;
 	@Autowired
 	private MsShowPageShareDAO msShowPageShareDAO;
+	@Autowired
+	private MsFarmPageDAO msFarmPageDAO;
 	
 	private String showPageUriTemplate = "/app/%d"; 
 	private String businessUriTemplate = "/business/%s";
@@ -301,8 +300,18 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "非法微景展Id");
 		}
 		try {
+			// 获取微景展类型(type),操作不同数据库
+			MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+			if(msShowApp == null) {
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "微景展Id不存在");
+			}
+			Integer type = msShowApp.getType();
 			msShowAppDAO.deleteByPrimaryKey(appId);
-			msShowPageDAO.deletePagesByAppId(appId);
+			if(type == 0) {
+				msShowPageDAO.deletePagesByAppId(appId);
+			} else if(type == 2) {
+				msFarmPageDAO.deletePage(appId);
+			}
 			deleteCosResource(appId);
 		} catch (Exception e) {
 			logger.error("Failed to delete app: " + json, e);
@@ -488,7 +497,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
 		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
-		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
+//		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
+		// TODO 将二维码地址放在/app 目录下,不放在 /business下,则不会出现在切换上线app后二维码图片不及时跟新的情况
+		String businessDir = getAppCosDir(appId);
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
 		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
@@ -587,6 +598,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
 		data.put(MsShowAppTable.FIELD_PIC_THUMB, msShowApp.getPicThumb());
 		data.put(MsShowAppTable.FIELD_NOTE, msShowApp.getNote());
+		data.put(MsShowAppTable.FIELD_TYPE, msShowApp.getType());
 
 		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
@@ -595,12 +607,19 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		List<MsShowPageShare> msShowPageShares = msShowPageShareDAO.selectByCriteria(msShowPageShareCriteria);
 
 		JSONArray jsonArray = (JSONArray) JSON.toJSON(msShowPageShares);
+		data.put("shareArray", jsonArray);
 		// TODO: new version will not use these share_info fields, delete me later
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_TITLE, msShowApp.getShareInfoTitle());
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowApp.getShareInfoDes());
 		data.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowApp.getShareInfoPic());
 
-		data.put("shareArray", jsonArray);
+		Integer businessId = msShowApp.getBusinessId();
+		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+		if(msBusiness != null) {
+			data.put(MsBusinessTable.FIELD_STAT_ID, msBusiness.getStatId());
+		} else {
+			logger.warn("no business info for app: " + appId);
+		}
 		
 		return FastJsonUtil.sucess("", data);
 	}
