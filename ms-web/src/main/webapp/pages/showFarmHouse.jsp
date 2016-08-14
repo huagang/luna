@@ -54,7 +54,7 @@
                     </p>
                 </div>
             </header>
-            <nav>
+            <nav class="nav-container">
                 <a class="nav-item phone" href="tel:{{farm.poiData.contact_phone}}">
                     <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/phone.png"/>
                     <p class="tip">电话预定</p>
