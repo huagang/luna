@@ -303,12 +303,7 @@
                     role_id: parseInt(vm.data.role),
                 };
                 if(vm.data.extra){
-                    if(['string', 'number'].indexOf(typeof data.extra) === -1){
-                        data.extra = JSON.stringify(vm.data.extra.value);
-                    }
-                    else{
-                        data.extra = vm.data.extra.value;
-                    }
+                    data.extra = JSON.stringify(vm.data.extra);
                 }
                 if(! vm.userId){
                     data.emails = vm.data.emailList.join(',');
