@@ -66,8 +66,8 @@ var Inter = function() {
 
 
                 // poi around
-                poiInfo: {url: apiContext + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET'},
-                aroundPois: { url: apiContext + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
+                poiInfo: {url: context + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET'},
+                aroundPois: { url: context + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
                               type: 'GET'},
 
 

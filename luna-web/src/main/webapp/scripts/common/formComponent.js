@@ -1104,7 +1104,7 @@
                     show_name: that.definition.show_name + (that._children.length + 1),
                     limits: that.definition.limits,
                     placeholder: that.definition.placeholder || '',
-                    hideDeleteButton: true,
+                    hideDeleteButton: true
                 }
             });
             that._children.push(child);
@@ -1633,7 +1633,7 @@
                             alert(res.msg || '获取poi筛选列表失败');
                         }
                     },
-                    error: function(){
+                    error: function(res){
                         alert(res.msg || '获取poi筛选列表失败');
                     }
                 });

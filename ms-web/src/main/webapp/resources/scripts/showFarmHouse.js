@@ -585,16 +585,16 @@ function showAnimation(){
         }
 
         function navigate(navInfo) {
-            navInfo = navInfo || vm.poiData;
+            vm.navInfo = navInfo || vm.poiData;
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
             if (is_weixin) {
                 //判定为微信网页
                 if (wx) {
                     try {
-                        var address = navInfo.address;
+                        var address = vm.navInfo.address;
                         wx.openLocation({
-                            latitude: Number(navInfo.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
-                            longitude: Number(navInfo.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
+                            latitude: Number(vm.navInfo.lnglat.lat), // 纬度，浮点数，范围为90 ~ -90
+                            longitude: Number(vm.navInfo.lnglat.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: vm.poiData.poi_name, // 位置名
                             address: address.city + address.county + address.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大

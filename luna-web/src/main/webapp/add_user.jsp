@@ -88,7 +88,8 @@
                                 <span class="business-wrapper" ng-repeat="item in business" >
                                     <input class='business' type="{{user.choiceType}}" ng-checked="(user.data.business[item.business_id] || '')"
                                            ng-click="user.handleOptionsChange()" id="{{item.business_id}}"/>
-                                    <label for="{{item.business_id}}" class="business-name" title="{{item.business_name}}">{{item.business_name}}</label>
+                                    <label for="{{item.business_id}}" class="business-name"">{{item.business_name}}</label>
+                                    <div class="full-name">{{item.business_name}}</div>
                                 </span>
                             </div>
                         </div>

@@ -141,3 +141,17 @@
     border-radius: 4px;
     color: white;
 }
+
+.business-name + .full-name{
+    display: none;
+    position:absolute;
+    margin-left: 30px;
+    margin-top: -60px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background-color: white;
+}
+.business-name:hover + .full-name{
+    display: block;
+}
