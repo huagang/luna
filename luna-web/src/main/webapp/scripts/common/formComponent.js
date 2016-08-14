@@ -655,7 +655,7 @@
 
                 that.element = $(that._component);
                 that.element.html('<input type="text" class="input-text" placeholder="{0}" maxlength="{1}"/>'.format(
-                    that.definition.placeholder || '', that.definition.limit.max || 255));
+                    that.definition.placeholder.TEXT || '', that.definition.limit.max || 255));
 
                 if (that._children.label) {
                     var label = that._children.label.render();
@@ -859,9 +859,11 @@
 
             that._children.input = new Input({
                     definition: {
-                            limits: that.definition.limits, name: 'text'
+                        limits: that.definition.limits,
+                        name: 'text',
+                        placeholder: that.definition.placeholder || {'TEXT': ['']},
+
                     },
-                    placeholder: that.definition.placeholder || {'TEXT': ''},
                     value: that.value.text || ''
             });
 
@@ -955,7 +957,7 @@
                 value: that.value.text || '',   // text
                 definition: {
                     limits: that.definition.limits || that.defaultLimits,
-                    placeholder: '',
+                    placeholder: that.definition.placeholder || {TEXT: ['']},
                     display_order: curOrder,
                     name: 'text'
                 }
@@ -1278,6 +1280,9 @@
                 }
 
                 that.element.find('.pic-upload').append(that._children.picUploader.render());
+                if(that.definition.placeholder && that.definition.placeholder.TEXT && that.definition.placeholder.TEXT.length > 0){
+                    that.element.find('.selectize-input input').attr('placeholder', that.definition.placeholder.TEXT[0]);
+                }
                 that._bindEvent();
             }
 
