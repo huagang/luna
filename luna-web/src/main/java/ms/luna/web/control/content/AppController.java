@@ -189,6 +189,7 @@ public class AppController extends BasicController {
         String appName = RequestHelper.getString(request, "app_name");
         int businessId = RequestHelper.getInteger(request, "business_id");
         int sourceAppId = RequestHelper.getInteger(request, "source_app_id");
+        String type = RequestHelper.getString(request, "type");
         if(businessId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
         }
@@ -206,6 +207,7 @@ public class AppController extends BasicController {
         jsonObject.put("business_id", businessId);
         jsonObject.put("source_app_id", sourceAppId);
         jsonObject.put("owner", user.getLunaName());
+        jsonObject.put("type", type);
         JSONObject result = manageShowAppService.copyApp(jsonObject.toString());
 
         return result;
