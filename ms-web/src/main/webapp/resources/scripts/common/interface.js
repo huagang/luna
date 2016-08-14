@@ -35,12 +35,12 @@ var Inter = function() {
         apiContext =  apiHost[curHost()];
     }
 
-    var context = {
+    var Context = {
         'local': '',
         'test': '/ms-web',
         'online': '/ms-web',
         'local-mobile': ''
-        }, context = Content[curHost()];
+        }, context = Context[curHost()];
 
 
 
