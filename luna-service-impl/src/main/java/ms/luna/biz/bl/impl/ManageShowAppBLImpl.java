@@ -498,6 +498,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
 		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
 		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
+		businessDir = getAppCosDir(appId);
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
 		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
