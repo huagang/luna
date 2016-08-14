@@ -119,7 +119,7 @@ function modifyPageName() {
         };
         $.ajax({
             type: Inter.getApiUrl().appModifyName.type,
-            url: Util.strFormat(Inter.getApiUrl().appModifyName.url, [appModifyName]),
+            url: Util.strFormat(Inter.getApiUrl().appModifyName.url, [pageId]),
             cache: false,
             async: false,
             data: params,
@@ -251,6 +251,7 @@ function deletePage(pageID) {
                 $("#pop-delete").css("display", "none");
                 $overlay.css("display", "none");
                 $.alert(returndata.msg);
+                jQuery(".list-page .drop-item:first").trigger('click');
                 // TODO:click the next page if exist, otherwise previous page
             }
         },
