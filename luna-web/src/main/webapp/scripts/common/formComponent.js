@@ -359,12 +359,15 @@
             if(toString.call(that.definition.limit) === '[object Array]'){
                 that.definition.limit = that.definition.limit[0];
             }
-
+            var accept='';
+            if(that.definition.type === 'PIC'){
+                accept = "accept='image/*'";
+            }
             that._template =
                 "<div class='fileup'> \
                     <input type='text' readonly='true' class='media' placeholder='{0}介绍地址'> \
                     <span class='btn fileinput-button' title='文件大小不超过{1}M'> \
-                        <input class='media-fileup' type='file' name='media_fileup'> \
+                        <input class='media-fileup' type='file' name='media_fileup' {2}> \
                         <span>本地上传</span> \
                         <div class='load-container loading-tip load8 hidden'> \
                             <div class='loader'>Loading...</div> \
@@ -372,7 +375,7 @@
                     </span> \
                     <div class='cleanInput hidden'><a href='javascript:void(0)'>{1}</a></div> \
                  </div>\
-                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除');
+                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除',accept);
 
             that._children = {};
             if (that.definition.show_name) {
