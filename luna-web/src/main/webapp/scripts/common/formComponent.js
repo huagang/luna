@@ -39,6 +39,7 @@
         };
     }
 
+    // 接口url信息, 全部在interface.js
     var apiUrls = Inter.getApiUrl();
 
 
@@ -55,16 +56,15 @@
         this.data = this.data || {};
         this.data.value = this.data.value || {};
 
-
         this._type = 'baseComponent';   //组件类型
 
         this.value = this.data.value; // 表单内容数据 可以形成 data tree 结构
 
-        this.definition = this.data.definition || {};
+        this.definition = this.data.definition || {};  // 组件定义信息
 
         // 其他的回调函数扩展
 
-        this._component = null; // 当前组件
+        this._component = null; // 当前组件 DOM类型
 
         this._children = []; // 子组件对象, 每个父组件都应知道有哪些子组件 组件命名方式应该与组件作用相一致
 

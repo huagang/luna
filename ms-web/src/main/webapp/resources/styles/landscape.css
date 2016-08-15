@@ -162,7 +162,8 @@
     .main-wrap{
       /* display: none !important; */
         opacity: 0;
-
+        max-height: 100vh;
+        overflow: hidden;
     }
 }
 
