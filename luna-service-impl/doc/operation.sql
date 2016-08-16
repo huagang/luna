@@ -98,6 +98,16 @@ create table luna_role_category(
 
 alter table ms_show_app add column type INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版';
 
+# 修改农+ limits字段
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_foreground_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_background_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="manager_pic" ;
+update ms_farm_field set limits="{\"TEXTAREA\":[{\"empty\":false,\"max\":1024}]}" where name="manager_self_introduction" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="well_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="all_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}],\"TEXT\":[{\"empty\":false,\"max\":255}],\"num\":{\"min\":3}}" where name="delicacy" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="country_enjoyment" ;
+
 # 修改菜单名字
 update luna_menu set name="CRM" where id=13;
 update luna_menu set name="POI数据管理" where id=6;
