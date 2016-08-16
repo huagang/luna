@@ -104,7 +104,7 @@ window.onload = function () {
             // audio.src = data.audio;
             // audioBtnWraper.classList.remove('hidden');
         }
-        
+
 
         //设置标题宽度
         if (!data.video && !data.audio) {
@@ -123,12 +123,12 @@ window.onload = function () {
 
     // 显示视频框来观看视频
     function showVideoModal() {
-        document.querySelector('.video-modal').classList.remove('hidden');
+        document.querySelector('.video-modal').style.display = 'block';
     }
 
     // 隐藏视频框并停止视频播放
     function hideVideoModal() {
-        document.querySelector('.video-modal').classList.add('hidden');
+        document.querySelector('.video-modal').style.display = 'none';
         document.querySelector('.video').pause();
     }
 
