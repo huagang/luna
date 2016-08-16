@@ -820,3 +820,108 @@ function initEditor() {
     });
     return ue;
 }
+
+
+angular.module('poi', [])
+    .controller('Poi', Poi)
+    ;
+
+Poi.$inject = ['$scope', '$http'];
+
+function Poi($scope, $http){
+    window.vm = this;
+
+    vm.init = init;
+
+    vm.handleSearch = handleSearch;
+
+    vm.handleSelect = handleSelect;
+
+    vm.handlePanoTypeChange = handlePanoTypeChange;
+
+    vm.stopDefault = stopDefault;
+
+    vm.init();
+    function init(){
+        vm.apiUrls = Inter.getApiUrl(),
+        vm.data = {
+            searchText: '',
+            panoType: ''
+        };
+        vm.searchResult = [];
+        angular.element('input[name="panoramaType"]').each(function(){
+            if(this.checked){
+                vm.data.panoType = this.value;
+            }
+        });
+    }
+
+    function handleSelect(id){
+        angular.element('#panorama').val(id);
+        angular.element('.pano-container .pano').removeClass('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // 调用搜索接口
+    function handleSearch(){
+
+        if(vm.data.searchText && vm.data.panoType){
+            var url = '', type = '';
+            if(vm.data.panoType == '1'){ // 单场景点
+                url = vm.apiUrls.searchPano.url.format(vm.data.searchText, 1, 10, '', '');
+                type = vm.apiUrls.searchPano.type;
+            } else if(vm.data.panoType == '2' || vm.data.panoType == '3' ){  // 相册
+                url = vm.apiUrls.searchAlbum.url.format(vm.data.searchText, 1, 20, '', '');
+                type = vm.apiUrls.searchAlbum.type;
+            }
+            $http({
+                url: encodeURI(url),   // uri中可能有中文
+                type: type
+            }).then(function(res){
+                if(res.data.result === 0){
+                    if(vm.data.panoType == '1') {
+                        vm.searchResult = res.data.data.searchResult.map(function(item){
+                            return {
+                                id: item.panoId,
+                                name: item.panoName,
+                                pic: item.thumbnailUrl,
+                                link: vm.apiUrls.singlePano.format(item.panoId)
+                            };
+                        });
+                    } else{
+                        vm.searchResult = res.data.data.searchResult.map(function(item) {
+                            return {
+                                id: item.albumId,
+                                name: item.albumName,
+                                link: vm.data.panoType == '2' ? vm.apiUrls.multiplyPano.format(item.albumId)
+                                        :vm.apiUrls.customPano.format(item.albumId)
+                            };
+                        });
+                    }
+                    vm.total = res.data.data.total;
+                    vm.totalPage = res.data.data.totalPage;
+                } else{
+                    alert(res.data.msg || '搜索失败');
+                }
+            }, function(res){
+                alert(res.data.msg || '搜索失败');
+            });
+        } else{
+            alert('要选择微景展类型并填写部分微景展名称信息才能搜索哦');
+        }
+    }
+
+    function handlePanoTypeChange(){
+        vm.searchResult = [];
+        vm.data.searchText = '';
+    }
+
+    function stopDefault(){
+        if(event.stopPropagation){
+            event.stopPropagation();
+        } else{
+            event.cancelBubble = true;
+        }
+    }
+
+}

@@ -215,3 +215,77 @@ label{
 .panoramaType >span{
     margin:0px 30px 0 0;
 }
+
+
+.pano-search-input {
+    width: 440px;
+    margin: 5px 10px 10px 0;
+}
+.pano-search-result{
+    width: 570px;
+    min-height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+
+}
+
+
+.pano-container {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.pano-container .pano{
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid #eee;
+    width: 120px;
+    padding: 5px;
+    margin: 0 10px 10px 0;
+}
+
+
+.pano-container .pano .thumbnail{
+    width: 108px;
+    height: 108px;
+    margin: auto;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.pano-container .pano.active{
+    border: 1px solid #3E82F7;
+}
+
+.pano-container .pano-info{
+    display: flex;
+    align-items: center;
+    height: 30px;
+    font-size: 12px;
+    line-height: 12px;
+
+}
+.pano-container .pano-name{
+    display: inline-block;
+    width: 85px;
+    flex-grow: 1;
+}
+
+.pano-container .empty-result {
+    height: 120px;
+    line-height: 125px;
+    font-size: 20px;
+    color: #999;
+    text-align: center;
+}
+
+.icon-link{
+    height: 16px;
+    width: 16px;
+    background: url('../img/link.png') center center no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}
