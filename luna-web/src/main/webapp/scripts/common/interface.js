@@ -38,8 +38,15 @@ var Inter = function() {
                 loadProvinces: context + '/pulldown.do?method=load_provinces', // 获取省份列表
                 loadCities: context + '/pulldown.do?method=load_citys',        // 通过省份id获取市列表
                 loadCounties: context + '/pulldown.do?method=load_counties',     // 通过市id获取县列表
-                filterPois: context + '/business_tree.do?method=searchPoisForBizTree' //筛选poi
-                
+                filterPois: context + '/business_tree.do?method=searchPoisForBizTree', //筛选poi
+
+                // 线路管理
+                createRoute: context + '/manage_router.do?method=create_route', //创建路线
+                editRoute: context + '/manage_router.do?method=edit_route', //编辑路线
+                getRouteList: context + '/manage_router.do?method=async_search_routes', //获取线路列表
+                delRoute: context + '/manage_router.do?method=del_route', // 删除线路
+                checkRoute: context + '/manage_router.do?method=check_route_nm', // 检查线路名称是否合法
+
             };
         }
     };

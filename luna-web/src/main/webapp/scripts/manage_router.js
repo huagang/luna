@@ -9,97 +9,132 @@ manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
 
 
 function routerController($rootScope, $scope, $http){
-	
-	this.data = {
-		id: '',
-		name: '',
-		description: '',
-		pic: '',
-		energyCost: '',
-		file: null,	
-	};
-	
-	
-	this.costMapping = {
-		'little': '较少',
-		'fine': '中等',
-		'large': '较大'
-	}
-	
-	this.uploadPath = Inter.getApiUrl().uploadPath;
-	this.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
-	this.opId = null;
-	this.rowsData = [];
-	this.pagination = {
-		curPage: 3, // from 0
-		totalPages: 20, //from 1
-		totalItems: 200,
-		maxPageNum: 5,  // 分页组件最多显示多少页
-		maxRowNum: 10, // 一页显示多少行
+	var vm = this;
 
-		getPageList: function(){
-			var arr = [];
-			for(var i=0; i<this.maxPageNum; i++){
-				arr.push(this.curPage + i);
-			}
-			console.log(arr);
-			return arr;
-		},
-		setTotalPageByRowNum: function(rowNum){
-			this.totalPage = rowNum / this.maxRowNum;
-		}
-
-	};
 
 	// 数据初始化
-	this.init = function(){
-		this.fetchData();
+	vm.init = function(){
+		vm.data = {
+			id: '',
+			name: '',
+			description: '',
+			pic: '',
+			energyCost: '',
+			file: null,
+			businessId: '',
+			nameValid: undefined
+		};
+
+
+		vm.costMapping = [
+			{id: 1, name: '较少'},
+			{id: 2, name: '中等'},
+			{id: 3, name: '较大'}
+		]
+
+		vm.urls = Inter.getApiUrl();
+		vm.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
+		vm.opId = null;
+		vm.rowsData = [];
+		vm.pagination = {
+			curPage: 1, // from 0
+			totalItems: 0,  // from 1
+			maxPageNum: 5,  // 分页组件最多显示多少页
+			maxRowNum: 10, // 一页显示多少行
+
+			getPageList: function(){
+				var arr = [];
+				for(var i=0; i<vm.maxPageNum; i++){
+					arr.push(vm.curPage + i);
+				}
+				console.log(arr);
+				return arr;
+			},
+			setTotalPageByRowNum: function(rowNum){
+				vm.totalPage = rowNum / vm.maxRowNum;
+			}
+
+		};
+
+		vm.fetchData();
+
 	};
 
-	this.handlePageChanged = function(){
+	vm.handlePageChanged = function(){
 		console.log("page changed");
+		vm.fetchData();
 	}
+
+
 	// 改变状态
-	this.changeState = function(nextState, index){
-		this.state = nextState;
-		if(index){
-			this.opId = this.rowsData[index].id;
-		}
-		
+	vm.changeState = function(nextState, id){
+		vm.state = nextState;
+
+		vm.opId = id || undefined;
+
 		if(nextState === 'new'){
-			this.resetNewDialog();
-		} else if(nextState !== 'init'){
+			vm.resetNewDialog();
+		} else if(nextState === 'update'){
+			if(id){
+				vm.data = JSON.parse(JSON.stringify(vm.getRowDataById(id)));
+			}
+			else{
+				console.error('点击属性时没有检查到父组件有id');
+			}
+		}
+
+		if(['init', 'new'].indexOf(nextState) === -1){
 			$scope.$apply();
 		}
 	};
-	
+
+	vm.getRowDataById = function(id){
+		var data ;
+		vm.rowsData.forEach(function(item){
+			if(!data && item.id === id){
+				data = item;
+			}
+		});
+		return data;
+
+	}
+
 	// 拉取线路数据
-	
-	this.fetchData = function(){
-		this.rowsData = [{
-			id: 45,
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			
-			creator: 'wumengqiang',
-		},{
-			id: 45,
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			creator: 'wumengqiang'
-				
-		},{
-			id: 45,
-			name: '名称',
-			businessName: '暂无业务',
-			energyCost: 'little',
-			creator: 'wumengqiang'
-		}];
+	vm.fetchData = function(){
+		$http({
+			url: vm.urls.getRouteList,
+			method: 'GET',
+			params: {offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1), limit: vm.pagination.maxRowNum},
+		}).then(function(res){
+			if(res.data.code === 0){
+				vm.rowsData = res.data.rows.map(function(item){
+					var costName;
+					vm.costMapping.forEach(function(cost){
+						if(cost.id === item.cost_id){
+							costName = cost.name;
+						}
+					});
+					return {
+						id: item.id,
+						businessId: item.business_id,
+						energyCost: item.cost_id + '',
+						costName: costName,
+						pic: item.cover,
+						description: item.description,
+						name: item.name,
+						creator: item.luna_name,
+						businessName: item.business_name
+					}
+				});
+				vm.pagination.totalItems = res.data.total;
+
+			}
+		}, function(res){
+
+		});
 	}
 	
-	this.uploadPic = function(event){
+	vm.uploadPic = function(event){
 		var file = event.target.files[0];
 		var type = file.name.substr(file.name.lastIndexOf('.')+1 );
 		
@@ -117,61 +152,73 @@ function routerController($rootScope, $scope, $http){
 		data.append('file', file);
 		$http({
 			method: 'POST',
-			url: this.uploadPath,
+			url: vm.urls.uploadPath,
 			headers:{
-				'Content-Type': undefined, // 设置成undefined之后浏览器会自动增加boundary
+				'Content-Type': undefined // 设置成undefined之后浏览器会自动增加boundary
 			},
 			data: data
 		}).then(function(data){
 			event.target.value = '';
 			if(data.data.code === '0'){
-				this.data.pic = data.data.data.access_url;
+				vm.data.pic = data.data.data.access_url;
 			} else{
 				alert('上传文件出错');
 			}
-		}.bind(this), function(data){
+		}, function(data){
 			alert('上传文件出错');
 			event.target.value = '';
 		});
-	}.bind(this)
+	}
 	
-	this.resetNewDialog = function(){
-		this.data = {
-			id: this.data.id,
+	vm.resetNewDialog = function(){
+		vm.data = {
+			id: '',
 			name: '',
 			description: '',
 			pic: '',
-			energyCost: ''
+			energyCost: '',
+			file: null,
+			businessId: '',
+			nameValid: undefined
 		};
 	}
 	
 	
 	// 新建路线
-	this.handleCreateRouter = function(){
-		var data = this.data;
-		if(data.name && data.description && data.pic && data.energyCost){
+	vm.handleCreateRouter = function(){
+		if(vm.data.nameValid === false){
+			alert('线路名称重复,请重新填写');
+		}
+		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
 			var data = new FormData();
-			data.append('id', data.id || null);
-			data.append('name', data.name);
-			data.append('description', data.description);
-			data.append('energyCost', data.energyCost);
-			
-			
+			data.append('id', vm.data.id || null);
+			data.append('name', vm.data.name);
+			data.append('description', vm.data.description);
+			data.append('cost_id', parseInt(vm.data.energyCost));
+			data.append('business_id',vm.data.businessId || 45);
+			data.append('cover', vm.data.pic);
 			
 			$http({
 				method: "POST",
-				url: 'xxxxxxxx',
-				data: data
+				url: vm.data.id ? vm.urls.editRoute : vm.urls.createRoute,
+				data: data,
+				headers:{
+					"Content-Type": undefined
+				}
 			}).then(function(res){
-				
-			}.bind(this), function(res){
-				//
-				this.data.id = Date.now();
-				this.data.creator = 'wumengqiang';
-				this.data.businessName = '业务名称';
-				this.rowsData.push(this.data);
-				this.changeState('init');
-			}.bind(this));
+				if(res.data.code === "0"){
+					vm.changeState('init');
+					vm.pagination.curPage = 1;
+					vm.fetchData();
+				} else if(res.data.code === "409"){
+					alert('线路名称重复,创建失败');
+				} else{
+					console.log(vm.data.id? '更新路线失败' : '创建路线失败');
+				}
+
+			}, function(res){
+				console.log(vm.data.id? '更新路线失败' : '创建路线失败');
+			});
 		}
 		else{
 			alert("部分信息为空，不能新建路线");
@@ -179,36 +226,55 @@ function routerController($rootScope, $scope, $http){
 	}
 	
 	// 删除路线
-	this.handleDeleteRouter = function(){
+	vm.handleDeleteRouter = function(){
 		var data = new FormData();
-		data.append('id', this.opId);
+		data.append('id', vm.opId);
 		$http({
 			method: 'POST',
-			url: 'xxx',
+			url: vm.urls.delRoute,
 			data: data,
 			headers: {
-				"Content-Type": undefined,
+				"Content-Type": undefined
 			},
 		}).then(function(res){
 			if(res.data.code === '0'){
-				
+				vm.changeState('init');
+				vm.fetchData();
 			}
-		}.bind(this), function(res){
-			var index = -1, id = this.opId;
-			this.rowsData.forEach(function(item, itemIndex){
-				if(item.id === id){
-					index = itemIndex;
-					return;
-				}
-			});
-			if(index > -1){
-				this.rowsData.splice(index, 1);
+		}, function(res){
+			alert("删除失败");
+		});
+	};
+
+	vm.checkRouteName =  function(){
+		var data = new FormData();
+		data.append('name', vm.data.name);
+		if(vm.data.id){
+			data.append('id', vm.data.id);
+		}
+		$http({
+			url: vm.urls.checkRoute,
+			method: 'POST',
+			data: data,
+			headers: {
+				"Content-Type": undefined,
 			}
-			this.changeState('init');
-		}.bind(this));
-	} 
+		}).then(function(res){
+			console.log(res);
+			if(res.data.code === "0"){
+				vm.data.nameValid = true;
+			} else if(res.data.code === "409"){
+				vm.data.nameValid = false;
+			} else{
+				vm.data.nameValid = undefined;
+			}
+
+		}, function(res){
+
+		});
+	};
 	
-	this.init();
+	vm.init();
 	window.s = $scope;
 }
 
@@ -222,11 +288,11 @@ manageRouter.directive("bnRows", function(){
 	function link($scope, element, attribute){
 		element.on('click', '.router-update', function(event){
 			$scope.router.changeState('update', 
-				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-id')));
 		});
 		element.on('click', '.router-delete', function(event){
 			$scope.router.changeState('delete', 
-				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-order')));
+				parseInt($(event.target).parentsUntil('tbody', 'tr').attr('data-id')));
 		});
 	}
 });

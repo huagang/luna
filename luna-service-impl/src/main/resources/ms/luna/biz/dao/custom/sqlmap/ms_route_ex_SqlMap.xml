@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ms_route" >
+<resultMap class="ms.luna.biz.dao.custom.model.MsRouteResult" id="MsRouteResult">
+	<result column="id" property="id" jdbcType="INTEGER"/>
+	<result column="name" property="name" jdbcType="VARCHAR2"/>
+	<result column="business_id" property="business_id" jdbcType="INTEGER"/>
+	<result column="business_name" property="business_name" jdbcType="VARCHAR2"/>
+	<result column="cost_id" property="cost_id" jdbcType="INTEGER"/>
+	<result column="luna_name" property="luna_name" jdbcType="VARCHAR2"/>
+	<result column="description" property="description" jdbcType="VARCHAR2"/>
+	<result column="cover" property="cover" jdbcType="VARCHAR2"/>
+</resultMap>
+
+	<select id="selectRoutes" resultMap="MsRouteResult" parameterClass="ms.luna.biz.dao.custom.model.MsRouteParameter">
+		select
+			ms_route.id As id,
+			ms_route.name As name,
+			ms_route.business_id As business_id,
+			ms_route.cost_id As cost_id,
+			ms_route.description As description,
+			ms_route.cover As cover,
+			ms_user_pw.luna_name As luna_name,
+			ms_business.business_name As business_name
+		from
+			ms_route 
+		inner join ms_user_pw on ms_route.unique_id = ms_user_pw.unique_id
+		inner join ms_business on ms_route.business_id = ms_business.business_id
+		order by
+			ms_route.regist_hhmmss
+		<isNotNull property="range">
+			Limit #offset#,#limit#
+		</isNotNull>
+		
+	</select>
+
+	<select id="countRoutes" resultClass="java.lang.Integer" parameterClass="ms.luna.biz.dao.custom.model.MsRouteParameter">
+		select
+			count(1)
+		from
+			MS_ROUTE
+	</select>
+
+</sqlMap>

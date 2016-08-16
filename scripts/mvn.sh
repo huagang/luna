@@ -16,10 +16,6 @@ cd luna-service-interface
 mvn clean package install
 
 cd ..
-cd luna-service-generator
-mvn clean package install
-
-cd ..
 cd luna-service-common
 mvn clean package install -P dev  -DskipTests 
 

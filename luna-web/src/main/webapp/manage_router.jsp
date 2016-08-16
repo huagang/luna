@@ -15,7 +15,6 @@
     <meta name="keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_router.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
@@ -25,7 +24,7 @@
 
 
 </head>
-<body ng-app="manageRouter" ng-controller="routerController as router">
+<body ng-app="manageRouter" ng-controller="routerController as router" ng-class="{'modal-open': router.state !== 'init'}">
 <div class="container-fluid">
     <!--通用导航栏 start-->
     <jsp:include page="/templete/header.jsp"/>
@@ -56,10 +55,10 @@
                 			</tr>
                 		</thead>
                 		<tbody bn-rows>
-                			<tr ng-repeat="rowData in router.rowsData" data-order={{$index}}>
+                			<tr ng-repeat="rowData in router.rowsData" data-id={{rowData.id}}>
                 				<td>{{rowData.name}}</td>
                 				<td>{{rowData.businessName}}</td>
-                				<td>{{router.costMapping[rowData.energyCost]}}</td>
+                				<td>{{rowData.costName}}</td>
                 				<td>{{rowData.creator}}</td>
                 				<td>
                 					<a href='javascript:void(0)' class='router-update'>属性</a>
@@ -77,6 +76,8 @@
 				</div>
 
                  <!--主题内容 end-->
+
+				 <div class="mask ng-hide" ng-show="router.state!=='init'"></div>
                  <!-- 线路设置弹窗 start -->
                  <div class='pop set_business ng-hide' ng-show="['new', 'update'].indexOf(router.state) > -1">
                  	<div class="pop-title">
@@ -86,7 +87,9 @@
 					<div class="pop-cont">
 						<div class='router-name'>
 							<label for='name'>线路名称</label>
-							<input name='name' id='name' ng-model='router.data.name'/>
+							<input name='name' id='name' ng-model='router.data.name' ng-blur="router.checkRouteName()"/>
+							<div class="valid-name ng-hide" ng-show="router.data.nameValid === true"></div>
+							<div class="invalid-name text-danger ng-hide" ng-show="router.data.nameValid === false">名称重复</div>
 						</div>
 						<div class='router-description'>
 							<label for='description'>线路介绍</label>
@@ -103,9 +106,7 @@
 						<div>
 							<label for='energyCost'>体力消耗</label>
 							<select name='energyCost' id='energyCost' ng-model='router.data.energyCost'>
-								<option value='little'>较小</option>
-								<option value='fine'>中等</option>
-								<option value='large'>较大</option>
+								<option ng-repeat="cost in  router.costMapping" value='{{cost.id}}'>{{cost.name}}</option>
 							</select>
 						</div>
 							
