@@ -18,9 +18,10 @@
             功能不太完善, 没有的功能要自己加 :)
 
 
-       相关函数说明:
-            - updateComponent 的参数只传需要更新的参数, 不需要更新的参数不用传, 判断参数中某一项是否需要更新应该用 data.attr !== undefined
-            -
+       相关说明:
+            - 所有的父组件应该在init函数中初始化子组件,并在render函数中渲染子组件到父组件中
+            - updateComponent函数 的参数只传需要更新的参数, 不需要更新的参数不用传, 判断参数中某一项是否需要更新应该用 data.attr !== undefined
+
  */
 
 (function() {
@@ -39,6 +40,7 @@
         };
     }
 
+    // 接口url信息, 全部在interface.js
     var apiUrls = Inter.getApiUrl();
 
 
@@ -50,21 +52,21 @@
         }
     }
 
-    // 信息初始化
+    // 初始化相应的值和子组件
     BaseComponent.prototype.init = function () {
         this.data = this.data || {};
-        this.data.value = this.data.value || {};
 
+        this.data.value = this.data.value || {}; // 组件的表单值 value的类型有object和array
 
         this._type = 'baseComponent';   //组件类型
 
         this.value = this.data.value; // 表单内容数据 可以形成 data tree 结构
 
-        this.definition = this.data.definition || {};
+        this.definition = this.data.definition || {};  // 组件定义信息
 
         // 其他的回调函数扩展
 
-        this._component = null; // 当前组件
+        this._component = null; // 当前组件 DOM类型
 
         this._children = []; // 子组件对象, 每个父组件都应知道有哪些子组件 组件命名方式应该与组件作用相一致
 
@@ -72,7 +74,7 @@
         this.initChildren();
     };
 
-    // 根据定义初始化子组件
+    // 根据组件在this.definition中的顺序初始化子组件
     BaseComponent.prototype.initChildren = function () {
         (this.definition || []).forEach(function (item, index) {
             try{
@@ -83,11 +85,14 @@
         }.bind(this));
     };
 
-    // 渲染组件 返回组件的DOM 如果selector已经设置,那么将组件渲染到该 $(selector)的尾部
+    // 渲染组件并返回组件的DOM 如果selector已经设置,那么将组件渲染到该 $(selector)的尾部
     BaseComponent.prototype.render = function (selector) {
-        // 1.获取子组件render结果
-        // 2.渲染当前组件
-        // 3.返回最终Dom节点结果
+        /* 渲染子组件
+         * 1. 获取子组件render结果
+         * 2. 渲染当前组件
+         * 3. 返回最终Dom节点结果
+         * 4. 由BaseComponent将组件内容插入到页面
+         */
         if (!this._component) {
             this._component = document.createElement('div');
             this._component.className = this.definition.type ?
@@ -107,7 +112,7 @@
         return this._component;
     };
 
-    // 根据组件的display_order来将组件顺序排列
+    // 根据组件的display_order顺序来排列组件
     BaseComponent.prototype.getOrderedChildren = function () {
         var _children = [];
         if (this._children) {
@@ -123,8 +128,15 @@
 
     };
 
-    // 用于提交表单是检查表单的值是否合乎要求
+    // 用于检查组件以及子组件的值是否合乎要求
     BaseComponent.prototype.checkValidation = function(){
+        /* 检查顺序
+         * 1. 遍历子组件(this._children), 检查子组件的值是否可以为空,如果可以为空则不进行验证,
+         *    否则则进行子组件值的验证(调用this._children[i].checkValidation())
+         * 2. this.validation表示该组件的值是否合乎要求,其初始值为true,如果通过没有验证this.validation的值为false,最终会将this.validation的值返回
+         * 3. hasChildren标识该组件到底是否有子组件(通过该组件是否有子组件或该组件的子组件是否有name),如果没有子组件,
+         *    则通过判断this.value的值是否为空来确定this.validation的值
+         */
         this.validation = true;
         if(this._type === 'baseComponent'){
             this.validation = '';
@@ -148,7 +160,6 @@
                     else if(this.validation && ! this._children[i].checkValidation()) {
                         this.validation = false;
                     }
-
                 }
             }
         }
@@ -195,6 +206,12 @@
 
     // 获取组件的表单值
     BaseComponent.prototype.getFormValue = function(){
+        /* 获取值的流程
+         *  1. 初始化formValue (formType 表示formValue的类型 object or array)
+         *  2. 获取子组件的值并填充到formValue中
+         *  3. 如果没有子组件this.formValue的值就是this.value的值
+         *  4. 返回this.formValue的值
+         */
         var hasChildren = false;
         if(this.formType === 'object'){
             this.formValue = {}
@@ -224,7 +241,7 @@
         }
     };
 
-    // 组件的限制条件
+    // 组件的限制条件, 如果组件没有限制条件,那么将会自动使用defaultLimits
     BaseComponent.prototype.defaultLimits = {
         PIC: {
             ext: ['png', 'jpg'],
@@ -331,7 +348,7 @@
         // 设置错误信息
         that.setWarn = setWarn;
 
-        // 检查合法性
+        // 用于上传文件时检查文件的合法性
         that._checkValidation = _checkValidation;
 
         // 文件上传
@@ -357,8 +374,13 @@
 
             that.definition.limit = that.definition.limits[that.definition.type] || that.defaultLimits[that.definition.type];  // 如果没有传入限制参数, 则使用默认限制参数
             if(toString.call(that.definition.limit) === '[object Array]'){
-                that.definition.limit = that.definition.limit[0];
+                that.definition.limit = that.definition.limit[that.data.definition.index || 0]; // index 表示选用第几个limit 默认选第一个
             }
+
+            if(that.definition.limit.empty){
+                that.definition.empty = true;
+            }
+
             var accept='';
             if(that.definition.type === 'PIC'){
                 accept = "accept='image/*'";
@@ -552,9 +574,12 @@
 
             that.definition.limit = (that.definition.limits || that.defaultLimits)['TEXTAREA'];  // 如果没有传入限制参数, 则使用默认限制参数
             if(toString.call(that.definition.limit) === '[object Array]'){
-                that.definition.limit = that.definition.limit[0];
+                that.definition.limit = that.definition.limit[that.data.definition.index || 0];
             }
 
+            if(that.definition.limit.empty){
+                that.definition.empty = true;
+            }
 
             that._children = {};
             if (that.definition.show_name) {
@@ -642,6 +667,10 @@
             that.definition.limit = that.definition.limits['TEXT'] || that.defaultLimits['TEXT'];  // 如果没有传入限制参数, 则使用默认限制参数
             if(toString.call(that.definition.limit) === '[object Array]'){
                 that.definition.limit = that.definition.limit[0];
+            }
+
+            if(that.definition.limit.empty){
+                that.definition.empty = true;
             }
 
             that._children = {};
@@ -834,14 +863,15 @@
         that.init();
         function init() {
             that._type = 'radioText';
-
             that.data.value = that.data.value || {};
-
             that.value = that.data.value;
-
             that.definition = that.data.definition || {};
-
             that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty && that.definition.limits.radio &&
+                that.definition.limits.radio[0].empty){
+                that.definition.empty = true;
+            }
 
             that._children = {};
 
@@ -932,6 +962,7 @@
         that.init = init;
 
         that.updateComponent = updateComponent;
+
         that.init();
 
         function init() {
@@ -944,6 +975,11 @@
 
             that.definition.type = 'TEXT_PIC';
             that._children = {};
+
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty && that.definition.limits.PIC &&
+                that.definition.limits.PIC[0].empty){
+                that.definition.empty = true;
+            }
 
             var curOrder = 1;
             if(that.definition.show_name){
@@ -1040,6 +1076,11 @@
 
             if(that.value.length > 0){
                 that.itemNum = that.value.length;
+            }
+
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty && that.definition.limits.PIC &&
+                that.definition.limits.PIC[0].empty){
+                that.definition.empty = true;
             }
 
             // 初始化子组件
@@ -1191,6 +1232,10 @@
             that.value = that.data.value;
             that.definition = that.data.definition || {};
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty){
+                that.definition.empty = true;
+            }
+
 
             that._template =
                     '<select class="text-select"></select> \
@@ -1449,6 +1494,7 @@
             that.value = that.data.value;
             that.definition = that.data.definition || {};
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
+
             that._children = {};
             if(that.definition.show_name){
                 that._children.label = new Label({

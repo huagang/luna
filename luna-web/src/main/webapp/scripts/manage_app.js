@@ -23,9 +23,8 @@ $(document).ready(function () {
 });
 var pageUrls = Inter.getPageUrl(), apiUrls = Inter.getApiUrl();
 
+
 /* 作用  - 用于计算输入框的字数并显示在输入框右下角
- * 潜在问题 : 由于jquery的change事件是在丢失焦点时触发的，不能满足需求，因而绑定input事件，
- * 		     但是在输入中文时，由于提前输入了字母，会导致在没有达到最大字数时就已经被截断了。
  * @param inputSelector - 输入框选择器  
  * @param counterSelector - 计数器选择器
  * @param maxNum  - 输入框允许的最大值
@@ -410,6 +409,11 @@ function NewAppController() {
 			'dev': 1,
 			'data': 2
 		};
+		that.valueMapping = {
+			0: 'basic',
+			1: 'dev',
+			2: 'data'
+		};
 		that.data = {
 			name: '',
 			type: '', //basic(基础项目版) dev(开发版)  data(数据版)
@@ -436,6 +440,16 @@ function NewAppController() {
 
 	function show(type, event) {
 		that.data = {};
+
+		if(type === 'reuse'){
+			$('.template-group').addClass('hidden');
+			$('.template-label').addClass('hidden');
+			that.data.type = that.valueMapping[parseInt(event.target.parentElement.getAttribute('data-app-type'))];
+		} else if(type === 'new'){
+			$('.template-group').removeClass('hidden');
+			$('.template-label').removeClass('hidden');
+		}
+
 		var business = localStorage.getItem('business');
 		if (business) {
 			business = JSON.parse(business);
@@ -463,7 +477,6 @@ function NewAppController() {
 		that.dialog.find('.template').removeClass('active');
 		$(event.currentTarget).addClass('active');
 		that.data.type = $(event.currentTarget).attr('data-value');
-		console.log('hello');
 	}
 
 	function handleAppNameChange(event) {
