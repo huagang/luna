@@ -868,7 +868,7 @@ function Poi($scope, $http){
         if(vm.data.searchText && vm.data.panoType){
             var url = '', type = '';
             if(vm.data.panoType == '1'){ // 单场景点
-                url = vm.apiUrls.searchPano.url.format(vm.data.searchText, 1, 10, '', '');
+                url = vm.apiUrls.searchPano.url.format(vm.data.searchText, 1, 20, '', '');
                 type = vm.apiUrls.searchPano.type;
             } else if(vm.data.panoType == '2' || vm.data.panoType == '3' ){  // 相册
                 url = vm.apiUrls.searchAlbum.url.format(vm.data.searchText, 1, 20, '', '');
