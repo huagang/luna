@@ -10,6 +10,7 @@
             plugins/deep-diff/deep-diff-0.3.3.min.js
             plugins/selectizeJs/selectize.min.js
             script/common/interface.js
+            plugins/es5-shim/es5-shim.min.js
 
 */
 /*
@@ -1015,18 +1016,19 @@
                     <div class="pano-search-result">\
                         <label>搜索结果(最多显示20条)</label>\
                         <div class="pano-container">\
-                        <div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">\
+                            <div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">\
                             这里空空的\
-                        </div>\
-                        <div class="pano" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">\
-                            <div class="thumbnail" style="background: #DEEEF8 url({{item.pic}}) center center no-repeat;background-size: contain;"></div>\
-                            <div class="pano-info">\
-                                <p class="pano-name">{{item.name}}</p>\
-                                <a class="pull-right icon-link" href="{{item.link}}" target="_blank" ng-click="poi.stopDefault()"></a>\
                             </div>\
-                        </div>\
+                            <div class="pano">\
+                                <div class="thumbnail" style="background: #DEEEF8  center center no-repeat;background-size: contain;"></div>\
+                                <div class="pano-info">\
+                                    <p class="pano-name"></p>\
+                                    <a class="pull-right icon-link" href="" target="_blank"></a>\
+                                </div>\
+                            </div>\
+                        <div class="panoList"></div>\
                     </div>\
-                </div>'
+                </div>';
 
         }
 
@@ -1087,41 +1089,47 @@
                     url = apiUrls.searchPano.url.format(that.data.searchText, 1, 20, '', '');
                     type = apiUrls.searchPano.type;
                 } else if(panoType == '2' || panoType == '3' ){  // 相册
-                    url = vm.apiUrls.searchAlbum.url.format(that.data.searchText, 1, 20, '', '');
-                    type = vm.apiUrls.searchAlbum.type;
+                    url = apiUrls.searchAlbum.url.format(that.data.searchText, 1, 20, '', '');
+                    type = apiUrls.searchAlbum.type;
                 }
-                $http({
+                $.ajax({
                     url: encodeURI(url),   // uri中可能有中文
-                    type: type
-                }).then(function(res){
-                    if(res.data.result === 0){
-                        if(vm.data.panoType == '1') {
-                            vm.searchResult = res.data.data.searchResult.map(function(item){
-                                return {
-                                    id: item.panoId,
-                                    name: item.panoName,
-                                    pic: item.thumbnailUrl,
-                                    link: vm.apiUrls.singlePano.format(item.panoId)
-                                };
-                            });
+                    type: type,
+                    success: function(res){
+                        if(res.result === 0){
+                            if(panoType == '1') {
+                                that.data.searchResult = res.data.searchResult.map(function(item){
+                                    return {
+                                        id: item.panoId,
+                                        name: item.panoName,
+                                        pic: item.thumbnailUrl,
+                                        link: apiUrls.singlePano.format(item.panoId)
+                                    };
+                                });
+                            } else{
+                                that.data.searchResult = res.data.searchResult.map(function(item) {
+                                    return {
+                                        id: item.albumId,
+                                        name: item.albumName,
+                                        link: panoType == '2' ? apiUrls.multiplyPano.format(item.albumId)
+                                            : apiUrls.customPano.format(item.albumId)
+                                    };
+                                });
+                            }
+
+
+
+
                         } else{
-                            vm.searchResult = res.data.data.searchResult.map(function(item) {
-                                return {
-                                    id: item.albumId,
-                                    name: item.albumName,
-                                    link: vm.data.panoType == '2' ? vm.apiUrls.multiplyPano.format(item.albumId)
-                                        :vm.apiUrls.customPano.format(item.albumId)
-                                };
-                            });
+                            alert(res.data.msg || '搜索失败');
                         }
-                        vm.total = res.data.data.total;
-                        vm.totalPage = res.data.data.totalPage;
-                    } else{
-                        alert(res.data.msg || '搜索失败');
+                    },
+                    error: function(res){
+                        alert(res.msg || '搜索失败');
                     }
-                }, function(res){
-                    alert(res.data.msg || '搜索失败');
                 });
+
+
             } else{
                 alert('要选择微景展类型并填写部分微景展名称信息才能搜索哦');
             }
