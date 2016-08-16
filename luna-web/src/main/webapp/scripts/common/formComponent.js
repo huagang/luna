@@ -277,7 +277,8 @@
         'TEXT_PIC': TextPic,
         'TEXT_PIC_GROUP': TextPicGroup,
         'COUNTRY_ENJOYMENT': CountryEnjoyment,
-        'RADIO_TEXT': RadioText,
+       // 'RADIO_TEXT': RadioText,
+        'RADIO_TEXT': Pano,
         'FileUploader': FileUploader,
         'RadioList': RadioList,
         'INPUT': Input,
@@ -946,6 +947,187 @@
         }
     }
     RadioText.prototype = new BaseComponent();
+
+
+
+
+    /*************** radio text 组件 end*******************/
+
+    /**************** pano 全景选择组件 *********************/
+    function Pano(data){
+        var that = this;
+        that.data = data;
+
+        that.init = init;
+        that.render = render;
+        that.updateComponent = updateComponent;
+
+        // 事件绑定
+        that._bindEvent = _bindEvent;
+
+        // 事件 搜索名称输入框 onChange
+        that.handleSearchTextChange = handleSearchTextChange;
+
+        that.init();
+        function init() {
+            that._type = 'radioText';
+            that.data.value = that.data.value || {};
+            that.value = that.data.value;
+            that.definition = that.data.definition || {};
+            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty && that.definition.limits.radio &&
+                that.definition.limits.radio[0].empty){
+                that.definition.empty = true;
+            }
+
+            that._children = {};
+
+            if(that.definition.options){
+                that._children.radioList = new RadioList({
+                    value: that.value.value || '',
+                    definition: {
+                        options: that.definition.options,
+                        name: 'value'
+                    }
+
+                });
+            }
+
+            if (that.definition.show_name) {
+                that._children.label = new Label({definition: {show_name: that.definition.show_name}});
+            }
+
+            that._children.input = new Input({
+                definition: {
+                    limits: that.definition.limits,
+                    name: 'text',
+                    placeholder: that.definition.placeholder || {'TEXT': ['']},
+
+                },
+                value: that.value.text || ''
+            });
+
+            that.template =
+                    '<input type="text" class="pano-search-input" ng-model="poi.data.searchText" \
+                        placeholder="输入全景名称等关键字信息,支持模糊搜索"/> \
+                    <button type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>\
+                    <div class="pano-search-result">\
+                        <label>搜索结果(最多显示20条)</label>\
+                        <div class="pano-container">\
+                        <div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">\
+                            这里空空的\
+                        </div>\
+                        <div class="pano" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">\
+                            <div class="thumbnail" style="background: #DEEEF8 url({{item.pic}}) center center no-repeat;background-size: contain;"></div>\
+                            <div class="pano-info">\
+                                <p class="pano-name">{{item.name}}</p>\
+                                <a class="pull-right icon-link" href="{{item.link}}" target="_blank" ng-click="poi.stopDefault()"></a>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>'
+
+        }
+
+        function render() {
+            if (!that._component) {
+                that._component = document.createElement('div');
+                that.element = $(that._component);
+                that._component.className = 'radio-text component';
+
+                that.element.html(that.template);
+
+                if (that._children.label) {
+                    var label = that._children.label.render();
+                    that.element.prepend(label);
+                }
+
+                if(that._children.radioList){
+                    that.element.prepend(that._children.radioList.render());
+                }
+
+                that._component.appendChild(that._children.input.render());
+                that.element.find('.input-text').val(that.value.text || '');
+
+                that._bindEvent();
+            }
+
+            return that._component;
+        }
+
+
+        function _bindEvent(){
+            that.element.find('.pano-search-input').on('change', that.handleSearchTextChange);
+        }
+
+
+        function updateComponent(data) {
+            if (data.value.url !== that.value.url) {
+                that._component.url = that.value.url = data.value.url;
+            }
+
+            if (data.definition.show_name !== that.definition.show_name) {
+                that.definition.show_name = data.definition.show_name;
+                that._children.label.updateComponent({definition: {show_name: that.definition.show_name}});
+            }
+        }
+
+        function handleSearchTextChange(event){
+            that.data.searchText = event.target.value;
+        }
+
+        // 调用搜索接口
+        function handleSearch(){
+            var panoType = that._children.radioList.value;
+
+            if( panoType &&  that.data.searchText){
+                var url = '', type = '';
+                if(panoType == '1'){ // 单场景点
+                    url = apiUrls.searchPano.url.format(that.data.searchText, 1, 20, '', '');
+                    type = apiUrls.searchPano.type;
+                } else if(panoType == '2' || panoType == '3' ){  // 相册
+                    url = vm.apiUrls.searchAlbum.url.format(that.data.searchText, 1, 20, '', '');
+                    type = vm.apiUrls.searchAlbum.type;
+                }
+                $http({
+                    url: encodeURI(url),   // uri中可能有中文
+                    type: type
+                }).then(function(res){
+                    if(res.data.result === 0){
+                        if(vm.data.panoType == '1') {
+                            vm.searchResult = res.data.data.searchResult.map(function(item){
+                                return {
+                                    id: item.panoId,
+                                    name: item.panoName,
+                                    pic: item.thumbnailUrl,
+                                    link: vm.apiUrls.singlePano.format(item.panoId)
+                                };
+                            });
+                        } else{
+                            vm.searchResult = res.data.data.searchResult.map(function(item) {
+                                return {
+                                    id: item.albumId,
+                                    name: item.albumName,
+                                    link: vm.data.panoType == '2' ? vm.apiUrls.multiplyPano.format(item.albumId)
+                                        :vm.apiUrls.customPano.format(item.albumId)
+                                };
+                            });
+                        }
+                        vm.total = res.data.data.total;
+                        vm.totalPage = res.data.data.totalPage;
+                    } else{
+                        alert(res.data.msg || '搜索失败');
+                    }
+                }, function(res){
+                    alert(res.data.msg || '搜索失败');
+                });
+            } else{
+                alert('要选择微景展类型并填写部分微景展名称信息才能搜索哦');
+            }
+        }
+    }
+    Pano.prototype = new BaseComponent();
 
 
 
