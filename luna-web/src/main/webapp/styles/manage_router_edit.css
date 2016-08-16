@@ -83,7 +83,7 @@
 
 .poi-results{
     min-height: 100px;
-    max-height: 300px;
+    max-height: 200px;
     width: 610px;
     border: 1px solid #E5E5E5;
     overflow-y: auto;
@@ -247,4 +247,11 @@
     display: block;
     background-color: #444;
     border: none;
+}
+
+.drag-img{
+    position:absolute;
+    left:-200px;
+    height: 20px;
+    width:20px;
 }

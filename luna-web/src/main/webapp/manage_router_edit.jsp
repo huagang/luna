@@ -209,6 +209,9 @@
         </div>
     </div>
 </div>
+<script>
+    window.context = "<%=request.getContextPath() %>";
+</script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>

@@ -26,6 +26,9 @@
         // 操作 设置线路点设置弹出框的时间信息
         vm.setPoiInfo = setPoiInfo;
 
+        // 操作 获取景点数量
+        vm.getSceneryNum = getSceneryNum;
+
         // 事件 编辑poi时间信息
         vm.handleEditPoi = handleEditPoi;
 
@@ -150,8 +153,11 @@
                 insertId: '',
                 direction: '' // "above" or "below"
             };
-
-
+            vm.dragData.dragImg = new Image();
+            vm.dragData.dragImg.src = window.context + '/img/dragImg.png';
+            vm.dragData.dragImg.setAttribute('class', "drag-img");
+            window.dragImg = vm.dragData.dragImg;
+            document.body.appendChild(vm.dragData.dragImg);
             vm.loadProvinces();
             vm.fetchRouteData();
         }
@@ -412,6 +418,15 @@
             }
         }
 
+        function getSceneryNum(){
+            return vm.routeData.reduce(function(memo, cur){
+                if(vm.routeData.tag.indexOf(2) !== -1){
+                    memo += 1;
+                }
+                return memo;
+            }, 0);
+        }
+
         function fetchRouteData(){
             setTimeout(function(){
                 vm.routeData = [ //线路信息
@@ -421,7 +436,7 @@
                         order: 1,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2],
+                        tags:[2],
 
                     },{
                         _id: '1232',
@@ -429,56 +444,56 @@
                         order: 2,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1233',
                         name: 'haha3',
                         order: 3,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1234',
                         name: 'haha4',
                         order: 4,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1235',
                         name: 'haha5',
                         order: 5,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1236',
                         name: 'haha6',
                         order: 6,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1237',
                         name: 'haha7',
                         order: 7,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1238',
                         name: 'haha8',
                         order: 8,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },{
                         _id: '1239',
                         name: 'haha9',
                         order: 9,
                         startTime: "09:00",
                         endTime: "11:00",
-                        tag:[2]
+                        tags:[2]
                     },
                 ];
                 $scope.$apply();
@@ -503,6 +518,7 @@
             event.dataTransfer.setData('text', 'haha');
             event.dataTransfer.effectAllowed = "move";
             event.dataTransfer.dropEffect = "move";
+            event.dataTransfer.setDragImage(vm.dragData.dragImg, 10 , 14);
         }
 
         function handleDragEnter(){
