@@ -162,7 +162,7 @@
     .main-wrap{
       /* display: none !important; */
         opacity: 0;
-
+        overflow: hidden;
     }
 }
 
