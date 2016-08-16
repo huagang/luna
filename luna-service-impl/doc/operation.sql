@@ -97,3 +97,14 @@ create table luna_role_category(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色类别表';
 
 alter table ms_show_app add column type INT NOT NULL DEFAULT 0 COMMENT '微景展类型,0:基本版,1:高级版,2:数据版';
+
+# 修改菜单名字
+update luna_menu set name="CRM" where id=13;
+update luna_menu set name="POI数据管理" where id=6;
+update luna_menu set name="POI数据关系配置" where id=15;
+
+# 修改ms_farm_field 组件类型名称
+update ms_farm_field set type="PANORAMA" where type="RADIO_TEXT";
+
+
+
