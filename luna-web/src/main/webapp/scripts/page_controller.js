@@ -60,7 +60,7 @@ showPage.controller('navController', ['$scope', '$rootScope', NavController]);
 showPage.controller('panoController', ['$scope', '$rootScope', PanoController]);
 showPage.controller('audioController', ['$scope', '$rootScope', AudioController]);
 showPage.controller('videoController', ['$scope', '$rootScope', VideoController]);
-showPage.controller('menuTabController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabController]);
+showPage.controller('menuTabController', ['$scope', '$rootScope', '$http', '$timeout', 'menuTabIcon', MenuTabController]);
 showPage.controller('menuTabIconController', ['$scope', '$rootScope', '$http', 'menuTabIcon', MenuTabIconController]);
 
 /**
@@ -90,7 +90,7 @@ function MenuController($scope, $rootScope, $http) {
     this.previewQR = function () {
         var request = {
             method: Inter.getApiUrl().appPreview.type,
-            url: Util.strFormat( Inter.getApiUrl().appPreview.url,[appId]),
+            url: Util.strFormat(Inter.getApiUrl().appPreview.url, [appId]),
             // data: { 'app_id': appId }
         };
         $http(request).then(function success(response) {
@@ -126,7 +126,7 @@ function MenuController($scope, $rootScope, $http) {
         });
         //给弹出的二维码框复制按钮绑定复制方法
         $(".copy").zclip({
-            path:  Inter.getApiUrl().zclipSWFPath,
+            path: Inter.getApiUrl().zclipSWFPath,
             copy: function () {
                 return $(this).siblings(".copyed").text();
             },
@@ -643,7 +643,7 @@ VideoController.prototype = new InteractComponentController();
 /* Init Video Controller End */
 
 /* Init TabMenu Controller Start */
-function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
+function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabIcon) {
 
     var $$scope = $scope;
     var _self = this;
@@ -813,6 +813,9 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
     //tab列表点击事件
     this.changeMenuTab = function ($event, $index) {
         this.currentTab = this.content.tabList[$index];
+        $timeout(function () {
+            _self.initColorSet();
+        });
 
         if (this.currentTab.firstPoiId) {
             //初始化POI类别
@@ -873,9 +876,11 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         this.content.tabList.push(defaultTab);
         this.content.tabListCount++;
         this.currentTab = this.content.tabList[this.content.tabList.length - 1];
-        console.log(customerMenuTabIcon.iconGroup);
-
+        // console.log(customerMenuTabIcon.iconGroup);
         this.currentComponent.content.tabList = this.content.tabList;
+        $timeout(function () {
+            _self.initColorSet();
+        });
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     };
 
@@ -918,10 +923,7 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     };
 
-    //选择Icon的颜色
-    this.changeIconColor = function (type) {
-        this.currentComponent.content.tabList = this.content.tabList;
-    };
+
 
     //icon选择回调函数
     this.onIconSelectCallback = function (item, model) {
@@ -991,6 +993,14 @@ function MenuTabController($scope, $rootScope, $http, customerMenuTabIcon) {
     this.changeIconColor = function (colorType, colorStatus) {
         this.currentComponent.content.tabList = this.content.tabList;
         updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+    };
+
+    //初始化拾色器
+    this.initColorSet = function () {
+        document.querySelectorAll('.menutab-colorset .color-set').forEach(function (element) {
+            $(element).trigger('keyup');
+            console.log(element.value);
+        }, this);
     };
 }
 

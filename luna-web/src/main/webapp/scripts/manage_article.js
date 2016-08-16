@@ -4,9 +4,7 @@
 //app初始化
 //获取当前的业务数据
 var business = {};
-if (window.localStorage.business.length === 0) {
-    window.location.href = Inter.getApiUrl().selectBusinessPage;
-} else {
+if (window.localStorage.business) {
     business = JSON.parse(window.localStorage.business);
 }
 
@@ -68,7 +66,7 @@ function timeFormatter(value, row, index) {
 function operationFormatter(value, row, index) {
     var id = row.id;
     var title = row.title;
-    var editOp = '<a class="edit" href="'+(Util.strFormat(Inter.getApiUrl().articleEditPage.url,[id]))+'" target="_blank">编辑</a>';
+    var editOp = '<a class="edit" href="' + (Util.strFormat(Inter.getApiUrl().articleEditPage.url, [id])) + '" target="_blank">编辑</a>';
     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, title);
 
     return editOp + deleteOp;
@@ -140,6 +138,10 @@ function ArticleController($scope, $rootScope, $http) {
     };
 
     this.showCreateArticlePage = function () {
+        if (!business.id) {
+            alert('请选择业务');
+            return;
+        }
         window.open(Util.strFormat(Inter.getApiUrl().articleCreatePage.url, [business.id]));
     };
 
@@ -158,7 +160,7 @@ function ArticleController($scope, $rootScope, $http) {
     this.submitDeleteArticle = function (id) {
         var request = {
             method: Inter.getApiUrl().articleDelete.type,
-            url: Util.strFormat(Inter.getApiUrl().articleDelete.url,[id])
+            url: Util.strFormat(Inter.getApiUrl().articleDelete.url, [id])
         };
         $http(request).then(function success(response) {
             var data = response.data;

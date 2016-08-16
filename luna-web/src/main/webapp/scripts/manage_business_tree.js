@@ -10,15 +10,19 @@ time:20160527*/
  */
 var flag1 = false, flag2 = false;
 var business = {};
-if (window.localStorage.business.length === 0) {
-	window.location.href = Inter.getApiUrl().selectBusinessPage;
-} else {
-	business = JSON.parse(window.localStorage.business);
+if (window.localStorage.business) {
+    business = JSON.parse(window.localStorage.business);
 }
+
 $(document).ready(function () {
     // 【+新建数据配置】按钮
     $("#new-business-tree").click(function () {
-        addBusinessTree();
+        if (!business.id) {
+			alert('请选择业务');
+            return;
+		}
+		addBusinessTree();
+
     });
 
     // 检索业务名称

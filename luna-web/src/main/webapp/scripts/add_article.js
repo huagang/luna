@@ -5,10 +5,11 @@
  */
 //获取当前的业务数据
 var business = {};
-if (window.localStorage.business.length === 0) {
-    window.location.href = Inter.getApiUrl().selectBusinessPage;
-} else {
+if (window.localStorage.business) {
     business = JSON.parse(window.localStorage.business);
+} else {
+    alert('请选择业务');
+    window.location.href = Inter.getApiUrl().selectBusinessPage;
 }
 
 var initPage = function () {
@@ -239,7 +240,7 @@ var initPage = function () {
                     'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
                     'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
                     'insertorderedlist', 'insertunorderedlist', 'spechars', '|',
-                    'link','simpleupload', /*'insertmusic',*/ 'insertvideo',
+                    'link', 'simpleupload', /*'insertmusic',*/ 'insertvideo',
                 ]
             ],
         });
@@ -273,7 +274,7 @@ var initPage = function () {
             };
             $.ajax({
                 url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
-                type:  articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
+                type: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -308,7 +309,7 @@ var initPage = function () {
         document.querySelector('.publish').addEventListener('click', function (e) {
             $.ajax({
                 url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
-                type:Inter.getApiUrl().articlePublish.type,
+                type: Inter.getApiUrl().articlePublish.type,
                 async: true,
                 data: { id: articleStore.id },
                 dataType: "json",
@@ -329,7 +330,7 @@ var initPage = function () {
 
         // 事件绑定  文章标题输入框onChange事件 
         // 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
-        document.querySelector('#title').addEventListener('change', function(event) {
+        document.querySelector('#title').addEventListener('change', function (event) {
             articleStore.title = event.target.value;
         });
 
@@ -340,29 +341,29 @@ var initPage = function () {
         });
 
         // 事件绑定  文章摘要输入框onChange事件
-        document.querySelector('#summary').addEventListener('change', function(event) {
+        document.querySelector('#summary').addEventListener('change', function (event) {
             articleStore.summary = event.target.value;
         });
 
         // 事件绑定  文章栏目选择框onChange事件
-        document.querySelector('#category').addEventListener('change', function(event) {
+        document.querySelector('#category').addEventListener('change', function (event) {
             articleStore.category = event.target.value;
         });
 
         // 事件绑定  音频url输入框onChange事件
-        document.querySelector('#audio').addEventListener('change', function(event) {
+        document.querySelector('#audio').addEventListener('change', function (event) {
             articleStore.audio = event.target.value;
             clearWarn('#audio_warn');
         });
 
         // 事件绑定  视频url输入框onChange事件
-        document.querySelector('#video').addEventListener('change', function(event) {
+        document.querySelector('#video').addEventListener('change', function (event) {
             articleStore.video = event.target.value;
             clearWarn('#video_warn');
         });
 
         // 事件绑定  文章头图文件onChange事件 
-        document.querySelector('#pic_fileup').addEventListener('change', function(event) {
+        document.querySelector('#pic_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
             var preview = document.querySelector('#thumbnail_show');
             preview.src = '';
@@ -379,7 +380,7 @@ var initPage = function () {
         });
 
         // 事件绑定  视频文件onChange事件 
-        document.querySelector('#video_fileup').addEventListener('change', function(event) {
+        document.querySelector('#video_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
             FileUploader.uploadFile('video', event.target.files[0], function (data) {
@@ -395,7 +396,7 @@ var initPage = function () {
         });
 
         // 事件绑定  音频文件onChange事件 
-        document.querySelector('#audio_fileup').addEventListener('change', function(event) {
+        document.querySelector('#audio_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
             FileUploader.uploadFile('audio', event.target.files[0], function (data) {
@@ -592,7 +593,7 @@ var initPage = function () {
             }
         }
     };
-}();
+} ();
 
 
 $(document).ready(function () {

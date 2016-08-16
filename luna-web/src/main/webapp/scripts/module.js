@@ -5,15 +5,16 @@ $(document).ready(function () {
             control: $(this).attr('data-control') || 'hue',
             defaultValue: $(this).attr('data-defaultValue') || '',
             inline: $(this).attr('data-inline') === 'true',
+            format: $(this).attr('data-format') || 'hex',
             letterCase: $(this).attr('data-letterCase') || 'lowercase',
             opacity: $(this).attr('data-opacity'),
             position: $(this).attr('data-position') || 'bottom left',
-            change: function (hex, opacity) {
-                // if( !hex ) return;
-                // if( opacity ) hex += ', ' + opacity;
-                // try {
-                //     colorSet = hex;
-                // } catch(e) {}
+            change: function (value, opacity) {
+                if (!value) return;
+                if (opacity) value += ', ' + opacity;
+                if (typeof console === 'object') {
+                    console.log(value);
+                }
             },
             theme: 'bootstrap'
         });
