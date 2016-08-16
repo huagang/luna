@@ -389,13 +389,12 @@ video {
     background-size: 100% 77px;
     background-position: top left;
 }
-.menulist-img{
-    height: 48px;
-}
+
 .menulist-title {
     text-align: center;
-    line-height: 27px;
+    line-height: 22px;
     display: inline-block;
+    padding-bottom: 9px;
 }
 
 .menulist .border {
