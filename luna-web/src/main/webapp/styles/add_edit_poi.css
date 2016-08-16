@@ -263,14 +263,15 @@ label{
 .pano-container .pano-info{
     display: flex;
     align-items: center;
-    height: 30px;
     font-size: 12px;
     line-height: 12px;
-
+    height: 40px;
 }
 .pano-container .pano-name{
     display: inline-block;
     width: 85px;
+    max-height: 35px;
+    overflow: hidden;
     flex-grow: 1;
 }
 
