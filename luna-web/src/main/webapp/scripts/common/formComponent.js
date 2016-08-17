@@ -397,9 +397,9 @@
                             <div class='loader'>Loading...</div> \
                         </div> \
                     </span> \
-                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{1}</a></div> \
+                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{3}</a></div> \
                  </div>\
-                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除',accept);
+                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type], that.definition.limit.max ,accept, that.definition.hideDeleteButton ? '' : '删除');
 
             that._children = {};
             if (that.definition.show_name) {
@@ -621,7 +621,7 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > that.definition.limit.max || 1024){
+            if(event.target.value.length > (that.definition.limit.max || 1024)){
                 that.value = event.target.value.substr(0, that.definition.limit.max || 1024);
                 that.element.find('textarea').val(that.value);
             } else{
@@ -722,8 +722,8 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > that.definition.limit.max || 255){
-                that.value = event.target.value.substr(0,that.definition.limit.max || 255);
+            if(event.target.value.length > (that.definition.limit.max || 255)){
+                that.value = event.target.value.substr(0,(that.definition.limit.max || 255));
                 that.element.find('input').val(that.value);
             } else{
                 that.value = event.target.value;
@@ -1054,14 +1054,16 @@
 
                 that.element.html(that.template);
 
+                if(that._children.radioList){
+                    that.element.prepend(that._children.radioList.render());
+                }
+
                 if (that._children.label) {
                     var label = that._children.label.render();
                     that.element.prepend(label);
                 }
 
-                if(that._children.radioList){
-                    that.element.prepend(that._children.radioList.render());
-                }
+
 
                 that._component.appendChild(that._children.input.render());
                 that.element.find('.input-text').val(that.value.text || '');
