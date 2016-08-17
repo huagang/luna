@@ -12,5 +12,6 @@ public interface MsShowAppDAO extends MsShowAppDAOBase {
 	public List<MsShowAppResult> selectShowAppWithFilter(MsShowAppParameter parameter);
 	
 	public int selectIdByName(String name);
-	
+
+	public List<MsShowAppResult> selectShowAppByCtgrId(MsShowAppParameter parameter);
 }
