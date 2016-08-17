@@ -273,7 +273,7 @@ public class FarmPageServiceImpl implements FarmPageService {
      * @return Object
      */
     private Object convertOptionsString2Json(String options, String type) {
-        if (FieldTypes.RADIO_TEXT.equals(type)) { // eg:全景
+        if (FieldTypes.PANORAMA.equals(type)) { // eg:全景
             return JSONArray.parseArray(options);
         }
         if (FieldTypes.COUNTRY_ENJOYMENT.equals(type)) { // eg:乡村野趣
@@ -329,7 +329,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             return document.get(field_name);
         }
         // 初始化或者不含字段信息
-        if (FieldTypes.RADIO_TEXT.equals(field_type))
+        if (FieldTypes.PANORAMA.equals(field_type))
             return JSONObject.parseObject(default_value);
         if (FieldTypes.TEXT_PIC.equals(field_type))
             return JSONObject.parseArray(default_value);
