@@ -225,8 +225,8 @@ public class FarmPageServiceImpl implements FarmPageService {
             msShowAppParameter.setMax(param.getInteger(MsShowAppTable.LIMIT));
             msShowAppParameter.setRange(true);
 
-            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCtgrId(msShowAppParameter);
             JSONArray rows = new JSONArray();
+            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCtgrId(msShowAppParameter);
             String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
             for (MsShowAppResult msShowAppResult : msShowAppResults) {
                 JSONObject row = new JSONObject();
@@ -247,7 +247,9 @@ public class FarmPageServiceImpl implements FarmPageService {
                 row.put(MsShowAppTable.FIELD_APP_STATUS, msShowAppResult.getAppStatus());
                 rows.add(row);
             }
-            return FastJsonUtil.sucess("success", rows);
+            JSONObject result = FastJsonUtil.sucess("success", rows);
+            result.put("total", msShowAppResults.size());
+            return result;
         } catch (Exception e) {
             MsLogger.error("Failed to get show apps by category id:" + e.getMessage());
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get show apps by category id");

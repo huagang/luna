@@ -117,4 +117,39 @@
 		</isEqual>
 	</select>
 
+	<select id="countShowAppsByCtgrId" resultClass="java.lang.Integer"
+			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
+		SELECT
+			count(1)
+		FROM
+		(
+			SELECT
+				ms_business.business_id
+			FROM
+			(
+				SELECT
+					ms_merchant_manage.merchant_id
+				FROM ms_category INNER JOIN ms_merchant_manage
+				WHERE ms_category.category_id = ms_merchant_manage.category_id
+				<isNotEmpty property="categoryIds">
+					AND ms_category.category_id IN
+					<iterate conjunction="," open="(" close=")" property="categoryIds">
+						#categoryIds[]#
+					</iterate>
+				</isNotEmpty>
+			) CATEGORY_MERCHANT INNER JOIN ms_business WHERE CATEGORY_MERCHANT.merchant_id = ms_business.merchant_id
+		) CATEGORY_MERCHANT_BUSINESS INNER JOIN ms_show_app
+		WHERE CATEGORY_MERCHANT_BUSINESS.business_id = ms_show_app.business_id
+		<isNotNull property="status">
+			AND ms_show_app.app_status=#status#
+		</isNotNull>
+		<isNotEmpty property="types">
+			AND ms_show_app.type IN
+			<iterate conjunction="," open="(" close=")" property="types">
+				#types[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+
 </sqlMap>

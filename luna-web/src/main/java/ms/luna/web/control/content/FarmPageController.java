@@ -134,7 +134,7 @@ public class FarmPageController extends BasicController {
             MsLogger.debug(result.toString());
             return result;
         } catch (Exception e) {
-            MsLogger.error("Failed to get show apps by category id" + e.getMessage());
+            MsLogger.error("Failed to get show apps by category id:" + e.getMessage());
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get show apps by category id");
         }
     }
