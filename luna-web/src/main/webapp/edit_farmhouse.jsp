@@ -98,6 +98,7 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/deep-diff/deep-diff-0.3.3.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/es5-shim/es5-shim.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/clipboardJs/clipboard.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>

@@ -10,6 +10,7 @@
             plugins/deep-diff/deep-diff-0.3.3.min.js
             plugins/selectizeJs/selectize.min.js
             script/common/interface.js
+            plugins/es5-shim/es5-shim.min.js
 
 */
 /*
@@ -278,6 +279,7 @@
         'TEXT_PIC_GROUP': TextPicGroup,
         'COUNTRY_ENJOYMENT': CountryEnjoyment,
         'RADIO_TEXT': RadioText,
+        'PANORAMA': Pano,
         'FileUploader': FileUploader,
         'RadioList': RadioList,
         'INPUT': Input,
@@ -395,9 +397,9 @@
                             <div class='loader'>Loading...</div> \
                         </div> \
                     </span> \
-                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{1}</a></div> \
+                    <div class='cleanInput hidden'><a href='javascript:void(0)'>{3}</a></div> \
                  </div>\
-                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type],that.definition.hideDeleteButton ? '' : '删除',accept);
+                 <p class='warn'></p>".format( that.typeNameMapping[that.definition.type], that.definition.limit.max ,accept, that.definition.hideDeleteButton ? '' : '删除');
 
             that._children = {};
             if (that.definition.show_name) {
@@ -619,11 +621,14 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > 1024){
-                that.value = event.target.value.substr(0,1024);
+            if(event.target.value.length > (that.definition.limit.max || 1024)){
+                that.value = event.target.value.substr(0, that.definition.limit.max || 1024);
                 that.element.find('textarea').val(that.value);
             } else{
                 that.value = event.target.value;
+            }
+            if(typeof that.data.onChange === 'function'){
+                that.data.onChange(event, that.value); // 传递事件本身和值
             }
         }
 
@@ -717,11 +722,14 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > 1024){
-                that.value = event.target.value.substr(0,1024);
+            if(event.target.value.length > (that.definition.limit.max || 255)){
+                that.value = event.target.value.substr(0,(that.definition.limit.max || 255));
                 that.element.find('input').val(that.value);
             } else{
                 that.value = event.target.value;
+            }
+            if(typeof that.data.onChange === 'function'){
+                that.data.onChange(event, that.value); // 传递事件本身和值
             }
         }
 
@@ -732,7 +740,7 @@
                 that.element.find('input').val(that.value);
             }
             if(that._children.label && that.definition.show_name !== data.definition.show_name ){
-                that.definition.show_name = data.definition.show_name
+                that.definition.show_name = data.definition.show_name;
                 that._children.label.updateComponent({definition: {show_name: that.definition.show_name }});
             }
         }
@@ -826,6 +834,9 @@
                     }
                     that.element.find('.radio-item').prop('checked',false);
                     $(event.target).prop('checked', true);
+                    if(typeof that.data.onChange === 'function'){
+                        that.data.onChange(event, that.value); // 传递事件本身和值
+                    }
                 });
             }
         }
@@ -946,6 +957,240 @@
         }
     }
     RadioText.prototype = new BaseComponent();
+
+
+
+
+    /*************** radio text 组件 end*******************/
+
+    /**************** pano 全景选择组件 *********************/
+    function Pano(data){
+        var that = this;
+        that.data = data;
+
+        that.init = init;
+        that.render = render;
+        that.updateComponent = updateComponent;
+
+        // 事件绑定
+        that._bindEvent = _bindEvent;
+
+        // 事件 搜索名称输入框 onChange
+        that.handleSearchTextChange = handleSearchTextChange;
+
+        // 事件 选中某项全景
+        that.handleSelect = handleSelect;
+
+        // 事件 & 请求 搜索全景
+        that.handleSearch = handleSearch;
+
+        that.handlePanoTypeChange = handlePanoTypeChange;
+
+        that.init();
+        function init() {
+            that._type = 'radioText';
+            that.data.value = that.data.value || {};
+            that.value = that.data.value;
+            that.definition = that.data.definition || {};
+            that.definition.limits = (that.definition.limits || that.defaultLimits);  // 如果没有传入限制参数, 则使用默认限制参数
+
+            if(that.definition.limits.TEXT && that.definition.limits.TEXT[0].empty && that.definition.limits.radio &&
+                that.definition.limits.radio[0].empty){
+                that.definition.empty = true;
+            }
+
+            that._children = {};
+
+            if(that.definition.options){
+                that._children.radioList = new RadioList({
+                    value: that.value.value || '',
+                    definition: {
+                        options: that.definition.options,
+                        name: 'value'
+                    },
+                    onChange: that.handlePanoTypeChange,
+                });
+            }
+
+            if (that.definition.show_name) {
+                that._children.label = new Label({definition: {show_name: that.definition.show_name}});
+            }
+
+            that._children.input = new Input({
+                definition: {
+                    limits: that.definition.limits,
+                    name: 'text',
+                    placeholder: that.definition.placeholder || {'TEXT': ['']},
+                },
+                value: that.value.text || ''
+            });
+
+            that.template =
+                    '<input type="text" class="pano-search-input"  placeholder="输入全景名称等关键字信息,支持模糊搜索"/> \
+                    <button type="button" class="button btn-search">搜索</button>\
+                    <div class="pano-search-result">\
+                        <label>搜索结果(最多显示20条)</label>\
+                        <div class="pano-container">\
+                            <div class="empty-result">\
+                            这里空空的\
+                            </div>\
+                            <div class="pano hidden" data-value="">\
+                                <div class="thumbnail" style="background: #DEEEF8  center center no-repeat;background-size: contain;"></div>\
+                                <div class="pano-info">\
+                                    <p class="pano-name"></p>\
+                                    <a class="pull-right icon-link" href="" target="_blank"></a>\
+                                </div>\
+                            </div>\
+                            <div class="panoList hidden"></div>\
+                    </div>\
+                </div>';
+        }
+
+        function render() {
+            if (!that._component) {
+                that._component = document.createElement('div');
+                that.element = $(that._component);
+                that._component.className = 'radio-text component';
+
+                that.element.html(that.template);
+
+                if(that._children.radioList){
+                    that.element.prepend(that._children.radioList.render());
+                }
+
+                if (that._children.label) {
+                    var label = that._children.label.render();
+                    that.element.prepend(label);
+                }
+
+
+
+                that._component.appendChild(that._children.input.render());
+                that.element.find('.input-text').val(that.value.text || '');
+
+                that._bindEvent();
+            }
+            return that._component;
+        }
+
+
+        function _bindEvent(){
+            that.element.find('.pano-search-input').on('change', that.handleSearchTextChange);
+            that.element.find('.panoList').on('click', '.pano', that.handleSelect);
+            that.element.find('.btn-search').on('click', that.handleSearch);
+        }
+
+
+        function updateComponent(data) {
+            if (data.value.url !== that.value.url) {
+                that._component.url = that.value.url = data.value.url;
+            }
+
+            if (data.definition.show_name !== that.definition.show_name) {
+                that.definition.show_name = data.definition.show_name;
+                that._children.label.updateComponent({definition: {show_name: that.definition.show_name}});
+            }
+        }
+
+        function handlePanoTypeChange(event, value){
+            that.data.searchText = '';
+            that.element.find('.pano-search-input').val('');
+            that.element.find('.panoList').html('');
+            that.data.searchResult = [];
+            that.element.find('.empty-result').removeClass('hidden');
+            that.element.find('.panoList').addClass('hidden');
+        }
+
+        function handleSearchTextChange(event){
+            that.data.searchText = event.target.value;
+        }
+
+        // 调用搜索接口
+        function handleSearch(){
+            var panoType = that._children.radioList.value;
+
+            if( panoType &&  that.data.searchText){
+                var url = '', type = '';
+                if(panoType == '1'){ // 单场景点
+                    url = apiUrls.searchPano.url.format(that.data.searchText, 1, 20, '', '');
+                    type = apiUrls.searchPano.type;
+                } else if(panoType == '2' || panoType == '3' ){  // 相册
+                    url = apiUrls.searchAlbum.url.format(that.data.searchText, 1, 20, '', '');
+                    type = apiUrls.searchAlbum.type;
+                }
+                $.ajax({
+                    url: encodeURI(url),   // uri中可能有中文
+                    type: type,
+                    success: function(res){
+                        if(res.result === 0){
+                            if(panoType == '1') {
+                                that.data.searchResult = res.data.searchResult.map(function(item){
+                                    return {
+                                        id: item.panoId,
+                                        name: item.panoName,
+                                        pic: item.thumbnailUrl,
+                                        link: apiUrls.singlePano.format(item.panoId)
+                                    };
+                                });
+                            } else{
+                                that.data.searchResult = res.data.searchResult.map(function(item) {
+                                    return {
+                                        id: item.albumId,
+                                        name: item.albumName,
+                                        link: panoType == '2' ? apiUrls.multiplyPano.format(item.albumId)
+                                            : apiUrls.customPano.format(item.albumId)
+                                    };
+                                });
+                            }
+
+                            that.element.find('.panoList').html('');
+                            var prototype = that.element.find('.pano');
+                            var panoList = that.element.find('.panoList');
+                            if(that.data.searchResult.length > 0){
+                                that.data.searchResult.forEach(function(item) {
+                                    var pano = prototype.clone(false,true);
+                                    pano.removeClass('hidden');
+                                    pano.attr('data-value', item.id);
+                                    pano.find('.pano-name').html(item.name);
+                                    pano.find('.icon-link').attr('href', item.link);
+                                    if(item.pic){
+                                        var style = pano.find('.thumbnail').attr('style');
+                                        pano.find('.thumbnail').attr('style', style + 'background-image:url(' + item.pic + ');');
+                                    }
+                                    panoList.append(pano);
+
+                                });
+                                that.element.find('.panoList').removeClass('hidden');
+                                that.element.find('.empty-result').addClass('hidden');
+                            } else{
+                                that.element.find('.empty-result').removeClass('hidden');
+                                that.element.find('.panoList').addClass('hidden');
+                            }
+                        } else{
+                            alert(res.data.msg || '搜索失败');
+                        }
+                    },
+                    error: function(res){
+                        alert(res.msg || '搜索失败');
+                    }
+                });
+
+
+            } else{
+                alert('要选择微景展类型并填写部分微景展名称信息才能搜索哦');
+            }
+        }
+
+        function handleSelect(event){
+            if(event.target.className.indexOf('icon-link') === -1){
+                var id = event.currentTarget.getAttribute('data-value');
+                that.element.find('.panoList .pano').removeClass('active');
+                event.currentTarget.classList.add('active');
+                that._children.input.updateComponent({'value': id});
+            }
+        }
+    }
+    Pano.prototype = new BaseComponent();
 
 
 
