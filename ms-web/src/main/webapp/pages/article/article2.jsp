@@ -45,7 +45,7 @@
                 <div class="go-top"></div>
             </div>
         </div>
-        <div class='video-modal hidden'>
+        <div class='video-modal' style="display:none;">
             <div class='mask'></div>
             <div class='video-dialog'>
                 <p class='video-title'>
