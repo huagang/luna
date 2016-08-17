@@ -34,6 +34,28 @@ showPage.factory('menuTabIcon', function ($rootScope) {
     return menuTabIcon;
 });
 
+showPage.directive("contenteditable", function () {
+    return {
+        restrict: "A",
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+
+            function read() {
+                ngModel.$setViewValue(element.html());
+            }
+
+            ngModel.$render = function () {
+                element.html(ngModel.$viewValue || "");
+            };
+
+            element.bind("blur keyup change", function () {
+                scope.$apply(read);
+            });
+        }
+    };
+});
+
+
 /**
  * 启用APP 设置$http的默认属性
  * @param  {[type]} $rootScope [description]
@@ -212,13 +234,13 @@ function BaseComponentController() {
     this.changeX = function () {
         this.currentComponent.position.changeTrigger.horizontal = "left";
         updatePageComponentsHtml(currentPageId, currentComponentId);
-        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
 
     this.changeY = function () {
         this.currentComponent.position.changeTrigger.vertial = "top";
         updatePageComponentsHtml(currentPageId, currentComponentId);
-        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeZ = function () {
         updatePageComponentsHtml(currentPageId, currentComponentId);
@@ -226,12 +248,12 @@ function BaseComponentController() {
     this.changeBottom = function () {
         this.currentComponent.position.changeTrigger.vertial = "bottom";
         updatePageComponentsHtml(currentPageId, currentComponentId);
-        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeRight = function () {
         this.currentComponent.position.changeTrigger.horizontal = "right";
         updatePageComponentsHtml(currentPageId, currentComponentId);
-        lunaPage.editPageComponents(currentPageId, currentComponentId);
+        lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeWidth = function () {
         updatePageComponentsHtml(currentPageId, currentComponentId);
@@ -453,7 +475,16 @@ CanvasController.prototype = new BaseComponentController();
 
 function TextController($scope, $rootScope) {
 
-    this.changeContent = function () { };
+    this.init = function () {
+        TextController.prototype.init.call(this);
+        // controller内其他元素会因为model变化发生显示变化，所以设置一个临时变量而不是直接绑定currentComponent，避免页面非预期的变化
+        this.content = this.currentComponent.content;
+    };
+
+    this.changeContent = function () {
+        console.log('changeText');
+    };
+
 }
 
 TextController.prototype = new InteractComponentController();
