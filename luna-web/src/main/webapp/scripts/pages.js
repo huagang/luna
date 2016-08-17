@@ -658,7 +658,7 @@ function setPageHtml(pageID) {
             if (!value.timestamp) {
                 value.timestamp = new Date().getTime();
             }
-            if (n.startsWith("canvas")) {
+            if (value.type ==  "canvas") {
                 componentArr = [value].concat(componentArr);
             } else {
                 componentArr.push(value);
