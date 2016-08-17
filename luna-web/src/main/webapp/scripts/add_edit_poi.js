@@ -466,7 +466,39 @@ $(function () {
             }, 3000);
         }
     });
+
+    $('#thumbnail_fileup').on('change', function(event){
+        var file = event.target.files[0];
+        var res = FileUploader._checkValidation('pic',file);
+        if(res.error){
+            $('#thumbnail_warn').html(res.msg).css('display','block');
+            return;
+        }
+        cropper.setFile(file, function(file){
+            FileUploader.uploadMediaFile({
+                type: 'pic',
+                file: file,
+                resourceType: 'poi',
+                resourceId: window.poiId,
+                success: function(data){
+                    $('#thumbnail').val(data.data.access_url);
+                    $('#thumbnail-show').attr('src', data.data.access_url);
+                    $('#thumbnail_warn').css('display', 'none');
+                    cropper.close();
+                },
+                error: function(data){
+                    $('#thumbnail_warn').html(data.msg).css('display','block');
+                    alert('上传失败');
+                }
+            });
+            $('#thumbnail_fileup').val('');
+        }, function(){
+            $('#thumbnail_fileup').val('');
+        });
+    });
     displayPrivateField();
+
+
 });
 //“新增”按钮，新建POI数据属性
 function newProperty(obj) {

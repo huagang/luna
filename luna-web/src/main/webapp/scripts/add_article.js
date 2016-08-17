@@ -361,7 +361,7 @@ var initPage = function () {
             clearWarn('#video_warn');
         });
 
-        // 事件绑定  文章头图文件onChange事件 
+        // 事件绑定  文章头图文件onChange事件
         document.querySelector('#pic_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             var preview = document.querySelector('#thumbnail_show');

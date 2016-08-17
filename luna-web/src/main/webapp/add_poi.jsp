@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
     <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
@@ -32,6 +34,7 @@
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/fileupload.js"></script>
+
 </head>
 
 <body ng-app="poi" ng-controller="Poi as poi">
@@ -160,9 +163,9 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">缩略图</div>
                         <div class="value-poi">
-                            <form:input type="text" id="thumbnail" readOnly="true" path="thumbnail" cssClass="img-url"/>
+                            <form:input type="text" id="thumbnail" path="thumbnail" cssClass="img-url"/>
                             <div class="upload-thumbnail">
-                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup" onchange="asyncUploadThumb(this,'thumbnail_fileup','original','specification1','specification2')"/>
+                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup"/>
                                 <button type="button">本地上传</button>
                                 <span class="info">不超过1M</span>
                             </div>
@@ -230,7 +233,7 @@
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
     <!--新建POI数据属性 start-->
-	<div class="pop" id="pop-newproperty">
+	<div class="pop" id="btn-newproperty">
 	    <div class="pop-title">
 	        <h4>新建类别</h4>
 	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
@@ -312,17 +315,22 @@
 	    <!-- 底部功能区 end -->
 	</div>
 	<!--删除类别 end-->
-</body>
-<script type='text/javascript'>
+
+
+
+<jsp:include page="/templete/imgCropper.jsp" />
+    <script type='text/javascript'>
     // 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
     window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
 </script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/es5-shim/es5-shim.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
+
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_edit_poi.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-
+</body>
 </html>

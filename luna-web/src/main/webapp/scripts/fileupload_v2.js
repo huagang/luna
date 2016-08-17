@@ -12,7 +12,6 @@
  * 
  * @author wumengqiang  小伍
  * @email dean@visualbusiness.com
- * 该文件若有bug随时找我	:) 
  */
 
 // 以下划线开头的属性或者方法表示其为私有的，不对外开放

@@ -22,6 +22,8 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
+	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
 	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
@@ -243,7 +245,7 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">缩略图</div>
                         <div class="value-poi">
-                            <form:input type="text" id="thumbnail" readOnly="true" path="thumbnail" cssClass="img-url"/>
+                            <form:input type="text" id="thumbnail" path="thumbnail" cssClass="img-url"/>
                             <c:if test="${!poiReadOnly || lang == 'en'}">
 	                            <div class="upload-thumbnail">
 	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup" onchange="asyncUploadThumb(this,'thumbnail_fileup','original','specification1','specification2')"/>
@@ -401,18 +403,21 @@
 	    <!-- 底部功能区 end -->
 	</div>
 	<!--删除类别 end-->
-</body>
+<jsp:include page="/templete/imgCropper.jsp" />
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
 	window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
+	window.poiId = '${_id}';
 </script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_edit_poi.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script type="text/javascript">
+
+	<script type="text/javascript">
 	function init(){
 		var fieldDisplayed = false;
 		var field = $("#field-show .item-poi");
@@ -431,4 +436,5 @@
 		});
 	}
 </script>
+</body>
 </html>
