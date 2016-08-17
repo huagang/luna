@@ -20,6 +20,7 @@ import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
+import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang.StringUtils;
@@ -215,26 +216,35 @@ public class FarmPageServiceImpl implements FarmPageService {
             String categoryIds = param.getString(MsShowAppTable.CATEGRYIDS);
             String types = param.getString(MsShowAppTable.TYPES);
             List<String> categoryList = Arrays.asList(categoryIds.split(","));
-            List<Integer> typeList = convertStringLst2IntergerLst(Arrays.asList(types.split(",")));
+            List<Integer> typeList = convertStringLst2IntergerLst(types != null ? Arrays.asList(types.split(",")) : null);
             MsShowAppParameter msShowAppParameter = new MsShowAppParameter();
             msShowAppParameter.setCategoryIds(categoryList);
             msShowAppParameter.setTypes(typeList);
-            msShowAppParameter.setMin(param.getInteger("offset"));
-            msShowAppParameter.setMax(param.getInteger("limit"));
-            msShowAppParameter.setRange(false);
+            msShowAppParameter.setStatus(param.getInteger(MsShowAppTable.FIELD_APP_STATUS));
+            msShowAppParameter.setMin(param.getInteger(MsShowAppTable.OFFSET));
+            msShowAppParameter.setMax(param.getInteger(MsShowAppTable.LIMIT));
+            msShowAppParameter.setRange(true);
 
             List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCtgrId(msShowAppParameter);
             JSONArray rows = new JSONArray();
             String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
             for (MsShowAppResult msShowAppResult : msShowAppResults) {
                 JSONObject row = new JSONObject();
+                row.put(MsShowAppTable.FIELD_CATEGORY_ID, msShowAppResult.getCategoryId());
+                row.put(MsShowAppTable.FIELD_CATEGORY_NAME, msShowAppResult.getCategoryName());
+                row.put(MsShowAppTable.FIELD_BUSINESS_ID, msShowAppResult.getBusinessId());
+                row.put(MsShowAppTable.FIELD_BUSINESS_NAME, msShowAppResult.getBusinessName());
                 row.put(MsShowAppTable.FIELD_APP_ID, msShowAppResult.getAppId());
                 row.put(MsShowAppTable.FIELD_APP_CODE, msShowAppResult.getAppCode());
                 row.put(MsShowAppTable.FIELD_APP_NAME, msShowAppResult.getAppName());
                 row.put(MsShowAppTable.FIELD_TYPE, msShowAppResult.getType());
                 row.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowAppResult.getShareInfoDes() != null ? msShowAppResult.getShareInfoDes() : "");
                 row.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowAppResult.getShareInfoPic() != null ? msShowAppResult.getShareInfoPic() : "");
+                row.put(MsShowAppTable.FIELD_OWNER, msShowAppResult.getOwner());
+                row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(msShowAppResult.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+                row.put(MsShowAppTable.FIELD_PUBLISH_TIME, DateUtil.format(new Date(msShowAppResult.getPublishTime().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
                 row.put(MsShowAppTable.INDEXURL, msWebUrl + String.format(showPageUriTemplate, msShowAppResult.getAppId()));
+                row.put(MsShowAppTable.FIELD_APP_STATUS, msShowAppResult.getAppStatus());
                 rows.add(row);
             }
             return FastJsonUtil.sucess("success", rows);
@@ -432,7 +442,7 @@ public class FarmPageServiceImpl implements FarmPageService {
      */
     private List<Integer> convertStringLst2IntergerLst(List<String> types) {
         List<Integer> typeLst = new ArrayList<>();
-        if (types != null) {
+        if (types != null && !types.isEmpty()) {
             for (String type : types) {
                 typeLst.add(Integer.parseInt(type));
             }

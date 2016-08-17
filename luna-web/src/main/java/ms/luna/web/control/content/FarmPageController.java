@@ -117,15 +117,17 @@ public class FarmPageController extends BasicController {
     public JSONObject getShowAppByCtgrId(
             @PathVariable("categoryIds") String categoryIds,
             @RequestParam(required = false, value = "types") String types,
-            @RequestParam(required = false, value = "offset", defaultValue = ""+0) Integer offset,
-            @RequestParam(required = false, value = "limit", defaultValue = ""+Integer.MAX_VALUE) Integer limit) {
+            @RequestParam(required = false, value = "app_status", defaultValue = "1") Integer status,
+            @RequestParam(required = false, value = "offset", defaultValue = "0") Integer offset,
+            @RequestParam(required = false, value = "limit", defaultValue = "30") Integer limit) {
         try {
             // 检查types类型
-            if(!checkIntegerList(types))
+            if(types != null && !checkIntegerList(types))
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "types is valid");
             JSONObject param = new JSONObject();
             param.put("categoryIds", categoryIds);
             param.put("types", types);
+            param.put("app_status", status);
             param.put("offset", offset);
             param.put("limit", limit);
             JSONObject result = farmPageService.getShowAppsByCtgrId(param);
