@@ -1486,6 +1486,12 @@
             </p>
           </div>
         </div>
+        <!--支持es5 的语法-->
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
+        <!--End -->
+
+
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
