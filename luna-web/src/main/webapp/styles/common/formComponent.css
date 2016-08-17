@@ -415,7 +415,7 @@ p.warn{
 
  .pano-search-input {
      width: 440px;
-     margin: 5px 10px 10px 0;
+     margin: 5px 10px 10px 130px;
  }
 
  .pano-search-result{
@@ -424,7 +424,7 @@ p.warn{
      border: 1px solid #ccc;
      border-radius: 4px;
      padding: 10px 20px;
-     margin-bottom: 20px;
+     margin: 0 0 20px 130px;
 
  }
 
@@ -483,7 +483,7 @@ p.warn{
  .icon-link {
      height: 16px;
      width: 16px;
-     background: url(../img/link.png) center center no-repeat;
+     background: url(../../img/link.png) center center no-repeat;
      background-size: contain;
      vertical-align: middle;
  }

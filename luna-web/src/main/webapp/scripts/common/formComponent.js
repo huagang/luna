@@ -278,8 +278,8 @@
         'TEXT_PIC': TextPic,
         'TEXT_PIC_GROUP': TextPicGroup,
         'COUNTRY_ENJOYMENT': CountryEnjoyment,
-       // 'RADIO_TEXT': RadioText,
-        'RADIO_TEXT': Pano,
+        'RADIO_TEXT': RadioText,
+        'PANORAMA': Pano,
         'FileUploader': FileUploader,
         'RadioList': RadioList,
         'INPUT': Input,
@@ -621,11 +621,14 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > 1024){
-                that.value = event.target.value.substr(0,1024);
+            if(event.target.value.length > that.definition.limit.max || 1024){
+                that.value = event.target.value.substr(0, that.definition.limit.max || 1024);
                 that.element.find('textarea').val(that.value);
             } else{
                 that.value = event.target.value;
+            }
+            if(typeof that.data.onChange === 'function'){
+                that.data.onChange(event, that.value); // 传递事件本身和值
             }
         }
 
@@ -719,11 +722,14 @@
         }
 
         function handleChange(event){
-            if(event.target.value.length > 1024){
-                that.value = event.target.value.substr(0,1024);
+            if(event.target.value.length > that.definition.limit.max || 255){
+                that.value = event.target.value.substr(0,that.definition.limit.max || 255);
                 that.element.find('input').val(that.value);
             } else{
                 that.value = event.target.value;
+            }
+            if(typeof that.data.onChange === 'function'){
+                that.data.onChange(event, that.value); // 传递事件本身和值
             }
         }
 
@@ -734,7 +740,7 @@
                 that.element.find('input').val(that.value);
             }
             if(that._children.label && that.definition.show_name !== data.definition.show_name ){
-                that.definition.show_name = data.definition.show_name
+                that.definition.show_name = data.definition.show_name;
                 that._children.label.updateComponent({definition: {show_name: that.definition.show_name }});
             }
         }
@@ -828,6 +834,9 @@
                     }
                     that.element.find('.radio-item').prop('checked',false);
                     $(event.target).prop('checked', true);
+                    if(typeof that.data.onChange === 'function'){
+                        that.data.onChange(event, that.value); // 传递事件本身和值
+                    }
                 });
             }
         }
@@ -969,6 +978,14 @@
         // 事件 搜索名称输入框 onChange
         that.handleSearchTextChange = handleSearchTextChange;
 
+        // 事件 选中某项全景
+        that.handleSelect = handleSelect;
+
+        // 事件 & 请求 搜索全景
+        that.handleSearch = handleSearch;
+
+        that.handlePanoTypeChange = handlePanoTypeChange;
+
         that.init();
         function init() {
             that._type = 'radioText';
@@ -990,8 +1007,8 @@
                     definition: {
                         options: that.definition.options,
                         name: 'value'
-                    }
-
+                    },
+                    onChange: that.handlePanoTypeChange,
                 });
             }
 
@@ -1004,32 +1021,29 @@
                     limits: that.definition.limits,
                     name: 'text',
                     placeholder: that.definition.placeholder || {'TEXT': ['']},
-
                 },
                 value: that.value.text || ''
             });
 
             that.template =
-                    '<input type="text" class="pano-search-input" ng-model="poi.data.searchText" \
-                        placeholder="输入全景名称等关键字信息,支持模糊搜索"/> \
-                    <button type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>\
+                    '<input type="text" class="pano-search-input"  placeholder="输入全景名称等关键字信息,支持模糊搜索"/> \
+                    <button type="button" class="button btn-search">搜索</button>\
                     <div class="pano-search-result">\
                         <label>搜索结果(最多显示20条)</label>\
                         <div class="pano-container">\
-                            <div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">\
+                            <div class="empty-result">\
                             这里空空的\
                             </div>\
-                            <div class="pano">\
+                            <div class="pano hidden" data-value="">\
                                 <div class="thumbnail" style="background: #DEEEF8  center center no-repeat;background-size: contain;"></div>\
                                 <div class="pano-info">\
                                     <p class="pano-name"></p>\
                                     <a class="pull-right icon-link" href="" target="_blank"></a>\
                                 </div>\
                             </div>\
-                        <div class="panoList"></div>\
+                            <div class="panoList hidden"></div>\
                     </div>\
                 </div>';
-
         }
 
         function render() {
@@ -1054,13 +1068,14 @@
 
                 that._bindEvent();
             }
-
             return that._component;
         }
 
 
         function _bindEvent(){
             that.element.find('.pano-search-input').on('change', that.handleSearchTextChange);
+            that.element.find('.panoList').on('click', '.pano', that.handleSelect);
+            that.element.find('.btn-search').on('click', that.handleSearch);
         }
 
 
@@ -1073,6 +1088,15 @@
                 that.definition.show_name = data.definition.show_name;
                 that._children.label.updateComponent({definition: {show_name: that.definition.show_name}});
             }
+        }
+
+        function handlePanoTypeChange(event, value){
+            that.data.searchText = '';
+            that.element.find('.pano-search-input').val('');
+            that.element.find('.panoList').html('');
+            that.data.searchResult = [];
+            that.element.find('.empty-result').removeClass('hidden');
+            that.element.find('.panoList').addClass('hidden');
         }
 
         function handleSearchTextChange(event){
@@ -1117,9 +1141,29 @@
                                 });
                             }
 
+                            that.element.find('.panoList').html('');
+                            var prototype = that.element.find('.pano');
+                            var panoList = that.element.find('.panoList');
+                            if(that.data.searchResult.length > 0){
+                                that.data.searchResult.forEach(function(item) {
+                                    var pano = prototype.clone(false,true);
+                                    pano.removeClass('hidden');
+                                    pano.attr('data-value', item.id);
+                                    pano.find('.pano-name').html(item.name);
+                                    pano.find('.icon-link').attr('href', item.link);
+                                    if(item.pic){
+                                        var style = pano.find('.thumbnail').attr('style');
+                                        pano.find('.thumbnail').attr('style', style + 'background-image:url(' + item.pic + ');');
+                                    }
+                                    panoList.append(pano);
 
-
-
+                                });
+                                that.element.find('.panoList').removeClass('hidden');
+                                that.element.find('.empty-result').addClass('hidden');
+                            } else{
+                                that.element.find('.empty-result').removeClass('hidden');
+                                that.element.find('.panoList').addClass('hidden');
+                            }
                         } else{
                             alert(res.data.msg || '搜索失败');
                         }
@@ -1132,6 +1176,15 @@
 
             } else{
                 alert('要选择微景展类型并填写部分微景展名称信息才能搜索哦');
+            }
+        }
+
+        function handleSelect(event){
+            if(event.target.className.indexOf('icon-link') === -1){
+                var id = event.currentTarget.getAttribute('data-value');
+                that.element.find('.panoList .pano').removeClass('active');
+                event.currentTarget.classList.add('active');
+                that._children.input.updateComponent({'value': id});
             }
         }
     }
