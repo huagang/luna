@@ -45,7 +45,9 @@ function showAnimation(){
                     } else{
                         href = '?disableWelcome=true';
                     }
-                    history.replaceState({}, 'disableWelcome', location.href + href);
+                    window.onBeforeUnload = function(){
+                        history.replaceState({}, 'disableWelcome', location.href + href);
+                    }
                 }
             });
         $('.page-main').velocity({opacity: 1},
