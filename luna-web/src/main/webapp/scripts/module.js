@@ -194,7 +194,7 @@ function creatPageHtml(pageID) {
     $("#list-page").append(pageHtml);
     currentPageId = pageID;
     //debugger;
-    createNewEelement('canvas');
+    createNewEelement('canvas', 'create');
 }
 /**
  * 左侧调整顺序
@@ -219,7 +219,6 @@ function reOrderPage() {
  * 左侧显示
  * @param {[type]} pageList [description]
  */
-
 function setPageListHtml(pageList) {
     $("#list-page").empty();
     var orderedPages = [], page;
@@ -264,7 +263,7 @@ function createPageListItemHtml(page) {
  * @param {any} componentType
  * @param {any} isCopy
  */
-function createNewEelement(componentType, isCopy) {
+function createNewEelement(componentType, createType) {
     var componentModel = {};
     switch (componentType) {
         case 'canvas':
@@ -305,7 +304,7 @@ function createNewEelement(componentType, isCopy) {
             break;
     }
     if (componentType.length > 0) {
-        var $editor = $("#editor");
+
         var timestamp = new Date().getTime();
 
         //去掉选中样式
@@ -315,7 +314,7 @@ function createNewEelement(componentType, isCopy) {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         //创建数据层内容
-        if (isCopy) {
+        if (createType == 'copy') {
             currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentModel, currentComponent);
         } else {
             currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentModel);
@@ -326,16 +325,18 @@ function createNewEelement(componentType, isCopy) {
         currentComponent._id = currentComponentId;
         //创建时间戳
         currentComponent.timestamp = timestamp;
-        //创建HTML内容
-        lunaPage.creatPageComponents(currentPageId, null, componentType, true);
         //将插件数据层添加到统一的全局变量
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         //初始化Controller
-        componentPanel.init(componentType);
+        componentPanel.init();
+
+        //创建HTML内容
+        lunaPage.creatPageComponents(currentPageId, componentType, createType);
         //更新数据模型
-        lunaPage.updatePageComponents(currentPageId, currentComponentId);
-        $editor.html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
-        componentPanel.update(componentType);
+        lunaPage.updatePageComponents();
+        // $editor.html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
+
+        componentPanel.update();
     }
 }
 
@@ -351,7 +352,7 @@ function setPageHtml(pageID) {
     var jsonData = lunaPage.pages[pageID].page_content;
 
     if (!jsonData || Object.keys(jsonData).length === 0) {
-        createNewEelement('canvas');
+        createNewEelement('canvas', 'show');
     } else {
         // 组件数据解析，对应jsonData
         var componentArr = [];
@@ -370,7 +371,10 @@ function setPageHtml(pageID) {
         componentArr.sort(Util.arraySortBy('timestamp'));
 
         componentArr.forEach(function (element) {
-            creatPageComponentsHtml(pageID, element);
+            currentComponent = element;
+            //初始化Controller
+            componentPanel.init();
+            creatPageComponentsHtml(pageID, element, 'show');
         });
     }
 }
@@ -384,7 +388,9 @@ function setPageHtml(pageID) {
  * @param  {[type]} componentID [description]
  * @return {[type]}             [description]
  */
-function updatePageComponents(pageID, componentID) {
+function updatePageComponents() {
+    var pageID = currentPageId;
+    var componentID = currentComponentId;
     var $currenthtml = $("#layermain #" + componentID);
     if (!$currenthtml) {
         alert("component error!");
@@ -473,15 +479,17 @@ function updatePageComponents(pageID, componentID) {
 /**
  * 只管创建component，其他一切事务由调用者自行协调
  * 此函数只创建component UI
+ * @param {any} pageID
+ * @param {any} componentObj
+ * @param {any} isNew 判断是新创建还是回显
+ * @returns
  */
-function creatPageComponentsHtml(pageID, componentObj, isNew) {
+function creatPageComponentsHtml(pageID, componentObj, createType) {
     if (currentPageId === "") {
         alert("请选择需要编辑的页面或者重新创建新页面！");
         return;
     }
-    if (componentObj.type=='') {
-        console.log('两个Type类型不一样：type1:' + componentObj.type + ';type2=' + comType);
-    }
+
     var comType = componentObj.type;
     if (!comType) {
         console.log("componentType error");
@@ -490,10 +498,10 @@ function creatPageComponentsHtml(pageID, componentObj, isNew) {
     }
     var newComponentDom,
         componentID = componentObj._id;
-    if (isNew) {
-        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox componentbox-selected" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
+    if (createType == 'create' || createType == 'copy') {
+        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox componentbox-selected" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;left:' + (componentObj.top || '50') + ';"><div class="con context con_' + comType + '"></div></div>');
     } else {
-        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
+        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;left:' + (componentObj.top || '50') + ';"><div class="con context con_' + comType + '"></div></div>');
     }
     switch (comType) {
         case "canvas":
@@ -536,16 +544,17 @@ function creatPageComponentsHtml(pageID, componentObj, isNew) {
         case "tab":
             newComponentDom.attr("component-type", "tab");
             newComponentDom.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-
             newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
             newComponentDom.addClass("tabmenu");
+
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(componentObj.content.tabList);
+            newComponentDom.find('.menulist').empty().append(innerHtml);
             break;
         case "imgList":
             newComponentDom.attr("component-type", comType);
             newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
             newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
-            newComponentDom.find('.menulist').empty().append(innerHtml);
+
 
             break;
         default:
@@ -555,7 +564,7 @@ function creatPageComponentsHtml(pageID, componentObj, isNew) {
 
     newComponentDom.css("position", "absolute");
 
-    if (!isNew) {
+    if (createType != 'create') {
         switch (comType) {
             case "canvas":
                 break;
@@ -590,7 +599,7 @@ function creatPageComponentsHtml(pageID, componentObj, isNew) {
     } else {
         showPanoBackground(newComponentDom, componentObj);
     }
-    if (isNew) {
+    if (createType == 'create' || createType == "copy") {
         getEleFocus($("#" + componentID));
     } else {
         lostFocus($("#" + componentID));
@@ -603,16 +612,16 @@ function creatPageComponentsHtml(pageID, componentObj, isNew) {
  * @param  {[type]} comType     [description]
  * @return {[type]}             [description]
  */
-function updatePageComponentsHtml(pageID, componentObj, comType) {
-    var component = componentObj;
+function updatePageComponentsHtml() {
+    var component = currentComponent;
     var componentID = component._id;
+    var comType = component.type; // text,img,bg
     var comobj = $("#layermain #" + componentID);
 
     if (!component) {
         alert("component error");
         return;
     }
-    var comType = component.type; // text,img,bg
     var content = component.content;
 
     switch (comType) {
@@ -671,26 +680,26 @@ function updatePageComponentsHtml(pageID, componentObj, comType) {
 
 
     var idValue = component._id;
-    var comType = component.type; // text，img
     var unit = component.unit;
-    comobj.css("position", "absolute");
-
-    if (component.position.changeTrigger.horizontal == 'right') {
-        comobj.css("left", 'auto');
-        comobj.css("right", component.right + unit);
-    } else {
-        comobj.css("left", component.x + unit);
-        comobj.css("right", 'auto');
+    // comobj.css("position", "absolute");
+    if (comType != 'canvas') {
+        if (component.position.changeTrigger.horizontal == 'right') {
+            comobj.css("left", 'auto');
+            comobj.css("right", component.right + unit);
+        } else {
+            comobj.css("left", component.x + unit);
+            comobj.css("right", 'auto');
+        }
+        if (component.position.changeTrigger.vertial == 'bottom') {
+            comobj.css("top", 'auto');
+            comobj.css("bottom", component.bottom + unit);
+        } else {
+            comobj.css("top", component.y + unit);
+            comobj.css("bottom", 'auto');
+        }
+        comobj.css("width", component.width + unit);
+        comobj.css("height", component.height + unit);
     }
-    if (component.position.changeTrigger.vertial == 'bottom') {
-        comobj.css("top", 'auto');
-        comobj.css("bottom", component.bottom + unit);
-    } else {
-        comobj.css("top", component.y + unit);
-        comobj.css("bottom", 'auto');
-    }
-    comobj.css("width", component.width + unit);
-    comobj.css("height", component.height + unit);
 
     comobj.css("z-index", component.zindex);
     comobj.css("display", component.display);
@@ -759,38 +768,14 @@ function showPanoBackground($container, componentData) {
 function getAppId() {
     return window.location.pathname.match(/\d+/)[0];
 }
-/**
- * 画布中的点击事件
- * @type {Object}
- */
-var componentPanel = {
-    init: function (componentType) {
-        if (componentType) {
-            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
-        }
-        currentController = componentType + "Div";
-        var controllerManagerDiv = $("#controller-manager");
-        var children = controllerManagerDiv.children();
-        for (var i = 0; i < children.length; i++) {
-            if ($(children[i]).attr("id") == currentController) {
-                $(children[i]).show();
-            } else {
-                $(children[i]).hide();
-            }
-        }
-    },
-    update: function (componentType) {
-        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
-    }
-};
-
 
 /**
  * 点击画布中的组件，渲染右边参数，在画布点击事件中调用
  * @type {Object}
  */
 var componentPanel = {
-    init: function (componentType) {
+    init: function () {
+        var componentType = currentComponent.type;
         if (componentType) {
             $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
         }
@@ -805,7 +790,8 @@ var componentPanel = {
             }
         }
     },
-    update: function (componentType) {
+    update: function () {
+        var componentType = currentComponent.type;
         $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
     }
 };
@@ -866,8 +852,8 @@ function initBind(comid) {
             ui.element.height(ui.element.find('.con').height());
         },
         stop: function () {
-            lunaPage.updatePageComponents(currentPageId, $(this).attr("component-id"));
-            componentPanel.update($(this).attr("component-type"));
+            lunaPage.updatePageComponents();
+            componentPanel.update();
         }
     }).draggable({
         containment: "#layermain",
@@ -898,12 +884,14 @@ function initBind(comid) {
             }
             $(this).removeClass("newcomponentbox");
             // drag允许组件处于未点击选中状态，模拟选中，并切换当前组件为活动组件
-            getEleFocus($(this));
-            currentComponentId = $(this).attr("component-id");
-            currentComponent = lunaPage.pages[currentPageId].page_content[currentComponentId];
-            componentPanel.init($(this).attr("component-type"));
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
-            componentPanel.update($(this).attr("component-type"));
+            // getEleFocus($(this));
+            // currentComponentId = $(this).attr("component-id");
+            // currentComponent = lunaPage.pages[currentPageId].page_content[currentComponentId];
+
+            // componentPanel.init();
+
+            lunaPage.updatePageComponents();
+            componentPanel.update();
         }
     }).rotatable({
         start: function (event, ui) { },
@@ -985,6 +973,7 @@ function resetDialog() {
         radioDom[i].removeAttribute('disabled');
     }
 }
+
 function copy_code(copyText) {
     if (window.clipboardData) {
         window.clipboardData.setData("Text", copyText);
@@ -1002,13 +991,11 @@ function copy_code(copyText) {
     alert('copy成功！');
 }
 
-
 /**
  * 显示删除区域的对话框
  * @param pageID
  */
 function deletePageDialog(pageID) {
-
     if ($(".list-page .drop-item[page_id]").length <= 1) {
         $.alert("最后一页不能删除");
         return;

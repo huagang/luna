@@ -18,10 +18,10 @@ public class MsShowAppResult {
 	// 根据类别获取微景展接口 添加属性
 	private String shareInfoDes;
 	private String shareInfoPic;
-
 	private String categoryId; // 类别id
-
 	private String categoryName; // 类别名称
+	private Timestamp publishTime;
+
 	public int getAppId() {
 		return appId;
 	}
@@ -113,4 +113,10 @@ public class MsShowAppResult {
 		this.categoryName = categoryName;
 	}
 
+	public Timestamp getPublishTime() {
+		return publishTime;
+	}
+	public void setPublishTime(Timestamp publishTime) {
+		this.publishTime = publishTime;
+	}
 }

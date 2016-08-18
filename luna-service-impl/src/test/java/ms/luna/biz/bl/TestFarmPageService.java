@@ -85,7 +85,7 @@ public class TestFarmPageService {
 	}
 
 	public static void main(String[] args) {
-		List<String> categoryList = Arrays.asList("1,2,3,4,5".split(","));
+		List<String> categoryList = Arrays.asList("".split(","));
 		System.out.print(categoryList.toString());
 	}
 

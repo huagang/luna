@@ -33,9 +33,12 @@ public class MsShowAppTable {
     public static final String FIELD_CATEGORY_NAME = "category_name";
 //    public static final String FIELD_MERCHANT_ID = "merchant_id";
 //    public static final String FIELD_MERCHANT_NAME = "merchant_name";
-//    public static final String FIELD_BUSINESS_NAME = "business_name";
+    public static final String FIELD_BUSINESS_NAME = "business_name";
     public static final String INDEXURL = "indexUrl";
     public static final String CATEGRYIDS = "categoryIds";
     public static final String TYPES = "types";
+    public static final String OFFSET = "offset";
+    public static final String LIMIT = "limit";
+
 
 }

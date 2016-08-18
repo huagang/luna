@@ -1,5 +1,5 @@
 //  获取当前app全部页面摘要列表信息
-function getAppData(appID,successCallback) {
+function getAppData(appID, successCallback) {
     if (!appID) {
         $.alert("没有appID，请重新选择app");
         return;
@@ -148,7 +148,7 @@ function modifyPageName() {
 
 
 // 获取app单个页面全部详情
-function getPageDataDetail(pageID,successCallback) {
+function getPageDataDetail(pageID, successCallback) {
 
     $.ajax({
         type: Inter.getApiUrl().appGetPageDetail.type,
@@ -159,7 +159,7 @@ function getPageDataDetail(pageID,successCallback) {
         dataType: 'json',
         success: function (returndata) {
             successCallback(returndata);
-           
+
         },
         error: function () {
             $.alert("请求出错，新建微景展页面详情数据失败！");
@@ -328,10 +328,12 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     }
     var formdata = new FormData(formobj);
     formdata.append("app_id", appId);
-
+    formdata.append('type', 'pic');
+    formdata.append('resource_type', 'app');
+    formdata.append('resource_id', '');
     $.ajax({
-        url: Inter.getApiUrl().uploadPic.url,
-        type: Inter.getApiUrl().uploadPic.type,
+        url: Inter.getApiUrl().uploadPath.url,
+        type: Inter.getApiUrl().uploadPath.type,
         cache: false,
         async: false,
         data: formdata,
@@ -430,11 +432,6 @@ function async_upload_audioVideo(form_id, file_obj, url_id, fileType, resourceTy
     formdata.append('resource_type', resourceType);
     formdata.append('resource_id', '');
 
-    // var fileType2Method = {
-    //     'audio': 'upload_audio',
-    //     'video': 'upload_video'
-    // };
-
     if (fileType == "video") {
         var fileSize = file_obj.files[0].size,
             fileNameArr = file_obj.files[0].name.split('.'),
@@ -532,10 +529,13 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
     }
     var formdata = new FormData(formobj);
     formdata.append("app_id", appId);
+    formdata.append('type', 'pic');
+    formdata.append('resource_type', 'app');
+    formdata.append('resource_id', '');
 
     $.ajax({
-        url: host + '/uploadCtrl.do?method=aync_upload_pic',
-        type: 'POST',
+        url: Inter.getApiUrl().uploadPath.url,
+        type: Inter.getApiUrl().uploadPath.type,
         cache: false,
         async: false,
         data: formdata,
@@ -548,27 +548,6 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
                 return;
             }
             if (flag) {
-                // currentComponent.width = returndata.data.width;
-                // currentComponent.height = returndata.data.height;
-                // if (returndata.data.width >= 480) {
-                //     currentComponent.width = 480;
-                //     currentComponent.x = 0;
-                //     currentComponent.height = returndata.data.height * 480 / returndata.data.width;
-                // }
-                // if (currentComponent.width >= 480 && currentComponent.height > 756) {
-                //     currentComponent.height = 756;
-                //     currentComponent.width = currentComponent.width * 756 / currentComponent.height;
-                //     currentComponent.y = 0;
-                //     currentComponent.x = (480 - currentComponent.width) / 2;
-                // }
-                // if (currentComponent.width < 480 && returndata.data.height > 756) {
-                //     currentComponent.height = 756;
-                //     currentComponent.width = currentComponent.width * 756 / returndata.data.height;
-                //     currentComponent.y = 0;
-                //     currentComponent.x = (480 - currentComponent.width) / 2;
-                // }
-                // currentComponent.width = parseInt(currentComponent.width);
-                // currentComponent.height = parseInt(currentComponent.height);
                 urlElement.value = returndata.data.access_url;
                 var urlObj = $("#" + url_id);
                 urlObj.trigger("focus");
