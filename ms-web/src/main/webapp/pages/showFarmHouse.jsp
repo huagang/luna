@@ -63,7 +63,7 @@
                     <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/navigation.png"/>
                     <p class="tip">到这去</p>
                 </div>
-                <a class="nav-item pano" href="{{farm.poiData.panoUrl}}">
+                <a class="nav-item pano" href="{{farm.poiData.panoUrl}}" ng-click="farm.replaceUrl()">
                     <img class='img' src="<%=request.getContextPath()%>/resources/images/farmhouse/pano.png"/>
                     <p class="tip">看全景</p>
                 </a>
@@ -78,7 +78,7 @@
         <div class="room-info" >
             <header>
                 <span>房间</span>
-                <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}">
+                <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}" ng-click="farm.replaceUrl()">
                     全部
                     <div class="icon-arrow"></div>
                 </a>

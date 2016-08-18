@@ -39,15 +39,8 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-                    var href = '';
-                    if(location.search){
-                        href = '&disableWelcome=true';
-                    } else{
-                        href = '?disableWelcome=true';
-                    }
-                    window.onBeforeUnload = function(){
-                        history.replaceState({}, 'disableWelcome', location.href + href);
-                    }
+
+
                 }
             });
         $('.page-main').velocity({opacity: 1},
@@ -202,6 +195,9 @@ function showAnimation(){
         vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
 
         vm.checkPanoPosition = checkPanoPosition;
+
+        //
+        vm.replaceUrl = replaceUrl;
 
         vm.init();
 
@@ -696,5 +692,16 @@ function showAnimation(){
                     break;
             }
         }
+
+        function replaceUrl(){
+            var href = '';
+            if(location.search){
+                href = '&disableWelcome=true';
+            } else{
+                href = '?disableWelcome=true';
+            }
+            history.replaceState({}, 'disableWelcome', location.href + href);
+        }
     }
 })();
+
