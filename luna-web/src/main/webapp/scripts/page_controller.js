@@ -233,33 +233,33 @@ function BaseComponentController() {
     //改变属性值响应事件
     this.changeX = function () {
         this.currentComponent.position.changeTrigger.horizontal = "left";
-        updatePageComponentsHtml(currentPageId, currentComponent);
-        lunaPage.updatePageComponents(currentPageId, currentComponentId);
+        updatePageComponentsHtml();
+        lunaPage.updatePageComponents();
     };
 
     this.changeY = function () {
         this.currentComponent.position.changeTrigger.vertial = "top";
-        updatePageComponentsHtml(currentPageId, currentComponent);
-        lunaPage.updatePageComponents(currentPageId, currentComponentId);
+        updatePageComponentsHtml();
+        lunaPage.updatePageComponents();
     };
     this.changeZ = function () {
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
     this.changeBottom = function () {
         this.currentComponent.position.changeTrigger.vertial = "bottom";
-        updatePageComponentsHtml(currentPageId, currentComponent);
-        lunaPage.updatePageComponents(currentPageId, currentComponentId);
+        updatePageComponentsHtml();
+        lunaPage.updatePageComponents();
     };
     this.changeRight = function () {
         this.currentComponent.position.changeTrigger.horizontal = "right";
-        updatePageComponentsHtml(currentPageId, currentComponent);
-        lunaPage.updatePageComponents(currentPageId, currentComponentId);
+        updatePageComponentsHtml();
+        lunaPage.updatePageComponents();
     };
     this.changeWidth = function () {
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
     this.changeHeight = function () {
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
 
     //点击某个组件触发初始化
@@ -428,21 +428,20 @@ function CanvasController($scope, $rootScope) {
 
     this.changeBackgroundColor = function () {
 
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
 
     };
 
     this.changeBackgroundImg = function () {
         if (this.backgroundImg) {
             this.currentComponent.bgimg = this.backgroundImg;
-            updatePageComponentsHtml(currentPageId, currentComponent);
+            updatePageComponentsHtml();
         }
-        //console.log($rootScope.isEmptyStr(this.backgroundImg));
     };
     this.removeBackgroundImg = function () {
         this.backgroundImg = '';
         this.currentComponent.bgimg = '';
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
 
     this.saveBackgroundImg = function () {
@@ -466,7 +465,7 @@ function CanvasController($scope, $rootScope) {
         this.currentComponent.pano = this.pano;
         this.currentComponent.gravity = this.gravity;
 
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
 
 }
@@ -482,7 +481,8 @@ function TextController($scope, $rootScope) {
     };
 
     this.changeContent = function () {
-        console.log('changeText');
+        $("div.selected-text").html(this.content);
+        this.currentComponent.content = this.content;
     };
 
 }
@@ -500,7 +500,7 @@ function ImgController($scope, $rootScope) {
 
     this.changeContent = function () {
         this.currentComponent.content = this.content;
-        updatePageComponentsHtml(currentPageId, currentComponent);
+        updatePageComponentsHtml();
     };
     this.removeImg = function () {
         this.currentComponent.content = '';
@@ -531,7 +531,7 @@ function NavController($scope, $rootScope) {
     this.changeIcon = function () {
         if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponent);
+            updatePageComponentsHtml();
             console.log("change icon");
         }
     };
@@ -595,7 +595,7 @@ function PanoController($scope, $rootScope) {
     this.changeIcon = function () {
         if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponent);
+            updatePageComponentsHtml();
             console.log("change icon");
         }
     };
@@ -633,12 +633,12 @@ function AudioController($scope, $rootScope) {
 
     this.changePlayIcon = function () {
         this.currentComponent.content.icon = this.currentComponent.content.playIcon;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'audio');
+        updatePageComponentsHtml();
     };
 
     this.changePauseIcon = function () {
         this.currentComponent.content.icon = this.currentComponent.content.pauseIcon;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'audio');
+        updatePageComponentsHtml();
 
     };
 
@@ -666,7 +666,7 @@ function VideoController($scope, $rootScope) {
     //播放图标
     this.changeVideoIcon = function () {
         this.currentComponent.content.icon = this.currentComponent.content.videoIcon;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'video');
+        updatePageComponentsHtml();
     };
 }
 
@@ -694,7 +694,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
 
         $$scope.$on('handleBroadcast', function () {
             _self.currentTab.icon.customer = customerMenuTabIcon.iconGroup;
-            updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+            updatePageComponentsHtml();
         });
 
         //根绝业务Id 获取栏目列表
@@ -838,7 +838,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
     //修改头图
     this.changeBannerImg = function () {
         this.currentComponent.content.bannerImg = this.content.bannerImg;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //tab列表点击事件
@@ -860,7 +860,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
         this.content.tabList.splice($index, 1);
 
         this.currentComponent.content.tabList = this.content.tabList;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //创建新的tab
@@ -912,13 +912,13 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
         $timeout(function () {
             _self.initColorSet();
         });
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //修改名称
     this.changeCurrentTabName = function () {
         this.currentComponent.content.tabList = this.content.tabList;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //修改栏目
@@ -951,7 +951,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
     //列表类型
     this.changePageStyle = function ($event, $index) {
         this.currentComponent.content.tabList = this.content.tabList;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
 
@@ -975,7 +975,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
             this.currentTab.icon.customer.currentUrl = "";
         }
         this.currentComponent.content.tabList = this.content.tabList;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //第一级Poi选择事件
@@ -1023,7 +1023,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
     //改变图标的背景颜色
     this.changeIconColor = function (colorType, colorStatus) {
         this.currentComponent.content.tabList = this.content.tabList;
-        updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
+        updatePageComponentsHtml();
     };
 
     //初始化拾色器
@@ -1053,7 +1053,6 @@ function MenuTabIconController($scope, $rootScope, $http, customerMenuTabIcon) {
     };
     this.chageCurrentIcon = function () {
         customerMenuTabIcon.prepForBroadcast(this.menuTabIcon);
-        // updatePageComponentsHtml(currentPageId, currentComponentId, 'tab');
     };
 
     this.init($scope);
