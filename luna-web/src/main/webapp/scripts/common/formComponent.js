@@ -401,7 +401,7 @@
             }
             that._template =
                 "<div class='fileup'> \
-                    <input type='text' readonly='true' class='media' placeholder='{0}介绍地址'> \
+                    <input type='text' class='media' placeholder='{0}介绍地址'> \
                     <span class='btn fileinput-button' title='文件大小不超过{1}M'> \
                         <input class='media-fileup' type='file' name='media_fileup' {2}> \
                         <span>本地上传</span> \
