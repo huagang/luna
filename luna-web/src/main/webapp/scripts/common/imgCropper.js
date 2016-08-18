@@ -115,15 +115,17 @@ $(function(){
                     that.successCallback(file);
                 }
             }, that.file.type, that.compressSelect.prop('checked') ? 0.8 : 1);
+
         }
 
         // 取消上传
-        function _handleCancel(){
+        function _handleCancel(event){
             that.container.addClass('hidden');
             that.body.removeClass('modal-open');
             if(typeof that.cancelCallback === 'function'){
                 that.cancelCallback();
             }
+            event.preventDefault();
         }
 
         // 清除内容

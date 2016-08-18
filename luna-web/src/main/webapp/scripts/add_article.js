@@ -14,207 +14,12 @@ if (window.localStorage.business.length === 0) {
 var initPage = function () {
     var ue;
     var articleStore = getArticleStore();
+    window.a = articleStore;
     /**
      * 初始化编辑器
      * @return {[type]} [description]
      */
     var initEditor = function () {
-        //插入全景
-        // var createVb = function(ueDom, i) {
-        //     ueDom.execCommand('inserthtml', '', true);
-        //     var pano = {};
-        //     pano = new com.vbpano.Panorama(window.frames['ueditor_0'].contentWindow.document.getElementById("vbContainer" + i));
-        //     pano.setPanoId("E8D36DE566E14AC28407E0729D5CDF80");
-        //     pano.setHeading(180);
-        //     pano.setPitch(-20);
-        //     pano.setRoll(0);
-        //     pano.setAutoplayEnable(false);
-        //     pano.setGravityEnable(false);
-        // };
-
-
-
-        // /*注册添加音乐按钮*/
-        // UE.registerUI('insertmusic', function(editor, uiName) {
-        //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-        //     editor.registerCommand(uiName, {
-        //         execCommand: function() {
-        //             alert('execCommand:' + uiName);
-        //         }
-        //     });
-
-        //     //创建一个button
-        //     var btn = new UE.ui.Button({
-        //         //按钮的名字
-        //         name: uiName,
-        //         //提示
-        //         title: "音乐",
-        //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-        //         cssRules: 'background-position: -18px -40px;',
-        //         //点击时执行的命令
-        //         onclick: function() {
-        //             //这里可以不用执行命令,做你自己的操作也可
-        //             var cmd = "insertmusic";
-        //             var dialog,
-        //                 outDialog = function(options) {
-        //                     var dialog = new baidu.editor.ui.Dialog(options);
-        //                     dialog.addListener('hide', function() {
-
-        //                         if (dialog.editor) {
-        //                             var editor = dialog.editor;
-        //                             try {
-        //                                 if (browser.gecko) {
-        //                                     var y = editor.window.scrollY,
-        //                                         x = editor.window.scrollX;
-        //                                     editor.body.focus();
-        //                                     editor.window.scrollTo(x, y);
-        //                                 } else {
-        //                                     editor.focus();
-        //                                 }
-
-
-        //                             } catch (ex) {}
-        //                         }
-        //                     });
-        //                     return dialog;
-        //                 };
-        //             var options = UE.utils.extend({
-        //                 iframeUrl: editor.ui.mapUrl(editor.options.iframeUrlMap["insertmusic"]),
-        //                 editor: editor,
-        //                 className: 'edui-for-' + cmd,
-        //                 title: "音乐",
-        //                 holdScroll: cmd === 'insertimage',
-        //                 fullscreen: /charts|preview/.test(cmd),
-        //                 closeDialog: editor.getLang("closeDialog")
-        //             }, 'ok' == 'ok' ? {
-        //                 buttons: [{
-        //                     className: 'edui-okbutton',
-        //                     label: editor.getLang("ok"),
-        //                     editor: editor,
-        //                     onclick: function() {
-        //                         dialog.close(true);
-        //                     }
-        //                 }, {
-        //                     className: 'edui-cancelbutton',
-        //                     label: editor.getLang("cancel"),
-        //                     editor: editor,
-        //                     onclick: function() {
-        //                         dialog.close(false);
-        //                     }
-        //                 }]
-        //             } : {});
-        //             dialog = new outDialog(options);
-        //             dialog.render();
-        //             dialog.open();
-        //         }
-        //     });
-
-        //     //当点到编辑内容上时，按钮要做的状态反射
-        //     editor.addListener('selectionchange', function() {
-        //         var state = editor.queryCommandState(uiName);
-        //         if (state == -1) {
-        //             btn.setDisabled(true);
-        //             btn.setChecked(false);
-        //         } else {
-        //             btn.setDisabled(false);
-        //             btn.setChecked(state);
-        //         }
-        //     });
-
-        //     //因为你是添加button,所以需要返回这个button
-        //     return btn;
-        // }, [20]);
-
-        // // /*注册添加视频按钮*/
-        // // UE.registerUI('添加视频', function(editor, uiName) {
-        // //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-        // //     editor.registerCommand(uiName, {
-        // //         execCommand: function() {
-        // //             alert('execCommand:' + uiName);
-        // //         }
-        // //     });
-
-        // //     //创建一个button
-        // //     var btn = new UE.ui.Button({
-        // //         //按钮的名字
-        // //         name: uiName,
-        // //         //提示
-        // //         title: uiName,
-        // //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-        // //         cssRules: 'background-position: -320px -20px;',
-        // //         //点击时执行的命令
-        // //         onclick: function() {
-        // //             //这里可以不用执行命令,做你自己的操作也可
-        // //             editor.execCommand('music', {
-        // //                 width: 400,
-        // //                 height: 95,
-        // //                 align: "center",
-        // //                 url: "http://audio.xmcdn.com/group14/M00/30/C1/wKgDZFb2fqDziRfjADbBrgdSFfY096.m4a"
-        // //             });
-        // //         }
-        // //     });
-
-        // //     //当点到编辑内容上时，按钮要做的状态反射
-        // //     editor.addListener('selectionchange', function() {
-        // //         var state = editor.queryCommandState(uiName);
-        // //         if (state == -1) {
-        // //             btn.setDisabled(true);
-        // //             btn.setChecked(false);
-        // //         } else {
-        // //             btn.setDisabled(false);
-        // //             btn.setChecked(state);
-        // //         }
-        // //     });
-
-        // //     //因为你是添加button,所以需要返回这个button
-        // //     return btn;
-        // // });
-
-        // /*注册添加全景按钮*/
-        // UE.registerUI('添加全景', function(editor, uiName) {
-        //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-        //     editor.registerCommand(uiName, {
-        //         execCommand: function() {
-        //             alert('execCommand:' + uiName);
-        //         }
-        //     });
-
-        //     //创建一个button
-        //     var btn = new UE.ui.Button({
-        //         //按钮的名字
-        //         name: uiName,
-        //         //提示
-        //         title: uiName,
-        //         //需要添加的额外样式，指定icon图标，这里默认使用一个重复的icon
-        //         cssRules: 'background-position: -500px 0;',
-        //         //点击时执行的命令
-        //         onclick: function() {
-        //             //这里可以不用执行命令,做你自己的操作也可
-        //             // ue.execCommand('inserthtml', '<div class="vbContainer" style="width:100%;height:800px;position:relative;">啊上大法师地方</div>', true);
-
-        //             var $container = window.frames['ueditor_0'].contentWindow.document.getElementsByClassName("vbContainer");
-
-        //             console.log($container);
-        //             createVb(ue, $container.length + 1);
-        //         }
-        //     });
-
-        //     //当点到编辑内容上时，按钮要做的状态反射
-        //     editor.addListener('selectionchange', function() {
-        //         var state = editor.queryCommandState(uiName);
-        //         if (state == -1) {
-        //             btn.setDisabled(true);
-        //             btn.setChecked(false);
-        //         } else {
-        //             btn.setDisabled(false);
-        //             btn.setChecked(state);
-        //         }
-        //     });
-
-        //     //因为你是添加button,所以需要返回这个button
-        //     return btn;
-        // });
-
         // /*重置上传附件请求的地址*/
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function (action) {
@@ -364,17 +169,36 @@ var initPage = function () {
         // 事件绑定  文章头图文件onChange事件
         document.querySelector('#pic_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
+            var file = event.target.files[0];
+            var res = FileUploader._checkValidation('pic',file);
+            if(res.error){
+                $('#pic_warn').html(res.msg);
+                event.target.value = '';
+                return;
+            }
             var preview = document.querySelector('#thumbnail_show');
-            preview.src = '';
-            showLoadingTip('.pic_tip');
-            FileUploader.uploadFile('thumbnail', event.target.files[0], function (data) {
-                preview.src = articleStore.thumbnail = data.data.access_url;
-                clearWarn('#pic_warn');
-                hideLoadingTip('.pic_tip');
-                document.querySelector('#clearHeadImg').classList.remove('hide');
-            }, function (data) {
-                document.querySelector('#pic_warn').innerHTML = data.msg;
-                hideLoadingTip('.pic_tip');
+            cropper.setFile(file, function(file) {
+                cropper.close();
+                showLoadingTip('.pic_tip');
+                FileUploader.uploadMediaFile({
+                    type: 'pic',
+                    file: file,
+                    resourceType: 'article',
+                    resourceId: articleStore.id,
+                    success: function (data) {
+                        preview.src = articleStore.thumbnail = data.data.access_url;
+                        clearWarn('#pic_warn');
+                        hideLoadingTip('.pic_tip');
+                        document.querySelector('#clearHeadImg').classList.remove('hide');
+                    },
+                    error: function (data) {
+                        document.querySelector('#pic_warn').innerHTML = data.msg;
+                        hideLoadingTip('.pic_tip');
+                        event.target.value = '';
+                    }
+                });
+            }, function(){
+                event.target.value = '';
             });
         });
 
@@ -382,15 +206,25 @@ var initPage = function () {
         document.querySelector('#video_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.video_tip');
-            FileUploader.uploadFile('video', event.target.files[0], function (data) {
-                console.log(data);
-                document.querySelector('#video').value = articleStore.video = data.url;
-                clearWarn('#video_warn');
-                hideLoadingTip('.video_tip');
-                document.querySelector('#clearVideo').classList.remove('hide');
-            }, function (data) {
-                document.querySelector('#video_warn').innerHTML = data.msg;
-                hideLoadingTip('.video_tip');
+            FileUploader.uploadMediaFile({
+                type: 'video',
+                file: event.target.files[0],
+                resourceType: 'article',
+                resourceId: articleStore.id,
+                success: function (data) {
+                    document.querySelector('#video').value = articleStore.video = data.url;
+                    clearWarn('#video_warn');
+                    hideLoadingTip('.video_tip');
+                    document.querySelector('#clearVideo').classList.remove('hide');
+                    event.target.value = '';
+
+                },
+                error: function (data) {
+                    document.querySelector('#video_warn').innerHTML = data.msg;
+                    hideLoadingTip('.video_tip');
+                    event.target.value = '';
+
+                }
             });
         });
 
@@ -398,17 +232,29 @@ var initPage = function () {
         document.querySelector('#audio_fileup').addEventListener('change', function(event) {
             // 进行文件的上传以及显示文件上传效果
             showLoadingTip('.audio_tip');
-            FileUploader.uploadFile('audio', event.target.files[0], function (data) {
-                document.querySelector('#audio').value = articleStore.audio = data.data.access_url;
-                clearWarn('#audio_warn');
-                hideLoadingTip('.audio_tip');
-                document.querySelector('#clearAudio').classList.remove('hide');
-            }, function (data) {
-                document.querySelector('#audio_warn').innerHTML = data.msg;
-                hideLoadingTip('.audio_tip');
+
+            FileUploader.uploadMediaFile({
+                type: 'audio',
+                file: event.target.files[0],
+                resourceType: 'article',
+                resourceId: articleStore.id,
+                success: function (data) {
+                    document.querySelector('#audio').value = articleStore.audio = data.data.access_url;
+                    clearWarn('#audio_warn');
+                    hideLoadingTip('.audio_tip');
+                    document.querySelector('#clearAudio').classList.remove('hide');
+                    event.target.value = '';
+
+                },
+                error: function (data) {
+                    document.querySelector('#audio_warn').innerHTML = data.msg;
+                    hideLoadingTip('.audio_tip');
+                    event.target.value = '';
+
+                }
             });
         });
-    }
+    };
 
 
     function getArticleStore() {
@@ -425,13 +271,12 @@ var initPage = function () {
          * */
         var business_id, id;
         try {
-            business_id = parseInt(location.href.match(/content\/article\/(\d+)/)[1]);
+            business_id = parseInt(location.href.match(/business_id=(\d+)/)[1]);
         } catch (e) {
-            business_id = null;
+            business_id = undefined;
         }
         try {
-            var idx = location.href.lastIndexOf("/");
-            id = parseInt(location.href.substr(idx + 1));
+            id =  parseInt(location.href.match(/content\/article\/(\d+)/)[1])
         } catch (e) {
             id = '';
         }

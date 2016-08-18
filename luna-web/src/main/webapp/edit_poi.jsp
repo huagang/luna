@@ -39,7 +39,7 @@
     <script src="<%=request.getContextPath() %>/scripts/fileupload.js"></script>
 </head>
 
-<body onload='init()' ng-app="poi" ng-controller="Poi as poi">
+<body onload='init()' ng-app="poi-manage" ng-controller="Poi as poi">
     <div class="container-fluid">
         <!--通用导航栏 start-->
         <jsp:include page="/templete/header_without_logout.jsp"/>
@@ -245,7 +245,7 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">缩略图</div>
                         <div class="value-poi">
-                            <form:input type="text" id="thumbnail" path="thumbnail" cssClass="img-url"/>
+                            <form:input type="text" id="thumbnail"  readonly="${poiReadOnly}" path="thumbnail" cssClass="img-url"/>
                             <c:if test="${!poiReadOnly || lang == 'en'}">
 	                            <div class="upload-thumbnail">
 	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup" onchange="asyncUploadThumb(this,'thumbnail_fileup','original','specification1','specification2')"/>
@@ -320,89 +320,7 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
-    <!--新建POI数据属性 start-->
-	<div class="pop" id="pop-newproperty">
-	    <div class="pop-title">
-	        <h4>新建类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-	    	<div class="pop-cont" id="pop-cont-property">
-	    		<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name" maxlength="16"/>
-	                	<div class="warn" id="warn-newproperty" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-		                <input type="text" id="property-maker" readonly="readonly" style="width:380px;"/>
-		                <input type="file" id="maker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-		                <button type="button">上传</button>
-                    </div>
-                </div>
-	    	</div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty" disabled="disabled">确定</button>
-	        <button type="button"  class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--新建POI数据属性 end-->
-	<!--编辑POI数据属性 start-->
-	<div class="pop" id="pop-newproperty-edit">
-	    <div class="pop-title">
-	        <h4>编辑类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-		    <div class="pop-cont" id="pop-cont-property-edit">
-		    	<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name-edit" maxlength="16"/>
-	                	<div class="warn" id="warn-newproperty-edit" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-maker-edit" readonly="readonly" style="width:380px;"/>
-	                	<input type="file" id="marker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-	                	<button type="button">上传</button>
-                    </div>
-                </div>
-		    </div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty-edit">确定</button>
-	        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--编辑POI数据属性 end-->
-	<!--删除类别 start-->
-	<div class="pop pop-delete" id="pop-deletePOI">
-	    <div class="pop-title">
-	        <h4>删除</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <div class="pop-cont">
-	       	 删除类别后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？
-	    </div>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun">
-	        <button type="button" id="btn-deletePOI">确定</button>
-	        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--删除类别 end-->
+
 <jsp:include page="/templete/imgCropper.jsp" />
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang

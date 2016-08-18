@@ -1,7 +1,7 @@
 <div class="item-poi" style="display:none" tag_id="${privateField.field_def.tag_id}">
     <div class="label-poi label-ver">${privateField.field_def.field_show_name}</div>
     <div class="value-poi">
-        <input type="text" readOnly="true" value="${privateField.field_val.value}" id="${privateField.field_def.field_name}" name="${privateField.field_def.field_name}" placeholder="${privateField.field_def.placeholder}" class="img-url"/>
+        <input type="text"  #if (${readonly} !="") readonly="readonly" #end value="${privateField.field_val.value}" id="${privateField.field_def.field_name}" name="${privateField.field_def.field_name}" placeholder="${privateField.field_def.placeholder}" class="img-url"/>
 		#if (${readonly} == "")
 	        <div class="upload-thumbnail">
 	            <input id="${privateField.field_def.field_name}_fileup" name="${privateField.field_def.field_name}_fileup"

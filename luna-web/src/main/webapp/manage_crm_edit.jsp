@@ -17,6 +17,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
@@ -210,14 +212,12 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
-
+<jsp:include page="/templete/imgCropper.jsp" />
 <script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/map_init.js"></script>
-</script>
-
 </body>
 </html>

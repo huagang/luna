@@ -1,14 +1,18 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: wumengqiang
-  Date: 16/8/17
-  Time: 13:07
-  To change this template use File | Settings | File Templates.
-
-  dependency: bootstrap.min.css
+  author: wumengqiang
+  dependency(依赖文件):
+              bootstrap.min.css
               common.css
-              jquery.js
+              plugins/cropper/cropper.min.css
+              styles/common/imgCropper.css
+              jquery.js (: jquery需要放在该文件内容前方 :)
 
+  部分文件已经包含在该文件内:
+              plugins/cropper/cropper.min.js
+              plugins/bootstrap/js/bootstrap.min.js
+              scripts/common/imgCropper.js
+
+  应用到该文件的地方有add_poi.jsp edit_poi.jsp等, 使用时可以参照add_edit_poi.js
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

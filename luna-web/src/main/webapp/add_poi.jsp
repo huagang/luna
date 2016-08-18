@@ -37,7 +37,7 @@
 
 </head>
 
-<body ng-app="poi" ng-controller="Poi as poi">
+<body ng-app="poi-manage" ng-controller="Poi as poi">
     <div class="container-fluid">
         <!--通用导航栏 start-->
         <jsp:include page="/templete/header_without_logout.jsp"/>
@@ -232,90 +232,6 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
-    <!--新建POI数据属性 start-->
-	<div class="pop" id="btn-newproperty">
-	    <div class="pop-title">
-	        <h4>新建类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-	    	<div class="pop-cont" id="pop-cont-property">
-	    		<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name" />
-	                	<div class="warn" id="warn-newproperty" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-		                <input type="text" id="property-maker" readonly="readonly" style="width:380px;"/>
-		                <input type="file" id="marker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-		                <button type="button">上传</button>
-                    </div>
-                </div>
-	    	</div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty" disabled="disabled">确定</button>
-	        <button type="button"  class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--新建POI数据属性 end-->
-	<!--编辑POI数据属性 start-->
-	<div class="pop" id="pop-newproperty-edit">
-	    <div class="pop-title">
-	        <h4>编辑类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-		    <div class="pop-cont" id="pop-cont-property-edit">
-		    	<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name-edit" />
-	                	<div class="warn" id="warn-newproperty-edit" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-maker-edit" readonly="readonly" style="width:380px;"/>
-	                	<input type="file" id="maker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-	                	<button type="button">上传</button>
-                    </div>
-                </div>
-		    </div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty-edit">确定</button>
-	        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--编辑POI数据属性 end-->
-	<!--删除类别 start-->
-	<div class="pop pop-delete" id="pop-deletePOI">
-	    <div class="pop-title">
-	        <h4>删除</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <div class="pop-cont">
-	       	 删除类别后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？
-	    </div>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun">
-	        <button type="button" id="btn-deletePOI">确定</button>
-	        <button type="button"  class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--删除类别 end-->
-
 
 
 <jsp:include page="/templete/imgCropper.jsp" />

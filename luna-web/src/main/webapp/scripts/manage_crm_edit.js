@@ -61,37 +61,7 @@ $(function(){
 			$("#div-img").css("display","none");
         }
     });
-//    $("#license-upload-edit").change(function(){
-//        var $license= $(this),
-//    		$license_url = $("#license-url-edit");
-//        var url = $license.val();
-//        	$warn = $("#license-upload-edit-warn");
-//        var hasError = licenseVerify($license,url,$warn);
-//        if(!hasError){
-//    		$warn.css('display','none');
-//    		$.ajaxFileUpload({
-//    			//处理文件上传操作的服务器端地址
-//    			url:host+"/manage_merchant.do?method=upload_thumbnail",
-//    			secureuri:false,                       //是否启用安全提交,默认为false
-//    			fileElementId: 'license-upload-edit', 
-//    			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-//    			success:function(returndata){        //服务器响应成功时的处理函数
-//    				if (returndata.code=='0') {
-//    					$license_url.val(returndata.data.access_url);
-//    				} else {
-//    					$license_url.val('');
-//    					$warn.html(returndata.msg);
-//    					$warn.css('display','block');
-//    				}
-//    			},
-//    			error:function(returndata){ //服务器响应失败时的处理函数
-//    				$license_url.val('');
-//    				$warn.html('上传失败，请重试！！');
-//    				$warn.css('display','block');
-//    			}
-//    		});
-//    	}
-//    });
+
     //商户地址，select
     $('#province-edit').change(function(){
         var province = $("#province-edit option:checked").val();
@@ -302,29 +272,35 @@ function asyncUploadPicEdit(obj,fileElementId,warn,license_url){
 	var hasError = licenseVerifyEdit($license,url,$warn,$license_url);
 	if(!hasError){
 		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:Inter.getApiUrl().crmThumbnailUpload.url,
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId: fileElementId, 
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-					$license_url.val(returndata.data.access_url);
-					$("#thumbnail").attr("src",returndata.data.access_url);
-				} else {
+		cropper.setFile($license[0].files[0], function(file){
+			cropper.close();
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: file,
+				resourceType: 'crm',
+				resourceId: $('#merchant_id_edit').attr('val'),
+				success: function(returndata){
+					if (returndata.code=='0') {
+						$license_url.val(returndata.data.access_url);
+						$("#thumbnail").attr("src",returndata.data.access_url);
+					} else {
+						$license_url.val('');
+						$warn.html(returndata.msg);
+						$warn.css('display','block');
+						$("#thumbnail").attr("picExist","false");
+						$("#div-img").css("display","none");
+					}
+					$license.val('');
+				},
+				error: function(){
 					$license_url.val('');
-					$warn.html(returndata.msg);
+					$warn.html('上传失败，请重试！！');
 					$warn.css('display','block');
-					$("#thumbnail").attr("picExist","false");
-					$("#div-img").css("display","none");
+					$license.val('');
 				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$license_url.val('');
-				$warn.html('上传失败，请重试！！');
-				$warn.css('display','block');
-			}
+			});
+		}, function(){
+			$license.val('');
 		});
 	}
 }
