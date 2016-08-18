@@ -94,7 +94,7 @@
 	<div class="pop-cont ">
 		<div>中文名称</div>
 		<input class="app-name" placeholder="请输入微景展中文名称" />
-		<div>选择模板类型</div>
+		<div class="template-label">选择模板类型</div>
 		<div class="template-group">
 			<div class="template basic" data-value="basic">
 				<div class="img-container">
@@ -102,7 +102,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev hidden" data-value="dev">
+			<div class="template dev" style="display: none" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>
@@ -298,7 +298,8 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' data-business-name=\'{3}\'>".format(row.app_id, row.app_name, row.business_id, row.business_name)
+		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' \
+				data-business-name=\'{3}\' data-app-type='{4}'>".format(row.app_id, row.app_name, row.business_id, row.business_name, row.type);
 		var editOp = '<a class="property" href="javascript:void(0)">发布设置</a>';
 		var href = '', clickEvent = '';
 		switch(row.type){

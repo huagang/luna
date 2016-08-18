@@ -17,7 +17,6 @@ $(function(){
             }
             fgLoaded = true;
         };
-
         fgImg.src = pageData.start_page_foreground_pic;
         bgImg.src = pageData.start_page_background_pic;
     } else{
@@ -25,8 +24,6 @@ $(function(){
         $(document.body).removeClass('modal-open');
         $('.page-main').removeClass('transparent');
     }
-
-
 });
 
 function showAnimation(){

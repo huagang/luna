@@ -38,47 +38,47 @@
                 <img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand">
             </a>
             <div class="component-btn-wrap">
-              <div class="component-btn" id="textComponent">
+              <div class="component-btn" id="textComponent" data-comType="text">
                 <i class="icon icon-comp-text"></i>
                 <br/>
                 <span>文本</span>
               </div>
-              <div class="component-btn" id="imageComponent">
+              <div class="component-btn" id="imageComponent" data-comType="img">
                 <i class="icon icon-comp-img"></i>
                 <br/>
                 <span>图片</span>
               </div>
-              <div class="component-btn hide" id="imageListComponent">
+              <div class="component-btn hide" id="imageListComponent"  data-comType="img">
                 <i class="icon icon-comp-imglist"></i>
                 <br/>
                 <span>图集</span>
               </div>
-              <div class="component-btn hide" id="shapeComponentGroup">
+              <div class="component-btn hide" id="shapeComponentGroup"  data-comType="img">
                 <i class="icon icon-comp-shape"></i>
                 <br/>
                 <span>形状</span>
               </div>
-              <div class="component-btn" id="panoComponent">
+              <div class="component-btn" id="panoComponent"  data-comType="pano">
                 <i class="icon icon-comp-vpano"></i>
                 <br/>
                 <span>全景</span>
               </div>
-              <div class="component-btn" id="navComponent">
+              <div class="component-btn" id="navComponent"  data-comType="nav">
                 <i class="icon icon-comp-nav"></i>
                 <br/>
                 <span>导航</span>
               </div>
-              <div class="component-btn" id="audioComponent">
+              <div class="component-btn" id="audioComponent"  data-comType="audio">
                 <i class="icon icon-comp-audio"></i>
                 <br/>
                 <span>音频</span>
               </div>
-              <div class="component-btn" id="videoComponent">
+              <div class="component-btn" id="videoComponent"  data-comType="video">
                 <i class="icon icon-comp-video"></i>
                 <br/>
                 <span>视频</span>
               </div>
-              <div class="component-btn" id="tabComponent">
+              <div class="component-btn" id="tabComponent"  data-comType="tab">
                 <i class="icon icon-comp-tab"></i>
                 <br/>
                 <span>页签</span>
@@ -284,7 +284,7 @@
                         <ul class="dropdown-menu" id="lineheight-select"></ul>
                       </div>
                     </div>
-                    <div id="editor" contenteditable="true" placeholder="请输入文字">
+                    <div id="editor" contenteditable="true" placeholder="请输入文字" ng-model="text.currentComponent.content" ng-change="text.changeContent()">
                     </div>
                     <!-- <textarea id="editor" ng-model="text.currentComponent.content" ng-change="text.changeContent()"></textarea> -->
                   </div>
@@ -1208,11 +1208,11 @@
                           </ui-select-choices>
                         </ui-select>
                       </div>
-                      <div class=""><span>背景颜色:</span>
+                      <div class="menutab-colorset"><span>背景颜色:</span>
                         <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.bgColor.defaultColor" ng-change="menuTab.changeIconColor('bgColor', 'defaultColor')">
                         <input type="text" class="color-set icon-color" data-position="bottom right" data-control="hue" ng-model="menuTab.currentTab.icon.bgColor.currentColor" ng-change="menuTab.changeIconColor('bgColor', 'currentColor')">
                       </div>
-                      <div class=""><span>图标颜色:</span>
+                      <div class="menutab-colorset"><span>图标颜色:</span>
                         <input type="text" class="color-set icon-color" data-control="hue" ng-model="menuTab.currentTab.icon.iconColor.defaultColor" ng-change="menuTab.changeIconColor('iconColor','defaultColor')">
                         <input type="text" class="color-set icon-color" data-position="bottom right" data-control="hue" ng-model="menuTab.currentTab.icon.iconColor.currentColor" ng-change="menuTab.changeIconColor('iconColor','currentColor')">
                       </div>
@@ -1319,7 +1319,8 @@
           <div id="context-menu">
             <ul class="dropdown-menu" role="menu">
               <li id="component-del">
-                <a tabindex="-1">删除</a>
+                <a id='copy' tabindex="1">复制</a>
+                <a id='delete' tabindex="-1">删除</a>
               </li>
             </ul>
           </div>
@@ -1486,6 +1487,12 @@
             </p>
           </div>
         </div>
+        
+        <!-- 对ES5的支持Start -->
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
+        <!-- ES5的支持End -->
+
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
