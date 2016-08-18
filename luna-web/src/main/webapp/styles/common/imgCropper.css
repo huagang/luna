@@ -17,6 +17,7 @@
     width: 600px;
     margin: auto;
     height: 400px;
+    overflow: hidden;
 }
 
 .pic-cropper  .init-img{

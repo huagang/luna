@@ -84,7 +84,7 @@
 				                <label class="license-label"><input type="radio" name="license-edit" value="是" checked="checked"/>是</label>
 				                <label><input type="radio" id="license" name="license-edit" value="否" />否</label>
 			                    <div id="license-area-edit" style="position:relative;">
-			                   		<input type="text" id="license-url-edit" name="resource_content_edit" readonly="readonly">
+			                   		<input type="text" id="license-url-edit" name="resource_content_edit" >
 				              		<!-- <input id="license-url-edit" name="resource_content_edit" style="display:none;"/> -->
 				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
 				                   	<button id="btn-license-upload-edit" >修改</button>

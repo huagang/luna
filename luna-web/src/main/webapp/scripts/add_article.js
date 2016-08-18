@@ -212,7 +212,7 @@ var initPage = function () {
                 resourceType: 'article',
                 resourceId: articleStore.id,
                 success: function (data) {
-                    document.querySelector('#video').value = articleStore.video = data.url;
+                    document.querySelector('#video').value = articleStore.video = data.data.access_url;
                     clearWarn('#video_warn');
                     hideLoadingTip('.video_tip');
                     document.querySelector('#clearVideo').classList.remove('hide');

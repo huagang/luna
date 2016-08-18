@@ -1,4 +1,5 @@
 <%--
+  图片剪切插件, 由于多处用到且是弹出框的形式,因而写成模板,方便共用
   author: wumengqiang
   dependency(依赖文件):
               bootstrap.min.css
@@ -11,7 +12,6 @@
               plugins/cropper/cropper.min.js
               plugins/bootstrap/js/bootstrap.min.js
               scripts/common/imgCropper.js
-
   应用到该文件的地方有add_poi.jsp edit_poi.jsp等, 使用时可以参照add_edit_poi.js
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

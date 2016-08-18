@@ -23,8 +23,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
 	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
-	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
 	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 	<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
@@ -248,7 +248,8 @@
                             <form:input type="text" id="thumbnail"  readonly="${poiReadOnly}" path="thumbnail" cssClass="img-url"/>
                             <c:if test="${!poiReadOnly || lang == 'en'}">
 	                            <div class="upload-thumbnail">
-	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup" onchange="asyncUploadThumb(this,'thumbnail_fileup','original','specification1','specification2')"/>
+	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" accept="image/*"
+										   class="fileup"/>
 	                                <button type="button">本地上传</button>
 	                                <span class="info">不超过1M</span>
 	                            </div>

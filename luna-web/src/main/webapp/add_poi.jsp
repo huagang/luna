@@ -165,7 +165,7 @@
                         <div class="value-poi">
                             <form:input type="text" id="thumbnail" path="thumbnail" cssClass="img-url"/>
                             <div class="upload-thumbnail">
-                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup"/>
+                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" accept="image/*" file_size="1" class="fileup"/>
                                 <button type="button">本地上传</button>
                                 <span class="info">不超过1M</span>
                             </div>
