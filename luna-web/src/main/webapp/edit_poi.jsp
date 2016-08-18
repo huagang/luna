@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
 	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
@@ -35,7 +37,7 @@
     <script src="<%=request.getContextPath() %>/scripts/fileupload.js"></script>
 </head>
 
-<body onload='init()'>
+<body onload='init()' ng-app="poi" ng-controller="Poi as poi">
     <div class="container-fluid">
         <!--通用导航栏 start-->
         <jsp:include page="/templete/header_without_logout.jsp"/>
@@ -263,8 +265,25 @@
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi panoramaType">
                         	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
-                        	<form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
-                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入相册id或者单场景点id"/>
+                        	<form:radiobuttons   ng-model="poi.data.panoType" ng-change="poi.handlePanoTypeChange()"  id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
+							<input type="text" class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
+							<button  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
+							<div class="pano-search-result">
+								<label>搜索结果(最多显示20条)</label>
+								<div class="pano-container">
+									<div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">
+										这里空空的
+									</div>
+									<div class="pano" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">
+                                        <div class="thumbnail" style="background: #DEEEF8 url({{item.pic}}) center center no-repeat;background-size: contain;"></div>
+                                        <div class="pano-info">
+                                            <p class="pano-name" title="{{item.name}}">{{item.name}}</p>
+                                            <a class="pull-right icon-link" href="{{item.link}}" target="_blank"  ng-click="poi.stopDefault()"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="自动填入全景/相册对应ID,也可支持手动输入"/>
                         </div>
                     </div>
                     <div class="item-poi">
@@ -351,7 +370,7 @@
                     <div class="label-poi-pop">属性maker图标</div>
                     <div class="value-poi-pop">
                         <input type="text" id="property-maker-edit" readonly="readonly" style="width:380px;"/>
-	                	<input type="file" id="maker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
+	                	<input type="file" id="marker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
 	                	<button type="button">上传</button>
                     </div>
                 </div>
@@ -390,6 +409,7 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_edit_poi.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script type="text/javascript">
