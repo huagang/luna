@@ -43,8 +43,8 @@ body.modal-open{
     position: absolute;
     left: 30%;
     top: 15%;
-    height: 55vh;
-    width: 40vw;
+    height: 55%;
+    width: 40%;
 }
 
 .transparent{
