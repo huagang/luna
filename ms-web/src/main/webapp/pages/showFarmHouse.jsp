@@ -63,7 +63,7 @@
                     <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/navigation.png"/>
                     <p class="tip">到这去</p>
                 </div>
-                <a class="nav-item pano" target="_blank" href="{{farm.poiData.panoUrl}}">
+                <a class="nav-item pano" href="{{farm.poiData.panoUrl}}">
                     <img class='img' src="<%=request.getContextPath()%>/resources/images/farmhouse/pano.png"/>
                     <p class="tip">看全景</p>
                 </a>
@@ -78,7 +78,7 @@
         <div class="room-info" >
             <header>
                 <span>房间</span>
-                <a class='room-all' target="_blank" href="{{farm.farmData.allPanorama.panoUrl}}">
+                <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}">
                     全部
                     <div class="icon-arrow"></div>
                 </a>
@@ -183,7 +183,6 @@
             desc: "${share_info_des}" || pageData.poi_info.share_desc,
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail,
-            debug:true
         };
         var wechat = new weChat(wx, wechatOptions);
 
