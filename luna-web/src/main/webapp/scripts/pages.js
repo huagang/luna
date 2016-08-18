@@ -1,5 +1,9 @@
 /**
  * 微景展事件初始化界面
+ * 数据加载顺序
+ * 1:进入界面先加载列表信息，渲染列表，同时初始各种点击事件
+ * 2:默认点击第一个界面,得到第一个界面里面的元素；遍历每个元素，遍历中赋值到 currentComponent,将currentComponent复制到全局变量lunapage中，激活angular的初始设置，渲染画布中对应的组件，然后画布中的数据到currentComponent中，也就是全局变量的lunapage中，然后再更新controller中的数据
+ * 3:切换page的时候，先保存当前页面的数据，然后再触发点击事件重复2中的过程
  */
 
 var imghost = "http://cdn.visualbusiness.cn/public/vb";
@@ -39,7 +43,7 @@ var InitTopArea = function () {
                 componentType = divBtnDom.dataset.comtype;
 
             if (componentType.length > 0) {
-                createNewEelement(componentType);
+                createNewEelement(componentType,'create');
             }
         });
     };
@@ -144,9 +148,7 @@ var InitLeftArea = function () {
 
             lunaPage.getPageData($(this).attr("page_id"));
 
-            setTimeout(function () {
-                $('#canvas [component-type=canvas]').trigger('click');
-            }, 5);
+
         });
     };
 
@@ -209,13 +211,13 @@ var InitRightArea = function () {
         $('#font-select').on('click', 'li', function () {
             var fontFamily = $(this).text();
             $("div.selected-text").css("font-family", fontFamily);
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //字体大小
         $('#size-select').on('click', 'li', function () {
             var fontSize = $(this).text();
             $("div.selected-text").css("font-size", fontSize);
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //粗细
         $('#bold-select').click(function () {
@@ -226,7 +228,7 @@ var InitRightArea = function () {
             } else {
                 $tarSelect.css("font-weight", "bold");
             }
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //斜体
         $('#italic-select').click(function () {
@@ -237,35 +239,35 @@ var InitRightArea = function () {
             } else {
                 $tarSelect.css("font-style", "italic");
             }
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //颜色
         $('#color-select').change(function () {
             // $("div.selected-text").css("color","'" + colorSet + "'");
             $("div.selected-text").css("color", this.value);
 
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //左对齐
         $("#left-select").click(function () {
             $("div.selected-text").css("text-align", "left");
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //居中
         $("#center-select").click(function () {
             $("div.selected-text").css("text-align", "center");
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //右对齐
         $("#right-select").click(function () {
             $("div.selected-text").css("text-align", "right");
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
         //行高
         $('#lineheight-select').on('click', 'li', function () {
             var lineHeight = $(this).text();
             $(".selected-text").css("line-height", lineHeight);
-            lunaPage.updatePageComponents(currentPageId, currentComponentId);
+            lunaPage.updatePageComponents();
         });
     };
 
@@ -286,8 +288,9 @@ var InitRightArea = function () {
                 $target.css("top", position.top + 'px');
                 y = parseInt(y) - 1;
                 $('#elementy').val(y);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -307,8 +310,9 @@ var InitRightArea = function () {
                 $target.css("top", position.top + 'px');
                 y = parseInt(y) + 1;
                 $('#elementy').val(y);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -331,8 +335,8 @@ var InitRightArea = function () {
                 position.left = position.left - 1;
                 $target.css("left", position.left + 'px');
                 $('#elementx').val(parseInt(x) - 1);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -356,8 +360,8 @@ var InitRightArea = function () {
                 position.left = position.left + 1;
                 $target.css("left", position.left + 'px');
                 $('#elementx').val(parseInt(x) + 1);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -376,8 +380,8 @@ var InitRightArea = function () {
                 position.top = position.top - 10;
                 $target.css("top", position.top + 'px');
                 $('#elementy').val(parseInt(y) - 10);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -396,8 +400,8 @@ var InitRightArea = function () {
                 position.top = position.top + 10;
                 $target.css("top", position.top + 'px');
                 $('#elementy').val(parseInt(y) + 10);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -416,8 +420,8 @@ var InitRightArea = function () {
                 position.left = position.left - 10;
                 $target.css("left", position.left + 'px');
                 $('#elementx').val(parseInt(x) - 10);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -436,8 +440,8 @@ var InitRightArea = function () {
                 position.left = position.left + 10;
                 $target.css("left", position.left + 'px');
                 $('#elementx').val(parseInt(x) + 10);
-                lunaPage.updatePageComponents(currentPageId, $target.attr("component-id"));
-                componentPanel.update($target.attr("component-type"));
+                lunaPage.updatePageComponents();
+                componentPanel.update();
                 return false;
             }
         });
@@ -473,11 +477,7 @@ var InitRightArea = function () {
                 if (e.keyCode != 8) {
                     return false;
                 }
-            } else {
-                $("div.selected-text").html(content);
-                lunaPage.updatePageComponents(currentPageId, currentComponentId);
-            }
-
+            } 
         });
 
         //粘贴时去除样式
@@ -492,7 +492,7 @@ var InitRightArea = function () {
                     newContent = $editor.html();
                 }
                 $("div.selected-text").html(newContent);
-                componentPanel.update("text");
+                componentPanel.update();
 
             }, 1);
         });
@@ -540,7 +540,7 @@ var InitCenterArea = function () {
                     case 'copy':
                         if ($('#' + currentComponentId).length > 0) {
                             var copmpnentType = currentComponent.type;
-                            createNewEelement(copmpnentType,true);
+                            createNewEelement(copmpnentType, 'copy');
                         }
                         break;
                     case 'delete':
@@ -569,7 +569,7 @@ var InitCenterArea = function () {
             getEleFocus(target);
             currentComponentId = target.attr("component-id");
             currentComponent = lunaPage.pages[currentPageId].page_content[target.attr("component-id")];
-            componentPanel.init(target.attr("component-type"));
+            componentPanel.init();
             if (target.attr("component-type") == "text") {
                 $("#editor").html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
             }
@@ -636,7 +636,6 @@ $(document).ready(function () {
         var firstPage = jQuery(".list-page .drop-item:first");
         if (firstPage) {
             firstPage.trigger('click');
-            // componentPanel.init("canvas");
         }
     };
 
@@ -672,11 +671,14 @@ $(document).ready(function () {
     };
 
     $.showPage = function (pageID) {
-        if (currentPageId != "" && currentPageId != pageID) {
+        if (currentPageId !== "" && currentPageId != pageID) {
             this.savePage(currentPageId);
         }
         currentPageId = pageID;
         setPageHtml(pageID);
+        setTimeout(function () {
+            jQuery('#canvas [component-type=canvas]').trigger('click');
+        }, 5);
     };
 
     $.savePage = function (pageID, isPrompt) {
@@ -691,17 +693,13 @@ $(document).ready(function () {
         reOrderPage();
     };
 
-    // $.showPageComponents = function (pageID, componentID) {
-    //     setPageComponentsHtml(pageID, componentID);
-    // };
-
     //更新component model
-    $.updatePageComponents = function (pageID, componentID) {
-        updatePageComponents(pageID, componentID);
+    $.updatePageComponents = function () {
+        updatePageComponents();
     };
 
-    $.creatPageComponents = function (pageID, componentID, componentType, isNew) {
-        creatPageComponentsHtml(pageID, currentComponent, componentType, true);
+    $.creatPageComponents = function (pageID,  componentType, createType) {
+        creatPageComponentsHtml(pageID, currentComponent, createType);
     };
 
     $.delPageComponents = function (pageID, componentID) {
@@ -709,6 +707,7 @@ $(document).ready(function () {
             delete lunaPage.pages[pageID].page_content[componentID];
             currentComponentId = "";
             currentComponent = {};
+            jQuery('#canvas [component-type=canvas]').trigger('click');
         }
     };
 })(lunaPage);
