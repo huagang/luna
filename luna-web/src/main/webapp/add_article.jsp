@@ -16,9 +16,11 @@
 		<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 		<link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+		<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+		<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
+		<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/file_loading_tip.css">
-    	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_article.css">
+		<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_article.css">
 		
 	</head>
 	<body>
@@ -52,7 +54,7 @@
 		                            <span class="btn fileinput-button" title='文件大小不超过1M'>
 		                                <span>本地上传</span>
 		                                <!-- The file input field used as target for the file upload widget -->
-		                                <input id="pic_fileup" type="file" file_type='image' name="thumbnail_fileup" multiple>
+		                                <input id="pic_fileup" type="file" file_type='image' accept="image/*" name="thumbnail_fileup" multiple>
 				                        <div class="load-container pic_tip load8 hidden">
 				                            <div class="loader">Loading...</div>
 				                        </div> 
@@ -77,10 +79,10 @@
 		                <div class="group article-audio">
 		                    <p class='group-title'>音频</p>
 		                    <div class="">
-		                        <input type="text" name="audioName" readonly="true" id='audio' placeholder="请输入音频介绍地址">
+		                        <input type="text" name="audioName" id='audio' placeholder="请输入音频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>		                                
 		                        <!-- The file input field used as target for the file upload widget -->
-		                        	<input id="audio_fileup" type="file" file_type='audio' name="audio_fileup">
+		                        	<input id="audio_fileup" type="file" file_type='audio' name="audio_fileup" accept="audio/*">
 		                        	<span>本地上传</span>
 		                        	<div class="load-container audio_tip load8 hidden">
 		                            	<div class="loader">Loading...</div>
@@ -93,10 +95,10 @@
 		                <div class="group article-video">
 		                    <p class='group-title'>视频</p>
 		                    <div class="">
-		                        <input type="text" name="videoName" readonly="true" file_type='video' id='video' placeholder="请输入视频介绍地址">
+		                        <input type="text" name="videoName" file_type='video' id='video' placeholder="请输入视频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>                 
 		                        	<!-- The file input field used as target for the file upload widget -->
-		                        	<input id="video_fileup" type="file" name="video_fileup">
+		                        	<input id="video_fileup" type="file" name="video_fileup" accept="video/*">
 		                        	<span>本地上传</span>
 		                        	<div class="load-container video_tip load8 hidden">
 		                            	<div class="loader">Loading...</div>
@@ -131,6 +133,7 @@
 				</div>	         
 		    </div>
 		</div>
+		<jsp:include page="/templete/imgCropper.jsp" />
 		<script type='text/javascript'>
 			window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
 		</script>

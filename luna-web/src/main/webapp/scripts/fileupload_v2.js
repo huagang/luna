@@ -12,7 +12,6 @@
  * 
  * @author wumengqiang  小伍
  * @email dean@visualbusiness.com
- * 该文件若有bug随时找我	:) 
  */
 
 // 以下划线开头的属性或者方法表示其为私有的，不对外开放
@@ -74,8 +73,7 @@ var FileUploader = {
 		 *   limit		 						限制条件
 		 *   success				 			上传文件成功后的回调函数
 		 *   error					 			上传文件失败后调用此函数（包含文件验证失败）
-		 * }
-		 * errorCallback调用时的参数格式为{error：''，msg:''} 对于上传失败的情况参数中还有data属性
+		 * 										error调用时的参数格式为{error：''，msg:''} 对于上传失败的情况参数中还有data属性
 		 *
 		 */
 
@@ -119,46 +117,6 @@ var FileUploader = {
 
 		})
 
-	},
-	uploadFile: function(type, file, successCallback, errorCallback){
-		/* @param type 上传文件的类型,可选值为'thumbnail','audio','video'
-		 * @param file 上传的文件
-		 * @param successCallback 上传文件成功后的回调函数
-		 * @param errorCallback 上传文件失败后调用此函数（包含文件验证失败） 
-		 * errorCallback调用时的参数格式为{error：''，msg:''} 对于上传失败的情况参数中还有data属性
-		 */  
-		var result = this._checkValidation(type, file);
-		var context = window.context || "/luna-web"
-		if(result.error && window.toString.call(errorCallback) === "[object Function]"){
-			errorCallback(result);
-			return;
-		}
-		var data = new FormData();
-		data.append(this._formNamesForFile[type],file);
-		$.ajax({
-			//处理文件上传操作的服务器端地址
-			url: context + "/data/poi/" + type + "/upload",
-			type:'POST',
-			contentType: false,
-			data: data,
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			processData:false,
-			success:function(returndata){          //服务器响应成功时的处理函数
-				if(returndata.code === "0"){
-					if(window.toString.call(successCallback) === "[object Function]"){
-						successCallback(returndata);
-					}					
-				}
-				else if(window.toString.call(errorCallback) === "[object Function]"){
-					errorCallback({error: 'upload', msg: '文件上传失败', data:returndata});
-				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				if(window.toString.call(errorCallback) === "[object Function]"){
-					errorCallback({error: 'upload', msg: '文件上传失败', data:returndata});
-				}
-			}
-		});
 	}
 };
 
