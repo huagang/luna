@@ -1,8 +1,6 @@
-/*
-页面编辑
-author：franco
-time:20160504
-*/
+/**
+ * 微景展事件初始化界面
+ */
 
 var imghost = "http://cdn.visualbusiness.cn/public/vb";
 
@@ -38,7 +36,7 @@ var InitTopArea = function () {
             var divBtnDom = $(e.target.closest('.component-btn'))[0];
 
             var tagId = divBtnDom.id,
-                componentType = divBtnDom.dataset.comType;
+                componentType = divBtnDom.dataset.comtype;
 
             if (componentType.length > 0) {
                 createNewEelement(componentType);
@@ -542,7 +540,7 @@ var InitCenterArea = function () {
                     case 'copy':
                         if ($('#' + currentComponentId).length > 0) {
                             var copmpnentType = currentComponent.type;
-                            createNewEelement(copmpnentType);
+                            createNewEelement(copmpnentType,true);
                         }
                         break;
                     case 'delete':
@@ -655,14 +653,14 @@ $(document).ready(function () {
     //获取数据并展示
     $.getPageData = function (pageID) {
         //debugger;
-        if (!$.pages[pageID]['page_content']) {
+        if (!$.pages[pageID].page_content) {
             getPageDataDetail(pageID, function (res) {
                 if (res.code != "0") {
                     //不等于零说明获取数据失败
                     alert(res.msg);
                     return;
                 }
-
+                var data = res.data;
                 lunaPage.pages[data.page_id] = res.data;
             });
         }
@@ -693,9 +691,9 @@ $(document).ready(function () {
         reOrderPage();
     };
 
-    $.showPageComponents = function (pageID, componentID) {
-        setPageComponentsHtml(pageID, componentID);
-    };
+    // $.showPageComponents = function (pageID, componentID) {
+    //     setPageComponentsHtml(pageID, componentID);
+    // };
 
     //更新component model
     $.updatePageComponents = function (pageID, componentID) {

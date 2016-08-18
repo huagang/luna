@@ -61,7 +61,7 @@ componentImgListModelTemplate = {
 componentImgModelTemplate = {
     "_id": "",
     "type": "img",
-    "content": 'http://cdn.visualbusiness.cn/public/vb/img/sampleimg.png',
+    "content": 'http://cdn.visualbusiness.cn/public/vb/img/sample.png',
     "action": {
         "href": {
             "type": "none",
@@ -181,127 +181,21 @@ var componentViewTemplate = {
     '</div>',
 };
 
-function copy_code(copyText) {
-    if (window.clipboardData) {
-        window.clipboardData.setData("Text", copyText);
-    } else {
-        var flashcopier = 'flashcopier';
-        if (!document.getElementById(flashcopier)) {
-            var divholder = document.createElement('div');
-            divholder.id = flashcopier;
-            document.body.appendChild(divholder);
-        }
-        document.getElementById(flashcopier).innerHTML = '';
-        var divinfo = '<embed src="../js/_clipboard.swf" FlashVars="clipboard=' + encodeURIComponent(copyText) + '" width="0" height="0" type="application/x-shockwave-flash"></embed>';
-        document.getElementById(flashcopier).innerHTML = divinfo;
-    }
-    alert('copy成功！');
-}
 
 /**
- * 复制到剪切版
- * @param  {[type]} s [description]
- * @return {[type]}   [description]
+ * 创建页面
+ * @param  {[type]} pageID [description]
+ * @return {[type]}        [description]
  */
-function copyToClipBoard(s) {
-    //alert(s);
-    if (window.clipboardData) {
-        window.clipboardData.setData("Text", s);
-        alert("已经复制到剪切板！" + "\n" + s);
-    } else if (navigator.userAgent.indexOf("Opera") != -1) {
-        window.location = s;
-    } else if (window.netscape) {
-        try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-        } catch (e) {
-            alert("被浏览器拒绝！\n请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true'");
-        }
-        var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
-        if (!clip)
-            return;
-        var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
-        if (!trans)
-            return;
-        trans.addDataFlavor('text/unicode');
-        var str = new Object();
-        var len = new Object();
-        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
-        var copytext = s;
-        str.data = copytext;
-        trans.setTransferData("text/unicode", str, copytext.length * 2);
-        var clipid = Components.interfaces.nsIClipboard;
-        if (!clip)
-            return false;
-        clip.setData(trans, null, clipid.kGlobalClipboard);
-        alert("已经复制到剪切板！" + "\n" + s);
-    }
+function creatPageHtml(pageID) {
+
+    var page = lunaPage.pages[pageID];
+    var pageHtml = createPageListItemHtml(page);
+    $("#list-page").append(pageHtml);
+    currentPageId = pageID;
+    //debugger;
+    createNewEelement('canvas');
 }
-
-function getUrlParam(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-    var r = window.location.search.substr(1).match(reg); //匹配目标参数
-    if (r != null) return unescape(r[2]);
-    return null; //返回参数值
-}
-
-function resetDialog() {
-    document.querySelector('#editPageForm').reset();
-    var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
-    for (var i = 0; i < radioDom.length; i++) {
-        radioDom[i].removeAttribute('checked');
-        radioDom[i].removeAttribute('disabled');
-    }
-}
-
-/**
- * 显示删除区域的对话框
- * @param pageID
- */
-function deletePageDialog(pageID) {
-
-    if ($(".list-page .drop-item[page_id]").length <= 1) {
-        $.alert("最后一页不能删除");
-        return;
-    }
-    $overlay.css("display", "block");
-    var $pop_window = $("#pop-delete");
-    var h = $pop_window.height();
-    var w = $pop_window.width();
-    var $height = $(window).height();
-    var $width = $(window).width();
-    $pop_window.css({
-        "display": "block",
-        "top": ($height - h) / 2,
-        "left": ($width - w) / 2
-    });
-    $("#btn-delete").attr("pageID", pageID);
-}
-
-//编辑窗口，和新增共用
-function modify() {
-    $overlay.css("display", "block");
-    var $pop_window = $("#pop-add");
-    var h = $pop_window.height();
-    var w = $pop_window.width();
-    var $height = $(window).height();
-    var $width = $(window).width();
-    $pop_window.css({
-        "display": "block",
-        "top": ($height - h) / 2,
-        "left": ($width - w) / 2
-    });
-    resetDialog();
-    $("#modify_page_id").val(currentPageId);
-    $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
-    $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
-    $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
-    $("[name=pageType][value=" + lunaPage.pages[currentPageId].page_type + "]").trigger('click');
-    $("[name=pageType]").each(function (e) {
-        $(this).attr('disabled', 'disabled');
-    });
-}
-
-
 /**
  * 左侧调整顺序
  * @return {[type]} [description]
@@ -362,44 +256,21 @@ function createPageListItemHtml(page) {
 
 }
 
-/**
- * 创建页面
- * @param  {[type]} pageID [description]
- * @return {[type]}        [description]
- */
-function creatPageHtml(pageID) {
 
-    var page = lunaPage.pages[pageID];
-    var pageHtml = createPageListItemHtml(page);
-    $("#list-page").append(pageHtml);
-    currentPageId = pageID;
-    //debugger;
-    createCanvas();
-}
 
 /**
- * 创建画布
- * 创建页面画布
- * @return {[type]} [description]
+ * 
+ * 创建一个新的组件
+ * @param {any} componentType
+ * @param {any} isCopy
  */
-function createCanvas() {
-    lunaPage.creatPageComponents(currentPageId, null, "canvas", true);
-    currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
-    currentComponent._id = currentComponentId;
-    currentComponent.timestamp = new Date().getTime();
-    lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
-    componentPanel.init("canvas");
-    lunaPage.updatePageComponents(currentPageId, currentComponentId);
-    componentPanel.update("canvas");
-}
-
-
-/** 
- * 创建一个新的插件
- */
-function createNewEelement(componentType) {
+function createNewEelement(componentType, isCopy) {
     var componentModel = {};
     switch (componentType) {
+        case 'canvas':
+            componentType = 'canvas';
+            componentModel = componentCanvasModelTemplate;
+            break;
         case 'text':
             componentType = 'text';
             componentModel = componentTextModelTemplate;
@@ -444,27 +315,26 @@ function createNewEelement(componentType) {
         $("div.componentbox-selected").removeClass("componentbox-selected");
 
         //创建数据层内容
-        currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentModel, currentComponent);
+        if (isCopy) {
+            currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentModel, currentComponent);
+        } else {
+            currentComponent = jQuery.extend(true, {}, componentBaseModelTemplate, componentModel);
+        }
         currentComponentId = componentID = componentType + timestamp + Math.floor(Math.random() * 10);
 
         //赋值创建ID
         currentComponent._id = currentComponentId;
         //创建时间戳
         currentComponent.timestamp = timestamp;
-
         //创建HTML内容
         lunaPage.creatPageComponents(currentPageId, null, componentType, true);
-
         //将插件数据层添加到统一的全局变量
         lunaPage.pages[currentPageId].page_content[currentComponentId] = currentComponent;
         //初始化Controller
         componentPanel.init(componentType);
-
         //更新数据模型
         lunaPage.updatePageComponents(currentPageId, currentComponentId);
-        //
         $editor.html(lunaPage.pages[currentPageId].page_content[currentComponentId].content);
-        //
         componentPanel.update(componentType);
     }
 }
@@ -481,7 +351,7 @@ function setPageHtml(pageID) {
     var jsonData = lunaPage.pages[pageID].page_content;
 
     if (!jsonData || Object.keys(jsonData).length === 0) {
-        createCanvas();
+        createNewEelement('canvas');
     } else {
         // 组件数据解析，对应jsonData
         var componentArr = [];
@@ -490,7 +360,7 @@ function setPageHtml(pageID) {
             if (!value.timestamp) {
                 value.timestamp = new Date().getTime();
             }
-            if (n.startsWith("canvas")) {
+            if (value.type == "canvas") {
                 componentArr = [value].concat(componentArr);
             } else {
                 componentArr.push(value);
@@ -500,203 +370,13 @@ function setPageHtml(pageID) {
         componentArr.sort(Util.arraySortBy('timestamp'));
 
         componentArr.forEach(function (element) {
-            setPageComponentsHtml(pageID, element._id);
+            creatPageComponentsHtml(pageID, element);
         });
     }
 }
 
-/**
- * 只管创建component，其他一切事务由调用者自行协调
- * 此函数只创建component UI
- */
-function creatPageComponentsHtml(pageID, componentObj, comType, isNew) {
-    if (currentPageId === "") {
-        alert("请选择需要编辑的页面或者重新创建新页面！");
-        return;
-    }
-    if (!comType) {
-        alert("componentType error");
-        return;
-    }
-    var newComponentDom,
-        componentID = componentObj._id;
-    if (isNew) {
-        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox componentbox-selected" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
-
-    } else {
-        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
-    }
-
-    switch (comType) {
-        case "canvas":
-            //增加样式显示，增加绑定事件 click等
-            newComponentDom.attr("component-type", "canvas");
-            newComponentDom.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
-            newComponentDom.addClass("bg-canvas");
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            if (componentObj.bgc) {
-                newComponent.css("background-color", componentObj.bgc);
-            }
-            if (componentObj.bgimg) {
-                newComponent.css("background-image", 'url({0})'.format(componentObj.bgimg));
-            }
-            break;
-        case "text":
-            newComponentDom.attr("component-type", "text");
-            newComponentDom.children("div").append('<div class="text selected-text" style= "font-family:微软雅黑;font-size: 16px;text-align: left;line-height: 24px;color: #212121;font-style:normal;font-width:normal;">' + (componentObj.content || '右侧面板编辑文本内容') + '</div>');
-            break;
-        case "img":
-            newComponentDom.attr("component-type", "img");
-            newComponentDom.children("div").append('<img src="' + (componentObj.content || imghost + '/img/sample.png') + '"/>');
-            break;
-        case "nav":
-            newComponentDom.attr("component-type", "nav");
-            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '"/>');
-            break;
-        case "pano":
-            newComponentDom.attr("component-type", "pano");
-            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '" />');
-            break;
-        case "audio":
-            newComponentDom.attr("component-type", "audio");
-            newComponentDom.children("div").append('<img src="' + (componentObj.content.playIcon || imghost + '/img/sample.png') + '" />');
-            break;
-        case "video":
-            newComponentDom.attr("component-type", "video");
-            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '" />');
-            break;
-        case "tab":
-            newComponentDom.attr("component-type", "tab");
-            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            newComponentDom.addClass("tabmenu");
-            break;
-        case "imgList":
-            newComponentDom.attr("component-type", comType);
-            newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
-            newComponent.find('.menulist').empty().append(innerHtml);
-
-            break;
-        default:
-            $.alert("未知的组件类型");
-            return;
-    }
-
-    $("#layermain").append(newComponentDom);
-    if (comType != "canvas") {
-        initBind(componentID);
-    }
-    if (isNew) {
-        getEleFocus($("#" + componentID));
-    }
-}
-
-/**
-
- * 编辑时，初始化画布中的内容
- * @param {[type]} pageID      [description]
- * @param {[type]} componentID [description]
- * @param {[type]} comType     [description]
- */
-function setPageComponentsHtml(pageID, componentID, comType) {
-    var newComponent = $('<div class="componentbox"><div class="con"></div></div>');
-
-    var componentObj = lunaPage.pages[pageID].page_content[componentID];
-    if (!componentObj) {
-        alert("component error");
-        return;
-    }
-    comType = componentObj.type; // text,img,bg
-    var content = componentObj.content, icon;
-    newComponent.children(".con").addClass("con_" + comType);
-    switch (comType) {
-        case "canvas":
-            //增加样式显示，增加绑定事件 click等
-            newComponent.attr("component-type", "canvas");
-            newComponent.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
-            newComponent.addClass("bg-canvas");
-            newComponent.css("background-color", componentObj.bgc);
-            newComponent.css("background-image", 'url({0})'.format(componentObj.bgimg));
-            // showPanoBackground(newComponent, componentObj);
-            break;
-        case "text":
-            newComponent.attr("component-type", "text");
-            newComponent.children("div").append('<div class="text">' + componentObj.content + '</div>');
-            break;
-        case "img":
-            newComponent.attr("component-type", "img");
-            newComponent.children("div").append('<img src="' + componentObj.content + '"/>');
-            break;
-        case "nav":
-            newComponent.attr("component-type", "nav");
-            newComponent.children("div").append('<img src="' + componentObj.content.icon + '"/>');
-            break;
-        case "pano":
-            newComponent.attr("component-type", "pano");
-            newComponent.children("div").append('<img src="' + componentObj.content.icon + '"/>');
-            break;
-        case "audio":
-            newComponent.attr("component-type", "audio");
-            newComponent.children("div").append('<img src="' + componentObj.content.playIcon + '"/>');
-            break;
-        case "video":
-            newComponent.attr("component-type", "video");
-            newComponent.children("div").append('<img src="' + componentObj.content.icon + '"/>');
-            break;
-        case "tab":
-            newComponent.attr("component-type", "tab");
-
-            var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            $topMenu.find('.enuTab-bg img').attr('src', content.bannerImg);
-            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-            newComponent.addClass("tabmenu");
-
-            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
-            newComponent.find('.menulist').empty().append(innerHtml);
-
-            break;
-        default:
-            $.alert("未知的组件类型");
-            return;
-    }
 
 
-    if (!componentID) {
-        componentID = componentObj._id;
-    }
-    newComponent.attr("component-id", componentID); // id
-    newComponent.attr("id", componentID);
-    newComponent.css("position", "absolute");
-    switch (comType) {
-        case "canvas":
-            break;
-        default:
-            var unit = componentObj.unit;
-            newComponent.css("left", componentObj.x + unit);
-            newComponent.css("top", componentObj.y + unit);
-            newComponent.css("width", componentObj.width + unit);
-            newComponent.css("height", componentObj.height + unit);
-            newComponent.css("right", componentObj.right + unit);
-            newComponent.css("bottom", componentObj.bottom + unit);
-            break;
-    }
-
-    newComponent.css("z-index", componentObj.zindex);
-    newComponent.css("display", componentObj.display);
-    newComponent.children("div").children().attr("style", componentObj.style_other);
-    $("#layermain").append(newComponent);
-    if (comType != "canvas") {
-        initBind(componentID);
-    } else {
-        showPanoBackground(newComponent, componentObj);
-    }
-
-    lostFocus($("#" + componentID));
-}
 
 /**
  * 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
@@ -791,16 +471,143 @@ function updatePageComponents(pageID, componentID) {
 }
 
 /**
+ * 只管创建component，其他一切事务由调用者自行协调
+ * 此函数只创建component UI
+ */
+function creatPageComponentsHtml(pageID, componentObj, isNew) {
+    if (currentPageId === "") {
+        alert("请选择需要编辑的页面或者重新创建新页面！");
+        return;
+    }
+    if (componentObj.type=='') {
+        console.log('两个Type类型不一样：type1:' + componentObj.type + ';type2=' + comType);
+    }
+    var comType = componentObj.type;
+    if (!comType) {
+        console.log("componentType error");
+        alert("componentType error");
+        return;
+    }
+    var newComponentDom,
+        componentID = componentObj._id;
+    if (isNew) {
+        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox componentbox-selected" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
+    } else {
+        newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;"><div class="con context con_' + comType + '"></div></div>');
+    }
+    switch (comType) {
+        case "canvas":
+            //增加样式显示，增加绑定事件 click等
+            newComponentDom.attr("component-type", "canvas");
+            newComponentDom.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            newComponentDom.addClass("bg-canvas");
+            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            if (componentObj.bgc) {
+                newComponentDom.css("background-color", componentObj.bgc);
+            }
+            if (componentObj.bgimg) {
+                newComponentDom.css("background-image", 'url({0})'.format(componentObj.bgimg));
+            }
+            break;
+        case "text":
+            newComponentDom.attr("component-type", "text");
+            newComponentDom.children("div").append('<div class="text selected-text" style= "font-family:微软雅黑;font-size: 16px;text-align: left;line-height: 24px;color: #212121;font-style:normal;font-width:normal;">' + (componentObj.content || '右侧面板编辑文本内容') + '</div>');
+            break;
+        case "img":
+            newComponentDom.attr("component-type", "img");
+            newComponentDom.children("div").append('<img src="' + (componentObj.content || imghost + '/img/sample.png') + '"/>');
+            break;
+        case "nav":
+            newComponentDom.attr("component-type", "nav");
+            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '"/>');
+            break;
+        case "pano":
+            newComponentDom.attr("component-type", "pano");
+            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '" />');
+            break;
+        case "audio":
+            newComponentDom.attr("component-type", "audio");
+            newComponentDom.children("div").append('<img src="' + (componentObj.content.playIcon || imghost + '/img/sample.png') + '" />');
+            break;
+        case "video":
+            newComponentDom.attr("component-type", "video");
+            newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '" />');
+            break;
+        case "tab":
+            newComponentDom.attr("component-type", "tab");
+            newComponentDom.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+
+            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.addClass("tabmenu");
+            break;
+        case "imgList":
+            newComponentDom.attr("component-type", comType);
+            newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
+            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
+            newComponentDom.find('.menulist').empty().append(innerHtml);
+
+            break;
+        default:
+            $.alert("未知的组件类型");
+            return;
+    }
+
+    newComponentDom.css("position", "absolute");
+
+    if (!isNew) {
+        switch (comType) {
+            case "canvas":
+                break;
+            default:
+                var unit = componentObj.unit;
+                if (componentObj.position.changeTrigger.horizontal == 'right') {
+                    newComponentDom.css("left", 'auto');
+                    newComponentDom.css("right", componentObj.right + unit);
+                } else {
+                    newComponentDom.css("left", componentObj.x + unit);
+                    newComponentDom.css("right", 'auto');
+                }
+                if (componentObj.position.changeTrigger.vertial == 'bottom') {
+                    newComponentDom.css("top", 'auto');
+                    newComponentDom.css("bottom", componentObj.bottom + unit);
+                } else {
+                    newComponentDom.css("top", componentObj.y + unit);
+                    newComponentDom.css("bottom", 'auto');
+                }
+                newComponentDom.css("width", componentObj.width + unit);
+                newComponentDom.css("height", componentObj.height + unit);
+                break;
+        }
+        newComponentDom.css("z-index", componentObj.zindex);
+        newComponentDom.css("display", componentObj.display);
+        newComponentDom.children("div").children().attr("style", componentObj.style_other);
+    }
+
+    $("#layermain").append(newComponentDom);
+    if (comType != "canvas") {
+        initBind(componentID);
+    } else {
+        showPanoBackground(newComponentDom, componentObj);
+    }
+    if (isNew) {
+        getEleFocus($("#" + componentID));
+    } else {
+        lostFocus($("#" + componentID));
+    }
+}
+/**
  * 根据当前id更新组件htmlstyle
  * @param  {[type]} pageID      [description]
  * @param  {[type]} componentID [description]
  * @param  {[type]} comType     [description]
  * @return {[type]}             [description]
  */
-function updatePageComponentsHtml(pageID, componentID, comType) {
+function updatePageComponentsHtml(pageID, componentObj, comType) {
+    var component = componentObj;
+    var componentID = component._id;
     var comobj = $("#layermain #" + componentID);
 
-    var component = lunaPage.pages[pageID].page_content[componentID];
     if (!component) {
         alert("component error");
         return;
@@ -867,8 +674,7 @@ function updatePageComponentsHtml(pageID, componentID, comType) {
     var comType = component.type; // text，img
     var unit = component.unit;
     comobj.css("position", "absolute");
-    // console.log(component.position.changeTrigger.horizontal);
-    // console.log(component.position.changeTrigger.vertial);
+
     if (component.position.changeTrigger.horizontal == 'right') {
         comobj.css("left", 'auto');
         comobj.css("right", component.right + unit);
@@ -1004,6 +810,9 @@ var componentPanel = {
     }
 };
 
+/**
+ * 生成页签文件
+ */
 var initMenuTab = {
     getTabListHtmlInCavas: function (tabList) {
         var innerHtml = [];
@@ -1120,4 +929,124 @@ function lostFocus(_this) {
     _this.siblings().find('.ui-resizable-handle').hide();
     _this.find('.ui-rotatable-handle').hide();
     _this.siblings().find('.ui-rotatable-handle').hide();
+}
+
+/**
+ * 复制到剪切版
+ * @param  {[type]} s [description]
+ * @return {[type]}   [description]
+ */
+function copyToClipBoard(s) {
+    //alert(s);
+    if (window.clipboardData) {
+        window.clipboardData.setData("Text", s);
+        alert("已经复制到剪切板！" + "\n" + s);
+    } else if (navigator.userAgent.indexOf("Opera") != -1) {
+        window.location = s;
+    } else if (window.netscape) {
+        try {
+            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+        } catch (e) {
+            alert("被浏览器拒绝！\n请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true'");
+        }
+        var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
+        if (!clip)
+            return;
+        var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
+        if (!trans)
+            return;
+        trans.addDataFlavor('text/unicode');
+        var str = new Object();
+        var len = new Object();
+        var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+        var copytext = s;
+        str.data = copytext;
+        trans.setTransferData("text/unicode", str, copytext.length * 2);
+        var clipid = Components.interfaces.nsIClipboard;
+        if (!clip)
+            return false;
+        clip.setData(trans, null, clipid.kGlobalClipboard);
+        alert("已经复制到剪切板！" + "\n" + s);
+    }
+}
+
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+    if (r != null) return unescape(r[2]);
+    return null; //返回参数值
+}
+
+function resetDialog() {
+    document.querySelector('#editPageForm').reset();
+    var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
+    for (var i = 0; i < radioDom.length; i++) {
+        radioDom[i].removeAttribute('checked');
+        radioDom[i].removeAttribute('disabled');
+    }
+}
+function copy_code(copyText) {
+    if (window.clipboardData) {
+        window.clipboardData.setData("Text", copyText);
+    } else {
+        var flashcopier = 'flashcopier';
+        if (!document.getElementById(flashcopier)) {
+            var divholder = document.createElement('div');
+            divholder.id = flashcopier;
+            document.body.appendChild(divholder);
+        }
+        document.getElementById(flashcopier).innerHTML = '';
+        var divinfo = '<embed src="../js/_clipboard.swf" FlashVars="clipboard=' + encodeURIComponent(copyText) + '" width="0" height="0" type="application/x-shockwave-flash"></embed>';
+        document.getElementById(flashcopier).innerHTML = divinfo;
+    }
+    alert('copy成功！');
+}
+
+
+/**
+ * 显示删除区域的对话框
+ * @param pageID
+ */
+function deletePageDialog(pageID) {
+
+    if ($(".list-page .drop-item[page_id]").length <= 1) {
+        $.alert("最后一页不能删除");
+        return;
+    }
+    $overlay.css("display", "block");
+    var $pop_window = $("#pop-delete");
+    var h = $pop_window.height();
+    var w = $pop_window.width();
+    var $height = $(window).height();
+    var $width = $(window).width();
+    $pop_window.css({
+        "display": "block",
+        "top": ($height - h) / 2,
+        "left": ($width - w) / 2
+    });
+    $("#btn-delete").attr("pageID", pageID);
+}
+
+//编辑窗口，和新增共用
+function modify() {
+    $overlay.css("display", "block");
+    var $pop_window = $("#pop-add");
+    var h = $pop_window.height();
+    var w = $pop_window.width();
+    var $height = $(window).height();
+    var $width = $(window).width();
+    $pop_window.css({
+        "display": "block",
+        "top": ($height - h) / 2,
+        "left": ($width - w) / 2
+    });
+    resetDialog();
+    $("#modify_page_id").val(currentPageId);
+    $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
+    $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
+    $("[name=pageType][value=" + lunaPage.pages[currentPageId].page_type + "]").trigger('click');
+    $("[name=pageType]").each(function (e) {
+        $(this).attr('disabled', 'disabled');
+    });
 }

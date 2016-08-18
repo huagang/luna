@@ -233,33 +233,33 @@ function BaseComponentController() {
     //改变属性值响应事件
     this.changeX = function () {
         this.currentComponent.position.changeTrigger.horizontal = "left";
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
         lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
 
     this.changeY = function () {
         this.currentComponent.position.changeTrigger.vertial = "top";
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
         lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeZ = function () {
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
     this.changeBottom = function () {
         this.currentComponent.position.changeTrigger.vertial = "bottom";
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
         lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeRight = function () {
         this.currentComponent.position.changeTrigger.horizontal = "right";
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
         lunaPage.updatePageComponents(currentPageId, currentComponentId);
     };
     this.changeWidth = function () {
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
     this.changeHeight = function () {
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
 
     //点击某个组件触发初始化
@@ -428,21 +428,21 @@ function CanvasController($scope, $rootScope) {
 
     this.changeBackgroundColor = function () {
 
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
 
     };
 
     this.changeBackgroundImg = function () {
         if (this.backgroundImg) {
             this.currentComponent.bgimg = this.backgroundImg;
-            updatePageComponentsHtml(currentPageId, currentComponentId);
+            updatePageComponentsHtml(currentPageId, currentComponent);
         }
         //console.log($rootScope.isEmptyStr(this.backgroundImg));
     };
     this.removeBackgroundImg = function () {
         this.backgroundImg = '';
         this.currentComponent.bgimg = '';
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
 
     this.saveBackgroundImg = function () {
@@ -466,7 +466,7 @@ function CanvasController($scope, $rootScope) {
         this.currentComponent.pano = this.pano;
         this.currentComponent.gravity = this.gravity;
 
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
 
 }
@@ -500,7 +500,7 @@ function ImgController($scope, $rootScope) {
 
     this.changeContent = function () {
         this.currentComponent.content = this.content;
-        updatePageComponentsHtml(currentPageId, currentComponentId);
+        updatePageComponentsHtml(currentPageId, currentComponent);
     };
     this.removeImg = function () {
         this.currentComponent.content = '';
@@ -531,7 +531,7 @@ function NavController($scope, $rootScope) {
     this.changeIcon = function () {
         if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponentId);
+            updatePageComponentsHtml(currentPageId, currentComponent);
             console.log("change icon");
         }
     };
@@ -595,7 +595,7 @@ function PanoController($scope, $rootScope) {
     this.changeIcon = function () {
         if (this.content.icon) {
             this.currentComponent.content.icon = this.content.icon;
-            updatePageComponentsHtml(currentPageId, currentComponentId);
+            updatePageComponentsHtml(currentPageId, currentComponent);
             console.log("change icon");
         }
     };
