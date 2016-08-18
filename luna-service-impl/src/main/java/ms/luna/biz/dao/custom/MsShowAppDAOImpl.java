@@ -13,7 +13,7 @@ import ms.luna.biz.dao.custom.model.MsShowAppResult;
 public class MsShowAppDAOImpl extends MsShowAppDAOBaseImpl implements MsShowAppDAO {
 
 	private final static Logger logger = Logger.getLogger(MsShowAppDAOImpl.class);
-	
+
 	@Override
 	public List<MsShowAppResult> selectShowAppWithFilter(MsShowAppParameter parameter) {
 		// TODO Auto-generated method stub
@@ -28,9 +28,14 @@ public class MsShowAppDAOImpl extends MsShowAppDAOBaseImpl implements MsShowAppD
 		if(results != null && results.size() == 1) {
 			return results.get(0);
 		}
-		
+
 		return -1;
 	}
-	
+
+	@Override
+	public List<MsShowAppResult> selectShowAppByCtgrId(MsShowAppParameter parameter) {
+		List<MsShowAppResult> results = getSqlMapClientTemplate().queryForList("ms_show_app.selectShowAppByCtgrId", parameter);
+		return results;
+	}
 	
 }

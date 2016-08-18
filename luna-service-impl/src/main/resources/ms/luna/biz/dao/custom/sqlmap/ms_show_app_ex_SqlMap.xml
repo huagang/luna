@@ -15,32 +15,92 @@
 	</resultMap>
 	<select id="selectShowAppWithFilter" resultMap="MsShowAppResult"
 		parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter">
-		select 
+		select
 			a.app_id app_id,
 			a.app_name app_name,
 			a.app_code app_code,
 			a.type type,
 			a.regist_hhmmss regist_hhmmss,
-			a.up_hhmmss up_hhmmss, 
+			a.up_hhmmss up_hhmmss,
 			a.owner owner,
-			a.app_status app_status, 
+			a.app_status app_status,
 			a.business_id business_id,
 			b.business_name business_name
-		from ms_show_app a left join ms_business b on a.business_id = b.business_id 
+		from ms_show_app a left join ms_business b on a.business_id = b.business_id
 		<isNotEmpty property="keyword">
 			where a.app_name like #keyword#
 		</isNotEmpty>
 		order by a.regist_hhmmss desc
 		<isEqual property="range" compareValue="true">
 			Limit #min#, #max#
-		</isEqual>		
+		</isEqual>
 	</select>
-	
+
 	<select id="selectIdByName" parameterClass="String" resultClass="Integer">
-		select app_id 
+		select app_id
 		from ms_show_app
 		where app_name=#appName#
-	</select> 
-	
+	</select>
+
+	<resultMap id="MsShowAppResult" class="ms.luna.biz.dao.custom.model.MsShowAppResult">
+		<result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+		<!--<result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />-->
+		<!--<result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />-->
+		<!--<result column="business_id" property="businessId" jdbcType="INTEGER" />-->
+		<!--<result column="business_name" property="businessName" jdbcType="VARCHAR" />-->
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="share_info_des" property="shareInfoDes" jdbcType="VARCHAR" />
+		<result column="share_info_pic" property="shareInfoPic" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectShowAppByCtgrId" resultMap="MsShowAppResult"
+			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
+		SELECT
+			CATEGORY_MERCHANT_BUSINESS.category_id AS category_id,
+			CATEGORY_MERCHANT_BUSINESS.category_name AS category_name,
+			ms_show_app.app_id AS app_id,
+			ms_show_app.app_code AS app_code,
+			ms_show_app.app_name AS app_name,
+			ms_show_app.type AS type,
+			ms_show_app.share_info_des AS share_info_des,
+			ms_show_app.share_info_pic AS share_info_pic
+		FROM
+		(
+			SELECT
+				ms_business.business_id,
+				CATEGORY_MERCHANT.category_id,
+				CATEGORY_MERCHANT.category_name
+
+			FROM
+			(
+				SELECT
+					ms_merchant_manage.merchant_id,
+					ms_category.category_id,
+					ms_category.nm_zh as category_name
+				FROM ms_category INNER JOIN ms_merchant_manage
+				WHERE ms_category.category_id = ms_merchant_manage.category_id
+				<isNotEmpty property="categoryIds">
+					AND ms_category.category_id IN
+					<iterate conjunction="," open="(" close=")" property="categoryIds">
+						#categoryIds[]#
+					</iterate>
+				</isNotEmpty>
+			) CATEGORY_MERCHANT INNER JOIN ms_business WHERE CATEGORY_MERCHANT.merchant_id = ms_business.merchant_id
+		) CATEGORY_MERCHANT_BUSINESS INNER JOIN ms_show_app
+		WHERE CATEGORY_MERCHANT_BUSINESS.business_id = ms_show_app.business_id
+		<isNotEmpty property="types">
+			AND ms_show_app.type IN
+			<iterate conjunction="," open="(" close=")" property="types">
+				#types[]#
+			</iterate>
+		</isNotEmpty>
+		ORDER BY category_id, ms_show_app.regist_hhmmss desc
+		<isEqual property="range" compareValue="true">
+			Limit #min#, #max#
+		</isEqual>
+	</select>
 
 </sqlMap>
