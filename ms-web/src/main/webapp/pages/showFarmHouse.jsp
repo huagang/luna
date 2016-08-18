@@ -183,18 +183,9 @@
             desc: "${share_info_des}" || pageData.poi_info.share_desc,
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail,
-            dest:{
-                lat: (pageData.poi_info.lnglat || {}).lat,
-                lng: (pageData.poi_info.lnglat || {}).lng,//经度
-                name: pageData.poi_info.poi_name || '',//名字
-                address: (pageData.poi_info.address || {}).city + (pageData.poi_info.address || {}).county, // 地址
-                debug:false
-            }
+            debug:true
         };
-        $(function(){
-            var wechat = new weChat(wx, wechatOptions);
-
-        });
+        var wechat = new weChat(wx, wechatOptions);
 
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>
