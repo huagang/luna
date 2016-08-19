@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import ms.luna.biz.dao.custom.MsOperationLogDAO;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
@@ -66,6 +67,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	@Autowired
 	private MsVideoUploadDAO msVideoUploadDAO;
+
+	@Autowired
+	private MsOperationLogDAO msOperationLogDAO;
 
 	/**
 	 * tag标签的level=1的部分
@@ -595,6 +599,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			poi.put("province_name", province_name);
 			poi.put("city_name", city_name);
 			poi.put("_id", _id);
+			poi.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 			pois.add(poi);
 		}
 		JSONObject data = new JSONObject();
@@ -737,6 +742,11 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		DeleteResult deleteResult = poi_collection.deleteOne(keyId);
 		if (deleteResult.getDeletedCount() > 0) {
+			MsOperationLog msOperationLog = JSONObject.toJavaObject(param, MsOperationLog.class);
+			msOperationLog.setResourceId(_id);
+			msOperationLog.setType(VbConstant.ResourceType.POI);
+			msOperationLog.setRegistHhmmss(new Date());
+			msOperationLogDAO.insertSelective(msOperationLog);
 			return FastJsonUtil.sucess("success");
 		}
 

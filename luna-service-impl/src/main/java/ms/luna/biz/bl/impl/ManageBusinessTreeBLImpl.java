@@ -244,9 +244,11 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		// zone地域(过滤)
 		if(provinceId != null) {
 			condition.append("province_id", provinceId);
-		} else if (countyId != null) {
+		}
+		if (countyId != null) {
 			condition.append("county_id", countyId);
-		} else if (cityId != null) {
+		}
+		if (cityId != null) {
 			condition.append("city_id", cityId);
 		}
 

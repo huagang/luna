@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -109,5 +111,40 @@ public class FarmPageController extends BasicController {
         }
     }
 
+    // 根据id获取
+    @RequestMapping(method = RequestMethod.GET, value = "/categoryIds/{categoryIds}")
+    @ResponseBody
+    public JSONObject getShowAppByCtgrId(
+            @PathVariable("categoryIds") String categoryIds,
+            @RequestParam(required = false, value = "types") String types,
+            @RequestParam(required = false, value = "app_status", defaultValue = "1") Integer status,
+            @RequestParam(required = false, value = "offset", defaultValue = "0") Integer offset,
+            @RequestParam(required = false, value = "limit", defaultValue = "30") Integer limit) {
+        try {
+            // 检查types类型
+            if(types != null && !checkIntegerList(types))
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "types is valid");
+            JSONObject param = new JSONObject();
+            param.put("categoryIds", categoryIds);
+            param.put("types", types);
+            param.put("app_status", status);
+            param.put("offset", offset);
+            param.put("limit", limit);
+            JSONObject result = farmPageService.getShowAppsByCtgrId(param);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to get show apps by category id:" + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get show apps by category id");
+        }
+    }
 
+    /**
+     * 检查整数序列,如 "1,4,3,56,9"
+     */
+    private boolean checkIntegerList(String tags){
+        Pattern pattern = Pattern.compile("((\\d+),)*(\\d+)");
+        Matcher matcher = pattern.matcher(tags);
+        return matcher.matches();
+    }
 }

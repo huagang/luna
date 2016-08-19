@@ -17,6 +17,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
@@ -73,7 +75,8 @@
 				                <label><input type="radio" id="license" name="license" value="否" />否</label>
 			                    <div id="license-area" style="position:relative;">
 				              		<input id="license-url" name="resource_content" style="display:none;"/>
-				                   	<input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
+				                   	<input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true"  accept="image/*"
+										   onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
 				                   	<button id="btn-license-upload" >营业执照副本电子版</button><span class="info-add">*需要保证图片中文字清晰可见</span>
 									<div class="warn" id="license-upload-warn">必须填写</div>
 			                	</div>
@@ -201,20 +204,20 @@
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+
+<jsp:include page="/templete/imgCropper.jsp" />
+
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 <script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
 <%-- <script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script> --%>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/map_init.js"></script>
-</script>
-
 </body>
 </html>

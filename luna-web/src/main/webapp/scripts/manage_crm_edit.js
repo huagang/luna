@@ -61,37 +61,7 @@ $(function(){
 			$("#div-img").css("display","none");
         }
     });
-//    $("#license-upload-edit").change(function(){
-//        var $license= $(this),
-//    		$license_url = $("#license-url-edit");
-//        var url = $license.val();
-//        	$warn = $("#license-upload-edit-warn");
-//        var hasError = licenseVerify($license,url,$warn);
-//        if(!hasError){
-//    		$warn.css('display','none');
-//    		$.ajaxFileUpload({
-//    			//处理文件上传操作的服务器端地址
-//    			url:host+"/manage_merchant.do?method=upload_thumbnail",
-//    			secureuri:false,                       //是否启用安全提交,默认为false
-//    			fileElementId: 'license-upload-edit', 
-//    			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-//    			success:function(returndata){        //服务器响应成功时的处理函数
-//    				if (returndata.code=='0') {
-//    					$license_url.val(returndata.data.access_url);
-//    				} else {
-//    					$license_url.val('');
-//    					$warn.html(returndata.msg);
-//    					$warn.css('display','block');
-//    				}
-//    			},
-//    			error:function(returndata){ //服务器响应失败时的处理函数
-//    				$license_url.val('');
-//    				$warn.html('上传失败，请重试！！');
-//    				$warn.css('display','block');
-//    			}
-//    		});
-//    	}
-//    });
+
     //商户地址，select
     $('#province-edit').change(function(){
         var province = $("#province-edit option:checked").val();
@@ -292,40 +262,48 @@ $(function(){
         	return false;
         }
     });
-})
+});
+
 //异步上传图片
 function asyncUploadPicEdit(obj,fileElementId,warn,license_url){
     var $license= $(obj),
 	$license_url = $("#"+license_url);
     var url = $license.val();
 	$warn = $("#"+warn);
-	var hasError = licenseVerifyEdit($license,url,$warn,$license_url);
-	if(!hasError){
+	var file = $license[0].files[0];
+	var res = FileUploader._checkValidation('pic', file);
+	if(! res.error){
 		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:Inter.getApiUrl().crmThumbnailUpload.url,
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId: fileElementId, 
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-					$license_url.val(returndata.data.access_url);
-					$("#thumbnail").attr("src",returndata.data.access_url);
-				} else {
-					$license_url.val('');
-					$warn.html(returndata.msg);
+		cropper.setFile(file, function(file){
+			cropper.close();
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: file,
+				resourceType: 'crm',
+				resourceId: $('#merchant_id_edit').attr('val'),
+				success: function(returndata){
+					if (returndata.code=='0') {
+						$license_url.val(returndata.data.access_url);
+						$("#thumbnail").attr("src",returndata.data.access_url);
+					} else {
+						$warn.html(returndata.msg);
+						$warn.css('display','block');
+						$("#thumbnail").attr("picExist","false");
+						$("#div-img").css("display","none");
+					}
+					$license.val('');
+				},
+				error: function(){
+					$warn.html('上传失败，请重试！！');
 					$warn.css('display','block');
-					$("#thumbnail").attr("picExist","false");
-					$("#div-img").css("display","none");
+					$license.val('');
 				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$license_url.val('');
-				$warn.html('上传失败，请重试！！');
-				$warn.css('display','block');
-			}
-		});
+			});
+		}, function(){});
+	}
+	else{
+		$warn.html(res.msg).css('display', 'block');
+		$license.val('');
 	}
 }
 
@@ -570,88 +548,52 @@ function linkmanEmailEdit(){
     return hasError;
 }
 //是否获得经纬度
-function latLonGetEdit(){
+function latLonGetEdit() {
 	//是否获得经纬度
-    var hasError = false;
-    var $warn = $("#address-edit-warn");
-    var lat = $("#lat_edit").val(),
-    	lng = $("#lng_edit").val();
-    var reg = /^([+-]?\d{1,3})(\.\d{0,6})$/;//整数最大为3，小数最大有6位
-    
-    // 允许不选择经纬度，但如有则需要同时选择
-    // 未选择经纬度
-    if(lat.length == 0 && lng.length == 0){
-    	return false;
-    }
-    if(lat.length == 0 || lng.length == 0){
-    	return true;
-    }
-    
-    if(reg.test(lat)){
-    	var floatLat = parseFloat(lat);
+	var hasError = false;
+	var $warn = $("#address-edit-warn");
+	var lat = $("#lat_edit").val(),
+		lng = $("#lng_edit").val();
+	var reg = /^([+-]?\d{1,3})(\.\d{0,6})$/;//整数最大为3，小数最大有6位
+
+	// 允许不选择经纬度，但如有则需要同时选择
+	// 未选择经纬度
+	if (lat.length == 0 && lng.length == 0) {
+		return false;
+	}
+	if (lat.length == 0 || lng.length == 0) {
+		return true;
+	}
+
+	if (reg.test(lat)) {
+		var floatLat = parseFloat(lat);
 		if (floatLat < -90 || floatLat > 90) {
-			$warn.html("纬度范围不正确").css("display",'inline-block');
+			$warn.html("纬度范围不正确").css("display", 'inline-block');
 			hasError = true;
 		}
-    }else{
-    	$warn.html("纬度格式不正确").css('display','inline-block');
-    	hasError = true;
+	} else {
+		$warn.html("纬度格式不正确").css('display', 'inline-block');
+		hasError = true;
 	}
-    if(hasError == true){
-    	return true;
-    }
-    
-    if(reg.test(lng)){
-    	var floatLng = parseFloat(lng);
+	if (hasError == true) {
+		return true;
+	}
+
+	if (reg.test(lng)) {
+		var floatLng = parseFloat(lng);
 		if (floatLng < -180 || floatLng > 180) {
-			$warn.html("经度范围不正确").css("display",'inline-block');
+			$warn.html("经度范围不正确").css("display", 'inline-block');
 			hasError = true;
 		}
-    }else{
-    	$warn.html("经度格式不正确").css('display','inline-block');
-    	hasError = true;
+	} else {
+		$warn.html("经度格式不正确").css('display', 'inline-block');
+		hasError = true;
 	}
-    if(hasError == true){
-    	return true;
-    }
-    
-    return false;
-}
-//上传营业执照是否符合要求
-function licenseVerifyEdit(obj,url,warn,lic_url){
-    var extStart = url.lastIndexOf("."),
-        ext = url.substring(extStart + 1, url.length).toUpperCase(),
-        format = new Array('PNG', 'JPG');    //图片格式
-    var hasError = false;
-    var sign = false;
-    for(var i=0;i<format.length;i++){
-        if(format[i]==ext){
-            sign=true;
-            hasError = false;
-            break;
-        }
-    }
-    if(!sign){
-    	warn.html('图片格式仅限于JPG，PNG').css('display','inline-block');
-        hasError = true;
-        obj.val("");
-        lic_url.val("无");
-    }
-    else{
-        var file_size = obj[0].files[0].size;
-        var size = file_size / 1024;
-        if(size>1024){
-        	warn.html('上传的文件大小不能超过1M！').css('display','inline-block');
-            hasError = true;
-            obj.val("");
-            lic_url.val("无");
-        }else{
-        	lic_url.val(url);
-        	warn.css('display','none');
-            hasError = false;
-        }
-    }
-    return hasError;
+	if (hasError == true) {
+		return true;
+	}
+
+	return false;
 }
 //检查是否需要上传营业执照及是否上传了营业执照
 function licenseUploadEdit(){

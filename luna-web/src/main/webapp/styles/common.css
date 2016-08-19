@@ -84,7 +84,9 @@ a.button.disable:hover{
     font-weight: normal;
 }
 
-
+.pointer{
+    cursor: pointer;
+}
 
 .container-fluid{
     padding: 0;
@@ -425,7 +427,8 @@ a.button.disable:hover{
     position: relative;
     z-index: 20;
 }
-#pop-message .pop-cont{
+.pop-cont,
+.pop-fun{
     background-color: white;
 }
 #pop-message .pop-fun {
@@ -434,6 +437,15 @@ a.button.disable:hover{
     padding-right: 0;
     width: 100%;
     background-color: white;
+}
+.mask{
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.4);
+    z-index: 10;
 }
 
 .red{

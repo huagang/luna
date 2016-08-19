@@ -3,16 +3,24 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant.FieldTypes;
-import ms.luna.biz.dao.custom.*;
+import ms.luna.biz.dao.custom.MsFarmFieldDAO;
+import ms.luna.biz.dao.custom.MsFarmPageDAO;
+import ms.luna.biz.dao.custom.MsShowAppDAO;
+import ms.luna.biz.dao.custom.MsShowPageDAO;
 import ms.luna.biz.dao.custom.model.FarmFieldParameter;
 import ms.luna.biz.dao.custom.model.FarmFieldResult;
-import ms.luna.biz.dao.model.*;
+import ms.luna.biz.dao.custom.model.MsShowAppParameter;
+import ms.luna.biz.dao.custom.model.MsShowAppResult;
+import ms.luna.biz.dao.model.MsFarmField;
+import ms.luna.biz.dao.model.MsFarmFieldCriteria;
 import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.PoiApiService;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
+import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang.StringUtils;
@@ -43,11 +51,14 @@ public class FarmPageServiceImpl implements FarmPageService {
     @Autowired
     private PoiApiService poiApiService;
 
+    private String showPageUriTemplate = "/app/%d";
+
     private static int[] divider = new int[]{1, 3, 5, 7, 8, 9};// 组件间的分割线插入位置.2,4表示组件相对顺序display_order.
     // 目前农+页页面固定,以后涉及到配置页面的时候,需要另外的配置信息
 
     @Override
-    public JSONObject getPageDefAndInfo(Integer appId) {
+    public JSONObject getPageDefAndInfo
+            (Integer appId) {
 
         // 创建微景展(ms_show_app)
         // 获取页面字段定义和初始值
@@ -199,6 +210,52 @@ public class FarmPageServiceImpl implements FarmPageService {
         }
     }
 
+    @Override
+    public JSONObject getShowAppsByCtgrId(JSONObject param) {
+        try {
+            String categoryIds = param.getString(MsShowAppTable.CATEGRYIDS);
+            String types = param.getString(MsShowAppTable.TYPES);
+            List<String> categoryList = Arrays.asList(categoryIds.split(","));
+            List<Integer> typeList = convertStringLst2IntergerLst(types != null ? Arrays.asList(types.split(",")) : null);
+            MsShowAppParameter msShowAppParameter = new MsShowAppParameter();
+            msShowAppParameter.setCategoryIds(categoryList);
+            msShowAppParameter.setTypes(typeList);
+            msShowAppParameter.setStatus(param.getInteger(MsShowAppTable.FIELD_APP_STATUS));
+            msShowAppParameter.setMin(param.getInteger(MsShowAppTable.OFFSET));
+            msShowAppParameter.setMax(param.getInteger(MsShowAppTable.LIMIT));
+            msShowAppParameter.setRange(true);
+
+            JSONArray rows = new JSONArray();
+            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCtgrId(msShowAppParameter);
+            String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
+            for (MsShowAppResult msShowAppResult : msShowAppResults) {
+                JSONObject row = new JSONObject();
+                row.put(MsShowAppTable.FIELD_CATEGORY_ID, msShowAppResult.getCategoryId());
+                row.put(MsShowAppTable.FIELD_CATEGORY_NAME, msShowAppResult.getCategoryName());
+                row.put(MsShowAppTable.FIELD_BUSINESS_ID, msShowAppResult.getBusinessId());
+                row.put(MsShowAppTable.FIELD_BUSINESS_NAME, msShowAppResult.getBusinessName());
+                row.put(MsShowAppTable.FIELD_APP_ID, msShowAppResult.getAppId());
+                row.put(MsShowAppTable.FIELD_APP_CODE, msShowAppResult.getAppCode());
+                row.put(MsShowAppTable.FIELD_APP_NAME, msShowAppResult.getAppName());
+                row.put(MsShowAppTable.FIELD_TYPE, msShowAppResult.getType());
+                row.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowAppResult.getShareInfoDes() != null ? msShowAppResult.getShareInfoDes() : "");
+                row.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowAppResult.getShareInfoPic() != null ? msShowAppResult.getShareInfoPic() : "");
+                row.put(MsShowAppTable.FIELD_OWNER, msShowAppResult.getOwner());
+                row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(msShowAppResult.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+                row.put(MsShowAppTable.FIELD_PUBLISH_TIME, DateUtil.format(new Date(msShowAppResult.getPublishTime().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+                row.put(MsShowAppTable.INDEXURL, msWebUrl + String.format(showPageUriTemplate, msShowAppResult.getAppId()));
+                row.put(MsShowAppTable.FIELD_APP_STATUS, msShowAppResult.getAppStatus());
+                rows.add(row);
+            }
+            JSONObject result = FastJsonUtil.sucess("success", rows);
+            result.put("total", msShowAppResults.size());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to get show apps by category id:" + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get show apps by category id");
+        }
+    }
+
     //-----------------------------------------------------------------------------------------------
 
     /**
@@ -318,9 +375,9 @@ public class FarmPageServiceImpl implements FarmPageService {
     /**
      * 获取字段值
      *
-     * @param document   mongodb 信息
-     * @param field_name 字段名称
-     * @param field_type 字段类型
+     * @param document      mongodb 信息
+     * @param field_name    字段名称
+     * @param field_type    字段类型
      * @param default_value 默认值
      * @return Object
      */
@@ -379,5 +436,20 @@ public class FarmPageServiceImpl implements FarmPageService {
         return doc;
     }
 
+    /**
+     * 将字符串集合转换为整型集合
+     *
+     * @param types
+     * @return
+     */
+    private List<Integer> convertStringLst2IntergerLst(List<String> types) {
+        List<Integer> typeLst = new ArrayList<>();
+        if (types != null && !types.isEmpty()) {
+            for (String type : types) {
+                typeLst.add(Integer.parseInt(type));
+            }
+        }
+        return typeLst;
+    }
 
 }
