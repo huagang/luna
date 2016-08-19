@@ -32,6 +32,11 @@ body.modal-open{
 .bg{
     width: 100vw;
     height: 100vh;
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
 }
 
 .page-main{

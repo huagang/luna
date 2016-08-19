@@ -694,13 +694,18 @@ function showAnimation(){
         }
 
         function replaceUrl(){
-            var href = '';
-            if(location.search){
-                href = '&disableWelcome=true';
-            } else{
-                href = '?disableWelcome=true';
+            if($(event.currentTarget).hasClass('pano') &&  ! vm.poiData.panorama.panorama_id){
+                return;
             }
-            history.replaceState({}, 'disableWelcome', location.href + href);
+            if(! /disableWelcome=true/.test(location.href)){
+                var href = '';
+                if(location.search){
+                    href = '&disableWelcome=true';
+                } else{
+                    href = '?disableWelcome=true';
+                }
+                history.replaceState({}, 'disableWelcome', location.href + href);
+            }
         }
     }
 })();
