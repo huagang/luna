@@ -2,7 +2,6 @@
 增加单条POI数据 author:Demi
 */
 $(function () {
-    var haserror = false;
     var ue;
     if ($('#editor').length > 0) {
         //如果是用了百度地图，则初始化，并回显
@@ -117,138 +116,6 @@ $(function () {
             $editor.html(newContent);
         }, 1);
     });
-    //新增属性是否合法
-    $("#property-name").blur(function () {
-        var hasError = false;
-        var values = $("#property-name").val(),
-            cLen = countChineseEn(values);
-        var $warn = $("#warn-newproperty");
-        if (cLen == 0) {
-            $warn.html("名称不能为空").show();
-            hasError = true;
-        } else {
-            if (cLen > 16) {
-                $warn.html("名称超过规定的16个字符").show();
-                hasError = true;
-            } else {
-                $warn.hide();
-                hasError = false;
-            }
-        }
-        if (!hasError) {
-            $("#btn-newproperty-edit").attr("disabled", true);
-        } else {
-            $("#btn-newproperty-edit").attr("disabled", false);
-        }
-    });
-    //新增属性确定按钮
-    $("#btn-newproperty").click(function () {
-        var value = $("#property-name").val();
-        var marker = $("#property-maker").val();
-        $.ajax({
-            url: host + "",
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: { 'POIpropertyName': value, 'markerurl': marker },
-            dataType: 'JSON',
-            success: function (returndata) {
-                switch (returndata.code) {
-                    case "0": //符合规则添加新属性
-                        $("#pop-newproperty").css('display', 'none');
-                        var $newPOIpro = $('<span><label class="checkbox-inline"><input type="checkbox" name="business" value="出入口">' + value +
-                            '</label><input type="text" style="display: none;"/>' +
-                            '<img class="edit-property" src="img/edit.png" onclick="editProperty(this)"/>' +
-                            '<img class="del-property" src="img/delete.png" onclick="delProperty(this)"/></span>');
-                        $newPOIpro.find('input[type=text]').val(marker);
-                        $("#newPOI-edit").before($newPOIpro);
-                        break;
-                    case "1": //名称已经存在的情况
-                        $("#warn-newproperty").html("类别名称已存在");
-                        $("#btn-newproperty").attr("disabled", true);
-                        $("#warn-newproperty").css("display", "block");
-                        break;
-                    case "2":
-                        $("#warn-newproperty").html("名称超过16个字符");
-                        $("#btn-newproperty").attr("disabled", true);
-                        $("#warn-newproperty").css("display", "block");
-                        break;
-                }
-            },
-            error: function (returndata) {
-                $("#warn-newproperty").html("名称超过16个字符");
-                $("#btn-newproperty").attr("disabled", true);
-                $("#warn-newproperty").css("display", "block");
-            }
-        });
-    });
-    //编辑属性名称是否合法
-    $("#property-name-edit").blur(function () {
-        var hasError = false;
-        var values = $("#property-name-edit").val(),
-            cLen = countChineseEn(values);
-        var $warn = $("#warn-newproperty-edit");
-        if (cLen == 0) {
-            $warn.html("名称不能为空").show();
-            hasError = true;
-        } else {
-            if (cLen > 16) {
-                $warn.html("名称超过规定的16个字符").show();
-                hasError = true;
-            } else {
-                $warn.hide();
-                hasError = false;
-            }
-        }
-        if (!hasError) {
-            $("#btn-newproperty-edit").attr("disabled", true);
-        } else {
-            $("#btn-newproperty-edit").attr("disabled", false);
-        }
-    });
-
-
-    //类别添加，增加页卡项
-    $("input:checkbox[name='checkeds']").change(function () {
-        var property = $(this).next().text();
-        var len = $("#tabbar").find('span').length;
-        var tagid = $(this).val();
-
-        if (!isTagFieldsExist(tagid)) {
-            return;
-        }
-
-        if ($(this).is(":checked")) {
-            if (!len) {
-                $("#field-show").css("display", "block");
-                var $content = $("<span class='tabbar-item' tagid='" + tagid + "'>" + property + "</span>");
-                var field = $("#field-show .item-poi");
-                fieldshow(tagid, field);
-            } else {
-                var $content = $("<span class='tabbar-item selected-item'tagid='" + tagid + "'>" + property + "</span>");
-            }
-            $('#tabbar').append($content);
-            $content.click();
-        } else {
-            if (len == 1) {
-                $("#field-show").css("display", "none");
-            }
-            $('#tabbar>span').each(function () {
-                if ($(this).text() == property) {
-                    if ($(this).hasClass("selected-item")) {
-                        $(this).remove();
-                        $('#tabbar>span:first-child').addClass("selected-item");
-                        var tagid = $('#tabbar>span:first-child').attr('tagid');
-                        var field = $("#field-show .item-poi");
-                        fieldshow(tagid, field);
-                    } else {
-                        $(this).remove();
-                    }
-                }
-            });
-            $('#tabbar>span:first-child').click();
-        }
-    });
 
     $("#topTag").change(function () {
 
@@ -273,7 +140,7 @@ $(function () {
                 // 显示私有字段域
                 displayPrivateField();
             },
-            error: function (returndata) {
+            error: function () {
                 $.alert("请求失败");
             }
         });
@@ -466,70 +333,42 @@ $(function () {
             }, 3000);
         }
     });
-    displayPrivateField();
-});
-//“新增”按钮，新建POI数据属性
-function newProperty(obj) {
-    var _target = $(obj);
-    var $popwindow = $("#pop-newproperty");
-    popWindow($popwindow);
-}
-//编辑类别
-function editProperty(obj) {
-    var _target = $(obj);
-    var $popwindow = $("#pop-newproperty-edit");
-    popWindow($popwindow);
-    //编辑属性确定按钮
-    $("#btn-newproperty-edit").click(function () {
-        var value = $("#property-name-edit").val();
-        var marker = $("#property-maker-edit").val();
-        $.ajax({
-            url: host + "",
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: { 'POIpropertyName': value, 'markerurl': marker },
-            dataType: 'JSON',
-            success: function (returndata) {
-                switch (returndata.code) {
-                    case "0": //符合规则添加修改属性
-                        $("#pop-newproperty").css('display', 'none');
-                        _target.parent().find('label').text(value);
-                        _target.parent().find('input[type=text]').val(marker);
-                        $("#newPOI-edit").before($newPOIpro);
-                        break;
-                    case "1": //名称已经存在的情况
-                        $("#warn-newproperty").html("类别名称已存在");
-                        $("#btn-newproperty").attr("disabled", true);
-                        $("#warn-newproperty").css("display", "block");
-                        break;
-                    case "2":
-                        $("#warn-newproperty").html("名称超过16个字符");
-                        $("#btn-newproperty").attr("disabled", true);
-                        $("#warn-newproperty").css("display", "block");
-                        break;
+
+    $('#thumbnail_fileup').on('change', function(event){
+        var file = event.target.files[0];
+        var res = FileUploader._checkValidation('pic',file);
+        if(res.error){
+            $('#thumbnail_warn').html(res.msg).css('display','block');
+            event.target.value = '';
+            return;
+        }
+        cropper.setFile(file, function(file){
+            FileUploader.uploadMediaFile({
+                type: 'pic',
+                file: file,
+                resourceType: 'poi',
+                resourceId: window.poiId,
+                success: function(data){
+                    $('#thumbnail').val(data.data.access_url);
+                    $('#thumbnail-show').attr('src', data.data.access_url);
+                    $('#thumbnail_warn').css('display', 'none');
+                    cropper.close();
+                },
+                error: function(data){
+                    $('#thumbnail_warn').html(data.msg).css('display','block');
+                    alert('上传失败');
                 }
-            },
-            error: function () {
-                $("#warn-newproperty").html("名称超过16个字符");
-                $("#btn-newproperty").attr("disabled", true);
-                $("#warn-newproperty").css("display", "block");
-            }
+            });
+            $('#thumbnail_fileup').val('');
+        }, function(){
+            $('#thumbnail_fileup').val('');
         });
     });
-}
-//删除类别
-function delProperty(obj) {
-    var _target = $(obj).parent();
-    var $popwindow = $("#pop-deletePOI");
-    popWindow($popwindow);
-    //删除类别，“确定”按钮
-    $("#btn-deletePOI").click(function () {
-        $("#pop-overlay").css("z-index", "100");
-        $popwindow.css("display", "none");
-        _target.remove();
-    });
-}
+    displayPrivateField();
+
+
+});
+
 //检查名称
 function checkTitleLong() {
     var hasError = false;
@@ -573,17 +412,6 @@ function checkTitleShort() {
     return hasError;
 }
 
-function characterCheck(cInput, cNum) {
-    var flag = null;
-    var cLen = countChineseEn(cInput);
-    if (cLen == 0) {
-        flag = 0;
-    }
-    if (cLen > cNum) {
-        flag = 1;
-    }
-    return flag;
-}
 //经纬度粘贴去除样式
 function lonlatPaste(value, target) {
     var flag = value.indexOf(',');
@@ -617,7 +445,6 @@ function checkLnglatitude(lnglat) {
     var hasError = false;
     var $lnglat = $("#" + lnglat);
     var value = $lnglat.val();
-    // var reg = /^(\d+)(\.\d+)?$/;
     var reg = /^([+-]?\d+)(\.\d+)?$/;
     var $lonlat_warn = $("#lonlat_warn");
     if (value.length == 0) {
@@ -733,8 +560,6 @@ var geocoder = new qq.maps.Geocoder({
 
         var street = addressComponents.street;
         var streetNumber = addressComponents.streetNumber;
-        //var town = addressComponents.town;
-        //var village = addressComponents.village;
 
         var params = {
             "province": province,
@@ -822,9 +647,8 @@ function initEditor() {
 }
 
 
-angular.module('poi', [])
-    .controller('Poi', Poi)
-    ;
+angular.module('poi-manage', [])
+    .controller('Poi', Poi);
 
 Poi.$inject = ['$scope', '$http'];
 

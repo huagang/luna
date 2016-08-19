@@ -110,7 +110,7 @@ input[type=radio][name=license]{
     z-index: 99;
     font-size: 14px;
 }
-.confirm{
+#pop-newbusiness .confirm{
     border: 1px solid #C3c3c3;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -118,14 +118,14 @@ input[type=radio][name=license]{
     margin: 10px auto;
     padding: 10px 60px;
 }
-.confirm div{
+#pop-newbusiness .confirm div{
     margin-bottom: 10px;
 }
 .pop-fun{
     padding-right: 44px;
 }
 .pop-cont{
-    padding:28px 44px 20px 44px;
+    padding:28px 24px 20px 24px;
 }
 .warn{
     position: relative;
