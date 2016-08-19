@@ -39,13 +39,11 @@ textarea{
 button{
     background: #445FA8;
     color: #FFFFFF;
-    padding: 0px 18px;
+    padding: 4px 18px;
     border: 1px solid #445FA8;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    line-height: 34px;
-    width: 108px;
 }
 
 button:hover{
