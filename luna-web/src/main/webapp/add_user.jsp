@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <span class="ng-hide" ng-show="user.businessLength === 1">
-                            {{user.business[Object.keys(user.business)[0]].business_name}}</span>
+                            {{user.businessName }}</span>
                     </div>
                 </div>
                 <div class="footer">

@@ -327,7 +327,7 @@
                         data: data
                     }).then(function(res){
                         if(res.data.code === '0'){
-                            alert('保存成功');
+                            history.back(-1);
                         } else{
                             alert(res.data.msg || '保存失败');
                         }
@@ -416,8 +416,11 @@
                             vm.businessLength += 1;
                         });
                     });
+                    console.log(vm.data.business);
                     if(vm.businessLength === 1){
-                        vm.data.extra.value = [vm.business[Object.keys(vm.business)[0]][0].business_id];
+                        var business = vm.business[Object.keys(vm.business)[0]][0];
+                        vm.data.business[business.business_id] = 'checked';
+                        vm.businessName = vm.business[Object.keys(vm.business)[0]][0].business_name;
                     }
                 }
                 else{
