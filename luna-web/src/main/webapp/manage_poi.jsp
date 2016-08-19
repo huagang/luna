@@ -216,8 +216,8 @@
         <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
     </div>
     <div class="pop-cont">
-		<div>poi信息: <span class="red poi-name"></span> （<span class="poi-id"></span>）</div>
-		<label>删除理由</label>
+		<div>要删除的poi信息: <span class="red poi-name"></span> （<span class="poi-id"></span>）</div>
+		<label>确定删除词条记录,需要填写删除理由</label>
 		<textarea class="delete-reason"></textarea>
 		<p class="warn">删除理由不能为空</p>
     </div>
