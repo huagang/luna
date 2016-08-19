@@ -74,6 +74,7 @@
                 <div class='form-input ng-hide' ng-show="! user.choiceType ">
                     <label>{{user.extraData.label}}</label>
                     <select class="ng-hide" ng-model="user.data.extra.value" ng-show="user.extraData.optionLength > 1">
+                        <option value="">请选择</option>
                         <option ng-repeat="(value, label) in user.extraData.options" value="{{value}}">{{label}}</option>
                     </select>
                     <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
