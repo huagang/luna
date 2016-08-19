@@ -46,4 +46,20 @@ public interface ManageRouteService {
 	 * @return
 	 */
 	JSONObject isRouteNmExist(String json);
+
+	/**
+	 * 获取线路配置信息
+	 *
+	 * @param routeId
+	 * @return
+	 */
+	JSONObject viewRouteConfiguration(Integer routeId);
+
+	/**
+	 * 保存线路配置信息
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject saveRouteConfiguration(String json);
 }

@@ -19,6 +19,7 @@ import ms.luna.biz.dao.model.MsRoute;
 import ms.luna.biz.dao.model.MsRouteCriteria;
 import ms.luna.biz.sc.ManageRouteService;
 import ms.luna.biz.util.FastJsonUtil;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /**
  * @author Greek
@@ -46,6 +47,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			return FastJsonUtil.sucess("success");
 		} catch (Exception e){
 			MsLogger.error("Failed to insert route: " + e.getMessage());
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to insert route");
 		}
 
@@ -70,6 +72,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			return FastJsonUtil.sucess("success");
 		} catch (Exception e) {
 			MsLogger.error("Failed to update route: " + e.getMessage());
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to update route" + e.getMessage());
 		}
 
@@ -86,6 +89,8 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			// TODO
 			return FastJsonUtil.sucess("success");
 		} catch (Exception e) {
+			MsLogger.error("Failed to delete route: " + e.getMessage());
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to delete route" + e.getMessage());
 		}
 	}
@@ -123,6 +128,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 			result.put("code", 0);
 			return result;
 		} catch (Exception e) {
+			MsLogger.error("Failed to load routes: " + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to load routes" + e.getMessage());
 		}
 	}
@@ -139,6 +145,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 			}
 		} catch (Exception e) {
+			MsLogger.error("Failed to judge whether route is existed: " + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to judge whether route is existed" + e.getMessage());
 		}
 
@@ -159,4 +166,24 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 		}
 	}
 
+	@Override
+	public JSONObject viewRouteConfiguration(Integer routeId) {
+		try {
+
+
+		} catch (Exception e) {
+			MsLogger.error("Failed to view route configuration: " + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to view route configuration.");
+		}
+	}
+
+	@Override
+	public JSONObject saveRouteConfiguration(String json) {
+		try {
+
+		} catch (Exception e) {
+			MsLogger.error("Failed to save route configuration: " + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to save route configuration.");
+		}
+	}
 }

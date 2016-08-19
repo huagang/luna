@@ -39,8 +39,7 @@ public class ManageRouterCtrl extends BasicCtrl {
 	
 	@Autowired
 	ManageRouteService manageRouteService;
-	
-	
+
     private static final String INIT = "method=init";//初始化
     private static final String EDIT_ROUTER = "method=edit_router_page";// 线路编辑页面初始化
     private static final String ASYNC_SEARCH_ROUTES = "method=async_search_routes";// 搜索线路
@@ -56,17 +55,6 @@ public class ManageRouterCtrl extends BasicCtrl {
             session.setAttribute("menu_selected", "manage_router");
         }
         ModelAndView modelAndView = buildModelAndView("/manage_router");
-
-        return modelAndView;
-    }
-    
-    @RequestMapping(params = EDIT_ROUTER)
-    public ModelAndView editRouter(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.setAttribute("menu_selected", "manage_router");
-        }
-        ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
 
         return modelAndView;
     }
@@ -201,4 +189,15 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check route name.");
     	}
     }
+
+	@RequestMapping(params = EDIT_ROUTER)
+	public ModelAndView initRouteConfigurationPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute("menu_selected", "manage_router");
+		}
+		ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
+
+		return modelAndView;
+	}
 }
