@@ -405,4 +405,8 @@ public final class VbConstant {
 		public static final String PANORAMA = "PANORAMA";
 	}
 
+	public static final class ResourceType {
+		public static final String POI = "POI";
+	}
+
 }

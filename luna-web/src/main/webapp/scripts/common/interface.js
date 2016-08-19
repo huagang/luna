@@ -59,7 +59,7 @@ var Inter = function () {
                 poiInit: { url: context + "/data/poi", type: "GET" },
                 poiDataImport: { url: context + '/data/poi/batch', type: 'POST' },// Poi 批量数据导入功能
                 poiCheckDelete: { url: context + '/data/poi/checkPoiCanBeDeleteOrNot?_id={0}', type: 'GET' },//检查是否能够删除
-                poiDelete: { url: context + '/data/poi/{0}', type: 'DELETE' },//poi删除功能
+                poiDelete: { url: context + '/data/poi/{0}?note={1}', type: 'DELETE' },//poi删除功能
                 poiAddPage: { url: context + '/data/poi/addPage', type: 'GET' },//poi删除功能
                 poiEdit: { url: context + '/data/poi/initEditPage?poiId={0}', type: 'GET' },//poi编辑功能
                 poiAddSave: { url: context + '/data/poi', type: 'POST' },//poi 创建成功

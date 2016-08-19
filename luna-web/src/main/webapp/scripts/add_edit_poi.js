@@ -366,6 +366,58 @@ $(function () {
     });
     displayPrivateField();
 
+    var geocoder = new qq.maps.Geocoder({
+        // 设置服务请求成功的回调函数
+        complete: function (result) {
+            var addressComponents = result.detail.addressComponents;
+            var province = addressComponents.province;
+            var city = addressComponents.city;
+            var district = addressComponents.district;
+
+            var street = addressComponents.street;
+            var streetNumber = addressComponents.streetNumber;
+
+            var params = {
+                "province": province,
+                "city": city,
+                "district": district,
+            }
+            $.ajax({
+                type: 'GET',
+                url: Inter.getApiUrl().pullDownZoneIds.url,
+                cache: false,
+                async: false,
+                data: params,
+                dataType: 'json',
+                success: function (returndata) {
+                    if (returndata.code == '0') {
+                        var provinceId = returndata.data.provinceId;
+                        $("#province option[value='" + provinceId + "']").attr("selected", "true");
+                        change_province();
+                        var cityId = returndata.data.cityId;
+                        $("#city option[value='" + cityId + "']").attr("selected", "true");
+                        change_city();
+                        var countyId = returndata.data.countyId;
+                        $("#county option[value='" + countyId + "']").attr("selected", "true");
+
+                        var complete_address_detail = $("#complete-address-detail").val();
+                        if (complete_address_detail == "") {
+                            $("#complete-address-detail").val(street + streetNumber);
+                        }
+                    }
+                },
+                error: function () {
+                    alert("counties请求失败");
+                    return;
+                }
+            });
+
+        },
+        // 若服务请求失败，则运行以下函数
+        error: function () {
+            $.alert("请输入正确的经纬度！！！");
+        }
+    });
 
 });
 
@@ -550,58 +602,6 @@ function asistZone() {
  * @param lat
  * @param lng
  */
-var geocoder = new qq.maps.Geocoder({
-    // 设置服务请求成功的回调函数
-    complete: function (result) {
-        var addressComponents = result.detail.addressComponents;
-        var province = addressComponents.province;
-        var city = addressComponents.city;
-        var district = addressComponents.district;
-
-        var street = addressComponents.street;
-        var streetNumber = addressComponents.streetNumber;
-
-        var params = {
-            "province": province,
-            "city": city,
-            "district": district,
-        }
-        $.ajax({
-            type: 'GET',
-            url: Inter.getApiUrl().pullDownZoneIds.url,
-            cache: false,
-            async: false,
-            data: params,
-            dataType: 'json',
-            success: function (returndata) {
-                if (returndata.code == '0') {
-                    var provinceId = returndata.data.provinceId;
-                    $("#province option[value='" + provinceId + "']").attr("selected", "true");
-                    change_province();
-                    var cityId = returndata.data.cityId;
-                    $("#city option[value='" + cityId + "']").attr("selected", "true");
-                    change_city();
-                    var countyId = returndata.data.countyId;
-                    $("#county option[value='" + countyId + "']").attr("selected", "true");
-
-                    var complete_address_detail = $("#complete-address-detail").val();
-                    if (complete_address_detail == "") {
-                        $("#complete-address-detail").val(street + streetNumber);
-                    }
-                }
-            },
-            error: function () {
-                alert("counties请求失败");
-                return;
-            }
-        });
-
-    },
-    // 若服务请求失败，则运行以下函数
-    error: function () {
-        $.alert("请输入正确的经纬度！！！");
-    }
-});
 
 function findZoneIdsWithQQZoneName(lat, lng) {
     var lat = parseFloat(lat);
