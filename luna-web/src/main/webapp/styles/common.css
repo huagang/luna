@@ -34,6 +34,7 @@ table{
 textarea{
     border: 1px solid #C3C3C3;
     padding: 5px 10px;
+    resize: none;
 }
 
 

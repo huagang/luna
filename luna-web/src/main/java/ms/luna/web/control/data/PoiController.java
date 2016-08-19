@@ -248,7 +248,7 @@ public class PoiController extends BasicController {
     @ResponseBody
     public JSONObject asyncDeletePoi(
             @PathVariable("_id") String _id,
-            @RequestParam(required = false, value = "note", defaultValue = "") String note,
+            @RequestParam(required = true, value = "note", defaultValue = "") String note,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {

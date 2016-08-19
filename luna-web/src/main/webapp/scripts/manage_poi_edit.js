@@ -162,7 +162,7 @@ function delPOI(obj, _id, poiName){
 							return;
 						}
                         $.ajax({
-                	        url: Util.strFormat( Inter.getApiUrl().poiDelete.url,[_id]),
+                	        url: Util.strFormat( Inter.getApiUrl().poiDelete.url,[_id, reason]),
                 	        type: 'DELETE',
                 	        async: false,
                 	        data: {"_id":_id},

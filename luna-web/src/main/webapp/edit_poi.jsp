@@ -53,9 +53,13 @@
                 	</c:if>
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
-                	<c:if test="${lang == 'zh'}">
-                		<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
-                	</c:if>
+					<c:if test="${lang == 'zh'}">
+						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+					</c:if>
+					<!-- 英文版的时候给出可以切换到中文版的链接 -->
+					<c:if test="${lang == 'en'}">
+						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
+					</c:if>
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
@@ -337,6 +341,7 @@
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 
 	<script type="text/javascript">
+		window.lang = "${lang}";
 	function init(){
 		var fieldDisplayed = false;
 		var field = $("#field-show .item-poi");

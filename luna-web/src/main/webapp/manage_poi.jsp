@@ -216,9 +216,9 @@
         <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
     </div>
     <div class="pop-cont">
-		<div>要删除的poi信息: <span class="red poi-name"></span> （<span class="poi-id"></span>）</div>
+		<div  class="delete-poi-info">要删除的poi信息: <span class="red poi-name"></span> （<span class="poi-id"></span>）</div>
 		<label>确定删除词条记录,需要填写删除理由</label>
-		<textarea class="delete-reason"></textarea>
+		<textarea class="delete-reason" placeholder="请填写删除理由"></textarea>
 		<p class="warn">删除理由不能为空</p>
     </div>
     <!-- 底部功能区 -->
@@ -262,7 +262,7 @@
 		if (row.lang == 'en') {
 			lang = '(英)'
 		}
-		return '<span style="color:#F00">'+lang+'</span>' + row.poi_name;
+		return '<a target="_blank" href="' + row.preview_url + '"><span style="color:#F00">'+lang+'</span>' + row.poi_name + '</a>';
 	}
 	function queryParams(params) {
 		//alert(JSON.stringify(params));
