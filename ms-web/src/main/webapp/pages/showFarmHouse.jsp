@@ -37,6 +37,7 @@
     </div>
     <div class="page-back">
         <div class="bg" style="background: url(${pageData.start_page_background_pic}) top left no-repeat; background-size: cover;">
+            <div class="bg-mask" style="background: url(${pageData.start_page_background_pic}) top left no-repeat; background-size: cover;"></div>
         </div>
         <div class="fg transparent" style="background: url(${pageData.start_page_foreground_pic}) top center no-repeat; background-size: cover; ">
         </div>
