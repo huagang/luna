@@ -14,7 +14,7 @@ public interface ManageRouteService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject createRoute(String json);
+	JSONObject createRoute(JSONObject json);
 
 	/**
 	 * 属性编辑
@@ -22,7 +22,7 @@ public interface ManageRouteService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject editRoute(String json);
+	JSONObject editRoute(JSONObject json);
 
 	/**
 	 * 删除线路
@@ -37,7 +37,7 @@ public interface ManageRouteService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject loadRoutes(String json);
+	JSONObject loadRoutes(JSONObject json);
 
 	/**
 	 * 判断线路名称是否存在

@@ -2,6 +2,8 @@ package ms.luna.biz.sc.impl;
 
 import java.util.List;
 
+import ms.luna.biz.table.MsRouteTable;
+import ms.luna.biz.util.MsLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,69 +32,44 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	private MsRouteDAO msRouteDAO;
 
 	@Override
-	public JSONObject createRoute(String json) {
-		JSONObject param = JSONObject.parseObject(json);
-		String name = param.getString("name");
-		String description = param.getString("description");
-		String cover = param.getString("cover");
-		String unique_id = param.getString("unique_id");
-		Integer cost_id = param.getInteger("cost_id");
-		Integer business_id = param.getInteger("business_id");
-
-		// 检测名称是否存在
-		boolean flag = checkRouteNmExist(name, null);
-		if(flag) {
-			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
-		}
-
-		MsRoute msRoute = new MsRoute();
-		msRoute.setName(name);
-		msRoute.setCover(cover);
-		msRoute.setDescription(description);
-		msRoute.setCostId(cost_id);
-		msRoute.setBusinessId(business_id);
-		msRoute.setUniqueId(unique_id);
+	public JSONObject createRoute(JSONObject json) {
 		try {
+			String name = json.getString(MsRouteTable.FIELD_NAME);
+			// 检测名称是否存在
+			boolean flag = checkRouteNmExist(name, null);
+			if(flag) {
+				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
+			}
+
+			MsRoute msRoute = JSONObject.toJavaObject(json, MsRoute.class);
 			msRouteDAO.insertSelective(msRoute);
 			return FastJsonUtil.sucess("success");
 		} catch (Exception e){
-			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to insert route" + e.getMessage());
+			MsLogger.error("Failed to insert route: " + e.getMessage());
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to insert route");
 		}
 
 	}
 
 	@Override
-	public JSONObject editRoute(String json) {
-		JSONObject param = JSONObject.parseObject(json);
-		Integer id = param.getInteger("id");
-
-		String name = param.getString("name");
-		String description = param.getString("description") ;
-		Integer cost_id = param.getInteger("cost_id");
-		String cover = param.getString("cover");
-		String unique_id = param.getString("unique_id");
-
-		// 检测名称是否存在
-		boolean flag = checkRouteNmExist(name, id);
-		if(flag) {
-			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
-		}
-
-		MsRoute msRoute = new MsRoute();
-		msRoute.setName(name);
-		msRoute.setDescription(description);
-		msRoute.setCostId(cost_id);
-		msRoute.setCover(cover);
-		msRoute.setId(id);
-		msRoute.setUniqueId(unique_id);
-
+	public JSONObject editRoute(JSONObject json) {
 		try {
+			Integer id = json.getInteger(MsRouteTable.FIELD_ID);
+			String name = json.getString(MsRouteTable.FIELD_NAME);
+
+			// 检测名称是否存在
+			boolean flag = checkRouteNmExist(name, id);
+			if(flag) {
+				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
+			}
+			MsRoute msRoute = JSONObject.toJavaObject(json, MsRoute.class);
 			Integer count = msRouteDAO.updateByPrimaryKeySelective(msRoute);
 			if(count <= 0) {
 				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid route id");
 			}
 			return FastJsonUtil.sucess("success");
 		} catch (Exception e) {
+			MsLogger.error("Failed to update route: " + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to update route" + e.getMessage());
 		}
 
@@ -114,53 +91,36 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	}
 
 	@Override
-	public JSONObject loadRoutes(String json) {
-		JSONObject param = JSONObject.parseObject(json);
-		Integer offset = null;
-		Integer limit = null;
-		if(param.containsKey("offset")) {
-			offset = param.getInteger("offset");
-		}
-		if(param.containsKey("limit")) {
-			limit = param.getInteger("limit");
-		}
+	public JSONObject loadRoutes(JSONObject json) {
 		MsRouteParameter msRouteParameter = new MsRouteParameter();
-		if(offset == null ) {
-			offset = 0;
-		}
-		if(limit == null) {
-			limit = Integer.MAX_VALUE;
-		}
-		if(offset != null || limit != null) {
-			msRouteParameter.setRange(true);
-		}
-		msRouteParameter.setLimit(limit);
-		msRouteParameter.setOffset(offset);
+		msRouteParameter.setLimit(json.getInteger("limit"));
+		msRouteParameter.setOffset(json.getInteger("offset"));
+		msRouteParameter.setRange(true);
 		try{
-			Integer count = msRouteDAO.countRoutes(msRouteParameter);
-			JSONArray rows = JSONArray.parseArray("[]");
-			if(count > 0) {
-				 List<MsRouteResult> lst = msRouteDAO.selectRoutes(msRouteParameter);
-				 for(int i = 0; i < lst.size(); i++) {
-					 JSONObject row = new JSONObject();
-					 MsRouteResult msRouteResult = lst.get(i);
-					 row.put("id", msRouteResult.getId());
-					 row.put("name", msRouteResult.getName());
-					 row.put("business_id", msRouteResult.getBusiness_id());
-					 row.put("business_name", msRouteResult.getBusiness_name());
-					 row.put("cost_id", msRouteResult.getCost_id());
-					 row.put("luna_name", msRouteResult.getLuna_name());
-					 row.put("description", msRouteResult.getDescription());
-					 row.put("cover", msRouteResult.getCover());
-					 rows.add(row);
-				 }
+			Integer total = msRouteDAO.countRoutes(new MsRouteParameter());
+			JSONArray rows = new JSONArray();
+			if(total > 0)
+			{
+				List<MsRouteResult> lst = msRouteDAO.selectRoutes(msRouteParameter);
+				for(int i = 0; i < lst.size(); i++) {
+					JSONObject row = new JSONObject();
+					MsRouteResult msRouteResult = lst.get(i);
+					row.put(MsRouteTable.FIELD_ID, msRouteResult.getId());
+					row.put(MsRouteTable.FIELD_NAME, msRouteResult.getName());
+					row.put(MsRouteTable.FIELD_BUSINESS_ID, msRouteResult.getBusiness_id());
+					row.put(MsRouteTable.FIELD_BUSINESS_NAME, msRouteResult.getBusiness_name());
+					row.put(MsRouteTable.FIELD_COST_ID, msRouteResult.getCost_id());
+					row.put(MsRouteTable.FIELD_LUNA_NAME, msRouteResult.getLuna_name());
+					row.put(MsRouteTable.FIELD_DESCRIPTION, msRouteResult.getDescription());
+					row.put(MsRouteTable.FIELD_COVER, msRouteResult.getCover());
+					rows.add(row);
+				}
 			}
 			JSONObject result = new JSONObject();
-			result.put("total", count);
 			result.put("rows", rows);
-			result.put("code", 0);
+			result.put("total", total);
 			result.put("msg", "success");
-
+			result.put("code", 0);
 			return result;
 		} catch (Exception e) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to load routes" + e.getMessage());
@@ -169,20 +129,15 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 
 	@Override
 	public JSONObject isRouteNmExist(String json) {
-		JSONObject param = JSONObject.parseObject(json);
-		String name = param.getString("name");
-		Integer id = null;
-		if(param.containsKey("id")) {
-			id = param.getInteger("id");
-		}
 		try {
-			boolean flag = checkRouteNmExist(name, id);
-			if(!flag) {
+			JSONObject param = JSONObject.parseObject(json);
+			String name = param.getString(MsRouteTable.FIELD_NAME);
+			Integer id = param.containsKey(MsRouteTable.FIELD_ID)? param.getInteger(MsRouteTable.FIELD_ID) : null;
+			if(!checkRouteNmExist(name, id)) {
 				return FastJsonUtil.sucess("route name does not exist");
 			} else {
 				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
 			}
-
 		} catch (Exception e) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to judge whether route is existed" + e.getMessage());
 		}

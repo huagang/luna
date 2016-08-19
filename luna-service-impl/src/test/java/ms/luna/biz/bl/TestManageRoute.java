@@ -106,17 +106,6 @@ public class TestManageRoute {
 	
 	@Test
 	public void createRoute(){
-		JSONObject param = new JSONObject();
-		JSONObject result = manageRouteService.loadRoutes(param.toString());
-		System.out.println(result.toString());
-		
-		Integer offset = 1;
-		Integer limit = 3;
-		
-		param.put("offset", offset);
-		param.put("limit", limit);
-		
-		result = manageRouteService.loadRoutes(param.toString());
-		System.out.println(result.toString());
+
 	}
 }

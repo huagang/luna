@@ -97,12 +97,13 @@ public class ManageRouterCtrl extends BasicCtrl {
     		param.put("unique_id", unique_id);
     		
     		// 异常会怎么处理?
-    		JSONObject result = manageRouteService.createRoute(param.toString());
+    		JSONObject result = manageRouteService.createRoute(param);
     		MsLogger.debug(result.toString());
     		return result;
     		
     	} catch (Exception e){
-    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建线路失败"+e.getMessage());
+			MsLogger.error("Failed to create route: " + e.getMessage());
+    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to create route");
     	}
     }
     
@@ -132,10 +133,11 @@ public class ManageRouterCtrl extends BasicCtrl {
     		param.put("cover", cover);
     		param.put("unique_id", unique_id);
     		
-    		JSONObject result = manageRouteService.editRoute(param.toString());
+    		JSONObject result = manageRouteService.editRoute(param);
     		MsLogger.debug(result.toString());
     		return result;
     	} catch (Exception e) {
+			MsLogger.error("Failed to edit route: " + e.getMessage());
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "线路属性编辑失败"+e.getMessage());
     	}
     }
@@ -153,6 +155,7 @@ public class ManageRouterCtrl extends BasicCtrl {
 	    	MsLogger.debug(result.toString());
 	    	return result;
     	} catch (Exception e){
+			MsLogger.error("Failed to delete route: " + e.getMessage() );
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "线路删除失败"+e.getMessage());
     	}
     }
@@ -160,22 +163,19 @@ public class ManageRouterCtrl extends BasicCtrl {
     @RequestMapping(params = ASYNC_SEARCH_ROUTES)
     @ResponseBody
     public JSONObject async_search_routes(
-    		@RequestParam(required=false, value="offset") String offset,
-    		@RequestParam(required=false, value="limit") String limit,
+    		@RequestParam(required=false, value="offset", defaultValue = "0") Integer offset,
+    		@RequestParam(required=false, value="limit", defaultValue = "" + Integer.MAX_VALUE) Integer limit,
     		HttpServletRequest request, HttpServletResponse response){
     	try {
     		JSONObject param = new JSONObject();
-    		if(offset != null) {
-    			param.put("offset", offset);
-    		}
-    		if(limit != null) {
-    			param.put("limit", limit);
-    		}
-    		JSONObject result = manageRouteService.loadRoutes(param.toString());
+			param.put("offset", offset);
+			param.put("limit", limit);
+    		JSONObject result = manageRouteService.loadRoutes(param);
     		MsLogger.debug(result.toString());
     		return result;
     	} catch (Exception e) {
-    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "线路搜索失败"+e.getMessage());
+			MsLogger.error("Failed to search routes: " + e.getMessage());
+    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to search routes.");
     	}
     }
     
@@ -197,7 +197,8 @@ public class ManageRouterCtrl extends BasicCtrl {
     		MsLogger.debug(result.toString());
     		return result;
     	} catch (Exception e) {
-    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "检测路线名称失败"+e.getMessage());
+			MsLogger.error("Failed to check route name: " + e.getMessage());
+    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check route name.");
     	}
     }
 }
