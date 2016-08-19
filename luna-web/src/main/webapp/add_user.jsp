@@ -74,6 +74,7 @@
                 <div class='form-input ng-hide' ng-show="! user.choiceType ">
                     <label>{{user.extraData.label}}</label>
                     <select class="ng-hide" ng-model="user.data.extra.value" ng-show="user.extraData.optionLength > 1">
+                        <option value="">请选择</option>
                         <option ng-repeat="(value, label) in user.extraData.options" value="{{value}}">{{label}}</option>
                     </select>
                     <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
@@ -94,7 +95,7 @@
                             </div>
                         </div>
                         <span class="ng-hide" ng-show="user.businessLength === 1">
-                            {{user.business[Object.keys(user.business)[0]].business_name}}</span>
+                            {{user.businessName }}</span>
                     </div>
                 </div>
                 <div class="footer">

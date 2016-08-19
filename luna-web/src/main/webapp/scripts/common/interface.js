@@ -122,7 +122,6 @@ var Inter = function() {
                     url: context + "/data/poi/video/upload",
                     type: "POST"
                 }, //poi视频上传
-
                 //CRM管理
                 crmInit: {
                     url: context + "/content/crm",
@@ -535,8 +534,19 @@ var Inter = function() {
                 multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}', //相册全景路径
                 customerPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}', //自定义全景
 
+                searchPano: {
+                    url: 'http://data.pano.visualbusiness.cn/rest/pano/search?q={0}&fromPage={1}&size={2}&from={3}&project={4}',
+                    type: 'GET'
+                }, // 通过关键字搜索全景
+                searchAlbum: {
+                    url: 'http://data.pano.visualbusiness.cn/rest/album/search?q={0}&fromPage={1}&size={2}&from={3}',
+                    type: 'GET'
+                },
+
+
                 //zclip路径
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
+
 
                 //全景搜索
                 searchSinglePano: {

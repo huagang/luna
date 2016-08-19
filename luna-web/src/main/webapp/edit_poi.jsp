@@ -22,8 +22,12 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/add_edit_poi.css">
+	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
 	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
 	<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
@@ -35,7 +39,7 @@
     <script src="<%=request.getContextPath() %>/scripts/fileupload.js"></script>
 </head>
 
-<body onload='init()'>
+<body onload='init()' ng-app="poi-manage" ng-controller="Poi as poi">
     <div class="container-fluid">
         <!--通用导航栏 start-->
         <jsp:include page="/templete/header_without_logout.jsp"/>
@@ -49,9 +53,13 @@
                 	</c:if>
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
-                	<c:if test="${lang == 'zh'}">
-                		<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
-                	</c:if>
+					<c:if test="${lang == 'zh'}">
+						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+					</c:if>
+					<!-- 英文版的时候给出可以切换到中文版的链接 -->
+					<c:if test="${lang == 'en'}">
+						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
+					</c:if>
                 </h3>
             </div>
             <div class="status-message" id="status-message">成功</div>
@@ -241,10 +249,11 @@
                     <div class="item-poi">
                         <div class="label-poi label-ver">缩略图</div>
                         <div class="value-poi">
-                            <form:input type="text" id="thumbnail" readOnly="true" path="thumbnail" cssClass="img-url"/>
+                            <form:input type="text" id="thumbnail"  readonly="${poiReadOnly}" path="thumbnail" cssClass="img-url"/>
                             <c:if test="${!poiReadOnly || lang == 'en'}">
 	                            <div class="upload-thumbnail">
-	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" class="fileup" onchange="asyncUploadThumb(this,'thumbnail_fileup','original','specification1','specification2')"/>
+	                                <input id="thumbnail_fileup" name="thumbnail_fileup" type="file" file_size="1" accept="image/*"
+										   class="fileup"/>
 	                                <button type="button">本地上传</button>
 	                                <span class="info">不超过1M</span>
 	                            </div>
@@ -263,8 +272,25 @@
                         <div class="label-poi"><span class="superscript"></span>全景标识</div>
                         <div class="value-poi panoramaType">
                         	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
-                        	<form:radiobuttons id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
-                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="请输入相册id或者单场景点id"/>
+                        	<form:radiobuttons   ng-model="poi.data.panoType" ng-change="poi.handlePanoTypeChange()"  id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
+							<input type="text" class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
+							<button  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
+							<div class="pano-search-result">
+								<label>搜索结果(最多显示20条)</label>
+								<div class="pano-container">
+									<div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">
+										这里空空的
+									</div>
+									<div class="pano" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">
+                                        <div class="thumbnail" style="background: #DEEEF8 url({{item.pic}}) center center no-repeat;background-size: contain;"></div>
+                                        <div class="pano-info">
+                                            <p class="pano-name" title="{{item.name}}">{{item.name}}</p>
+                                            <a class="pull-right icon-link" href="{{item.link}}" target="_blank"  ng-click="poi.stopDefault()"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form:input id="panorama" readonly="${poiReadOnly || lang == 'en'}" cssClass="txt" path="panorama" maxlength="255" placeholder="自动填入全景/相册对应ID,也可支持手动输入"/>
                         </div>
                     </div>
                     <div class="item-poi">
@@ -299,100 +325,23 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
-    <!--新建POI数据属性 start-->
-	<div class="pop" id="pop-newproperty">
-	    <div class="pop-title">
-	        <h4>新建类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-	    	<div class="pop-cont" id="pop-cont-property">
-	    		<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name" maxlength="16"/>
-	                	<div class="warn" id="warn-newproperty" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-		                <input type="text" id="property-maker" readonly="readonly" style="width:380px;"/>
-		                <input type="file" id="maker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-		                <button type="button">上传</button>
-                    </div>
-                </div>
-	    	</div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty" disabled="disabled">确定</button>
-	        <button type="button"  class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--新建POI数据属性 end-->
-	<!--编辑POI数据属性 start-->
-	<div class="pop" id="pop-newproperty-edit">
-	    <div class="pop-title">
-	        <h4>编辑类别</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <form>
-		    <div class="pop-cont" id="pop-cont-property-edit">
-		    	<div class="item-poi-pop">
-                    <div class="label-poi-pop">名称</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-name-edit" maxlength="16"/>
-	                	<div class="warn" id="warn-newproperty-edit" style="position: relative;">名称超过规定的16个字符</div>
-                    </div>
-                </div>
-                <div class="item-poi-pop">
-                    <div class="label-poi-pop">属性maker图标</div>
-                    <div class="value-poi-pop">
-                        <input type="text" id="property-maker-edit" readonly="readonly" style="width:380px;"/>
-	                	<input type="file" id="maker-upload" class="marker-upload" onchange="asyncUploadPic(this,'property-maker')"/>
-	                	<button type="button">上传</button>
-                    </div>
-                </div>
-		    </div>
-	    </form>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun" style="padding-right: 24px;">
-	        <button type="button" id="btn-newproperty-edit">确定</button>
-	        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--编辑POI数据属性 end-->
-	<!--删除类别 start-->
-	<div class="pop pop-delete" id="pop-deletePOI">
-	    <div class="pop-title">
-	        <h4>删除</h4>
-	        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
-	    </div>
-	    <div class="pop-cont">
-	       	 删除类别后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？
-	    </div>
-	    <!-- 底部功能区 -->
-	    <div class="pop-fun">
-	        <button type="button" id="btn-deletePOI">确定</button>
-	        <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
-	    </div>
-	    <!-- 底部功能区 end -->
-	</div>
-	<!--删除类别 end-->
-</body>
+
+<jsp:include page="/templete/imgCropper.jsp" />
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
 	window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
+	window.poiId = '${_id}';
 </script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/add_edit_poi.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script type="text/javascript">
+
+	<script type="text/javascript">
+		window.lang = "${lang}";
 	function init(){
 		var fieldDisplayed = false;
 		var field = $("#field-show .item-poi");
@@ -411,4 +360,5 @@
 		});
 	}
 </script>
+</body>
 </html>

@@ -3,6 +3,9 @@
 author:franco
 time:20160517
 */
+#childPoi{
+    position: fixed;
+}
 .luna-tree {
 	width:1200px;
 	height:100%;
@@ -15,6 +18,11 @@ time:20160517
 	padding:10px 48px;
 	font-size:16px;
 }
+
+.luna-tree .luna-tree-parent {
+    padding-bottom: 120px;
+}
+
 .luna-tree .item-name{
     width: 146px;
     height: 36px;
@@ -123,11 +131,43 @@ right connector from last child*/
     z-index: 1000;
 }
 
+
+
 .list-result-poi > label:hover .poi_info,
 .luna-tree .item-title:hover .poi_info{
 	display: block;	
 }
 
+.luna-tree .item-title .poi_info:hover{
+    display: none;
+}
+/*
+.node-ops{
+    display: none;
+    position: absolute;
+    left: -35px;
+    top: 4px;
+    z-index: 10;
+    height: 20px;
+    width: 20px;
+}
+
+.node-ops .node-up,
+.node-ops .node-down{
+    cursor: pointer;
+}
+
+.luna-tree .item-name:hover > .node-ops{
+    display: block;
+}
+*/
+.luna-tree li:first-of-type > .item-name .move-up{
+    display: none;
+}
+
+.luna-tree li:last-of-type > .item-name .move-down{
+    display: none;
+}
 
 .luna-tree .item-name .item-child-btn{
     float: right;

@@ -752,7 +752,8 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
         this.articleColumnList = [{
             'columnName': '请选择',
             'columnId': ''
-        }]; //栏目列表
+        }]; 
+        //栏目列表
         $http.get(Util.strFormat(Inter.getApiUrl().articleColumn.url, [objdata.businessId])).success(function(res) {
             if (res.code == '0') {
                 if (res.data) {
@@ -778,7 +779,9 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
         this.articleList = [{
             'articleName': '请选择',
             'articleId': ''
-        }]; //栏目列表
+        }]; 
+        
+        //文章列表
         $http.get(Util.strFormat(Inter.getApiUrl().articleListByBid, [objdata.businessId])).success(function(response) {
             if (response.code == '0') {
                 if (response.data) {

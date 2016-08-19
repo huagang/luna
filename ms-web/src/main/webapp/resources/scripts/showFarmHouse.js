@@ -39,13 +39,8 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-                    var href = '';
-                    if(location.search){
-                        href = '&disableWelcome=true';
-                    } else{
-                        href = '?disableWelcome=true';
-                    }
-                    history.replaceState({}, 'disableWelcome', location.href + href);
+
+
                 }
             });
         $('.page-main').velocity({opacity: 1},
@@ -200,6 +195,9 @@ function showAnimation(){
         vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
 
         vm.checkPanoPosition = checkPanoPosition;
+
+        //
+        vm.replaceUrl = replaceUrl;
 
         vm.init();
 
@@ -507,7 +505,7 @@ function showAnimation(){
                         vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
                         break;
                     case 3:
-                        vm.poiData.panoUrl = vm.apiUrls.customerPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.customPano.format(vm.poiData.panorama.panorama_id);
                         break;
                     default:
                         vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
@@ -542,7 +540,7 @@ function showAnimation(){
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
                     break;
                 case 3:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.customerPano.format(vm.farmData.allPanorama.text);
+                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
                     break;
                 default:
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
@@ -694,5 +692,21 @@ function showAnimation(){
                     break;
             }
         }
+
+        function replaceUrl(){
+            if($(event.currentTarget).hasClass('pano') &&  ! vm.poiData.panorama.panorama_id){
+                return;
+            }
+            if(! /disableWelcome=true/.test(location.href)){
+                var href = '';
+                if(location.search){
+                    href = '&disableWelcome=true';
+                } else{
+                    href = '?disableWelcome=true';
+                }
+                history.replaceState({}, 'disableWelcome', location.href + href);
+            }
+        }
     }
 })();
+

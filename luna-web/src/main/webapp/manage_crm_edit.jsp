@@ -17,6 +17,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
@@ -82,7 +84,7 @@
 				                <label class="license-label"><input type="radio" name="license-edit" value="是" checked="checked"/>是</label>
 				                <label><input type="radio" id="license" name="license-edit" value="否" />否</label>
 			                    <div id="license-area-edit" style="position:relative;">
-			                   		<input type="text" id="license-url-edit" name="resource_content_edit" readonly="readonly">
+			                   		<input type="text" id="license-url-edit" name="resource_content_edit" >
 				              		<!-- <input id="license-url-edit" name="resource_content_edit" style="display:none;"/> -->
 				                   	<input type="file" id="license-upload-edit" name="thumbnail_fileup" data_upload="true" onchange="asyncUploadPicEdit(this,'license-upload-edit','license-upload-edit-warn','license-url-edit')"/>
 				                   	<button id="btn-license-upload-edit" >修改</button>
@@ -210,14 +212,12 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
-
+<jsp:include page="/templete/imgCropper.jsp" />
 <script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/map_init.js"></script>
-</script>
-
 </body>
 </html>
