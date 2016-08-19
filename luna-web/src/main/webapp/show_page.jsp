@@ -27,6 +27,15 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
         <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
         <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+        
+        <!-- 对ES5的支持Start -->
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
+        <!-- ES5的支持End -->
+        <!-- 基础脚本文件 -->
+        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+        <!-- 基础脚本文件 End-->
 
       </head>
 
@@ -168,7 +177,7 @@
                 </div>
                 <div class="bg-set clearfix">
                   <label>全景背景：</label>
-                  <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
+                  <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
                   <div class="bgPano-set" ng-show="canvas.panoId">
                     <div class="bgPano-set-item">Heading:
                       <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字">
@@ -782,17 +791,17 @@
                   <div class="bg-set">
                     <h2><label>全景数据</label></h2>
                     <form name="panoInfoForm">
-                      <div>全景ID：
-                        <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
-                          <input type="text" name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()">
-                          <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
-                        </div>
-                      </div>
                       <div>全景类型:
                         <div class="" ng-class="">
                           <select class="form-control" name="panoType" ng-model="pano.content.panoType" required="required" ng-options="type.name for type in pano.content.panoTypeList track by type.id" ng-change="pano.changePanoType()">
-                                            <option value="">请选择</option>
-                                        </select>
+                              <option value="">请选择</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div>全景ID：
+                        <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
+                          <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                          <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
                         </div>
                       </div>
                     </form>
@@ -1457,6 +1466,9 @@
           <!-- 弹出层底部功能区 -->
         </div>
         <!-- 微景展设置弹出层 -->
+        <!-- 全景选择弹出框 -->
+          <jsp:include page="/templete/dialog_select_pano.jsp"></jsp:include>
+        <!-- 全景选择弹出框 End-->
         <!-- 删除页面弹出层 -->
         <div class="pop" id="pop-delete">
           <div class="pop-title">
@@ -1488,13 +1500,9 @@
           </div>
         </div>
         
-        <!-- 对ES5的支持Start -->
-        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
-        <!-- ES5的支持End -->
+
 
         <!-- 脚本文件 -->
-        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -1514,10 +1522,10 @@
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
         <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/errCode.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common/luna.config.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
         <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>

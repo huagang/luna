@@ -1,4 +1,3 @@
-
 //BaseComponet
 componentBaseModelTemplate = {
     x: '',
@@ -73,7 +72,7 @@ componentImgModelTemplate = {
 componentNavModelTemplate = {
     "_id": "",
     "type": "nav",
-    "navType": 0,  // 0 : 从当前位置开始 1:设置起点位置
+    "navType": 0, // 0 : 从当前位置开始 1:设置起点位置
     "content": {
         "icon": "http://cdn.visualbusiness.cn/public/vb/img/samplenav.png",
         "startName": "",
@@ -95,7 +94,9 @@ componentPanoModelTemplate = {
     "content": {
         "icon": "http://cdn.visualbusiness.cn/public/vb/img/samplepano.png",
         "panoId": "",
-        'panoType': { id: 1 }
+        'panoType': {
+            id: 1
+        }
     },
     "action": {
         "href": {
@@ -165,20 +166,20 @@ componentTabModelTemplate = {
  */
 var componentViewTemplate = {
     'tabMenu': '<div class="menuTab-wrapper" >' +
-    '<div class="menuTab-bg">' +
-    '<img src="http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg">' +
-    '</div>' +
-    '<div class="menuTab">' +
-    '<div class="menulist-wrap">' +
-    '<ul class="menulist">' +
-    // '<li class="menuitem current" item="default" >' +
-    // '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
-    // '<div class="menuitem-title"><span>概况</span></div>' +
-    // '</li>' +
-    '</ul>' +
-    '</div>' +
-    '</div>' +
-    '</div>',
+        '<div class="menuTab-bg">' +
+        '<img src="http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg">' +
+        '</div>' +
+        '<div class="menuTab">' +
+        '<div class="menulist-wrap">' +
+        '<ul class="menulist">' +
+        // '<li class="menuitem current" item="default" >' +
+        // '<div class="menuitem-img"><i class="tabicon icon-list  icon-profile"></i></div>' +
+        // '<div class="menuitem-title"><span>概况</span></div>' +
+        // '</li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '</div>',
 };
 
 
@@ -221,7 +222,8 @@ function reOrderPage() {
  */
 function setPageListHtml(pageList) {
     $("#list-page").empty();
-    var orderedPages = [], page;
+    var orderedPages = [],
+        page;
     for (var key in pageList) {
         page = pageList[key];
         orderedPages[page.page_order] = page.page_id;
@@ -347,7 +349,10 @@ function createNewEelement(componentType, createType) {
  */
 function setPageHtml(pageID) {
     var $root = $('#layermain');
-    $('#layermain').html("").css({ "background-color": "#ffffff", 'height': lunaPage.pages[pageID].page_height || '617px' });
+    $('#layermain').html("").css({
+        "background-color": "#ffffff",
+        'height': lunaPage.pages[pageID].page_height || '617px'
+    });
     // 解析json数据
     var jsonData = lunaPage.pages[pageID].page_content;
 
@@ -356,7 +361,7 @@ function setPageHtml(pageID) {
     } else {
         // 组件数据解析，对应jsonData
         var componentArr = [];
-        $.each(jsonData, function (n, value) {
+        $.each(jsonData, function(n, value) {
             // move canvas first
             if (!value.timestamp) {
                 value.timestamp = new Date().getTime();
@@ -370,7 +375,7 @@ function setPageHtml(pageID) {
         //对组件的显示顺序重新排序
         componentArr.sort(Util.arraySortBy('timestamp'));
 
-        componentArr.forEach(function (element) {
+        componentArr.forEach(function(element) {
             currentComponent = element;
             //初始化Controller
             componentPanel.init();
@@ -509,7 +514,12 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
             newComponentDom.attr("component-type", "canvas");
             newComponentDom.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
             newComponentDom.addClass("bg-canvas");
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
             if (componentObj.bgc) {
                 newComponentDom.css("background-color", componentObj.bgc);
             }
@@ -544,7 +554,12 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
         case "tab":
             newComponentDom.attr("component-type", "tab");
             newComponentDom.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
             newComponentDom.addClass("tabmenu");
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(componentObj.content.tabList);
@@ -553,7 +568,12 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
         case "imgList":
             newComponentDom.attr("component-type", comType);
             newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
 
 
             break;
@@ -726,7 +746,7 @@ function showPanoBackground($container, componentData) {
         pano.setGravityEnable(componentData.gravity); //重力感应
 
         //heading方向滚动的时候回调函数
-        pano.panoView.onHeadingChangeCallback = function (heading) {
+        pano.panoView.onHeadingChangeCallback = function(heading) {
             heading = heading % 360;
             if (heading < 0) {
                 heading += 360;
@@ -741,7 +761,7 @@ function showPanoBackground($container, componentData) {
         };
 
         //pitch方向滚动的时候回调函数
-        pano.panoView.onPitchChangeCallback = function (pitch) {
+        pano.panoView.onPitchChangeCallback = function(pitch) {
             var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
             if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
                 scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
@@ -774,7 +794,7 @@ function getAppId() {
  * @type {Object}
  */
 var componentPanel = {
-    init: function () {
+    init: function() {
         var componentType = currentComponent.type;
         if (componentType) {
             $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
@@ -790,7 +810,7 @@ var componentPanel = {
             }
         }
     },
-    update: function () {
+    update: function() {
         var componentType = currentComponent.type;
         $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
     }
@@ -800,7 +820,7 @@ var componentPanel = {
  * 生成页签文件
  */
 var initMenuTab = {
-    getTabListHtmlInCavas: function (tabList) {
+    getTabListHtmlInCavas: function(tabList) {
         var innerHtml = [];
         for (var i = 0; i < tabList.length; i++) {
 
@@ -823,7 +843,7 @@ var initMenuTab = {
 };
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
-$.fn.getHexBackgroundColor = function (id, property) {
+$.fn.getHexBackgroundColor = function(id, property) {
     var rgb = $(id).css(property);
     rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
 
@@ -842,24 +862,24 @@ function initBind(comid) {
         minWidth: 20,
         aspectRatio: false,
         containment: "#layermain",
-        start: function (event, ui) {
+        start: function(event, ui) {
             //console.log("start");
             $(ui.element).css({
                 'max-width': ''
             });
         },
-        resize: function (event, ui) {
+        resize: function(event, ui) {
             ui.element.height(ui.element.find('.con').height());
         },
-        stop: function () {
+        stop: function() {
             lunaPage.updatePageComponents();
             componentPanel.update();
         }
     }).draggable({
         containment: "#layermain",
-        start: function () { },
-        drag: function (event, ui) { },
-        stop: function () {
+        start: function() {},
+        drag: function(event, ui) {},
+        stop: function() {
             // TODO: 修复调整高度逻辑bug
             if (parseFloat($(this).css('top')) + $(this).height() == $('#layermain').height()) {
                 if ($(this).height() > 460) {
@@ -894,9 +914,9 @@ function initBind(comid) {
             componentPanel.update();
         }
     }).rotatable({
-        start: function (event, ui) { },
-        rotate: function (event, ui) { },
-        stop: function (event, ui) { },
+        start: function(event, ui) {},
+        rotate: function(event, ui) {},
+        stop: function(event, ui) {},
         rotationCenterX: 50.0,
         rotationCenterY: 50.0
     });
@@ -1033,7 +1053,34 @@ function modify() {
     $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
     $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
     $("[name=pageType][value=" + lunaPage.pages[currentPageId].page_type + "]").trigger('click');
-    $("[name=pageType]").each(function (e) {
+    $("[name=pageType]").each(function(e) {
         $(this).attr('disabled', 'disabled');
     });
+}
+/**
+ * 背景全景选择的回调函数
+ * 
+ * @param {any} panoid
+ */
+function panoSelectConfirmCallback(panoId) {
+    var scope = angular.element('#panoId').scope(); //jquery+angular实现
+    scope.canvas.currentComponent.panoId = scope.canvas.panoId = panoId;
+
+    scope.$apply();
+
+    angular.element('#panoId').triggerHandler('blur');
+}
+
+/**
+ * 全景控件全景选择的回调函数
+ * 
+ * @param {any} panoid
+ */
+function panoComSelectConfirmCallback(panoId) {
+    var scope = angular.element('#panoPanoId').scope(); //jquery+angular实现
+    scope.pano.currentComponent.content.panoId= scope.pano.content.panoId =panoId;
+    
+    scope.$apply();
+
+    angular.element('#panoPanoId').triggerHandler('blur');
 }
