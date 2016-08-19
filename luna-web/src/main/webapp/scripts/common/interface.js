@@ -219,10 +219,14 @@ var Inter = function () {
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
                 multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
-                customerPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+                customPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义相册全景
+                searchPano: { url: 'http://data.pano.visualbusiness.cn/rest/pano/search?q={0}&fromPage={1}&size={2}&from={3}&project={4}' ,type: 'GET'}, // 通过关键字搜索全景
+                searchAlbum: { url: 'http://data.pano.visualbusiness.cn/rest/album/search?q={0}&fromPage={1}&size={2}&from={3}', type:'GET'},
+
 
                 //zclip路径
-                zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
+                zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf"
+
 
             };
         }

@@ -116,5 +116,3 @@ update luna_menu set name="POI数据关系配置" where id=15;
 # 修改ms_farm_field 组件类型名称
 update ms_farm_field set type="PANORAMA" where type="RADIO_TEXT";
 
-
-
