@@ -1,12 +1,9 @@
 package ms.luna.biz.bl;
 
 import com.alibaba.fastjson.JSONObject;
-import jdk.nashorn.internal.parser.JSONParser;
 import ms.biz.common.ServiceConfig;
-import ms.luna.biz.dao.custom.MsFarmFieldDAO;
 import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.util.COSUtil;
-import ms.luna.biz.util.MsLogger;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +11,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class TestFarmPageService {
@@ -41,11 +40,7 @@ public class TestFarmPageService {
 		} catch (IOException e1) {
 			logger.error("Failed to load config");
 		}
-		
-		msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
-		msZoneCacheBL.init();
-		poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
-		poiApiBL.init();
+
 		farmPageService = (FarmPageService)context.getBean("farmPageService");
 	}
 	
@@ -73,9 +68,25 @@ public class TestFarmPageService {
 		Integer appId = 298;
 		JSONObject result = farmPageService.getPageInfo(appId);
 		System.out.println(result.toString());
+	}
 
+	@Test
+	public void getShowAppsByCategoryIds() {
+		JSONObject param = new JSONObject();
+		Integer limit = 3;
+		Integer offset = 0;
+		String categoryId = "CATE000000000002";
+		param.put("limit",limit);
+		param.put("offset", offset);
+//		param.put()
+//		param.put("categoryId", categoryId);
+//		JSONObject result = farmPageService.getShowAppsByCtgrId(param.toString());
+//		System.out.println(result.toString());
+	}
 
-
+	public static void main(String[] args) {
+		List<String> categoryList = Arrays.asList("".split(","));
+		System.out.print(categoryList.toString());
 	}
 
 }

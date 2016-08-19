@@ -5,6 +5,7 @@
             plugins/selectizeJs/selectize.bootstrap3.css
             styles/formComponent.css
             styles/common.css
+
         js
             plugins/jquery.js
             plugins/deep-diff/deep-diff-0.3.3.min.js
@@ -12,8 +13,14 @@
             script/common/interface.js
             plugins/es5-shim/es5-shim.min.js
 
-*/
-/*
+       如果用到图片上传,还需要下列文件
+            <jsp:include page="/templete/imgCropper.jsp" />
+            templete/imgCropper.jsp
+            bootstrap.min.css
+            plugins/cropper/cropper.min.css
+            styles/common/imgCropper.css
+
+
        注意事项
             需要在设置window.context, 否则可能有些图片加载不了
             功能不太完善, 没有的功能要自己加 :)
@@ -22,6 +29,8 @@
        相关说明:
             - 所有的父组件应该在init函数中初始化子组件,并在render函数中渲染子组件到父组件中
             - updateComponent函数 的参数只传需要更新的参数, 不需要更新的参数不用传, 判断参数中某一项是否需要更新应该用 data.attr !== undefined
+
+
 
  */
 
@@ -341,7 +350,7 @@
         // 事件绑定
         that._bindEvent = _bindEvent;
 
-        // 显示
+        // 显示loading效果
         that.showLoadingTip = showLoadingTip;
 
         // 隐藏loading效果
@@ -353,8 +362,11 @@
         // 用于上传文件时检查文件的合法性
         that._checkValidation = _checkValidation;
 
-        // 文件上传
+        // 文件上传,包含检验文件合法性
         that.handleFileUp = handleFileUp;
+
+        // 发送文件上传请求
+        that.reqUploadFile = reqUploadFile;
 
         // 清空内容
         that.clear = clear;
@@ -389,7 +401,7 @@
             }
             that._template =
                 "<div class='fileup'> \
-                    <input type='text' readonly='true' class='media' placeholder='{0}介绍地址'> \
+                    <input type='text' class='media' placeholder='{0}介绍地址'> \
                     <span class='btn fileinput-button' title='文件大小不超过{1}M'> \
                         <input class='media-fileup' type='file' name='media_fileup' {2}> \
                         <span>本地上传</span> \
@@ -470,11 +482,24 @@
                 that.setWarn(res.msg);
                 return;
             }
+            var file = event.target.files[0];
+            if(that.definition.type.toLocaleLowerCase() === 'pic'){
+                cropper.setFile(file, function(file){
+                    cropper.close();
+                    that.reqUploadFile(file);
+                }, function(){
+                    that.element.find('.media-fileup').val('');
+                });
+            } else{
+                that.reqUploadFile(file);
+            }
+        }
+
+        function reqUploadFile(file){
             that.showLoadingTip();
             that.element.find('.cleanInput').addClass('hidden');
-
             var data = new FormData();
-            data.append('file', event.target.files[0]);
+            data.append('file', file);
             data.append('type', that.definition.type.toLocaleLowerCase());
             data.append('resource_type', 'app');
             $.ajax({
@@ -488,7 +513,6 @@
                     if(data.code === '0'){
                         that.value = data.data.access_url;
                         that.element.find('.media').val(that.value);
-                        that.element.find('.media-fileup').val('');
                         that.setWarn('');
                         that.element.find('.cleanInput').removeClass('hidden');
                     } else{
@@ -496,10 +520,10 @@
                         if(that.value){
                             that.element.find('.cleanInput').removeClass('hidden');
                         }
+
                     }
                     that.hideLoadingTip();
-
-
+                    that.element.find('.media-fileup').val('');
                 },
                 error: function(data){
                     that.setWarn(data.msg);
@@ -507,6 +531,7 @@
                     if(that.value){
                         that.element.find('.cleanInput').removeClass('hidden');
                     }
+                    that.element.find('.media-fileup').val('');
                 }
             });
         }

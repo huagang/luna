@@ -14,6 +14,7 @@ import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
+import ms.luna.web.util.RequestHelper;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -228,7 +229,7 @@ public class PoiController extends BasicController {
                     row.put("poi_tags", poiJson.getString("tags"));
                     row.put("city_name", poiJson.getString("city_name"));
                     row.put("province_name", poiJson.getString("province_name"));
-
+                    row.put("preview_url", poiJson.getString("preview_url"));
                     rows.add(row);
                 }
                 resJSON.put("rows", rows);
@@ -247,11 +248,15 @@ public class PoiController extends BasicController {
     @ResponseBody
     public JSONObject asyncDeletePoi(
             @PathVariable("_id") String _id,
+            @RequestParam(required = false, value = "note", defaultValue = "") String note,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             JSONObject param = new JSONObject();
             param.put("_id", _id);
+            param.put("note", note);
+            LunaUserSession user = (LunaUserSession)SessionHelper.getUser(request.getSession(false));
+            param.put("unique_id", user.getUniqueId());
             JSONObject poisResult = managePoiService.asyncDeletePoi(param.toString());
             MsLogger.info(poisResult.toJSONString());
             return poisResult;

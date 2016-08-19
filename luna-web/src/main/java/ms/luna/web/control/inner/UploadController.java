@@ -180,7 +180,7 @@ public class UploadController {
             if(StringUtils.isNotBlank(resourceId)) {
                 realPath += "/" + resourceId;
             }
-            realPath += "/" + filename;
+            //realPath += "/" + filename;
             JSONObject vodResult = VODUtil.getInstance().upload2Cloud(file, realPath, filename, "", 0);
 
             JSONObject retData = new JSONObject();

@@ -1,19 +1,23 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.MsOperationLogTable;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class MsOperationLog implements Serializable {
+    @JSONField(name = MsOperationLogTable.ID)
     private Integer id;
-
+    @JSONField(name = MsOperationLogTable.RESOURCE_ID)
     private String resourceId;
-
+    @JSONField(name = MsOperationLogTable.TYPE)
     private String type;
-
+    @JSONField(name = MsOperationLogTable.NOTE)
     private String note;
-
+    @JSONField(name = MsOperationLogTable.UNIQUE_ID)
     private String uniqueId;
-
+    @JSONField(name = MsOperationLogTable.REGIST_HHMMSS)
     private Date registHhmmss;
 
     private static final long serialVersionUID = 1L;
@@ -79,11 +83,11 @@ public class MsOperationLog implements Serializable {
         }
         MsOperationLog other = (MsOperationLog) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getResourceId() == null ? other.getResourceId() == null : this.getResourceId().equals(other.getResourceId()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
-            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
-            && (this.getUniqueId() == null ? other.getUniqueId() == null : this.getUniqueId().equals(other.getUniqueId()))
-            && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()));
+                && (this.getResourceId() == null ? other.getResourceId() == null : this.getResourceId().equals(other.getResourceId()))
+                && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
+                && (this.getUniqueId() == null ? other.getUniqueId() == null : this.getUniqueId().equals(other.getUniqueId()))
+                && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()));
     }
 
     @Override
