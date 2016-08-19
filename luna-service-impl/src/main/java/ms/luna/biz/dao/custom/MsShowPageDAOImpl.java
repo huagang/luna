@@ -111,8 +111,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_UPDATE_TIME, new BsonDateTime(System.currentTimeMillis()));
 		showPageCollection.updateOne(Filters.eq(FIELD_PAGE_ID, page.getPageId()), new Document("$set", document));
 	}
-	
-	
+
 	
 	/**
 	 * 

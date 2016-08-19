@@ -3,6 +3,7 @@ package ms.luna.web.control;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.prism.impl.BaseMesh;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageRouteService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
@@ -55,11 +56,17 @@ public class RouteConfigurationController extends BasicCtrl {
     @ResponseBody
     public JSONObject saveRouteConfiguration(
             @PathVariable("routeId") Integer routeId,
-            @RequestParam(required = true, value = "data") String data){
+            @RequestParam(required = true, value = "data") String data,
+            HttpServletRequest request){
         try {
+            // todo
+            HttpSession session = request.getSession(false);
+            MsUser msUser = (MsUser) session.getAttribute("msUser");
+            
             JSONObject param = new JSONObject();
             param.put("routeId", routeId);
             param.put("data", data);
+            param.put("luna_name", msUser.getNickName());
             JSONObject result = manageRouteService.saveRouteConfiguration(param);
             MsLogger.debug(result.toString());
             return result;

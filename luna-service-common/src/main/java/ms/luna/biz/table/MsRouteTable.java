@@ -19,4 +19,13 @@ public class MsRouteTable {
     public static final String FIELD_BUSINESS_NAME = "business_name";
     public static final String FIELD_LUNA_NAME = "luna_name";
 
+    public static final String FIELD_ROUTE_ID = "route_id";
+    public static final String FIELD_LONG_TITLE = "long_title";
+    public static final String FIELD_CREATE_TIME = "create_time";
+    public static final String FIELD_UPDATE_TIME = "update_time";
+    public static final String FIELD_UPDATE_USER = "update_user";
+    public static final String FIELD_POI_ID = "poi_id";
+
+    public static final String C_LIST = "c_list";
+
 }
