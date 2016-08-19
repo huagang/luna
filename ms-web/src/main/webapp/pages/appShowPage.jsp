@@ -40,6 +40,10 @@
         <!-- 视频弹出框 End -->
 
 	</div>
+    <input id="shareInfoTitle" type="hidden" name="" value="${share_info_title}">
+    <input id="shareInfoDes" type="hidden" name="" value="${share_info_des}">
+    <input id="shareInfoLink" type="hidden" name="" value="${share_info_link}">
+    <input id="shareInfoPic" type="hidden" name="" value="${share_info_pic}">
     <script type="text/javascript" src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/vbpano.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
@@ -54,11 +58,10 @@
 
         var host = "<%=request.getContextPath() %>";
         var wechatOptions = {
-            title: "${share_info_title}",
-            desc: "${share_info_des}",
-            link: "${share_info_link}",
-           // link: window.location.href.split('?')[0],
-            imgUrl:"${share_info_pic}",
+            title: $('#shareInfoTitle').val(),
+            desc:  $('#shareInfoDes').val(),
+            link:  $('#shareInfoLink').val(),
+            imgUrl: $('#shareInfoPic').val(),
         };
         // alert(JSON.stringify( wechatOptions));
         var wechat = new weChat(wx,wechatOptions);
