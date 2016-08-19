@@ -128,6 +128,9 @@ right connector from last child*/
 	display: block;	
 }
 
+.luna-tree .item-title .poi_info:hover{
+    display: none;
+}
 
 .luna-tree .item-name .item-child-btn{
     float: right;
