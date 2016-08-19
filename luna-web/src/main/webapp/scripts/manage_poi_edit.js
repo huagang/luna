@@ -135,7 +135,7 @@ function newBlankPoiReadOnly(_id) {
 };
 
 //“删除”按钮，删除POI数据
-function delPOI(obj, _id){
+function delPOI(obj, _id, poiName){
 	$.ajax({
         url: Util.strFormat( Inter.getApiUrl().poiCheckDelete.url,[_id]),
         type: 'GET',
@@ -152,6 +152,11 @@ function delPOI(obj, _id){
                     popWindow($popwindow);
                     //弹窗中的确定按钮
                     $("#btn-delete").unbind().click(function(){
+						var reason = $('.delete-reason').val();
+						if(! reason){
+
+							return;
+						}
                         $.ajax({
                 	        url: Util.strFormat( Inter.getApiUrl().poiDelete.url,[_id]),
                 	        type: 'DELETE',

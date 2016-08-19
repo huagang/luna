@@ -436,3 +436,14 @@ a.button.disable:hover{
     background-color: white;
 }
 
+.red{
+    color: #D0021B;
+}
+
+.hidden{
+    display: none !important;
+}
+
+.show{
+    display: block !important;
+}

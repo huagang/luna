@@ -216,7 +216,10 @@
         <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
     </div>
     <div class="pop-cont">
-        删除POI数据后，将同步删除与之相关的数据应用，且不可恢复，确定执行删除操作吗？
+		<div>poi信息: <span class="red poi-name"></span> （<span class="poi-id"></span>）</div>
+		<label>删除理由</label>
+		<textarea class="delete-reason"></textarea>
+		<p class="warn">删除理由不能为空</p>
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
@@ -251,8 +254,8 @@
 		});
 	});
 	function operationFormatter(value, row, index) {
-		return '<a class="detail" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().poiEdit.url,[row._id]) +'">详情</a>'
-	   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\')">删除</a>';
+		return '<a class="detail" target="_blank" href="' + Util.strFormat(Inter.getApiUrl().poiEdit.url,[row._id]) +'">编辑</a>'
+	   +'<a class="delete" href="#" onclick="delPOI(this,\'' + row._id +'\',\'' + row.poi_name +'\')">删除</a>';
 	}
 	function nameformatter(value, row, index) {
 		var lang = '';
@@ -260,7 +263,7 @@
 			lang = '(英)'
 		}
 		return '<span style="color:#F00">'+lang+'</span>' + row.poi_name;
-}
+	}
 	function queryParams(params) {
 		//alert(JSON.stringify(params));
 		return {
