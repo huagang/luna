@@ -9,10 +9,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.web.common.BasicCtrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +48,24 @@ public class RouteConfigurationController extends BasicCtrl {
         } catch (Exception e) {
             MsLogger.error("Failed to get route configuration: " + e.getMessage() );
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get route configuration");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/configuration/{routeId}")
+    @ResponseBody
+    public JSONObject saveRouteConfiguration(
+            @PathVariable("routeId") Integer routeId,
+            @RequestParam(required = true, value = "data") String data){
+        try {
+            JSONObject param = new JSONObject();
+            param.put("routeId", routeId);
+            param.put("data", data);
+            JSONObject result = manageRouteService.saveRouteConfiguration(param);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to save route configuration: " + e.getMessage() );
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to save route configuration");
         }
     }
 

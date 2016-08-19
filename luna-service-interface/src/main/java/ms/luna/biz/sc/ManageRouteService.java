@@ -61,5 +61,5 @@ public interface ManageRouteService {
 	 * @param json
 	 * @return
 	 */
-	JSONObject saveRouteConfiguration(String json);
+	JSONObject saveRouteConfiguration(JSONObject json);
 }

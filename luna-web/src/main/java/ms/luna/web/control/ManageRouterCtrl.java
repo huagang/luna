@@ -10,9 +10,7 @@ import ms.luna.web.common.BasicCtrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -32,7 +30,7 @@ import java.io.IOException;
  */
 
 @Controller("manageRouterCtrl")
-@RequestMapping("/manage_router.do")
+@RequestMapping("/content/route")
 public class ManageRouterCtrl extends BasicCtrl {
 
 //	private static Logger logger = Logger.getLogger(ManageRouterCtrl.class);
@@ -40,15 +38,8 @@ public class ManageRouterCtrl extends BasicCtrl {
 	@Autowired
 	ManageRouteService manageRouteService;
 
-    private static final String INIT = "method=init";//初始化
-    private static final String EDIT_ROUTER = "method=edit_router_page";// 线路编辑页面初始化
-    private static final String ASYNC_SEARCH_ROUTES = "method=async_search_routes";// 搜索线路
-    private static final String EDIT_ROUTE = "method=edit_route";//线路属性编辑
-    private static final String DEL_ROUTE = "method=del_route"; //删除线路
-    private static final String CREATE_ROUTE = "method=create_route"; // 创建线路
-    private static final String CHECK_ROUTE_NM = "method=check_route_nm"; // 检测线路名称是否合法
-    
-    @RequestMapping(params = INIT)
+	//初始化
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -58,8 +49,9 @@ public class ManageRouterCtrl extends BasicCtrl {
 
         return modelAndView;
     }
-    
-    @RequestMapping(params = CREATE_ROUTE)
+
+	// 创建线路
+    @RequestMapping(method = RequestMethod.POST, value = "")
     @ResponseBody
     public JSONObject createRoute(
     		@RequestParam(required=true, value="name") String name,
@@ -94,16 +86,17 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to create route");
     	}
     }
-    
-    @RequestMapping(params = EDIT_ROUTE)
+
+	// 编辑线路
+    @RequestMapping(method = RequestMethod.PUT, value = "/{routeId}")
     @ResponseBody
     public JSONObject editRoute(
-    		@RequestParam(required=true, value="id") Integer id,
-    		@RequestParam(required=true, value="name") String name,
-    		@RequestParam(required=true, value="description") String description,
-    		@RequestParam(required=true, value="cost_id") Integer cost_id,
-    		@RequestParam(required=true, value="cover") String cover,
-    		HttpServletRequest request, HttpServletResponse response) {
+			@PathVariable("routeId") Integer id,
+			@RequestParam(required = true, value = "name") String name,
+			@RequestParam(required = true, value = "description") String description,
+			@RequestParam(required = true, value = "cost_id") Integer cost_id,
+			@RequestParam(required = true, value = "cover") String cover,
+			HttpServletRequest request, HttpServletResponse response) {
     	
     	try{
     		HttpSession session = request.getSession(false);
@@ -129,12 +122,13 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "线路属性编辑失败"+e.getMessage());
     	}
     }
-    
-    @RequestMapping(params = DEL_ROUTE)
+
+	// 删除线路
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{routeId}")
     @ResponseBody
     public JSONObject delRoute(
-    		@RequestParam(required=true, value="id") Integer id,
-    		HttpServletRequest request, HttpServletResponse response){
+			@PathVariable("routeId") Integer id,
+			HttpServletRequest request, HttpServletResponse response){
     	try{
 	    	JSONObject param = new JSONObject();
 	    	param.put("id", id);
@@ -147,8 +141,9 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "线路删除失败"+e.getMessage());
     	}
     }
-    
-    @RequestMapping(params = ASYNC_SEARCH_ROUTES)
+
+	// 搜索线路
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject async_search_routes(
     		@RequestParam(required=false, value="offset", defaultValue = "0") Integer offset,
@@ -166,9 +161,10 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to search routes.");
     	}
     }
-    
-    @RequestMapping(params = CHECK_ROUTE_NM)
-    @ResponseBody  
+
+	// 检查线路名称
+    @RequestMapping(method = RequestMethod.GET, value = "/checkName")
+    @ResponseBody
     public JSONObject checkRouteNm(
     		@RequestParam(required=true, value="name") String name,
     		@RequestParam(required=false, value="id") Integer id,
@@ -190,14 +186,4 @@ public class ManageRouterCtrl extends BasicCtrl {
     	}
     }
 
-	@RequestMapping(params = EDIT_ROUTER)
-	public ModelAndView initRouteConfigurationPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.setAttribute("menu_selected", "manage_router");
-		}
-		ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
-
-		return modelAndView;
-	}
 }

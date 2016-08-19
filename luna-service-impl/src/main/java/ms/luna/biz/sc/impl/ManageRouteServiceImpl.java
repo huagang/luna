@@ -1,9 +1,12 @@
 package ms.luna.biz.sc.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ms.luna.biz.dao.custom.MsRouteCollectionDAO;
 import ms.luna.biz.table.MsRouteTable;
 import ms.luna.biz.util.MsLogger;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,9 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 
 	@Autowired
 	private MsRouteDAO msRouteDAO;
+
+	@Autowired
+	private MsRouteCollectionDAO msRouteCollectionDAO;
 
 	@Override
 	public JSONObject createRoute(JSONObject json) {
@@ -169,8 +175,17 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	@Override
 	public JSONObject viewRouteConfiguration(Integer routeId) {
 		try {
+			JSONObject result = new JSONObject();
+			// mongo获取线路配置
+			Document document = msRouteCollectionDAO.getRoute(routeId);
+			JSONArray c_list = document.get("c_list", JSONArray.class);
+			result.put("routeDate", c_list);
+			// 获取线路poi数据
+			List<String> poiIdList = readPoiId2List(c_list);
+			JSONArray poiInfoList = getPoiForRoute(c_list);
+			result.put("poiDef", poiIdList);
 
-
+			return FastJsonUtil.sucess("success");
 		} catch (Exception e) {
 			MsLogger.error("Failed to view route configuration: " + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to view route configuration.");
@@ -178,12 +193,38 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 	}
 
 	@Override
-	public JSONObject saveRouteConfiguration(String json) {
+	public JSONObject saveRouteConfiguration(JSONObject json) {
 		try {
-
+			return null;
 		} catch (Exception e) {
 			MsLogger.error("Failed to save route configuration: " + e.getMessage());
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to save route configuration.");
 		}
+	}
+
+
+	/**
+	 * 从线路中获取poi id列表
+	 *
+	 * @param c_list
+	 * @return
+	 */
+	private List<String> readPoiId2List(JSONArray c_list) {
+		List<String> list = new ArrayList<>();
+		for (int i = 0; i < c_list.size(); i++) {
+			String poi_id = c_list.getJSONObject(i).getString("poi_id");
+			list.add(poi_id);
+		}
+		return list;
+	}
+
+	/**
+	 * 根据poi id列表获取信息
+	 *
+	 * @param c_list
+	 * @return
+	 */
+	private JSONArray getPoiForRoute(JSONArray c_list) {
+		return null;
 	}
 }
