@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import ms.luna.biz.dao.custom.MsRouteCollectionDAO;
 import ms.luna.biz.dao.custom.MsVideoUploadDAO;
 import ms.luna.biz.dao.model.*;
 import org.bson.Document;
@@ -723,12 +724,25 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		if (isUsing) {
 			return FastJsonUtil.errorWithMsg("LUNA.E0006");
 		}
+
+		// 检查在线路管理中是否使用
+		MongoCollection<Document> poi_route_index = mongoConnector.getDBCollection(MsRouteCollectionDAO.POI_ROUTE_INDEX);
+		document = poi_route_index.find(keyId).limit(1).first();
+		if (document != null) {
+			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_route"));
+			if (used_in_business.size() > 0) {
+				isUsing = true;
+			}
+		}
+		if (isUsing) {
+			return FastJsonUtil.errorWithMsg("该POI在线路配置中已经投入使用，请先从线路配置中移除。");
+		}
+
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
 		DeleteResult deleteResult = poi_collection.deleteOne(keyId);
 		if (deleteResult.getDeletedCount() > 0) {
 			return FastJsonUtil.sucess("success");
 		}
-
 		return FastJsonUtil.errorWithMsg("LUNA.E0011", _id);
 	}
 

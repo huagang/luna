@@ -1,7 +1,7 @@
 package ms.luna.biz.table;
 
 /**
- * Created by greek on 16/8/19.
+ * Created: by greek on 16/8/19.
  */
 public class MsRouteTable {
 
@@ -27,5 +27,6 @@ public class MsRouteTable {
     public static final String FIELD_POI_ID = "poi_id";
 
     public static final String C_LIST = "c_list";
+    public static final String USED_IN_ROUTE = "used_in_route";
 
 }

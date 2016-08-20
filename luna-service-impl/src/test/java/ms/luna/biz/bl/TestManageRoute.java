@@ -63,30 +63,36 @@ public class TestManageRoute {
 
 	}
 	
-//	@Test
-//	public void delRoute(){
-//		Integer id = 26;
-//		JSONObject result = manageRouteService.delRoute(id);
-//		System.out.println(result.toString());
-//	}
+	@Test
+	public void delRoute(){
+		Integer id = 35;
+		JSONObject result = manageRouteService.delRoute(id);
+		System.out.println(result.toString());
+	}
 	
-//	@Test
-//	public void viewRouteConfiguration() {
-//		Integer id = 28;
-//		JSONObject result = manageRouteService.viewRouteConfiguration(id);
-//		System.out.println(result.toString());
-//	}
+	@Test
+	public void viewRouteConfiguration() {
+		Integer id = 30;
+		JSONObject result = manageRouteService.viewRouteConfiguration(id);
+		System.out.println(result.toString());
+	}
 
 	@Test
 	public void saveRouteConfiguration(){
 		String c_list = "{\"c_list\":[{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5772311b8ccb783280163939\"},{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5760bc433fc92303d8d2255b\"}]}";
 		String luna_name = "greek test";
-		Integer id = 28;
+		Integer id = 35;
 		JSONObject param = new JSONObject();
 		param.put("data", c_list);
 		param.put("route_id", id);
 		param.put("luna_name", luna_name);
 		JSONObject result = manageRouteService.saveRouteConfiguration(param);
 		System.out.println(result.toString());
+	}
+
+	@Test
+	public void test() {
+		delRoute();
+		createRoute();
 	}
 }

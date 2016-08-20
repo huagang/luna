@@ -20,8 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Greek
@@ -93,8 +94,10 @@ public class ManageRouteServiceImpl implements ManageRouteService {
         try {
             // mysql 数据删除
             msRouteDAO.deleteByPrimaryKey(id);
-            // mongoDb 数据删除
+            // mongoDb--route_collection 数据删除
             msRouteCollectionDAO.deleteRoute(id);
+            // todo mongoDb--poi_route_index 数据删除
+            msRouteCollectionDAO.deleteRouteIndex(id);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to delete route: " + e.getMessage());
@@ -173,7 +176,6 @@ public class ManageRouteServiceImpl implements ManageRouteService {
         }
     }
 
-
     @Override
     public JSONObject viewRouteConfiguration(Integer routeId) {
         try {
@@ -185,7 +187,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
                 // 获取线路配置数据
                 c_list = JSONObject.parseObject(document.toJson()).getJSONArray(MsRouteTable.C_LIST);
                 // 获取线路poi数据
-                List<ObjectId> poiIdList = readPoiId2List(c_list);
+                Set<ObjectId> poiIdList = readPoiId2List(c_list);
                 poiDef = msRouteCollectionDAO.getPoiForRoute(poiIdList);
             }
             result.put("routeDate", c_list);
@@ -207,7 +209,16 @@ public class ManageRouteServiceImpl implements ManageRouteService {
             document.put(MsRouteTable.C_LIST, c_list);
             String luna_name = json.getString(MsRouteTable.FIELD_LUNA_NAME);
             Integer routeId = json.getInteger(MsRouteTable.FIELD_ROUTE_ID);
+
+            // todo 保存索引到poi_route_index
+            Set<ObjectId> newPoiIds = readPoiId2List(c_list);
+            Document oldRouteDoc = msRouteCollectionDAO.getRoute(routeId);
+            JSONObject oldRouteJson = JSONObject.parseObject(oldRouteDoc.toJson());
+            JSONArray c_list2 = oldRouteJson.getJSONArray(MsRouteTable.C_LIST);
+            Set<ObjectId> oldPoiIds = readPoiId2List(c_list2);
+
             msRouteCollectionDAO.saveRoute(document, routeId, luna_name);
+            msRouteCollectionDAO.updateRouteIndex(oldPoiIds, newPoiIds, routeId);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to save route configuration: " + e.getMessage());
@@ -222,8 +233,8 @@ public class ManageRouteServiceImpl implements ManageRouteService {
      * @param c_list
      * @return
      */
-    private List<ObjectId> readPoiId2List(JSONArray c_list) {
-        List<ObjectId> list = new ArrayList<>();
+    private Set<ObjectId> readPoiId2List(JSONArray c_list) {
+        Set<ObjectId> list = new HashSet<>();
         for (int i = 0; i < c_list.size(); i++) {
             String _id = c_list.getJSONObject(i).getString(MsRouteTable.FIELD_POI_ID);
             list.add(new ObjectId(_id));
