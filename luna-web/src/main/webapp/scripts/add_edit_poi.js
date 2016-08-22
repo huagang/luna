@@ -366,7 +366,7 @@ $(function () {
     });
     displayPrivateField();
 
-    var geocoder = new qq.maps.Geocoder({
+    window.geocoder = new qq.maps.Geocoder({
         // 设置服务请求成功的回调函数
         complete: function (result) {
             var addressComponents = result.detail.addressComponents;
