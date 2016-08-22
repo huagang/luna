@@ -49,6 +49,7 @@ public class LoginFilter implements Filter {
 				webRoot + "/api_vodPlay.do",
 				webRoot + "/fileUpload.do",
 				//前端开发需要 暂时添加
+				webRoot + "/manage_router.do",
 				webRoot + "/manage_user.do",
 				webRoot + "/select_bussiness.do",
 				//end
