@@ -196,11 +196,12 @@ $(document).ready(function () {
 
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '';
+                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '',
+                pageTime = item.page_time ? item.page_time * 1000 : 4000;
             if (item.page_type == "2") {
                 $("body").addClass("canscroll");
             }
-            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"><i class="icon icon-goback goback"></i></div>');
+            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"  data-pagetime="' + pageTime + '"><i class="icon icon-goback goback"></i></div>');
             console.log(item);
             if (document.querySelector('.component-group')) {
                 $comGroup.css('opacity', 0);
@@ -275,15 +276,13 @@ $(document).ready(function () {
     if ($('.welcome').length > 0) {
 
         //修改history 中的内容，来解决goback 中的问题
-
-
+        var pageTime = $('.welcome').data('pagetime');
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
         setTimeout(function () {
-            // window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
@@ -299,7 +298,7 @@ $(document).ready(function () {
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
+        }, pageTime);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
