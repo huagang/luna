@@ -115,6 +115,14 @@ update luna_menu set name="POI数据关系配置" where id=15;
 
 # 修改ms_farm_field 组件类型名称
 update ms_farm_field set type="PANORAMA" where type="RADIO_TEXT";
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_foreground_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_background_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="manager_pic" ;
+update ms_farm_field set limits="{\"TEXTAREA\":[{\"empty\":false,\"max\":1024}]}" where name="manager_self_introduction" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="well_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="all_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}],\"TEXT\":[{\"empty\":false,\"max\":255}],\"num\":{\"min\":3}}" where name="delicacy" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="country_enjoyment" ;
 
 CREATE TABLE `ms_operation_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
