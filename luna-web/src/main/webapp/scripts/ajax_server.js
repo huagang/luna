@@ -38,14 +38,14 @@ function isValidPageInfo() {
         $("#warn2").text("不能为空");
         validFlag = false;
     }
-
-    var txtTime = document.querySelector('#txt-time').value,
-        numReg = /^[0-9](.[0-9]{1,3})?$|^[0-9]$/;
-    if (!numReg.test(txtTime)) {
-        $("#warn4").text("请输入10以内的数字，最长保留三位小数");
-        validFlag = false;
+    if (pageCode == 'welcome') {
+        var txtTime = document.querySelector('#txt-time').value,
+            numReg = /^[0-9](.[0-9]{1,3})?$|^[0-9]$/;
+        if (!numReg.test(txtTime)) {
+            $("#warn4").text("请输入10以内的数字，最长保留三位小数");
+            validFlag = false;
+        }
     }
-
     var txtPageHeight = document.querySelector('#txtPageHeight').value,
         txtPageType = document.querySelector('[name=pageType]:checked').value;
     if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {

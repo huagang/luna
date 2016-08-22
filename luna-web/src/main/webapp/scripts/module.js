@@ -1039,9 +1039,6 @@ function deletePageDialog(pageID) {
 
 //编辑窗口，和新增共用
 function modify(e) {
-
-
-
     $overlay.css("display", "block");
     var $pop_window = $("#pop-add");
     var h = $pop_window.height();

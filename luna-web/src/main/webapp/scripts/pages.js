@@ -100,6 +100,7 @@ var InitLeftArea = function () {
             });
             resetDialog();
             $("[name=pageType][value=1]").trigger('click');
+            $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
         });
 
         //修改界面
@@ -111,7 +112,6 @@ var InitLeftArea = function () {
                     $('#txt-time').closest('.item-wrap').removeClass('hide');
                 } else {
                     $('#txt-time').closest('.item-wrap').addClass('hide');
-
                 }
                 $('#txt-name,#txt-short').attr('readonly', 'readonly');
             } else {
