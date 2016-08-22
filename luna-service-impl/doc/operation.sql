@@ -132,4 +132,4 @@ CREATE TABLE `ms_operation_log` (
   `unique_id` varchar(32) NOT NULL COMMENT '用户id',
   `regist_hhmmss` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
