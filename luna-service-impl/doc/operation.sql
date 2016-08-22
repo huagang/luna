@@ -116,3 +116,12 @@ update luna_menu set name="POI数据关系配置" where id=15;
 # 修改ms_farm_field 组件类型名称
 update ms_farm_field set type="PANORAMA" where type="RADIO_TEXT";
 
+CREATE TABLE `ms_operation_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `resource_id` varchar(32) NOT NULL COMMENT '资源id',
+  `type` varchar(8) NOT NULL COMMENT '资源类型',
+  `note` varchar(255) DEFAULT NULL COMMENT '备注',
+  `unique_id` varchar(32) NOT NULL COMMENT '用户id',
+  `regist_hhmmss` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
