@@ -159,26 +159,18 @@
                 </div>
                 <div class="bg-set clearfix">
                   <label class="bg-img">背景图片：
-                            <br>
-                            <br>
-                            <form id="backgrounadpic_id" name="backgrounadpic_id" method="post" enctype="multipart/form-data" class="bg-opt-wrap">
-                                <div class="bg-tips"><span>建议尺寸 640x1136</span></div>
-                                <button class="btn btn-local">本地上传</button>
-                                <span class="or hide">或</span>
-                                <input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()" />
-                                <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="file" />
-                                <button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景
-                                </button>
-                            </form>
-                        </label>
-                  <!--  <div class="preview" id='pre-bg'>
-                       <div style="z-index: -1; background: #ddd; text-align: center; vertical-align: middle; color: #333; width: 110px; height: 100px; padding-top: 30px; font-size: 14px;">图片最大尺寸
-                         <br>640x1136</div>
-                       <a class="img-clc" id="bg-clc" ng-hide="canvas.isEmptyStr(canvas.currentComponent.bgimg)" ng-click='canvas.removeBackgroundImg()'>删除
-                       </a>
-                       <img class="thumbnail" id="thumbnail-bg" ng-hide="canvas.isEmptyStr(canvas.currentComponent.bgimg)" src="{{canvas.currentComponent.bgimg}}" style="position:absolute; top:228px;width:110px;padding:0;">
-                     </div>
-                     <button class="btn btn-confirm" id="btn-bg" ng-click="saveBackgroundImg()">确定</button> -->
+                      <br>
+                      <br>
+                      <form id="backgrounadpic_id" name="backgrounadpic_id" method="post" enctype="multipart/form-data" class="bg-opt-wrap">
+                          <div class="bg-tips"><span>建议尺寸 640x1136</span></div>
+                          <button class="btn btn-local">本地上传</button>
+                          <span class="or hide">或</span>
+                          <input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()" />
+                          <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="file" />
+                          <button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景
+                          </button>
+                      </form>
+                  </label>
                 </div>
                 <div class="bg-set clearfix">
                   <label>全景背景：</label>
@@ -1370,11 +1362,18 @@
                 <span class="item-tit">页面长度</span>
                 <div class="item-cont">
                   <div class="col-md-12" style="height:30px;">
-                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1" readonly="readonly"><label for="rdSinglePage">单页</label>
-                    <input type="radio" id="rdLongPage" name="pageType" value="2" readonly="readonly"><label for="rdLongPage">纵向长页面</label>
+                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1" ><label for="rdSinglePage">单页</label>
+                    <input type="radio" id="rdLongPage" name="pageType" value="2" ><label for="rdLongPage">纵向长页面</label>
                   </div>
                   <input class="txt col-md-12" id="txtPageHeight" type="number" placeholder="输入页面长度，不小于617" name="pageHeight" min="617" readonly='readonly' />
                   <span class="warnTips"></span>
+                </div>
+              </div>
+              <div class="item-wrap hide">
+                <span class="item-tit">显示时长</span>
+                <div class="item-cont">
+                  <input class="txt col-md-12" id="txt-time" type="text" placeholder="请输入时间数字，单位是秒" />
+                  <span id="warn4"></span>
                 </div>
               </div>
             </form>

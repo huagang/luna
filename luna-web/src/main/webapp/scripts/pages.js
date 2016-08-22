@@ -43,7 +43,7 @@ var InitTopArea = function () {
                 componentType = divBtnDom.dataset.comtype;
 
             if (componentType.length > 0) {
-                createNewEelement(componentType,'create');
+                createNewEelement(componentType, 'create');
             }
         });
     };
@@ -85,6 +85,7 @@ var InitLeftArea = function () {
 
     //初始化页面创建、修改点击事件
     var initEditEvent = function () {
+        //新增界面
         $("#new-built").click(function () {
             $overlay.css("display", "block");
             var $pop_window = $("#pop-add");
@@ -101,9 +102,22 @@ var InitLeftArea = function () {
             $("[name=pageType][value=1]").trigger('click');
         });
 
-        //修改
-        $("#list-page").on('click', 'a.modify', function () {
-            modify();
+        //修改界面
+        $("#list-page").on('click', 'a.modify', function (e) {
+            var pageItemDom = $(e.target).closest('li'),
+                pageCode = pageItemDom.data('pagecode');
+            if (pageCode == 'welcome' || pageCode == 'index') {
+                if (pageCode == 'welcome') {
+                    $('#txt-time').closest('.item-wrap').removeClass('hide');
+                } else {
+                    $('#txt-time').closest('.item-wrap').addClass('hide');
+
+                }
+                $('#txt-name,#txt-short').attr('readonly', 'readonly');
+            } else {
+                $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
+            }
+            modify(e);
         });
 
         //创建或更新，根据弹窗是否存在modify_page_id确定
@@ -477,7 +491,7 @@ var InitRightArea = function () {
                 if (e.keyCode != 8) {
                     return false;
                 }
-            } 
+            }
         });
 
         //粘贴时去除样式
@@ -698,7 +712,7 @@ $(document).ready(function () {
         updatePageComponents();
     };
 
-    $.creatPageComponents = function (pageID,  componentType, createType) {
+    $.creatPageComponents = function (pageID, componentType, createType) {
         creatPageComponentsHtml(pageID, currentComponent, createType);
     };
 

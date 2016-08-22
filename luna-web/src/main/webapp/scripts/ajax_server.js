@@ -27,6 +27,7 @@ function getAppData(appID, successCallback) {
 
 function isValidPageInfo() {
     var validFlag = true,
+        pageCode = $("#txt-short").val(),
         $txtName = $("#txt-name").val();
     if ($txtName.length == 0) {
         $("#warn1").text("不能为空");
@@ -37,12 +38,22 @@ function isValidPageInfo() {
         $("#warn2").text("不能为空");
         validFlag = false;
     }
+
+    var txtTime = document.querySelector('#txt-time').value,
+        numReg = /^[0-9](.[0-9]{1,3})?$|^[0-9]$/;
+    if (!numReg.test(txtTime)) {
+        $("#warn4").text("请输入10以内的数字，最长保留三位小数");
+        validFlag = false;
+    }
+
     var txtPageHeight = document.querySelector('#txtPageHeight').value,
         txtPageType = document.querySelector('[name=pageType]:checked').value;
     if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }
+    $("#warn1,#warn2,#warn4").text("");
+
     return validFlag;
 }
 // 创建app的一个新的页面
@@ -56,6 +67,7 @@ function creatPageID() {
         var params = {
             'app_id': app_id,
             'page_name': $("#txt-name").val(),
+            'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
             'page_order': $(".list-page .drop-item[page_id]").length + 1,
             'page_type': document.querySelector('[name=pageType]:checked').value,
@@ -107,6 +119,7 @@ function modifyPageName() {
             'app_id': app_id,
             'page_id': pageId,
             'page_name': $("#txt-name").val(),
+            'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value,
@@ -128,6 +141,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_name = $("#txt-name").val();
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
+                lunaPage.pages[pageId].page_time = $("#txt-time").val();
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
                 $('#layermain').css('height', lunaPage.pages[pageId].page_height);
 
