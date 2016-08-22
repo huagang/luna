@@ -27,7 +27,8 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
         <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
         <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-        
+        <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
+
         <!-- 对ES5的支持Start -->
         <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
@@ -1500,8 +1501,8 @@
           </div>
         </div>
         
-
-
+		    <jsp:include page="/templete/imgCropper.jsp" />
+        
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
