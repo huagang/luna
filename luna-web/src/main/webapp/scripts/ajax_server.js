@@ -400,7 +400,8 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
                 if (clc) {
                     $(clc).show();
                 }
-
+                //关闭cropper弹框
+                cropper.close();
             },
             error: function (returndata) {
                 $.alert(returndata);
