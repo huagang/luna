@@ -115,7 +115,24 @@ update luna_menu set name="POI数据关系配置" where id=15;
 
 # 修改ms_farm_field 组件类型名称
 update ms_farm_field set type="PANORAMA" where type="RADIO_TEXT";
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_foreground_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="start_page_background_pic" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name="manager_pic" ;
+update ms_farm_field set limits="{\"TEXTAREA\":[{\"empty\":false,\"max\":1024}]}" where name="manager_self_introduction" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="well_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="all_chosen_room_panorama_type" ;
+update ms_farm_field set limits="{\"PIC\":[{\"empty\":false,\"max\":20,\"ext\":[\"png\",\"jpg\"]}],\"TEXT\":[{\"empty\":false,\"max\":255}],\"num\":{\"min\":3}}" where name="delicacy" ;
+update ms_farm_field set limits="{\"TEXT\":[{\"empty\":false,\"max\":255}]}" where name="country_enjoyment" ;
 
+CREATE TABLE `ms_operation_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `resource_id` varchar(32) NOT NULL COMMENT '资源id',
+  `type` varchar(8) NOT NULL COMMENT '资源类型',
+  `note` varchar(255) DEFAULT NULL COMMENT '备注',
+  `unique_id` varchar(32) NOT NULL COMMENT '用户id',
+  `regist_hhmmss` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,status,regist_hhmmss,up_hhmmss) 
 values('搜索线路列表',147,'/manage_router.do?method=async_search_routes',3,1,now(),now());
@@ -130,18 +147,16 @@ insert into ms_resource_uri (resource_name,parent_id,resource_uri,level_type,sta
 values('线路删除',147,'/manage_router.do?method=del_route',3,1,now(),now());
 
 create table `ms_route` (
-	`id` int(11) not null auto_increment comment '线路id',
-	`name` varchar(64) not null comment '线路名称',
-	`business_id` int(11) not null comment '所属业务id',
-	`description` varchar(1024) default '' comment '线路介绍',
-	`cost_id` int(1) not null comment '体力消耗值',
-	`cover` varchar(255) default '' comment '封面图',
-	`unique_id` char(32) NOT NULL comment '创建人id',
-	`regist_hhmmss` timestamp NULL DEFAULT NULL,
-	`up_hhmmss` timestamp NULL DEFAULT NULL,
-	primary key (`id`),
-	key `business_id` (`business_id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '线路id',
+  `name` varchar(64) NOT NULL COMMENT '线路名称',
+  `business_id` int(11) NOT NULL COMMENT '所属业务id',
+  `description` varchar(1024) DEFAULT '' COMMENT '线路介绍',
+  `cost_id` int(1) NOT NULL COMMENT '体力消耗值',
+  `cover` varchar(255) DEFAULT '' COMMENT '封面图',
+  `unique_id` char(32) NOT NULL COMMENT '创建人id',
+  `regist_hhmmss` timestamp NULL DEFAULT NULL,
+  `up_hhmmss` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `business_id` (`business_id`)
 )ENGINE=InnoDB default charset=utf8 comment='线路表';
-
-alter table ms_route add unique(`name`);
-
