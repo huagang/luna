@@ -1,22 +1,18 @@
-package ms.luna.web.control;
+package ms.luna.web.control.content;
 
+import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.model.MsUser;
 import ms.luna.biz.sc.ManageRouteService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
-import ms.luna.web.common.BasicCtrl;
-
-import org.apache.log4j.Logger;
+import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.SessionHelper;
+import ms.luna.web.control.common.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,9 +25,9 @@ import java.io.IOException;
  * @Date: 2016-07-11
  */
 
-@Controller("manageRouterCtrl")
+@Controller("routeController")
 @RequestMapping("/content/route")
-public class ManageRouterCtrl extends BasicCtrl {
+public class RouteController extends BasicController {
 
 //	private static Logger logger = Logger.getLogger(ManageRouterCtrl.class);
 	
@@ -66,8 +62,8 @@ public class ManageRouterCtrl extends BasicCtrl {
 			if(session == null){
 				throw new RuntimeException("session is null");
 			}
-    		MsUser msUser = (MsUser)session.getAttribute("msUser");
-    		String unique_id = msUser.getUniqueId();
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+    		String unique_id = user.getUniqueId();
     		JSONObject param = new JSONObject();
     		param.put("name", name);
     		param.put("description", description);
@@ -103,8 +99,8 @@ public class ManageRouterCtrl extends BasicCtrl {
 			if(session == null){
 				throw new RuntimeException("session is null");
 			}
-    		MsUser msUser = (MsUser)session.getAttribute("msUser");
-    		String unique_id = msUser.getUniqueId();
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+    		String unique_id = user.getUniqueId();
     		
     		JSONObject param = new JSONObject();
     		param.put("id", id);
@@ -150,7 +146,7 @@ public class ManageRouterCtrl extends BasicCtrl {
     		@RequestParam(required=false, value="limit", defaultValue = "" + Integer.MAX_VALUE) Integer limit,
     		HttpServletRequest request, HttpServletResponse response){
     	try {
-    		JSONObject param = new JSONObject();
+     		JSONObject param = new JSONObject();
 			param.put("offset", offset);
 			param.put("limit", limit);
     		JSONObject result = manageRouteService.loadRoutes(param);
@@ -158,7 +154,7 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return result;
     	} catch (Exception e) {
 			MsLogger.error("Failed to search routes: " + e.getMessage());
-    		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to search routes.");
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to search routes.");
     	}
     }
 
@@ -185,5 +181,52 @@ public class ManageRouterCtrl extends BasicCtrl {
     		return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check route name.");
     	}
     }
+
+	@RequestMapping(method = RequestMethod.GET, value = "/configuration")
+	public ModelAndView initRouteConfigurationPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute("menu_selected", "manage_router");
+		}
+		ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
+
+		return modelAndView;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/configuration/{routeId}")
+	@ResponseBody
+	public JSONObject viewRouteConfiguration(@PathVariable("routeId") Integer routeId){
+		try {
+			JSONObject result = manageRouteService.viewRouteConfiguration(routeId);
+			MsLogger.debug(result.toString());
+			return result;
+		} catch (Exception e) {
+			MsLogger.error("Failed to get route configuration: " + e.getMessage() );
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get route configuration");
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/configuration/{routeId}")
+	@ResponseBody
+	public JSONObject saveRouteConfiguration(
+			@PathVariable("routeId") Integer routeId,
+			@RequestParam(required = true, value = "data") String data,
+			HttpServletRequest request){
+		try {
+			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+
+			JSONObject param = new JSONObject();
+			param.put("routeId", routeId);
+			param.put("data", data);
+			param.put("luna_name", user.getNickName());
+			JSONObject result = manageRouteService.saveRouteConfiguration(param);
+			MsLogger.debug(result.toString());
+			return result;
+		} catch (Exception e) {
+			MsLogger.error("Failed to save route configuration: " + e.getMessage() );
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to save route configuration");
+		}
+	}
+
 
 }
