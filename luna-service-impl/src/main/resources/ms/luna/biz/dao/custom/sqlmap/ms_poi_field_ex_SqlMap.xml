@@ -33,7 +33,7 @@
 			left outer join ms_poi_field f
 				 on r.field_name= f.field_name  
 		 where tag.tag_level=1
-		 ORDER BY display_order,ds_order  asc
+		 ORDER BY display_order is null asc, display_order asc, ds_order asc
 	</select>
 	
 	<resultMap id="MsPoiTagInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
