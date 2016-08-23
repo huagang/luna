@@ -48,8 +48,8 @@
         // 操作 设置线路点设置弹出框的时间信息
         vm.setPoiInfo = setPoiInfo;
 
-        // 操作 获取景点数量
-        vm.getSceneryNum = getSceneryNum;
+        // 操作 获取景点数量以及总共时间
+        vm.summary = summary;
 
         // 操作 显示信息
         vm.showMessage = showMessage;
@@ -307,7 +307,15 @@
                 }
             }).then(function(res){
                 if(res.data.code === '0'){
-                    vm.filterData.poiData = res.data.data.row;
+                    var idList = vm.routeData.map(function(item){
+                        return item._id;
+                    });
+                    vm.filterData.poiData = res.data.data.row.filter(function(item){
+                        if(idList.indexOf(item._id) === -1){
+                            return true;
+                        }
+                        return false;
+                    });
                     vm.filterData.searched = true;
                 } else{
                     alert('加载数据失败,请重试');
@@ -363,6 +371,7 @@
                 vm.routeData[i].startTime = vm.editingPoiInfo.startTime.toTimeString().substr(0,5);
                 vm.routeData[i].endTime = vm.editingPoiInfo.endTime.toTimeString().substr(0,5);
                 vm.changeState('init');
+                vm.handleSave();
             }
         }
 
@@ -431,13 +440,30 @@
             }
         }
 
-        function getSceneryNum(){
-            return vm.routeData.reduce(function(memo, cur){
-                if(vm.routeData.tag.indexOf(2) !== -1){
+        function summary(){
+            vm.sceneryNum =  vm.routeData.reduce(function(memo, cur){
+                if(cur.tags.indexOf(2) !== -1){
                     memo += 1;
                 }
                 return memo;
             }, 0);
+            if(vm.routeData.length > 0){
+                var endTime = vm.routeData[vm.routeData.length - 1].endTime, startTime = vm.routeData[0].startTime;
+                if(startTime && endTime){
+                    var start = startTime.match(/(\d+):(\d+)/), end = endTime.match(/(\d+):(\d+)/);
+                    var hour = parseInt(end[1]) - parseInt(start[1]), minute = parseInt(end[2]) - parseInt(start[2]);
+                    if(minute < 0){
+                        minute += 60;
+                        hour -= 1;
+                    }
+                    if(hour < 0){
+                        hour += 24;
+                    }
+                    vm.routeTime = hour + '小时' + minute + '分钟';
+                } else{
+                    vm.routeTime = '信息不完全,无法获取';
+                }
+            }
         }
 
         function fetchRouteData(){
@@ -471,6 +497,7 @@
                             tags: [vm.poiDef[item.poi_id].category_id]
                         };
                     }) || [];
+                    vm.summary();
                 } else{
                     vm.showMessage('获取线路信息失败,请刷新重试');
                 }
@@ -499,7 +526,7 @@
                 }
             }).then(function(res){
                 if(res.data.code === '0'){
-
+                    vm.summary();
                 } else{
                     vm.showMessage('保存失败');
                 }
@@ -533,6 +560,7 @@
         function handleDragEnter(){
             if(vm.dragData.targetId){
                 vm.dragData.enterId = event.target.parentElement.getAttribute('data-id');
+                vm.dragData.enterNextId = event.target.parentElement.nextElementSibling.getAttribute('data-id');
                 event.preventDefault();
                 $scope.$apply();
             }
@@ -541,6 +569,7 @@
         function handleDragLeave(){
             if(vm.dragData.targetId) {
                 vm.dragData.enterId = '';
+                vm.dragData.enterNextId = '';
                 event.preventDefault();
                 $scope.$apply();
             }
@@ -554,7 +583,7 @@
         function handleDrop(){
             if(vm.dragData.targetId ){
 
-                if(vm.dragData.targetId !== vm.dragData.enterId){
+                if(vm.dragData.targetId !== vm.dragData.enterNextId && vm.dragData.targetId !== vm.dragData.enterId){
                     var dragData = vm.dragData;
                     var routeData = [], dragedData ;
                     vm.routeData = vm.routeData.reduce(function(memo, item, index){
@@ -567,13 +596,19 @@
                             memo.push(item);
                         }
                         return memo;
-
                     },[]);
+                    vm.routeData.some(function(item, index){
+                        if(item === undefined){
+                            vm.routeData[index] = dragedData;
+                            return true;
+                        }
+                        return false;
+                    })
                 }
 
-                vm.dragData.targetId = vm.dragData.enterId = '';
-                vm.handleSave();
+                vm.dragData.enterNextId = vm.dragData.targetId = vm.dragData.enterId = '';
                 $scope.$apply();
+                vm.handleSave();
             }
         }
 

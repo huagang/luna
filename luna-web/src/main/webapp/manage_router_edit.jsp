@@ -52,7 +52,11 @@
                         <div class="empty-tip" ng-show="editor.routeData.length === 0">
                             <p><span class="icon-tip"></span>该线路中还没有任何的POI点,点击右上角的"<span class="blue">添加线路点</span>"丰富线路信息吧</p>
                         </div>
-                        <div class="route-pois" route-event-delegate>
+                        <div class="route-pois ng-hide" ng-show="editor.routeData.length > 0"  route-event-delegate>
+                            <div class="summary">
+                                <span>旅游景点个数: {{editor.sceneryNum}}</span><br>
+                                <span>总共耗时: {{editor.routeTime}}</span>
+                            </div>
                             <div class="poi-item" ng-repeat="item in editor.routeData" data-id="{{item._id}}">
                                 <div class="circle" draggable="draggable"></div>
                                 <div class="line"  ng-class="{enter: item._id === editor.dragData.enterId}"></div>
@@ -60,6 +64,7 @@
                                 <button class="insert-poi button">插入线路点</button>
                                 -->
                                 <div class="info" ng-class-even="'right-side'" ng-class-odd="'left-side'">
+
                                     <p class="name">
                                         <span>{{item.name}}</span>
                                         <span class="edit" title="编辑"></span>
@@ -132,6 +137,7 @@
                                 <span>未找到匹配的POI数据，<a target="_blank" href="{{editor.pageUrls.addPoi}}">马上添加</a></span>
                             </p>
                             <div ng-show="editor.filterData.poiData.length > 0" poi-hover-delegate>
+
                                 <label ng-repeat="item in editor.filterData.poiData" class='poi'
                                         ng-show="editor.filterData.curTagId === 'ALL' || item.tags.indexOf(editor.filterData.curTagId) > -1">
                                         <input type="checkbox" ng-model="editor.filterData.selectedData[item._id]"/>

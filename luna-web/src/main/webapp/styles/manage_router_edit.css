@@ -171,12 +171,15 @@
     position: absolute;
     top: 0;
     right: 100%;
+    -webkit-user-select: none;
 }
 .right-side{
     width: 400px;
     position: absolute;
     top: 0;
     left: 100%;
+    -webkit-user-select: none;
+
 }
 
 .info .edit,
@@ -280,4 +283,8 @@
     text-align: center;
     margin: 0 auto;
     display: inline-block;
+}
+.summary {
+    margin: 0px auto 40px;
+    font-size: 16px;
 }
