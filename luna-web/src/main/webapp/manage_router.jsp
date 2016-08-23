@@ -15,7 +15,9 @@
     <meta name="keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/imgCropper.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_router.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
@@ -87,7 +89,7 @@
 					<div class="pop-cont">
 						<div class='router-name'>
 							<label for='name'>线路名称</label>
-							<input name='name' id='name' ng-model='router.data.name' ng-blur="router.checkRouteName()"/>
+							<input type="text" name='name' id='name' ng-model='router.data.name' ng-blur="router.checkRouteName()"/>
 							<div class="valid-name ng-hide" ng-show="router.data.nameValid === true"></div>
 							<div class="invalid-name text-danger ng-hide" ng-show="router.data.nameValid === false">名称重复</div>
 						</div>
@@ -97,9 +99,9 @@
 						</div>
 						<div class='router-pic'>
 							<label for='pic'>线路封面图</label>
-							<input disabled='disabled' name='pic' id='pic' ng-model='router.data.pic'/>
+							<input type="text" name='pic' id='pic' ng-model='router.data.pic'/>
 							<div class='uploader'>
-								<input type='file' ng-model='data.file' custom-change name='file' class='fileup-thumbnail'/>
+								<input type='file' ng-model='data.file' custom-change name='file' class='fileup-thumbnail' accept="image/*"/>
 								<button class='button'>本地上传</button>
 							</div>
 						</div>
@@ -141,10 +143,13 @@
         </div>
     </div>
 </div>
+<jsp:include page="/templete/imgCropper.jsp" />
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_router.js"></script>
 </body>
 </html>

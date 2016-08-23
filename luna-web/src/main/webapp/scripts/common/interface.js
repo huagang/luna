@@ -44,7 +44,9 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageApp: context + '/platform/user'
+                manageUser: context + '/platform/user', //
+                routeConfig: context + '/content/route/configuration/{0}',
+
             };
         },
         getApiUrl: function () {
@@ -234,11 +236,11 @@ var Inter = function () {
                 filterPois: context + '/business_tree.do?method=searchPoisForBizTree', //筛选poi
 
                 // 线路管理
-                createRoute: context + '/manage_router.do?method=create_route', //创建路线
-                editRoute: context + '/manage_router.do?method=edit_route', //编辑路线
-                getRouteList: context + '/manage_router.do?method=async_search_routes', //获取线路列表
-                delRoute: context + '/manage_router.do?method=del_route', // 删除线路
-                checkRoute: context + '/manage_router.do?method=check_route_nm', // 检查线路名称是否合法
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
 
 
             };
