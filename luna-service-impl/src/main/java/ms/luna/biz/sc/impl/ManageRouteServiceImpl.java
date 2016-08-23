@@ -195,7 +195,6 @@ public class ManageRouteServiceImpl implements ManageRouteService {
             return FastJsonUtil.sucess("success", result);
         } catch (Exception e) {
             MsLogger.error("Failed to view route configuration: " + e.getMessage());
-            System.out.println(e.getMessage());
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to view route configuration.");
         }
     }
