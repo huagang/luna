@@ -204,17 +204,17 @@ public class ManageRouteServiceImpl implements ManageRouteService {
         try {
             Document document = new Document();
             JSONObject data = JSONObject.parseObject(json.getString("data"));
-            JSONArray c_list = data.getJSONArray(MsRouteTable.C_LIST);
-            document.put(MsRouteTable.C_LIST, c_list);
+            JSONArray routeData = data.getJSONArray(MsRouteTable.C_LIST);
+            document.put(MsRouteTable.C_LIST, routeData);
             String luna_name = json.getString(MsRouteTable.FIELD_LUNA_NAME);
             Integer routeId = json.getInteger(MsRouteTable.FIELD_ROUTE_ID);
 
             // todo 保存索引到poi_route_index
-            Set<ObjectId> newPoiIds = readPoiId2List(c_list);
+            Set<ObjectId> newPoiIds = readPoiId2List(routeData);
             Document oldRouteDoc = msRouteCollectionDAO.getRoute(routeId);
             JSONObject oldRouteJson = JSONObject.parseObject(oldRouteDoc.toJson());
-            JSONArray c_list2 = oldRouteJson.getJSONArray(MsRouteTable.C_LIST);
-            Set<ObjectId> oldPoiIds = readPoiId2List(c_list2);
+            JSONArray routeData2 = oldRouteJson.getJSONArray(MsRouteTable.C_LIST);
+            Set<ObjectId> oldPoiIds = readPoiId2List(routeData2);
 
             msRouteCollectionDAO.saveRoute(document, routeId, luna_name);
             msRouteCollectionDAO.updateRouteIndex(oldPoiIds, newPoiIds, routeId);

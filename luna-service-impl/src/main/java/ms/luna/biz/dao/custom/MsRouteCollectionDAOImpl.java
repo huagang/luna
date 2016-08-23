@@ -6,7 +6,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.UpdateOptions;
+import ms.luna.biz.dao.model.MsRoute;
 import ms.luna.biz.table.MsRouteTable;
+import ms.luna.biz.util.FastJsonUtil;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
@@ -69,7 +71,7 @@ public class MsRouteCollectionDAOImpl extends MongoBaseDAO implements MsRouteCol
 
     @Override
     public JSONObject getPoiForRoute(Set<ObjectId> c_list) {
-        String[] includes = new String[]{MsRouteTable.FIELD_LONG_TITLE};
+        String[] includes = new String[]{MsRouteTable.FIELD_LONG_TITLE, MsRouteTable.FIELD_CATEGORY};
         Document in = new Document().append("_id", new Document().append("$in", c_list));
         MongoCursor<Document> cursor = poiCollection.find(in).projection(Projections.include(includes)).iterator();
         JSONObject result = new JSONObject();
@@ -77,6 +79,8 @@ public class MsRouteCollectionDAOImpl extends MongoBaseDAO implements MsRouteCol
             Document doc = cursor.next();
             JSONObject poi = new JSONObject();
             poi.put(MsRouteTable.FIELD_LONG_TITLE, doc.getString(MsRouteTable.FIELD_LONG_TITLE));
+            JSONArray array = FastJsonUtil.parse2Array(doc.get(MsRouteTable.FIELD_CATEGORY));
+            poi.put("category_id", array.getInteger(0));
             result.put(doc.getObjectId("_id").toString(), poi);
         }
         return result;
