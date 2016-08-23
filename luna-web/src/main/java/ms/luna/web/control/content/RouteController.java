@@ -218,7 +218,7 @@ public class RouteController extends BasicController {
 			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
 			JSONObject param = new JSONObject();
-			param.put("routeId", routeId);
+			param.put("route_id", routeId);
 			param.put("data", data);
 			param.put("luna_name", user.getNickName());
 			JSONObject result = manageRouteService.saveRouteConfiguration(param);
