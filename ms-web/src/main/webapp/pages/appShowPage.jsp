@@ -40,10 +40,13 @@
         <!-- 视频弹出框 End -->
 
 	</div>
+    <!-- 微信分享数据Start -->
     <input id="shareInfoTitle" type="hidden" name="" value="${share_info_title}">
     <input id="shareInfoDes" type="hidden" name="" value="${share_info_des}">
     <input id="shareInfoLink" type="hidden" name="" value="${share_info_link}">
     <input id="shareInfoPic" type="hidden" name="" value="${share_info_pic}">
+    <!-- 微信分享数据END -->
+
     <script type="text/javascript" src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/vbpano.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
@@ -68,6 +71,7 @@
         var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/exmethod.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/interface.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>

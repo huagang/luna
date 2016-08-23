@@ -15,16 +15,6 @@ var objdata = {
 };
 
 
-String.prototype.format = function () {
-    var s = this,
-        i = arguments.length;
-
-    while (i--) {
-        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
-    }
-    return s;
-};
-
 $(document).ready(function () {
 
     function init() {
@@ -70,6 +60,7 @@ $(document).ready(function () {
     });
 
     $('body').on('touchmove', function (event) {
+        // 判断能不能滑动
         var canscroll = $(event.target).parents(".canscroll");
         if (canscroll.length > 0) {
 
@@ -79,10 +70,12 @@ $(document).ready(function () {
     });
 
     $('.welcome').on('touchstart', function (event) {
+        //欢迎页的触摸事件
         event.preventDefault();
     });
 
     $(".app-wrap").on("click", "[hrefurl]", function (e) {
+        //带链接的点击事件
         e.stopPropagation();
         if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
             //禁止欢迎页面的点击事件
@@ -112,6 +105,7 @@ $(document).ready(function () {
         $(this).toggleClass('playing');
     });
 
+    //导航点击事件
     $(".app-wrap").on("click", ".navimg", function (e) {
         //获取地理位置和导航等信息
         // var myLongitude;
@@ -152,7 +146,7 @@ $(document).ready(function () {
             'address': $(this).attr('address') || ''
         };
         showNav(detailData);
-    };
+    }
 
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function (e) {
@@ -186,7 +180,7 @@ $(document).ready(function () {
         var arrPageDatas = pageData.data || [],
             curPageGroup = {};
 
-
+        //判断是不是
         if (location.href.match(/\?disableWelcome=true/)) {
             if (arrPageDatas.length > 0 && arrPageDatas[0].page_code == 'welcome') {
                 // 过滤welcome页面
@@ -194,15 +188,19 @@ $(document).ready(function () {
             }
         }
 
+        /**
+         * 对不同页面进行渲染
+         */
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
                 pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '',
                 pageTime = item.page_time ? item.page_time * 1000 : 4000;
             if (item.page_type == "2") {
+                //如果是长页面
                 $("body").addClass("canscroll");
             }
             $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"  data-pagetime="' + pageTime + '"><i class="icon icon-goback goback"></i></div>');
-            console.log(item);
+
             if (document.querySelector('.component-group')) {
                 $comGroup.css('opacity', 0);
             }
@@ -214,8 +212,6 @@ $(document).ready(function () {
                 componentArr.push(item.page_content[key]);
             }
             componentArr.sort(Util.arraySortBy('timestamp'));
-
-
 
             for (var n in componentArr) {
                 var value = componentArr[n];
@@ -235,6 +231,10 @@ $(document).ready(function () {
                     case 'img':
                         var img = new Img(value);
                         componentHtml = img.build();
+                        break;
+                    case 'imgList':
+                        var imgList = new ImgList(value);
+                        componentHtml = imgList.build();
                         break;
                     case 'pano':
                         var pano = new Pano(value);
@@ -518,6 +518,127 @@ $(document).ready(function () {
             this.setAction();
 
             return this.html;
+        };
+    }
+
+    /**
+     * 图集组件
+     * 
+     * @param {any} data
+     */
+    function ImgList(data) {
+        this.value = data;
+
+        /**
+         * 获取文章列表
+         */
+        this.getArticleList = function (data, successCallback) {
+            if (data.businessId && data.column) {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: Util.strFormat(Inter.getApiUrl().getArticleListByBidAndColumn.url, [data.businessId, data.column.id]),
+                    async: false,
+                    success: function (res) {
+                        if (res.code == "0") {
+                            successCallback(res);
+                        }
+                    },
+                    error: function (res) {
+                        alert('保存出现问题');
+                    }
+                });
+            } else {
+                console.log('文章数据有问题');
+            }
+        };
+        /**
+         * 获取POI列表
+         */
+        this.getPoiList = function (data, successCallback) {
+            if (data.businessId && data.firstPoi) {
+                var url = '';
+                if (data.poiType) {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.dataType.id]);
+                } else {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [data.businessId, data.firstPoi.id]);
+                }
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: url,
+                    async: false,
+                    success: function (res) {
+                        if (res.code == "0") {
+                            successCallback(res);
+                        }
+                    },
+                    error: function (res) {
+                        alert('保存出现问题');
+                    }
+                });
+                console.log(data);
+            } else {
+
+            }
+        };
+
+
+        BaseComponent.call(this);
+        this.build = function () {
+            var that = this;
+            this.setPosition();
+            this.setMoreInfo();
+            this.setAction();
+            that.html.css('width', '100%');
+            that.html.css('height', '100%');
+            if (this.value.content.dataType.id == "1") {
+                this.getArticleList(this.value.content, function (res) {
+                    var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
+                    for (var i = 0; i < res.data.length; i++) {
+                        arrUlHtml.push('<li class="imglist-li-wrapper">');
+                        arrUlHtml.push(' <a href="' + res.data[i].url + '">');
+                        arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + res.data[i].abstract_pic + ') no-repeat;background-size:100% 100%;">');
+                        arrUlHtml.push('<div class="imglist-filter"></div>');
+                        arrUlHtml.push('<div class="imglist-title">' + res.data[i].title + '</div>');
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</a>');
+                        arrUlHtml.push('</li>');
+                    }
+                    arrUlHtml.push('</ul>');
+                    that.html.children("div").append(arrUlHtml.join(''));
+                });
+            } else {
+                this.getPoiList(this.value.content, function (res) {
+                    var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
+                    var arrdata = res.data.zh.pois;
+                    var poiPanoUrl = {
+                        1: Inter.getApiUrl().singlePano,
+                        2: Inter.getApiUrl().multiplyPano,
+                        3: Inter.getApiUrl().customPano,
+                    };
+                    for (var i = 0; i < arrdata.length; i++) {
+                        arrUlHtml.push('<li class="imglist-poi-wrapper">');
+                        arrUlHtml.push('<a href="' + (arrdata[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[arrdata[i].panorama.panorama_type_id], [arrdata[i].panorama.panorama_id]) : "javascript:;") + '">');
+                        arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + arrdata[i].thumbnail + ') no-repeat;background-size:100% 100%;">');
+                        arrUlHtml.push('<div class="imglist-filter"></div>');
+                        arrUlHtml.push('<div class="imglist-title-wrapper">');
+                        arrUlHtml.push('<div class="imglist-title">' + arrdata[i].poi_name + '</div>');
+                        if (arrdata[i].panorama.panorama_type_id) {
+                            arrUlHtml.push('<div class="imglist-subtitle">点击看全景</div>');
+                        }
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</a>');
+                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">点击查看详情</a>');
+                        arrUlHtml.push('</li>');
+                    }
+                    arrUlHtml.push('</ul>');
+                    that.html.children("div").append(arrUlHtml.join(''));
+                });
+            }
+            return that.html;
+
         };
     }
 

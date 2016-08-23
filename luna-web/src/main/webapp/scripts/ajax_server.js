@@ -642,3 +642,51 @@ var uploadFileValidate = function () {
 
 
 } ();
+
+/**
+ * 获取文章类别列表 
+ */
+function getColumnListByBid(successCallback) {
+    //栏目列表
+    $.get(Util.strFormat(Inter.getApiUrl().articleColumn.url, [objdata.businessId]), function (res) {
+        if (res.code == '0') {
+            if (successCallback) {
+                successCallback(res);
+            }
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}
+/**
+ * 获取POI类别
+ * 
+ * @param {any} firstPoiId
+ * @param {any} successCallback
+ */
+function getPoiTypeListByPoiAndBid(firstPoiId,successCallback) {
+    $.get(Util.strFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [objdata.businessId, firstPoiId]), function (res) {
+        if (res.code == '0') {
+            successCallback(res);
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}
+
+/**
+ * 获取一级POI函数
+ * 
+ * @param {any} successCallback
+ */
+function getFirstPoiListByBid(successCallback) {
+    $.get(Util.strFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId]),function (res) {
+        if (res.code == '0') {
+            if (res.data) {
+                successCallback(res);
+            }
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}

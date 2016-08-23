@@ -47,8 +47,8 @@ componentTextModelTemplate = {
 //图集组件数据模型
 componentImgListModelTemplate = {
     "_id": "",
-    "type": "",
-    "content": '',
+    "type": "imgList",
+    "content": {}, //一个链接地址
     "action": {
         "href": {
             "type": "none",
@@ -297,10 +297,18 @@ function createNewEelement(componentType, createType) {
             componentModel = componentVideoModelTemplate;
             break;
         case 'tab':
+            if (document.querySelector('[component-type="tab"]')) {
+                alert("不能重复创建页签组件");
+                return;
+            }
             componentType = 'tab';
             componentModel = componentTabModelTemplate;
             break;
         case 'imgList':
+            if (document.querySelector('[component-type="imgList"]')) {
+                alert("不能重复创建图集组件");
+                return;
+            }
             componentType = 'imgList';
             componentModel = componentImgListModelTemplate;
             break;
@@ -431,6 +439,8 @@ function updatePageComponents() {
         case "img":
             componentObj.content = $currenthtml.find("img").attr("src");
             break;
+        case "imgList":
+            break;
         case "nav":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
@@ -535,6 +545,16 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
             newComponentDom.attr("component-type", "img");
             newComponentDom.children("div").append('<img src="' + (componentObj.content || imghost + '/img/sample.png') + '"/>');
             break;
+        case "imgList":
+            newComponentDom.attr("component-type", comType);
+            newComponentDom.children("div").append('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
+            break;
         case "nav":
             newComponentDom.attr("component-type", "nav");
             newComponentDom.children("div").append('<img src="' + (componentObj.content.icon || imghost + '/img/sample.png') + '"/>');
@@ -564,18 +584,6 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(componentObj.content.tabList);
             newComponentDom.find('.menulist').empty().append(innerHtml);
-            break;
-        case "imgList":
-            newComponentDom.attr("component-type", comType);
-            newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
-            newComponentDom.css({
-                "top": "0px",
-                "left": "0px",
-                "width": "100%",
-                "height": "100%"
-            });
-
-
             break;
         default:
             $.alert("未知的组件类型");

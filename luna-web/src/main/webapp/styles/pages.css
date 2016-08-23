@@ -1052,3 +1052,30 @@ a.wj-img-clc {
 
 
 /* END 保存的后的提示 */
+
+
+/* 图集组件Start */
+
+.imglist-wrapper-bg {
+    height: 200px;
+    font-size: 14px;
+}
+
+.img-title {
+    height: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    left: 0;
+    right: 0;
+    line-height: 26px;
+}
+
+.plr0 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+/* 图集组件End */
