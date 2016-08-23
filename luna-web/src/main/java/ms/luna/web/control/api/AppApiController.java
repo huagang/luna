@@ -3,6 +3,8 @@ package ms.luna.web.control.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.sc.FarmPageService;
+import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.web.control.content.AppEditController;
 import org.apache.commons.httpclient.HttpClient;
@@ -32,6 +34,8 @@ public class AppApiController {
     private final static Logger logger = Logger.getLogger(AppApiController.class);
     @Autowired
     private AppEditController appEditController;
+    @Autowired
+    private FarmPageService farmPageService;
     // TODO: set value in application listener, should provide a config service to do such thing
     public static String APP_DEVELOP_ADDRESS = "";
 
@@ -87,4 +91,34 @@ public class AppApiController {
     public JSONObject getSettingOfApp(@PathVariable int appId) throws IOException {
         return appEditController.getSettingOfApp(appId);
     }
+
+
+    // 根据category id获取show app
+    @RequestMapping(method = RequestMethod.GET, value = "/category/app")
+    @ResponseBody
+    public JSONObject getShowAppByCtgrId(
+            @RequestParam(required = false, value = "categoryIds") String categoryIds,
+            @RequestParam(required = false, value = "types") String types,
+            @RequestParam(required = false, value = "app_status", defaultValue = "1") Integer status,
+            @RequestParam(required = false, value = "offset", defaultValue = "0") Integer offset,
+            @RequestParam(required = false, value = "limit", defaultValue = "30") Integer limit) {
+        try {
+            // 检查types类型
+            if(types != null && !CharactorUtil.checkIntegerList(types))
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "types is valid");
+            JSONObject param = new JSONObject();
+            param.put("categoryIds", categoryIds);
+            param.put("types", types);
+            param.put("app_status", status);
+            param.put("offset", offset);
+            param.put("limit", limit);
+            JSONObject result = farmPageService.getShowAppsByCtgrId(param);
+            logger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            logger.error("Failed to get show apps by category id:" + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get show apps by category id");
+        }
+    }
+
 }
