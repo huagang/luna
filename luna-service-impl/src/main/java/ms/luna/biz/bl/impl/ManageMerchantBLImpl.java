@@ -4,7 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import ms.luna.biz.util.UUIDGenerator;
+import ms.biz.common.CloudConfig;
+import ms.biz.common.ServiceConfig;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.dao.custom.MsBusinessDAO;
+import ms.luna.biz.dao.model.*;
+import ms.luna.biz.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +22,6 @@ import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.MsUserPwDAO;
 import ms.luna.biz.dao.custom.model.MerchantsParameter;
 import ms.luna.biz.dao.custom.model.MerchantsResult;
-import ms.luna.biz.dao.model.MsMerchantManage;
-import ms.luna.biz.dao.model.MsMerchantManageCriteria;
-import ms.luna.biz.dao.model.MsUserPw;
-import ms.luna.biz.util.CharactorUtil;
-import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.biz.util.MsLogger;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -43,9 +42,25 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
  
 	@Autowired
 	private MsUserPwDAO msUserPwDAO;
+
+	@Autowired
+	private MsBusinessDAO msBusinessDAO;
 	
 	@Override
 	public JSONObject createMerchant(String json) {
+
+		JSONObject param = JSONObject.parseObject(json);
+		// 创建商户和创建业务合并——创建商户
+		JSONObject result = createMerchantInfo(param);
+		if(!"0".equals(result.getString("code"))) {
+			return result;
+		}
+		String merchant_id = result.getString("merchant_id");
+		return createBusiness(param, merchant_id);
+	}
+
+	@Override
+	public JSONObject registMerchant(String json) {
 
 		JSONObject param = JSONObject.parseObject(json);
 
@@ -92,7 +107,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if (param.containsKey("status_id")) {
 			status_id = param.getString("status_id"); // 商户状态
 		}
-		
+
 //		String merchant_id = genNumService.generateNum("MERCH");
 		String merchant_id = UUIDGenerator.generateUUID();
 
@@ -100,7 +115,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			MsLogger.debug("编号生成失败：[CRM]");
 			throw new RuntimeException("编号生成失败：[CRM]");
 		}
-		
+
 		// 检测商户是否重名
 		boolean flag = isMerchantNmExit(merchant_nm);
 		if (flag == true) {
@@ -452,8 +467,8 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	/**
 	 * 检测当前商户名字是否和其他商户名字重名
 	 * 
-	 * @param merchant_id当前商户id
-	 * @param merchant_nm
+	 * @param merchant_id 商户id
+	 * @param merchant_nm 商户名称
 	 * @return
 	 */
 	private boolean isMerchantNmExit(String merchant_id, String merchant_nm) {
@@ -516,7 +531,128 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			if (count == 0)//不是merchant_id对应的name
 				return FastJsonUtil.sucess("商户名称存在");
 		}
-		return FastJsonUtil.error("1","商户名称不存在");
+		return FastJsonUtil.error("1", "商户名称不存在");
 	}
 
+	private JSONObject createMerchantInfo(JSONObject param) {
+		String merchant_nm = param.getString("merchant_nm"); // 商户名字
+		String merchant_phonenum = param.getString("merchant_phonenum"); // 商户电话
+		String category_id = param.getString("category_id"); // 商户类型id
+		String province_id = param.getString("province_id"); // 省份id
+		String city_id = param.getString("city_id"); // 城市id
+		String merchant_addr = param.getString("merchant_addr"); // 商户地址
+		String contact_nm = param.getString("contact_nm"); // 联系人姓名
+		String contact_phonenum = param.getString("contact_phonenum"); // 联系人电话
+		String contact_mail = param.getString("contact_mail"); // 联系人邮箱
+		String county_id = param.containsKey("county_id")?  param.getString("county_id") : null;
+		String unique_id = param.getString("unique_id");
+		String salesman_id = ""; // 业务员名字
+		String salesman_nm = ""; // 业务员id
+		String status_id = VbConstant.MERCHANT_STATUS.CODE.待处理 + ""; // 处理状态
+		if (param.containsKey("salesman_nm")) {
+			salesman_nm = param.getString("salesman_nm"); // 业务员名字
+			// 检测业务员是否存在
+			if (!isLunaNmExit(salesman_nm)) {
+				return FastJsonUtil.error("2", "业务员不存在！salesman_nm:" + salesman_nm);
+			}
+			// 根据业务员名字得到业务员id
+			salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
+		}
+		if (param.containsKey("status_id")) {
+			status_id = param.getString("status_id"); // 商户状态
+		}
+
+		String merchant_id = UUIDGenerator.generateUUID();
+		if (CharactorUtil.isEmpyty(merchant_id)) {
+			MsLogger.debug("编号生成失败：[CRM]");
+			throw new RuntimeException("编号生成失败：[CRM]");
+		}
+		// 检测商户是否重名
+		boolean flag = isMerchantNmExit(merchant_nm);
+		if (flag == true) {
+			return FastJsonUtil.error("1", "商户重名(下手慢了)！merchant_nm:" + merchant_nm);
+		}
+
+		MsMerchantManage msMerchantManage = new MsMerchantManage();
+		msMerchantManage.setMerchantId(merchant_id);
+		msMerchantManage.setMerchantNm(merchant_nm);
+		msMerchantManage.setMerchantPhonenum(merchant_phonenum);
+		msMerchantManage.setCategoryId(category_id);
+		msMerchantManage.setProvinceId(province_id);
+		msMerchantManage.setCityId(city_id);
+		msMerchantManage.setMerchantAddr(merchant_addr);
+		msMerchantManage.setContactNm(contact_nm);
+		msMerchantManage.setContactPhonenum(contact_phonenum);
+		msMerchantManage.setContactMail(contact_mail);
+		msMerchantManage.setStatusId(status_id);
+		msMerchantManage.setSalesmanId(salesman_id);
+		msMerchantManage.setSalesmanNm(salesman_nm);
+		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
+		msMerchantManage.setRegistHhmmss(new Date());
+		msMerchantManage.setUpHhmmss(new Date());
+		msMerchantManage.setUpdatedByUniqueId(unique_id);
+		if(county_id != null){
+			msMerchantManage.setCountyId(county_id);
+		}
+		msMerchantManageDAO.insertSelective(msMerchantManage);
+		JSONObject result = FastJsonUtil.sucess("success");
+		result.put("merchant_id", merchant_id);
+		return result;
+	}
+
+	public JSONObject createBusiness(JSONObject param, String merchantId) {
+		// TODO Auto-generated method stub
+		if(existBusiness(param)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务名称或简称已经存在");
+		}
+		String businessName = FastJsonUtil.getString(param, "business_name");
+		String businessCode = FastJsonUtil.getString(param, "business_code");
+		String createUser = FastJsonUtil.getString(param, "create_user");
+
+		// 假设前端已经做了数据校验
+		MsBusiness business = new MsBusiness();
+		business.setBusinessName(businessName);
+		business.setBusinessCode(businessCode);
+		business.setMerchantId(merchantId);
+		business.setCreateUser(createUser);
+		try {
+			String statInfo = MtaWrapper.createApp(businessCode, CloudConfig.H5_TYPE, CloudConfig.H5_DOMAIN, ServiceConfig.getLong(ServiceConfig.MTA_QQ));
+			// str:{"code":0,"info":"success","data":{"app_id":500032916,"secret_key":"4ead8d782c516966b64424ab52500412"}}
+			if(statInfo == null) {
+				return FastJsonUtil.error("-1", "创建腾讯统计账号失败");
+			}
+			JSONObject jsonStat = JSONObject.parseObject(statInfo);
+			if ("0".equals(jsonStat.getString("code"))) {
+				JSONObject statData = jsonStat.getJSONObject("data");
+				business.setStatId(statData.getIntValue("app_id"));
+				business.setSecretKey(statData.getString("secret_key"));
+			} else {
+				MsLogger.error("Failed to create qq stats account");
+				return FastJsonUtil.error("-1", "创建腾讯统计账号失败");
+			}
+		} catch (Exception e) {
+			MsLogger.error("Failed to create business", e);
+			return FastJsonUtil.error("-1", e.getMessage());
+		}
+		msBusinessDAO.insertSelective(business);
+
+		return FastJsonUtil.sucess("新商户创建成功！");
+
+	}
+
+	private boolean existBusiness(JSONObject jsonObject) {
+		String businessName = FastJsonUtil.getString(jsonObject, "business_name");
+		String businessCode = FastJsonUtil.getString(jsonObject, "business_code");
+		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
+		MsBusinessCriteria.Criteria criteria1 = msBusinessCriteria.createCriteria();
+		criteria1.andBusinessNameEqualTo(businessName);
+		MsBusinessCriteria.Criteria criteria2 = msBusinessCriteria.or();
+		criteria2.andBusinessCodeEqualTo(businessCode);
+
+		List<MsBusiness> msBusinesses = msBusinessDAO.selectByCriteria(msBusinessCriteria);
+		if(msBusinesses == null || msBusinesses.size() == 0) {
+			return false;
+		}
+		return true;
+	}
 }

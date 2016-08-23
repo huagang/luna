@@ -31,6 +31,18 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 	}
 
 	@Override
+	public JSONObject registMerchant(String json) {
+		JSONObject result = null;
+		try {
+			result = manageMerchantBL.registMerchant(json);
+		} catch (RuntimeException e) {
+
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
+
+	@Override
 	public JSONObject loadMerchantById(String json) {
 		JSONObject result = null;
 		try {

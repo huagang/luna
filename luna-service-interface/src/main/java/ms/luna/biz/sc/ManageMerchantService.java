@@ -37,7 +37,6 @@ public interface ManageMerchantService {
 	 * 更新商户信息
 	 * 
 	 * @param json
-	 * @param msMerchant
 	 * @return
 	 */
 	JSONObject updateMerchantById(String json);
@@ -46,7 +45,6 @@ public interface ManageMerchantService {
 	 * 删除商户信息
 	 * 
 	 * @param json
-	 * @param msMerchant
 	 * @return
 	 */
 	JSONObject deleteMerchantById(String json);
@@ -54,7 +52,7 @@ public interface ManageMerchantService {
 	/**
 	 * 检测业务员是否存在
 	 * 
-	 * @param salesman_nm
+	 * @param json
 	 * @return
 	 */
 	JSONObject isSalesmanNmExit(String json);
@@ -90,5 +88,13 @@ public interface ManageMerchantService {
 	 * @return
 	 */
 	JSONObject openMerchantById(String json);
+
+	/**
+	 * 商户注册
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject registMerchant(String json);
 
 }

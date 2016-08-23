@@ -106,7 +106,7 @@ public class MerchantController extends BasicController {
                     param.put("resource_content", resource_content);
                 }
 
-                JSONObject result = manageMerchantService.createMerchant(param.toString());
+                JSONObject result = manageMerchantService.registMerchant(param.toString());
                 MsLogger.debug("method:createMerchant, result from service: " + result.toString());
 
                 String code = result.getString("code");
