@@ -1,6 +1,23 @@
 (function(){
     var editRouter = angular.module('editRouter',['ui.bootstrap']);
     editRouter
+        .config(['$httpProvider', function ($httpProvider) {
+            // Intercept POST requests, convert to standard form encoding
+            $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+            $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+            $httpProvider.defaults.transformRequest.unshift(function (data, headersGetter) {
+                var key, result = [];
+                if(toString.call(data) === "[object Object]"){
+                    for (key in data) {
+                        if (data.hasOwnProperty(key))
+                            result.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+                    }
+                    return result.join("&");
+                } else{
+                    return data;
+                }
+            });
+        }])
         .controller('editController',['$rootScope', '$scope', '$http', editController])
         .directive('poiHoverDelegate', poiHoverDelegate)
         .directive('routeEventDelegate',routeEventDelegate)
@@ -94,11 +111,12 @@
 
         vm.init();// 初始化
 
-        window.s = $scope;
+        window.v = vm;
 
         function init(){
             vm.urls = Inter.getApiUrl();  //接口url信息
-
+            vm.pageUrls = Inter.getPageUrl();
+            vm.id  = parseInt(location.href.match(/configuration\/(\d+)/)[1]);
             vm.tags = [
                 {
                     id:'ALL', name: '全部'
@@ -163,11 +181,6 @@
         }
 
 
-
-
-
-
-
         // 更改状态 用于控制弹出框的显示
         function changeState(nextState, targetPoiId){
             vm.state = nextState;
@@ -189,9 +202,8 @@
 
         function loadProvinces(){
             $http({
-                url: vm.urls.loadProvinces,
-                method: 'GET'
-
+                url: vm.urls.pullDownProvinces.url,
+                method:  vm.urls.pullDownProvinces.type
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.provinceList = res.data.data;
@@ -208,24 +220,16 @@
         function handleProvinceChange(){
 
             var id = vm.filterData.provinceId;
-            var data = new FormData();
-            data.append('province_id', id);
             vm.filterData.countyList = [];
             vm.filterData.countyId = '';
             vm.filterData.cityId = '';
             $http({
-                url: vm.urls.loadCities,
-                method:'POST',
-                data: data,
-                headers:{
-                    'Content-Type': undefined, // 设置成undefined之后浏览器会自动增加boundary
-                }
-
+                url: vm.urls.pullDownCitys.url,
+                method: vm.urls.pullDownCitys.type,
+                params: {province_id: id},
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.cityList = res.data.data.citys;
-
-
                 } else{
                     alert('加载市数据失败,请重试');
                 }
@@ -237,28 +241,21 @@
         // 市更改事件
         function handleCityChange(){
             var id = vm.filterData.cityId;
-            var data = new FormData();
-            data.append('city_id', id);
             vm.filterData.countyList = [];
             vm.filterData.countyId = '';
             $http({
-                url: vm.urls.loadCounties,
-                method:'POST',
-                data: data,
-                headers: {
-                    "Content-Type":undefined
-                }
+                url: vm.urls.pullDownCounties.url,
+                method: vm.urls.pullDownCounties.type,
+                params: {'city_id': id},
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.countyList = res.data.data.counties;
-
                 } else{
                     alert('加载县数据失败,请重试');
                 }
             }, function(res){
                 alert('加载县数据失败,请重试');
             });
-
         }
 
         // 县更改事件
@@ -281,17 +278,14 @@
 
         // 搜索事件
         function handleSearch(){
-            var data = new FormData();
-            data.append('province_id', vm.filterData.provinceId || 'ALL');
-            data.append('city_id', vm.filterData.cityId || 'ALL');
-            data.append('county_id', vm.filterData.countyId || 'ALL');
-            data.append('keyWord', vm.filterData.poiName || '');
             $http({
-                url: vm.urls.filterPois,
-                method:'POST',
-                data: data,
-                headers: {
-                    "Content-Type":undefined
+                url: vm.urls.bizRelationPoiSearch.url,
+                method: vm.urls.bizRelationPoiSearch.type,
+                params: {
+                    province_id: vm.filterData.provinceId || 'ALL',
+                    city_id: vm.filterData.cityId || 'ALL',
+                    county_id: vm.filterData.countyId || 'ALL',
+                    keyWord: vm.filterData.poiName || ''
                 }
             }).then(function(res){
                 if(res.data.code === '0'){
@@ -307,8 +301,6 @@
 
         // 标签tag点击事件
         function handleTagChange(id){
-            console.log(id);
-
             if(id !== 'ALL'){
                 id = parseInt(id);
             }
@@ -389,7 +381,7 @@
                 });
 
                 // 获取id list
-                var ids = [], data=[];
+                var ids
                 vm.filterData.poiData.forEach(function(item){
                     if(vm.filterData.selectedData[item._id]){
                         ids.push(item._id);

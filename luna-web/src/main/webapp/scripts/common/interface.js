@@ -46,6 +46,9 @@ var Inter = function () {
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
                 manageUser: context + '/platform/user', //
                 routeConfig: context + '/content/route/configuration/{0}',
+                addPoi: context + '/data/poi/addPage',
+                editPoi: context + '/data/poi/initEditPage?poiId={0}',
+                manageRouter: context + '/content/route',
 
             };
         },
@@ -229,19 +232,13 @@ var Inter = function () {
                 //zclip路径
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
-
-                loadProvinces: context + '/pulldown.do?method=load_provinces', // 获取省份列表
-                loadCities: context + '/pulldown.do?method=load_citys',        // 通过省份id获取市列表
-                loadCounties: context + '/pulldown.do?method=load_counties',     // 通过市id获取县列表
-                filterPois: context + '/business_tree.do?method=searchPoisForBizTree', //筛选poi
-
                 // 线路管理
                 createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
                 editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
                 getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
                 delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
                 checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
-
+                fetchRouteConfig:{url: context + '/content/route/configuration/{routeId}'}
 
             };
         }

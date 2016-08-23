@@ -19,8 +19,9 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/imgCropper.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_router.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/file_loading_tip.css">
+	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-2.0.0.js"></script>
 
@@ -46,7 +47,7 @@
                 	<div class='new-router'>
                 		<button class='button pull-right' ng-click='router.changeState("new")'>+新建线路</button>
                 	</div>
-                	<table class='table table-hover'>
+                	<table class='table ng-cloak table-hover'>
                 		<thead>
                 			<tr>
                 				<th>线路名称</th>
@@ -64,7 +65,7 @@
                 				<td>{{rowData.creator}}</td>
                 				<td>
                 					<a href='javascript:void(0)' class='router-update'>属性</a>
-                					<a href="{{'./manage_router.do?method=edit_router_page&id=' + rowData.id}}">编辑</a>
+                					<a href="{{router.pageUrls.routeConfig.format(rowData.id)}}">编辑</a>
                 					<a href='javascript:void(0)' class='router-delete'>删除</a>
                 				</td>
                 			</tr>
@@ -103,8 +104,11 @@
 							<div class='uploader'>
 								<input type='file' ng-model='data.file' custom-change name='file' class='fileup-thumbnail' accept="image/*"/>
 								<button class='button'>本地上传</button>
+								<div class="load-container load8 ng-hide" ng-show="router.showLoading">
+									<div class="loader">Loading...</div>
+								</div>
 							</div>
-						</div>
+					</div>
 						<div>
 							<label for='energyCost'>体力消耗</label>
 							<select name='energyCost' id='energyCost' ng-model='router.data.energyCost'>

@@ -51,9 +51,11 @@ function routerController($rootScope, $scope, $http){
 		];
 
 		vm.urls = Inter.getApiUrl();
+		vm.pageUrls = Inter.getPageUrl();
 		vm.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
 		vm.opId = null;
 		vm.rowsData = [];
+		vm.showLoading = false;
 		vm.pagination = {
 			curPage: 1, // from 0
 			totalItems: 0,  // from 1
@@ -162,12 +164,15 @@ function routerController($rootScope, $scope, $http){
 
 		cropper.setFile(file, function(file){
 			cropper.close();
+			vm.showLoading = true;
+			$scope.$apply();
 			FileUploader.uploadMediaFile({
 				type: 'pic',
 				file: file,
 				resourceType: 'poi',
 				resource_id: vm.data.id || undefined,
 				success: function(data){
+					vm.showLoading = false;
 					event.target.value = '';
 					if(data.code === '0'){
 						vm.data.pic = data.data.access_url;
@@ -179,6 +184,8 @@ function routerController($rootScope, $scope, $http){
 				error: function(){
 					alert('上传文件出错');
 					event.target.value = '';
+					vm.showLoading = false;
+					$scope.$apply();
 				}
 			});
 		}, function(){
@@ -203,6 +210,7 @@ function routerController($rootScope, $scope, $http){
 			businessId: business.id,
 			nameValid: undefined
 		};
+		vm.showLoading =false;
 	};
 	
 	

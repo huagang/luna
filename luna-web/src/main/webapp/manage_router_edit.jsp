@@ -44,7 +44,7 @@
                 		<h3>线路管理</h3>
                 	</div>
                     <ol class="breadcrumb">
-                        <li><a href="./manage_router.do?method=init">线路管理</a></li>
+                        <li><a href="{{editor.pageUrls.manageRouter}}">线路管理</a></li>
                         <li class='active'>编辑线路</li>
                         <button class='button pull-right' ng-click="editor.handleAddPois()">添加线路点</button>
                     </ol>
@@ -87,21 +87,21 @@
                 <div class="pop route ng-hide" ng-show="editor.state==='addPois'">
                     <div class="pop-title">
                         <h4>线路设置</h4>
-                        <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
+                        <a href="javascript:void(0)" class="btn-close" ng-click="editor.changeState('init')"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
                     </div>
                     <div class="pop-cont">
                         <div class="area-filter">
                             <label>区域筛选</label>
                             <select class="province" ng-model="editor.filterData.provinceId" ng-change="editor.handleProvinceChange()">
-                                <option value="ALL">请选择省</option>
+                                <option value="">请选择省</option>
                                 <option ng-repeat="province in editor.filterData.provinceList" value="{{province.province_id}}">{{province.province_nm_zh}}</option>
                             </select>
                             <select class="province" ng-model="editor.filterData.cityId" ng-change="editor.handleCityChange()">
-                                <option value="ALL">请选择市</option>
+                                <option value="">请选择市</option>
                                 <option ng-repeat="city in editor.filterData.cityList" value="{{city.city_id}}">{{city.nm_zh}}</option>
                             </select>
                             <select class="province" ng-model="editor.filterData.countyId" ng-change="editor.handleCountyChange()">
-                                <option value="ALL">请选择县</option>
+                                <option value="">请选择县</option>
                                 <option ng-repeat="county in editor.filterData.countyList" value="{{county.county_id}}">{{county.nm_zh}}</option>
                             </select>
                         </div>
@@ -129,13 +129,13 @@
 
                         <div class="poi-results">
                             <p class='empty' ng-show="editor.filterData.searched && editor.filterData.poiData.length === 0 ">
-                                <span>未找到匹配的POI数据，<a href="./add_poi.do?method=init">马上添加</a></span>
+                                <span>未找到匹配的POI数据，<a target="_blank" href="{{editor.pageUrls.addPoi}}">马上添加</a></span>
                             </p>
                             <div ng-show="editor.filterData.poiData.length > 0" poi-hover-delegate>
                                 <label ng-repeat="item in editor.filterData.poiData" class='poi'
                                         ng-show="editor.filterData.curTagId === 'ALL' || item.tags.indexOf(editor.filterData.curTagId) > -1">
                                         <input type="checkbox" ng-model="editor.filterData.selectedData[item._id]"/>
-                                        <a target='_blank' class='poi-name' href='{{"./edit_poi.do?method=init&_id=" + item._id}}'>{{item.name}}</a>
+                                        <a target='_blank' class='poi-name' href='{{editor.pageUrls.editPoi.format(item._id)}}'>{{item.name}}</a>
                                         <div class="poi_info">
                                             <p>长标题：{{item.name}}</p>
                                             <p>纬度：{{item.coordinates[1]}}</p>
@@ -161,7 +161,7 @@
                 <div class="pop ng-hide" ng-show="editor.state==='deletePoi'">
                     <div class="pop-title">
                         <h4>线路点信息设置</h4>
-                        <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
+                        <a href="javascript:void(0)" class="btn-close" ng-click="editor.changeState('init')"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
                     </div>
                     <div class="pop-cont">
                         <p>您确定要删除该线路点?</p>
@@ -180,7 +180,7 @@
                 <div class="pop ng-hide" ng-show="editor.state === 'editTime'">
                     <div class="pop-title">
                         <h4>线路点信息设置</h4>
-                        <a href="#" class="btn-close" ng-click="editor.changeState('init')"><img src="img/close.png" /></a>
+                        <a href="javascript:void(0)" class="btn-close" ng-click="editor.changeState('init')"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
                     </div>
                     <div class="pop-cont">
                         <div>
@@ -215,6 +215,7 @@
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_router_edit.js"></script>
 </body>
 </html>
