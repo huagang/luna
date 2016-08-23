@@ -209,6 +209,9 @@
         </div>
     </div>
 </div>
+<div class="message-wrapper hidden">
+    <p class="message"></p>
+</div>
 <script>
     window.context = "<%=request.getContextPath() %>";
 </script>

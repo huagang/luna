@@ -238,8 +238,8 @@ var Inter = function () {
                 getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
                 delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
                 checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
-                fetchRouteConfig:{url: context + '/content/route/configuration/{routeId}'}
-
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'}
             };
         }
     };
