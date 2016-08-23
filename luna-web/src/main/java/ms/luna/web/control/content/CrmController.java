@@ -344,6 +344,8 @@ public class CrmController extends BasicController {
             param.put("salesman_nm", salesman_nm);
             param.put("create_user", user.getNickName());
             param.put("unique_id", user.getUniqueId());
+            param.put("business_name", businessName);
+            param.put("business_code", businessCode);
             if (!"ALL".equals(county_id)) {
                 param.put("county_id", county_id);
             }

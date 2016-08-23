@@ -63,7 +63,6 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	public JSONObject registMerchant(String json) {
 
 		JSONObject param = JSONObject.parseObject(json);
-
 		String merchant_nm = param.getString("merchant_nm"); // 商户名字
 		String merchant_phonenum = param.getString("merchant_phonenum"); // 商户电话
 		String category_id = param.getString("category_id"); // 商户类型id
@@ -636,7 +635,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 		msBusinessDAO.insertSelective(business);
 
-		return FastJsonUtil.sucess("新商户创建成功！");
+		return FastJsonUtil.sucess("success");
 
 	}
 
