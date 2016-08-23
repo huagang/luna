@@ -465,7 +465,7 @@
               <!--imgList controller begin -->
               <div id="imgListDiv" ng-controller="imgListController as imgList">
                   <button id="initImgList" ng-click="imgList.init()" class="ng-hide">Init</button>
-                  <button id="updateImg" ng-click="imgList.update()" class="ng-hide">Update</button>
+                  <button id="updateImgList" ng-click="imgList.update()" class="ng-hide">Update</button>
                   <div>
                       <div class="menu-control menu-control-wrap">
                           <a href="#" class="style" ng-class="imgList.tabs.style.tab" ng-click="imgList.changeTab('style')">样式</a>

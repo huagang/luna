@@ -621,6 +621,7 @@ function ImgListController($scope, $rootScope, $http) {
      */
     this.changeColumn = function () {
         this.currentComponent.content.column = this.content.column;
+        updatePageComponentsHtml();
     };
 
     /**

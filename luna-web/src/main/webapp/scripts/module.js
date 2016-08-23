@@ -465,6 +465,15 @@ function updatePageComponents() {
     switch ($currenthtml.attr("component-type")) {
         case 'canvas':
             break;
+        case 'imgList':
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.width());
+            componentObj.height = parseInt($currenthtml.height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
+            break;
         case 'tab':
             componentObj.x = parseInt($currenthtml.position().left);
             componentObj.y = parseInt($currenthtml.position().top);
@@ -663,6 +672,12 @@ function updatePageComponentsHtml() {
             comobj.children("div.con").html('<div class="text">' + content + '</div>');
             break;
         case "img":
+            if (content == "") {
+                content = imghost + "/img/sample.png";
+            }
+            comobj.children("div.con").html('<img src="' + content + '"/>');
+            break;
+        case "imgList":
             if (content == "") {
                 content = imghost + "/img/sample.png";
             }
