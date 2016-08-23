@@ -190,7 +190,7 @@ public class ManageRouteServiceImpl implements ManageRouteService {
                 Set<ObjectId> poiIdList = readPoiId2List(c_list);
                 poiDef = msRouteCollectionDAO.getPoiForRoute(poiIdList);
             }
-            result.put("routeDate", c_list);
+            result.put("routeData", c_list);
             result.put("poiDef", poiDef);
             return FastJsonUtil.sucess("success", result);
         } catch (Exception e) {
