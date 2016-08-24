@@ -9,6 +9,10 @@ public interface LunaGoodsCategoryService {
 
     JSONObject getCategories();
 
+    JSONObject getCategories(JSONObject jsonObject);
+
+    JSONObject searchCategories(JSONObject jsonObject);
+
     JSONObject createCategory(JSONObject jsonObject);
 
     JSONObject deleteCategory(JSONObject jsonObject);
