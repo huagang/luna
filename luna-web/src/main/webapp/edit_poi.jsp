@@ -54,11 +54,11 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
 					<c:if test="${lang == 'zh'}">
-						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+						<a href="javascript:void(0)" data-href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
 					</c:if>
 					<!-- 英文版的时候给出可以切换到中文版的链接 -->
 					<c:if test="${lang == 'en'}">
-						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
+						<a href="javascript:void(0)"  data-href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
 					</c:if>
                 </h3>
             </div>
@@ -325,8 +325,23 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
-
-<jsp:include page="/templete/imgCropper.jsp" />
+	<div class="pop" id="pop-message">
+		<div class="pop-title">
+			<h4>提示</h4>
+			<a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+		</div>
+		<div class="pop-cont">
+			<div class="pop-tips">
+				<p class="message"></p>
+			</div>
+		</div>
+		<!-- 弹出层底部功能区 -->
+		<div class="pop-fun">
+			<button type="button" id="btn-mes">确定</button>
+			<button type="button" id="btn-mes">取消</button>
+		</div>
+		<!-- 弹出层底部功能区 -->
+	</div>
 <script type='text/javascript'>
 	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
 	window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";

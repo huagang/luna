@@ -7,12 +7,15 @@ import com.google.common.collect.Lists;
 import ms.biz.common.CommonQueryParam;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageShowAppBL;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
 import ms.luna.biz.cons.VbConstant.MsShowAppConfig;
 import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.*;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.model.MsUser;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.table.MsShowPageShareTable;
@@ -47,6 +50,8 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	private MsShowPageShareDAO msShowPageShareDAO;
 	@Autowired
 	private MsFarmPageDAO msFarmPageDAO;
+	@Autowired
+	private LunaUserRoleDAO lunaUserRoleDAO;
 	
 	private String showPageUriTemplate = "/app/%d"; 
 	private String businessUriTemplate = "/business/%s";
@@ -71,6 +76,30 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			parameter.setRange(true);
 			parameter.setMax(Integer.parseInt(max));
 			parameter.setMin(Integer.parseInt(min));
+		}
+
+		String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
+		if(lunaUserRole == null) {
+			logger.warn("user not found, unique_id: " + uniqueId);
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+		}
+		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
+
+		} else if(businessIdList.size() > 0){
+			parameter.setBusinessIds(businessIdList);
+			criteria.andBusinessIdIn(businessIdList);
+		} else {
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
 		}
 		
 		JSONObject data = JSONObject.parseObject("{}");

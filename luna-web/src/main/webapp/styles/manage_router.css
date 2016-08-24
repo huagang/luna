@@ -42,7 +42,6 @@ input{
 }
 .uploader{
 	display: inline-block;
-    width: 25%;
     position: relative;
 }
 .uploader .fileup-thumbnail{
@@ -53,7 +52,9 @@ input{
     height: 100%;
     opacity: 0;
 }
-
+.uploader .button{
+	line-height: 25px;
+}
 
 tr{
 	height: 60px;

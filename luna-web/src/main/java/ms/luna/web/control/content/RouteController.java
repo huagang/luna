@@ -182,18 +182,20 @@ public class RouteController extends BasicController {
     	}
     }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/configuration")
-	public ModelAndView initRouteConfigurationPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(method = RequestMethod.GET, value = "/configuration/{routeId}")
+	public ModelAndView initRouteConfigurationPage(
+			@PathVariable("routeId") String routeId,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			session.setAttribute("menu_selected", "manage_router");
 		}
 		ModelAndView modelAndView = buildModelAndView("/manage_router_edit");
-
+		modelAndView.addObject("routeId", routeId);
 		return modelAndView;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/configuration/{routeId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/configuration/{routeId}", params = "data")
 	@ResponseBody
 	public JSONObject viewRouteConfiguration(@PathVariable("routeId") Integer routeId){
 		try {
@@ -216,7 +218,7 @@ public class RouteController extends BasicController {
 			LunaUserSession user = SessionHelper.getUser(request.getSession(false));
 
 			JSONObject param = new JSONObject();
-			param.put("routeId", routeId);
+			param.put("route_id", routeId);
 			param.put("data", data);
 			param.put("luna_name", user.getNickName());
 			JSONObject result = manageRouteService.saveRouteConfiguration(param);

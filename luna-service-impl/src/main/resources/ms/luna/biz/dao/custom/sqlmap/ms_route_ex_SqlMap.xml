@@ -20,11 +20,11 @@
 			ms_route.cost_id As cost_id,
 			ms_route.description As description,
 			ms_route.cover As cover,
-			ms_user_pw.luna_name As luna_name,
+			luna_user.luna_name As luna_name,
 			ms_business.business_name As business_name
 		from
 			ms_route 
-		inner join ms_user_pw on ms_route.unique_id = ms_user_pw.unique_id
+		inner join luna_user on ms_route.unique_id = luna_user.unique_id
 		inner join ms_business on ms_route.business_id = ms_business.business_id
 		order by
 			ms_route.regist_hhmmss DESC

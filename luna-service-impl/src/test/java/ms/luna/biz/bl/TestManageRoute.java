@@ -79,7 +79,7 @@ public class TestManageRoute {
 
 	@Test
 	public void saveRouteConfiguration(){
-		String c_list = "{\"c_list\":[{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5772311b8ccb783280163939\"},{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5760bc433fc92303d8d2255b\"}]}";
+		String c_list = "{\"routeData\":[{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5772311b8ccb783280163939\"},{\"start_time\":\"11:00\",\"end_time\":\"12:45\",\"poi_id\":\"5760bc433fc92303d8d2255b\"}]}";
 		String luna_name = "greek test";
 		Integer id = 35;
 		JSONObject param = new JSONObject();

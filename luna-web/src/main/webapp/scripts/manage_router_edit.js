@@ -1,6 +1,28 @@
 (function(){
     var editRouter = angular.module('editRouter',['ui.bootstrap']);
     editRouter
+        .config(['$httpProvider', function ($httpProvider) {
+            // Intercept POST requests, convert to standard form encoding
+            $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+            $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+            $httpProvider.defaults.transformRequest.unshift(function (data, headersGetter) {
+                var key, result = [];
+                if(toString.call(data) === "[object Object]"){
+                    for (key in data) {
+                        if (data.hasOwnProperty(key)){
+                            var value = data[key];
+                            if(['[object Object]', '[object Array]'].indexOf(toString.call(value)) !== -1){
+                                value = JSON.stringify(value);
+                            }
+                            result.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+                        }
+                    }
+                    return result.join("&");
+                } else{
+                    return data;
+                }
+            });
+        }])
         .controller('editController',['$rootScope', '$scope', '$http', editController])
         .directive('poiHoverDelegate', poiHoverDelegate)
         .directive('routeEventDelegate',routeEventDelegate)
@@ -26,8 +48,11 @@
         // 操作 设置线路点设置弹出框的时间信息
         vm.setPoiInfo = setPoiInfo;
 
-        // 操作 获取景点数量
-        vm.getSceneryNum = getSceneryNum;
+        // 操作 获取景点数量以及总共时间
+        vm.summary = summary;
+
+        // 操作 显示信息
+        vm.showMessage = showMessage;
 
         // 事件 编辑poi时间信息
         vm.handleEditPoi = handleEditPoi;
@@ -92,30 +117,33 @@
         // 请求 删除poi节点
         vm.handleDeletePoi = handleDeletePoi;
 
+        // 请求 保存线路信息
+        vm.handleSave = handleSave;
         vm.init();// 初始化
 
-        window.s = $scope;
+        window.vm = vm;
 
         function init(){
             vm.urls = Inter.getApiUrl();  //接口url信息
-
+            vm.pageUrls = Inter.getPageUrl();
+            vm.id  = parseInt(location.href.match(/configuration\/(\d+)/)[1]);
             vm.tags = [
                 {
                     id:'ALL', name: '全部'
                 },{
-                    id:'2', name: '景点'
+                    id:'2', name: '旅游景点'
                 },{
-                    id:'3', name: '住宿'
+                    id:'3', name: '住宿服务'
                 },{
-                    id:'4', name: '餐饮'
+                    id:'4', name: '餐饮服务'
                 },{
-                    id:'5', name: '娱乐'
+                    id:'5', name: '娱乐休闲'
                 },{
                     id:'6', name: '购物'
                 },{
-                    id:'7', name: '洗手间'
+                    id:'7', name: '基础设施'
                 },{
-                    id:'8', name: '出入口'
+                    id:'8', name: '其他'
                 }
             ]; // poi标签 缺少接口
 
@@ -153,19 +181,17 @@
                 insertId: '',
                 direction: '' // "above" or "below"
             };
+            vm.hasType = {}
             vm.dragData.dragImg = new Image();
             vm.dragData.dragImg.src = window.context + '/img/dragImg.png';
             vm.dragData.dragImg.setAttribute('class', "drag-img");
             window.dragImg = vm.dragData.dragImg;
             document.body.appendChild(vm.dragData.dragImg);
+            vm.msgEle = angular.element('.message-wrapper');
+
             vm.loadProvinces();
             vm.fetchRouteData();
         }
-
-
-
-
-
 
 
         // 更改状态 用于控制弹出框的显示
@@ -178,7 +204,13 @@
 
         }
 
-
+        function showMessage(msg){
+            vm.msgEle.removeClass('hidden');
+            vm.msgEle.find('.message').text(msg);
+            setTimeout(function(){
+                vm.msgEle.addClass('hidden');
+            }, 2000);
+        }
 
         // 更新路程时间
         function updateRouterTime(){
@@ -189,9 +221,8 @@
 
         function loadProvinces(){
             $http({
-                url: vm.urls.loadProvinces,
-                method: 'GET'
-
+                url: vm.urls.pullDownProvinces.url,
+                method:  vm.urls.pullDownProvinces.type
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.provinceList = res.data.data;
@@ -208,24 +239,16 @@
         function handleProvinceChange(){
 
             var id = vm.filterData.provinceId;
-            var data = new FormData();
-            data.append('province_id', id);
             vm.filterData.countyList = [];
             vm.filterData.countyId = '';
             vm.filterData.cityId = '';
             $http({
-                url: vm.urls.loadCities,
-                method:'POST',
-                data: data,
-                headers:{
-                    'Content-Type': undefined, // 设置成undefined之后浏览器会自动增加boundary
-                }
-
+                url: vm.urls.pullDownCitys.url,
+                method: vm.urls.pullDownCitys.type,
+                params: {province_id: id},
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.cityList = res.data.data.citys;
-
-
                 } else{
                     alert('加载市数据失败,请重试');
                 }
@@ -237,28 +260,21 @@
         // 市更改事件
         function handleCityChange(){
             var id = vm.filterData.cityId;
-            var data = new FormData();
-            data.append('city_id', id);
             vm.filterData.countyList = [];
             vm.filterData.countyId = '';
             $http({
-                url: vm.urls.loadCounties,
-                method:'POST',
-                data: data,
-                headers: {
-                    "Content-Type":undefined
-                }
+                url: vm.urls.pullDownCounties.url,
+                method: vm.urls.pullDownCounties.type,
+                params: {'city_id': id},
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.filterData.countyList = res.data.data.counties;
-
                 } else{
                     alert('加载县数据失败,请重试');
                 }
             }, function(res){
                 alert('加载县数据失败,请重试');
             });
-
         }
 
         // 县更改事件
@@ -281,21 +297,37 @@
 
         // 搜索事件
         function handleSearch(){
-            var data = new FormData();
-            data.append('province_id', vm.filterData.provinceId || 'ALL');
-            data.append('city_id', vm.filterData.cityId || 'ALL');
-            data.append('county_id', vm.filterData.countyId || 'ALL');
-            data.append('keyWord', vm.filterData.poiName || '');
             $http({
-                url: vm.urls.filterPois,
-                method:'POST',
-                data: data,
-                headers: {
-                    "Content-Type":undefined
+                url: vm.urls.bizRelationPoiSearch.url,
+                method: vm.urls.bizRelationPoiSearch.type,
+                params: {
+                    province_id: vm.filterData.provinceId || 'ALL',
+                    city_id: vm.filterData.cityId || 'ALL',
+                    county_id: vm.filterData.countyId || 'ALL',
+                    keyWord: vm.filterData.poiName || ''
                 }
             }).then(function(res){
                 if(res.data.code === '0'){
-                    vm.filterData.poiData = res.data.data.row;
+                    var idList = vm.routeData.map(function(item){
+                        return item._id;
+                    });
+                    vm.filterData.poiData = res.data.data.row.filter(function(item){
+                        if(idList.indexOf(item._id) === -1){
+                            return true;
+                        }
+                        return false;
+                    }) || [];
+
+                    vm.hasType = {};
+                    if(vm.filterData.poiData.length > 0){
+                        vm.hasType['ALL'] = true;
+                    }
+                    vm.filterData.poiData.forEach(function(item){
+                        item.tags.forEach(function(foo){
+                            vm.hasType[foo] = true;
+                            console.log(foo);
+                        });
+                    });
                     vm.filterData.searched = true;
                 } else{
                     alert('加载数据失败,请重试');
@@ -307,8 +339,6 @@
 
         // 标签tag点击事件
         function handleTagChange(id){
-            console.log(id);
-
             if(id !== 'ALL'){
                 id = parseInt(id);
             }
@@ -353,6 +383,7 @@
                 vm.routeData[i].startTime = vm.editingPoiInfo.startTime.toTimeString().substr(0,5);
                 vm.routeData[i].endTime = vm.editingPoiInfo.endTime.toTimeString().substr(0,5);
                 vm.changeState('init');
+                vm.handleSave();
             }
         }
 
@@ -376,7 +407,7 @@
             vm.routeData.splice(i, 1);
             vm.changeState('init');
             vm.targetPoiId = '';
-
+            vm.handleSave();
         }
 
         // 发送请求 fake
@@ -389,15 +420,28 @@
                 });
 
                 // 获取id list
-                var ids = [], data=[];
-                vm.filterData.poiData.forEach(function(item){
+                var ids = [],data = [];
+                vm.filterData.poiData = vm.filterData.poiData.filter(function(item){
                     if(vm.filterData.selectedData[item._id]){
                         ids.push(item._id);
                         data.push(JSON.parse(JSON.stringify(item)));
+                        return false;
                     }
+                    return true;
+                });
+
+                vm.hasType = {};
+                if(vm.filterData.poiData.length > 0){
+                    vm.hasType['ALL'] = true;
+                }
+                vm.filterData.poiData.forEach(function(item){
+                    item.tags.forEach(function(foo){
+                        vm.hasType[foo] = true;
+                    });
                 });
 
                 if(vm.dragData.direction && vm.dragData.insertId){
+                    // 插入到某个节点中
                     data = JSON.parse(JSON.stringify(data));
                     var i;
                     vm.routeData.forEach(function(item, index){
@@ -410,25 +454,44 @@
                     }
                     vm.routeData.splice.apply(vm.routeData,[i, 0].concat(data));
                 } else{
+                    // 插入到节点后面
                     vm.routeData = vm.routeData.concat(data);
                 }
                 vm.filterData.selectedData = {};
                 vm.filterData.selectAll = false;
                 vm.changeState('init');
+                vm.handleSave();
             }
         }
 
-        function getSceneryNum(){
-            return vm.routeData.reduce(function(memo, cur){
-                if(vm.routeData.tag.indexOf(2) !== -1){
+        function summary(){
+            vm.sceneryNum =  vm.routeData.reduce(function(memo, cur){
+                if(cur.tags.indexOf(2) !== -1){
                     memo += 1;
                 }
                 return memo;
             }, 0);
+            if(vm.routeData.length > 0){
+                var endTime = vm.routeData[vm.routeData.length - 1].endTime, startTime = vm.routeData[0].startTime;
+                if(startTime && endTime){
+                    var start = startTime.match(/(\d+):(\d+)/), end = endTime.match(/(\d+):(\d+)/);
+                    var hour = parseInt(end[1]) - parseInt(start[1]), minute = parseInt(end[2]) - parseInt(start[2]);
+                    if(minute < 0){
+                        minute += 60;
+                        hour -= 1;
+                    }
+                    if(hour < 0){
+                        hour += 24;
+                    }
+                    vm.routeTime = hour + '小时' + minute + '分钟';
+                } else{
+                    vm.routeTime = '时间未填写完全,无法获取';
+                }
+            }
         }
 
         function fetchRouteData(){
-            setTimeout(function(){
+            /*setTimeout(function(){
                 vm.routeData = [ //线路信息
                     {
                         _id: '1231',
@@ -438,66 +501,63 @@
                         endTime: "11:00",
                         tags:[2],
 
-                    },{
-                        _id: '1232',
-                        name: 'haha2',
-                        order: 2,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1233',
-                        name: 'haha3',
-                        order: 3,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1234',
-                        name: 'haha4',
-                        order: 4,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1235',
-                        name: 'haha5',
-                        order: 5,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1236',
-                        name: 'haha6',
-                        order: 6,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1237',
-                        name: 'haha7',
-                        order: 7,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1238',
-                        name: 'haha8',
-                        order: 8,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },{
-                        _id: '1239',
-                        name: 'haha9',
-                        order: 9,
-                        startTime: "09:00",
-                        endTime: "11:00",
-                        tags:[2]
-                    },
+                    }
                 ];
                 $scope.$apply();
-            }, 500);
+            }, 500);*/
+            $http({
+                url: vm.urls.fetchRouteConfig.url.format(vm.id),
+                method: vm.urls.fetchRouteConfig.type
+            }).then(function(data){
+                console.log(data);
+                if(data.data.code === '0'){
+                    vm.poiDef = data.data.data.poiDef;
+                    vm.routeData = (data.data.data.routeData || []).map(function(item){
+                        return {
+                            _id: item.poi_id,
+                            startTime: item.start_time,
+                            endTime: item.end_time,
+                            name: vm.poiDef[item.poi_id].long_title,
+                            tags: [vm.poiDef[item.poi_id].category_id]
+                        };
+                    }) || [];
+                    vm.summary();
+                } else{
+                    vm.showMessage('获取线路信息失败,请刷新重试');
+                }
+            }, function(data){
+                console.log(data);
+                vm.showMessage('获取线路信息失败,请刷新重试');
+            })
+        }
+
+        function handleSave(){
+            var data = vm.routeData.map(function(item){
+                return {
+                    poi_id: item._id,
+                    start_time: item.startTime || '',
+                    end_time: item.endTime || ''
+                };
+            });
+
+            $http({
+                url: vm.urls.saveRouteConfig.url.format(vm.id),
+                method: vm.urls.saveRouteConfig.type,
+                data: {
+                    data: {
+                        routeData: data
+                    }
+                }
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    vm.summary();
+                } else{
+                    vm.showMessage('保存失败');
+                }
+            }, function(){
+                vm.showMessage('保存失败');
+            })
+
         }
 
         function handleEditPoi(){
@@ -524,6 +584,7 @@
         function handleDragEnter(){
             if(vm.dragData.targetId){
                 vm.dragData.enterId = event.target.parentElement.getAttribute('data-id');
+                vm.dragData.enterNextId = event.target.parentElement.nextElementSibling.getAttribute('data-id');
                 event.preventDefault();
                 $scope.$apply();
             }
@@ -532,6 +593,7 @@
         function handleDragLeave(){
             if(vm.dragData.targetId) {
                 vm.dragData.enterId = '';
+                vm.dragData.enterNextId = '';
                 event.preventDefault();
                 $scope.$apply();
             }
@@ -545,7 +607,7 @@
         function handleDrop(){
             if(vm.dragData.targetId ){
 
-                if(vm.dragData.targetId !== vm.dragData.enterId){
+                if(vm.dragData.targetId !== vm.dragData.enterNextId && vm.dragData.targetId !== vm.dragData.enterId){
                     var dragData = vm.dragData;
                     var routeData = [], dragedData ;
                     vm.routeData = vm.routeData.reduce(function(memo, item, index){
@@ -558,12 +620,19 @@
                             memo.push(item);
                         }
                         return memo;
-
                     },[]);
+                    vm.routeData.some(function(item, index){
+                        if(item === undefined){
+                            vm.routeData[index] = dragedData;
+                            return true;
+                        }
+                        return false;
+                    })
                 }
 
-                vm.dragData.targetId = vm.dragData.enterId = '';
+                vm.dragData.enterNextId = vm.dragData.targetId = vm.dragData.enterId = '';
                 $scope.$apply();
+                vm.handleSave();
             }
         }
 

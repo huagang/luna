@@ -44,7 +44,12 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageApp: context + '/platform/user'
+                manageUser: context + '/platform/user', //
+                routeConfig: context + '/content/route/configuration/{0}',
+                addPoi: context + '/data/poi/addPage',
+                editPoi: context + '/data/poi/initEditPage?poiId={0}',
+                manageRouter: context + '/content/route',
+
             };
         },
         getApiUrl: function () {
@@ -91,7 +96,7 @@ var Inter = function () {
                 merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
-                merchantSuccess: { url: context + "common/merchant/successPage", type: "GET" }, //注册成功页面
+                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
                 crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
@@ -227,20 +232,14 @@ var Inter = function () {
                 //zclip路径
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
-
-                loadProvinces: context + '/pulldown.do?method=load_provinces', // 获取省份列表
-                loadCities: context + '/pulldown.do?method=load_citys',        // 通过省份id获取市列表
-                loadCounties: context + '/pulldown.do?method=load_counties',     // 通过市id获取县列表
-                filterPois: context + '/business_tree.do?method=searchPoisForBizTree', //筛选poi
-
                 // 线路管理
-                createRoute: context + '/manage_router.do?method=create_route', //创建路线
-                editRoute: context + '/manage_router.do?method=edit_route', //编辑路线
-                getRouteList: context + '/manage_router.do?method=async_search_routes', //获取线路列表
-                delRoute: context + '/manage_router.do?method=del_route', // 删除线路
-                checkRoute: context + '/manage_router.do?method=check_route_nm', // 检查线路名称是否合法
-
-
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'}
             };
         }
     };

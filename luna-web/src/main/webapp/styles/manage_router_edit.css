@@ -1,3 +1,4 @@
+
 .icon-tip{
     height: 20px;
     width: 20px;
@@ -10,9 +11,13 @@
     color: #5CB8DF;
 }
 
-.button，
+.button,
 .button-close{
     height: 36px;
+}
+
+.font-14{
+    font-size: 14px;
 }
 
 .tags{
@@ -21,7 +26,7 @@
     vertical-align: top;
 }
 
-.btn-tag {
+.btn-tag{
     background-color: #fff;
     border: 1px solid #E5E5E5;
     color: #000;
@@ -29,6 +34,7 @@
     margin: 0 5px 10px 0;
 }
 
+.btn-tag:hover,
 .btn-tag.current{
     background-color: #4F6499;
     border: 1px solid #4F6499;
@@ -59,7 +65,7 @@
 }
 
 .icon-tip{
-    margin: 0 20px -5px 0;
+    margin: 0 10px -5px 0;
 }
 
 .breadcrumb button{
@@ -70,9 +76,16 @@
     display: block;
     position: fixed;
     width: 50%;
-    left: 25%;
-    top: 10%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 40px;
 }
+.pop.delPoi{
+    top: 20%;
+    width: 400px;
+}
+
 .pop.route{
     width: 690px;
 }
@@ -170,12 +183,15 @@
     position: absolute;
     top: 0;
     right: 100%;
+    -webkit-user-select: none;
 }
 .right-side{
     width: 400px;
     position: absolute;
     top: 0;
     left: 100%;
+    -webkit-user-select: none;
+
 }
 
 .info .edit,
@@ -225,6 +241,11 @@
     direction: rtl;
     margin-right: 10px;
 }
+#keyWord{
+    height: 30px;
+    padding-left: 5px;
+    width: 200px;
+}
 
 #select-all, #select-all + label{
     cursor: pointer;
@@ -254,4 +275,9 @@
     left:-200px;
     height: 20px;
     width:20px;
+}
+
+.summary {
+    margin: 0px auto 40px;
+    font-size: 16px;
 }

@@ -66,10 +66,10 @@ function timeFormatter(value, row, index) {
 function operationFormatter(value, row, index) {
     var id = row.id;
     var title = row.title;
+    var publishOp = '<a class="publish" href="#" onclick="handlePublish({0})">发布</a>'.format(id);
     var editOp = '<a class="edit" href="' + (Util.strFormat(Inter.getApiUrl().articleEditPage.url, [id])) + '" target="_blank">编辑</a>';
     var deleteOp = '<a class="delete" href="#" onclick="showDeleteArticleDialog({0}, \'{1}\')">删除</a>'.format(id, title);
-
-    return editOp + deleteOp;
+    return publishOp + editOp + deleteOp;
 }
 
 function queryParams(params) {
@@ -186,4 +186,36 @@ function showDeleteArticleDialog(id, name) {
 }
 
 function showUpdateArticleDialog(id) {
+}
+
+
+function handlePublish(id){
+    event.preventDefault();
+    $.ajax({
+        url: Inter.getApiUrl().articlePublish.url.format(id),
+        type: Inter.getApiUrl().articlePublish.type,
+        async: true,
+        data: { id: id },
+        dataType: "json",
+        success: function (data) {
+            if (data.code == "0") {
+                showMessage("发布成功");
+                $('#table_article').bootstrapTable("refresh");
+            } else {
+                showMessage("发布失败");
+            }
+        },
+        error: function () {
+            showMessage("发布失败");
+        }
+    });
+}
+
+function showMessage(msg){
+    var message = $('.message-wrapper');
+    message.removeClass('hidden');
+    message.find('.message').text(msg);
+    setTimeout(function(){
+        message.addClass('hidden');
+    }, 2000);
 }

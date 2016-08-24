@@ -1,7 +1,25 @@
 
 
 var manageRouter = angular.module('manageRouter', ['ui.bootstrap']);
-manageRouter.controller('routerController', ['$rootScope', '$scope', '$http', routerController]);
+manageRouter
+	.config(['$httpProvider', function ($httpProvider) {
+		// Intercept POST requests, convert to standard form encoding
+		$httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+		$httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+		$httpProvider.defaults.transformRequest.unshift(function (data, headersGetter) {
+			var key, result = [];
+
+			if (typeof data === "string")
+				return data;
+
+			for (key in data) {
+				if (data.hasOwnProperty(key))
+					result.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+			}
+			return result.join("&");
+		});
+	}])
+	.controller('routerController', ['$rootScope', '$scope', '$http', routerController]);
 
 manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
 	//定义  $rootScope内容
@@ -10,7 +28,7 @@ manageRouter.run(['$rootScope', '$http', function($rootScope, $http){
 
 function routerController($rootScope, $scope, $http){
 	var vm = this;
-
+	window.vm = vm;
 
 	// 数据初始化
 	vm.init = function(){
@@ -30,12 +48,14 @@ function routerController($rootScope, $scope, $http){
 			{id: 1, name: '较少'},
 			{id: 2, name: '中等'},
 			{id: 3, name: '较大'}
-		]
+		];
 
 		vm.urls = Inter.getApiUrl();
+		vm.pageUrls = Inter.getPageUrl();
 		vm.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
 		vm.opId = null;
 		vm.rowsData = [];
+		vm.showLoading = false;
 		vm.pagination = {
 			curPage: 1, // from 0
 			totalItems: 0,  // from 1
@@ -63,7 +83,7 @@ function routerController($rootScope, $scope, $http){
 	vm.handlePageChanged = function(){
 		console.log("page changed");
 		vm.fetchData();
-	}
+	};
 
 
 	// 改变状态
@@ -97,13 +117,13 @@ function routerController($rootScope, $scope, $http){
 		});
 		return data;
 
-	}
+	};
 
 	// 拉取线路数据
 	vm.fetchData = function(){
 		$http({
-			url: vm.urls.getRouteList,
-			method: 'GET',
+			url: vm.urls.getRouteList.url,
+			method: vm.urls.getRouteList.type,
 			params: {offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1), limit: vm.pagination.maxRowNum},
 		}).then(function(res){
 			if(res.data.code === 0){
@@ -132,45 +152,54 @@ function routerController($rootScope, $scope, $http){
 		}, function(res){
 
 		});
-	}
+	};
 	
 	vm.uploadPic = function(event){
 		var file = event.target.files[0];
-		var type = file.name.substr(file.name.lastIndexOf('.')+1 );
-		
-		if(file.size > 1000000 ){
-			alert('图片大小不能超过1M');
-			return;
-		} 
-		if(['png', 'jpg'].indexOf(type) < 0){
-			alert("文件格式仅限于PNG和JPG");
+		var res = FileUploader._checkValidation('pic', file);
+		if(res.error){
+			alert(res.msg);
 			return;
 		}
-		var data = new FormData();
-		data.append('type', 'pic');
-		data.append('resource_type', 'poi');
-		data.append('file', file);
-		$http({
-			method: 'POST',
-			url: vm.urls.uploadPath,
-			headers:{
-				'Content-Type': undefined // 设置成undefined之后浏览器会自动增加boundary
-			},
-			data: data
-		}).then(function(data){
-			event.target.value = '';
-			if(data.data.code === '0'){
-				vm.data.pic = data.data.data.access_url;
-			} else{
-				alert('上传文件出错');
-			}
-		}, function(data){
-			alert('上传文件出错');
+
+		cropper.setFile(file, function(file){
+			cropper.close();
+			vm.showLoading = true;
+			$scope.$apply();
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: file,
+				resourceType: 'poi',
+				resource_id: vm.data.id || undefined,
+				success: function(data){
+					vm.showLoading = false;
+					event.target.value = '';
+					if(data.code === '0'){
+						vm.data.pic = data.data.access_url;
+						$scope.$apply();
+					} else{
+						alert('上传文件出错');
+					}
+				},
+				error: function(){
+					alert('上传文件出错');
+					event.target.value = '';
+					vm.showLoading = false;
+					$scope.$apply();
+				}
+			});
+		}, function(){
 			event.target.value = '';
 		});
-	}
+	};
 	
 	vm.resetNewDialog = function(){
+		var business = localStorage.getItem('business');
+		if(! business){
+			alert('请您先选择业务,然后才能创建线路');
+			return;
+		}
+		business = JSON.parse(business);
 		vm.data = {
 			id: '',
 			name: '',
@@ -178,33 +207,42 @@ function routerController($rootScope, $scope, $http){
 			pic: '',
 			energyCost: '',
 			file: null,
-			businessId: '',
+			businessId: business.id,
 			nameValid: undefined
 		};
-	}
+		vm.showLoading =false;
+	};
 	
 	
 	// 新建路线
 	vm.handleCreateRouter = function(){
 		if(vm.data.nameValid === false){
 			alert('线路名称重复,请重新填写');
+			return;
 		}
 		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
-			var data = new FormData();
+			/*var data = new FormData();
 			data.append('id', vm.data.id || null);
 			data.append('name', vm.data.name);
 			data.append('description', vm.data.description);
 			data.append('cost_id', parseInt(vm.data.energyCost));
-			data.append('business_id',vm.data.businessId || 45);
-			data.append('cover', vm.data.pic);
+			data.append('business_id',vm.data.businessId);
+			data.append('cover', vm.data.pic);*/
+			var data = {
+				name: vm.data.name,
+				description: vm.data.description,
+				cost_id: parseInt(vm.data.energyCost),
+				business_id: vm.data.businessId,
+				cover: vm.data.pic
+			};
+			if(vm.data.id){
+				data.id = vm.data.id;
+			}
 			
 			$http({
-				method: "POST",
-				url: vm.data.id ? vm.urls.editRoute : vm.urls.createRoute,
-				data: data,
-				headers:{
-					"Content-Type": undefined
-				}
+				method: vm.data.id ? vm.urls.editRoute.type : vm.urls.createRoute.type,
+				url: vm.data.id ? vm.urls.editRoute.url.format(vm.data.id) : vm.urls.createRoute.url,
+				data: data
 			}).then(function(res){
 				if(res.data.code === "0"){
 					vm.changeState('init');
@@ -223,15 +261,15 @@ function routerController($rootScope, $scope, $http){
 		else{
 			alert("部分信息为空，不能新建路线");
 		}
-	}
+	};
 	
 	// 删除路线
 	vm.handleDeleteRouter = function(){
 		var data = new FormData();
 		data.append('id', vm.opId);
 		$http({
-			method: 'POST',
-			url: vm.urls.delRoute,
+			method: vm.urls.delRoute.type,
+			url: vm.urls.delRoute.url.format(vm.opId),
 			data: data,
 			headers: {
 				"Content-Type": undefined
@@ -253,9 +291,8 @@ function routerController($rootScope, $scope, $http){
 			data.append('id', vm.data.id);
 		}
 		$http({
-			url: vm.urls.checkRoute,
-			method: 'POST',
-			data: data,
+			url: vm.urls.checkRoute.url.format(vm.data.name , vm.data.id || ''),
+			method: vm.urls.checkRoute.type,
 			headers: {
 				"Content-Type": undefined,
 			}

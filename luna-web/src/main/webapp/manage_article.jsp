@@ -73,15 +73,19 @@
             </div>
         </div>
     </div>
+
     <div class="status-message" id="status-message">成功</div>
     <!--中间业务内容 end-->
     <!--底部版权 start-->
     <jsp:include page="/templete/bottom.jsp"/>
     <!--底部版权 end-->
 </div>
+<div class="message-wrapper hidden">
+    <p class="message"></p>
+</div>
+<div id="pop-overlay" class="ng-hide" ng-show="article.dialogBaseShow"></div>
 <!--弹出层 start-->
 <!--模态窗口 -->
-<div id="pop-overlay" class="ng-hide" ng-show="article.dialogBaseShow"></div>
 
 <script>
     window.context = "<%=request.getContextPath() %>";
