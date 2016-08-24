@@ -119,12 +119,20 @@ var InitLeftArea = function () {
             }
             modify(e);
         });
+        //页面复用
+        $("#list-page").on('click', 'a.pageCopy', function (e) {
+            modify(e, 'copy');
+        });
 
         //创建或更新，根据弹窗是否存在modify_page_id确定
         $("#setup").click(function () {
-            modifyPageId = $("#modify_page_id").val();
+            var modifyPageId = $("#modify_page_id").val();
+            var sourcePageId = $('#sourcePageId').val();
             if (modifyPageId) {
                 modifyPageName();
+            } else if (sourcePageId) {
+                lunaPage.savePage(currentPageId);
+                creatPageID();
             } else {
                 creatPageID();
             }

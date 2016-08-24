@@ -66,6 +66,7 @@ function creatPageID() {
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
+            'sourcePageId':$('#sourcePageId').val(),
             'page_name': $("#txt-name").val(),
             'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),

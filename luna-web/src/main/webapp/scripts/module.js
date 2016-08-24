@@ -248,6 +248,9 @@ function createPageListItemHtml(page) {
     pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
     pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
     pageHtml.push('<div class="fun-page">');
+    if (page.page_code != 'welcome') {
+        pageHtml.push('<a href="#" class="pageCopy" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">复用<i class="icon icon-edit"></i></a>');
+    }
     pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
     if (page.page_code != 'welcome' && page.page_code != 'index') {
         pageHtml.push('<a href="#" class="delete" page_id="' + page.page_id + '" onclick="deletePageDialog(\'' + page.page_id + '\');">删除<i class="icon icon-delete"></i></a>');
@@ -681,7 +684,7 @@ function updatePageComponentsHtml() {
             if (content == "") {
                 content = imghost + "/img/sample.png";
             }
-            comobj.children("div.con").html('<img src="' + content + '"/>');
+            comobj.children("div.con").html('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
             break;
         case "nav":
             if (content != undefined && content.hasOwnProperty("icon")) {
@@ -1061,7 +1064,7 @@ function deletePageDialog(pageID) {
 }
 
 //编辑窗口，和新增共用
-function modify(e) {
+function modify(e, callType) {
     $overlay.css("display", "block");
     var $pop_window = $("#pop-add");
     var h = $pop_window.height();
@@ -1074,9 +1077,15 @@ function modify(e) {
         "left": ($width - w) / 2
     });
     resetDialog();
-    $("#modify_page_id").val(currentPageId);
-    $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
-    $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    if (callType == "copy") {
+        $("#sourcePageId").val(currentPageId);
+        $("#txt-name").val('');
+        $("#txt-short").val('');
+    } else {
+        $("#modify_page_id").val(currentPageId);
+        $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
+        $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    }
     $("#txt-time").val(lunaPage.pages[currentPageId].page_time);
     $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
     lunaPage.pages[currentPageId].page_type = lunaPage.pages[currentPageId].page_type || 1;
@@ -1085,6 +1094,7 @@ function modify(e) {
         $(this).attr('disabled', 'disabled');
     });
 }
+
 /**
  * 背景全景选择的回调函数
  * 

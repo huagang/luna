@@ -1371,6 +1371,8 @@
               <div class="item-wrap">
                 <span class="item-tit">页面名称</span>
                 <input id="modify_page_id" hidden>
+                <input id="sourcePageId" hidden>
+                
                 <div class="item-cont">
                   <input class="txt" id="txt-name" type="text" placeholder="输入页面的中文名称" />
                   <span id="warn1"></span>
