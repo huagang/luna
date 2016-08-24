@@ -28,6 +28,20 @@
         <!--<link rel="stylesheet" type="text/css" href="http://webfont-10002033.cos.myqcloud.com/luna/iconfont.css">-->
         <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 
+        <!-- imgCropper引用的css文件 -->
+        <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
+        <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+        <!-- imgCropper引用的css文件 -->
+
+        <!-- 对ES5的支持Start -->
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
+        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
+        <!-- ES5的支持End -->
+        <!-- 基础脚本文件 -->
+        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
+        <!-- 基础脚本文件 End-->
+
       </head>
 
       <body ng-app="showPage">
@@ -48,7 +62,7 @@
                 <br/>
                 <span>图片</span>
               </div>
-              <div class="component-btn hide" id="imageListComponent"  data-comType="img">
+              <div class="component-btn" id="imageListComponent"  data-comType="imgList">
                 <i class="icon icon-comp-imglist"></i>
                 <br/>
                 <span>图集</span>
@@ -145,30 +159,22 @@
                 </div>
                 <div class="bg-set clearfix">
                   <label class="bg-img">背景图片：
-                            <br>
-                            <br>
-                            <form id="backgrounadpic_id" name="backgrounadpic_id" method="post" enctype="multipart/form-data" class="bg-opt-wrap">
-                                <div class="bg-tips"><span>建议尺寸 640x1136</span></div>
-                                <button class="btn btn-local">本地上传</button>
-                                <span class="or hide">或</span>
-                                <input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()" />
-                                <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="file" />
-                                <button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景
-                                </button>
-                            </form>
-                        </label>
-                  <!--  <div class="preview" id='pre-bg'>
-                       <div style="z-index: -1; background: #ddd; text-align: center; vertical-align: middle; color: #333; width: 110px; height: 100px; padding-top: 30px; font-size: 14px;">图片最大尺寸
-                         <br>640x1136</div>
-                       <a class="img-clc" id="bg-clc" ng-hide="canvas.isEmptyStr(canvas.currentComponent.bgimg)" ng-click='canvas.removeBackgroundImg()'>删除
-                       </a>
-                       <img class="thumbnail" id="thumbnail-bg" ng-hide="canvas.isEmptyStr(canvas.currentComponent.bgimg)" src="{{canvas.currentComponent.bgimg}}" style="position:absolute; top:228px;width:110px;padding:0;">
-                     </div>
-                     <button class="btn btn-confirm" id="btn-bg" ng-click="saveBackgroundImg()">确定</button> -->
+                      <br>
+                      <br>
+                      <form id="backgrounadpic_id" name="backgrounadpic_id" method="post" enctype="multipart/form-data" class="bg-opt-wrap">
+                          <div class="bg-tips"><span>建议尺寸 640x1136</span></div>
+                          <button class="btn btn-local">本地上传</button>
+                          <span class="or hide">或</span>
+                          <input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()" />
+                          <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="file" />
+                          <button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景
+                          </button>
+                      </form>
+                  </label>
                 </div>
                 <div class="bg-set clearfix">
                   <label>全景背景：</label>
-                  <input type="text" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()">
+                  <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
                   <div class="bgPano-set" ng-show="canvas.panoId">
                     <div class="bgPano-set-item">Heading:
                       <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字">
@@ -456,122 +462,155 @@
                 <!-- 交互样式 -->
               </div>
               <!-- img controller end -->
-                            <!-- img controller begin -->
-              <div id="imgListDiv" ng-controller="imgController as imgList">
-                <button id="initImgList" ng-click="imgList.init()" class="ng-hide">Init</button>
-                <button id="updateImg" ng-click="imgList.update()" class="ng-hide">Update</button>
-                <div>
-                  <div class="menu-control menu-control-wrap">
-                    <a href="#" class="style" ng-class="imgList.tabs.style.tab" ng-click="imgList.changeTab('style')">样式</a>
-                    <a href="#" class="interact" ng-class="imgList.tabs.interact.tab" ng-click="imgList.changeTab('interact')">交互</a>
-                  </div>
-                </div>
-                <div ng-show="imgList.tabs.style.content">
-                  <!-- 模块大小位置 -->
-                  <div class="position slide-panel">
-                    <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
-                    <ul class="list-pos slide-content">
-                      <li>
-                        <span>X</span>
-                        <input type="number" ng-model="imgList.currentComponent.x" ng-blur="imgList.changeX()" />px
-                      </li>
-                      <li>
-                        <span>Y</span>
-                        <input type="number" ng-model="imgList.currentComponent.y" ng-blur="imgList.changeY()" />px
-                      </li>
-                      <li>
-                        <span>右</span>
-                        <input type="number" ng-model="imgList.currentComponent.right" ng-blur="imgList.changeRight()" ng-required="true" />px
-                      </li>
-                      <li>
-                        <span>底</span>
-                        <input type="number" ng-model="imgList.currentComponent.bottom" ng-blur="imgList.changeBottom()" ng-required="true" />px
-                      </li>
-                      <li>
-                        <span>宽</span>
-                        <input type="number" ng-model="imgList.currentComponent.width" ng-blur="imgList.changeWidth()" />px
-                      </li>
-                      <li>
-                        <span>高</span>
-                        <input ttype="number" ng-model="imgList.currentComponent.height" ng-blur="imgList.changeHeight()" />px
-                      </li>
-                      <li>
-                        <span>Z</span>
-                        <input type="number" ng-model="imgList.currentComponent.zindex" ng-blur="imgList.changeZ()" />
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- 模块大小位置-->
-                  <div class="bg-set">
-                    <h2>图片数据填充：</h2>
-                    <form id="page_pic_id" name="page_pic_id" method="post" enctype="multipart/form-data">
-                      <button class="btn btn-local">本地上传</button>
-                      <span class="or hide">或</span>
-                      <input class="imgList-url hide" id="model-url" placeholder="输入图片url地址" ng-model="img.content" ng-blur="imgList.changeContent()" />
-                      <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="file" />
-                      <div class="preview hide" id="pre-model">
-                        <div style="z-index: -1; background: #ddd; text-align: center; vertical-align: middle; color: #333; width: 110px; height: 100px; padding-top: 40px; font-size: 14px;">
-                          图片示例图
-                        </div>
-                        <a class="imgList-clc" id="model-clc" ng-hide="imgList.isEmptyStr(img.currentComponent.content)" ng-click='imgList.removeImg()'>删除
-                                </a>
-                        <!--<img class="thumbnail" id="thumbnail-bg" ng-hide="imgList.isEmptyStr(imgList.currentComponent.content)" src="{{imgList.currentComponent.content}}" style="position:absolute; top:228px;width:110px;height:100px;padding:0;">-->
+              <!--imgList controller begin -->
+              <div id="imgListDiv" ng-controller="imgListController as imgList">
+                  <button id="initImgList" ng-click="imgList.init()" class="ng-hide">Init</button>
+                  <button id="updateImgList" ng-click="imgList.update()" class="ng-hide">Update</button>
+                  <div>
+                      <div class="menu-control menu-control-wrap">
+                          <a href="#" class="style" ng-class="imgList.tabs.style.tab" ng-click="imgList.changeTab('style')">样式</a>
+                          <a href="#" class="interact" ng-class="imgList.tabs.interact.tab" ng-click="imgList.changeTab('interact')">交互</a>
                       </div>
-                    </form>
-                    <button class="btn btn-confirm hide" id="btn-model">确定</button>
                   </div>
-                </div>
-                <!-- 交互样式 -->
-                <div class="interaction" ng-show="imgList.tabs.interact.content">
-                  <form name="imgListInteractForm">
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="none" ng-click="imgList.changeHrefType()" />无链接</label>
-                    </div>
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="outer" ng-click="imgList.changeHrefType()">网站地址：</label>
-                      <br/>
-                      <input type="url" class="txt" name="outerValue" ng-model="imgList.action.href.outerValue" ng-change="imgList.changeOuterHref()" ng-disabled="img.currentComponent.action.href.type != 'outer'" />
-                      <div role="alert">
-                        <span class="error" ng-show="imgInteractForm.outerValue.$error.url">url格式不合法</span>
+                  <div ng-show="imgList.tabs.style.content">
+                      <!-- 模块大小位置 -->
+                      <div class="position slide-panel">
+                          <h2>大小和位置  <div class="icon-right">  <i class="iconfont icon-slidedown btn-slide"></i></div></h2>
+                          <ul class="list-pos slide-content">
+                              <li>
+                                  <span>X</span>
+                                  <input type="number" ng-model="imgList.currentComponent.x" ng-blur="imgList.changeX()" />px
+                              </li>
+                              <li>
+                                  <span>Y</span>
+                                  <input type="number" ng-model="imgList.currentComponent.y" ng-blur="imgList.changeY()" />px
+                              </li>
+                              <li>
+                                  <span>右</span>
+                                  <input type="number" ng-model="imgList.currentComponent.right" ng-blur="imgList.changeRight()" ng-required="true" />px
+                              </li>
+                              <li>
+                                  <span>底</span>
+                                  <input type="number" ng-model="imgList.currentComponent.bottom" ng-blur="imgList.changeBottom()" ng-required="true" />px
+                              </li>
+                              <li>
+                                  <span>宽</span>
+                                  <input type="number" ng-model="imgList.currentComponent.width" ng-blur="imgList.changeWidth()" />px
+                              </li>
+                              <li>
+                                  <span>高</span>
+                                  <input ttype="number" ng-model="imgList.currentComponent.height" ng-blur="imgList.changeHeight()" />px
+                              </li>
+                              <li>
+                                  <span>Z</span>
+                                  <input type="number" ng-model="imgList.currentComponent.zindex" ng-blur="imgList.changeZ()" />
+                              </li>
+                          </ul>
                       </div>
-                    </div>
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="inner" ng-click="imgList.loadPages()" />微展页面：
-                                </label>
-                      <br/>
-                      <select class="select" ng-model="imgList.action.href.innerValue" ng-change="img.changeInnerHref()" ng-disabled="imgList.currentComponent.action.href.type != 'inner'">
-                                    <option ng-repeat="option in img.action.href.pageOptions" value="{{option.id}}">
-                                        {{option.name}}
-                                    </option>
-                                </select>
-                    </div>
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="email" ng-click="imgList.changeHrefType()">邮件跳转：</label>
-                      <br/>
-                      <input type="email" class="txt" name="email" ng-model="imgList.action.href.email" ng-change="imgList.changeEmail()" ng-disabled="imgList.currentComponent.action.href.type != 'email'" />
-                      <div role="alert">
-                        <span class="error" ng-show="imgInteractForm.email.$error.email">email格式不合法</span>
+                      <!-- 模块大小位置-->
+                      <div class="bg-set">
+                          <h2>图集列表数据：</h2>
+                          <div class="form-group clearfix">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">数据类型：</label>
+                              <div class="col-md-8">
+                                  <select class="" name="dataType" ng-model="imgList.content.dataType" required="required" ng-options="item.name for item in imgList.imgListTypeList track by item.id" ng-change="imgList.changeDataType()">
+                                                    <option value="">请选择</option>
+                                                </select>
+                              </div>
+                          </div>
+                          <div class="form-group clearfix hide">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">请选择业务</label>
+                              <div class="col-md-8">
+                                  <select class="" name="business" ng-model="imgList.content.businessId" required="required" ng-options="item.name for item in imgList.content.businessList track by item.id" ng-change="">
+                                                  <option value="">请选择</option>
+                                              </select>
+                              </div>
+                          </div>
+                          <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='1'">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">文章栏目:</label>
+                              <div class="col-md-8">
+                                  <select class="" name="column" ng-model="imgList.content.column" required="required" ng-options="item.name for item in imgList.columnList track by item.id" ng-change="imgList.changeColumn()">
+                                            <option value="">请选择</option>
+                                        </select>
+                              </div>
+                          </div>
+                           <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">语言:</label>
+                              <div class="col-md-8">
+                                  <select class="" name="poiLang" ng-model="imgList.content.poiLang" required="required" ng-options="item.name for item in imgList.langList track by item.id" ng-change="imgList.changePoiLang()">
+                                    <option value="">请选择</option>
+                                    </select>
+                              </div>
+                          </div>
+                          <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">一级POI:</label>
+                              <div class="col-md-8">
+                                  <select class="" name="firstPoi" ng-model="imgList.content.firstPoi" required="required" ng-options="item.name for item in imgList.firstPoiList track by item.id" ng-change="imgList.changeFirstPoi()">
+                                            <option value="">请选择</option>
+                                        </select>
+                              </div>
+                          </div>
+                          <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">POI类别:</label>
+                              <div class="col-md-8">
+                                  <select class="" name="poiType" ng-model="imgList.content.poiType" required="required" ng-options="item.name for item in imgList.poiTypeList track by item.id" ng-change="imgList.changePoiType()">
+                                            <option value="">请选择</option>
+                                        </select>
+                              </div>
+                          </div>
                       </div>
-                    </div>
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="phone" ng-click="imgList.changeHrefType()">电话号码：</label>
-                      <br/>
-                      <input type="text" class="txt" ng-model="imgList.action.href.phone" ng-change="imgList.changePhone()" ng-disabled="imgList.currentComponent.action.href.type != 'phone'" />
-                    </div>
-                    <div class="item">
-                      <label>
-                                    <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="return" ng-click="imgList.changeHrefType()">返回上一页：</label>
-                    </div>
-                  </form>
-                </div>
-                <!-- 交互样式 -->
+                  </div>
+                  <!-- 交互样式 -->
+                  <div class="interaction" ng-show="imgList.tabs.interact.content">
+                      <form name="imgListInteractForm">
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="none" ng-click="imgList.changeHrefType()" />无链接</label>
+                          </div>
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="outer" ng-click="imgList.changeHrefType()">网站地址：</label>
+                              <br/>
+                              <input type="url" class="txt" name="outerValue" ng-model="imgList.action.href.outerValue" ng-change="imgList.changeOuterHref()" ng-disabled="img.currentComponent.action.href.type != 'outer'" />
+                              <div role="alert">
+                                  <span class="error" ng-show="imgInteractForm.outerValue.$error.url">url格式不合法</span>
+                              </div>
+                          </div>
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="inner" ng-click="imgList.loadPages()" />微展页面：
+                                                            </label>
+                              <br/>
+                              <select class="select" ng-model="imgList.action.href.innerValue" ng-change="img.changeInnerHref()" ng-disabled="imgList.currentComponent.action.href.type != 'inner'">
+                                                                <option ng-repeat="option in img.action.href.pageOptions" value="{{option.id}}">
+                                                                    {{option.name}}
+                                                                </option>
+                                                            </select>
+                          </div>
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="email" ng-click="imgList.changeHrefType()">邮件跳转：</label>
+                              <br/>
+                              <input type="email" class="txt" name="email" ng-model="imgList.action.href.email" ng-change="imgList.changeEmail()" ng-disabled="imgList.currentComponent.action.href.type != 'email'" />
+                              <div role="alert">
+                                  <span class="error" ng-show="imgInteractForm.email.$error.email">email格式不合法</span>
+                              </div>
+                          </div>
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="phone" ng-click="imgList.changeHrefType()">电话号码：</label>
+                              <br/>
+                              <input type="text" class="txt" ng-model="imgList.action.href.phone" ng-change="imgList.changePhone()" ng-disabled="imgList.currentComponent.action.href.type != 'phone'" />
+                          </div>
+                          <div class="item">
+                              <label>
+                                                                <input type="radio" name="link" ng-model="imgList.currentComponent.action.href.type" class="radio" value="return" ng-click="imgList.changeHrefType()">返回上一页：</label>
+                          </div>
+                      </form>
+                  </div>
+                  <!-- 交互样式 -->
               </div>
-              <!-- img controller end -->
+              <!-- imgList controller end -->
               <!-- nav controller begin -->
               <div id="navDiv" ng-controller="navController as nav">
                 <button id="initNav" ng-click="nav.init()" class="ng-hide">Init</button>
@@ -782,17 +821,17 @@
                   <div class="bg-set">
                     <h2><label>全景数据</label></h2>
                     <form name="panoInfoForm">
-                      <div>全景ID：
-                        <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
-                          <input type="text" name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()">
-                          <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
-                        </div>
-                      </div>
                       <div>全景类型:
                         <div class="" ng-class="">
                           <select class="form-control" name="panoType" ng-model="pano.content.panoType" required="required" ng-options="type.name for type in pano.content.panoTypeList track by type.id" ng-change="pano.changePanoType()">
-                                            <option value="">请选择</option>
-                                        </select>
+                              <option value="">请选择</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div>全景ID：
+                        <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
+                          <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                          <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
                         </div>
                       </div>
                     </form>
@@ -1228,9 +1267,9 @@
                         </div>
                         <div ng-show="menuTab.currentTab.type == 'singleArticle'">文章名称:
                           <select ng-model="menuTab.currentTab.articleId" ng-change="menuTab.changeArticle()">
-                                            <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}
-                                            </option>
-                                        </select>
+                              <option ng-repeat='article in menuTab.articleList track by article.articleId' value='{{article.articleId}}'>{{article.articleName}}
+                              </option>
+                          </select>
                         </div>
                         <!--<div ng-show="menuTab.currentTab.type == 'articleList'">列表样式:
                           <select name="" id="" ng-model="menuTab.currentTab.pageStyle.type" ng-options="style.name for style in menuTab.pageListStyle track by style.id" ng-change="menuTab.changePageStyle()">
@@ -1238,7 +1277,16 @@
                           </select>
                         </div>-->
                       </div>
+                      <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'||menuTab.currentTab.type == 'singlePoi' ">
+                        <div>语言
+                          <select name="" id="" ng-model="menuTab.currentTab.poiLang" ng-change="menuTab.changeLang($evnet)">
+                              <option ng-repeat='item in menuTab.langList track by item.id' value='{{item.id}}'>{{item.name}}
+                              </option>
+                          </select>
+                        </div>
+                      </div>
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
+                     
                         <div>一级Poi
                           <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
                                             <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}
@@ -1340,6 +1388,8 @@
               <div class="item-wrap">
                 <span class="item-tit">页面名称</span>
                 <input id="modify_page_id" hidden>
+                <input id="sourcePageId" hidden>
+                
                 <div class="item-cont">
                   <input class="txt" id="txt-name" type="text" placeholder="输入页面的中文名称" />
                   <span id="warn1"></span>
@@ -1356,11 +1406,18 @@
                 <span class="item-tit">页面长度</span>
                 <div class="item-cont">
                   <div class="col-md-12" style="height:30px;">
-                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1" readonly="readonly"><label for="rdSinglePage">单页</label>
-                    <input type="radio" id="rdLongPage" name="pageType" value="2" readonly="readonly"><label for="rdLongPage">纵向长页面</label>
+                    <input type="radio" id="rdSinglePage" name="pageType" checked="checked" value="1" ><label for="rdSinglePage">单页</label>
+                    <input type="radio" id="rdLongPage" name="pageType" value="2" ><label for="rdLongPage">纵向长页面</label>
                   </div>
                   <input class="txt col-md-12" id="txtPageHeight" type="number" placeholder="输入页面长度，不小于617" name="pageHeight" min="617" readonly='readonly' />
                   <span class="warnTips"></span>
+                </div>
+              </div>
+              <div class="item-wrap hide">
+                <span class="item-tit">显示时长</span>
+                <div class="item-cont">
+                  <input class="txt col-md-12" id="txt-time" type="text" placeholder="请输入时间数字，单位是秒" />
+                  <span id="warn4"></span>
                 </div>
               </div>
             </form>
@@ -1457,6 +1514,9 @@
           <!-- 弹出层底部功能区 -->
         </div>
         <!-- 微景展设置弹出层 -->
+        <!-- 全景选择弹出框 -->
+          <jsp:include page="/templete/dialog_select_pano.jsp"></jsp:include>
+        <!-- 全景选择弹出框 End-->
         <!-- 删除页面弹出层 -->
         <div class="pop" id="pop-delete">
           <div class="pop-title">
@@ -1488,13 +1548,9 @@
           </div>
         </div>
         
-        <!-- 对ES5的支持Start -->
-        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
-        <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
-        <!-- ES5的支持End -->
-
+		    <jsp:include page="/templete/imgCropper.jsp" />
+        
         <!-- 脚本文件 -->
-        <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.ui.rotatable.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -1514,10 +1570,10 @@
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
         <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
-        <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/errCode.js" charset="utf-8"></script>
+        <script src="<%=request.getContextPath()%>/scripts/common/luna.config.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/popup.js"></script>
         <script src="<%=request.getContextPath()%>/scripts/pages.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/ajax_server.js" charset="utf-8"></script>
