@@ -59,4 +59,8 @@
     <!--底部版权 end-->
 
 </body>
+<script>
+    var businessId = "${business_id}";
+    var businessName = "${business_name}";
+</script>
 </html>

@@ -8,16 +8,13 @@ import com.google.common.collect.Lists;
 import ms.biz.common.CommonQueryParam;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.ManageArticleBL;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.dao.custom.MsArticleDAO;
-import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.custom.MsColumnDAO;
-import ms.luna.biz.dao.custom.MsMerchantManageDAO;
-import ms.luna.biz.dao.custom.model.MsArticleParameter;
-import ms.luna.biz.dao.custom.model.MsArticleResult;
-import ms.luna.biz.dao.custom.model.MsBusinessParameter;
-import ms.luna.biz.dao.custom.model.MsBusinessResult;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.*;
+import ms.luna.biz.dao.custom.model.*;
 import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -48,6 +45,8 @@ public class ManageArticleBLImpl implements ManageArticleBL {
     private MsBusinessDAO msBusinessDAO;
     @Autowired
     private MsColumnDAO msColumnDAO;
+    @Autowired
+    private LunaUserRoleDAO lunaUserRoleDAO;
 
     private MsArticleWithBLOBs toJavaObject(JSONObject articleObj) {
 
@@ -212,6 +211,33 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             parameter.setMin(min);
         }
 
+        MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+        MsArticleCriteria.Criteria criteria = msArticleCriteria.createCriteria();
+
+        String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+        LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
+        if(lunaUserRole == null) {
+            logger.warn("user not found, unique_id: " + uniqueId);
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
+        }
+        Map<String, Object> extra = lunaUserRole.getExtra();
+        String type = extra.get("type").toString();
+        if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+            // current user might not have business
+            logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+        }
+        List<Integer> businessIdList = (List<Integer>) extra.get("value");
+        if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
+
+        } else if(businessIdList.size() > 0){
+            parameter.setBusinessIds(businessIdList);
+            criteria.andBusinessIdIn(businessIdList);
+        } else {
+            logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
+        }
+
         JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);
@@ -221,7 +247,7 @@ public class ManageArticleBLImpl implements ManageArticleBL {
                     msArticleResult.setUrl(url);
                 }
             }
-            int total = msArticleDAO.countByCriteria(new MsArticleCriteria());
+            int total = msArticleDAO.countByCriteria(msArticleCriteria);
             if(msArticleResults != null) {
                 data.put("rows", JSON.parse(JSON.toJSONString(msArticleResults, SerializerFeature.WriteDateUseDateFormat)));
                 data.put("total", total);

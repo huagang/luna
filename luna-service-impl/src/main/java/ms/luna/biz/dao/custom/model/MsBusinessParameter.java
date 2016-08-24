@@ -1,11 +1,14 @@
 package ms.luna.biz.dao.custom.model;
 
+import java.util.List;
+
 public class MsBusinessParameter extends BasicModel {
 	
 	private String provinceId = null;
 	private String cityId = null;
 	private String countyId = null;
 	private String categoryId = null;
+	private List<Integer> businessIds = null;
 	
 	public String getProvinceId() {
 		return provinceId;
@@ -32,4 +35,11 @@ public class MsBusinessParameter extends BasicModel {
 		this.categoryId = categoryId;
 	}
 
+	public List<Integer> getBusinessIds() {
+		return businessIds;
+	}
+
+	public void setBusinessIds(List<Integer> businessIds) {
+		this.businessIds = businessIds;
+	}
 }

@@ -26,10 +26,18 @@
 			a.app_status app_status, 
 			a.business_id business_id,
 			b.business_name business_name
-		from ms_show_app a left join ms_business b on a.business_id = b.business_id 
-		<isNotEmpty property="keyword">
-			where a.app_name like #keyword#
-		</isNotEmpty>
+		from ms_show_app a left join ms_business b on a.business_id = b.business_id
+		<dynamic prepend="where" >
+			<isNotEmpty prepend="and" property="keyword">
+				a.app_name like #keyword#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="businessIds">
+				a.business_id in
+				<iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+					#businessIds[]#
+				</iterate>
+			</isNotNull>
+		</dynamic>
 		order by a.regist_hhmmss desc
 		<isEqual property="range" compareValue="true">
 			Limit #min#, #max#
