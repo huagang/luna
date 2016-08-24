@@ -89,13 +89,13 @@ var initPage = function () {
                             articleStore.id = data.data.id;
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
-                        alert("保存文章成功");
+                        showMessage("保存成功");
                     } else {
-                        alert(data.msg || "保存失败");
+                        showMessage(data.msg || "保存失败");
                     }
                 },
                 error: function (data) {
-                    alert("保存失败");
+                    showMessage("保存失败");
                 }
             });
         });
@@ -106,12 +106,13 @@ var initPage = function () {
                 window.open(articleStore.previewUrl);
                 console.log("预览事件");
             } else {
-                alert("文章没有保存，不能预览");
+                showMessage("文章没有保存，不能预览");
             }
         });
 
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', function (e) {
+            document.querySelector('.save').click();
             $.ajax({
                 url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
                 type: Inter.getApiUrl().articlePublish.type,
@@ -120,15 +121,13 @@ var initPage = function () {
                 dataType: "json",
                 success: function (data) {
                     if (data.code == "0") {
-                        alert("发布成功");
-                        console.log("发布成功");
+                        showMessage("发布成功");
                     } else {
-                        console.log("发布失败");
-                        alert("发布失败");
+                        showMessage("发布失败");
                     }
                 },
                 error: function (data) {
-                    alert("发布失败");
+                    showMessage("发布失败");
                 }
             });
         });
@@ -445,3 +444,21 @@ $(document).ready(function () {
     initPage.init();
 
 });
+
+var timeoutId = '';
+function showMessage(msg){
+    if(timeoutId){
+        setTimeout(function(){
+            showMessage(msg);
+        }, 1000);
+    } else{
+        var message = $('.message-wrapper');
+        message.removeClass('hidden');
+        message.find('.message').text(msg);
+        timeoutId = setTimeout(function(){
+            message.addClass('hidden');
+            timeoutId = undefined;
+        }, 2000);
+    }
+
+}
