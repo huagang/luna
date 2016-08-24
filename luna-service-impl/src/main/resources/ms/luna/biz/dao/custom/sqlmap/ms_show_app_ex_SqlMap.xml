@@ -61,7 +61,7 @@
 		<result column="app_status" property="appStatus" jdbcType="TIMESTAMP"/>
 
 	</resultMap>
-	<select id="selectShowAppByCtgrId" resultMap="MsShowAppResult"
+	<select id="selectShowAppByCategoryId" resultMap="MsShowAppResult"
 			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
 		SELECT
 			CATEGORY_MERCHANT_BUSINESS.category_id AS category_id,
@@ -117,7 +117,7 @@
 		</isEqual>
 	</select>
 
-	<select id="countShowAppsByCtgrId" resultClass="java.lang.Integer"
+	<select id="countShowAppsByCategoryId" resultClass="java.lang.Integer"
 			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
 		SELECT
 			count(1)

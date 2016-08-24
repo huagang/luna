@@ -33,14 +33,14 @@ public class MsShowAppDAOImpl extends MsShowAppDAOBaseImpl implements MsShowAppD
 	}
 
 	@Override
-	public List<MsShowAppResult> selectShowAppByCtgrId(MsShowAppParameter parameter) {
-		List<MsShowAppResult> results = getSqlMapClientTemplate().queryForList("ms_show_app.selectShowAppByCtgrId", parameter);
+	public List<MsShowAppResult> selectShowAppByCategoryId(MsShowAppParameter parameter) {
+		List<MsShowAppResult> results = getSqlMapClientTemplate().queryForList("ms_show_app.selectShowAppByCategoryId", parameter);
 		return results;
 	}
 
 	@Override
-	public Integer countShowAppsByCtgrId(MsShowAppParameter msShowAppParameter) {
-		Integer count = (Integer)getSqlMapClientTemplate().queryForObject("ms_show_app.countShowAppsByCtgrId", msShowAppParameter);
+	public Integer countShowAppsByCategoryId(MsShowAppParameter msShowAppParameter) {
+		Integer count = (Integer)getSqlMapClientTemplate().queryForObject("ms_show_app.countShowAppsByCategoryId", msShowAppParameter);
 		return count;
 	}
 
