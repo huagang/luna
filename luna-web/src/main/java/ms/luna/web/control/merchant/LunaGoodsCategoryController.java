@@ -1,11 +1,14 @@
 package ms.luna.web.control.merchant;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.LunaGoodsCategoryService;
+import ms.luna.web.control.common.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by SDLL18 on 16/8/24.
@@ -13,16 +16,53 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/merchant/goodsCategory")
-public class LunaGoodsCategoryController {
+public class LunaGoodsCategoryController extends BasicController {
 
     @Autowired
     private LunaGoodsCategoryService lunaGoodsCategoryService;
 
+    private JSONObject getJSONCategories(Integer offset,Integer limit){
+        JSONObject toReturn = null;
+        if (offset == null && limit == null) {
+            toReturn = lunaGoodsCategoryService.getCategories();
+        } else {
+            JSONObject inData = new JSONObject();
+            inData.put("offset", offset);
+            inData.put("limit", limit);
+            toReturn = lunaGoodsCategoryService.getCategories(inData);
+        }
+        return toReturn;
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "")
+    public ModelAndView init(@RequestParam(required = false) Integer offset,
+                             @RequestParam(required = false) Integer limit) {
+        ModelAndView modelAndView = new ModelAndView();
+        JSONObject toReturn = getJSONCategories(offset,limit);
+        modelAndView.addObject("data", toReturn);
+        modelAndView.setViewName("/manage_merchant_type.jsp");
+        return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/get")
     @ResponseBody
-    public JSONObject getCategories() {
-        JSONObject toReturn = lunaGoodsCategoryService.getCategories();
+    public JSONObject getCategories(@RequestParam(required = false) Integer offset,
+                             @RequestParam(required = false) Integer limit) {
+        JSONObject toReturn = getJSONCategories(offset,limit);
+        return toReturn;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    @ResponseBody
+    public JSONObject searchCategories(@RequestParam(required = false) Integer offset,
+                                    @RequestParam(required = false) Integer limit,
+                                    @RequestParam(required = false) String searchWord) {
+        JSONObject inData = new JSONObject();
+        inData.put("searchWord",searchWord);
+        inData.put("offset",offset);
+        inData.put("limit",limit);
+        JSONObject toReturn = lunaGoodsCategoryService.searchCategories(inData);
         return toReturn;
     }
 
@@ -60,7 +100,7 @@ public class LunaGoodsCategoryController {
     @ResponseBody
     public JSONObject deleteCategory(@PathVariable("id") Integer id) {
         JSONObject inData = new JSONObject();
-        inData.put("id",id);
+        inData.put("id", id);
         return lunaGoodsCategoryService.deleteCategory(inData);
     }
 

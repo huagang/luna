@@ -11,7 +11,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Calendar;
 import java.util.List;
@@ -27,65 +27,123 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
     @Autowired
     private LunaGoodsCategoryDAO lunaGoodsCategoryDAO;
 
+    private JSONArray getCategoriesByCriteria(LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria) {
+        List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
+        return assembleCategories(categories);
+    }
+
+    private JSONArray assembleCategories(List<LunaGoodsCategory> categories) {
+        JSONArray result = new JSONArray();
+        if (categories == null) {
+            return result;
+        }
+        JSONArray nowDepth = new JSONArray();
+        JSONArray nextDepth = new JSONArray();
+        int depth = 0;
+        for (LunaGoodsCategory category : categories) {
+            if (category.getDepth().intValue() != depth) {
+                if (depth != 0) {
+                    JSONArray temp = nowDepth;
+                    nowDepth = nextDepth;
+                    nextDepth = temp;
+                    nextDepth.clear();
+                }
+                depth++;
+            }
+            if (depth == 0) {
+                JSONObject object = new JSONObject();
+                object.put("id", category.getId());
+                object.put("name", category.getName());
+                object.put("child", new JSONArray());
+                object.put("abbreviation", category.getAbbreviation());
+                result.add(object);
+                nowDepth.add(object);
+            } else {
+                for (int i = 0; i < nowDepth.size(); i++) {
+                    JSONObject rootObject = nowDepth.getJSONObject(i);
+                    if (rootObject.getInteger("id").intValue() == category.getRoot().intValue()) {
+                        JSONObject object = new JSONObject();
+                        object.put("id", category.getId());
+                        object.put("name", category.getName());
+                        object.put("child", new JSONArray());
+                        object.put("abbreviation", category.getAbbreviation());
+                        rootObject.getJSONArray("child").add(object);
+                        nextDepth.add(object);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     public JSONObject getCategories() {
-        JSONArray result = new JSONArray();
         try {
             LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria = new LunaGoodsCategoryCriteria();
             lunaGoodsCategoryCriteria.setOrderByClause("depth");
-            List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
-            if (categories == null) {
-                return FastJsonUtil.sucess("{}");
+            JSONArray result = getCategoriesByCriteria(lunaGoodsCategoryCriteria);
+            return FastJsonUtil.sucess("success", result);
+        } catch (Exception ex) {
+            logger.error("Failed to get lunaGoodsCategories", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    @Override
+    public JSONObject getCategories(JSONObject jsonObject) {
+        try {
+            LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria = new LunaGoodsCategoryCriteria();
+            lunaGoodsCategoryCriteria.setOrderByClause("depth");
+            JSONArray temp = getCategoriesByCriteria(lunaGoodsCategoryCriteria);
+            Integer max = jsonObject.getInteger("limit");
+            Integer min = jsonObject.getInteger("offset");
+            max = max.intValue() < 1 ? 1 : max;
+            min = min.intValue() < 0 ? 0 : min;
+            if (max <= min) temp.clear();
+            JSONArray result = new JSONArray();
+            for (int i = (min < temp.size() ? min : temp.size()); i < (max > temp.size() ? temp.size() : max); i++) {
+                result.add(temp.get(i));
             }
-            System.out.println("result size is " + categories.size());
-            JSONArray nowDepth = new JSONArray();
-            JSONArray nextDepth = new JSONArray();
-            int depth = 0;
-            for (LunaGoodsCategory category : categories) {
-                if (category.getDepth().intValue() != depth) {
-                    if (depth != 0) {
-                        JSONArray temp = nowDepth;
-                        nowDepth = nextDepth;
-                        nextDepth = temp;
-                        nextDepth.clear();
-                    }
-                    depth++;
+            return FastJsonUtil.sucess("success", result);
+        } catch (Exception ex) {
+            logger.error("Failed to get lunaGoodsCategories", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+//        LunaGoodsCategoryParameter lunaGoodsCategoryParameter = new LunaGoodsCategoryParameter();
+//        lunaGoodsCategoryParameter.setMax(max);
+//        lunaGoodsCategoryParameter.setMin(min);
+//        lunaGoodsCategoryParameter.setRange("true");
+//        List<LunaGoodsCategoryResult> categories = lunaGoodsCategoryDAO.selectLunaGoodsCategory(lunaGoodsCategoryParameter);
+//        List<>
+
+    }
+
+    @Override
+    public JSONObject searchCategories(JSONObject jsonObject) {
+        try {
+            LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria = new LunaGoodsCategoryCriteria();
+            lunaGoodsCategoryCriteria.createCriteria().andNameLikeInsensitive("%" + jsonObject.getString("searchWord") + "%");
+            JSONArray temp = getCategoriesByCriteria(lunaGoodsCategoryCriteria);
+            Integer max = jsonObject.getInteger("limit");
+            Integer min = jsonObject.getInteger("offset");
+            if (max == null && min == null) {
+                return FastJsonUtil.sucess("success", temp);
+            } else {
+                max = max.intValue() < 1 ? 1 : max;
+                min = min.intValue() < 0 ? 0 : min;
+                if (max <= min) temp.clear();
+                JSONArray result = new JSONArray();
+                for (int i = (min < temp.size() ? min : temp.size()); i < (max > temp.size() ? temp.size() : max); i++) {
+                    result.add(temp.get(i));
                 }
-                if (depth == 0) {
-                    JSONObject object = new JSONObject();
-                    object.put("id", category.getId());
-                    object.put("name", category.getName());
-                    object.put("child", new JSONArray());
-                    object.put("abbreviation", category.getAbbreviation());
-                    result.add(object);
-                    nowDepth.add(object);
-                } else {
-                    for (int i = 0; i < nowDepth.size(); i++) {
-                        JSONObject rootObject = nowDepth.getJSONObject(i);
-                        if (rootObject.getInteger("id").intValue() == category.getRoot().intValue()) {
-                            JSONObject object = new JSONObject();
-                            object.put("id", category.getId());
-                            object.put("name", category.getName());
-                            object.put("child", new JSONArray());
-                            object.put("abbreviation", category.getAbbreviation());
-                            rootObject.getJSONArray("child").add(object);
-                            System.out.println(object);
-                            System.out.println(nowDepth);
-                            nextDepth.add(object);
-                            System.out.println(nextDepth);
-                            System.out.println();
-                        }
-                    }
-                }
+                return FastJsonUtil.sucess("success", result);
             }
         } catch (Exception ex) {
             logger.error("Failed to get lunaGoodsCategories", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
-        return FastJsonUtil.sucess("success", result);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public JSONObject createCategory(JSONObject jsonObject) {
         try {
@@ -102,6 +160,7 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
             }
         } catch (Exception ex) {
             logger.error("Failed to insert lunaGoodsCategory", ex);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
         return FastJsonUtil.sucess("success");
