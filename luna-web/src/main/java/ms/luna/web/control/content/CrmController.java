@@ -134,164 +134,29 @@ public class CrmController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject asyncSearchMerchants(
-            String like_filter_nm,
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit) throws IOException {
+            @RequestParam(required = false) String like_filter_nm,
+            @RequestParam(required = false, defaultValue = "0") Integer offset,
+            @RequestParam(required = false, defaultValue = "30") Integer limit) throws IOException {
         JSONObject resJSON = JSONObject.parseObject("{}");
         resJSON.put("total", 0);
         try {
             JSONObject param = JSONObject.parseObject("{}");
-            if (like_filter_nm != null && !like_filter_nm.isEmpty()) {
-                like_filter_nm = URLDecoder.decode(like_filter_nm, "UTF-8");
-                like_filter_nm = like_filter_nm.trim();
-                if (!like_filter_nm.isEmpty()) {
-                    param.put("like_filter_nm", like_filter_nm);
-                }
+            like_filter_nm = URLDecoder.decode(like_filter_nm, "UTF-8");
+            like_filter_nm = like_filter_nm.trim();
+            if (!like_filter_nm.isEmpty()) {
+                param.put("like_filter_nm", like_filter_nm);
             }
 
-            if (offset != null) {
-                param.put("min", offset);
-            }
-            if (limit != null) {
-                param.put("max", limit);
-            }
-
-            // manageMerchantService
+            param.put("offset", offset);
+            param.put("limit", limit);
             JSONObject result = manageMerchantService.loadMerchants(param.toString());
             MsLogger.debug("method:loadMerchants, result from service: " + result.toString());
-
             return result.getJSONObject("data");
-
-
-//            if ("0".equals(result.getString("code"))) {
-//                JSONObject data = result.getJSONObject("data");
-//                JSONArray arrays = data.getJSONArray("merchants");
-//                Integer total = data.getInteger("total");
-//
-//                resJSON.put("total", total);
-//                JSONArray rows = JSONArray.parseArray("[]");
-//
-//                for (int i = 0; i < arrays.size(); i++) {
-//                    JSONObject merchant = arrays.getJSONObject(i);
-//
-//                    JSONObject row = JSONObject.parseObject("{}");
-//                    row.put("merchant_id", merchant.getString("merchant_id")); // 商户id
-//                    row.put("merchant_nm", merchant.getString("merchant_nm")); // 商户名称
-//                    row.put("category_nm", merchant.getString("category_nm")); // 业务种类
-//                    row.put("contact_nm", merchant.getString("contact_nm")); // 联系人名字
-//                    row.put("contact_phonenum", merchant.getString("contact_phonenum")); // 联系人电话
-//                    row.put("salesman_nm", merchant.getString("salesman_nm")); // 业务员名字
-//                    row.put("province_id", merchant.getString("province_id"));
-//                    row.put("city_id", merchant.getString("city_id"));
-//                    row.put("del_flg", merchant.getString("del_flg"));
-//                    Byte status_id = Byte.parseByte(merchant.getString("status_id"));
-//                    String status = VbConstant.MERCHANT_STATUS.ConvertStauts(status_id);
-//                    row.put("status", status); // 状态
-//                    if (merchant.containsKey("county_id")) {
-//                        row.put("county_id", merchant.getString("county_id"));
-//                    } else {
-//                        row.put("county_id", "ALL");
-//                    }
-//                    rows.add(row);
-//                }
-//                resJSON.put("rows", rows);
-//            }
         } catch (Exception e) {
             MsLogger.error("Failed to search merchants: " + e);
         }
         return resJSON;
     }
-
-//    /**
-//     * 商户注册
-//     *
-//     * @param request
-//     * @param response
-//     * @throws IOException
-//     */
-//    @RequestMapping(method = RequestMethod.POST, value = "")
-//    @ResponseBody
-//    public JSONObject createMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        try {
-//            String contact_nm = request.getParameter("contact_nm"); // 联系人名字
-//            String contact_phonenum = request.getParameter("contact_phonenum");//
-//            // 联系人手机
-//            String contact_mail = request.getParameter("contact_mail");// 联系人邮箱
-//            String merchant_nm = request.getParameter("merchant_nm");// 商户名字
-//            String merchant_phonenum = request.getParameter("merchant_phonenum");//
-//            // 商户电话
-//            String category_id = request.getParameter("merchant_cata");// 业务种类
-//            String province_id = request.getParameter("province");// 省份id
-//            String city_id = request.getParameter("city");// 城市id
-//            String merchant_addr = request.getParameter("merchant_addr");// 商户地址
-//            String merchant_info = request.getParameter("merchant_info");// 商户介绍
-//            String lat = request.getParameter("lat");// 经纬度
-//            String lng = request.getParameter("lng");
-//            String status_id = request.getParameter("status");
-//            String salesman_nm = request.getParameter("salesman");
-//            String resource_content = request.getParameter("resource_content");// 证件
-//            String county_id = request.getParameter("county");// 区县id
-//
-//            String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum,
-//                    category_id, resource_content, province_id, city_id, county_id, merchant_addr, lat, lng,
-//                    merchant_info, status_id, salesman_nm);
-//
-//            // 如果邮箱输入不为空，则检测邮箱
-//            if (!contact_mail.isEmpty()) {
-//                if (!CharactorUtil.checkEmail(contact_mail)) {
-//                    inputInfo = inputInfo + "邮件输入有误, email:"+contact_mail;
-//                }
-//            }
-//
-//            // 输入校验通过
-//            // String inputInfo = "";
-//            if (inputInfo.equals("")) {
-//                JSONObject param = JSONObject.parseObject("{}");
-//
-//                param.put("contact_nm", contact_nm);
-//                param.put("contact_phonenum", contact_phonenum);
-//                param.put("contact_mail", contact_mail);
-//                param.put("merchant_nm", merchant_nm);
-//                param.put("merchant_phonenum", merchant_phonenum);
-//                param.put("category_id", category_id);
-//                param.put("province_id", province_id);
-//                param.put("city_id", city_id);
-//                param.put("merchant_addr", merchant_addr);
-//                param.put("merchant_info", merchant_info);
-//                param.put("status_id", status_id);
-//                param.put("salesman_nm", salesman_nm);
-//                if(!lat.equals("")){
-//                    param.put("lat", lat);
-//                }
-//                if(!lng.equals("")){
-//                    param.put("lng", lng);
-//                }
-//                if (!county_id.equals("ALL")) {
-//                    param.put("county_id", county_id);
-//                }
-//                if (!resource_content.equals("")) {
-//                    param.put("resource_content", resource_content);
-//                }
-//
-//                JSONObject result = manageMerchantService.createMerchant(param.toString());
-//                String code = result.getString("code");
-//                if ("0".equals(code)) {
-//                    return FastJsonUtil.sucess("编辑成功！merchant_nm:" + merchant_nm);
-//                } else if ("1".equals(code)) {
-//                    return FastJsonUtil.error("3", "用户重名(下手慢了),merchant_nm:" + merchant_nm);
-//                } else if ("2".equals(code)) {
-//                    return FastJsonUtil.error("4", "业务员不存在！salesman_nm:" + salesman_nm);
-//                } else {
-//                    return FastJsonUtil.error("-1", "编辑失败！");
-//                }
-//            } else {
-//                return FastJsonUtil.error("1", "校验错误！inputInfo:" + inputInfo);
-//            }
-//        } catch (Exception e) {
-//            MsLogger.error("创建商户失败." + e.getMessage());
-//            return FastJsonUtil.error("-1", "创建失败！");
-//        }
-//    }
 
     /**
      * 商户注册
@@ -345,7 +210,7 @@ public class CrmController extends BasicController {
             param.put("status_id", status_id);
             param.put("salesman_nm", salesman_nm);
             param.put("create_user", user.getNickName());
-            param.put("unique_id", user.getUniqueId());
+            param.put("updated_by_unique_id", user.getUniqueId());
             param.put("business_name", businessName);
             param.put("business_code", businessCode);
             if (!"ALL".equals(county_id)) {
@@ -471,18 +336,6 @@ public class CrmController extends BasicController {
 
             JSONObject result = manageMerchantService.loadMerchantById(param.toString());
             MsLogger.debug("method:loadMerchantById, result from service: " + result.toString());
-            if (!result.containsKey("lat")) {
-                result.put("lat", "");
-            }
-            if (!result.containsKey("lng")) {
-                result.put("lng", "");
-            }
-            if (!result.containsKey("county_id")) {
-                result.put("county_id", "ALL");
-            }
-            if (!result.containsKey("resource_content")) {
-                result.put("resource_content", "");
-            }
             return result;
         } catch (Exception e) {
             MsLogger.error("Failed to load merchant:" + e.getMessage());
@@ -629,7 +482,7 @@ public class CrmController extends BasicController {
 
             param.put("business_name", businessName);
             param.put("business_code", businessCode);
-            param.put("unique_id", user.getUniqueId());
+            param.put("updated_by_unique_id", user.getUniqueId());
             param.put("create_user", user.getNickName());
 
             JSONObject result = manageMerchantService.updateMerchantById(param.toString());

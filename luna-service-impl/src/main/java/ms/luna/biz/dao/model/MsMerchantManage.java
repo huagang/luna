@@ -1,55 +1,57 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.MsCRMTable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class MsMerchantManage implements Serializable {
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ID)
     private String merchantId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_NM)
     private String merchantNm;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_PHONENUM)
     private String merchantPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CATEGORY_ID)
     private String categoryId;
-
+    @JSONField(name = MsCRMTable.FIELD_PROVINCE_ID)
     private String provinceId;
-
+    @JSONField(name = MsCRMTable.FIELD_CITY_ID)
     private String cityId;
-
+    @JSONField(name = MsCRMTable.FIELD_COUNTY_ID)
     private String countyId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ADDR)
     private String merchantAddr;
-
+    @JSONField(name = MsCRMTable.FIELD_RESOURCE_CONTENT)
     private String resourceContent;
-
+    @JSONField(name = MsCRMTable.FIELD_LAT)
     private BigDecimal lat;
-
+    @JSONField(name = MsCRMTable.FIELD_LNG)
     private BigDecimal lng;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_INFO)
     private String merchantInfo;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_NM)
     private String contactNm;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_PHONENUM)
     private String contactPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_MAIL)
     private String contactMail;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_ID)
     private String salesmanId;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_NM)
     private String salesmanNm;
-
+    @JSONField(name = MsCRMTable.FIELD_STATUS_ID)
     private String statusId;
-
+    @JSONField(name = MsCRMTable.FIELD_DEL_FLG)
     private String delFlg;
-
+    @JSONField(name = MsCRMTable.FIELD_REGIST_HHMMSS)
     private Date registHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UP_HHMMSS)
     private Date upHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UPDATED_BY_UNIQUE_ID)
     private String updatedByUniqueId;
-
-    private static final long serialVersionUID = 1L;
 
     public String getMerchantId() {
         return merchantId;
