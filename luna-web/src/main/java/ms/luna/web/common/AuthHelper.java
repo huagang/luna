@@ -3,6 +3,7 @@ package ms.luna.web.common;
 import com.alibaba.fastjson.JSONArray;
 import ms.luna.biz.cons.LunaRoleCategoryExtra;
 import ms.luna.common.LunaUserSession;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +18,8 @@ import java.util.Set;
  * @Date: 2016-07-20
  */
 public class AuthHelper {
+
+    private final static Logger logger = Logger.getLogger(AuthHelper.class);
 
     public static boolean hasBusinessAuth(HttpServletRequest request, int businessId) {
 
@@ -38,6 +41,8 @@ public class AuthHelper {
         }
 
         Map<String, Object> extra = lunaUserSession.getExtra();
+        logger.debug("extra info: " + extra);
+
         if(! extra.get("type").toString().equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
             return false;
         }
