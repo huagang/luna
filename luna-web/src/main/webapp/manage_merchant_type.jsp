@@ -55,7 +55,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ></tr>
+                  <tr ng-repeat="row in cate.categoryData">
+                  </tr>
                 </tbody>
               </table>
             </div>
