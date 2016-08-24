@@ -66,7 +66,7 @@
 			</dynamic>
 			ORDER BY regist_hhmmss DESC
 			<isNotNull property="range">
-			Limit #min#,#max#
+				Limit #min#,#max#
 			</isNotNull>
 		) merchants left join
 		(

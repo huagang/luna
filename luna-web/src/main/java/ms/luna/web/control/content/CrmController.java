@@ -319,11 +319,10 @@ public class CrmController extends BasicController {
             }
 
             String businessName = RequestHelper.getString(request, "business_name");
+            String businessCode = RequestHelper.getString(request, "business_code");
             if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
                 return FastJsonUtil.error(-1, "业务名称长度不合法");
             }
-
-            String businessCode = RequestHelper.getString(request, "business_code");
             if(StringUtils.isBlank(businessCode) || businessCode.length() > 16) {
                 return FastJsonUtil.error(-1, "业务简称长度不合法");
             }
@@ -596,9 +595,6 @@ public class CrmController extends BasicController {
             String businessName = RequestHelper.getString(request, "business_name");
             String businessCode = RequestHelper.getString(request, "business_code");
 
-            businessName = "新建业务测试";
-            businessCode = "xinjianyewu";
-
             if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
                 return FastJsonUtil.error(-1, "业务名称长度不合法");
             }
@@ -631,20 +627,11 @@ public class CrmController extends BasicController {
             param.put("business_name", businessName);
             param.put("business_code", businessCode);
             param.put("unique_id", user.getUniqueId());
+            param.put("create_user", user.getNickName());
 
             JSONObject result = manageMerchantService.updateMerchantById(param.toString());
             MsLogger.debug("method:updateMerchantById, result from service: " + result.toString());
-
-            String code = result.getString("code");
-            if ("0".equals(code)) {
-                return FastJsonUtil.sucess("编辑成功！");
-            } else if ("1".equals(code)) {
-                return FastJsonUtil.error("3", "用户重名（下手慢了）,merchant_nm:" + merchant_nm);
-            } else if ("2".equals(code)) {
-                return FastJsonUtil.error("4", "业务员不存在！salesman_nm:" + salesman_nm);
-            } else {
-                return FastJsonUtil.error("-1", "编辑失败！");
-            }
+            return result;
         } catch (Exception e) {
             return FastJsonUtil.error("-1", "Failed to edit merchant, " + e);
         }
