@@ -148,55 +148,20 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		String contact_nm = param.getString("contact_nm"); // 联系人姓名
 		String contact_phonenum = param.getString("contact_phonenum"); // 联系人电话
 		String contact_mail = param.getString("contact_mail"); // 联系人邮箱
-		String county_id = null;
-		String resource_content = null;
-		String lat = null;
-		String lng = null;
-		if(param.containsKey("lat")){
-			lat = param.getString("lat"); // 纬度
-		}
-		if(param.containsKey("lng")){
-			lng = param.getString("lng"); // 经度
-		}
-		if(param.containsKey("county_id")){
-			county_id = param.getString("county_id"); // 区/县id
-		}
-		if(param.containsKey("resource_content")){
-			resource_content = param.getString("resource_content");
-		}
-
+		String county_id = param.containsKey("county_id")? param.getString("county_id") : null;
+		String resource_content = param.containsKey("resource_content")?param.getString("resource_content") : null;
+		String lat = param.containsKey("lat")? param.getString("lat") : null;
+		String lng = param.containsKey("lng")? param.getString("lng") : null;
 		String salesman_id = ""; // 业务员名字
 		String salesman_nm = ""; // 业务员id
 		String status_id = VbConstant.MERCHANT_STATUS.CODE.待处理 + ""; // 处理状态
-		if (param.containsKey("salesman_nm")) {
-			salesman_nm = param.getString("salesman_nm"); // 业务员名字
-			// 检测业务员是否存在
-			boolean flag = isLunaNmExit(salesman_nm);
-			if (flag == false) {
-				return FastJsonUtil.error("2", "无此业务员！salesman_nm:" + salesman_nm);
-			}
-			//根据业务员名字得到业务员id
-			salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
-		}
-		if (param.containsKey("status_id")) {
-			status_id = param.getString("status_id"); // 商户状态
-		}
-
-//		String merchant_id = genNumService.generateNum("MERCH");
 		String merchant_id = UUIDGenerator.generateUUID();
 
-		if (CharactorUtil.isEmpyty(merchant_id)) {
-			MsLogger.debug("编号生成失败：[CRM]");
-			throw new RuntimeException("编号生成失败：[CRM]");
-		}
-
 		// 检测商户是否重名
-		boolean flag = isMerchantNmExit(merchant_nm);
-		if (flag == true) {
+		if (isMerchantNmExit(merchant_nm)) {
 			return FastJsonUtil.error("1", "商户重名(下手慢了)！merchant_nm:" + merchant_nm);
 		}
 
-		Date date = new Date();
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
 		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setMerchantNm(merchant_nm);
@@ -213,21 +178,21 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManage.setSalesmanId(salesman_id);
 		msMerchantManage.setSalesmanNm(salesman_nm);
 		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
-		msMerchantManage.setRegistHhmmss(date);
-		msMerchantManage.setUpHhmmss(date);
+		msMerchantManage.setRegistHhmmss(new Date());
+		msMerchantManage.setUpHhmmss(new Date());
 		msMerchantManage.setUpdatedByUniqueId(salesman_id);
-		if(lat != null){
+//		if(lat != null){
 			msMerchantManage.setLat(new BigDecimal(lat));
-		}
-		if(lng != null){
+//		}
+//		if(lng != null){
 			msMerchantManage.setLng(new BigDecimal(lng));
-		}
-		if(county_id != null){
+//		}
+//		if(county_id != null){
 			msMerchantManage.setCountyId(county_id);
-		}
-		if(resource_content != null){
+//		}
+//		if(resource_content != null){
 			msMerchantManage.setResourceContent(resource_content);
-		}
+//		}
 
 		msMerchantManageDAO.insertSelective(msMerchantManage);
 		return FastJsonUtil.sucess("新商户创建成功！");
