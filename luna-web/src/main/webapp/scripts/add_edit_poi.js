@@ -153,6 +153,37 @@ $(function () {
         });
     });
 
+    $('#thumbnail_fileup').on('change', function(event){
+            var file = event.target.files[0];
+            var res = FileUploader._checkValidation('pic',file);
+            if(res.error){
+                    $('#thumbnail_warn').html(res.msg).css('display','block');
+                    event.target.value = '';
+                    return;
+             }
+            cropper.setFile(file, function(file){
+                    FileUploader.uploadMediaFile({
+                        type: 'pic',
+                            file: file,
+                            resourceType: 'poi',
+                            resourceId: window.poiId,
+                            success: function(data){
+                                $('#thumbnail').val(data.data.access_url);
+                                $('#thumbnail-show').attr('src', data.data.access_url);
+                                $('#thumbnail_warn').css('display', 'none');
+                                cropper.close();
+                            },
+                        error: function(data){
+                                $('#thumbnail_warn').html(data.msg).css('display','block');
+                                alert('上传失败');
+                            }
+                    });
+                $('#thumbnail_fileup').val('');
+            }, function(){
+                $('#thumbnail_fileup').val('');
+            });
+    });
+
     //页卡项选中
     $("#tabbar").on('click', 'span', function () {
         $(this).siblings().addClass("selected-item");
@@ -164,7 +195,7 @@ $(function () {
 
     $("#btn-POI-save").on('click', saveData);
 
-    $("#btn-POI-save-add").click();
+    $("#btn-POI-save-add").click(saveData);
     displayPrivateField();
 
     window.geocoder = new qq.maps.Geocoder({
