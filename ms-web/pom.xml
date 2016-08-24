@@ -171,6 +171,14 @@
         </profile>
 
         <profile>
+            <id>pre-release</id>
+            <properties>
+                <log4j.level>INFO</log4j.level>
+                <zookeeper.address>10.105.204.15:2181</zookeeper.address>
+            </properties>
+        </profile>
+
+        <profile>
             <id>release</id>
             <properties>
                 <log4j.level>INFO</log4j.level>
