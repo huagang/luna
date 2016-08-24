@@ -560,6 +560,8 @@ function ImgListController($scope, $rootScope, $http) {
         ];
         this.langList = lunaConfig.poiLang;
 
+        this.content.poiLang = this.content.poiLang || this.langList[0];
+
         getColumnListByBid(function (res) {
             if (res.data) {
                 var reArr = [];
@@ -585,6 +587,22 @@ function ImgListController($scope, $rootScope, $http) {
                 self.firstPoiList = reArr;
             }
         });
+        if (this.content.firstPoi && this.content.firstPoi.id) {
+            var firstPoiId = this.content.firstPoi.id;
+            getPoiTypeListByPoiAndBid(firstPoiId, function (res) {
+                if (res.data) {
+                    var reArr = [];
+                    for (var i = 0; i < res.data.categorys.length; i++) {
+                        reArr.push({
+                            'name': res.data.categorys[i].category_name,
+                            'id': res.data.categorys[i].category_id
+                        });
+                    }
+                    self.poiTypeList = reArr;
+                    scope.$apply();
+                }
+            });
+        }
         this.changeFirstPoi = function () {
             var _self = this;
             if (this.content.firstPoi) {
@@ -619,7 +637,7 @@ function ImgListController($scope, $rootScope, $http) {
         this.currentComponent.content.column = this.content.column = {};
         this.currentComponent.content.poiType = this.content.poiType = {};
         this.currentComponent.content.firstPoi = this.content.firstPoi = {};
-        this.currentComponent.content.poiLang = this.content.poiLang = {};
+        this.currentComponent.content.poiLang = this.content.poiLang = this.poiLang[0];
         updatePageComponentsHtml();
     };
 
@@ -856,10 +874,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
             this.changeMenuTab('', 0);
         }
 
-        this.langList = [{
-            'poiName': '请选择',
-            'poiId': ''
-        }].concat(lunaConfig.poiLang);
+        this.langList = lunaConfig.poiLang;
 
         $$scope.$on('handleBroadcast', function () {
             _self.currentTab.icon.customer = customerMenuTabIcon.iconGroup;
@@ -967,6 +982,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
     //tab列表点击事件
     this.changeMenuTab = function ($event, $index) {
         this.currentTab = this.content.tabList[$index];
+
         $timeout(function () {
             _self.initColorSet();
         });
@@ -1017,6 +1033,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                 code: 'default',
                 name: '默认',
             },
+            poiLang: this.langList[0],
             type: type,
             columnId: '',
             articleId: '',
