@@ -55,7 +55,8 @@
                         <div class="route-pois ng-hide" ng-show="editor.routeData.length > 0"  route-event-delegate>
                             <div class="summary">
                                 <span>旅游景点个数: {{editor.sceneryNum}}</span><br>
-                                <span>总共耗时: {{editor.routeTime}}</span>
+                                <span>总共耗时: {{editor.routeTime}}</span><br>
+                                <span class="blue">温馨提示: 可以拖拽黑点来改变顺序哦</span>
                             </div>
                             <div class="poi-item" ng-repeat="item in editor.routeData" data-id="{{item._id}}">
                                 <div class="circle" draggable="draggable"></div>
