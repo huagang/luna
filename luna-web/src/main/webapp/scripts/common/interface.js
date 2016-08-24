@@ -239,7 +239,15 @@ var Inter = function () {
                 delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
                 checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
                 fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
-                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'}
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
+
+                // 商品类目
+                fetchMerchantCat: {url: context + '?offset={0}&limit={1}', type: 'GET'}, // 获取商品类目信息
+                saveMerchantCat: {url: context + '', type: 'PUT'},  // 保存商品类目信息
+                deleteMerchantCat: {url: context + '', type: 'DELETE'},  // 删除商品类目
+                fetchAllMerchatParentCat: {url: context + '', type: 'GET'}, // 获取所有父级商品信息
+
+
             };
         }
     };
