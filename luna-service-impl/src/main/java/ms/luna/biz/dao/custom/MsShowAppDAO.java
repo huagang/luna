@@ -12,7 +12,7 @@ public interface MsShowAppDAO extends MsShowAppDAOBase {
 	
 	public int selectIdByName(String name);
 
-	public List<MsShowAppResult> selectShowAppByCtgrId(MsShowAppParameter parameter);
+	public List<MsShowAppResult> selectShowAppByCategoryId(MsShowAppParameter parameter);
 
-	public Integer countShowAppsByCtgrId(MsShowAppParameter msShowAppParameter);
+	public Integer countShowAppsByCategoryId(MsShowAppParameter msShowAppParameter);
 }
