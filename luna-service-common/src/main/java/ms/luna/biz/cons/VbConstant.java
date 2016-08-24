@@ -402,7 +402,11 @@ public final class VbConstant {
 		public static final String SELECT = "SELECT";
 		public static final String TEXT_PIC = "TEXT_PIC_GROUP";
 		public static final String COUNTRY_ENJOYMENT = "COUNTRY_ENJOYMENT";
-		public static final String RADIO_TEXT = "RADIO_TEXT";
+		public static final String PANORAMA = "PANORAMA";
+	}
+
+	public static final class ResourceType {
+		public static final String POI = "POI";
 	}
 
 }

@@ -557,7 +557,7 @@ $(document).ready(function () {
                     panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
                     break;
                 case 3:
-                    panoUrl = Util.strFormat(Inter.getApiUrl().customerPano, [this.value.content.panoId]);
+                    panoUrl = Util.strFormat(Inter.getApiUrl().customPano, [this.value.content.panoId]);
                     break;
                 default:
                     panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);

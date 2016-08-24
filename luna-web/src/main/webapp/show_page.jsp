@@ -38,47 +38,47 @@
                 <img class="logo" id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand">
             </a>
             <div class="component-btn-wrap">
-              <div class="component-btn" id="textComponent">
+              <div class="component-btn" id="textComponent" data-comType="text">
                 <i class="icon icon-comp-text"></i>
                 <br/>
                 <span>文本</span>
               </div>
-              <div class="component-btn" id="imageComponent">
+              <div class="component-btn" id="imageComponent" data-comType="img">
                 <i class="icon icon-comp-img"></i>
                 <br/>
                 <span>图片</span>
               </div>
-              <div class="component-btn hide" id="imageListComponent">
+              <div class="component-btn hide" id="imageListComponent"  data-comType="img">
                 <i class="icon icon-comp-imglist"></i>
                 <br/>
                 <span>图集</span>
               </div>
-              <div class="component-btn hide" id="shapeComponentGroup">
+              <div class="component-btn hide" id="shapeComponentGroup"  data-comType="img">
                 <i class="icon icon-comp-shape"></i>
                 <br/>
                 <span>形状</span>
               </div>
-              <div class="component-btn" id="panoComponent">
+              <div class="component-btn" id="panoComponent"  data-comType="pano">
                 <i class="icon icon-comp-vpano"></i>
                 <br/>
                 <span>全景</span>
               </div>
-              <div class="component-btn" id="navComponent">
+              <div class="component-btn" id="navComponent"  data-comType="nav">
                 <i class="icon icon-comp-nav"></i>
                 <br/>
                 <span>导航</span>
               </div>
-              <div class="component-btn" id="audioComponent">
+              <div class="component-btn" id="audioComponent"  data-comType="audio">
                 <i class="icon icon-comp-audio"></i>
                 <br/>
                 <span>音频</span>
               </div>
-              <div class="component-btn" id="videoComponent">
+              <div class="component-btn" id="videoComponent"  data-comType="video">
                 <i class="icon icon-comp-video"></i>
                 <br/>
                 <span>视频</span>
               </div>
-              <div class="component-btn" id="tabComponent">
+              <div class="component-btn" id="tabComponent"  data-comType="tab">
                 <i class="icon icon-comp-tab"></i>
                 <br/>
                 <span>页签</span>
@@ -152,7 +152,7 @@
                                 <button class="btn btn-local">本地上传</button>
                                 <span class="or hide">或</span>
                                 <input class="img-url hide" id="bgimg-url" placeholder="输入图片url地址" ng-model="canvas.backgroundImg" ng-blur="canvas.changeBackgroundImg()" />
-                                <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="pic" />
+                                <input type="file" onchange="async_upload_pic('backgrounadpic_id','pre-bg',true,'bg-clc',this,'bgimg-url');" class="file file-local" id="upload-bg" name="file" />
                                 <button class="btn btn-local btn-border-gray" ng-click="canvas.removeBackgroundImg()">删除背景
                                 </button>
                             </form>
@@ -284,7 +284,7 @@
                         <ul class="dropdown-menu" id="lineheight-select"></ul>
                       </div>
                     </div>
-                    <div id="editor" contenteditable="true" placeholder="请输入文字">
+                    <div id="editor" contenteditable="true" placeholder="请输入文字" ng-model="text.content" ng-change="text.changeContent()">
                     </div>
                     <!-- <textarea id="editor" ng-model="text.currentComponent.content" ng-change="text.changeContent()"></textarea> -->
                   </div>
@@ -392,7 +392,7 @@
                       <button class="btn btn-local">本地上传</button>
                       <span class="or hide">或</span>
                       <input class="img-url hide" id="model-url" placeholder="输入图片url地址" ng-model="img.content" ng-blur="img.changeContent()" />
-                      <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="file" />
                       <div class="preview hide" id="pre-model">
                         <div style="z-index: -1; background: #ddd; text-align: center; vertical-align: middle; color: #333; width: 110px; height: 100px; padding-top: 40px; font-size: 14px;">
                           图片示例图
@@ -508,7 +508,7 @@
                       <button class="btn btn-local">本地上传</button>
                       <span class="or hide">或</span>
                       <input class="imgList-url hide" id="model-url" placeholder="输入图片url地址" ng-model="img.content" ng-blur="imgList.changeContent()" />
-                      <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('page_pic_id','pre-model',true,'model-clc',this,'model-url');" class="file file-local" id="upload-model" name="file" />
                       <div class="preview hide" id="pre-model">
                         <div style="z-index: -1; background: #ddd; text-align: center; vertical-align: middle; color: #333; width: 110px; height: 100px; padding-top: 40px; font-size: 14px;">
                           图片示例图
@@ -623,7 +623,7 @@
                     <form id="nav_icon" name="nav_icon" method="post" enctype="multipart/form-data">
                       <button class="btn btn-local">上传</button>
                       <input class="img-url hide" id="nav_icon_img" placeholder="输入图片url地址" ng-model="nav.content.icon" ng-blur="nav.changeIcon()" />
-                      <input type="file" onchange="async_upload_pic('nav_icon','',true,'',this,'nav_icon_img');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('nav_icon','',true,'',this,'nav_icon_img');" class="file file-local" id="upload-model" name="file" />
                     </form>
                   </div>
                   <div class="bg-set">
@@ -776,7 +776,7 @@
                     <form id="pano_icon" name="pano_icon" method="post" enctype="multipart/form-data">
                       <button class="btn btn-local">上传</button>
                       <input class="img-url hide" id="pano_icon_img" placeholder="输入图片url地址" ng-model="pano.content.icon" ng-blur="pano.changeIcon()" />
-                      <input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('pano_icon','',true,'',this,'pano_icon_img');" class="file file-local" id="upload-model" name="file" />
                     </form>
                   </div>
                   <div class="bg-set">
@@ -907,13 +907,13 @@
                       <span class="title">播放图标</span>
                       <input class="fileurl play-icon-url" id="audioPlayIconUrl" placeholder="请上传播放图标文件" ng-model="audio.currentComponent.content.playIcon" ng-blur="audio.changePlayIcon()" />
                       <button class="btn btn-local">上传</button>
-                      <input type="file" onchange="async_upload_pic('audioPlayIconForm','',true,'',this,'audioPlayIconUrl');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('audioPlayIconForm','',true,'',this,'audioPlayIconUrl');" class="file file-local" id="upload-model" name="file" />
                     </form>
                     <form id="audioPauseIconForm" name="audioPauseIconForm" method="post" enctype="multipart/form-data" class="audio-upload">
                       <span class="title">暂停图标</span>
                       <input class="fileurl stop-img-url" id="audioPauseIconUrl" placeholder="请上传暂停图标文件" ng-model="audio.currentComponent.content.pauseIcon" ng-blur="audio.changePauseIcon()" />
                       <button class="form-control btn btn-local">上传</button>
-                      <input type="file" onchange="async_upload_pic('audioPauseIconForm','',true,'',this,'audioPauseIconUrl');" class="file file-local" id="upload-model" name="pic" />
+                      <input type="file" onchange="async_upload_pic('audioPauseIconForm','',true,'',this,'audioPauseIconUrl');" class="file file-local" id="upload-model" name="file" />
                     </form>
                   </div>
                   <div class="bg-set">
@@ -1051,7 +1051,7 @@
                       <span class="title">视频图标</span>
                       <input class="fileurl video-url" id="videoIconUrl" placeholder="请上传视频图标" ng-model="video.currentComponent.content.videoIcon" ng-blur="video.changeVideoIcon()" readonly="readonly" />
                       <button class="btn btn-local">上传</button>
-                      <input type="file" onchange="async_upload_pic('videoIconForm','',true,'',this,'videoIconUrl');" class="file file-local" id="" name="pic" />
+                      <input type="file" onchange="async_upload_pic('videoIconForm','',true,'',this,'videoIconUrl');" class="file file-local" id="" name="file" />
                     </form>
                     <form id="videoFileForm" name="videoFileForm" method="post" enctype="multipart/form-data" class="video-upload">
                       <span class="title">视频文件</span>
@@ -1163,7 +1163,7 @@
                       <span class="title">头图</span>
                       <input class="menuTab-url" id="tabBannerUrl" placeholder="请上传头图" title="{{menuTab.content.bannerImg}}" ng-model="menuTab.content.bannerImg" ng-blur="menuTab.changeBannerImg()" readonly="readonly" />
                       <button class="btn btn-local">上传</button>
-                      <input type="file" onchange="async_upload_picForMenuTab('tabBanner','',true,'',this,'tabBannerUrl');" class="file file-local" id="" name="pic" />
+                      <input type="file" onchange="async_upload_picForMenuTab('tabBanner','',true,'',this,'tabBannerUrl');" class="file file-local" id="" name="file" />
                     </form>
                     <h2><label>页卡管理：</label></h2>
                     <div class="form-group clearfix">
@@ -1319,7 +1319,8 @@
           <div id="context-menu">
             <ul class="dropdown-menu" role="menu">
               <li id="component-del">
-                <a tabindex="-1">删除</a>
+                <a id='copy' tabindex="1">复制</a>
+                <a id='delete' tabindex="-1">删除</a>
               </li>
             </ul>
           </div>
@@ -1385,7 +1386,7 @@
                 <span class="title">当前图标</span>
                 <input class="fileurl" id="menuTabCurrentIconUrl" placeholder="请上传图标" title={{tabMenuIcon.menuTabIcon.currentUrl}} ng-model="tabMenuIcon.menuTabIcon.currentUrl" ng-change="tabMenuIcon.chageCurrentIcon()" />
                 <button class="btn btn-local">上传</button>
-                <input type="file" onchange="async_upload_picForMenuTab('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="pic" />
+                <input type="file" onchange="async_upload_picForMenuTab('menuTabCurrentIcon','',true,'',this,'menuTabCurrentIconUrl');" class="file file-local" id="" name="file" />
               </form>
             </div>
             <div class="item-wrap">
@@ -1393,7 +1394,7 @@
                 <span class="title">默认图标</span>
                 <input class="fileurl" id="menuTabDefaultIconUrl" placeholder="请上传图标" title="{{tabMenuIcon.menuTabIcon.defaultUrl}}" ng-model="tabMenuIcon.menuTabIcon.defaultUrl" ng-change="tabMenuIcon.chageDefaultIcon()" />
                 <button class="btn btn-local">上传</button>
-                <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="pic" />
+                <input type="file" onchange="async_upload_picForMenuTab('menuTabDefaultIcon','',true,'',this,'menuTabDefaultIconUrl');" class="file file-local" id="" name="file" />
               </form>
             </div>
           </div>
@@ -1420,7 +1421,7 @@
                     <div class="img-bg-tips">设置微景展封面
                       <br>235x175
                     </div>
-                    <input type="file" class="file" onchange="async_upload_pic('wj_first_page_pic_id','wj-page-set',false,'wj-page-clc',this);" name="pic" />
+                    <input type="file" class="file" onchange="async_upload_pic('wj_first_page_pic_id','wj-page-set',false,'wj-page-clc',this);" name="file" />
                     <a class="wj-img-clc" id="wj-page-clc">删除</a>
                   </div>
                   <div class="info-set">
@@ -1438,7 +1439,7 @@
                       <br>120x120
                     </div>
                     <%-- <img id="wj-share" class="thumbnail" src="<%=request.getContextPath() %>/img/cover2.png" alt="分享缩略图" style="width:103px;height:98px;padding:0;" />--%>
-                      <input type="file" class="file" onchange="async_upload_pic('share_to_friend_pic_id','wj-share-set',false,'wj-share-clc',this);" name="pic" />
+                      <input type="file" class="file" onchange="async_upload_pic('share_to_friend_pic_id','wj-share-set',false,'wj-share-clc',this);" name="file" />
                       <a class="wj-img-clc" id="wj-share-clc">删除</a></div>
                   <div class="info-set">
                     <input type="text" class="txt" id="share_info_title" />
@@ -1486,11 +1487,11 @@
             </p>
           </div>
         </div>
-        <!--支持es5 的语法-->
+        
+        <!-- 对ES5的支持Start -->
         <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-shim.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/es5-shim/es5-sham.js"></script>
-        <!--End -->
-
+        <!-- ES5的支持End -->
 
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>

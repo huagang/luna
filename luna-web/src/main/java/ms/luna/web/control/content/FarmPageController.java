@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -109,5 +111,12 @@ public class FarmPageController extends BasicController {
         }
     }
 
-
+    /**
+     * 检查整数序列,如 "1,4,3,56,9"
+     */
+    private boolean checkIntegerList(String tags){
+        Pattern pattern = Pattern.compile("((\\d+),)*(\\d+)");
+        Matcher matcher = pattern.matcher(tags);
+        return matcher.matches();
+    }
 }

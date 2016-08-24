@@ -153,3 +153,21 @@ time:20160331*/
     color: #445FA8;
     border-color: #c3c3c3;
 }
+
+#pop-delete{
+    position: fixed;
+    max-width: 600px;
+    left: 0 !important;
+    right: 0;
+    margin: auto;
+}
+
+.delete-poi-info{
+    margin-bottom: 15px;
+}
+
+#pop-delete .delete-reason{
+    width: 80%;
+    height: 100px;
+    margin-top: 10px;
+}

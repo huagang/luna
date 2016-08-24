@@ -18,7 +18,7 @@ var poiDefTemplate={
 	    "_id":"",
 	    "tags":"",
 	    "name":""
-}
+};
 var PoiDataTemplate={
     "_id":"",
     "c_list":[]
@@ -27,6 +27,8 @@ var TypeDataTemplate={
     "type_id":"",
     "c_list":[]
 };
+
+var typeId = undefined;
 
 $(document).ready(function(){
 	initBusinessTreeData();
@@ -52,7 +54,15 @@ $(document).ready(function(){
             		// {"data":{"total":1,"row":[{"tags":[2],"_id":"57556f17af04b234b01ed5d7","name":"故宫"}]},"code":"0","msg":"success"}
             		if(returndata.data && returndata.data.row)
             		{
-            			searchPoisForBizTree=returndata.data.row;
+                        searchPoisForBizTree = returndata.data.row.filter(function(item){
+                            if(poiDef[item._id]){
+                                return false;
+                            }
+                            if(typeId && item.tags.indexOf(typeId) === -1){
+                                return false;
+                            }
+                            return true;
+                        });
             		//	$(".tags-wrap .btn-tags").removeClass("current");
             		//	$(".tags-wrap .btn-tags:first").addClass("current");
             			showSearchPois(tag_id);
@@ -178,11 +188,84 @@ $(document).ready(function(){
     	parents_poi=$(this).parents("ul");
         parents_poi_li=$(this).parents("li");
     	ps=[];
+        try{
+            typeId = $(event.target).parentsUntil('.luna-tree-parent', 'ul[level-type-id]').attr('level-type-id');
+            if(typeId){
+                typeId = parseInt(typeId);
+            }
+            console.log(typeId);
+        } catch(e){
+            typeId = undefined;
+        }
+
         var $pop_window = $("#childPoi");
         popWindow($pop_window);
     });
-    
-    
+
+    // 上移节点
+    $(".luna-tree").on('click', '.move-up', function(event){
+        console.log(event.target);
+        var id = event.target.getAttribute('item_id');
+        var type = poiDef[id].tags[0],
+            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj;
+
+        obj.c_list.some(function(item, index){
+            var curType = poiDef[item._id].tags[0];
+            if(item._id === id){
+                desIndex = srcIndex;
+                desObj = srcObj;
+                srcIndex = index;
+                srcObj = item;
+                return true;
+            } else if(obj.business_id  || curType === type){
+                srcIndex = index;
+                srcObj = item;
+                return false;
+            }
+            return false;
+        });
+        if(srcIndex > -1 && desIndex > -1){
+            obj.c_list[srcIndex] = desObj;
+            obj.c_list[desIndex] = srcObj;
+            console.log('moved');
+            saveTreeData();
+            showTreeData();
+        }
+    });
+
+    // 下移节点
+    $(".luna-tree").on('click', '.move-down', function(event){
+        console.log(event.target);
+        var id = event.target.getAttribute('item_id');
+        var type = poiDef[id].tags[0],
+            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj, isFind = false;
+
+        obj.c_list.some(function(item, index){
+            var curType = poiDef[item._id].tags[0];
+            if(item._id === id){
+                srcIndex = index;
+                srcObj = item;
+                isFind = true;
+            } else if(isFind && (obj.business_id || curType === type)){
+                desIndex = index;
+                desObj = item;
+                return true;
+            }
+            return false;
+        });
+
+        if(srcIndex > -1 && desIndex > -1){
+            obj.c_list[srcIndex] = desObj;
+            obj.c_list[desIndex] = srcObj;
+            console.log('moved');
+            console.log(treeDate);
+            saveTreeData();
+            showTreeData();
+        }
+    });
+
+
+
     $("#btn-add-poi").on('click',function(){
     	
     	var _this=_this_poi;
@@ -336,29 +419,43 @@ $(document).ready(function(){
             deep=level;
         }
         var treeHtml="";
-        if(data._id&&data._id!="" && typeof(data.business_id)=="undefined"){
-            if(poiDef[data._id] && poiDef[data._id]!=""){
+        if(data._id && typeof(data.business_id)=="undefined"){
+            // poi展示
+            if(poiDef[data._id]){
                 if(typeof(data.keyorder)!="undefined"){
                     var ordernum='keyorder="'+data.keyorder+'"';
                 }else{
                     var ordernum='';
                 }
-                treeHtml='<li level-item-id="'+data._id+'" '+ordernum+'>';
-                treeHtml+='<div class="item-name" item_id="'+data._id+'" > ' 
-                   + '<span class="item-title"><p><a target="_blank" '
+                treeHtml = '<li level-item-id="'+data._id+'" '+ordernum+'>';
+
+
+
+                treeHtml += '<div class="item-name" item_id="'+data._id+'" > '
+                + '<span class="item-title"><p><a target="_blank" '
                    + 	'href="'+Util.strFormat(Inter.getApiUrl().poiEdit.url,[data._id]) +'">'
                    +     poiDef[data._id].name + '</a></p>' + getTooltip(data._id)
                    + '</span>'
                    + '<span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>'
                    + '<div class="item-opt-wrap">'
                    + '<div class="item-opt addchild" item_id="'+data._id+'">添加子节点</div>'
+                   + '<div class="item-opt move-up" item_id="'+data._id+'">上移</div>'
+                   + '<div class="item-opt move-down" item_id="'+data._id+'">下移</div>'
                    + '<div class="item-opt delete" item_id="'+data._id+'">删除</div>'
                    + '</div>'
+                   /*+ '<div class="node-ops">\
+                        <div class="node-up glyphicon glyphicon-arrow-up"></div>\
+                        <div class="node-down glyphicon glyphicon-arrow-down"></div>\
+                        </div>'*/
                    + '</div>';
+
+
             }else{
                 return "";
             }
-        }else if(data.type_id&&data.type_id!="" && typeof(data.business_id)=="undefined"){
+        } else if(data.type_id && typeof(data.business_id) == "undefined"){
+            // poi类型展示
+
             var n=0;
             for(var key in data.c_list) {
                 n++;
@@ -478,4 +575,30 @@ $(document).ready(function(){
 function clcContent(obj){
 	$("#chkbox-selcet-all").attr("checked",false);
 	clcWindow(obj);
+}
+
+function getParentObj(id){
+    var parentObj = undefined;
+    var isFind = false;
+
+    var findList = [treeDate];
+    var length = treeDate.c_list.length;
+    var itemList;
+    for(var i=0; i< findList.length ;i++){
+        if(isFind){
+            return parentObj;
+        }
+        itemList = findList[i];
+        itemList.c_list.some(function(item){
+            if(item._id === id){
+                treeDate.c_list = treeDate.c_list.slice(0, length);
+                parentObj = itemList;
+                isFind = true;
+            }
+            if(item.c_list && item.c_list.length > 0){
+                findList.push(item);
+            }
+        });
+    }
+    return parentObj;
 }

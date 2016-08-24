@@ -44,7 +44,12 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageApp: context + '/platform/user'
+                manageUser: context + '/platform/user', //
+                routeConfig: context + '/content/route/configuration/{0}',
+                addPoi: context + '/data/poi/addPage',
+                editPoi: context + '/data/poi/initEditPage?poiId={0}',
+                manageRouter: context + '/content/route',
+
             };
         },
         getApiUrl: function () {
@@ -59,7 +64,7 @@ var Inter = function () {
                 poiInit: { url: context + "/data/poi", type: "GET" },
                 poiDataImport: { url: context + '/data/poi/batch', type: 'POST' },// Poi 批量数据导入功能
                 poiCheckDelete: { url: context + '/data/poi/checkPoiCanBeDeleteOrNot?_id={0}', type: 'GET' },//检查是否能够删除
-                poiDelete: { url: context + '/data/poi/{0}', type: 'DELETE' },//poi删除功能
+                poiDelete: { url: context + '/data/poi/{0}?note={1}', type: 'DELETE' },//poi删除功能
                 poiAddPage: { url: context + '/data/poi/addPage', type: 'GET' },//poi删除功能
                 poiEdit: { url: context + '/data/poi/initEditPage?poiId={0}', type: 'GET' },//poi编辑功能
                 poiAddSave: { url: context + '/data/poi', type: 'POST' },//poi 创建成功
@@ -91,7 +96,7 @@ var Inter = function () {
                 merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
-                merchantSuccess: { url: context + "common/merchant/successPage", type: "GET" }, //注册成功页面
+                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
                 crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
@@ -219,11 +224,22 @@ var Inter = function () {
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
                 multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
-                customerPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+                customPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义相册全景
+                searchPano: { url: 'http://data.pano.visualbusiness.cn/rest/pano/search?q={0}&fromPage={1}&size={2}&from={3}&project={4}' ,type: 'GET'}, // 通过关键字搜索全景
+                searchAlbum: { url: 'http://data.pano.visualbusiness.cn/rest/album/search?q={0}&fromPage={1}&size={2}&from={3}', type:'GET'},
+
 
                 //zclip路径
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
+                // 线路管理
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'}
             };
         }
     };

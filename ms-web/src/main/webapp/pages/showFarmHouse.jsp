@@ -37,9 +37,11 @@
     </div>
     <div class="page-back">
         <div class="bg" style="background: url(${pageData.start_page_background_pic}) top left no-repeat; background-size: cover;">
-            <div class="fg transparent" style="background: url(${pageData.start_page_foreground_pic}) top center no-repeat; background-size: cover; ">
-            </div>
+            <div class="bg-mask" style="background: url(${pageData.start_page_background_pic}) top left no-repeat; background-size: cover;"></div>
         </div>
+        <div class="fg transparent" style="background: url(${pageData.start_page_foreground_pic}) top center no-repeat; background-size: cover; ">
+        </div>
+
     </div>
     <div class="page-main transparent">
         <div class="farmhouse-info">
@@ -63,7 +65,7 @@
                     <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/navigation.png"/>
                     <p class="tip">到这去</p>
                 </div>
-                <a class="nav-item pano" target="_blank" href="{{farm.poiData.panoUrl}}">
+                <a class="nav-item pano" href="{{farm.poiData.panoUrl}}" ng-click="farm.replaceUrl()">
                     <img class='img' src="<%=request.getContextPath()%>/resources/images/farmhouse/pano.png"/>
                     <p class="tip">看全景</p>
                 </a>
@@ -78,7 +80,7 @@
         <div class="room-info" >
             <header>
                 <span>房间</span>
-                <a class='room-all' target="_blank" href="{{farm.farmData.allPanorama.panoUrl}}">
+                <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}" ng-click="farm.replaceUrl()">
                     全部
                     <div class="icon-arrow"></div>
                 </a>
@@ -183,18 +185,8 @@
             desc: "${share_info_des}" || pageData.poi_info.share_desc,
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail,
-            dest:{
-                lat: (pageData.poi_info.lnglat || {}).lat,
-                lng: (pageData.poi_info.lnglat || {}).lng,//经度
-                name: pageData.poi_info.poi_name || '',//名字
-                address: (pageData.poi_info.address || {}).city + (pageData.poi_info.address || {}).county, // 地址
-                debug:false
-            }
         };
-        $(function(){
-            var wechat = new weChat(wx, wechatOptions);
-
-        });
+        var wechat = new weChat(wx, wechatOptions);
 
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>

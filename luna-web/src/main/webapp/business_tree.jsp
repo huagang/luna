@@ -168,6 +168,7 @@
 <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath() %>/plugins/es5-shim/es5-shim.min.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 
 <script type="text/javascript">

@@ -19,6 +19,8 @@
   <title>皓月平台</title>
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.bootstrap3.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/file_loading_tip.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/formComponent.css">
@@ -91,13 +93,15 @@
         </div>
     </div>
   </div>
-          <jsp:include page="/templete/message.jsp"/>
+    <jsp:include page="/templete/message.jsp"/>
     <script>
       window.context = "<%=request.getContextPath() %>";
     </script>
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+    <jsp:include page="/templete/imgCropper.jsp" />
     <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/deep-diff/deep-diff-0.3.3.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/es5-shim/es5-shim.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/clipboardJs/clipboard.min.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>

@@ -29,9 +29,19 @@ body.modal-open{
     width: 100vw;
 }
 
-.bg{
+.bg {
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+}
+.bg-mask{
+    width: 100%;
+    height: 100%;
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
 }
 
 .page-main{
@@ -41,10 +51,12 @@ body.modal-open{
 
 .fg{
     position: absolute;
-    left: 30%;
+    left: 0;
+    right: 0;
+    margin: auto;
     top: 15%;
-    height: 55vh;
-    width: 40vw;
+    height: 55%;
+    width: 40%;
 }
 
 .transparent{
@@ -119,7 +131,8 @@ body.modal-open{
     left: 0;
     height: 30%;
     width: 100%;
-    background: linear-gradient(0deg, rgba(0,0,0,.6), rgba(0,0,0,0));
+    background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.6));
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.6));
     color: white;
     padding:  0 0 10px 16px;
     font-size: 16px;
@@ -130,6 +143,10 @@ body.modal-open{
 }
 
 .nav-container{
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     align-items: center;
     width: 100%;
@@ -143,8 +160,11 @@ body.modal-open{
     height: 75px;
     vertical-align: middle;
     position: relative;
-    flex-grow: 1;
-    flex-shrink: 1;
+    -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 1;         /* OLD - Firefox 19- */
+    -webkit-flex: 1;          /* Chrome */
+    -ms-flex: 1;              /* IE 10 */
+    flex: 1;
 }
 
 .nav-item.phone,

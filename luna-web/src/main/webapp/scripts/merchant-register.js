@@ -290,40 +290,48 @@ $(function() {
 	});
 });
 
-// 异步上传图片
-function asyncUploadPicAdd(obj, fileElementId, warn, license_url) {
-	var $license = $(obj), $license_url = $("#" + license_url);
+//异步上传图片
+function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
+	var $license= $(obj),
+		$license_url = $("#"+license_url);
 	var url = $license.val();
-	$warn = $("#" + warn);
-	var hasError = licenseVerify($license, url, $warn);
-	if (!hasError) {
-		$warn.css('display', 'none');
-		$.ajaxFileUpload({
-			// 处理文件上传操作的服务器端地址
-			url : Inter.getApiUrl().merchantThumbnailUpload.url,
-			secureuri : false, // 是否启用安全提交,默认为false
-			fileElementId : fileElementId,
-			dataType : 'json', // 服务器返回的格式,可以是json或xml等
-			success : function(returndata) { // 服务器响应成功时的处理函数
-				if (returndata.code == '0') {
-					$license_url.val(returndata.data.access_url);
-					$("#thumbnail").attr("src", returndata.data.access_url);
-				} else {
-					$license_url.val('');
-					$warn.html(returndata.msg);
-					$warn.css('display', 'block');
-					$("#thumbnail").attr("picExist", "false");
-					$("#div-img").css("display", "none");
+	$warn = $("#"+warn);
+	var file = $license[0].files[0];
+	var res = FileUploader._checkValidation('pic', file);
+	if(! res.error){
+		$warn.css('display','none');
+		cropper.setFile(file, function(file){
+			cropper.close();
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: file,
+				resourceType: 'crm',
+				resourceId: $('#merchant_id_edit').attr('val'),
+				success: function(returndata){
+					if (returndata.code == '0') {
+						$license_url.val(returndata.data.access_url);
+						$("#thumbnail").attr("src", returndata.data.access_url);
+					} else {
+						$warn.html(returndata.msg);
+						$warn.css('display', 'block');
+						$("#thumbnail").attr("picExist", "false");
+						$("#div-img").css("display", "none");
+					}
+					$license.val('');
+				},
+				error: function(){
+					$warn.html('上传失败，请重试！！');
+					$warn.css('display','block');
+					$license.val('');
 				}
-			},
-			error : function(returndata) { // 服务器响应失败时的处理函数
-				$license_url.val('');
-				$warn.html("请求失败");
-				$warn.css('display', 'block');
-			}
-		});
+			});
+		}, function(){});
+	}
+	else{
+		$warn.html(res.msg).css('display', 'block');
 	}
 }
+
 
 // 验证商户名称是否为空
 function merchantName() {
