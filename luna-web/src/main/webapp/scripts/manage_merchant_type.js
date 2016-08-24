@@ -89,9 +89,13 @@ function MerchantType($scope, $http){
     // 请求 获取商品类目数据
     function fetchMerchatTypeData(){
         $http({
-            url: vm.apiUrls.fetchMerchantCat.url,
-            method:
-        })
+            url: vm.apiUrls.fetchMerchantCat.url.format(vm.pagination.offset, vm.pagination.limit),
+            method: vm.apiUrls.fetchMerchantCat
+        }).then(function(){
+
+        }, function(){
+            
+        });
     }
 
     // 事件 展开商品类目
