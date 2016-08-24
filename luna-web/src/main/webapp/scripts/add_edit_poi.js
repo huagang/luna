@@ -153,6 +153,37 @@ $(function () {
         });
     });
 
+    $('#thumbnail_fileup').on('change', function(event){
+            var file = event.target.files[0];
+            var res = FileUploader._checkValidation('pic',file);
+            if(res.error){
+                    $('#thumbnail_warn').html(res.msg).css('display','block');
+                    event.target.value = '';
+                    return;
+             }
+            cropper.setFile(file, function(file){
+                cropper.close();
+                FileUploader.uploadMediaFile({
+                        type: 'pic',
+                            file: file,
+                            resourceType: 'poi',
+                            resourceId: window.poiId,
+                            success: function(data){
+                                $('#thumbnail').val(data.data.access_url);
+                                $('#thumbnail-show').attr('src', data.data.access_url);
+                                $('#thumbnail_warn').css('display', 'none');
+                            },
+                        error: function(data){
+                                $('#thumbnail_warn').html(data.msg).css('display','block');
+                                alert('上传失败');
+                            }
+                    });
+                $('#thumbnail_fileup').val('');
+            }, function(){
+                $('#thumbnail_fileup').val('');
+            });
+    });
+
     //页卡项选中
     $("#tabbar").on('click', 'span', function () {
         $(this).siblings().addClass("selected-item");
@@ -162,9 +193,65 @@ $(function () {
         fieldshow(tagid, field);
     });
 
-    $("#btn-POI-save").on('click', saveData);
+    $("#btn-POI-save").on('click', function() {
+        saveData(function () {
+            $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
+            setTimeout(function () {
+                $("#status-message").css('display', 'none');
+                // window.location.href = Inter.getApiUrl().poiInit.url;
+            }, 2000);
+        });
+    });
 
-    $("#btn-POI-save-add").click();
+    $("#btn-POI-save-add").click(function () {
+        $('#description').val(ue.getContent());
+        var hasError = false;
+        hasError = checkTitleLong() || hasError;
+        hasError = checkTitleShort() || hasError;
+        hasError = checkLnglatitude("latitude") || hasError;
+        hasError = checkLnglatitude("longitude") || hasError;
+        hasError = check_description() || hasError;
+        if (!hasError) {
+            var formdata = new FormData($("#poiModel")[0]);
+            $.ajax({
+                url: Inter.getApiUrl().poiAddSave.url,
+                type: Inter.getApiUrl().poiAddSave.type,
+                async: false,
+                cache: true,
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: 'JSON',
+                success: function (returndata) {
+                    switch (returndata.code) {
+                        case "0": //符合规则添加修改属性
+                            $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
+                            setTimeout(function () {
+                                $("#status-message").css('display', 'none');
+                                window.location.href = Inter.getApiUrl().poiInit.url;
+                            }, 2000);
+                            break;
+                        default:
+                            $("#status-message").html(returndata.msg).css('display', 'block');
+                            setTimeout(function () {
+                                $("#status-message").css('display', 'none');
+                            }, 2000);
+                    }
+                },
+                error: function () {
+                    $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
+                    setTimeout(function () {
+                        $("#status-message").css('display', 'none');
+                    }, 2000);
+                }
+            });
+        } else {
+            $("#status-message").html('您的输入有误！').css('display', 'block');
+            setTimeout(function () {
+                $("#status-message").css('display', 'none');
+            }, 3000);
+        }
+    });
     displayPrivateField();
 
     window.geocoder = new qq.maps.Geocoder({
@@ -284,11 +371,7 @@ function saveData(successCallback, errorCallback) {
                     success: function (returndata) {
                         switch (returndata.code) {
                             case "0": //符合规则添加修改属性
-                                $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                                setTimeout(function () {
-                                    $("#status-message").css('display', 'none');
-                                    // window.location.href = Inter.getApiUrl().poiInit.url;
-                                }, 2000);
+
                                 if(typeof successCallback === 'function'){
                                     successCallback(returndata);
                                 }
@@ -330,11 +413,7 @@ function saveData(successCallback, errorCallback) {
                 success: function (returndata) {
                     switch (returndata.code) {
                         case "0": //符合规则添加修改属性
-                            $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                            setTimeout(function () {
-                                $("#status-message").css('display', 'none');
-                                // window.location.href = Inter.getApiUrl().poiInit.url;
-                            }, 2000);
+
                             if(typeof successCallback === 'function'){
                                 successCallback(returndata);
                             }

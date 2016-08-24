@@ -67,7 +67,7 @@ span.fileinput-button:hover
 	font-size: 14px;
 	color: #445FA8;
 	height: 36px;
-	width:104px;	
+	width:104px;
 	margin-top: -2px;
 	margin-left: 10px;
 	overflow:visible;
@@ -128,10 +128,7 @@ input[type='text'] {
     text-align: center;
 }
 
-/*button {
-    height: 36px;
-    width: 104px;
-}*/
+
 
 .btn {
     display: inline-block;
@@ -210,7 +207,7 @@ input[type='text'] {
 .content-footer button{
 	float: right;
 	margin: 20px 0 0 20px;	
-	width: 104px;
+	width: 110px;
 	height:36px;
 }
 .article-head-pic{

@@ -6,23 +6,19 @@ import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.CommonQueryParam;
 import ms.biz.common.ServiceConfig;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.bl.ManageBusinessBL;
-import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.custom.MsCategoryDAO;
-import ms.luna.biz.dao.custom.MsMerchantManageDAO;
-import ms.luna.biz.dao.custom.MsShowAppDAO;
-import ms.luna.biz.dao.custom.model.MerchantsParameter;
-import ms.luna.biz.dao.custom.model.MerchantsResult;
-import ms.luna.biz.dao.custom.model.MsBusinessParameter;
-import ms.luna.biz.dao.custom.model.MsBusinessResult;
-import ms.luna.biz.dao.model.MsBusiness;
-import ms.luna.biz.dao.model.MsBusinessCriteria;
-import ms.luna.biz.dao.model.MsCategory;
-import ms.luna.biz.dao.model.MsCategoryCriteria;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.*;
+import ms.luna.biz.dao.custom.model.*;
+import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.LunaRoleCategoryTable;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MtaWrapper;
+import ms.luna.cache.MerchantCategoryCache;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +39,14 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	
 	@Autowired
 	private MsBusinessDAO msBusinessDAO;
-	
+
 	@Autowired
-	private MsCategoryDAO msCategoryDAO;
+	private MerchantCategoryCache merchantCategoryCache;
 	
 	@Autowired
 	private MsShowAppDAO msShowAppDAO;
+	@Autowired
+	private LunaUserRoleDAO lunaUserRoleDAO;
 	
 	public boolean existBusiness(String json) {
 		JSONObject jsonObject = JSONObject.parseObject(json);
@@ -189,22 +187,40 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		String min = FastJsonUtil.getString(jsonObject, CommonQueryParam.LIMIT_MIN);
 		String max = FastJsonUtil.getString(jsonObject, CommonQueryParam.LIMIT_MAX);
-		
+		String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
+		if(lunaUserRole == null) {
+			logger.warn("user not found, unique_id: " + uniqueId);
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+		}
 		MsBusinessParameter msBusinessParameter = new MsBusinessParameter();
+		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
+
+		} else if(businessIdList.size() > 0){
+			msBusinessParameter.setBusinessIds(businessIdList);
+		} else {
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
+		}
+
 		if(StringUtils.isNotEmpty(min) && StringUtils.isNotEmpty(max)) {
 			msBusinessParameter.setRange(true);
 			msBusinessParameter.setMax(Integer.parseInt(max));
 			msBusinessParameter.setMin(Integer.parseInt(min));
 		}
-		List<MsCategory> msCategories = msCategoryDAO.selectByCriteria(new MsCategoryCriteria());
-		Map<String, String> categoryId2Name = new HashMap<String, String>();
-		for(MsCategory category : msCategories) {
-			categoryId2Name.put(category.getCategoryId(), category.getNmZh());
-		}
-		
-		int total = msBusinessDAO.readTotalBusinessCount();
+
+		Map<String, String> categoryId2Name = merchantCategoryCache.getCategoryId2Name();
+		int total = msBusinessDAO.selectBusinessCountWithFilter(msBusinessParameter);
 		List<MsBusinessResult> results = msBusinessDAO.selectBusinessWithFilter(msBusinessParameter);
-		JSONObject data = JSONObject.parseObject("{}");;
+		JSONObject data = new JSONObject();
 		if(results != null) {
 			JSONArray rows = new JSONArray();
 			for(MsBusinessResult result : results) {

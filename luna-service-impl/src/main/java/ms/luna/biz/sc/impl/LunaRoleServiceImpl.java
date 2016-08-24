@@ -16,6 +16,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
+import ms.luna.cache.RoleMenuCache;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,6 @@ public class LunaRoleServiceImpl implements LunaRoleService {
     private final static Logger logger = Logger.getLogger(LunaRoleServiceImpl.class);
 
     @Autowired
-    private LunaRoleDAO lunaRoleDAO;
-    @Autowired
     private LunaRoleMenuDAO lunaRoleMenuDAO;
     @Autowired
     private ModuleMenuCache moduleMenuCache;
@@ -45,6 +44,8 @@ public class LunaRoleServiceImpl implements LunaRoleService {
     private RoleCache roleCache;
     @Autowired
     private RoleCategoryCache roleCategoryCache;
+    @Autowired
+    private RoleMenuCache roleMenuCache;
 
     /**
      * read role list, only access children role for current user
@@ -62,20 +63,22 @@ public class LunaRoleServiceImpl implements LunaRoleService {
 
         JSONArray jsonArray = new JSONArray();
         try {
-            LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-            lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(loginRoleId);
-            List<LunaRoleMenu> lunaRoleMenus = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
             List<Integer> menuIdList = new ArrayList<>();
-            for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
-                menuIdList.add(lunaRoleMenu.getMenuId());
+            if(loginRoleId == DbConfig.ROOT_ROLE_ID) {
+                List<LunaMenu> allMenu = moduleMenuCache.getAllMenu();
+                for(LunaMenu lunaMenu : allMenu) {
+                    menuIdList.add(lunaMenu.getId());
+                }
+            } else {
+                List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(loginRoleId);
+                for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
+                    menuIdList.add(lunaRoleMenu.getMenuId());
+                }
             }
             List<Pair<LunaModule, List<LunaMenu>>> moduleAndMenuInfoList =
                     moduleMenuCache.getModuleAndMenuByMenuIds(menuIdList);
 
-
-            lunaRoleMenuCriteria.clear();
-            lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(slaveRoleId);
-            lunaRoleMenus = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
+            List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(slaveRoleId);
             Set<Integer> slaveMenuIdSet = new HashSet<>();
             for(LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
                 slaveMenuIdSet.add(lunaRoleMenu.getMenuId());
@@ -118,9 +121,7 @@ public class LunaRoleServiceImpl implements LunaRoleService {
     @Override
     public JSONObject updateMenuForRole(int loginRoleId, int slaveRoleId, JSONArray menuArray) {
         try {
-            LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-            lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(loginRoleId);
-            List<LunaRoleMenu> lunaRoleMenus = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
+            List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(loginRoleId);
             Set<Integer> validMenuIdSet = new HashSet<>(lunaRoleMenus.size());
             for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
                 validMenuIdSet.add(lunaRoleMenu.getMenuId());
@@ -134,7 +135,7 @@ public class LunaRoleServiceImpl implements LunaRoleService {
                 }
             }
 
-            lunaRoleMenuCriteria.clear();
+            LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
             lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(slaveRoleId);
             lunaRoleMenuDAO.deleteByCriteria(lunaRoleMenuCriteria);
             /**
