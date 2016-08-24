@@ -33,5 +33,7 @@ public interface MsShowPageService {
 	JSONObject updatePageOrder(String json);
 	
 	JSONObject getIndexPage(int appId);
+
+	JSONObject duplicateOnePage(String json, String lunaName);
 	
 }
