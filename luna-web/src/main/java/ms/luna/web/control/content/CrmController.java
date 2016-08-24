@@ -353,7 +353,7 @@ public class CrmController extends BasicController {
             JSONObject result = manageMerchantService.createMerchant(param.toString());
             String code = result.getString("code");
             if ("0".equals(code)) {
-                return FastJsonUtil.sucess("编辑成功！merchant_nm:" + merchant_nm);
+                return FastJsonUtil.sucess("success");
             } else if ("1".equals(code)) {
                 return FastJsonUtil.error("3", "用户重名(下手慢了),merchant_nm:" + merchant_nm);
             } else if ("2".equals(code)) {
