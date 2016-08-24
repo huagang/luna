@@ -1,0 +1,302 @@
+
+.icon-tip{
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    background: url(../img/icon-tip.png) top left no-repeat ;
+    background-size: contain;
+}
+
+.blue{
+    color: #5CB8DF;
+}
+
+.button,
+.button-close{
+    height: 36px;
+}
+
+.font-14{
+    font-size: 14px;
+}
+
+.tags{
+    display:inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+
+.btn-tag{
+    background-color: #fff;
+    border: 1px solid #E5E5E5;
+    color: #000;
+    padding: 4px 10px;
+    margin: 0 5px 10px 0;
+}
+
+.btn-tag:hover,
+.btn-tag.current{
+    background-color: #4F6499;
+    border: 1px solid #4F6499;
+    color: #fff;
+}
+
+
+
+.pop-fun{
+    width: 100%;
+}
+
+.mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* ------------------------------------分割线 上面是可重用的样式-------------------------------------------------- */
+
+.empty-tip{
+    height: 360px;
+    line-height: 360px;
+    text-align: center;
+}
+
+.icon-tip{
+    margin: 0 10px -5px 0;
+}
+
+.breadcrumb button{
+    margin-top: -5px;
+}
+
+.pop{
+    display: block;
+    position: fixed;
+    width: 50%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 40px;
+}
+.pop.delPoi{
+    top: 20%;
+    width: 400px;
+}
+
+.pop.route{
+    width: 690px;
+}
+
+.pop-cont > div{
+    margin-bottom: 15px;
+}
+
+.poi-results{
+    min-height: 100px;
+    max-height: 200px;
+    width: 610px;
+    border: 1px solid #E5E5E5;
+    overflow-y: auto;
+}
+
+.poi-results .empty{
+    line-height: 100px;
+    text-align: center;
+}
+
+.poi-results .poi{
+    width: 105px;
+    margin: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: ltr;
+}
+
+.route-pois{
+    min-height: 450px;
+    width: 100%;
+    overflow: auto;
+
+}
+.poi_info{
+    display: none;
+    position: fixed;
+    margin: 1px 0 0 -5px;
+    background-color: #efefef;
+    line-height: 21px;
+    padding: 8px 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    word-break: break-all;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+.poi-name:hover + .poi_info{
+    display: block;
+}
+
+.poi-item{
+    width: 45px;
+    height: 90px;
+    overflow: visible;
+    position: relative;
+    margin: auto;
+}
+.poi-item .circle{
+    background: #303131 center center no-repeat;
+    height: 20px;
+    border-radius: 50%;
+    width: 20px;
+    margin: auto;
+}
+.poi-item .line{
+    height: 70px;
+    width: 20px;
+    margin: auto;
+}
+.line:before {
+    width: 12px;
+    height: 70px;
+    display: block;
+    content: ' ';
+    border-right: 4px solid #ccc;
+}
+.line.enter:before {
+    border-color: #303131;
+}
+
+.route-pois .poi-item:last-child .line{
+    display: none;
+}
+
+.left-side{
+    width: 400px;
+    direction: rtl;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    -webkit-user-select: none;
+}
+.right-side{
+    width: 400px;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    -webkit-user-select: none;
+
+}
+
+.info .edit,
+.info .delete,
+.info .add-up,
+.info .add-down{
+    display: none;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.info:hover .edit,
+.info:hover .delete,
+.info:hover .add-down,
+.info:hover .add-up{
+    display: inline-block;
+}
+.info .edit{
+    background: url(../img/poi-edit.png) left top no-repeat;
+    background-size: contain;
+}
+.info .delete{
+     background: url(../img/poi-delete.png) left top no-repeat;
+     background-size: contain;
+ }
+
+.info .add-down{
+    background: url(../img/icon-route-add.png) left top no-repeat;
+    background-size: contain;
+
+}
+
+.info .add-up{
+    background: url(../img/icon-route-add.png) left top no-repeat;
+    background-size: contain;
+    transform: rotate(180deg);
+}
+
+.timepicker{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.pop-cont > div > label:first-child{
+    width: 68px;
+    direction: rtl;
+    margin-right: 10px;
+}
+#keyWord{
+    height: 30px;
+    padding-left: 5px;
+    width: 200px;
+}
+
+#select-all, #select-all + label{
+    cursor: pointer;
+}
+
+.insert-poi{
+    position: absolute;
+    bottom: 31%;
+    width: 80px;
+    left: -17px;
+    padding: 2px 4px;
+    z-index: 1000;
+    background-color: #444;
+    display: none;
+    border: none;
+}
+
+.line:hover + .insert-poi,
+.insert-poi:hover{
+    display: block;
+    background-color: #444;
+    border: none;
+}
+
+.drag-img{
+    position:absolute;
+    left:-200px;
+    height: 20px;
+    width:20px;
+}
+
+.message-wrapper{
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 50%;
+    top: 40%;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.message-wrapper .message{
+    background-color: rgba(0,0,0,.5);
+    padding: 5px 20px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 0 auto;
+    display: inline-block;
+}
+.summary {
+    margin: 0px auto 40px;
+    font-size: 16px;
+}

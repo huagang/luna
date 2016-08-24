@@ -113,8 +113,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		showPageCollection.updateOne(Filters.eq(FIELD_PAGE_ID, page.getPageId()), new Document("$set", document));
 	}
-	
-	
+
 	
 	/**
 	 * 
