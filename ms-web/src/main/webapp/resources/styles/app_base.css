@@ -792,12 +792,15 @@ video {
     color: #fff;
     z-index: 2;
     font-size: 19px;
-    width: 300px;
-    margin: 0 auto;
+    width: 100%;
+    margin: auto;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     text-decoration: none;
+    /* top: 0; */
+    /* bottom: 0; */
+    /* height: 60px; */
 }
 
 .imglist-title-wrapper {
@@ -808,6 +811,9 @@ video {
     right: 0;
     margin: auto;
     color: #fff;
+    height: 30px;
+}
+.imglist-poi-wrapper .imglist-title-wrapper{
     height: 65px;
 }
 
