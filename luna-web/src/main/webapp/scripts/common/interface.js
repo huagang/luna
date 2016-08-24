@@ -6,12 +6,12 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-var Inter = function() {
+var Inter = function () {
     var host = "/luna-web";
     var context = window.context || "/luna-web",
         apiContext = '';
 
-    var curHost = function() {
+    var curHost = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
@@ -39,7 +39,7 @@ var Inter = function() {
 
     return {
         context: context,
-        getPageUrl: function() {
+        getPageUrl: function () {
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
@@ -47,7 +47,7 @@ var Inter = function() {
                 manageApp: context + '/platform/user'
             };
         },
-        getApiUrl: function() {
+        getApiUrl: function () {
             return {
                 //选择业务的数据
                 selectBusinessPage: context + '/common/business/select', //选择业务的页面 
@@ -361,6 +361,10 @@ var Inter = function() {
                 appCreatePage: {
                     url: context + '/content/app/page',
                     type: 'POST'
+                }, //复制微景展界面
+                appCopyPage: {
+                    url: context + '/content/app/page/copy',
+                    type: 'POST'
                 }, //微景展页面
                 appModifyName: {
                     url: context + '/content/app/page/name/{0}',
@@ -559,4 +563,4 @@ var Inter = function() {
         }
     };
 
-}();
+} ();

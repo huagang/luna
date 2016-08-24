@@ -63,10 +63,16 @@ function creatPageID() {
         $.alert("请先创建app");
         return;
     }
+    var url, sourcePageId = $('#sourcePageId').val();
+    if (sourcePageId) {
+        url = Inter.getApiUrl().appCopyPage;
+    } else {
+        url = Inter.getApiUrl().appCreatePage;
+    }
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
-            'sourcePageId': $('#sourcePageId').val(),
+            'page_id': $('#sourcePageId').val(),
             'page_name': $("#txt-name").val(),
             'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
@@ -75,8 +81,8 @@ function creatPageID() {
             'page_height': document.querySelector('#txtPageHeight').value || '617',
         };
         $.ajax({
-            type: Inter.getApiUrl().appCreatePage.type,
-            url: Inter.getApiUrl().appCreatePage.url,
+            type: url.type,
+            url: url.url,
             // cache: false,
             async: false,
             data: params,

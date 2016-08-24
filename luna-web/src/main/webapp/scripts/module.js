@@ -249,7 +249,7 @@ function createPageListItemHtml(page) {
     pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
     pageHtml.push('<div class="fun-page">');
     if (page.page_code != 'welcome') {
-        pageHtml.push('<a href="#" class="pageCopy" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">复用<i class="icon icon-edit"></i></a>');
+        pageHtml.push('<a href="#" class="pageCopy" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">复用<i class="iconfont icon-copy"></i></a>');
     }
     pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
     if (page.page_code != 'welcome' && page.page_code != 'index') {
