@@ -15,7 +15,7 @@ public interface MsBusinessDAO extends MsBusinessDAOBase {
 	
 	public List<MsBusinessResult> selectBusinessWithFilter(MsBusinessParameter parameter);
 	
-	public int readTotalBusinessCount();
+	public int selectBusinessCountWithFilter(MsBusinessParameter parameter);
 
 	public Map<Integer, String> readBusinessCategoryId(Collection<Integer> businessIds);
 	

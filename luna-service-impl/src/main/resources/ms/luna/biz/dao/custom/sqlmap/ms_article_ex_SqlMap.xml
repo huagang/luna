@@ -26,6 +26,12 @@
             ms_article a left join ms_column b on a.column_id = b.id
             left join ms_business c on a.business_id = c.business_id
         <dynamic prepend="where">
+            <isNotNull prepend="and" property="businessIds">
+                c.business_id in
+                <iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+                    #businessIds[]#
+                </iterate>
+            </isNotNull>
             <isNotEmpty prepend="and" property="keyword">
                 a.title like #keyword#
             </isNotEmpty>

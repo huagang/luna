@@ -460,3 +460,24 @@ a.button.disable:hover{
 .show{
     display: block !important;
 }
+
+
+.message-wrapper{
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 50%;
+    top: 40%;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.message-wrapper .message{
+    background-color: rgba(0,0,0,.5);
+    padding: 5px 20px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 0 auto;
+    display: inline-block;
+}
