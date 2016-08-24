@@ -221,3 +221,10 @@ input[type='text'] {
 	right: -40px;
 	top: 7px;
 }
+
+
+.change-lang {
+	font-size: 14px;
+	float: right;
+}
+
