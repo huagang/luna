@@ -14,52 +14,36 @@
 		<result column="COUNTY_ID" property="county_id" jdbcType="VARCHAR2" />
 		<result column="CATEGORY_NM" property="category_nm" jdbcType="VARCHAR2" />
 		<result column="DEL_FLG" property="del_flg" jdbcType="VARCHAR2" />
-		
-		
+		<result column="BUSINESS_NAME" property="business_name" jdbcType="VARCHAR2" />
+		<result column="BUSINESS_CODE" property="business_code" jdbcType="VARCHAR2" />
+		<result column="BUSINESS_ID" property="business_id" jdbcType="INTEGER" />
+
 	</resultMap>
 	<select id="selectAllMerchantsWithFilter" resultMap="MerchantsResult"
 		parameterClass="ms.luna.biz.dao.custom.model.MerchantsParameter">
-		
+
 		SELECT
-				merchants.merchant_id AS MERCHANT_ID,
-				merchants.merchant_nm AS MERCHANT_NM,
-				merchants.category_id AS CATEGORY_ID,
-				merchants.contact_nm AS CONTACT_NM,
-				merchants.contact_phonenum AS CONTACT_PHONENUM,
-				merchants.salesman_nm AS SALESMAN_NM,
-				merchants.status_id AS STATUS_ID,
-				merchants.province_id AS PROVINCE_ID,
-				merchants.city_id AS CITY_ID,
-				merchants.county_id AS COUNTY_ID,
-				merchants.del_flg AS DEL_FLG,
-				categorys.nm_zh AS CATEGORY_NM
+			MERCHANTS.merchant_id AS MERCHANT_ID,
+			MERCHANTS.merchant_nm AS MERCHANT_NM,
+			MERCHANTS.category_id AS CATEGORY_ID,
+			MERCHANTS.contact_nm AS CONTACT_NM,
+			MERCHANTS.contact_phonenum AS CONTACT_PHONENUM,
+			MERCHANTS.salesman_nm AS SALESMAN_NM,
+			MERCHANTS.status_id AS STATUS_ID,
+			MERCHANTS.province_id AS PROVINCE_ID,
+			MERCHANTS.city_id AS CITY_ID,
+			MERCHANTS.county_id AS COUNTY_ID,
+			MERCHANTS.del_flg AS DEL_FLG,
+			ms_category.nm_zh AS CATEGORY_NM,
+			ms_business.business_id AS BUSINESS_ID,
+			ms_business.business_code AS BUSINESS_CODE,
+			ms_business.business_name AS BUSINESS_NAME
 		FROM
 		(
 			SELECT
-				ms_merchant_manage.merchant_id,
-				ms_merchant_manage.merchant_nm,
-				ms_merchant_manage.category_id,
-				ms_merchant_manage.contact_nm,
-				ms_merchant_manage.contact_phonenum,
-				ms_merchant_manage.salesman_nm,
-				ms_merchant_manage.status_id,
-				ms_merchant_manage.province_id,
-				ms_merchant_manage.city_id,
-				ms_merchant_manage.county_id,
-				ms_merchant_manage.del_flg,
-				ms_merchant_manage.regist_hhmmss
-			FROM
-				ms_merchant_manage
+				*
+			FROM ms_merchant_manage
 			<dynamic prepend="where">
-				<isNotEmpty prepend="and" property="provinceId">
-					province_id = #provinceId#
-				</isNotEmpty>
-				<isNotEmpty prepend="and" property="cityId">
-					city_id = #cityId#
-				</isNotEmpty>
-				<isNotEmpty prepend="and" property="countyId">
-					county_id = #countyId#
-				</isNotEmpty>
 				<isNotEmpty prepend="and" property="likeFilterNm">
 					merchant_nm like #likeFilterNm#
 				</isNotEmpty>
@@ -68,14 +52,10 @@
 			<isNotNull property="range">
 				Limit #min#,#max#
 			</isNotNull>
-		) merchants left join
-		(
-			SELECT
-				ms_category.nm_zh,
-				ms_category.category_id
-			FROM
-				ms_category
-		) categorys ON merchants.category_id=categorys.category_id
+		) MERCHANTS
+		LEFT JOIN ms_category ON MERCHANTS.category_id=ms_category.category_id
+		LEFT JOIN ms_business ON MERCHANTS.merchant_id=ms_business.merchant_id
+
 	</select>
 
 	<select id="countMerchants" resultClass="java.lang.Integer"

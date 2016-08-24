@@ -223,10 +223,14 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				merchant.put("contact_nm", merchantsResult.getContact_nm());
 				merchant.put("contact_phonenum", merchantsResult.getContact_phonenum());
 				merchant.put("salesman_nm", merchantsResult.getSalesman_nm());
-				merchant.put("status_id", merchantsResult.getStatus_id());
+				Byte status_id = Byte.parseByte(merchantsResult.getStatus_id());
+				merchant.put("status", VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
 				merchant.put("province_id", merchantsResult.getProvince_id());
 				merchant.put("city_id", merchantsResult.getCity_id());
 				merchant.put("del_flg", merchantsResult.getDel_flg());
+				merchant.put("business_id", merchantsResult.getBusiness_id());
+				merchant.put("business_name", merchantsResult.getBusiness_name());
+				merchant.put("business_code", merchantsResult.getBusiness_code());
 				if(merchantsResult.getCounty_id() != null){
 					merchant.put("county_id", merchantsResult.getCounty_id());
 				}
@@ -242,7 +246,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 		JSONObject data = new JSONObject();
 		data.put("total", total);
-		data.put("merchants", merchants);
+		data.put("rows", merchants);
 		return FastJsonUtil.sucess("检索成功！", data);
 		//注：新加入province_id，city_id和county_id，作用：编辑商户时的地理位置加载
 	}

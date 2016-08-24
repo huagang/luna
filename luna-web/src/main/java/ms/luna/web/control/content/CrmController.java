@@ -160,39 +160,42 @@ public class CrmController extends BasicController {
             JSONObject result = manageMerchantService.loadMerchants(param.toString());
             MsLogger.debug("method:loadMerchants, result from service: " + result.toString());
 
-            if ("0".equals(result.getString("code"))) {
-                JSONObject data = result.getJSONObject("data");
-                JSONArray arrays = data.getJSONArray("merchants");
-                Integer total = data.getInteger("total");
+            return result.getJSONObject("data");
 
-                resJSON.put("total", total);
-                JSONArray rows = JSONArray.parseArray("[]");
 
-                for (int i = 0; i < arrays.size(); i++) {
-                    JSONObject merchant = arrays.getJSONObject(i);
-
-                    JSONObject row = JSONObject.parseObject("{}");
-                    row.put("merchant_id", merchant.getString("merchant_id")); // 商户id
-                    row.put("merchant_nm", merchant.getString("merchant_nm")); // 商户名称
-                    row.put("category_nm", merchant.getString("category_nm")); // 业务种类
-                    row.put("contact_nm", merchant.getString("contact_nm")); // 联系人名字
-                    row.put("contact_phonenum", merchant.getString("contact_phonenum")); // 联系人电话
-                    row.put("salesman_nm", merchant.getString("salesman_nm")); // 业务员名字
-                    row.put("province_id", merchant.getString("province_id"));
-                    row.put("city_id", merchant.getString("city_id"));
-                    row.put("del_flg", merchant.getString("del_flg"));
-                    Byte status_id = Byte.parseByte(merchant.getString("status_id"));
-                    String status = VbConstant.MERCHANT_STATUS.ConvertStauts(status_id);
-                    row.put("status", status); // 状态
-                    if (merchant.containsKey("county_id")) {
-                        row.put("county_id", merchant.getString("county_id"));
-                    } else {
-                        row.put("county_id", "ALL");
-                    }
-                    rows.add(row);
-                }
-                resJSON.put("rows", rows);
-            }
+//            if ("0".equals(result.getString("code"))) {
+//                JSONObject data = result.getJSONObject("data");
+//                JSONArray arrays = data.getJSONArray("merchants");
+//                Integer total = data.getInteger("total");
+//
+//                resJSON.put("total", total);
+//                JSONArray rows = JSONArray.parseArray("[]");
+//
+//                for (int i = 0; i < arrays.size(); i++) {
+//                    JSONObject merchant = arrays.getJSONObject(i);
+//
+//                    JSONObject row = JSONObject.parseObject("{}");
+//                    row.put("merchant_id", merchant.getString("merchant_id")); // 商户id
+//                    row.put("merchant_nm", merchant.getString("merchant_nm")); // 商户名称
+//                    row.put("category_nm", merchant.getString("category_nm")); // 业务种类
+//                    row.put("contact_nm", merchant.getString("contact_nm")); // 联系人名字
+//                    row.put("contact_phonenum", merchant.getString("contact_phonenum")); // 联系人电话
+//                    row.put("salesman_nm", merchant.getString("salesman_nm")); // 业务员名字
+//                    row.put("province_id", merchant.getString("province_id"));
+//                    row.put("city_id", merchant.getString("city_id"));
+//                    row.put("del_flg", merchant.getString("del_flg"));
+//                    Byte status_id = Byte.parseByte(merchant.getString("status_id"));
+//                    String status = VbConstant.MERCHANT_STATUS.ConvertStauts(status_id);
+//                    row.put("status", status); // 状态
+//                    if (merchant.containsKey("county_id")) {
+//                        row.put("county_id", merchant.getString("county_id"));
+//                    } else {
+//                        row.put("county_id", "ALL");
+//                    }
+//                    rows.add(row);
+//                }
+//                resJSON.put("rows", rows);
+//            }
         } catch (Exception e) {
             MsLogger.error("Failed to search merchants: " + e);
         }
