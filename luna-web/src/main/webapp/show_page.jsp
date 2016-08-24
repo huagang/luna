@@ -186,10 +186,20 @@
                       <input class="form-control" type="number" name="" ng-model="canvas.pano.roll" ng-blur="canvas.changePano()" placeholder="请输入0-360的数字">
                     </div>
                   </div>
-                  <div class="form-group">
+                  <!--<div class="form-group">
                     <input type="checkbox" id="chkGsensor" ng-model="canvas.gravity" ng-click="canvas.changePano()">
                     <lable for="chkGsensor" for="chkGsensor">开启重力感应</lable>
-                  </div>
+                  </div>-->
+                </div>
+                <div class="bg-set clearfix" ng-show="canvas.panoId.length==0">
+                  <label for="">图片背景设置</label>
+                  <select id="" name="" class="form-control" ng-model="canvas.bgAnimaType" ng-options="item.name for item in    canvas.bgAnimaTypeList track by item.id" ng-change="canvas.changeBgAnimaType()">
+                  </select>
+                </div>
+                <div class="bg-set clearfix" ng-show="canvas.panoId.length>0">
+                  <label for="">全景背景设置</label>
+                  <select id="" name="" class="form-control" ng-model="canvas.panoAnimaType" ng-options="item.name for item in   canvas.panoAnimaTypeList track by item.id" ng-change="canvas.changePanoAnimaType()">
+                  </select>
                 </div>
               </div>
               <!-- canvas controller end -->

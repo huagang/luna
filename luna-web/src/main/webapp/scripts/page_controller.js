@@ -430,13 +430,18 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = this.currentComponent.bgimg;
         this.panoId = this.currentComponent.panoId || '';
         this.gravity = this.currentComponent.gravity || false;
+
+        this.bgAnimaTypeList = [{ id: 'none', name: '无动画' }, { id: 'gravity', name: '重力感应' }, { id: 'rtol', name: '从右到左动画' }];
+        this.bgAnimaType = this.currentComponent.bgAnimaType || this.bgAnimaTypeList[0];
+
+        this.panoAnimaTypeList = [{ id: 'none', name: '无动画' }, { id: 'gravity', name: '重力感应' }, { id: 'autoplay', name: '自动播放' }];
+        this.panoAnimaType = this.currentComponent.panoAnimaType || this.panoAnimaTypeList[0];
+
         this.pano = angular.extend(defaultPano, this.currentComponent.pano);
     };
 
     this.changeBackgroundColor = function () {
-
         updatePageComponentsHtml();
-
     };
 
     this.changeBackgroundImg = function () {
@@ -449,10 +454,6 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = '';
         this.currentComponent.bgimg = '';
         updatePageComponentsHtml();
-    };
-
-    this.saveBackgroundImg = function () {
-        this.currentComponent.bgimg = this.backgroundImg;
     };
 
     this.changePano = function ($event) {
@@ -470,10 +471,45 @@ function CanvasController($scope, $rootScope) {
 
         this.currentComponent.panoId = this.panoId;
         this.currentComponent.pano = this.pano;
-        this.currentComponent.gravity = this.gravity;
+        var animaType = '';
+        if (this.panoId.length > 0) {
+            animaType = this.panoAnimaType.id;
+        } else {
+            animaType = this.bgAnimaType.id;
+        }
 
+        if (animaType == 'gravity') {
+            this.gravity = true;
+        } else {
+            this.gravity = false;
+        }
+
+        this.currentComponent.gravity = this.gravity;
         updatePageComponentsHtml();
     };
+    /**
+     * 图片背景设置
+     */
+    this.changeBgAnimaType = function () {
+        this.currentComponent.bgAnimaType = this.bgAnimaType;
+
+        // this.currentComponent.gravity = this.gravity;
+        this.changePano();
+
+    };
+    /**
+     * 全景背景设置
+     */
+    this.changePanoAnimaType = function () {
+        this.currentComponent.panoAnimaType = this.panoAnimaType;
+        if (this.panoAnimaType.id == 'gravity') {
+            this.gravity = true;
+        } else {
+            this.gravity = false;
+        }
+        this.changePano();
+    };
+
     this.selectPano = function () {
         $overlay.css("display", "block");
         var $pop_window = $("#pop-selectPano");
