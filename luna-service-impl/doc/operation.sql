@@ -23,6 +23,14 @@ create table `ms_route` (
   KEY `business_id` (`business_id`)
 )ENGINE=InnoDB default charset=utf8 comment='线路表';
 
+# 增加 线路管理 菜单
+insert into luna_menu (`id`,`name`,`code`,`module_id`,`display_order`) values(20,"线路管理","route",4,7);
+insert into luna_role_menu (`role_id`,`menu_id`) values(1,20);
+insert into luna_role_menu (`role_id`,`menu_id`) values(2,20);
+insert into luna_role_menu (`role_id`,`menu_id`) values(3,20);
+insert into luna_role_menu (`role_id`,`menu_id`) values(8,20);
+insert into luna_role_menu (`role_id`,`menu_id`) values(9,20);
+
 CREATE TABLE `luna_goods_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类别id',
   `name` varchar(32) NOT NULL COMMENT '类别名称',

@@ -127,12 +127,16 @@
     		<!-- </div> -->
 			<div class="content-footer">
 				<div class='button-container'>
-					<button class='publish'>发布</button>
+					<button class='publish'>保存并发布</button>
 					<button class='preview'>预览</button>
 					<button class='save'>保存</button>			        
 				</div>	         
 		    </div>
 		</div>
+		<div class="message-wrapper hidden">
+			<p class="message"></p>
+		</div>
+
 		<jsp:include page="/templete/imgCropper.jsp" />
 		<script type='text/javascript'>
 			window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";

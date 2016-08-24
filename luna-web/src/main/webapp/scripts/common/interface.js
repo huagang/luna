@@ -44,7 +44,12 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageApp: context + '/platform/user'
+                manageUser: context + '/platform/user', //
+                routeConfig: context + '/content/route/configuration/{0}',
+                addPoi: context + '/data/poi/addPage',
+                editPoi: context + '/data/poi/initEditPage?poiId={0}',
+                manageRouter: context + '/content/route',
+
             };
         },
         getApiUrl: function () {
@@ -91,7 +96,7 @@ var Inter = function () {
                 merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
-                merchantSuccess: { url: context + "common/merchant/successPage", type: "GET" }, //注册成功页面
+                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
                 crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
@@ -225,7 +230,22 @@ var Inter = function () {
 
 
                 //zclip路径
-                zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf"
+                zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
+
+                // 线路管理
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
+
+                // 商品类目
+                fetchMerchantCat: {url: context + '?offset={0}&limit={1}', type: 'GET'}, // 获取商品类目信息
+                saveMerchantCat: {url: context + '', type: 'PUT'},  // 保存商品类目信息
+                deleteMerchantCat: {url: context + '', type: 'DELETE'},  // 删除商品类目
+                fetchAllMerchatParentCat: {url: context + '', type: 'GET'}, // 获取所有父级商品信息
 
 
             };

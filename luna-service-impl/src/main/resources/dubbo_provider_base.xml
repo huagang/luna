@@ -6,7 +6,6 @@
 						http://code.alibabatech.com/schema/dubbo 
 						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        default-lazy-init="true">
-
     <dubbo:service interface="ms.luna.biz.sc.AuthoritySetService" ref="authoritySetService"/>
     <dubbo:service interface="ms.luna.biz.sc.CategoryService" ref="categoryService"/>
     <dubbo:service interface="ms.luna.biz.sc.LoginService" ref="loginService"/>
@@ -29,5 +28,7 @@
     <dubbo:service interface="ms.luna.biz.sc.MenuService" ref="menuService"/>
     <dubbo:service interface="ms.luna.biz.sc.FarmPageService" ref="farmPageService"/>
     <dubbo:service interface="ms.luna.biz.sc.LunaGoodsCategoryService" ref="lunaGoodsCategoryService"/>
+	<dubbo:service interface="ms.luna.biz.sc.LunaAuthService" ref="lunaAuthService" />
+	<dubbo:service interface="ms.luna.biz.sc.ManageRouteService" ref="manageRouteService" />
 
 </beans>

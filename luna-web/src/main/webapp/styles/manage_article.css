@@ -18,7 +18,8 @@ time：20160324*/
 
 /*主内容区域*/
 
-.edit {
+.edit,
+.publish{
     padding-right: 10px;
 }
 

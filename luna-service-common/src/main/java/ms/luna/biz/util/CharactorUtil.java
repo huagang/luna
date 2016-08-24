@@ -338,6 +338,17 @@ public class CharactorUtil {
 		}
 	}
 
+	/**
+	 * 检查整数序列,如 "1,4,3,56,9"
+	 * @param tags
+	 * @return
+	 */
+	public static boolean checkIntegerList(String tags){
+		Pattern pattern = Pattern.compile("((\\d+),)*(\\d+)");
+		Matcher matcher = pattern.matcher(tags);
+		return matcher.matches();
+	}
+
 	//	public static void main(String[] args) {
 	//		System.out.println(checkAlphaAndNumber("audio,en_name,intro1,intro2,intro3,intro4,lat,lng,sketch,viewall,zh_name,title1,title2,title3,title4", new char[]{'_'}));
 	//	}

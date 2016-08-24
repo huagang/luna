@@ -79,6 +79,8 @@ public class BusinessController extends BasicController {
             if (limit != null) {
                 param.put("max", limit);
             }
+            LunaUserSession user = SessionHelper.getUser(request.getSession());
+            param.put(LunaUserTable.FIELD_ID, user.getUniqueId());
 
             JSONObject result = manageBusinessService.loadBusinesses(param.toString());
             logger.debug(result.toString());

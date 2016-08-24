@@ -1,5 +1,6 @@
 package ms.luna.web.control.common;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageBusinessService;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -48,8 +51,26 @@ public class CommonBusinessController extends BasicController {
         JSONObject businessForSelect = manageBusinessService.getBusinessForSelect(jsonObject);
         ModelAndView modelAndView = null;
         if(businessForSelect.getString("code").equals("0")) {
-            modelAndView = buildModelAndView("select_business");
-            modelAndView.addObject("businessMap", businessForSelect.getJSONObject("data"));
+
+            JSONObject businessMap = businessForSelect.getJSONObject("data");
+            boolean isSingle = false;
+            if(businessMap.size() == 1) {
+                Set<String> keySet = businessMap.keySet();
+                Iterator<String> iterator = keySet.iterator();
+                String next = iterator.next();
+                JSONArray jsonArray = businessMap.getJSONArray(next);
+                if(jsonArray.size() == 1) {
+                    isSingle = true;
+                    modelAndView = buildModelAndView("home");
+                    modelAndView.addAllObjects(jsonArray.getJSONObject(0));
+                }
+
+            }
+            if(! isSingle) {
+                modelAndView = buildModelAndView("select_business");
+                modelAndView.addObject("businessMap", businessMap);
+            }
+
         } else {
             // 没有业务权限的用户直接展示home页
             modelAndView = buildModelAndView("home");

@@ -232,7 +232,7 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
-
+    <jsp:include page="/templete/message.jsp" />
 
 <jsp:include page="/templete/imgCropper.jsp" />
     <script type='text/javascript'>
