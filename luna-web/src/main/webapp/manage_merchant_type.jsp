@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_merchant_type.css">
 </head>
-<body>
+<body ng-app="merchantType" ng-controller="MerchantType as cate">
 <div class="container-fluid">
   <!--通用导航栏 start-->
   <jsp:include page="/templete/header.jsp"/>
@@ -40,7 +40,12 @@
         <div class="main">
           <div class="main-hd"><h3>商品类目管理</h3></div>
           <div class="main-bd">
-
+            <div class="search">
+              <input type="text" class="search-txt" placeholder="请输入关键字进行搜索">
+              <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
+              <button type="button" class="btn-search" ng-click="cate.search()">搜 索</button>
+              <button type="button" class="add"></button>
+            </div>
           </div>
         </div>
       </div>

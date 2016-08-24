@@ -14,9 +14,6 @@ function MerchantType($scope, $http){
     // 操作 初始化参数以及拉取数据
     vm.init = init;
 
-    // 操作 改变页面状态 用于切换不同弹出框的显示
-    vm.changeState = changeState;
-
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
     vm.checkValid = checkValid;
 
@@ -72,11 +69,6 @@ function MerchantType($scope, $http){
 
         vm.fetchMerchatTypeData();
         vm.fetchParentCat();
-    }
-
-    // 操作 改变页面状态 用于切换不同弹出框的显示
-    function changeState(state){
-        vm.state = state;
     }
 
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
