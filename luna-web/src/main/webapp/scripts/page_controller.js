@@ -587,6 +587,22 @@ function ImgListController($scope, $rootScope, $http) {
                 self.firstPoiList = reArr;
             }
         });
+        if (this.content.firstPoi && this.content.firstPoi.id) {
+            var firstPoiId = this.content.firstPoi.id;
+            getPoiTypeListByPoiAndBid(firstPoiId, function (res) {
+                if (res.data) {
+                    var reArr = [];
+                    for (var i = 0; i < res.data.categorys.length; i++) {
+                        reArr.push({
+                            'name': res.data.categorys[i].category_name,
+                            'id': res.data.categorys[i].category_id
+                        });
+                    }
+                    self.poiTypeList = reArr;
+                    scope.$apply();
+                }
+            });
+        }
         this.changeFirstPoi = function () {
             var _self = this;
             if (this.content.firstPoi) {
