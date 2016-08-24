@@ -116,7 +116,9 @@ function MerchantType($scope, $http){
 
     }
 
+    function handleAbbrChange(){
 
+    }
 
     function showMessage(msg){
         vm.msgEle.removeClass('hidden');
@@ -133,7 +135,16 @@ function MerchantType($scope, $http){
             method: vm.apiUrls.fetchMerchantCat.type
         }).then(function(res){
             if(res.data.code === '0'){
-                vm.categoryData = res.data.data;
+                vm.originData = res.data.data;
+
+                vm.categoryData = [];
+                // 将所有类目层级展开并顺序加到categoryData中
+                var data = $.extend(true, [], res.data.data);
+                for(var i=0; i < data.length; i++){
+
+                }
+
+
                 // vm.parentCat = res.data.data.parentCat;
             } else{
                 vm.showMessage('获取商品类目列表失败');

@@ -21,6 +21,7 @@
   <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
   <title>皓月平台</title>
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.bootstrap3.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_merchant_type.css">
 </head>
@@ -128,6 +129,7 @@
   </script>
   <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
   <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+  <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/manage_merchant_type.js"></script>
