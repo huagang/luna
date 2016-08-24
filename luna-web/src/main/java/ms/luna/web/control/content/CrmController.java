@@ -351,20 +351,11 @@ public class CrmController extends BasicController {
             }
 
             JSONObject result = manageMerchantService.createMerchant(param.toString());
-            String code = result.getString("code");
-            if ("0".equals(code)) {
-                return FastJsonUtil.sucess("success");
-            } else if ("1".equals(code)) {
-                return FastJsonUtil.error("3", "用户重名(下手慢了),merchant_nm:" + merchant_nm);
-            } else if ("2".equals(code)) {
-                return FastJsonUtil.error("4", "业务员不存在！salesman_nm:" + salesman_nm);
-            } else {
-                return FastJsonUtil.error("-1", "编辑失败！");
-            }
-
+            MsLogger.debug(result.toString());
+            return result;
         } catch (Exception e) {
             MsLogger.error("创建商户失败." + e.getMessage());
-            return FastJsonUtil.error("-1", "创建失败！");
+            return FastJsonUtil.error("-1", "创建商户失败！");
         }
     }
 
@@ -476,51 +467,21 @@ public class CrmController extends BasicController {
             JSONObject param = JSONObject.parseObject("{}");
             param.put("merchant_id", merchantId);
 
-            JSONObject results = manageMerchantService.loadMerchantById(param.toString());
-            MsLogger.debug("method:loadMerchantById, result from service: " + results.toString());
-
-            if ("0".equals(results.getString("code"))) {
-                JSONObject result = results.getJSONObject("data");
-                JSONObject merchant = JSONObject.parseObject("{}");
-                merchant.put("merchant_id", result.getString("merchant_id"));
-                merchant.put("merchant_nm", result.getString("merchant_nm"));
-                merchant.put("merchant_phonenum", result.getString("merchant_phonenum"));
-                merchant.put("category_id", result.getString("category_id"));
-                merchant.put("province_id", result.getString("province_id"));
-                merchant.put("city_id", result.getString("city_id"));
-                merchant.put("merchant_addr", result.getString("merchant_addr"));
-                merchant.put("merchant_info", result.getString("merchant_info"));
-                merchant.put("contact_nm", result.getString("contact_nm"));
-                merchant.put("contact_phonenum", result.getString("contact_phonenum"));
-                merchant.put("contact_mail", result.getString("contact_mail"));
-                merchant.put("salesman_id", result.getString("salesman_id"));
-                merchant.put("salesman_nm", result.getString("salesman_nm"));
-                merchant.put("status_id", result.getString("status_id"));
-                if (result.containsKey("lat")) {
-                    merchant.put("lat", result.getString("lat"));
-                } else {
-                    merchant.put("lat", "");
-                }
-                if (result.containsKey("lng")) {
-                    merchant.put("lng", result.getString("lng"));
-                } else {
-                    merchant.put("lng", "");
-                }
-                if (result.containsKey("county_id")) {
-                    merchant.put("county_id", result.getString("county_id"));
-                } else {
-                    merchant.put("county_id", "ALL");
-                }
-                if (result.containsKey("resource_content")) {
-                    merchant.put("resource_content", result.getString("resource_content"));
-                } else {
-                    merchant.put("resource_content", "");
-                }
-                return FastJsonUtil.sucess("加载成功！", merchant);
-            } else {
-                return FastJsonUtil.error("1", "加载失败！");
+            JSONObject result = manageMerchantService.loadMerchantById(param.toString());
+            MsLogger.debug("method:loadMerchantById, result from service: " + result.toString());
+            if (!result.containsKey("lat")) {
+                result.put("lat", "");
             }
-
+            if (!result.containsKey("lng")) {
+                result.put("lng", "");
+            }
+            if (!result.containsKey("county_id")) {
+                result.put("county_id", "ALL");
+            }
+            if (!result.containsKey("resource_content")) {
+                result.put("resource_content", "");
+            }
+            return result;
         } catch (Exception e) {
             MsLogger.error("Failed to load merchant:" + e.getMessage());
             return FastJsonUtil.error("-1", "Failed to load merchant");
@@ -618,7 +579,6 @@ public class CrmController extends BasicController {
     @ResponseBody
     public JSONObject editMerchant(HttpServletRequest request) throws IOException {
         try {
-
             String merchant_id = request.getParameter("merchant_id_edit"); // 商户id
             String contact_nm = request.getParameter("contact_nm_edit"); // 联系人名字
             String contact_phonenum = request.getParameter("contact_phonenum_edit");// 联系人手机
@@ -633,42 +593,57 @@ public class CrmController extends BasicController {
             String salesman_nm = request.getParameter("salesman_edit");
             String county_id = request.getParameter("county_edit");// 区县id
 
+            String businessName = RequestHelper.getString(request, "business_name");
+            String businessCode = RequestHelper.getString(request, "business_code");
+
+            businessName = "新建业务测试";
+            businessCode = "xinjianyewu";
+
+            if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
+                return FastJsonUtil.error(-1, "业务名称长度不合法");
+            }
+            if(StringUtils.isBlank(businessCode) || businessCode.length() > 16) {
+                return FastJsonUtil.error(-1, "业务简称长度不合法");
+            }
             String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum,
                     category_id, province_id, city_id, county_id, merchant_addr, status_id, salesman_nm);
-            // 输入校验通过
-            if (inputInfo.equals("")) {
-                JSONObject param = JSONObject.parseObject("{}");
-
-                param.put("contact_nm", contact_nm);
-                param.put("contact_phonenum", contact_phonenum);
-                param.put("contact_mail", contact_mail);
-                param.put("merchant_id", merchant_id);
-                param.put("merchant_nm", merchant_nm);
-                param.put("merchant_phonenum", merchant_phonenum);
-                param.put("category_id", category_id);
-                param.put("province_id", province_id);
-                param.put("city_id", city_id);
-                param.put("merchant_addr", merchant_addr);
-                param.put("status_id", status_id);
-                param.put("salesman_nm", salesman_nm);
-                if (!county_id.equals("ALL")) {
-                    param.put("county_id", county_id);
-                }
-                JSONObject result = manageMerchantService.updateMerchantById(param.toString());
-                MsLogger.debug("method:updateMerchantById, result from service: " + result.toString());
-
-                String code = result.getString("code");
-                if ("0".equals(code)) {
-                    return FastJsonUtil.sucess("编辑成功！");
-                } else if ("1".equals(code)) {
-                    return FastJsonUtil.error("3", "用户重名（下手慢了）,merchant_nm:" + merchant_nm);
-                } else if ("2".equals(code)) {
-                    return FastJsonUtil.error("4", "业务员不存在！salesman_nm:" + salesman_nm);
-                } else {
-                    return FastJsonUtil.error("-1", "编辑失败！");
-                }
-            } else {
+            if(!"".equals(inputInfo)) {
                 return FastJsonUtil.error("1", "校验错误！");
+            }
+
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject param = JSONObject.parseObject("{}");
+
+            param.put("contact_nm", contact_nm);
+            param.put("contact_phonenum", contact_phonenum);
+            param.put("contact_mail", contact_mail);
+            param.put("merchant_id", merchant_id);
+            param.put("merchant_nm", merchant_nm);
+            param.put("merchant_phonenum", merchant_phonenum);
+            param.put("category_id", category_id);
+            param.put("province_id", province_id);
+            param.put("city_id", city_id);
+            param.put("merchant_addr", merchant_addr);
+            param.put("status_id", status_id);
+            param.put("salesman_nm", salesman_nm);
+            param.put("county_id", !"ALL".equals(county_id)? county_id : null);
+
+            param.put("business_name", businessName);
+            param.put("business_code", businessCode);
+            param.put("unique_id", user.getUniqueId());
+
+            JSONObject result = manageMerchantService.updateMerchantById(param.toString());
+            MsLogger.debug("method:updateMerchantById, result from service: " + result.toString());
+
+            String code = result.getString("code");
+            if ("0".equals(code)) {
+                return FastJsonUtil.sucess("编辑成功！");
+            } else if ("1".equals(code)) {
+                return FastJsonUtil.error("3", "用户重名（下手慢了）,merchant_nm:" + merchant_nm);
+            } else if ("2".equals(code)) {
+                return FastJsonUtil.error("4", "业务员不存在！salesman_nm:" + salesman_nm);
+            } else {
+                return FastJsonUtil.error("-1", "编辑失败！");
             }
         } catch (Exception e) {
             return FastJsonUtil.error("-1", "Failed to edit merchant, " + e);
@@ -789,8 +764,8 @@ public class CrmController extends BasicController {
                               String county_id, String merchant_addr, String status_id, String salesman_nm) {
 
         String inputInfo = checkContactNm(contact_nm) + checkMerchantNm(merchant_nm) + checkCategoryId(category_id)
-                + checkProvinceId(province_id) + checkCityId(city_id) + checkCountyId(county_id) + checkMerchantAddr(merchant_addr)
-                + checkStatusId(status_id) + checkSalesmanNm(salesman_nm);
+                + checkProvinceId(province_id) + checkCityId(city_id) + checkMerchantAddr(merchant_addr)
+                + checkStatusId(status_id) + checkSalesmanNm(salesman_nm); // + checkCountyId(county_id)
 
         // 如果邮箱输入不为空，则检测邮箱
         if (contact_mail == null) {
