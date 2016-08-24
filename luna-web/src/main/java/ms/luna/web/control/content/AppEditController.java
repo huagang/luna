@@ -397,10 +397,10 @@ public class AppEditController extends BasicController {
     /**
      * 单页复用
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/page/{page_id}")
+    @RequestMapping(method = RequestMethod.POST, value = "/page/copy")
     @ResponseBody
     public JSONObject duplicateNewPage(
-            @PathVariable("page_id") String pageId,
+            @RequestParam(required = true, value = "page_id") String pageId,
             @RequestParam(required = true, value = "page_name") String pageName,
             @RequestParam(required = true, value = "page_code") String pageCode,
             @RequestParam(required = true, value = "page_order") int pageOrder,
