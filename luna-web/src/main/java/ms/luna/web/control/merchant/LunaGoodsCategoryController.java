@@ -1,7 +1,5 @@
 package ms.luna.web.control.merchant;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.LunaGoodsCategoryService;
 import ms.luna.web.control.common.BasicController;
@@ -57,7 +55,7 @@ public class LunaGoodsCategoryController extends BasicController {
     @ResponseBody
     public JSONObject searchCategories(@RequestParam(required = false) Integer offset,
                                     @RequestParam(required = false) Integer limit,
-                                    @RequestParam(required = false) String searchWord) {
+                                    @RequestParam(required = true) String searchWord) {
         JSONObject inData = new JSONObject();
         inData.put("searchWord",searchWord);
         inData.put("offset",offset);
