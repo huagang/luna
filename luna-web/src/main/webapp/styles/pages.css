@@ -1077,5 +1077,75 @@ a.wj-img-clc {
     padding-right: 0;
 }
 
+.imgListContainer {
+    overflow-y: auto;
+    height: 100%;
+    overflow-x: visible;
+    color: #fff;
+}
+
+.imgListContainer a {
+    color: #fff;
+}
+
+.imglist-wrapper,
+.imglist-poi-wrapper {
+    position: relative;
+    margin-top: 5px;
+}
+
+.imglist-wrapper:first-child,
+.imglist-poi-wrapper:first-child {
+    margin-top: 0;
+}
+
+.imglist-li-bg {
+    height: 200px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+
+/*.imglist-poi-wrapper {
+    position: relative;
+}*/
+
+.imglist-title-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    /*color: #fff;*/
+    height: 65px;
+}
+
+.imglist-detail {
+    position: absolute;
+    bottom: 13px;
+    right: 15px;
+    z-index: 2;
+    width: 116px;
+    padding-right: 14px;
+    border-radius: 15px;
+    color: white;
+    background-color: rgba(169, 169, 169, 0.5);
+    line-height: 24px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.imglist-detail::after {
+    content: ' ';
+    display: inline-block;
+    border: 5px solid transparent;
+    border-left: 7px solid white;
+    position: absolute;
+    right: 8px;
+    top: 6.5px;
+}
+
 
 /* 图集组件End */

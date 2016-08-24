@@ -517,12 +517,11 @@ var Inter = function() {
                 articleListByBid: apiContext + 'article/businessId/{0}', //通过业务ID获取
                 articleListByBidAndCid: apiContext + 'article/businessId/{0}/columnIds/{1}', //通过业务ID和栏目Id获取
 
-
                 // poi
                 firstPoiByBid: apiContext + 'servicepoi.do?method=getPoisInFirstLevel&business_id={0}&lang=zh&fields=poi_name,category,boundary', //通过业务ID
                 poiTypeListByBidAndFPoi: apiContext + 'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
-                poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh&fields=poi_name,other_name', //获取业务关系树 一层结构下所有POI数据接口
-                poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}&fields=poi_name&lang=zh', //获取业务关系树 多个一级类别下的数据接口
+                poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}&lang=zh', //获取业务关系树 一层结构下所有POI数据接口
+                poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}', //获取业务关系树 多个一级类别下的数据接口
                 poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
                 poiFilter: {
                     url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}',

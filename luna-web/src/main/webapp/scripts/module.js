@@ -559,7 +559,8 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
             break;
         case "imgList":
             newComponentDom.attr("component-type", comType);
-            newComponentDom.children("div").append('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            var imgListHtml = getImgListHtml(componentObj.content);
+            newComponentDom.children("div").empty().append(imgListHtml.join(''));
             newComponentDom.css({
                 "top": "0px",
                 "left": "0px",
@@ -684,7 +685,8 @@ function updatePageComponentsHtml() {
             if (content == "") {
                 content = imghost + "/img/sample.png";
             }
-            comobj.children("div.con").html('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            var imgListHtml = getImgListHtml(content);
+            comobj.children("div.con").empty().html(imgListHtml.join(''));
             break;
         case "nav":
             if (content != undefined && content.hasOwnProperty("icon")) {
@@ -1121,4 +1123,85 @@ function panoComSelectConfirmCallback(panoId) {
     scope.$apply();
 
     angular.element('#panoPanoId').triggerHandler('blur');
+}
+
+/** 
+ * 获取图片列表的html
+*/
+function getImgListHtml(content) {
+    var arrHtml = [];
+    if (!content.dataType || (content.dataType.id == 1 && (!content.column || !content.column.id)) || (content.dataType.id == 2 && (!content.firstPoi || !content.firstPoi.id))) {
+        arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+        return arrHtml;
+    }
+    switch (content.dataType.id) {
+        case 1:
+            //文章列表
+            var articleList = [];
+            if (content.column.id) {
+                getArticleListByBidAndCid(content.businessId, content.column.id, function (res) {
+                    if (res.code == "0") {
+                        articleList = res.data;
+                    } else {
+                        console.log('请求文章数据失败');
+                    }
+                });
+            } else {
+                articleLis = [];
+            }
+            if (articleList.length > 0) {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
+                for (var i = 0; i < articleList.length; i++) {
+                    arrHtml.push('<li class="imglist-wrapper"><a href="' + articleList[i].url + '"><div class="imglist-wrapper-bg" style="background:url(' + (articleList[i].abstract_pic || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">' + articleList[i].title + '</div></div></a></li>');
+                }
+                arrHtml.push('</ul></div>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            }
+
+            break;
+        case 2:
+            var poiList = [], url;
+            if (content.poiType&&content.poiType.id) {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [objdata.businessId, content.firstPoi.id, content.poiType.id]);
+            } else {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoi, [objdata.businessId, content.firstPoi.id]);
+            }
+            getPoiListByBidAndFidAndTid(url, function (res) {
+                if (res.code == '0') {
+                    poiList = res.data.zh.pois;
+                }
+            });
+            if (poiList.length > 0) {
+                var poiPanoUrl = {
+                    1: Inter.getApiUrl().singlePano,
+                    2: Inter.getApiUrl().multiplyPano,
+                    3: Inter.getApiUrl().customPano,
+                };
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
+                for (var i = 0; i < poiList.length; i++) {
+                    arrHtml.push('<li class="imglist-poi-wrapper">');
+                    arrHtml.push('<a href="' + (poiList[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[poiList[i].panorama.panorama_type_id], [poiList[i].panorama.panorama_id]) : "javascript:;") + '">');
+                    arrHtml.push('<div class="imglist-li-bg" style="background:url(' + (poiList[i].thumbnail || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;">');
+                    arrHtml.push('<div class="imglist-filter"></div>');
+                    arrHtml.push('<div class="imglist-title-wrapper">');
+                    arrHtml.push('<div class="imglist-title">' + poiList[i].poi_name + '</div>');
+                    if (poiList[i].panorama.panorama_type_id) {
+                        arrHtml.push('<div class="imglist-subtitle">点击看全景</div>');
+                    }
+                    arrHtml.push('</div>');
+                    arrHtml.push('</div>');
+                    arrHtml.push('</a>');
+                    arrHtml.push('<a href="' + poiList[i].preview_url + '" class="imglist-detail">点击查看详情</a>');
+                    arrHtml.push('</li>');
+                }
+
+                arrHtml.push('</ul></div>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-poi-wrapper"><a href="javascript:;" > <div class="imglist-li-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;"><div class="imglist-filter"></div><div class="imglist-title-wrapper"><div class="imglist-title">显示POI名称</div></div></div></a><a href="javascript:;" class="imglist-detail">点击查看详情</a></li> ');
+            }
+            //poi列表
+            break;
+    }
+    return arrHtml;
 }

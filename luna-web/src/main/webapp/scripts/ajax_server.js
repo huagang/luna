@@ -66,7 +66,7 @@ function creatPageID() {
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
-            'sourcePageId':$('#sourcePageId').val(),
+            'sourcePageId': $('#sourcePageId').val(),
             'page_name': $("#txt-name").val(),
             'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
@@ -665,7 +665,7 @@ function getColumnListByBid(successCallback) {
  * @param {any} firstPoiId
  * @param {any} successCallback
  */
-function getPoiTypeListByPoiAndBid(firstPoiId,successCallback) {
+function getPoiTypeListByPoiAndBid(firstPoiId, successCallback) {
     $.get(Util.strFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [objdata.businessId, firstPoiId]), function (res) {
         if (res.code == '0') {
             successCallback(res);
@@ -681,13 +681,55 @@ function getPoiTypeListByPoiAndBid(firstPoiId,successCallback) {
  * @param {any} successCallback
  */
 function getFirstPoiListByBid(successCallback) {
-    $.get(Util.strFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId]),function (res) {
+    $.get(Util.strFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId]), function (res) {
         if (res.code == '0') {
             if (res.data) {
                 successCallback(res);
             }
         } else {
             alert(ErrCode.get(res.code));
+        }
+    });
+}
+/**
+ * 根据业务ID和栏目获取文章列表数据
+ */
+function getArticleListByBidAndCid(bid, cid, successCallback) {
+    if (cid) {
+        $.ajax({
+            type: 'GET',
+            url: Util.strFormat(Inter.getApiUrl().articleListByBidAndCid, [bid, cid]),
+            async: false,
+            success: function (res) {
+                if (successCallback) {
+                    successCallback(res);
+                }
+            },
+            error: function (res) {
+                console.log('请求文章数据失败');
+                console.log(res);
+            }
+        });
+    } else {
+        successCallback([]);
+    }
+}
+/**
+ * 根据业务iD和一级POi和类别ID获取数据
+ */
+function getPoiListByBidAndFidAndTid(url, successCallback) {
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: function (res) {
+            if (successCallback) {
+                successCallback(res);
+            }
+        },
+        error: function (res) {
+            console.log('请求POI数据失败');
+            console.log(res);
         }
     });
 }

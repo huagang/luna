@@ -605,6 +605,7 @@ function ImgListController($scope, $rootScope, $http) {
                 _self.poiTypeList = [];
             }
             this.currentComponent.content.firstPoi = this.content.firstPoi;
+            updatePageComponentsHtml();
         };
     };
 
@@ -613,7 +614,10 @@ function ImgListController($scope, $rootScope, $http) {
      */
     this.changeDataType = function () {
         this.currentComponent.content.dataType = this.content.dataType;
-        console.log(this.content.dataType);
+        this.currentComponent.content.column = this.content.column = {};
+        this.currentComponent.content.poiType = this.content.poiType = {};
+        this.currentComponent.content.column = this.content.firstPoi = {};
+        updatePageComponentsHtml();
     };
 
     /**
@@ -621,6 +625,7 @@ function ImgListController($scope, $rootScope, $http) {
      */
     this.changeColumn = function () {
         this.currentComponent.content.column = this.content.column;
+
         updatePageComponentsHtml();
     };
 
@@ -629,6 +634,7 @@ function ImgListController($scope, $rootScope, $http) {
      */
     this.changePoiType = function () {
         this.currentComponent.content.poiType = this.content.poiType;
+        updatePageComponentsHtml();
     };
 }
 ImgListController.prototype = new InteractComponentController();
