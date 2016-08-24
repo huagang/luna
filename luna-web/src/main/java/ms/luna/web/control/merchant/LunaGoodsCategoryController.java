@@ -34,11 +34,8 @@ public class LunaGoodsCategoryController extends BasicController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView init(@RequestParam(required = false) Integer offset,
-                             @RequestParam(required = false) Integer limit) {
+    public ModelAndView init() {
         ModelAndView modelAndView = new ModelAndView();
-        JSONObject toReturn = getJSONCategories(offset,limit);
-        modelAndView.addObject("data", toReturn);
         modelAndView.setViewName("/manage_merchant_type.jsp");
         return modelAndView;
     }
