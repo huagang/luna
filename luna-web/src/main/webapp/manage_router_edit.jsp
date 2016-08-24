@@ -56,7 +56,7 @@
                             <div class="summary">
                                 <span>旅游景点个数: {{editor.sceneryNum}}</span><br>
                                 <span>总共耗时: {{editor.routeTime}}</span><br>
-                                <span class="blue">温馨提示: 可以拖拽黑点来改变顺序哦</span>
+                                <span class="blue font-14">温馨提示: 可以拖拽黑点来改变顺序哦</span>
                             </div>
                             <div class="poi-item" ng-repeat="item in editor.routeData" data-id="{{item._id}}">
                                 <div class="circle" draggable="draggable"></div>
@@ -131,10 +131,11 @@
                             <label>搜索结果</label>
                             <input type='checkbox' id="select-all" ng-model='editor.filterData.selectAll' ng-change='editor.toggleSelectAll()' />
                             <label for="select-all">全选</label>
+                            <span class="">备注: 已经过滤掉线路正在使用的poi</span>
                         </div>
 
                         <div class="poi-results">
-                            <p class='empty' ng-show="editor.filterData.searched && editor.filterData.poiData.length === 0 ">
+                            <p class='empty ng-hide' ng-show="editor.filterData.searched && (! editor.hasType[editor.filterData.curTagId] || editor.filterData.poiData.length === 0)">
                                 <span>未找到匹配的POI数据，<a target="_blank" href="{{editor.pageUrls.addPoi}}">马上添加</a></span>
                             </p>
                             <div ng-show="editor.filterData.poiData.length > 0" poi-hover-delegate>

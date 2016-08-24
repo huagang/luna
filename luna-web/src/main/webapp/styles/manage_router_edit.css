@@ -16,6 +16,10 @@
     height: 36px;
 }
 
+.font-14{
+    font-size: 14px;
+}
+
 .tags{
     display:inline-block;
     width: 80%;

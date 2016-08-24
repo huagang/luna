@@ -121,7 +121,7 @@
         vm.handleSave = handleSave;
         vm.init();// 初始化
 
-        window.v = vm;
+        window.vm = vm;
 
         function init(){
             vm.urls = Inter.getApiUrl();  //接口url信息
@@ -181,6 +181,7 @@
                 insertId: '',
                 direction: '' // "above" or "below"
             };
+            vm.hasType = {}
             vm.dragData.dragImg = new Image();
             vm.dragData.dragImg.src = window.context + '/img/dragImg.png';
             vm.dragData.dragImg.setAttribute('class', "drag-img");
@@ -315,6 +316,17 @@
                             return true;
                         }
                         return false;
+                    }) || [];
+
+                    vm.hasType = {};
+                    if(vm.filterData.poiData.length > 0){
+                        vm.hasType['ALL'] = true;
+                    }
+                    vm.filterData.poiData.forEach(function(item){
+                        item.tags.forEach(function(foo){
+                            vm.hasType[foo] = true;
+                            console.log(foo);
+                        });
                     });
                     vm.filterData.searched = true;
                 } else{
@@ -416,6 +428,16 @@
                         return false;
                     }
                     return true;
+                });
+
+                vm.hasType = {};
+                if(vm.filterData.poiData.length > 0){
+                    vm.hasType['ALL'] = true;
+                }
+                vm.filterData.poiData.forEach(function(item){
+                    item.tags.forEach(function(foo){
+                        vm.hasType[foo] = true;
+                    });
                 });
 
                 if(vm.dragData.direction && vm.dragData.insertId){
