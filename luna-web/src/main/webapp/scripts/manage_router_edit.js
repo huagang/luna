@@ -409,11 +409,13 @@
 
                 // 获取id list
                 var ids = [],data = [];
-                vm.filterData.poiData.forEach(function(item){
+                vm.filterData.poiData = vm.filterData.poiData.filter(function(item){
                     if(vm.filterData.selectedData[item._id]){
                         ids.push(item._id);
                         data.push(JSON.parse(JSON.stringify(item)));
+                        return false;
                     }
+                    return true;
                 });
 
                 if(vm.dragData.direction && vm.dragData.insertId){
@@ -461,7 +463,7 @@
                     }
                     vm.routeTime = hour + '小时' + minute + '分钟';
                 } else{
-                    vm.routeTime = '信息不完全,无法获取';
+                    vm.routeTime = '时间未填写完全,无法获取';
                 }
             }
         }

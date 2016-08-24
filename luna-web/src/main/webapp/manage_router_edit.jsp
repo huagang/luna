@@ -164,9 +164,9 @@
 
 
                 <!--------------------------删除线路点弹出框 start ------------------------------------->
-                <div class="pop ng-hide" ng-show="editor.state==='deletePoi'">
+                <div class="pop ng-hide delPoi" ng-show="editor.state==='deletePoi'">
                     <div class="pop-title">
-                        <h4>线路点信息设置</h4>
+                        <h4>删除线路点</h4>
                         <a href="javascript:void(0)" class="btn-close" ng-click="editor.changeState('init')"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
                     </div>
                     <div class="pop-cont">

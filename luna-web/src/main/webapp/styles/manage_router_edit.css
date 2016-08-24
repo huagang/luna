@@ -71,9 +71,16 @@
     display: block;
     position: fixed;
     width: 50%;
-    left: 25%;
+    left: 0;
+    right: 0;
+    margin: auto;
     top: 40px;
 }
+.pop.delPoi{
+    top: 20%;
+    width: 400px;
+}
+
 .pop.route{
     width: 690px;
 }
