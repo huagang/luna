@@ -122,7 +122,7 @@
                         <div class="labels">
                             <label>标签</label>
                             <div class="tags">
-                                <button type="button" ng-repeat="tag in  editor.tags" class="btn-tag" ng-class="{current: tag.id == editor.filterData.curTagId}"
+                                <button type="button" ng-repeat="tag in  editor.tags" class="btn-tag button" ng-class="{current: tag.id == editor.filterData.curTagId}"
                                         ng-click ="editor.handleTagChange(tag.id)" tag_id="{{tag.id}}">{{tag.name}}</button>
                             </div>
                         </div>
@@ -138,7 +138,6 @@
                                 <span>未找到匹配的POI数据，<a target="_blank" href="{{editor.pageUrls.addPoi}}">马上添加</a></span>
                             </p>
                             <div ng-show="editor.filterData.poiData.length > 0" poi-hover-delegate>
-
                                 <label ng-repeat="item in editor.filterData.poiData" class='poi'
                                         ng-show="editor.filterData.curTagId === 'ALL' || item.tags.indexOf(editor.filterData.curTagId) > -1">
                                         <input type="checkbox" ng-model="editor.filterData.selectedData[item._id]"/>

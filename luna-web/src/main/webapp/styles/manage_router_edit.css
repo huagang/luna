@@ -22,7 +22,7 @@
     vertical-align: top;
 }
 
-.btn-tag {
+.btn-tag{
     background-color: #fff;
     border: 1px solid #E5E5E5;
     color: #000;
@@ -30,6 +30,7 @@
     margin: 0 5px 10px 0;
 }
 
+.btn-tag:hover,
 .btn-tag.current{
     background-color: #4F6499;
     border: 1px solid #4F6499;
