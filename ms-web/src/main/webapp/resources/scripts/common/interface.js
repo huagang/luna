@@ -7,12 +7,12 @@
  * @update:2016-6-22
  */
 
-var Inter = function() {
+var Inter = function () {
     var curHost = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        } else if(/(192\.168\.\d+\.\d+)/.test(host)){
+        } else if (/(192\.168\.\d+\.\d+)/.test(host)) {
             return 'local-mobile';
         }
         else if (/luna-test/.test(host)) {
@@ -28,11 +28,11 @@ var Inter = function() {
         'online': 'http://luna.visualbusiness.cn/luna-api/'
     };
     var apiContext;
-    if(curHost() === 'local-mobile'){
+    if (curHost() === 'local-mobile') {
         apiContext = 'http://' + location.host + '/';
     }
-    else{
-        apiContext =  apiHost[curHost()];
+    else {
+        apiContext = apiHost[curHost()];
     }
 
     var Context = {
@@ -40,38 +40,48 @@ var Inter = function() {
         'test': '/ms-web',
         'online': '/ms-web',
         'local-mobile': ''
-        }, context = Context[curHost()];
+    }, context = Context[curHost()];
 
 
 
     return {
-        getApiUrl: function() {
+        getApiUrl: function () {
             return {
-            	//文章操作
+                //文章操作
                 uploadImageInArtcle: context + "/data/poi/thumbnail/upload",//上传图片
                 uploadVideoInArtcle: context + "/data/poi/video/upload",//上传视频
 
                 // 业务搜索
-                searchBusiness: context+'/manage/app.do?method=search_business', //搜索业务请求
+                searchBusiness: context + '/manage/app.do?method=search_business', //搜索业务请求
 
                 // 微景展
-                farmAppInfo: {url: context + '', type: 'GET'},
+                farmAppInfo: { url: context + '', type: 'GET' },
+
+                //文章的API
+                getArticleListByBid: { url: apiContext + 'article/businessId/{0}', type: 'GET' }, //根据业务ID 获取数据
+                getArticleListByBidAndColumn: { url: apiContext + 'article/businessId/{0}/columnIds/{1}', type: 'GET' }, //根据业务ID和栏目ids  获取数据
+                
+                //poi列表的获取
+                getPoiListByBidAndFPoi:{url:apiContext+'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}',type:'GET'},  //根据业务和一级poi数据获取
+                getPoiListByBidAndFPoiAndCate:{url:apiContext+'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}',type:'GET'},//根据业务和一级poi数据、一级类别获取数据
 
                 // poi around
-                poiInfo: {url: context + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET'},
-                aroundPois: { url: context + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
-                              type: 'GET'},
+                poiInfo: { url: context + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET' },
+                aroundPois: {
+                    url: context + '/servicepoi.do?method=getPoisAround&latitude={0}&longitude={1}&fields={2}&lang=zh&number={3}&radius={4}',
+                    type: 'GET'
+                },
 
 
                 //全景路径接口
-                singlePano:'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
-                multiplyPano:'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
-                customPano:'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
+                singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
+                multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
+                customPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
 
                 multiplyPanoInfo: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  // 相册信息
 
                 //腾讯导航调用接口
-                qqNavStoEnd:'http://map.qq.com/m/mqq/nav/transport=2&spointy={0}&spointx={1}&epointy={2}&epointx={3}&eword={4}', // 0:开始纬度 1:开始经度 2:结束纬度 3:结束经度 4:终点名称
+                qqNavStoEnd: 'http://map.qq.com/m/mqq/nav/transport=2&spointy={0}&spointx={1}&epointy={2}&epointx={3}&eword={4}', // 0:开始纬度 1:开始经度 2:结束纬度 3:结束经度 4:终点名称
 
 
 
@@ -79,4 +89,4 @@ var Inter = function() {
         }
     };
 
-}();
+} ();

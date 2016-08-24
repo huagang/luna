@@ -1,4 +1,3 @@
-
 //BaseComponet
 componentBaseModelTemplate = {
     x: '',
@@ -48,8 +47,8 @@ componentTextModelTemplate = {
 //图集组件数据模型
 componentImgListModelTemplate = {
     "_id": "",
-    "type": "",
-    "content": '',
+    "type": "imgList",
+    "content": {}, //一个链接地址
     "action": {
         "href": {
             "type": "none",
@@ -73,7 +72,7 @@ componentImgModelTemplate = {
 componentNavModelTemplate = {
     "_id": "",
     "type": "nav",
-    "navType": 0,  // 0 : 从当前位置开始 1:设置起点位置
+    "navType": 0, // 0 : 从当前位置开始 1:设置起点位置
     "content": {
         "icon": "http://cdn.visualbusiness.cn/public/vb/img/samplenav.png",
         "startName": "",
@@ -95,7 +94,9 @@ componentPanoModelTemplate = {
     "content": {
         "icon": "http://cdn.visualbusiness.cn/public/vb/img/samplepano.png",
         "panoId": "",
-        'panoType': { id: 1 }
+        'panoType': {
+            id: 1
+        }
     },
     "action": {
         "href": {
@@ -193,8 +194,9 @@ function creatPageHtml(pageID) {
     var pageHtml = createPageListItemHtml(page);
     $("#list-page").append(pageHtml);
     currentPageId = pageID;
-    //debugger;
-    createNewEelement('canvas', 'create');
+    if (!page.page_content) {//复制过来的自带canvas组件，不需要单独创建了
+        createNewEelement('canvas', 'create');
+    }
 }
 /**
  * 左侧调整顺序
@@ -221,7 +223,8 @@ function reOrderPage() {
  */
 function setPageListHtml(pageList) {
     $("#list-page").empty();
-    var orderedPages = [], page;
+    var orderedPages = [],
+        page;
     for (var key in pageList) {
         page = pageList[key];
         orderedPages[page.page_order] = page.page_id;
@@ -246,8 +249,11 @@ function createPageListItemHtml(page) {
     pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
     pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
     pageHtml.push('<div class="fun-page">');
+    if (page.page_code != 'welcome') {
+        pageHtml.push('<a href="#" class="pageCopy" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">复用<i class="iconfont icon-copy"></i></a>');
+    }
+    pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
     if (page.page_code != 'welcome' && page.page_code != 'index') {
-        pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
         pageHtml.push('<a href="#" class="delete" page_id="' + page.page_id + '" onclick="deletePageDialog(\'' + page.page_id + '\');">删除<i class="icon icon-delete"></i></a>');
     }
     pageHtml.push('</div></div></li>');
@@ -295,10 +301,18 @@ function createNewEelement(componentType, createType) {
             componentModel = componentVideoModelTemplate;
             break;
         case 'tab':
+            if (document.querySelector('[component-type="tab"]')) {
+                alert("不能重复创建页签组件");
+                return;
+            }
             componentType = 'tab';
             componentModel = componentTabModelTemplate;
             break;
         case 'imgList':
+            if (document.querySelector('[component-type="imgList"]')) {
+                alert("不能重复创建图集组件");
+                return;
+            }
             componentType = 'imgList';
             componentModel = componentImgListModelTemplate;
             break;
@@ -347,7 +361,10 @@ function createNewEelement(componentType, createType) {
  */
 function setPageHtml(pageID) {
     var $root = $('#layermain');
-    $('#layermain').html("").css({ "background-color": "#ffffff", 'height': lunaPage.pages[pageID].page_height || '617px' });
+    $('#layermain').html("").css({
+        "background-color": "#ffffff",
+        'height': lunaPage.pages[pageID].page_height || '617px'
+    });
     // 解析json数据
     var jsonData = lunaPage.pages[pageID].page_content;
 
@@ -426,6 +443,8 @@ function updatePageComponents() {
         case "img":
             componentObj.content = $currenthtml.find("img").attr("src");
             break;
+        case "imgList":
+            break;
         case "nav":
             componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
@@ -449,6 +468,15 @@ function updatePageComponents() {
 
     switch ($currenthtml.attr("component-type")) {
         case 'canvas':
+            break;
+        case 'imgList':
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.width());
+            componentObj.height = parseInt($currenthtml.height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
             break;
         case 'tab':
             componentObj.x = parseInt($currenthtml.position().left);
@@ -509,7 +537,12 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
             newComponentDom.attr("component-type", "canvas");
             newComponentDom.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
             newComponentDom.addClass("bg-canvas");
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
             if (componentObj.bgc) {
                 newComponentDom.css("background-color", componentObj.bgc);
             }
@@ -524,6 +557,17 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
         case "img":
             newComponentDom.attr("component-type", "img");
             newComponentDom.children("div").append('<img src="' + (componentObj.content || imghost + '/img/sample.png') + '"/>');
+            break;
+        case "imgList":
+            newComponentDom.attr("component-type", comType);
+            var imgListHtml = getImgListHtml(componentObj.content);
+            newComponentDom.children("div").empty().append(imgListHtml.join(''));
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
             break;
         case "nav":
             newComponentDom.attr("component-type", "nav");
@@ -544,18 +588,16 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
         case "tab":
             newComponentDom.attr("component-type", "tab");
             newComponentDom.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
             newComponentDom.addClass("tabmenu");
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(componentObj.content.tabList);
             newComponentDom.find('.menulist').empty().append(innerHtml);
-            break;
-        case "imgList":
-            newComponentDom.attr("component-type", comType);
-            newComponentDom.children("div").append('<div class="imgListContainer"><div></div></div>');
-            newComponentDom.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
-
-
             break;
         default:
             $.alert("未知的组件类型");
@@ -639,6 +681,13 @@ function updatePageComponentsHtml() {
                 content = imghost + "/img/sample.png";
             }
             comobj.children("div.con").html('<img src="' + content + '"/>');
+            break;
+        case "imgList":
+            if (content == "") {
+                content = imghost + "/img/sample.png";
+            }
+            var imgListHtml = getImgListHtml(content);
+            comobj.children("div.con").empty().html(imgListHtml.join(''));
             break;
         case "nav":
             if (content != undefined && content.hasOwnProperty("icon")) {
@@ -965,6 +1014,9 @@ function getUrlParam(name) {
     return null; //返回参数值
 }
 
+/**
+ * 重置设置界面
+ */
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
     var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
@@ -1015,7 +1067,7 @@ function deletePageDialog(pageID) {
 }
 
 //编辑窗口，和新增共用
-function modify() {
+function modify(e, callType) {
     $overlay.css("display", "block");
     var $pop_window = $("#pop-add");
     var h = $pop_window.height();
@@ -1028,12 +1080,129 @@ function modify() {
         "left": ($width - w) / 2
     });
     resetDialog();
-    $("#modify_page_id").val(currentPageId);
-    $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
-    $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    if (callType == "copy") {
+        $("#sourcePageId").val(currentPageId);
+        $("#txt-name").val('');
+        $("#txt-short").val('');
+    } else {
+        $("#modify_page_id").val(currentPageId);
+        $("#txt-name").val(lunaPage.pages[currentPageId].page_name);
+        $("#txt-short").val(lunaPage.pages[currentPageId].page_code);
+    }
+    $("#txt-time").val(lunaPage.pages[currentPageId].page_time);
     $("#txtPageHeight").val(lunaPage.pages[currentPageId].page_height);
+    lunaPage.pages[currentPageId].page_type = lunaPage.pages[currentPageId].page_type || 1;
     $("[name=pageType][value=" + lunaPage.pages[currentPageId].page_type + "]").trigger('click');
     $("[name=pageType]").each(function (e) {
         $(this).attr('disabled', 'disabled');
     });
+}
+
+/**
+ * 背景全景选择的回调函数
+ * 
+ * @param {any} panoid
+ */
+function panoSelectConfirmCallback(panoId) {
+    var scope = angular.element('#panoId').scope(); //jquery+angular实现
+    scope.canvas.currentComponent.panoId = scope.canvas.panoId = panoId;
+
+    scope.$apply();
+
+    angular.element('#panoId').triggerHandler('blur');
+}
+
+/**
+ * 全景控件全景选择的回调函数
+ * 
+ * @param {any} panoid
+ */
+function panoComSelectConfirmCallback(panoId) {
+    var scope = angular.element('#panoPanoId').scope(); //jquery+angular实现
+    scope.pano.currentComponent.content.panoId = scope.pano.content.panoId = panoId;
+
+    scope.$apply();
+
+    angular.element('#panoPanoId').triggerHandler('blur');
+}
+
+/** 
+ * 获取图片列表的html
+*/
+function getImgListHtml(content) {
+    var arrHtml = [];
+    if (!content.dataType || (content.dataType.id == 1 && (!content.column || !content.column.id)) || (content.dataType.id == 2 && (!content.poiLang || !content.poiLang.id || !content.firstPoi || !content.firstPoi.id))) {
+        arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+        return arrHtml;
+    }
+    switch (content.dataType.id) {
+        case 1:
+            //文章列表
+            var articleList = [];
+            if (content.column.id) {
+                getArticleListByBidAndCid(content.businessId, content.column.id, function (res) {
+                    if (res.code == "0") {
+                        articleList = res.data;
+                    } else {
+                        console.log('请求文章数据失败');
+                    }
+                });
+            } else {
+                articleLis = [];
+            }
+            if (articleList.length > 0) {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
+                for (var i = 0; i < articleList.length; i++) {
+                    arrHtml.push('<li class="imglist-wrapper"><a href="' + articleList[i].url + '"><div class="imglist-wrapper-bg" style="background:url(' + (articleList[i].abstract_pic || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">' + articleList[i].title + '</div></div></a></li>');
+                }
+                arrHtml.push('</ul></div>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            }
+
+            break;
+        case 2:
+            var poiList = [], url;
+            if (content.poiType && content.poiType.id) {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [objdata.businessId, content.firstPoi.id, content.poiType.id]);
+            } else {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoi, [objdata.businessId, content.firstPoi.id]);
+            }
+            getPoiListByBidAndFidAndTid(url, function (res) {
+                if (res.code == '0') {
+                    poiList = res.data[content.poiLang.id].pois;
+                }
+            });
+            if (poiList.length > 0) {
+                var poiPanoUrl = {
+                    1: Inter.getApiUrl().singlePano,
+                    2: Inter.getApiUrl().multiplyPano,
+                    3: Inter.getApiUrl().customPano,
+                };
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
+                for (var i = 0; i < poiList.length; i++) {
+                    arrHtml.push('<li class="imglist-poi-wrapper">');
+                    arrHtml.push('<a href="' + (poiList[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[poiList[i].panorama.panorama_type_id], [poiList[i].panorama.panorama_id]) : "javascript:;") + '">');
+                    arrHtml.push('<div class="imglist-li-bg" style="background:url(' + (poiList[i].thumbnail || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;">');
+                    arrHtml.push('<div class="imglist-filter"></div>');
+                    arrHtml.push('<div class="imglist-title-wrapper">');
+                    arrHtml.push('<div class="imglist-title">' + poiList[i].poi_name + '</div>');
+                    if (poiList[i].panorama.panorama_type_id) {
+                        arrHtml.push('<div class="imglist-subtitle">点击看全景</div>');
+                    }
+                    arrHtml.push('</div>');
+                    arrHtml.push('</div>');
+                    arrHtml.push('</a>');
+                    arrHtml.push('<a href="' + poiList[i].preview_url + '" class="imglist-detail">点击查看详情</a>');
+                    arrHtml.push('</li>');
+                }
+
+                arrHtml.push('</ul></div>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-poi-wrapper"><a href="javascript:;" > <div class="imglist-li-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;"><div class="imglist-filter"></div><div class="imglist-title-wrapper"><div class="imglist-title">显示POI名称</div></div></div></a><a href="javascript:;" class="imglist-detail">点击查看详情</a></li> ');
+            }
+            //poi列表
+            break;
+    }
+    return arrHtml;
 }

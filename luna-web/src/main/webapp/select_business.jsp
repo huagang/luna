@@ -47,7 +47,7 @@
                 </div>
             </c:forEach>
         </div>
-        <p class="home"><a href="<%=request.getContextPath() %>/">稍后再选</a></p>
+        <p class="home hidden"><a href="<%=request.getContextPath() %>/">稍后再选</a></p>
     </div>
 </div>
 <script>
