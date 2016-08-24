@@ -1,6 +1,14 @@
 /**
  * Created by wumengqiang on 16/7/19.
  */
+
+
+/*
+    备注:
+         mode 等于0表示多选 mode等于1表示单选
+         extra_value 等于0表示全选
+
+ */
 (function() {
     angular.module('addUser', []);
     angular
@@ -91,11 +99,20 @@
             vm.roles = [];
             if(window.roleData){
                 try{
-                    vm.userId = location.href.match(/user\/(\w+)/)[1];
+                    vm.userId = location.href.match(/user\/(\w+)/)[1];  // 用户id
                 } catch(e){
-                    vm.userId = '';
+                    vm.userId = undefined;
                 }
             }
+            try{
+                if(roleData && roleData.extra.type === 'business' && roleData.extra.value[0] === 0){
+                    vm.businessSelectAll = true
+                }
+
+            } catch(e){
+
+            }
+
             vm.fetchInviteAuthData();
             vm.fetchBusinessData();
             vm.fetchUserData();
@@ -153,16 +170,18 @@
                 vm.data.module = parseInt(vm.data.module);
                 vm.inviteAuth.some(function (item) {
                     if (item.id === vm.data.module) {
-                        vm.data.extra = {"type": item.extra.type, value:undefined};
                         vm.roles = item.roleArray;
+                        vm.businessSelectAll = false;
+                        // 初始化相应值
+                        vm.data.extra = {"type": item.extra.type, value:undefined};
                         vm.data.business = {};
                         vm.data.role = '';
                         if(vm.roles.length === 1){
                             vm.data.role = vm.roles[0].id;
                         }
 
-
                         if(item.extra.type === 'business'){
+                            // 获知业务是单选还是多选
                             if(item.extra.mode === 0){
                                 vm.choiceType = 'checkbox';
                             } else if(item.extra.mode === 1){
@@ -170,11 +189,13 @@
                             }
                             vm.extraData = item.extra || {};
                         } else{
+                            // 非业务类型 获取选项值
                             vm.choiceType = '';
                             vm.extraData = item.extra || {};
                             var keys = Object.keys(vm.extraData.options);
                             vm.extraData.optionLength = keys.length;
                             if(vm.extraData.optionLength === 1){
+                                // 如果选项只有一个, 自动选择该值
                                 vm.data.extra.value = keys[0];
                                 vm.extraData.option = vm.extraData.options[keys[0]];
                             }
@@ -203,11 +224,8 @@
             if (vm.choiceType === 'checkbox' && extra_value === 0) {
                 // 全选
                 vm.businessSelectAll = true;
-                Object.keys(vm.business).forEach(function (item) {
-                    vm.business[item].forEach(function (subItem) {
-                        vm.data.business[subItem.business_id] = 'checked';
-                    });
-                });
+            } else{
+                vm.businessSelectAll = false;
             }
         }
 
@@ -232,16 +250,11 @@
                     vm.data.extra.value = [0];
                     return;
                 }
-                var length = 0;
                 Object.keys(vm.data.business).forEach(function(item, index) {
                     if(vm.data.business[item]){
                         vm.data.extra.value.push(parseInt(item));
-                        length += 1;
                     }
                 });
-                if(length === vm.businessLength){
-                    vm.data.extra.value = [0];
-                }
             }
         }
 
@@ -398,7 +411,7 @@
 
         // 获取业务信息
         function fetchBusinessData(){
-            var req  = vm.userId ? vm.apiUrls.getBusinessListForEdit : vm.apiUrls.getBusinessList;
+            var req = vm.userId ? vm.apiUrls.getBusinessListForEdit : vm.apiUrls.getBusinessList;
             $http({
                 url: req.url.format(vm.userId),
                 method: req.type
@@ -407,7 +420,8 @@
                     vm.business = res.data.data;
                     vm.data.business = {};
                     // 设置已选中业务
-                    vm.businessLength = 0;
+                    vm.businessLength = 0; // 用于计算business数量
+
                     Object.keys(vm.business).forEach(function(item, index){
                         (vm.business[item] || []).forEach(function(item, index){
                             if(vm.userId){
@@ -416,8 +430,8 @@
                             vm.businessLength += 1;
                         });
                     });
-                    console.log(vm.data.business);
-                    if(vm.businessLength === 1){
+
+                    if(vm.businessLength === 1){ // business长度为1时,自动选择,页面只显示文字
                         var business = vm.business[Object.keys(vm.business)[0]][0];
                         vm.data.business[business.business_id] = 'checked';
                         vm.businessName = vm.business[Object.keys(vm.business)[0]][0].business_name;
