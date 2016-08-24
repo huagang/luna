@@ -393,4 +393,56 @@ public class AppEditController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "发布失败");
         }
     }
+
+    /**
+     * 单页复用
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/page/copy")
+    @ResponseBody
+    public JSONObject duplicateNewPage(
+            @RequestParam(required = true, value = "page_id") String pageId,
+            @RequestParam(required = true, value = "page_name") String pageName,
+            @RequestParam(required = true, value = "page_code") String pageCode,
+            @RequestParam(required = true, value = "page_order") int pageOrder,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (StringUtils.isBlank(pageName)) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "页面名称不能为空！");
+        }
+        if (!CharactorUtil.hasOnlyChineseChar(pageName)) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "名称只能由汉字组成！");
+        }
+        if (pageName.length() < 2) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "名称不能少于2个汉字！");
+        }
+        if (pageName.length() > 32) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "名称不能超过32个汉字！");
+        }
+        if (StringUtils.isBlank(pageCode)) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "页面code不能为空！");
+        }
+        if (!CharactorUtil.checkAlphaAndNumber(pageCode, new char[]{})) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "code只能由半角数字和小写字母组成！");
+        }
+        if (pageCode.getBytes().length < 2) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "code不能少于2个字符！");
+        }
+        if (pageCode.getBytes().length > 32) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "code不能超过32个字符！");
+        }
+
+        JSONObject params = new JSONObject();
+        params.put("page_name", pageName);
+        params.put("page_code", pageCode);
+        params.put("page_order", pageOrder);
+        params.put("page_id", pageId);
+        try {
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = msShowPageService.duplicateOnePage(params.toString(), user.getLunaName());
+            return result;
+        } catch (Exception e) {
+            logger.error("Failed to add new page", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "添加页面失败");
+        }
+    }
 }
