@@ -534,6 +534,14 @@
                                         </select>
                               </div>
                           </div>
+                           <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
+                              <label for="" class="fw-normal col-md-3 text-right plr0">语言:</label>
+                              <div class="col-md-8">
+                                  <select class="" name="poiLang" ng-model="imgList.content.poiLang" required="required" ng-options="item.name for item in imgList.langList track by item.id" ng-change="imgList.changePoiLang()">
+                                    <option value="">请选择</option>
+                                    </select>
+                              </div>
+                          </div>
                           <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
                               <label for="" class="fw-normal col-md-3 text-right plr0">一级POI:</label>
                               <div class="col-md-8">
@@ -1269,7 +1277,16 @@
                           </select>
                         </div>-->
                       </div>
+                      <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'||menuTab.currentTab.type == 'singlePoi' ">
+                        <div>语言
+                          <select name="" id="" ng-model="menuTab.currentTab.poiLang" ng-change="menuTab.changeLang($evnet)">
+                              <option ng-repeat='item in menuTab.langList track by item.id' value='{{item.id}}'>{{item.name}}
+                              </option>
+                          </select>
+                        </div>
+                      </div>
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'">
+                     
                         <div>一级Poi
                           <select name="" id="" ng-model="menuTab.currentTab.firstPoiId" ng-change="menuTab.changeFirstPoi($evnet)">
                                             <option ng-repeat='poi in menuTab.firstPoiList track by poi.poiName' value='{{poi.poiId}}'>{{poi.poiName}}

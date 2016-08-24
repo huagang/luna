@@ -764,15 +764,19 @@ video {
 .con_imgList {
     overflow-y: scroll;
 }
+
 .con_imgList a {
-    color:#fff;
+    color: #fff;
 }
-.imglist-li-wrapper {
+
+.imglist-li-wrapper,
+.imglist-poi-wrapper {
     position: relative;
     margin: 5px auto 0;
 }
 
-.imglist-li-wrapper:first-child {
+.imglist-li-wrapper:first-child,
+.imglist-poi-wrapper:first-child {
     margin-top: 0;
 }
 
@@ -813,10 +817,6 @@ video {
     position: absolute;
     top: 0;
     background-color: rgba(27, 27, 31, .4);
-}
-
-.imglist-poi-wrapper {
-    position: relative;
 }
 
 .imglist-detail {

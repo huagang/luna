@@ -610,8 +610,9 @@ $(document).ready(function () {
                 });
             } else {
                 this.getPoiList(this.value.content, function (res) {
+                    console.log(that.value);
                     var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
-                    var arrdata = res.data.zh.pois;
+                    var arrdata = res.data[that.value.content.poiLang.id].pois;
                     var poiPanoUrl = {
                         1: Inter.getApiUrl().singlePano,
                         2: Inter.getApiUrl().multiplyPano,
@@ -937,17 +938,18 @@ $(document).ready(function () {
         function fetchSingleData(item, index) {
             switch (item.type) {
                 case 'singlePoi':
+                    var poiLangId = item.poiLang;
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoiById',
                         type: 'GET',
-                        data: { poi_id: item.firstPoiId, lang: 'zh' },
+                        data: { poi_id: item.singlePoiId },
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data.zh;
+                                    that.data[index] = data.data[poiLangId];
                                     that.updateContent();
                                 } else {
-                                    that.data[index] = data.data.zh;
+                                    that.data[index] = data.data[poiLangId];
                                 }
 
                             }
@@ -972,21 +974,23 @@ $(document).ready(function () {
                     });
                     break;
                 case 'poiList':
+                    var poiLangId = item.poiLang;
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
                         type: 'GET',
                         data: {
                             business_id: window.business_id,
                             poi_id: item.firstPoiId,
-                            category_id: item.poiTypeId
+                            category_id: item.poiTypeId,
+                            // lang:item.poiLang.id,
                         },
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data.zh || data.data.en;
+                                    that.data[index] = data.data[poiLangId];
                                     that.updateContent();
                                 } else {
-                                    that.data[index] = data.data.zh || data.data.en;
+                                    that.data[index] = data.data[poiLangId];
                                 }
                             }
                         },

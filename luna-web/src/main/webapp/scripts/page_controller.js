@@ -558,6 +558,8 @@ function ImgListController($scope, $rootScope, $http) {
             { id: 1, name: "文章列表" },
             { id: 2, name: "poi列表" }
         ];
+        this.langList = lunaConfig.poiLang;
+
         getColumnListByBid(function (res) {
             if (res.data) {
                 var reArr = [];
@@ -616,7 +618,8 @@ function ImgListController($scope, $rootScope, $http) {
         this.currentComponent.content.dataType = this.content.dataType;
         this.currentComponent.content.column = this.content.column = {};
         this.currentComponent.content.poiType = this.content.poiType = {};
-        this.currentComponent.content.column = this.content.firstPoi = {};
+        this.currentComponent.content.firstPoi = this.content.firstPoi = {};
+        this.currentComponent.content.poiLang = this.content.poiLang = {};
         updatePageComponentsHtml();
     };
 
@@ -634,6 +637,13 @@ function ImgListController($scope, $rootScope, $http) {
      */
     this.changePoiType = function () {
         this.currentComponent.content.poiType = this.content.poiType;
+        updatePageComponentsHtml();
+    };
+    /**
+     * 改变poi语言类型
+     */
+    this.changePoiLang = function () {
+        this.currentComponent.content.poiLang = this.content.poiLang;
         updatePageComponentsHtml();
     };
 }
@@ -846,6 +856,11 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
             this.changeMenuTab('', 0);
         }
 
+        this.langList = [{
+            'poiName': '请选择',
+            'poiId': ''
+        }].concat(lunaConfig.poiLang);
+
         $$scope.$on('handleBroadcast', function () {
             _self.currentTab.icon.customer = customerMenuTabIcon.iconGroup;
             updatePageComponentsHtml();
@@ -940,80 +955,7 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
             }];
 
         //图标选择初始化
-        this.iconList = [{
-            name: '概况',
-            code: 'profile',
-            type: 'default',
-        }, {
-                name: '交通',
-                code: 'traffic',
-                type: 'default',
-            }, {
-                name: '名人',
-                code: 'celebrity',
-                type: 'default',
-            }, {
-                name: '民族',
-                code: 'nation',
-                type: 'default',
-            }, {
-                name: '景点',
-                code: 'attraction',
-                type: 'default',
-            }, {
-                name: '食物',
-                code: 'delicacy',
-                type: 'default',
-            }, {
-                name: '酒店',
-                code: 'lodge',
-                type: 'default',
-            }, {
-                name: '活动',
-                code: 'huodong',
-                type: 'default',
-            }, {
-                name: '溯源',
-                code: 'suyuan',
-                type: 'default',
-            }, {
-                name: '特产',
-                code: 'techan',
-                type: 'default',
-            }, {
-                name: '文学',
-                code: 'wenxue',
-                type: 'default',
-            }, {
-                name: '沿革',
-                code: 'yange',
-                type: 'default',
-            }, {
-                name: '遗迹',
-                code: 'yiji',
-                type: 'default',
-            }, {
-                name: '自然环境',
-                code: 'ziranhuanjing',
-                type: 'default',
-            }, {
-                name: '地理特征',
-                code: 'dilitezheng',
-                type: 'default',
-            }, {
-                name: '风情',
-                code: 'fengqing',
-                type: 'default',
-            }, {
-                name: '文字',
-                code: 'text',
-                type: 'text',
-            }];
-        // {
-        //     name: '自定义图标',
-        //     code: 'customer',
-        //     type: 'customer',
-        // }
+        this.iconList = lunaConfig.menuTabIcon;
     };
 
     //修改头图
@@ -1219,6 +1161,11 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
             $(element).trigger('keyup');
             console.log(element.value);
         }, this);
+    };
+
+    //初始化语言事件
+    this.changeLang = function () {
+        this.currentComponent.content.tabList = this.content.tabList;
     };
 }
 

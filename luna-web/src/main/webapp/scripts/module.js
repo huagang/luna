@@ -1131,7 +1131,7 @@ function panoComSelectConfirmCallback(panoId) {
 */
 function getImgListHtml(content) {
     var arrHtml = [];
-    if (!content.dataType || (content.dataType.id == 1 && (!content.column || !content.column.id)) || (content.dataType.id == 2 && (!content.firstPoi || !content.firstPoi.id))) {
+    if (!content.dataType || (content.dataType.id == 1 && (!content.column || !content.column.id)) || (content.dataType.id == 2 && (!content.poiLang || !content.poiLang.id || !content.firstPoi || !content.firstPoi.id))) {
         arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
         return arrHtml;
     }
@@ -1170,7 +1170,7 @@ function getImgListHtml(content) {
             }
             getPoiListByBidAndFidAndTid(url, function (res) {
                 if (res.code == '0') {
-                    poiList = res.data.zh.pois;
+                    poiList = res.data[content.poiLang.id].pois;
                 }
             });
             if (poiList.length > 0) {
