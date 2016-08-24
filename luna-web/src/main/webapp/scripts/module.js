@@ -194,8 +194,9 @@ function creatPageHtml(pageID) {
     var pageHtml = createPageListItemHtml(page);
     $("#list-page").append(pageHtml);
     currentPageId = pageID;
-    //debugger;
-    createNewEelement('canvas', 'create');
+    if (!page.page_content) {//复制过来的自带canvas组件，不需要单独创建了
+        createNewEelement('canvas', 'create');
+    }
 }
 /**
  * 左侧调整顺序
@@ -1162,7 +1163,7 @@ function getImgListHtml(content) {
             break;
         case 2:
             var poiList = [], url;
-            if (content.poiType&&content.poiType.id) {
+            if (content.poiType && content.poiType.id) {
                 url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [objdata.businessId, content.firstPoi.id, content.poiType.id]);
             } else {
                 url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoi, [objdata.businessId, content.firstPoi.id]);

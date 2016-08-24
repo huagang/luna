@@ -105,6 +105,8 @@ var InitLeftArea = function () {
 
         //修改界面
         $("#list-page").on('click', 'a.modify', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             var pageItemDom = $(e.target).closest('li'),
                 pageCode = pageItemDom.data('pagecode');
             if (pageCode == 'welcome' || pageCode == 'index') {
@@ -121,11 +123,13 @@ var InitLeftArea = function () {
         });
         //页面复用
         $("#list-page").on('click', 'a.pageCopy', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             modify(e, 'copy');
         });
 
         //创建或更新，根据弹窗是否存在modify_page_id确定
-        $("#setup").click(function () {
+        $("#setup").click(function (e) {
             var modifyPageId = $("#modify_page_id").val();
             var sourcePageId = $('#sourcePageId').val();
             if (modifyPageId) {
@@ -139,22 +143,25 @@ var InitLeftArea = function () {
         });
 
         $('[name=pageType]').on('change', function (e) {
-            console.log($(this).val());
             if ($(this).val() == 1) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
                 document.querySelector('#txtPageHeight').value = '';
+            } else if ($('#sourcePageId')) {
+                $('#txtPageHeight').attr('readonly', 'readonly');
             } else {
                 $('#txtPageHeight').removeAttr('readonly');
             }
         });
 
         //取消
-        $("button.btn-clc").click(function () {
+        $("button.btn-clc").click(function (e) {
             $overlay.css("display", "none");
             $("div.pop").css("display", "none");
         });
 
-        $("#btn-delete").click(function () {
+        $("#btn-delete").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             deletePage($(this).attr("pageID"));
         });
     };
