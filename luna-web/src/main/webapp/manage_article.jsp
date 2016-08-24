@@ -61,7 +61,7 @@
                                     <th data-field="business_name" data-align="left">所属业务</th>
                                     <th data-formatter="timeFormatter" data-align="left">时间</th>
                                     <th data-formatter="statusFormatter" data-align="left">状态</th>
-                                    <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
+                                    <th data-formatter="operationFormatter" data-events="operationEvents" data-width="150" data-align="right">操作</th>
                                 </tr>
                                 </thead>
                             </table>
