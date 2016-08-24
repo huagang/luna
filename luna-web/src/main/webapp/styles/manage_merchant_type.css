@@ -1,0 +1,18 @@
+.pop-modal{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 20px;
+    z-index: 10000;
+    margin: auto;
+    display: block;
+    width: 1000px;
+}
+
+.pop-modal .pop-fun{
+    width: 100%;
+}
+
+.mask{
+    z-index: 1000;
+}

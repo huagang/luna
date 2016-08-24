@@ -242,11 +242,10 @@ var Inter = function () {
                 saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
 
                 // 商品类目
-                fetchMerchantCat: {url: context + '?offset={0}&limit={1}', type: 'GET'}, // 获取商品类目信息
-                saveMerchantCat: {url: context + '', type: 'PUT'},  // 保存商品类目信息
-                deleteMerchantCat: {url: context + '', type: 'DELETE'},  // 删除商品类目
-                fetchAllMerchatParentCat: {url: context + '', type: 'GET'}, // 获取所有父级商品信息
-
+                fetchMerchantCat: {url: context + '/merchant/goodsCategory?offset={0}&limit={1}', type: 'GET'}, // 获取商品类目信息
+                createMerchantCat: {url: context + '/merchant/goodsCategory', type: 'POST'},  // 新建商品类目信息
+                saveMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'PUT'},  // 保存商品类目信息
+                deleteMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'DELETE'},  // 删除商品类目
 
             };
         }
