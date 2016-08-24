@@ -24,6 +24,8 @@
   <link href="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.bootstrap3.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_merchant_type.css">
+  <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+  <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
 <body ng-app="merchantType" ng-controller="MerchantType as cate">
 <div class="container-fluid">
@@ -56,7 +58,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="row in cate.categoryData">
+                  <tr ng-repeat="row in cate.categoryData" class="ng-hide"
+                      ng-show="row.depth === 1 || cate.openList.indexOf(row.parent) !== -1 ">
+
+                      <td ng-class="{'isChild': row.depth !== 1}">
+                          <div class="ng-hide icon-close" ng-show="row.depth === 1" ng-click="cate.handleToggle(row.id)"></div>
+                          <span>{{row.name}}</span>
+                      </td>
+                      <td>{{row.abbreviation}}</td>
+                      <td>
+                         <a href="javascript:void(0)" class='edit'
+                                 ng-click="cate.changeState('edit', row.id)">编辑</a>
+                         <a href="javascript:void(0)" ng-click="cate.changeState('delete', row.id)">删除</a>
+                      </td>
                   </tr>
                 </tbody>
               </table>
@@ -127,8 +141,7 @@
   <script>
       window.context = "<%=request.getContextPath() %>";
   </script>
-  <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-  <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
+
   <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>

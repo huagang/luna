@@ -66,6 +66,8 @@ function MerchantType($scope, $http){
             name: '无'
         }]; // 所有的父级商品类目信息
         vm.opData = {}; // 操作用数据 用于添加类目和编辑类目信息
+        vm.openList = [];
+
         vm.pagination = { // 可能类目比较多,需要设置分页
             limit: 10,
             totalItems: 0,
@@ -93,7 +95,7 @@ function MerchantType($scope, $http){
         vm.fetchParentCat();
     }
 
-    function changeState(state){
+    function changeState(state, id){
         vm.state = state;
         switch(state) {
             case 'new':
@@ -139,11 +141,23 @@ function MerchantType($scope, $http){
 
                 vm.categoryData = [];
                 // 将所有类目层级展开并顺序加到categoryData中
-                var data = $.extend(true, [], res.data.data);
-                for(var i=0; i < data.length; i++){
+                var data = $.extend(true, [], res.data.data), i = 0;
+                while(data.length > 0){
+                    var parent = data[0];
+                    parent.depth = parent.depth || 1;
+                    vm.categoryData.push(data[0]);
 
+                    data.shift();
+                    if((parent.child || []).length > 0){
+                        i = parent.child.length -1;
+                        for(; i > -1; i -= 1){
+                            parent.child[i].parent = parent.parent || parent.id;
+                            parent.child[i].depth = parent.depth + 1;
+                            data.unshift(parent.child[i]);
+                        }
+                    }
                 }
-
+                console.log(vm.categoryData);
 
                 // vm.parentCat = res.data.data.parentCat;
             } else{

@@ -16,3 +16,28 @@
 .mask{
     z-index: 1000;
 }
+
+.edit{
+    padding-right: 10px;
+}
+
+.icon-close{
+    display: inline-block;
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
+    background: url(../img/merchant/open.png) center center no-repeat;
+    background-size: contain;
+    margin-bottom: 2px;
+}
+.icon-open{
+    display: inline-block;
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    background: url(../img/merchant/close.png) center center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
