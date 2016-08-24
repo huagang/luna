@@ -74,4 +74,6 @@
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_farm_field_ex_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/sqlmap/ms_operation_log_SqlMap.xml" />
   <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/ms_operation_log_ex_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_goods_category_SqlMap.xml" />
+  <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_goods_category_ex_SqlMap.xml" />
 </sqlMapConfig>

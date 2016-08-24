@@ -87,8 +87,8 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="ms_operation_log">
-			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		<table tableName="luna_goods_category">
+			 <generatedKey column="id" sqlStatement="MySql" identity="true"/> 
 		</table>
 	</context>
 </generatorConfiguration>
