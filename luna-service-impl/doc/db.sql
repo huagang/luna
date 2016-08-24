@@ -439,3 +439,19 @@ create table luna_role_category(
   update_time timestamp default current_timestamp on update current_timestamp,
   primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色类别表';
+
+CREATE TABLE `luna_goods_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类别id',
+  `name` varchar(32) NOT NULL COMMENT '类别名称',
+  `root` int(11) DEFAULT NULL COMMENT '类别上级id',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `depth` int(11) NOT NULL COMMENT '类别深度',
+  `abbreviation` varchar(16) NOT NULL COMMENT '类别简称',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`),
+  UNIQUE KEY `abbreviation_UNIQUE` (`abbreviation`),
+  KEY `root_idx` (`root`),
+  CONSTRAINT `root` FOREIGN KEY (`root`) REFERENCES `luna_goods_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品类别表';
+
+
