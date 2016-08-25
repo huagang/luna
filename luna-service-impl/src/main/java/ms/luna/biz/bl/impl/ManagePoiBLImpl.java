@@ -873,7 +873,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id".toString()));
+		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id").toString());
 		
 		/*
 		 * 公共字段值
@@ -1211,7 +1211,6 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject initFixPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		String _id = param.getString("_id");
 
 		Document docPoi = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
@@ -1220,7 +1219,6 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 

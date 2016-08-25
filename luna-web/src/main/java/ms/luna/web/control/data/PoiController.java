@@ -2,6 +2,7 @@ package ms.luna.web.control.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
@@ -70,6 +71,7 @@ public class PoiController extends BasicController {
      * 二级菜单缓存
      */
     private volatile Map<Integer, JSONObject> subTagsCache = new ConcurrentHashMap<Integer, JSONObject>();
+    private ArrayList<String> commonFieldsShowName = new ArrayList<>();
 
     /**
      * 加载模板资源
@@ -87,6 +89,21 @@ public class PoiController extends BasicController {
                 String zone_id = getCellValueAsString(row.getCell(0));
                 ZONENAME_2_CODE_MAP.put(merger_name, zone_id);
             }
+            // TODO 将公共字段名称放入commonFieldsShowName.用于批量上传时excel文件的检查(批量上传中公共字段采用hardcode的形式规定字段顺序)
+            commonFieldsShowName.add("名称");
+            commonFieldsShowName.add("别名");
+            commonFieldsShowName.add("纬度");
+            commonFieldsShowName.add("经度");
+            commonFieldsShowName.add("地址");
+            commonFieldsShowName.add("");    //地址占两列
+            commonFieldsShowName.add("二级分类");
+            commonFieldsShowName.add("分享摘要");
+            commonFieldsShowName.add("详细介绍");
+            commonFieldsShowName.add("缩略图");
+            commonFieldsShowName.add("全景类型");
+            commonFieldsShowName.add("全景标识");
+            commonFieldsShowName.add("联系电话");
+
         } catch (EncryptedDocumentException e) {
             MsLogger.error(e);
         } catch (InvalidFormatException e) {
@@ -533,6 +550,52 @@ public class PoiController extends BasicController {
         InputStream inp = new FileInputStream(savedExcel);
         Workbook wb = WorkbookFactory.create(inp);
         int sheetNum = wb.getNumberOfSheets();// sheet: excel的sheet页
+
+        // TODO 检查excel格式-----------------------------------------------------------------------------------------------------
+        for (int i = 0; i < sheetNum; i++) {
+            Sheet sheet = wb.getSheetAt(i);
+            if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
+                continue;
+            }
+            Row row0 = sheet.getRow(0);// excel sheet第一行
+            String tag_name = sheet.getSheetName();
+            // 检查sheet页名称
+            if(!fieldsGroupByTagName.containsKey(tag_name)) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")名称");
+            }
+            Map<String, JSONObject> fieldsJsonByTag = fieldsGroupByTagName.get(tag_name);
+            // 检查字段长度是否匹配
+            int fieldsNum = PoiCommon.Excel.公有字段个数 + fieldsJsonByTag.size();// 实际字段个数
+            for (int k = PoiCommon.Excel.公有字段个数; k < fieldsNum; k++) {// 地址两列占一列
+                String field_show_name = getCellValueAsString(row0.getCell(k)).trim();
+                if (field_show_name.length() == 0 ) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")列数");
+                }
+            }
+            String field_show_name = getCellValueAsString(row0.getCell(fieldsNum)).trim();
+            if (field_show_name.length() != 0 ) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")列数");
+            }
+            // 检查公有字段是否符合要求
+            for(int k = 0; k < PoiCommon.Excel.公有字段个数; k++) {
+                String excel_field_name = getCellValueAsString(row0.getCell(k)).trim();
+                String real_field_name = commonFieldsShowName.get(k);
+                if(!excel_field_name.equals(real_field_name)) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")公共字段名称");
+                }
+            }
+
+            // 检查私有字段是否符合要求
+            for(int k = PoiCommon.Excel.公有字段个数; k < PoiCommon.Excel.公有字段个数 + fieldsJsonByTag.size(); k++) {
+                String excel_field_name = getCellValueAsString(row0.getCell(k)).trim();
+                if(!fieldsJsonByTag.containsKey(excel_field_name)) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")私有字段名称");
+                }
+            }
+        }
+        // -----------------------------------------------------------------------------------------------------------------------
+
+
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = wb.getSheetAt(i);
             if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
