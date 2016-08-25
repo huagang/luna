@@ -30,3 +30,9 @@ insert into luna_role_menu (`role_id`,`menu_id`) values(2,20);
 insert into luna_role_menu (`role_id`,`menu_id`) values(3,20);
 insert into luna_role_menu (`role_id`,`menu_id`) values(8,20);
 insert into luna_role_menu (`role_id`,`menu_id`) values(9,20);
+
+alter table ms_article change column `type` `type` INT(1) NOT NULL DEFAULT '0' COMMENT '类型,0:中文,1:英文';
+alter table ms_article add column publish_time TIMESTAMP NULL DEFAULT NULL COMMENT '发布时间' AFTER regist_hhmmss;
+alter table ms_article drop index title;
+alter table ms_article add UNIQUE (title, business_id);
+update ms_article set publish_time = up_hhmmss;

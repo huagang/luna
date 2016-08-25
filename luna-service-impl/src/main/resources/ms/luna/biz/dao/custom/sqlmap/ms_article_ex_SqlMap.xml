@@ -5,6 +5,7 @@
         <result column="id" property="id" jdbcType="INTEGER" />
         <result column="title" property="title" jdbcType="VARCHAR" />
         <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
         <result column="column_name" property="columnName" jdbcType="VARCHAR" />
         <result column="business_name" property="businessName" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="TINYINT" />
@@ -17,6 +18,7 @@
             a.id id,
             a.title title,
             a.author author,
+            a.type type,
             a.status status,
             b.name column_name,
             c.business_name business_name,
