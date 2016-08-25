@@ -3,6 +3,13 @@
  * author:wumengqiang & duyutao
  * Date:2016-6-22
  */
+/*
+        前后端接口参数说明:
+            type: 语言信息 type==0 中文   type==1 英文
+
+ */
+
+
 //获取当前的业务数据
 var business = {};
 if (window.localStorage.business) {
@@ -17,17 +24,58 @@ var initPage = function () {
     var articleStore = getArticleStore();
     window.a = articleStore;
     var pageUrls = Inter.getPageUrl();
-    if(/lang=en/.test(location.search)){
-        window.lang = 'en';
-        if(articleStore.id){
-            $('.change-lang').removeClass('hidden').html('切换到中文').attr('href', pageUrls.articleForZh.format(articleStore.id));
+    var apiUrls = Inter.getApiUrl();
+    updateLangLink(); // 更新切换中英文的链接
+
+    function updateLangLink(){
+        var zh_id;
+        try{
+            zh_id = parseInt(location.href.match(/zh_id=(\w+)/)[1]);
+        } catch(e){
+
         }
-    } else{
-        window.lang = 'zh';
-        if(articleStore.id){
-            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
+
+        if(/lang=en/.test(location.search)){
+            window.lang = 'en';
+            if(zh_id){  // 情况1 带有中文id的英文版,表示新建英文版
+                $('.change-lang').removeClass('hidden').html('切换到中文').
+                    attr('href', pageUrls.articleForZh.format(articleStore.id || zh_id));
+            } else if(articleStore.id){  // 情况2 不带有中文id的英文版,表示编辑英文版,此时应该有英文版id
+                fetchLangInfo(0, articleStore.id)
+            } else{
+                showMessage('链接不正确,获取不到英文版文章id')
+            }
+
+
+        } else{
+            window.lang = 'zh';
+            if(articleStore.id){ // 情况3 带有id的中文版,表示编辑中文版
+                // $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
+                fetchLangInfo(1, articleStore.id);
+            }
+
+            // 情况4 不带有id的中文版,表示新建中文版,此时不显示切换到英文版,因为中文版还没有新建,拿不到中文版id
         }
     }
+
+    // 获取到其他版本语言的信息
+    function fetchLangInfo(type,id, success, error){
+        $.ajax({
+            url: apiUrls.articleEditData.format(id) + '&type=' + type,
+            type: 'GET',
+            success: function(data){
+                if(data.code === '0'){
+
+                } else{
+
+                }
+            },
+            error: function(data){
+
+            }
+        })
+    }
+
     /**
      * 初始化编辑器
      * @return {[type]} [description]
