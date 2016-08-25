@@ -512,7 +512,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         if(columnInfoMap.size() > 0) {
             criteria.andColumnIdIn(Lists.newArrayList(columnInfoMap.keySet()));
         }
-        msArticleCriteria.setOrderByClause("up_hhmmss desc");
+        msArticleCriteria.setOrderByClause("publish_time desc");
         List<MsArticleWithBLOBs> msArticleWithBLOBses = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
 
         if(columnInfoMap.size() == 0) {
@@ -555,7 +555,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         if(columnIdSet.size() > 0) {
             criteria.andColumnIdIn(Lists.newArrayList(columnIdSet));
         }
-        msArticleCriteria.setOrderByClause("up_hhmmss desc");
+        msArticleCriteria.setOrderByClause("publish_time desc");
         List<MsArticleWithBLOBs> msArticleWithBLOBses = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
 
         if(msArticleWithBLOBses == null) {
