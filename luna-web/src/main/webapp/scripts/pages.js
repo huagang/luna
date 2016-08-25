@@ -611,7 +611,7 @@ var InitCenterArea = function () {
 
         //按delete按钮删除组件
         $(document).bind('keydown', 'del', function (e) {
-            if (e.target.nodeName == "INPUT") {
+            if (e.target.nodeName == "INPUT"||lunaPage.pages[currentPageId].page_content[currentComponentId].type=='canvas') {
                 //如果是文本框，删除文本框中的内容，不删除画布中的插件
                 return true;
             }
