@@ -42,13 +42,16 @@ var Inter = function () {
         getPageUrl: function () {
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
                 manageUser: context + '/platform/user', //
                 routeConfig: context + '/content/route/configuration/{0}',
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
                 manageRouter: context + '/content/route',
+                articleForZh: context + '/content/article/{0}',
+                articleForEn: context + '/content/article/{0}?lang=en',
+                createArticleForEn: context + '/content/article?create&zh_id={0}&business_id={1}&lang=en'
 
             };
         },
