@@ -195,30 +195,30 @@
 			                <%--</div>--%>
 			            <%--</div>--%>
 
-							<div class="item">
-								<div class="item-label"><span class="superscript">*</span>业务名称</div>
-								<div class="item-value">
-									<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name', 'btn-add')" required />
-									<span id="warn-name" class="warn hide">格式不正确,请重新输入</span>
-								</div>
+						<div class="item">
+							<div class="item-label"><span class="superscript">*</span>业务名称</div>
+							<div class="item-value">
+								<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name', 'btn-add')" required />
+								<span id="warn-name" class="warn hide">格式不正确,请重新输入</span>
 							</div>
-							<div class="item">
-								<div class="item-label"><span class="superscript">*</span>业务简称</div>
-								<div class="item-value">
-									<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short', 'btn-add')" required/>
-									<span id="warn-short" class="warn hide">格式不正确,请重新输入</span>
-								</div>
+						</div>
+						<div class="item">
+							<div class="item-label"><span class="superscript">*</span>业务简称</div>
+							<div class="item-value">
+								<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short', 'btn-add')" required/>
+								<span id="warn-short" class="warn hide">格式不正确,请重新输入</span>
 							</div>
+						</div>
 
-							<div class="item">
-			                <div class="item-label"><span class="superscript">*</span>受理业务员：</div>
-			                <div class="item-value">
-			                    <span id="agent" >${luna_nm}</span>
-			                    <span><img src="<%=request.getContextPath() %>/img/edit.png" id="editagent"/></span>
-			                    <div class="warn" id="agent-warn">必须填写</div>
-			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
-			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
-			                </div>
+						<div class="item">
+						<div class="item-label"><span class="superscript">*</span>受理业务员</div>
+						<div class="item-value">
+							<span id="agent" >${luna_nm}</span>
+							<span><img src="<%=request.getContextPath() %>/img/edit.png" id="editagent"/></span>
+							<div class="warn" id="agent-warn">必须填写</div>
+							<input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
+							<input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
+						</div>
 			            </div>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>商户状态</div>

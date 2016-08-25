@@ -333,8 +333,8 @@ $(function () {
 	   				default:
 	   					$("#pop-overlay").css("display","none");
 			        	$("#pop-addmerchant").css("display","none");
-			        	clcContent();
-			        	$("#status-message").html("创建失败").css('display','block');
+			        	//clcContent();
+			        	$("#status-message").html(returndata.msg).css('display','block');
 	    				setTimeout(function(){
 	    					$("#status-message").css('display','none');
 	    				},2000);

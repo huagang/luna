@@ -320,8 +320,8 @@ $(function(){
 						default:
 							$("#pop-overlay").css("display","none");
 							$("#pop-editmerchant").css("display","none");
-							clcContent();
-							$("#status-message").html("编辑失败").css('display','block');
+							//clcContent();
+							$("#status-message").html(returndata.msg).css('display','block');
 							setTimeout(function(){
 								$("#status-message").css('display','none');
 							},2000);
@@ -400,22 +400,10 @@ function editcrm(obj){
 	    		case '0':
 	    			$.each(returndata.data,function(i,n){
 	    				$("#"+i+"_edit:not(select)").val(n);
-	    				console.log($("#"+i+"_edit:not(select)").length);
+	    				console.log($("#"+i+"_edit:not(select)").val());
 	    			})
-	    			if(returndata.data.resource_content){
-	    				$("#license-url-edit").val(returndata.data.resource_content);
-	    	            $("#license-upload-edit").attr('data_upload','true');
-	    	            $("input[name='license-edit']")[0].click();//选中“是”
-	    	            $("#thumbnail").attr("src",returndata.data.resource_content);
-	    	            $("#div-img").css("display","none");
-	    			}else{
-	    				$("#license-url-edit").val("无");
-	    				$("input[name='license-edit']")[1].click();//选中“否”
-	    	            $("#license-upload-edit").attr('data_upload','false');
-	    			}
 	    			$("#agent-edit").html($("#salesman_nm_edit").val());
-	    			mapInitial();
-	    			
+
 	    			var province_id = returndata.data.province_id;
 	    			var city_id = returndata.data.city_id;
 	    			var county_id = returndata.data.county_id;//#address-region-edit
@@ -428,6 +416,8 @@ function editcrm(obj){
 	    			$("#merchant-type-edit").val(returndata.data.category_id);
 	    			$("#status-edit").val(returndata.data.status_id);
 	    			$("#address-region-edit").val(country_nm+province_nm+city_nm+county_nm);
+					$("#business-name-edit").val(returndata.data.business_name);
+					$("#business-name-short-edit").val(returndata.data.business_code);
 	    			break;
 	    		default:
 	    			$("#status-message").html("请求失败").css('display','block');
