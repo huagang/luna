@@ -667,8 +667,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("tags", doc.get("tags"));
 					// 二级分类
 					enDoc.put("sub_tag", doc.get("sub_tag"));
-					// 分享摘要
-					enDoc.put("share_desc", doc.get("share_desc"));
+//					// 分享摘要
+//					enDoc.put("share_desc", doc.get("share_desc"));
 					// 经纬度
 					enDoc.put("lnglat", doc.get("lnglat"));
 					// zone_id
