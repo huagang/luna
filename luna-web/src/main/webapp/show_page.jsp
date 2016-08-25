@@ -174,7 +174,10 @@
                 </div>
                 <div class="bg-set clearfix">
                   <label>全景背景：</label>
-                  <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
+                 <div class="input-del-wrapper" style="width:252px;">
+                   <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
+                   <i class="iconfont icon-lunadelete1 input-del" ng-click="canvas.clearPanoId()"></i>
+                 </div> 
                   <div class="bgPano-set" ng-show="canvas.panoId">
                     <div class="bgPano-set-item">Heading:
                       <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字">
@@ -547,9 +550,7 @@
                            <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
                               <label for="" class="fw-normal col-md-3 text-right plr0">语言:</label>
                               <div class="col-md-8">
-                                  <select class="" name="poiLang" ng-model="imgList.content.poiLang" required="required" ng-options="item.name for item in imgList.langList track by item.id" ng-change="imgList.changePoiLang()">
-                                    <option value="">请选择</option>
-                                    </select>
+                                  <select class="" name="poiLang" ng-model="imgList.content.poiLang" required="required" ng-options="item.name for item in imgList.langList track by item.id" ng-change="imgList.changePoiLang()"></select>
                               </div>
                           </div>
                           <div class="form-group clearfix" ng-show="imgList.content.dataType.id=='2'">
@@ -840,7 +841,10 @@
                       </div>
                       <div>全景ID：
                         <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
-                          <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                          <div class="input-del-wrapper" style="width:252px;">
+                            <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                            <i class="iconfont icon-lunadelete1 input-del" ng-click="pano.clearPanoId()"></i>
+                          </div>
                           <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
                         </div>
                       </div>
@@ -1289,9 +1293,7 @@
                       </div>
                       <div class="menutab-customer-set" ng-show="menuTab.currentTab.type == 'poiList'||menuTab.currentTab.type == 'singlePoi' ">
                         <div>语言
-                          <select name="" id="" ng-model="menuTab.currentTab.poiLang" ng-change="menuTab.changeLang($evnet)">
-                              <option ng-repeat='item in menuTab.langList track by item.id' value='{{item.id}}'>{{item.name}}
-                              </option>
+                          <select name="" id="" ng-model="menuTab.currentTab.poiLang" ng-change="menuTab.changeLang($evnet)" ng-options="item.name for item in menuTab.langList track by item.id">
                           </select>
                         </div>
                       </div>

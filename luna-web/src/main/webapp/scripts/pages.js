@@ -146,7 +146,7 @@ var InitLeftArea = function () {
             if ($(this).val() == 1) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
                 document.querySelector('#txtPageHeight').value = '';
-            } else if ($('#sourcePageId')) {
+            } else if ($('#sourcePageId').val()) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
             } else {
                 $('#txtPageHeight').removeAttr('readonly');
@@ -222,8 +222,8 @@ var InitRightArea = function () {
     };
 
     /**
- *初始化收起功能 
- */
+    *初始化收起功能 
+    */
     var initSlide = function () {
 
         $('.btn-slide').on('click', function (e) {
