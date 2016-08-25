@@ -133,6 +133,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+        jsonObject.put(MsArticleTable.FIELD_BUSINESS_ID, msArticle.getBusinessId());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
         jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
         // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
