@@ -258,13 +258,6 @@ $(document).ready(function () {
             }
         }
     }
-
-
-    //初始化 欢迎页的视差效果
-    var paraScene = [];
-    $('.paraScene').each(function (n, item) {
-        paraScene[n] = new Parallax(item);
-    });
     // var scene = document.querySelector('.scene');
     // var parallax = new Parallax(scene);
     // $('.scene').find('.img-wraper').addClass('go-right');
@@ -272,14 +265,19 @@ $(document).ready(function () {
 
     if ($('.welcome').length > 0) {
 
-        //修改history 中的内容，来解决goback 中的问题
         var pageTime = $('.welcome').data('pagetime');
+        //初始化 欢迎页的视差效果
+        var paraScene = [];
+        $('.paraScene').each(function (n, item) {
+            paraScene[n] = new Parallax(item);
+        });
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
         setTimeout(function () {
+            //修改history 中的内容，来解决goback 中的问题
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
@@ -369,10 +367,7 @@ $(document).ready(function () {
             this.html.attr("id", this.value._id);
             //this.html.attr("name_value", this.value.name);
             //this.html.attr("default_value",this.value.default_value);
-            this.html.css("background-color", this.value.bgc);
-            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
-            }
+
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
@@ -431,13 +426,19 @@ $(document).ready(function () {
 
         this.setCanvasBg = function () {
             this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                + this.value.gravity + '" data-animaType ="'+ this.value.+'"></div>');
+                + this.value.gravity + '" data-animaType ="' + this.value.bgAnimaType.id + '"></div>');
+            this.html.attr('data-animaType', this.value.bgAnimaType.id);
+            this.html.css("background-color", this.value.bgc);
+            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
+                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
+            }
         };
 
         this.setPanoBg = function () {
             this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
                 + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
                 + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
         };
 
         this.setParaBg = function () {
@@ -445,13 +446,20 @@ $(document).ready(function () {
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
             this.html.children("div").append($scene);
         };
+        this.setAnimaBg = function () {
+            this.html.children("div").append('<div class="animaCanvas" style="width:100%;height:100%;" data-animaType ="' + this.value.bgAnimaType.id + '" style="background:url(' + this.value.bgimg + ');background-size:100% 100%" ></div>');
+            this.html.attr('data-animaType', this.value.bgAnimaType.id);
+
+        };
 
         this.build = function () {
 
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (!this.value.panoId && this.value.gravity) {
+            } else if (!this.value.panoId && this.value.bgAnimaType.id == "gravity") {
                 this.setParaBg.call(this);
+            } else if (!this.value.panoId && this.value.bgAnimaType.id == "rtol") {
+                this.setAnimaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);
             }
