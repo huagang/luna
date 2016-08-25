@@ -10,13 +10,11 @@ var objdata = {
         "lng": "116.355246"
     },
     destPosition: {
-
     }
 };
 
 
 $(document).ready(function () {
-
     function init() {
         var w = $(".app-wrap");
         var m = w.width();
@@ -27,7 +25,6 @@ $(document).ready(function () {
             content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-
     var iftab = false,
         iflongpage = false;
     if (pageData.data instanceof Array && pageData.data.length > 0) {
@@ -434,7 +431,7 @@ $(document).ready(function () {
 
         this.setCanvasBg = function () {
             this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                + this.value.gravity + '"></div>');
+                + this.value.gravity + '" data-animaType ="'+ this.value.+'"></div>');
         };
 
         this.setPanoBg = function () {
@@ -446,18 +443,14 @@ $(document).ready(function () {
         this.setParaBg = function () {
             var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
-            // $scene.append('<li class="layer" data-depth="1.00"><div class="img-wrapeÎr"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
-        }
+        };
 
         this.build = function () {
 
-            //this.setPosition();
-            // Canvas.prototype.setPosition.call();
-
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (this.value.gravity && !this.value.panoId) {
+            } else if (!this.value.panoId && this.value.gravity) {
                 this.setParaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);

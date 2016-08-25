@@ -88,6 +88,42 @@ var lunaConfig = function(){
                 name: '文字',
                 code: 'text',
                 type: 'text',
+            }, {
+                name: '溯源',
+                code: 'suyuan',
+                type: 'default',
+            }, {
+                name: '特产',
+                code: 'techan',
+                type: 'default',
+            }, {
+                name: '文学',
+                code: 'wenxue',
+                type: 'default',
+            }, {
+                name: '沿革',
+                code: 'yange',
+                type: 'default',
+            }, {
+                name: '遗迹',
+                code: 'yiji',
+                type: 'default',
+            }, {
+                name: '自然环境',
+                code: 'ziranhuanjing',
+                type: 'default',
+            }, {
+                name: '地理特征',
+                code: 'dilitezheng',
+                type: 'default',
+            }, {
+                name: '风情',
+                code: 'fengqing',
+                type: 'default',
+            }, {
+                name: '文字',
+                code: 'text',
+                type: 'text',
             }],
     };
 }();
