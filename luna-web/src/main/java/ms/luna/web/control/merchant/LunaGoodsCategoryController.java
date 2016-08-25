@@ -66,7 +66,7 @@ public class LunaGoodsCategoryController extends BasicController {
     public JSONObject searchRootCategories(@RequestParam(required = true) String searchWord) {
         JSONObject inData = new JSONObject();
         inData.put("searchWord", searchWord);
-        JSONObject toReturn = lunaGoodsCategoryService.searchRootCategories(inData);
+        JSONObject toReturn = lunaGoodsCategoryService.searchCategories(inData);
         return toReturn;
     }
 

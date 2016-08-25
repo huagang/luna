@@ -13,8 +13,6 @@ public interface LunaGoodsCategoryService {
 
     JSONObject searchCategories(JSONObject jsonObject);
 
-    JSONObject searchRootCategories(JSONObject jsonObject);
-
     JSONObject createCategory(JSONObject jsonObject);
 
     JSONObject deleteCategory(JSONObject jsonObject);

@@ -157,28 +157,6 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
     }
 
     @Override
-    public JSONObject searchRootCategories(JSONObject jsonObject) {
-        try {
-            LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria = new LunaGoodsCategoryCriteria();
-            lunaGoodsCategoryCriteria.createCriteria().andNameLikeInsensitive("%" + jsonObject.getString("searchWord") + "%");
-            List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
-            JSONArray result = new JSONArray();
-            for (LunaGoodsCategory lunaGoodsCategory : categories) {
-                JSONObject object = new JSONObject();
-                object.put("id", lunaGoodsCategory.getId());
-                object.put("name", lunaGoodsCategory.getName());
-                object.put("abbreviation", lunaGoodsCategory.getAbbreviation());
-                object.put("depth", lunaGoodsCategory.getDepth());
-                result.add(object);
-            }
-            return FastJsonUtil.sucess("success", result);
-        } catch (Exception ex) {
-            logger.error("Failed to get lunaGoodsCategories", ex);
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
-        }
-    }
-
-    @Override
     public JSONObject createCategory(JSONObject jsonObject) {
         try {
             LunaGoodsCategory lunaGoodsCategory = new LunaGoodsCategory();
