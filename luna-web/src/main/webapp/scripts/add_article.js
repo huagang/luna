@@ -314,7 +314,7 @@ var initPage = function () {
                     { id: 'content', name: '正文' },
                     // { id: 'thumbnail', name: '首图' },
                     // { id: 'summary', name: '摘要' },
-                    // { id: 'category', name: '栏目' }
+                     { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function (item) {
                     if (!this[item.id]) {
