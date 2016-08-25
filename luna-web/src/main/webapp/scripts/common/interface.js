@@ -51,7 +51,7 @@ var Inter = function () {
                 manageRouter: context + '/content/route',
                 articleForZh: context + '/content/article/{0}',
                 articleForEn: context + '/content/article/{0}?lang=en',
-                createArticleForEn: context + '/content/article?create&zh_id={0}&lang=en'
+                createArticleForEn: context + '/content/article?create&zh_id={0}&business_id={1}&lang=en'
 
             };
         },

@@ -39,11 +39,29 @@ var initPage = function () {
             window.lang = 'en';
             if(window.zh_id){  // 情况1 带有中文id的英文版,表示新建英文版
                 $('.change-lang').removeClass('hidden').html('切换到中文').
-                    attr('href', pageUrls.articleForZh.format(articleStore.id || window.zh_id));
+                    attr('data-href', pageUrls.articleForZh.format(articleStore.id || window.zh_id));
+                fetchLangInfo(0, window.zh_id, function(data) {
+                    articleStore.category = data.column_id;
+                    articleStore.audio = data.audio || '';
+                    articleStore.video = data.video || '';
+                    articleStore.thumbnail = data.abstract_pic || '';
+                    if(articleStore.audio){
+                        $('#audio').val(articleStore.audio);
+                    }
+                    if(articleStore.video){
+                        $('#video').val(articleStore.video);
+                    }
+                    if(articleStore.thumbnail){
+                        $('#thumbnail_show').attr('src', articleStore.thumbnail);
+                    }
+
+                    $('#category')[0].value = data.column_id;
+                    $('#category').attr('disabled', 'disabled');
+                });
             } else if(articleStore.id){  // 情况2 不带有中文id的英文版,表示编辑英文版,此时应该有英文版id
                 fetchLangInfo(0, articleStore.id, function(data){
                     $('.change-lang').removeClass('hidden').html('切换到中文').
-                        attr('href', pageUrls.articleForZh.format(data.data.id));
+                        attr('data-href', pageUrls.articleForZh.format(data.id));
                 });
             } else{
                 showMessage('链接不正确,无法获取英文版文章id')
@@ -52,13 +70,11 @@ var initPage = function () {
         } else{
             window.lang = 'zh';
             if(articleStore.id){
-                // $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
                 fetchLangInfo(1, articleStore.id, function(data){ // 情况3 带有id的中文版,表示编辑中文版 并有英文版
                     $('.change-lang').removeClass('hidden').html('切换到英文').
-                        attr('href', pageUrls.articleForEn.format(data.data.id));
+                        attr('data-href', pageUrls.articleForEn.format(data.data.id));
                 }, function(data){ // 情况4 带有id的中文版,表示编辑中文版 没有有英文版
-                    $('.change-lang').removeClass('hidden').html('切换到英文').
-                        attr('href', pageUrls.createArticleForEn.format(articleStore.id));
+
                 });
             }
 
@@ -139,6 +155,7 @@ var initPage = function () {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', saveData);
 
+        $('.change-lang').on('click', saveData);
 
         function saveData(e) {
             articleStore.content = ue.getContent();
@@ -173,9 +190,12 @@ var initPage = function () {
                 url = Inter.getApiUrl().articleCreate.url;
                 type = Inter.getApiUrl().articleCreate.type;
             }
-
+            
+            var
             if(event.target.className.indexOf('publish') > -1){
                 url +='?saveAndPublish';
+            } else(event.target.className.indexOf('change-lang') !== -1){
+
             }
 
             $.ajax({
@@ -188,11 +208,16 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href',
-                                pageUrls.createArticleForEn.format(articleStore.id));
+                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('data-href',
+                                pageUrls.createArticleForEn.format(articleStore.id, articleStore.business_id));
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
-                        showMessage("保存成功");
+                        if(){
+                            location.href = event.target.getAttribute('data-href');
+                            return;
+                        }
+
+                            showMessage("保存成功");
                     } else {
                         showMessage(data.msg || "保存失败");
                     }
@@ -449,6 +474,10 @@ var initPage = function () {
                     });
                     articleStore.previewUrl += '?preview';
                     insertArticleData();
+                    if(window.lang === 'zh'){
+                        $('.change-lang').removeClass('hidden').html('切换到英文').
+                            attr('data-href', pageUrls.createArticleForEn.format(articleStore.id, data.business_id));
+                    }
                 } else {
                     console.log("请求文章数据失败");
                 }
@@ -513,10 +542,22 @@ var initPage = function () {
             });
             initEditor();
             initEvent();
+            var title = '';
             if (articleStore.id) {
-                $(".content-header .title").html("更新文章");
+                if(window.lang === 'zh'){
+                    title = "更新文章 (中文版)";
+                } else{
+                    title = "更新文章 (英文版)";
+                }
                 updateArticleData(articleStore.id);
+            } else{
+                if(window.lang === 'zh'){
+                    title = "新建文章 (中文版)";
+                } else{
+                    title = "新建文章 (英文版)";
+                }
             }
+            $(".content-header .title").html(title);
         }
     };
 } ();
@@ -544,3 +585,4 @@ function showMessage(msg){
     }
 
 }
+

@@ -33,7 +33,7 @@
 		        <div class="inner-wrap">
 		            <div class="content-header">
 						<span class="title">新建文章</span>
-						<a href='javascript:void(0)'class="change-lang hidden">切换到英文</a>
+						<a href='javascript:void(0)' class="change-lang hidden">切换到英文</a>
 		            </div>
 		            <div class="main-content">
 		                <div class="group article-title">
@@ -142,6 +142,7 @@
 		<script type='text/javascript'>
 			window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
 			window.context = '<%=request.getContextPath() %>';
+			window.businessId = "${business_id}";
 		</script>
         <script src='<%=request.getContextPath() %>/scripts/lunaweb.js'></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
