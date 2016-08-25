@@ -65,7 +65,7 @@
                                     	<th data-field="business_name" data-align="left">所属业务</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
-						                <th data-formatter="operationFormatter" data-align="right">操作</th>
+						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
 						            </tr>
 						        </thead>
 						    </table>
@@ -102,7 +102,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev" style="display: none" data-value="dev">
+			<div class="template dev" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>
