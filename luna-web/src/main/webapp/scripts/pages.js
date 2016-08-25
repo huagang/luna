@@ -740,3 +740,676 @@ $(document).ready(function () {
         }
     };
 })(lunaPage);
+
+/**
+ * 左侧调整顺序
+ * @return {[type]} [description]
+ */
+function reOrderPage() {
+    var pageElements = $(".list-page .drop-item[page_id]");
+    var pageOrder = {};
+    for (var i = 0; i < pageElements.length; i++) {
+        var pageId = $(pageElements[i]).attr("page_id");
+        if (pageId) {
+            //含有pageId的才是真正的页面元素（其他是拖拉控件或辅助元素）
+            lunaPage.pages[pageId].page_order = i + 1;
+            pageOrder[pageId] = i + 1;
+        }
+    }
+    updatePageOrder(pageOrder);
+    return pageOrder;
+}
+
+/**
+ * 左侧显示
+ * @param {[type]} pageList [description]
+ */
+
+function setPageListHtml(pageList) {
+    $("#list-page").empty();
+    var orderedPages = [], page;
+    for (var key in pageList) {
+        page = pageList[key];
+        orderedPages[page.page_order] = page.page_id;
+    }
+    for (var i in orderedPages) {
+        if (orderedPages[i]) {
+            page = pageList[orderedPages[i]];
+            $("#list-page").append(createPageListItemHtml(page));
+        }
+    }
+}
+
+/**
+ * 创建左侧缩略图
+ * @param  {[type]} page [description]
+ * @return {[type]}      [description]
+ */
+function createPageListItemHtml(page) {
+    // console.log(page);
+    var pageHtml = [];
+    pageHtml.push('<li class="drop-item {1}" page_id="{0}" data-pagecode="{1}"><div class="mod">'.format(page.page_id, page.page_code));
+    pageHtml.push('<img src="' + imghost + '/img/pagesample.jpg" alt="缩略图" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '"/>');
+    pageHtml.push('<div class="page_title">' + page.page_name + '</div>');
+    pageHtml.push('<div class="fun-page">');
+    if (page.page_code != 'welcome' && page.page_code != 'index') {
+        pageHtml.push('<a href="#" class="modify" page_id="' + page.page_id + '" page_code="' + page.page_code + '" page_order="' + page.page_order + '">编辑<i class="icon icon-edit"></i></a>');
+        pageHtml.push('<a href="#" class="delete" page_id="' + page.page_id + '" onclick="deletePageDialog(\'' + page.page_id + '\');">删除<i class="icon icon-delete"></i></a>');
+    }
+    pageHtml.push('</div></div></li>');
+    return pageHtml.join("");
+
+}
+
+/**
+ * 创建页面
+ * @param  {[type]} pageID [description]
+ * @return {[type]}        [description]
+ */
+
+function creatPageHtml(pageID) {
+
+    var page = lunaPage.pages[pageID];
+    var pageHtml = createPageListItemHtml(page);
+    $("#list-page").append(pageHtml);
+    currentPageId = pageID;
+    //debugger;
+    createCanvas();
+}
+
+/**
+ * 创建画布
+ * 创建页面画布
+ * @return {[type]} [description]
+ */
+function createCanvas() {
+    lunaPage.creatPageComponents(currentPageId, null, "canvas");
+    currentComponent = jQuery.extend(true, {}, componentCanvasModelTemplate);
+    currentComponent["_id"] = currentComponentId;
+    currentComponent.timestamp = new Date().getTime();
+    lunaPage.pages[currentPageId]["page_content"][currentComponentId] = currentComponent;
+    componentPanel.init("canvas");
+    lunaPage.editPageComponents(currentPageId, currentComponentId);
+    componentPanel.update("canvas");
+}
+
+/**
+ * 切换页面加载新页面内容
+ * @param {[type]} pageID [description]
+ */
+function setPageHtml(pageID) {
+    var $root = $('#layermain');
+    $('#layermain').html("");
+    $('#layermain').css({ "background-color": "#ffffff", 'height': lunaPage.pages[pageID].page_height || '617px' });
+    // 解析json数据
+    var jsonData = lunaPage.pages[pageID]["page_content"];
+
+    if (!jsonData || Object.keys(jsonData).length == 0) {
+        createCanvas();
+    } else {
+        // 组件数据解析，对应jsonData
+        // console.log(pageID);
+        var componentArr = [];
+        $.each(jsonData, function (n, value) {
+            // move canvas first
+            if (!value.timestamp) {
+                value.timestamp = new Date().getTime();
+            }
+            if (value.type ==  "canvas") {
+                componentArr = [value].concat(componentArr);
+            } else {
+                componentArr.push(value);
+            }
+            // componentArr.push(value);
+        });
+        //对组件的显示顺序重新排序
+        componentArr.sort(Util.arraySortBy('timestamp'));
+        componentArr.forEach(function (element) {
+            setPageComponentsHtml(pageID, element._id);
+        });
+    }
+}
+
+/**
+ * 只管创建component，其他一切事务由调用者自行协调
+ * 此函数只创建component UI
+ */
+function creatPageComponentsHtml(pageID, componentID, componentType) {
+    if (currentPageId == "") {
+        alert("请选择需要编辑的页面或者重新创建新页面！");
+        return;
+    }
+    if (!componentType) {
+        alert("componentType error");
+        return;
+    }
+    var comType = componentType;
+    var newComponent;
+    var isNew = false;
+    if (!componentID) {
+        isNew = true;
+        componentID = comType + new Date().getTime() + Math.floor(Math.random() * 10);
+        newComponent = $('<div class="componentbox newcomponentbox componentbox-selected" data-toggle="context" ><div class="con context con_' + comType + '"></div></div>');
+    } else {
+        newComponent = $('<div class="componentbox newcomponentbox" data-toggle="context" ><div class="con context con_' + comType + '"></div></div>');
+    }
+
+    //全局使用，否则最好使用返回值
+    currentComponentId = componentID;
+    newComponent.attr("id", componentID);
+    newComponent.attr("component-id", componentID);
+
+    //组件位置
+    var newPosition = 50 + 10 * $(".newcomponentbox").size();
+
+    newComponent.css("top", newPosition + "px");
+    newComponent.css("left", newPosition + "px");
+
+    switch (comType) {
+        case "canvas":
+            //增加样式显示，增加绑定事件 click等
+            newComponent.attr("component-type", "canvas");
+            newComponent.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("bg-canvas");
+            break;
+        case "img":
+            newComponent.attr("component-type", "img");
+            newComponent.children("div").append('<img src="' + imghost + '/img/sample.png"/>');
+            break;
+        case "text":
+            newComponent.attr("component-type", "text");
+            newComponent.children("div").append('<div class="text selected-text" style= "font-family:微软雅黑;font-size: 16px;text-align: left;line-height: 24px;color: #212121;font-style:normal;font-width:normal;">右侧面板编辑文本内容</div>');
+            break;
+        case "nav":
+            newComponent.attr("component-type", "nav");
+            newComponent.children("div").append('<img src="' + imghost + '/img/samplenav.png"/>');
+            break;
+        case "pano":
+            newComponent.attr("component-type", "pano");
+            newComponent.children("div").append('<img src="' + imghost + '/img/samplepano.png" />');
+            break;
+        case "audio":
+            newComponent.attr("component-type", "audio");
+            newComponent.children("div").append('<img src="' + imghost + '/img/sampleaudio.png" />');
+            break;
+        case "video":
+            newComponent.attr("component-type", "video");
+            newComponent.children("div").append('<img src="' + imghost + '/img/samplevideo.png" />');
+            break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
+            break;
+        case "imgList":
+            newComponent.attr("component-type", comType);
+            newComponent.children("div").append('<div class="imgListContainer"><div></div></div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            break;
+        default:
+            $.alert("未知的组件类型");
+            return;
+    }
+
+    $("#layermain").append(newComponent);
+    if (comType != "canvas") {
+        initBind(componentID);
+    }
+    if (isNew) {
+        getEleFocus($("#" + componentID));
+    }
+}
+
+/**
+
+ * 编辑时，初始化画布中的内容
+ * @param {[type]} pageID      [description]
+ * @param {[type]} componentID [description]
+ * @param {[type]} comType     [description]
+ */
+function setPageComponentsHtml(pageID, componentID, comType) {
+    var newComponent = $('<div class="componentbox"><div class="con"></div></div>');
+
+    var componentObj = lunaPage.pages[pageID].page_content[componentID];
+    if (!componentObj) {
+        alert("component error");
+        return;
+    }
+    comType = componentObj.type; // text,img,bg
+    var content = componentObj.content, icon;
+    newComponent.children(".con").addClass("con_" + comType);
+    switch (comType) {
+        case "canvas":
+            //增加样式显示，增加绑定事件 click等
+            newComponent.attr("component-type", "canvas");
+            newComponent.children("div").append('<div class="canvas" style="width:100%;height:100%;"></div>');
+            newComponent.addClass("bg-canvas");
+            newComponent.css("background-color", componentObj.bgc);
+            newComponent.css("background-image", 'url({0})'.format(componentObj.bgimg));
+            // showPanoBackground(newComponent, componentObj);
+            break;
+        case "text":
+            newComponent.attr("component-type", "text");
+            newComponent.children("div").append('<div class="text">' + content + '</div>');
+            break;
+        case "img":
+            newComponent.attr("component-type", "img");
+            if (content == "") {
+                content = imghost + "/img/sample.png";
+            }
+            newComponent.children("div").append('<img src="' + content + '"/>');
+            break;
+        case "nav":
+            newComponent.attr("component-type", "nav");
+            var icon = imghost + "/img/samplenav.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "pano":
+            newComponent.attr("component-type", "pano");
+            var icon = imghost + "/img/samplepano.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "audio":
+            newComponent.attr("component-type", "audio");
+            var icon = imghost + "/img/samplevideo.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "video":
+            newComponent.attr("component-type", "video");
+            var icon = imghost + "/img/samplevideo.png";
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                icon = content.icon;
+            }
+            newComponent.children("div").append('<img src="' + icon + '"/>');
+            break;
+        case "tab":
+            newComponent.attr("component-type", "tab");
+
+            var $topMenu = $('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            $topMenu.find('.enuTab-bg img').attr('src', content.bannerImg);
+            newComponent.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponent.css({ "top": "0px", "left": "0px", "width": "100%", "height": "100%" });
+            newComponent.addClass("tabmenu");
+
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
+            newComponent.find('.menulist').empty().append(innerHtml);
+
+            break;
+        default:
+            $.alert("未知的组件类型");
+            return;
+    }
+
+
+    if (!componentID) {
+        componentID = componentObj._id;
+    }
+    newComponent.attr("component-id", componentID); // id
+    newComponent.attr("id", componentID);
+    newComponent.css("position", "absolute");
+    switch (comType) {
+        case "canvas":
+            break;
+        default:
+            var unit = componentObj.unit;
+            newComponent.css("left", componentObj.x + unit);
+            newComponent.css("top", componentObj.y + unit);
+            newComponent.css("width", componentObj.width + unit);
+            newComponent.css("height", componentObj.height + unit);
+            newComponent.css("right", componentObj.right + unit);
+            newComponent.css("bottom", componentObj.bottom + unit);
+            break;
+    }
+
+    newComponent.css("z-index", componentObj.zindex);
+    newComponent.css("display", componentObj.display);
+    newComponent.children("div").children().attr("style", componentObj.style_other);
+    $("#layermain").append(newComponent);
+    if (comType != "canvas") {
+        initBind(componentID);
+    } else {
+        showPanoBackground(newComponent, componentObj);
+    }
+
+    lostFocus($("#" + componentID));
+}
+
+/**
+ * 更新指定component model数据，不依赖于当前组件是谁，由指定的参数决定
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @return {[type]}             [description]
+ */
+function updatePageComponents(pageID, componentID) {
+    var $currenthtml = $("#layermain #" + componentID);
+    if (!$currenthtml) {
+        alert("component error!");
+        return;
+    }
+
+    function valueReplace(v) {
+        if (v.indexOf("\\") != -1)
+            v = v.toString().replace(
+                new RegExp("([\\\\])", 'g'), "\\\\");
+
+        if (v.indexOf("\"") != -1) {
+            v = v.toString().replace(
+                new RegExp('(["\"])', 'g'), "\\\"");
+        }
+        return v;
+    }
+
+    var componentObj = lunaPage.pages[pageID].page_content[componentID];
+    //初始化数据，后续数据部分其实没有必要更新，画布中只能操作位置信息，其他都是通过控制面板操作的
+    switch ($currenthtml.attr("component-type")) {
+        case "canvas":
+            break;
+        case "text":
+            var con_text = $currenthtml.find(".text");
+            componentObj.content = con_text.prop('innerHTML');
+            try {
+                componentObj.content = valueReplace(componentObj.content);
+            } catch (e) {
+                console.log(e.message);
+            }
+            break;
+        case "img":
+            componentObj.content = $currenthtml.find("img").attr("src");
+            break;
+        case "nav":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        case "pano":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        case "audio":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        case "video":
+            componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        case "tab":
+            // componentObj.content.icon = $currenthtml.find("img").attr("src");
+            break;
+        default:
+            $.alert("未知的组件类型");
+            return;
+
+    }
+
+    switch ($currenthtml.attr("component-type")) {
+        case 'canvas':
+            break;
+        case 'tab':
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.width());
+            componentObj.height = parseInt($currenthtml.height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
+            break;
+        default:
+            componentObj.x = parseInt($currenthtml.position().left);
+            componentObj.y = parseInt($currenthtml.position().top);
+            componentObj.width = parseInt($currenthtml.find("div.con").width());
+            componentObj.height = parseInt($currenthtml.find("div.con").height());
+            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
+            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.unit = "px";
+            break;
+    }
+
+    componentObj.zindex = $currenthtml.zIndex();
+    componentObj.display = $currenthtml.css('display');
+
+    componentObj.style_other = $currenthtml.children("div").children().attr("style");
+}
+
+/**
+ * 根据当前id更新组件htmlstyle
+ * @param  {[type]} pageID      [description]
+ * @param  {[type]} componentID [description]
+ * @param  {[type]} comType     [description]
+ * @return {[type]}             [description]
+ */
+function updatePageComponentsHtml(pageID, componentID, comType) {
+    var comobj = $("#layermain #" + componentID);
+
+    var component = lunaPage.pages[pageID].page_content[componentID];
+    if (!component) {
+        alert("component error");
+        return;
+    }
+    var comType = component.type; // text,img,bg
+    var content = component.content;
+
+    switch (comType) {
+        case "canvas":
+            //comobj.children("div.con").html('<div class="canvas" style="width:100%;height:100%;"></div>');
+            comobj.css("background-color", component.bgc);
+            comobj.css("background-image", 'url({0})'.format(component.bgimg));
+            showPanoBackground(comobj, component);
+            break;
+        case "text":
+            comobj.children("div.con").html('<div class="text">' + content + '</div>');
+            break;
+        case "img":
+            if (content == "") {
+                content = imghost + "/img/sample.png";
+            }
+            comobj.children("div.con").html('<img src="' + content + '"/>');
+            break;
+        case "nav":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+            break;
+        case "pano":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
+            break;
+        case "audio":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
+            break;
+        case "video":
+            if (content != undefined && content.hasOwnProperty("icon")) {
+                var icon = content.icon;
+                comobj.children("div.con").html('<img src="' + icon + '"/>');
+            }
+
+            break;
+        case "tab":
+            var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
+            comobj.find('.menulist').empty().append(innerHtml);
+
+            comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
+            break;
+        default:
+            $.alert("未知的组件类型");
+            return;
+    }
+
+
+    var idValue = component._id;
+    var comType = component.type; // text，img
+    var unit = component.unit;
+    comobj.css("position", "absolute");
+    // console.log(component.position.changeTrigger.horizontal);
+    // console.log(component.position.changeTrigger.vertial);
+    if (component.position.changeTrigger.horizontal == 'right') {
+        comobj.css("left", 'auto');
+        comobj.css("right", component.right + unit);
+    } else {
+        comobj.css("left", component.x + unit);
+        comobj.css("right", 'auto');
+    }
+    if (component.position.changeTrigger.vertial == 'bottom') {
+        comobj.css("top", 'auto');
+        comobj.css("bottom", component.bottom + unit);
+    } else {
+        comobj.css("top", component.y + unit);
+        comobj.css("bottom", 'auto');
+    }
+    comobj.css("width", component.width + unit);
+    comobj.css("height", component.height + unit);
+
+    comobj.css("z-index", component.zindex);
+    comobj.css("display", component.display);
+    comobj.children("div").children().attr("style", component.style_other);
+}
+
+/**
+ * 显示全景背景
+ * @param  {[type]} $container    [全景背景存放容器]
+ * @param  {[type]} componentData [description]
+ * @return {[type]}               [description]
+ */
+function showPanoBackground($container, componentData) {
+    var pano = {},
+        panoObj = $container.find('canvas');
+
+    if (componentData.panoId && panoObj.length == 0) {
+        pano = new com.vbpano.Panorama($container.get(0));
+        pano.setPanoId(componentData.panoId); //panoId
+        pano.setHeading(componentData.pano.heading); //左右
+        pano.setPitch(componentData.pano.pitch); //俯仰角
+        pano.setRoll(componentData.pano.roll); //未知
+        pano.setAutoplayEnable(false); //自动播放
+        pano.setGravityEnable(componentData.gravity); //重力感应
+
+        //heading方向滚动的时候回调函数
+        pano.panoView.onHeadingChangeCallback = function (heading) {
+            heading = heading % 360;
+            if (heading < 0) {
+                heading += 360;
+            }
+            var scope = angular.element('#panoHead').scope(); //jquery+angular实现
+            if (scope.canvas.pano.heading != Number(heading).toFixed(0) * 1) {
+                scope.canvas.pano.heading = Number(heading).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.heading = scope.canvas.pano.heading;
+                scope.$apply();
+                // $('#panoHead').trigger('blur');
+            }
+        };
+
+        //pitch方向滚动的时候回调函数
+        pano.panoView.onPitchChangeCallback = function (pitch) {
+            var scope = angular.element('#panoPitch').scope(); //jquery+angular实现
+            if (scope.canvas.pano.pitch != Number(pitch).toFixed(0) * 1) {
+                scope.canvas.pano.pitch = Number(pitch).toFixed(0) * 1;
+                scope.canvas.currentComponent.pano.pitch = scope.canvas.pano.pitch;
+                scope.$apply();
+                // $('#panoPitch').trigger('blur');
+            }
+        };
+        currentBgPano = pano;
+    } else if (componentData.panoId && panoObj.length > 0) {
+        currentBgPano.setPanoId(componentData.panoId);
+        currentBgPano.setHeading(componentData.pano.heading); //左右
+        currentBgPano.setPitch(componentData.pano.pitch); //俯仰角
+        currentBgPano.setRoll(componentData.pano.roll); //未知
+        currentBgPano.setGravityEnable(componentData.gravity);
+    } else {
+        if (panoObj.length > 0) {
+            panoObj.parent().parent().remove();
+            currentBgPano = null;
+        }
+    }
+}
+//获取应用的id
+function getAppId() {
+    return window.location.pathname.match(/\d+/)[0];
+}
+/**
+ * 画布中的点击事件
+ * @type {Object}
+ */
+var componentPanel = {
+    init: function (componentType) {
+        if (componentType) {
+            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
+        }
+        currentController = componentType + "Div";
+        var controllerManagerDiv = $("#controller-manager");
+        var children = controllerManagerDiv.children();
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
+                $(children[i]).show();
+            } else {
+                $(children[i]).hide();
+            }
+        }
+    },
+    update: function (componentType) {
+        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
+    }
+};
+
+
+/**
+ * 点击画布中的组件，渲染右边参数，在画布点击事件中调用
+ * @type {Object}
+ */
+var componentPanel = {
+    init: function (componentType) {
+        if (componentType) {
+            $("#init" + componentType.capitalizeFirstLetter()).trigger('click');
+        }
+        currentController = componentType + "Div";
+        var controllerManagerDiv = $("#controller-manager");
+        var children = controllerManagerDiv.children();
+        for (var i = 0; i < children.length; i++) {
+            if ($(children[i]).attr("id") == currentController) {
+                $(children[i]).show();
+            } else {
+                $(children[i]).hide();
+            }
+        }
+    },
+    update: function (componentType) {
+        $("#update" + componentType.capitalizeFirstLetter()).trigger('click');
+    }
+};
+
+var initMenuTab = {
+    getTabListHtmlInCavas: function (tabList) {
+        var innerHtml = [];
+        for (var i = 0; i < tabList.length; i++) {
+
+            var defaultBgColor = 'background-color:' + (tabList[i].icon.bgColor ? tabList[i].icon.bgColor.defaultColor : '#fff') + ';',
+                defaultIconColor = 'color:' + (tabList[i].icon.iconColor ? tabList[i].icon.iconColor.defaultColor : '#ff4800') + ';';
+            switch (tabList[i].icon.type) {
+                case 'customer':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><i class="customerIcon icon-list" style="background:url(' + (tabList[i].icon.customer.defaultUrl || tabList[i].icon.customer.currentUrl) + ') no-repeat;"></i></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                    break;
+                case 'default':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><div class="menuitem-img-bg" style=' + defaultBgColor + '><i class="iconfont icon-list icon-' + tabList[i].icon.code + '" style="' + defaultIconColor + '"></i></div></div><div class="menuitem-title"><span>' + tabList[i].name + '</span></div></li>');
+                    break;
+                case 'text':
+                    innerHtml.push('<li class="menuitem " item="default" ><div class="menuitem-img"><div class="menuitem-img-bg" style=' + defaultBgColor + '><i class="icontext" style="' + defaultIconColor + '">' + tabList[i].name + '</i></div></div><div class="menuitem-title"><span></span></div></li>');
+                    break;
+            }
+        }
+        return innerHtml.join('');
+    }
+};

@@ -30,22 +30,9 @@ public class MsBusinessDAOImpl extends MsBusinessDAOBaseImpl implements MsBusine
 	}
 
 	@Override
-	public int readTotalBusinessCount() {
+	public int selectBusinessCountWithFilter(MsBusinessParameter parameter) {
 		// TODO Auto-generated method stub
-		int count = 0;
-		try{
-			String selectSql = String.format("select count(*) from %s", MsBusinessTable.TABLE_NAME);
-			Connection connection = getDataSource().getConnection();
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(selectSql);
-			if(resultSet.next()) {
-				count = resultSet.getInt(1);
-			}
-			statement.close();
-		} catch (Exception ex) {
-			logger.error("Failed to read total business count", ex);
-		}
-		
+		int count = (Integer) getSqlMapClientTemplate().queryForObject("ms_business.selectBusinessCountWithFilter", parameter);
 		return count;
 	}
 

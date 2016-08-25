@@ -23,7 +23,7 @@ public interface FarmPageService {
     JSONObject getPageInfo(Integer appId);
 
     // 根据类别id获取微景展信息
-    JSONObject getShowAppsByCtgrId(JSONObject param);
+    JSONObject getShowAppByCategoryId(JSONObject param);
 
     // 预览
     JSONObject previewPage(Integer appId);

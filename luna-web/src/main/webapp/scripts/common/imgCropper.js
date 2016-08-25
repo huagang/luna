@@ -91,7 +91,7 @@ $(function(){
                             that.image.cropper('destroy');
                         }
                         that.image.cropper({
-                            viewMode: 3,
+                            viewMode: 1,
                             autoCropArea: 1,
                             preview: '.img-preview'
                         });

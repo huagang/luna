@@ -164,26 +164,38 @@ function getNormalController(appSel) {
 		// 上传图片
 		uploadImg: function (conSel, previewSel, previewImgSel, event) {
 			//上传图片功能以及预览功能
-			$(conSel + ' .fileupload-tip').html("上传中...");
-			FileUploader.uploadMediaFile({
-				type: 'pic',
-				file: event.target.files[0],
-				resourceType: 'app',
-				success: function (data) {
-					$(conSel).addClass('hidden');
-					$(previewSel).removeClass('hidden');
-					if (!previewImgSel) {
-						//preview img的默认class名称为 preview-img
-						previewImgSel = previewSel + ' .preview-img';
-					}
-					$(previewImgSel).attr("src", data.data.access_url);
-					this.data.coverUrl = data.data.access_url;
-				}.bind(this),
-				error: function (data) {
-					showMessage(data.msg || '上传图片失败');
-				}
+			var file = event.target.files[0];
+			cropper.setFile(file, function(file){
+				$(conSel + ' .fileupload-tip').html("上传中...");
+				cropper.close();
+				FileUploader.uploadMediaFile({
+					type: 'pic',
+					file: file,
+					resourceType: 'app',
+					success: function (data) {
+						$(conSel).addClass('hidden');
+						$(previewSel).removeClass('hidden');
+						if (!previewImgSel) {
+							//preview img的默认class名称为 preview-img
+							previewImgSel = previewSel + ' .preview-img';
+						}
+						$(previewImgSel).attr("src", data.data.access_url);
+						this.data.coverUrl = data.data.access_url;
+						event.target.value = '';
+						$(conSel + ' .fileupload-tip').html("更换封面");
 
+					}.bind(this),
+					error: function (data) {
+						showMessage(data.msg || '上传图片失败');
+						$(conSel + ' .fileupload-tip').html("更换封面");
+						event.target.value = '';
+					}
+
+				});
+			}.bind(this), function(){
+				event.target.value = '';
 			});
+
 		}
 	};
 	controller.init();
@@ -340,25 +352,33 @@ function getShareController(data) {
 		uploadImg: function (event, order) {
 			//上传图片功能以及预览功能
 			var tipSel = ['.share-item.order-', order, ' .fileupload-tip'].join('');
-			$(tipSel).html("上传中...");
+			var file = event.target.files[0];
+			cropper.setFile(file, function(file) {
+				$(tipSel).html("上传中...");
+				cropper.close();
+				FileUploader.uploadMediaFile({
+					type: 'pic',
+					file: file,
+					resourceType: 'app',
+					success: function (data) {
+						var shareEle = $('.share-item.order-' + order);
+						shareEle.find('.file-uploader').addClass('hidden');
+						shareEle.find('.preview-container').removeClass('hidden');
+						shareEle.find('.preview-img').attr("src", data.data.access_url);
+						this.data[order].pic = data.data.access_url;
+						$(tipSel).html("更换缩略图");
+						event.target.value = '';
 
-			FileUploader.uploadMediaFile({
-				type: 'pic',
-				file: event.target.files[0],
-				resourceType: 'app',
-				success: function (data) {
-					var shareEle = $('.share-item.order-' + order);
-					shareEle.find('.file-uploader').addClass('hidden');
-					shareEle.find('.preview-container').removeClass('hidden');
-					shareEle.find('.preview-img').attr("src", data.data.access_url);
-					this.data[order].pic = data.data.access_url;
-					$(tipSel).html("更换缩略图");
-				}.bind(this),
-				error: function (data) {
-					$(tipSel).html("更换缩略图");
-					showMessage(data.msg || '上传图片失败');
-				}
+					}.bind(this),
+					error: function (data) {
+						$(tipSel).html("更换缩略图");
+						showMessage(data.msg || '上传图片失败');
+						event.target.value = '';
+					}
 
+				});
+			}.bind(this), function(){
+				event.target.value = '';
 			});
 		},
 		reset: function () {
@@ -525,7 +545,7 @@ function NewAppController() {
 								location.href = pageUrls.basicAppEdit.format(data.data.app_id, that.data.businessId);
 								break;
 							case 'dev':
-								location.href = pageUrls.devAppEdit.format('createapp', data.data.app_id, data.data.token);
+								location.href = pageUrls.devAppEdit.format('editapp.do', data.data.app_id, data.data.token);
 								break;
 							case 'data':
 								location.href = pageUrls.dataAppEdit.format(data.data.app_id, that.data.businessId);
@@ -754,7 +774,7 @@ function editDevApp(appId) {
 		type: apiUrls.appToken.type,
 		success: function (res) {
 			if (res.code === '0') {
-				location.href = pageUrls.devAppEdit.format('editapp', appId, res.data.token);
+				location.href = pageUrls.devAppEdit.format('editapp.do', appId, res.data.token);
 			} else {
 				alert(res.msg || '获取token失败')
 			}

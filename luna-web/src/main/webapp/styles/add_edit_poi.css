@@ -145,6 +145,10 @@ label{
 .cate-poi{
     margin-right: 10px;
 }
+
+.cate-poi label{
+    cursor: pointer;
+}
 .tabbar{
     width: 100%;
     padding: 0 195px;

@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import ms.biz.common.MailRunnable;
 import ms.biz.common.MenuHelper;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
@@ -65,8 +66,10 @@ public class LunaUserServiceImpl implements LunaUserService {
     @Override
     public JSONObject getUserList(int roleId, String query, int start, int limit) {
         List<Integer> childRoleIdList = new ArrayList<>();
-        // 当前角色不能设定自己角色的权限,但可以管理自己角色下的用户
-        childRoleIdList.add(roleId);
+        //超级管理员可以管理包括自己在内角色下的用户
+        if(roleId == DbConfig.ROOT_ROLE_ID) {
+            childRoleIdList.add(roleId);
+        }
         try {
             List<LunaRole> childRolesByRoleId = roleCache.getChildRolesByRoleId(roleId);
             for(LunaRole lunaRole : childRolesByRoleId) {

@@ -82,21 +82,20 @@
 
                 <div class="form-input" ng-show="user.choiceType">
                     <label>{{user.extraData.label}}</label>
-                    <div class="bussiness-container">
-                        <div class="ng-hide" ng-show="user.businessLength > 1">
+                    <div class="bussiness-container ng-hide" ng-show="! user.businessSelectAll && user.businessLength > 1">
                             <div class='business-group' ng-repeat="(label,business) in user.business">
                                 <label>{{label}}</label>
                                 <span class="business-wrapper" ng-repeat="item in business" >
                                     <input class='business' type="{{user.choiceType}}" ng-checked="(user.data.business[item.business_id] || '')"
                                            ng-click="user.handleOptionsChange()" id="{{item.business_id}}"/>
-                                    <label for="{{item.business_id}}" class="business-name"">{{item.business_name}}</label>
+                                    <label for="{{item.business_id}}" class="business-name">{{item.business_name}}</label>
                                     <div class="full-name">{{item.business_name}}</div>
                                 </span>
                             </div>
-                        </div>
-                        <span class="ng-hide" ng-show="user.businessLength === 1">
-                            {{user.businessName }}</span>
                     </div>
+                    <span class="ng-hide" ng-show="! user.businessSelectAll && user.businessLength === 1">{{user.businessName }}</span>
+                    <span class="ng-hide" ng-show="user.businessSelectAll">业务已全选</span>
+
                 </div>
                 <div class="footer">
                     <button class="button" ng-click="user.handleInviteUser()">{{user.userId ? '保存' : '邮箱邀请' }}</button>

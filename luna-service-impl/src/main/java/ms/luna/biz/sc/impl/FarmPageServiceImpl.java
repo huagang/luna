@@ -211,7 +211,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
-    public JSONObject getShowAppsByCtgrId(JSONObject param) {
+    public JSONObject getShowAppByCategoryId(JSONObject param) {
         try {
             String categoryIds = param.getString(MsShowAppTable.CATEGRYIDS);
             String types = param.getString(MsShowAppTable.TYPES);
@@ -226,7 +226,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             msShowAppParameter.setRange(true);
 
             JSONArray rows = new JSONArray();
-            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCtgrId(msShowAppParameter);
+            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCategoryId(msShowAppParameter);
             String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
             for (MsShowAppResult msShowAppResult : msShowAppResults) {
                 JSONObject row = new JSONObject();

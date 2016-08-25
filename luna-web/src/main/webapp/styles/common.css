@@ -23,7 +23,7 @@ input[type=number]{
     padding: 5px 10px;
 }
 select{
-	height:30px;
+    height:30px;
 	width:125px;
     padding-left:3px;
     margin-right:5px;
@@ -459,4 +459,25 @@ a.button.disable:hover{
 
 .show{
     display: block !important;
+}
+
+
+.message-wrapper{
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 50%;
+    top: 40%;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.message-wrapper .message{
+    background-color: rgba(0,0,0,.5);
+    padding: 5px 20px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 0 auto;
+    display: inline-block;
 }

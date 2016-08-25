@@ -16,6 +16,7 @@ import ms.luna.biz.table.LunaMenuTable;
 import ms.luna.biz.table.LunaModuleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.ModuleMenuCache;
+import ms.luna.cache.RoleMenuCache;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ public class MenuServiceImpl implements MenuService {
     private LunaRoleMenuDAO lunaRoleMenuDAO;
     @Autowired
     private ModuleMenuCache moduleMenuCache;
+    @Autowired
+    private RoleMenuCache roleMenuCache;
 
     @Override
     public JSONObject getModuleAndMenuByUserId(String userId) {
@@ -82,9 +85,7 @@ public class MenuServiceImpl implements MenuService {
     public JSONObject getModuleAndMenuByRoleId(int roleId) {
         JSONArray jsonArray = new JSONArray();
         try {
-            LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-            lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(roleId);
-            List<LunaRoleMenu> lunaRoleMenus = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
+            List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(roleId);
             List<Integer> menuIdList = new ArrayList<>();
             for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
                 menuIdList.add(lunaRoleMenu.getMenuId());

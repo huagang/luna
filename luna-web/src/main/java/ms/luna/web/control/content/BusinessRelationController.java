@@ -2,6 +2,7 @@ package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.ManageBusinessTreeService;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
@@ -25,6 +26,9 @@ import java.io.IOException;
  * @Date: 2016-07-27
  */
 
+/**
+ * 关系树列表页
+ */
 @Controller
 @RequestMapping("/content/businessRelation")
 public class BusinessRelationController extends BasicController {
@@ -76,6 +80,8 @@ public class BusinessRelationController extends BasicController {
             param.put("cityId", cityId);
             param.put("countyId", countId);
             param.put("keyWord", keyWord);
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            param.put(LunaUserTable.FIELD_ID, user.getUniqueId());
 
             JSONObject result = manageBusinessTreeService.loadBusinessTrees(param.toString());
             MsLogger.info(result.toString());

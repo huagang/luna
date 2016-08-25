@@ -3,6 +3,27 @@
 	��css�ļ���Ϊ��ʵ���ļ��ϴ�Ч����ʹ����http://projects.lukehaas.me/css-loaders/#load4
 	��Ч����
 */
+.load-container{
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin: 2px 0 0 10px;
+  height: 36px;
+  width: 36px;
+  background-color: white;
+  z-index: 2;
+}
+
+.load-container .loader {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  border-top: 0.5em solid rgba(68,95,168, 0.2);
+  border-right: 0.5em solid rgba(68,95,168, 0.2);
+  border-bottom: 0.5em solid rgba(68,95,168, 0.2);
+  border-left: 0.5em solid #445fa8;
+}
+
 .loader {
   margin: 60px auto;
   font-size: 10px;
