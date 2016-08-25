@@ -54,3 +54,30 @@ UPDATE `luna_dev`.`luna_menu` SET `display_order`='5' WHERE `id`='12';
 INSERT INTO `luna_dev`.`luna_role_menu` (`role_id`, `menu_id`) VALUES ('1', '22');
 
 
+CREATE TABLE `luna_deal_application` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '申请id',
+  `contact_name` varchar(20) NOT NULL COMMENT '申请商户名称',
+  `contact_phone` varchar(16) NOT NULL COMMENT '申请人联系方式',
+  `email` varchar(36) NOT NULL COMMENT '申请人邮箱',
+  `idcard_pic_url` varchar(100) NOT NULL COMMENT '申请人身份证正反面照片地址',
+  `idcard_period` varchar(26) NOT NULL COMMENT '申请人身份证有效期',
+  `merchant_name` varchar(36) NOT NULL COMMENT '商户主体名称',
+  `merchant_phone` varchar(16) NOT NULL COMMENT '商户客服电话',
+  `merchant_no` varchar(30) NOT NULL COMMENT '商户营业执照号',
+  `licence_pic_url` varchar(100) NOT NULL COMMENT '商户营业执照照片地址',
+  `licence_period` varchar(26) NOT NULL COMMENT '商户营业执照有效期',
+  `account_type` int(11) NOT NULL COMMENT '商户账户类型',
+  `account_name` varchar(36) NOT NULL COMMENT '商户账户名称',
+  `account_bank` varchar(36) NOT NULL COMMENT '商户账户开户银行',
+  `account_city` varchar(36) NOT NULL COMMENT '商户账户开户城市',
+  `account_address` varchar(36) NOT NULL COMMENT '商户账户开户行',
+  `account_no` varchar(20) NOT NULL COMMENT '商户开户账号',
+  `update_time` datetime NOT NULL COMMENT '申请更新时间',
+  `app_state` int(11) NOT NULL COMMENT '申请状态',
+  `user_id` char(32) NOT NULL COMMENT '申请人ID',
+  PRIMARY KEY (`id`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `luna_user` (`unique_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
+
+
