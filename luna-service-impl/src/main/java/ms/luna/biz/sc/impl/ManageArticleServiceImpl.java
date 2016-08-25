@@ -737,6 +737,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_CONTENT, msArticle.getAbstractContent());
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
+            jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
+            jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
             String columnName = columnInfoMap.get(msArticle.getColumnId());
             jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, columnName == null ? "无" : columnName);
             jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
