@@ -1157,3 +1157,26 @@ a.wj-img-clc {
 
 
 /* 图集组件End */
+
+
+/*带删除的输入框*/
+
+.input-del-wrapper {
+    position: relative;
+}
+
+.input-del-wrapper input {
+    width: 100%;
+}
+
+.input-del-wrapper .input-del {
+    position: absolute;
+    top:0;
+    font-size: 18px;
+    right: 0;
+    height: 30px;
+    line-height: 30px;
+}
+
+
+/*带删除的输入框End*/

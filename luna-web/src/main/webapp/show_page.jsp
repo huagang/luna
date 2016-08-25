@@ -174,7 +174,10 @@
                 </div>
                 <div class="bg-set clearfix">
                   <label>全景背景：</label>
-                  <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
+                 <div class="input-del-wrapper" style="width:252px;">
+                   <input type="text" id="panoId" name="panoId" class="form-control" ng-model="canvas.panoId" ng-blur="canvas.changePano()" ng-change="canvas.changePano()" ng-click="canvas.selectPano();">
+                   <i class="iconfont icon-lunadelete1 input-del" ng-click="canvas.clearPanoId()"></i>
+                 </div> 
                   <div class="bgPano-set" ng-show="canvas.panoId">
                     <div class="bgPano-set-item">Heading:
                       <input id="panoHead" class="form-control" type="number" name="" ng-model="canvas.pano.heading" ng-blur="canvas.changePano()" placeholder="请输入0 - 360的数字">
@@ -828,7 +831,10 @@
                       </div>
                       <div>全景ID：
                         <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
-                          <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                          <div class="input-del-wrapper" style="width:252px;">
+                            <input type="text"id="panoPanoId"  name="panoId" placeholder="输入全景Id" class="form-control" ng-model="pano.content.panoId" required ng-blur="pano.changePanoId()" ng-click='pano.selectPano()'>
+                            <i class="iconfont icon-lunadelete1 input-del" ng-click="pano.clearPanoId()"></i>
+                          </div>
                           <span ng-show="panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required" class="help-block">全景Id不能为空</span>
                         </div>
                       </div>
