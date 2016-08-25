@@ -28,18 +28,18 @@ var initPage = function () {
     updateLangLink(); // 更新切换中英文的链接
 
     function updateLangLink(){
-        var zh_id;
+        window.zh_id = '';
         try{
-            zh_id = parseInt(location.href.match(/zh_id=(\w+)/)[1]);
+            window.zh_id = parseInt(location.href.match(/zh_id=(\w+)/)[1]);
         } catch(e){
 
         }
 
         if(/lang=en/.test(location.search)){
             window.lang = 'en';
-            if(zh_id){  // 情况1 带有中文id的英文版,表示新建英文版
+            if(window.zh_id){  // 情况1 带有中文id的英文版,表示新建英文版
                 $('.change-lang').removeClass('hidden').html('切换到中文').
-                    attr('href', pageUrls.articleForZh.format(articleStore.id || zh_id));
+                    attr('href', pageUrls.articleForZh.format(articleStore.id || window.zh_id));
             } else if(articleStore.id){  // 情况2 不带有中文id的英文版,表示编辑英文版,此时应该有英文版id
                 fetchLangInfo(0, articleStore.id, function(data){
                     $('.change-lang').removeClass('hidden').html('切换到中文').
@@ -58,7 +58,7 @@ var initPage = function () {
                         attr('href', pageUrls.articleForEn.format(data.data.id));
                 }, function(data){ // 情况4 带有id的中文版,表示编辑中文版 没有有英文版
                     $('.change-lang').removeClass('hidden').html('切换到英文').
-                        attr('href', pageUrls.createArticleForEn.format(articleStore.business_id, articleStore.id));
+                        attr('href', pageUrls.createArticleForEn.format(articleStore.id));
                 });
             }
 
@@ -69,15 +69,15 @@ var initPage = function () {
     // 获取到其他版本语言的信息
     function fetchLangInfo(type,id, successCallback, errorCallback){
         $.ajax({
-            url: apiUrls.articleEditData.format(id) + '&type=' + type,
-            type: 'GET',
+            url: apiUrls.articleEditData.url.format(id) + '&type=' + type,
+            type: apiUrls.articleEditData.type,
             success: function(data){
                 if(data.code === '0'){
                     articleStore[window.lang] = data.data;
                     if(typeof successCallback === 'function'){
                         successCallback(data.data);
                     }
-                } else{
+                }  else{
                     console.error('获取文章信息失败');
                     if(typeof errorCallback === 'function'){
                         errorCallback(data.msg);
@@ -150,7 +150,7 @@ var initPage = function () {
 
             var data = {
                 id: articleStore.id || null,
-                business_id: business.id,
+                business_id: articleStore.business_id,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -161,6 +161,10 @@ var initPage = function () {
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
 
+            if(window.lang === 'en' && window.zh_id){
+                data.business_id = articleStore.en.business_id;
+            }
+
             var url, type;
             if(articleStore.id){
                 url = Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]);
@@ -169,6 +173,7 @@ var initPage = function () {
                 url = Inter.getApiUrl().articleCreate.url;
                 type = Inter.getApiUrl().articleCreate.type;
             }
+
             if(event.target.className.indexOf('publish') > -1){
                 url +='?saveAndPublish';
             }
@@ -184,7 +189,7 @@ var initPage = function () {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
                             $('.change-lang').removeClass('hidden').html('切换到英文').attr('href',
-                                pageUrls.createArticleForEn.format(articleStore.business_id, articleStore.id));
+                                pageUrls.createArticleForEn.format(articleStore.id));
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
                         showMessage("保存成功");

@@ -162,7 +162,7 @@ public class ArticleController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "", params = "create")
-    public ModelAndView createArticle(@RequestParam(required = true, value="business_id") int businessId,
+    public ModelAndView createArticle(@RequestParam(required = false, value="business_id") int businessId,
                                       HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = buildModelAndView("/add_article");
         modelAndView.addObject("business_id", businessId);
