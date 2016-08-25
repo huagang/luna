@@ -1783,7 +1783,7 @@
                 (that.definition.options || []).forEach(function(item, index){
                     id = now + '-' + index;
                     list += "<label for='{0}' class='checkbox-label'>\
-                                <div class='fullname'>{3}</div>\
+                                <div class='fullname-hidden hidden'>{3}</div>\
                                 <input class='checkbox' type='checkbox' value='{1}' id='{0}' data-order='{2}'/> {3}</label>"
                         .format(id, item.value, index, item.label);
                 });
