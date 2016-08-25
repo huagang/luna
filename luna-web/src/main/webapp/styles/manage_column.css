@@ -1,0 +1,17 @@
+#newColumnDialog .warn{
+    padding: 5px 0 0 70px;
+}
+
+#newColumnDialog{
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 20%;
+    margin: auto;
+    width: 500px;
+}
+
+#newColumnDialog input{
+    width: 370px;
+}

@@ -77,26 +77,11 @@ function ColumnController($scope, $rootScope, $http) {
         return -1;
     };
 
-    this.showDialog = function($popwindow) {
-        var h = $popwindow.height();
-        var w = $popwindow.width();
-        var $height = $(window).height();
-        var $width = $(window).width();
-        if($height < h){
-            h = $height;
-        }
-        $popwindow.css({
-            "display":"block",
-            "top":($height-h)/2,
-            "left":($width-w)/2
-        });
-    };
 
     this.newColumnDialog = function() {
         this.resetData();
         this.dialogBaseShow = true;
         this.newColumnShow = true;
-        this.showDialog($("#newColumnDialog"));
     };
 
     this.hideNewColumnDialog = function() {
