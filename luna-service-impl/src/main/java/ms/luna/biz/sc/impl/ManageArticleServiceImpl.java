@@ -125,6 +125,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
 
     private JSONObject toJson(MsArticleWithBLOBs msArticle) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(MsArticleTable.FIELD_ID, msArticle.getId());
         jsonObject.put(MsArticleTable.FIELD_TITLE, msArticle.getTitle());
         jsonObject.put(MsArticleTable.FIELD_SHORT_TITLE, msArticle.getShortTitle());
         jsonObject.put(MsArticleTable.FIELD_CONTENT, msArticle.getContent());
@@ -219,7 +220,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
                 MsArticleWithBLOBs msArticleWithBLOBs = msArticleDAO.selectByPrimaryKey(id);
                 if(msArticleWithBLOBs != null && msArticleWithBLOBs.getType() == 0) {
                     logger.warn(String.format("article [%d] is already chinese version", id));
-                } else {
+                    targetArticle = msArticleWithBLOBs;
+                } else if(msArticleWithBLOBs != null){
                     targetArticle = msArticleDAO.selectByPrimaryKey(msArticleWithBLOBs.getRefId());
                 }
             } else {
