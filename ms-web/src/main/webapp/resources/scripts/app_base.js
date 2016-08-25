@@ -261,16 +261,17 @@ $(document).ready(function () {
     // var scene = document.querySelector('.scene');
     // var parallax = new Parallax(scene);
     // $('.scene').find('.img-wraper').addClass('go-right');
+    //初始化 欢迎页的视差效果
+    var paraScene = [];
+    $('.paraScene').each(function (n, item) {
+        paraScene[n] = new Parallax(item);
+    });
     //设置首页滑动到第一页
 
     if ($('.welcome').length > 0) {
 
         var pageTime = $('.welcome').data('pagetime');
-        //初始化 欢迎页的视差效果
-        var paraScene = [];
-        $('.paraScene').each(function (n, item) {
-            paraScene[n] = new Parallax(item);
-        });
+
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
@@ -425,9 +426,7 @@ $(document).ready(function () {
         BaseComponent.call(this);
 
         this.setCanvasBg = function () {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                + this.value.gravity + '" data-animaType ="' + this.value.bgAnimaType.id + '"></div>');
-            this.html.attr('data-animaType', this.value.bgAnimaType.id);
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" ></div>');
             this.html.css("background-color", this.value.bgc);
             if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
                 this.html.css("background-image", 'url(' + this.value.bgimg + ')');
@@ -453,12 +452,13 @@ $(document).ready(function () {
         };
 
         this.build = function () {
+            var bgAnimaType = this.value.bgAnimaType || { id: 'none', name: '无动画' };//图片背景
 
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (!this.value.panoId && this.value.bgAnimaType.id == "gravity") {
+            } else if (!this.value.panoId && bgAnimaType.id == "gravity") {
                 this.setParaBg.call(this);
-            } else if (!this.value.panoId && this.value.bgAnimaType.id == "rtol") {
+            } else if (!this.value.panoId && bgAnimaType.id == "rtol") {
                 this.setAnimaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);
