@@ -16,6 +16,18 @@ var initPage = function () {
     var ue;
     var articleStore = getArticleStore();
     window.a = articleStore;
+    var pageUrls = Inter.getPageUrl();
+    if(/lang=en/.test(location.search)){
+        window.lang = 'en';
+        if(articleStore.id){
+            $('.change-lang').removeClass('hidden').html('切换到中文').attr('href', pageUrls.articleForZh.format(articleStore.id));
+        }
+    } else{
+        window.lang = 'zh';
+        if(articleStore.id){
+            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
+        }
+    }
     /**
      * 初始化编辑器
      * @return {[type]} [description]
@@ -87,6 +99,7 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
+                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
                         showMessage("保存成功");
@@ -432,7 +445,7 @@ var initPage = function () {
             initEditor();
             initEvent();
             if (articleStore.id) {
-                $(".content-header").html("更新文章");
+                $(".content-header .title").html("更新文章");
                 updateArticleData(articleStore.id);
             }
         }
