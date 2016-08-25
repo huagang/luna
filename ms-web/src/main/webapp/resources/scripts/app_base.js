@@ -1033,10 +1033,10 @@ $(document).ready(function () {
                         });
                     } else {
                         if (!that.data[index] && that.menuIndex == index) {
-                            that.data[index] = res.data;
+                            that.data[index] = [];
                             that.updateContent();
                         } else {
-                            that.data[index] = res.data;
+                            that.data[index] = [];
                         }
                     }
             }
@@ -1099,6 +1099,10 @@ $(document).ready(function () {
             that.menuType = type;
             switch (type) {
                 case 'singlePoi':
+                    if (!data || data.pois.length == 0) {
+                        html = '<div id="detail-title-wrap"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     html =
@@ -1119,6 +1123,10 @@ $(document).ready(function () {
                         + '</div>';
                     break;
                 case 'singleArticle':
+                    if (!data || data.length == 0) {
+                        html = '<div id="articleList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
@@ -1139,6 +1147,10 @@ $(document).ready(function () {
                     html = '<div id="article" class="content-details canscroll clearboth">' + (data.content) + '</div>';
                     break;
                 case 'poiList':
+                    if (!data || data.pois.length == 0) {
+                        html = '<div id="poiList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var typeInfo = {
                         '2': 'tour', //旅游
                         '3': 'hotel', //住宿
@@ -1317,10 +1329,6 @@ $(document).ready(function () {
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     break;
-
-
-
-
             }
 
             if (that.content.html()) {
