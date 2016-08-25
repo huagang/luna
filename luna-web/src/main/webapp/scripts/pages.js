@@ -146,7 +146,7 @@ var InitLeftArea = function () {
             if ($(this).val() == 1) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
                 document.querySelector('#txtPageHeight').value = '';
-            } else if ($('#sourcePageId')) {
+            } else if ($('#sourcePageId').val()) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
             } else {
                 $('#txtPageHeight').removeAttr('readonly');
