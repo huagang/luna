@@ -644,7 +644,7 @@ function ImgListController($scope, $rootScope, $http) {
         this.currentComponent.content.column = this.content.column = {};
         this.currentComponent.content.poiType = this.content.poiType = {};
         this.currentComponent.content.firstPoi = this.content.firstPoi = {};
-        this.currentComponent.content.poiLang = this.content.poiLang = this.poiLang[0];
+        this.currentComponent.content.poiLang = this.content.poiLang = this.langList[0];
         updatePageComponentsHtml();
     };
 
