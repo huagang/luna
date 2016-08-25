@@ -39,6 +39,12 @@
 			<isNotEmpty prepend="and" property="categoryId">
 				category_id = #categoryId#
 			</isNotEmpty>
+			<isNotNull prepend="and" property="businessIds">
+				a.business_id in
+				<iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+					#businessIds[]#
+				</iterate>
+			</isNotNull>
 			<isNotEmpty prepend="and" property="keyword">
 				a.business_name like #keyword#
 			</isNotEmpty>
@@ -48,5 +54,36 @@
 			Limit #min#, #max#
 		</isEqual>
 		
+	</select>
+
+	<select id="selectBusinessCountWithFilter" resultClass="Integer"
+			parameterClass="ms.luna.biz.dao.custom.model.MsBusinessParameter">
+		SELECT count(*)
+		FROM
+		ms_business a join ms_merchant_manage b on a.merchant_id = b.merchant_id
+		<dynamic prepend="where" >
+			<isNotEmpty prepend="and" property="provinceId">
+				province_id = #provinceId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="cityId">
+				city_id = #cityId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="countyId">
+				county_id = #countyId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="categoryId">
+				category_id = #categoryId#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="businessIds">
+				a.business_id in
+				<iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+					#businessIds[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="and" property="keyword">
+				a.business_name like #keyword#
+			</isNotEmpty>
+		</dynamic>
+
 	</select>
 </sqlMap>

@@ -9,4 +9,5 @@ package ms.luna.biz.cons;
 public class DbConfig {
 
     public final static int ROOT_ROLE_ID = 1;
+    public final static int BUSINESS_ALL = 0;
 }

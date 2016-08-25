@@ -54,11 +54,11 @@
 
                 	<!-- 中文版的时候给出可以切换到英文版的链接 -->
 					<c:if test="${lang == 'zh'}">
-						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
+						<a href="javascript:void(0)" data-href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}&lang=en" id="changeLang" class="lang-poi">切换到英文版</a>
 					</c:if>
 					<!-- 英文版的时候给出可以切换到中文版的链接 -->
 					<c:if test="${lang == 'en'}">
-						<a href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
+						<a href="javascript:void(0)"  data-href= "<%=request.getContextPath() %>/data/poi/initEditPage?poiId=${_id}" id="changeLang" class="lang-poi">切换到中文版</a>
 					</c:if>
                 </h3>
             </div>
@@ -273,9 +273,9 @@
                         <div class="value-poi panoramaType">
                         	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
                         	<form:radiobuttons   ng-model="poi.data.panoType" ng-change="poi.handlePanoTypeChange()"  id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
-							<input type="text" class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
-							<button  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
-							<div class="pano-search-result">
+							<input type="text" ng-hide="${poiReadOnly || lang == 'en'}"  class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
+							<button ng-hide="${poiReadOnly || lang == 'en'}"  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
+							<div class="pano-search-result" ng-hide="${poiReadOnly || lang == 'en'}" >
 								<label>搜索结果(最多显示20条)</label>
 								<div class="pano-container">
 									<div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">
@@ -325,13 +325,14 @@
 	<!--底部版权 end-->
 	<!--模态窗口 -->
 	<div id="pop-overlay"></div>
+	<jsp:include page="/templete/message.jsp" />
 
-<jsp:include page="/templete/imgCropper.jsp" />
-<script type='text/javascript'>
-	// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
-	window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
-	window.poiId = '${_id}';
-</script>
+	<jsp:include page="/templete/imgCropper.jsp" />
+	<script type='text/javascript'>
+		// 在此配置ueditor的home目录,必须在引入ueditor config之前设置   by wumengqiang
+		window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
+		window.poiId = '${_id}';
+	</script>
 <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>

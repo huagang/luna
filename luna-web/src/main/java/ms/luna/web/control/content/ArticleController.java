@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsArticleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
@@ -218,6 +219,8 @@ public class ArticleController extends BasicController {
             jsonQuery.put("min", min);
             jsonQuery.put("max", max);
         }
+        LunaUserSession user = SessionHelper.getUser(request.getSession());
+        jsonQuery.put(LunaUserTable.FIELD_ID, user.getUniqueId());
         try {
             JSONObject ret = manageArticleService.loadArticle(jsonQuery.toJSONString());
             if ("0".equals(ret.getString("code"))) {

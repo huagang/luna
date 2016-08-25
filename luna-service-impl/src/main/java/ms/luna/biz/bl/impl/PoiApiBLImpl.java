@@ -1596,7 +1596,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 					continue;
 				}
 				if("preview_url".equals(field)) {
-					result.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + poi_id);
+					result.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + poi_id + "?lang=" + lang);
 					continue;
 				}
 				result.put(convertDbField2ApiField(field), "");

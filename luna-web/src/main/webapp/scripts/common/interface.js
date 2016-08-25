@@ -42,9 +42,14 @@ var Inter = function () {
         getPageUrl: function () {
             return {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}', // {0} create or edit
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageApp: context + '/platform/user'
+                manageUser: context + '/platform/user', //
+                routeConfig: context + '/content/route/configuration/{0}',
+                addPoi: context + '/data/poi/addPage',
+                editPoi: context + '/data/poi/initEditPage?poiId={0}',
+                manageRouter: context + '/content/route',
+
             };
         },
         getApiUrl: function () {
@@ -550,6 +555,14 @@ var Inter = function () {
                 //zclip路径
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
+                // 线路管理
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
 
                 //全景搜索
                 searchSinglePano: {
@@ -558,7 +571,6 @@ var Inter = function () {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
-
             };
         }
     };

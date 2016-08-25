@@ -3,9 +3,11 @@ package ms.luna.web.control.content;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageShowAppService;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -62,6 +64,9 @@ public class AppController extends BasicController {
 
         String appName = RequestHelper.getString(request, MsShowAppTable.FIELD_APP_NAME);
         int businessId = RequestHelper.getInteger(request, MsShowAppTable.FIELD_BUSINESS_ID);
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有此业务权限");
+        }
         int type = RequestHelper.getInteger(request, MsShowAppTable.FIELD_TYPE);
         if(businessId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
@@ -155,7 +160,7 @@ public class AppController extends BasicController {
         resJSON.put("total", 0);
         try {
 
-            JSONObject param = JSONObject.parseObject("{}");
+            JSONObject param = new JSONObject();
             if (offset != null) {
                 param.put("min", offset);
             }
@@ -167,6 +172,8 @@ public class AppController extends BasicController {
                 keyword = URLDecoder.decode(keyword, "utf-8");
                 param.put("keyword", keyword.trim());
             }
+            LunaUserSession user = SessionHelper.getUser(request.getSession());
+            param.put(LunaUserTable.FIELD_ID, user.getUniqueId());
 
             JSONObject result = manageShowAppService.loadApps(param.toString());
             if(result == null) {

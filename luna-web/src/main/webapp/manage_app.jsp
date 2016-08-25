@@ -16,6 +16,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/imgCropper.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
@@ -65,7 +67,7 @@
                                     	<th data-field="business_name" data-align="left">所属业务</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
-						                <th data-formatter="operationFormatter" data-align="right">操作</th>
+						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
 						            </tr>
 						        </thead>
 						    </table>
@@ -102,7 +104,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev" style="display: none" data-value="dev">
+			<div class="template dev" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>
@@ -256,6 +258,7 @@
 <!--弹出层 end-->
 <jsp:include page="/templete/message.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<jsp:include page="/templete/imgCropper.jsp" />
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>

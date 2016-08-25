@@ -937,7 +937,7 @@ $(document).ready(function () {
         function fetchSingleData(item, index) {
             switch (item.type) {
                 case 'singlePoi':
-                    var poiLangId = item.poiLang;
+                    var poiLangId = item.poiLang || 'zh';
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoiById',
                         type: 'GET',
@@ -973,7 +973,7 @@ $(document).ready(function () {
                     });
                     break;
                 case 'poiList':
-                    var poiLangId = item.poiLang;
+                    var poiLangId = item.poiLang || 'zh';
                     $.ajax({
                         url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
                         type: 'GET',

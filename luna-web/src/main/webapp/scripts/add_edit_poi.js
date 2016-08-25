@@ -10,6 +10,13 @@ $(function () {
             ue.setContent($('#description').val());
         });
     }
+
+    $('#changeLang').on('click', function(event){
+        saveData(function(){
+            location.href = event.target.getAttribute('data-href');
+        });
+    });
+
     //名称
     $("#long_title").bind('keyup', function () {
         //        var value = $("#long_title").val();
@@ -146,6 +153,37 @@ $(function () {
         });
     });
 
+    $('#thumbnail_fileup').on('change', function(event){
+            var file = event.target.files[0];
+            var res = FileUploader._checkValidation('pic',file);
+            if(res.error){
+                    $('#thumbnail_warn').html(res.msg).css('display','block');
+                    event.target.value = '';
+                    return;
+             }
+            cropper.setFile(file, function(file){
+                cropper.close();
+                FileUploader.uploadMediaFile({
+                        type: 'pic',
+                            file: file,
+                            resourceType: 'poi',
+                            resourceId: window.poiId,
+                            success: function(data){
+                                $('#thumbnail').val(data.data.access_url);
+                                $('#thumbnail-show').attr('src', data.data.access_url);
+                                $('#thumbnail_warn').css('display', 'none');
+                            },
+                        error: function(data){
+                                $('#thumbnail_warn').html(data.msg).css('display','block');
+                                alert('上传失败');
+                            }
+                    });
+                $('#thumbnail_fileup').val('');
+            }, function(){
+                $('#thumbnail_fileup').val('');
+            });
+    });
+
     //页卡项选中
     $("#tabbar").on('click', 'span', function () {
         $(this).siblings().addClass("selected-item");
@@ -155,133 +193,14 @@ $(function () {
         fieldshow(tagid, field);
     });
 
-    $("#btn-POI-save").click(function () {
-        $('#description').val(ue.getContent());
-        var hasError = false;
-        hasError = checkTitleLong() || hasError;
-        hasError = checkTitleShort() || hasError;
-        hasError = checkLnglatitude("latitude") || hasError;
-        hasError = checkLnglatitude("longitude") || hasError;
-        hasError = check_description() || hasError;
-        if (!hasError) {
-            var formdata = new FormData($("#poiModel")[0]);
-            var noerror = true;
-            var msg = "";
-            // 针对英文做检查
-            var lang = $("#lang").val();
-            if ('en' == lang) {
-                // check检查
-                $.ajax({
-                    url: Inter.getApiUrl().poiCheckForEnglish.url,
-                    type: Inter.getApiUrl().poiCheckForEnglish.type,
-                    async: false,
-                    cache: true,
-                    data: formdata,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'JSON',
-                    success: function (returndata) {
-                        switch (returndata.code) {
-                            case "0":
-                                noerror = true;
-                                break;
-                            case "-1":
-                                msg = returndata.msg;
-                                noerror = false;
-                                break;
-                            default:
-                                noerror = false;
-                        }
-                    },
-                    error: function () {
-                        $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                        setTimeout(function () {
-                            $("#status-message").css('display', 'none');
-                        }, 2000);
-                    }
-                });
-            }
-            if (!noerror) {
-                $.confirm(msg, function () {
-                    $.ajax({
-                        url: Inter.getApiUrl().poiEditSave.url,
-                        type: Inter.getApiUrl().poiEditSave.type,
-                        async: true,
-                        cache: true,
-                        data: formdata,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        success: function (returndata) {
-                            switch (returndata.code) {
-                                case "0": //符合规则添加修改属性
-                                    $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                                    setTimeout(function () {
-                                        $("#status-message").css('display', 'none');
-                                        // window.location.href = Inter.getApiUrl().poiInit.url;
-                                    }, 2000);
-                                    break;
-                                default:
-                                    $("#status-message").html(returndata.msg).css('display', 'block');
-                                    setTimeout(function () {
-                                        $("#status-message").css('display', 'none');
-                                    }, 2000);
-                                    break;
-                            }
-                        },
-                        error: function () {
-                            $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                            setTimeout(function () {
-                                $("#status-message").css('display', 'none');
-                            }, 2000);
-                        }
-                    });
-                }, function () { });
-            } else {
-                // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
-                // 后台对于提交上来的数据，不再做中文检查
-                $.ajax({
-                    url: Inter.getApiUrl().poiEditSave.url,
-                    type: Inter.getApiUrl().poiEditSave.type,
-                    async: true,
-                    cache: true,
-                    data: formdata,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'JSON',
-                    success: function (returndata) {
-                        switch (returndata.code) {
-                            case "0": //符合规则添加修改属性
-                                $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
-                                setTimeout(function () {
-                                    $("#status-message").css('display', 'none');
-                                    // window.location.href = Inter.getApiUrl().poiInit.url;
-                                }, 2000);
-                                break;
-                            default:
-                                $("#status-message").html(returndata.msg).css('display', 'block');
-                                setTimeout(function () {
-                                    $("#status-message").css('display', 'none');
-                                }, 2000);
-                                break;
-                        }
-                    },
-                    error: function () {
-                        $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
-                        setTimeout(function () {
-                            $("#status-message").css('display', 'none');
-                        }, 2000);
-                    }
-                });
-
-            }
-
-        } else {
-            $("#status-message").html('您的输入有误！').css('display', 'block');
+    $("#btn-POI-save").on('click', function() {
+        saveData(function () {
+            $("#status-message").html("修改成功，请刷新后查看").css('display', 'block');
             setTimeout(function () {
                 $("#status-message").css('display', 'none');
+                // window.location.href = Inter.getApiUrl().poiInit.url;
             }, 2000);
-        }
+        });
     });
 
     $("#btn-POI-save-add").click(function () {
@@ -333,40 +252,9 @@ $(function () {
             }, 3000);
         }
     });
-
-    $('#thumbnail_fileup').on('change', function(event){
-        var file = event.target.files[0];
-        var res = FileUploader._checkValidation('pic',file);
-        if(res.error){
-            $('#thumbnail_warn').html(res.msg).css('display','block');
-            event.target.value = '';
-            return;
-        }
-        cropper.setFile(file, function(file){
-            FileUploader.uploadMediaFile({
-                type: 'pic',
-                file: file,
-                resourceType: 'poi',
-                resourceId: window.poiId,
-                success: function(data){
-                    $('#thumbnail').val(data.data.access_url);
-                    $('#thumbnail-show').attr('src', data.data.access_url);
-                    $('#thumbnail_warn').css('display', 'none');
-                    cropper.close();
-                },
-                error: function(data){
-                    $('#thumbnail_warn').html(data.msg).css('display','block');
-                    alert('上传失败');
-                }
-            });
-            $('#thumbnail_fileup').val('');
-        }, function(){
-            $('#thumbnail_fileup').val('');
-        });
-    });
     displayPrivateField();
 
-    var geocoder = new qq.maps.Geocoder({
+    window.geocoder = new qq.maps.Geocoder({
         // 设置服务请求成功的回调函数
         complete: function (result) {
             var addressComponents = result.detail.addressComponents;
@@ -420,6 +308,150 @@ $(function () {
     });
 
 });
+
+function saveData(successCallback, errorCallback) {
+    $('#description').val(ue.getContent());
+    var hasError = false;
+    hasError = checkTitleLong() || hasError;
+    hasError = checkTitleShort() || hasError;
+    hasError = checkLnglatitude("latitude") || hasError;
+    hasError = checkLnglatitude("longitude") || hasError;
+    hasError = check_description() || hasError;
+    if (!hasError) {
+        var formdata = new FormData($("#poiModel")[0]);
+        var noerror = true;
+        var msg = "";
+        // 针对英文做检查
+        var lang = $("#lang").val();
+        if ('en' == lang) {
+            // check检查
+            $.ajax({
+                url: Inter.getApiUrl().poiCheckForEnglish.url,
+                type: Inter.getApiUrl().poiCheckForEnglish.type,
+                async: false,
+                cache: true,
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: 'JSON',
+                success: function (returndata) {
+                    switch (returndata.code) {
+                        case "0":
+                            noerror = true;
+
+                            break;
+                        case "-1":
+                            msg = returndata.msg;
+                            noerror = false;
+
+                            break;
+                        default:
+                            noerror = false;
+                    }
+                },
+                error: function () {
+                    $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
+                    setTimeout(function () {
+                        $("#status-message").css('display', 'none');
+                    }, 2000);
+                }
+            });
+        }
+        if (!noerror) {
+            $.confirm(msg, function () {
+                $.ajax({
+                    url: Inter.getApiUrl().poiEditSave.url,
+                    type: Inter.getApiUrl().poiEditSave.type,
+                    async: true,
+                    cache: true,
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    success: function (returndata) {
+                        switch (returndata.code) {
+                            case "0": //符合规则添加修改属性
+
+                                if(typeof successCallback === 'function'){
+                                    successCallback(returndata);
+                                }
+                                break;
+                            default:
+                                if(typeof errorCallback === 'function'){
+                                    errorCallback(returndata);
+                                }
+                                $("#status-message").html(returndata.msg).css('display', 'block');
+                                setTimeout(function () {
+                                    $("#status-message").css('display', 'none');
+                                }, 2000);
+                                break;
+                        }
+                    },
+                    error: function () {
+                        $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
+                        setTimeout(function () {
+                            $("#status-message").css('display', 'none');
+                        }, 2000);
+                        if(typeof errorCallback === 'function'){
+                            errorCallback(returndata);
+                        }
+                    }
+                });
+            }, function () { });
+        } else {
+            // 确实没有错误，或者用户已经认可的英文版中有中文，可以提交
+            // 后台对于提交上来的数据，不再做中文检查
+            $.ajax({
+                url: Inter.getApiUrl().poiEditSave.url,
+                type: Inter.getApiUrl().poiEditSave.type,
+                async: true,
+                cache: true,
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: 'JSON',
+                success: function (returndata) {
+                    switch (returndata.code) {
+                        case "0": //符合规则添加修改属性
+
+                            if(typeof successCallback === 'function'){
+                                successCallback(returndata);
+                            }
+                            break;
+                        default:
+                            $("#status-message").html(returndata.msg).css('display', 'block');
+                            setTimeout(function () {
+                                $("#status-message").css('display', 'none');
+                            }, 2000);
+                            if(typeof errorCallback === 'function'){
+                                errorCallback(returndata);
+                            }
+                            break;
+                    }
+                },
+                error: function () {
+                    $("#status-message").html('请求错误，或会话已经失效！').css('display', 'block');
+                    setTimeout(function () {
+                        $("#status-message").css('display', 'none');
+                    }, 2000);
+                    if(typeof errorCallback === 'function'){
+                        errorCallback(returndata);
+                    }
+                }
+            });
+
+        }
+
+    } else {
+        $("#status-message").html('您的输入有误！').css('display', 'block');
+        setTimeout(function () {
+            $("#status-message").css('display', 'none');
+        }, 2000);
+        if(typeof errorCallback === 'function'){
+            errorCallback();
+        }
+    }
+}
 
 //检查名称
 function checkTitleLong() {

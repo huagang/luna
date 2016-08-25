@@ -59,4 +59,14 @@
     <!--底部版权 end-->
 
 </body>
+<script>
+    var businessId = "${business_id}";
+    var businessName = "${business_name}";
+    if(businessId && businessName){
+        localStorage.setItem('business', JSON.stringify({
+            id: parseInt(businessId),
+            name: businessName
+        }));
+    }
+</script>
 </html>
