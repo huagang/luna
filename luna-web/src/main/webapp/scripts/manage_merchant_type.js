@@ -23,6 +23,13 @@ function MerchantType($scope, $http){
     // 操作 改变状态
     vm.changeState = changeState;
 
+    // 操作 将从后台获取的数据展开
+    vm.transformData = transformData;
+
+    // 操作 搜索
+    vm.handleSearch = handleSearch;
+
+
     // 事件 展开, 合并商品类目
     vm.handleToggle = handleToggle;
 
@@ -55,8 +62,9 @@ function MerchantType($scope, $http){
     // 操作 初始化参数以及拉取数据
     function init(){
         vm.apiUrls = Inter.getApiUrl();
-        vm.msgEle = angular.element('.message-wrapper');
         vm.state = 'init'; // init - 不显示任何弹出框  new - 显示添加类目弹出框 edit - 显示编辑类目弹出框 delete - 显示删除类目弹出框
+        vm.searchText = '';
+
         vm.categoryData = []; // 商品类目列表, 可以多层嵌套
         vm.parentCat = [{
             value: 'None',
@@ -105,6 +113,26 @@ function MerchantType($scope, $http){
         }
     }
 
+    function transformData(data){
+        vm.categoryData = [];
+        var data = $.extend(true, [], data), i = 0;
+        while(data.length > 0){
+            var parent = data[0];
+            parent.depth = parent.depth || 1;
+            vm.categoryData.push(data[0]);
+
+            data.shift();
+            if((parent.child || []).length > 0){
+                i = parent.child.length -1;
+                for(; i > -1; i -= 1){
+                    parent.child[i].parent = parent.parent || parent.id;
+                    parent.child[i].depth = parent.depth + 1;
+                    data.unshift(parent.child[i]);
+                }
+            }
+        }
+    }
+
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
     function checkValid(){
 
@@ -120,10 +148,9 @@ function MerchantType($scope, $http){
     }
 
     function showMessage(msg){
-        vm.msgEle.removeClass('hidden');
-        vm.msgEle.find('.message').html(msg);
+        vm.message = msg;
         setTimeout(function(){
-            vm.msgEle.addClass('hidden');
+            vm.message = "";
         }, 2000)
     }
 
@@ -134,26 +161,8 @@ function MerchantType($scope, $http){
             method: vm.apiUrls.fetchMerchantCat.type
         }).then(function(res){
             if(res.data.code === '0'){
-                vm.originData = res.data.data;
-
-                vm.categoryData = [];
                 // 将所有类目层级展开并顺序加到categoryData中
-                var data = $.extend(true, [], res.data.data), i = 0;
-                while(data.length > 0){
-                    var parent = data[0];
-                    parent.depth = parent.depth || 1;
-                    vm.categoryData.push(data[0]);
-
-                    data.shift();
-                    if((parent.child || []).length > 0){
-                        i = parent.child.length -1;
-                        for(; i > -1; i -= 1){
-                            parent.child[i].parent = parent.parent || parent.id;
-                            parent.child[i].depth = parent.depth + 1;
-                            data.unshift(parent.child[i]);
-                        }
-                    }
-                }
+                vm.transformData(res.data.data);
                 console.log(vm.categoryData);
 
                 // vm.parentCat = res.data.data.parentCat;
@@ -165,6 +174,22 @@ function MerchantType($scope, $http){
             vm.categoryData = [];
             vm.parentCat = [];
         });
+    }
+
+    // 请求 搜索
+    function handleSearch(){
+        if(vm.searchText){
+            $http({
+                url: vm.apiUrls.searchMerchantCat.url.format(vm.searchText, 0, 10),
+                method: vm.apiUrls.searchMerchantCat.type
+            }).then(function(res){
+
+            }, function(res){
+
+            })
+        } else{
+            vm.showMessage('搜索内容不能为空');
+        }
     }
 
     // 事件 展开,合并商品类目

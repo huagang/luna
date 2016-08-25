@@ -2,11 +2,23 @@
     position: fixed;
     left: 0;
     right: 0;
-    top: 20px;
+    top: 10%;
     z-index: 10000;
     margin: auto;
     display: block;
-    width: 1000px;
+    width: 600px;
+    box-shadow: 4px 4px 5px #777,0px 0 2px #999;
+}
+
+.pop-modal input,
+.pop-modal select{
+    width: 470px;
+}
+
+.pop-modal .selectize-control{
+    width: 470px;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .pop-modal .pop-fun{
@@ -27,7 +39,7 @@
     height: 15px;
     width: 15px;
     cursor: pointer;
-    background: url(../img/merchant/open.png) center center no-repeat;
+    background: url(../img/merchant/close.png) center center no-repeat;
     background-size: contain;
     margin-bottom: 2px;
 }
@@ -36,8 +48,32 @@
     vertical-align: middle;
     height: 15px;
     width: 15px;
-    background: url(../img/merchant/close.png) center center no-repeat;
+    background: url(../img/merchant/open.png) center center no-repeat;
     background-size: contain;
     cursor: pointer;
     margin-bottom: 2px;
+}
+
+.depth-2{
+    padding-left: 20px;
+}
+
+.depth-3{
+    padding-left: 30px;
+}
+
+.depth-4{
+    padding-left: 40px;
+}
+
+.depth-5{
+    padding-left: 50px;
+}
+
+.depth-6{
+    padding-left: 60px;
+}
+
+.depth-7{
+    padding-left: 70px;
 }

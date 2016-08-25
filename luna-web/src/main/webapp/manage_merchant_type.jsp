@@ -27,7 +27,7 @@
   <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
   <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
-<body ng-app="merchantType" ng-controller="MerchantType as cate">
+<body ng-app="merchantType" ng-controller="MerchantType as cate" ng-class="{'modal-open': cate.state !== 'init'}">
 <div class="container-fluid">
   <!--通用导航栏 start-->
   <jsp:include page="/templete/header.jsp"/>
@@ -44,9 +44,9 @@
             <div class="main-hd"><h3>商品类目管理</h3></div>
             <div class="main-bd">
               <div class="search">
-                <input type="text" class="search-txt" placeholder="请输入关键字进行搜索">
+                <input type="text" class="search-txt" ng-model="cate.searchText" placeholder="请输入关键字进行搜索">
                 <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
-                <button type="button" class="btn-search" ng-click="cate.search()">搜 索</button>
+                <button type="button" class="btn-search" ng-click="cate.handleSearch()">搜 索</button>
                 <button type="button" class="pull-right" ng-click="cate.changeState('new')">添加类目</button>
               </div>
               <table class="table">
@@ -61,9 +61,10 @@
                   <tr ng-repeat="row in cate.categoryData" class="ng-hide"
                       ng-show="row.depth === 1 || cate.openList.indexOf(row.parent) !== -1 ">
 
-                      <td ng-class="{'isChild': row.depth !== 1}">
-                          <div class="ng-hide icon-close" ng-show="row.depth === 1" ng-click="cate.handleToggle(row.id)"></div>
-                          <span>{{'-'.repeat(row.depth-1) + row.name}}</span>
+                      <td>
+                          <div class="ng-hide " ng-class="{'icon-close': cate.openList.indexOf(row.id) !== -1, 'icon-open':  cate.openList.indexOf(row.id) === -1}"
+                               ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleToggle(row.id)"></div>
+                          <span class="depth-{{row.depth}}">{{'—'.repeat(row.depth-1) + row.name}}</span>
                       </td>
                       <td>{{row.abbreviation}}</td>
                       <td>
@@ -80,8 +81,8 @@
         </div>
       </div>
     </div>
-    <div class="message-wrapper hidden">
-      <div class="message"></div>
+    <div class="message-wrapper" ng-hide="cate.message === ''">
+      <div class="message">{{cate.message}}</div>
     </div>
     <div class="add-edit-cate ng-hide" ng-show="['edit', 'new'].indexOf(cate.state) !== -1">
       <div class="mask" ng-click="cate.changeState('init')"></div>

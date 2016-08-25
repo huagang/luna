@@ -246,7 +246,7 @@ var Inter = function () {
                 createMerchantCat: {url: context + '/merchant/goodsCategory', type: 'POST'},  // 新建商品类目信息
                 saveMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'PUT'},  // 保存商品类目信息
                 deleteMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'DELETE'},  // 删除商品类目
-
+                searchMerchantCat: {url: context + '/merchant/goodsCategory/search?searchWord={0}&offset={1}&limit={2}', type: 'GET'}
             };
         }
     };
