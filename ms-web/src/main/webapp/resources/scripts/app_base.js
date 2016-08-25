@@ -558,8 +558,8 @@ $(document).ready(function () {
         this.getPoiList = function (data, successCallback) {
             if (data.businessId && data.firstPoi) {
                 var url = '';
-                if (data.poiType) {
-                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.dataType.id]);
+                if (data.poiType && data.poiType.id) {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.poiType.id]);
                 } else {
                     url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [data.businessId, data.firstPoi.id]);
                 }
@@ -936,52 +936,73 @@ $(document).ready(function () {
         function fetchSingleData(item, index) {
             switch (item.type) {
                 case 'singlePoi':
-                    var poiLangId = item.poiLang || 'zh';
-                    $.ajax({
-                        url: host + '/servicepoi.do?method=getPoiById',
-                        type: 'GET',
-                        data: { poi_id: item.singlePoiId },
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data[poiLangId];
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data[poiLangId];
+                    if (item.singlePoiId) {
+                        var poiLangId = item.poiLang.id || 'zh';
+                        $.ajax({
+                            url: host + '/servicepoi.do?method=getPoiById',
+                            type: 'GET',
+                            data: { poi_id: item.singlePoiId },
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data[poiLangId];
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data[poiLangId];
+                                    }
                                 }
-
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = { pois: [] };
+                            that.updateContent();
+                        } else {
+                            that.data[index] = { pois: [] };
                         }
-                    });
+                    }
                     break;
                 case 'singleArticle':
-                    $.ajax({
-                        url: [host, '/article/data/', item.articleId].join(''),
-                        type: 'GET',
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data;
+                    if (item.articleId) {
+                        $.ajax({
+                            url: [host, '/article/data/', item.articleId].join(''),
+                            type: 'GET',
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data;
+                                    }
                                 }
-                            }
 
+                            }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.updateContent();
+                        } else {
+                            that.data[index] = [];
                         }
-                    });
+                    }
                     break;
                 case 'poiList':
-                    var poiLangId = item.poiLang || 'zh';
+                    var poiLangId = item.poiLang.id || 'zh', url;
+                    if (item.firstPoiId && item.poiTypeId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [window.business_id, item.firstPoiId, item.poiTypeId]);
+                    } else if (item.firstPoiId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
+                    } else {
+                        that.data[index] = { pois: [] };
+                        that.updateContent();
+                        return;
+                    }
                     $.ajax({
-                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
+                        url: url,
                         type: 'GET',
-                        data: {
-                            business_id: window.business_id,
-                            poi_id: item.firstPoiId,
-                            category_id: item.poiTypeId,
-                            // lang:item.poiLang.id,
-                        },
+
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
@@ -995,20 +1016,29 @@ $(document).ready(function () {
                     });
                     break;
                 case 'articleList':
-                    $.ajax({
-                        url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
-                        type: 'GET',
-                        success: function (res) {
-                            if (res.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = res.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = res.data;
+                    if (item.columnId) {
+                        $.ajax({
+                            url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
+                            type: 'GET',
+                            success: function (res) {
+                                if (res.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = res.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = res.data;
+                                    }
                                 }
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = res.data;
+                            that.updateContent();
+                        } else {
+                            that.data[index] = res.data;
                         }
-                    });
+                    }
             }
 
         }
