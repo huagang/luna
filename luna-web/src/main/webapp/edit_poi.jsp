@@ -273,9 +273,9 @@
                         <div class="value-poi panoramaType">
                         	<input type="hidden" name="tempPanoType" value="${tempPanoType}" >
                         	<form:radiobuttons   ng-model="poi.data.panoType" ng-change="poi.handlePanoTypeChange()"  id="panorama_type" path="panoramaType" items="${panoramaTypes}" disabled="${poiReadOnly || lang == 'en'}" itemLabel="label" itemValue="value" delimiter="&nbsp;" />
-							<input type="text" class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
-							<button  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
-							<div class="pano-search-result">
+							<input type="text" ng-hide="${poiReadOnly || lang == 'en'}"  class="pano-search-input" ng-model='poi.data.searchText' placeholder="输入全景名称等关键字信息,支持模糊搜索"/>
+							<button ng-hide="${poiReadOnly || lang == 'en'}"  type="button" class="button btn-search" ng-click="poi.handleSearch()">搜索</button>
+							<div class="pano-search-result" ng-hide="${poiReadOnly || lang == 'en'}" >
 								<label>搜索结果(最多显示20条)</label>
 								<div class="pano-container">
 									<div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">
