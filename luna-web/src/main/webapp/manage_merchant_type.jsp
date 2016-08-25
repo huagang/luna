@@ -63,7 +63,7 @@
 
                       <td ng-class="{'isChild': row.depth !== 1}">
                           <div class="ng-hide icon-close" ng-show="row.depth === 1" ng-click="cate.handleToggle(row.id)"></div>
-                          <span>{{row.name}}</span>
+                          <span>{{'-'.repeat(row.depth-1) + row.name}}</span>
                       </td>
                       <td>{{row.abbreviation}}</td>
                       <td>

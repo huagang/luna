@@ -23,11 +23,8 @@ function MerchantType($scope, $http){
     // 操作 改变状态
     vm.changeState = changeState;
 
-    // 事件 展开商品类目
-    vm.handleOpen = handleOpen;
-
-    // 事件 合并商品类目
-    vm.handleClose = handleClose;
+    // 事件 展开, 合并商品类目
+    vm.handleToggle = handleToggle;
 
     // 事件 新建,编辑弹出框名称改变
     vm.handleNameChange = handleNameChange;
@@ -170,14 +167,15 @@ function MerchantType($scope, $http){
         });
     }
 
-    // 事件 展开商品类目
-    function handleOpen(id){
-
-    }
-
-    // 事件 合并商品类目
-    function handleClose(id) {
-
+    // 事件 展开,合并商品类目
+    function handleToggle(id){
+        id = parseInt(id);
+        var index = vm.openList.indexOf(id);
+        if(index > -1){
+            vm.openList.splice(index,1);
+        } else{
+            vm.openList.push(id);
+        }
     }
 
     // 事件&请求 添加类目
