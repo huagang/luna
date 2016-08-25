@@ -211,13 +211,15 @@ public class ArticleController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public JSONObject loadArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int min = RequestHelper.getInteger(request, "offset");
-        int max = RequestHelper.getInteger(request, "limit");
+    public JSONObject loadArticle(@RequestParam(required = false) Integer offset,
+                                  @RequestParam(required = false) Integer limit,
+                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         JSONObject jsonQuery = new JSONObject();
-        if(min > 0 && max > 0) {
-            jsonQuery.put("min", min);
-            jsonQuery.put("max", max);
+        if (offset != null) {
+            jsonQuery.put("min", offset);
+        }
+        if (limit != null) {
+            jsonQuery.put("max", limit);
         }
         LunaUserSession user = SessionHelper.getUser(request.getSession());
         jsonQuery.put(LunaUserTable.FIELD_ID, user.getUniqueId());
@@ -229,7 +231,7 @@ public class ArticleController extends BasicController {
         } catch (Exception ex) {
             logger.error("Failed to load column", ex);
         }
-        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败");
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
 
     }
 
