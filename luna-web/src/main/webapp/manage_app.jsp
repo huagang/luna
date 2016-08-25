@@ -102,7 +102,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev" style="display: none" data-value="dev">
+			<div class="template dev" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>

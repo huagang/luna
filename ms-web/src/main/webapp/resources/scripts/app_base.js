@@ -600,7 +600,9 @@ $(document).ready(function () {
                         arrUlHtml.push(' <a href="' + res.data[i].url + '">');
                         arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + res.data[i].abstract_pic + ') no-repeat;background-size:100% 100%;">');
                         arrUlHtml.push('<div class="imglist-filter"></div>');
+                        arrUlHtml.push('<div class="imglist-title-wrapper">');
                         arrUlHtml.push('<div class="imglist-title">' + res.data[i].title + '</div>');
+                        arrUlHtml.push('</div>');
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</a>');
                         arrUlHtml.push('</li>');
@@ -896,10 +898,6 @@ $(document).ready(function () {
                 }
 
             });
-
-
-
-
             that.html.on('click', '.icon-video', function (event) {
                 var radio = that.html.find(".icon-radio");
                 if (radio.hasClass('icon-radio-on')) {

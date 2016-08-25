@@ -1153,7 +1153,7 @@ function getImgListHtml(content) {
             if (articleList.length > 0) {
                 arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
                 for (var i = 0; i < articleList.length; i++) {
-                    arrHtml.push('<li class="imglist-wrapper"><a href="' + articleList[i].url + '"><div class="imglist-wrapper-bg" style="background:url(' + (articleList[i].abstract_pic || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">' + articleList[i].title + '</div></div></a></li>');
+                    arrHtml.push('<li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(' + (articleList[i].abstract_pic || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">' + articleList[i].title + '</div></div></a></li>');
                 }
                 arrHtml.push('</ul></div>');
             } else {
@@ -1182,7 +1182,7 @@ function getImgListHtml(content) {
                 arrHtml.push('<div class="imgListContainer"><ul class="imglist-container">');
                 for (var i = 0; i < poiList.length; i++) {
                     arrHtml.push('<li class="imglist-poi-wrapper">');
-                    arrHtml.push('<a href="' + (poiList[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[poiList[i].panorama.panorama_type_id], [poiList[i].panorama.panorama_id]) : "javascript:;") + '">');
+                    arrHtml.push('<a href="javascript:;">');
                     arrHtml.push('<div class="imglist-li-bg" style="background:url(' + (poiList[i].thumbnail || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;">');
                     arrHtml.push('<div class="imglist-filter"></div>');
                     arrHtml.push('<div class="imglist-title-wrapper">');
@@ -1193,7 +1193,7 @@ function getImgListHtml(content) {
                     arrHtml.push('</div>');
                     arrHtml.push('</div>');
                     arrHtml.push('</a>');
-                    arrHtml.push('<a href="' + poiList[i].preview_url + '" class="imglist-detail">点击查看详情</a>');
+                    arrHtml.push('<a href="javascript:;" class="imglist-detail">点击查看详情</a>');
                     arrHtml.push('</li>');
                 }
 
