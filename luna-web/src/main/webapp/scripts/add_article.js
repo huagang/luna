@@ -3,11 +3,6 @@
  * author:wumengqiang & duyutao
  * Date:2016-6-22
  */
-/*
-        前后端接口参数说明:
-            type: 语言信息 type==0 中文   type==1 英文
-
- */
 
 
 //获取当前的业务数据
@@ -25,88 +20,12 @@ var initPage = function () {
     window.a = articleStore;
     var pageUrls = Inter.getPageUrl();
     var apiUrls = Inter.getApiUrl();
-    updateLangLink(); // 更新切换中英文的链接
 
-    function updateLangLink(){
-        window.zh_id = '';
-        try{
-            window.zh_id = parseInt(location.href.match(/zh_id=(\w+)/)[1]);
-        } catch(e){
-
-        }
-
-        if(/lang=en/.test(location.search)){
-            window.lang = 'en';
-            if(window.zh_id){  // 情况1 带有中文id的英文版,表示新建英文版
-                $('.change-lang').removeClass('hidden').html('切换到中文').
-                    attr('data-href', pageUrls.articleForZh.format(articleStore.id || window.zh_id));
-                fetchLangInfo(0, window.zh_id, function(data) {
-                    articleStore.category = data.column_id;
-                    articleStore.audio = data.audio || '';
-                    articleStore.video = data.video || '';
-                    articleStore.thumbnail = data.abstract_pic || '';
-                    if(articleStore.audio){
-                        $('#audio').val(articleStore.audio);
-                    }
-                    if(articleStore.video){
-                        $('#video').val(articleStore.video);
-                    }
-                    if(articleStore.thumbnail){
-                        $('#thumbnail_show').attr('src', articleStore.thumbnail);
-                    }
-
-                    $('#category')[0].value = data.column_id;
-                    $('#category').attr('disabled', 'disabled');
-                });
-            } else if(articleStore.id){  // 情况2 不带有中文id的英文版,表示编辑英文版,此时应该有英文版id
-                fetchLangInfo(0, articleStore.id, function(data){
-                    $('.change-lang').removeClass('hidden').html('切换到中文').
-                        attr('data-href', pageUrls.articleForZh.format(data.id));
-                });
-            } else{
-                showMessage('链接不正确,无法获取英文版文章id')
-            }
-
-        } else{
-            window.lang = 'zh';
-            if(articleStore.id){
-                fetchLangInfo(1, articleStore.id, function(data){ // 情况3 带有id的中文版,表示编辑中文版 并有英文版
-                    $('.change-lang').removeClass('hidden').html('切换到英文').
-                        attr('data-href', pageUrls.articleForEn.format(data.data.id));
-                }, function(data){ // 情况4 带有id的中文版,表示编辑中文版 没有有英文版
-
-                });
-            }
-
-            // 情况4 不带有id的中文版,表示新建中文版,此时不显示切换到英文版,因为中文版还没有新建,拿不到中文版id
-        }
+    if(/lang=en/.test(location.search)) {
+        window.lang = 'en';
     }
-
-    // 获取到其他版本语言的信息
-    function fetchLangInfo(type,id, successCallback, errorCallback){
-        $.ajax({
-            url: apiUrls.articleEditData.url.format(id) + '&type=' + type,
-            type: apiUrls.articleEditData.type,
-            success: function(data){
-                if(data.code === '0'){
-                    articleStore[window.lang] = data.data;
-                    if(typeof successCallback === 'function'){
-                        successCallback(data.data);
-                    }
-                }  else{
-                    console.error('获取文章信息失败');
-                    if(typeof errorCallback === 'function'){
-                        errorCallback(data.msg);
-                    }
-                }
-            },
-            error: function(data){
-                console.error('获取文章信息失败');
-                if(typeof errorCallback === 'function'){
-                    errorCallback(data.msg);
-                }
-            }
-        })
+    else{
+        window.lang = 'zh';
     }
 
     /**
@@ -155,7 +74,6 @@ var initPage = function () {
         // 事件绑定 发布按钮点击事件
         document.querySelector('.publish').addEventListener('click', saveData);
 
-        $('.change-lang').on('click', saveData);
 
         function saveData(e) {
             articleStore.content = ue.getContent();
@@ -178,10 +96,6 @@ var initPage = function () {
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
 
-            if(window.lang === 'en' && window.zh_id){
-                data.business_id = articleStore.en.business_id;
-            }
-
             var url, type;
             if(articleStore.id){
                 url = Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]);
@@ -190,14 +104,11 @@ var initPage = function () {
                 url = Inter.getApiUrl().articleCreate.url;
                 type = Inter.getApiUrl().articleCreate.type;
             }
-            
-            var
-            if(event.target.className.indexOf('publish') > -1){
-                url +='?saveAndPublish';
-            } else(event.target.className.indexOf('change-lang') !== -1){
-
+            var op = '保存';
+            if(e.target.className.indexOf('publish') > -1){
+                url += '?saveAndPublish';
+                op = '保存并发布';
             }
-
             $.ajax({
                 url: url,
                 type: type,
@@ -208,22 +119,15 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('data-href',
-                                pageUrls.createArticleForEn.format(articleStore.id, articleStore.business_id));
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
-                        if(){
-                            location.href = event.target.getAttribute('data-href');
-                            return;
-                        }
-
-                            showMessage("保存成功");
+                            showMessage(op + "成功");
                     } else {
-                        showMessage(data.msg || "保存失败");
+                        showMessage(data.msg || op + "失败");
                     }
                 },
                 error: function (data) {
-                    showMessage("保存失败");
+                    showMessage(op + "失败");
                 }
             });
         }
@@ -474,10 +378,6 @@ var initPage = function () {
                     });
                     articleStore.previewUrl += '?preview';
                     insertArticleData();
-                    if(window.lang === 'zh'){
-                        $('.change-lang').removeClass('hidden').html('切换到英文').
-                            attr('data-href', pageUrls.createArticleForEn.format(articleStore.id, data.business_id));
-                    }
                 } else {
                     console.log("请求文章数据失败");
                 }
@@ -544,18 +444,7 @@ var initPage = function () {
             initEvent();
             var title = '';
             if (articleStore.id) {
-                if(window.lang === 'zh'){
-                    title = "更新文章 (中文版)";
-                } else{
-                    title = "更新文章 (英文版)";
-                }
                 updateArticleData(articleStore.id);
-            } else{
-                if(window.lang === 'zh'){
-                    title = "新建文章 (中文版)";
-                } else{
-                    title = "新建文章 (英文版)";
-                }
             }
             $(".content-header .title").html(title);
         }
