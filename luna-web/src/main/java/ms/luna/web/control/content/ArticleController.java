@@ -104,6 +104,19 @@ public class ArticleController extends BasicController {
         }
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, columnId);
 
+        int type = RequestHelper.getInteger(request, MsArticleTable.FIELD_TYPE);
+        if(type < 0) {
+            type = 0;
+        }
+        jsonObject.put(MsArticleTable.FIELD_TYPE, type);
+        if(type != 0) {
+            int refId = RequestHelper.getInteger(request, MsArticleTable.FIELD_REF_ID);
+            if(refId < 0) {
+                errMsg = "中文版id不合法";
+                return Pair.of(jsonObject, errMsg);
+            }
+            jsonObject.put(MsArticleTable.FIELD_REF_ID, refId);
+        }
         return Pair.of(jsonObject, errMsg);
 
     }
@@ -118,10 +131,29 @@ public class ArticleController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
         }
         try {
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to create article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建文章失败，请重试");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "", params = "saveAndPublish")
+    @ResponseBody
+    public JSONObject submitCreateAndPublishArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Pair<JSONObject, String> pair = toJson(request, true);
+        JSONObject articleJson = pair.getLeft();
+        if(pair.getRight() != null) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
+        }
+        try {
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
+            JSONObject ret = manageArticleService.createAndPublishArticle(articleJson.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to create article", ex);
@@ -144,7 +176,8 @@ public class ArticleController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "data")
     @ResponseBody
-    public JSONObject readArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject readArticle(@PathVariable int id, @RequestParam(value = "type") int type,
+                                HttpServletRequest request, HttpServletResponse response) throws IOException {
         if(id < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
         }
@@ -183,11 +216,37 @@ public class ArticleController extends BasicController {
 
         try{
             JSONObject jsonObject = pair.getLeft();
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to update article: " + id , ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败，请重试");
+
+        }
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}", params = "saveAndPublish")
+    @ResponseBody
+    public JSONObject submitUpdateAndPublishArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if(id < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
+        }
+        Pair<JSONObject, String> pair = toJson(request, false);
+        if(pair.getRight() != null) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
+        }
+
+        try{
+            JSONObject jsonObject = pair.getLeft();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
+            jsonObject.put(MsArticleTable.FIELD_ID, id);
+            JSONObject ret = manageArticleService.updateAndPublishArticle(jsonObject.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to update article: " + id , ex);
