@@ -41,17 +41,25 @@ var initPage = function () {
                 $('.change-lang').removeClass('hidden').html('切换到中文').
                     attr('href', pageUrls.articleForZh.format(articleStore.id || zh_id));
             } else if(articleStore.id){  // 情况2 不带有中文id的英文版,表示编辑英文版,此时应该有英文版id
-                fetchLangInfo(0, articleStore.id)
+                fetchLangInfo(0, articleStore.id, function(data){
+                    $('.change-lang').removeClass('hidden').html('切换到中文').
+                        attr('href', pageUrls.articleForZh.format(data.data.id));
+                });
             } else{
-                showMessage('链接不正确,获取不到英文版文章id')
+                showMessage('链接不正确,无法获取英文版文章id')
             }
-
 
         } else{
             window.lang = 'zh';
-            if(articleStore.id){ // 情况3 带有id的中文版,表示编辑中文版
+            if(articleStore.id){
                 // $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
-                fetchLangInfo(1, articleStore.id);
+                fetchLangInfo(1, articleStore.id, function(data){ // 情况3 带有id的中文版,表示编辑中文版 并有英文版
+                    $('.change-lang').removeClass('hidden').html('切换到英文').
+                        attr('href', pageUrls.articleForEn.format(data.data.id));
+                }, function(data){ // 情况4 带有id的中文版,表示编辑中文版 没有有英文版
+                    $('.change-lang').removeClass('hidden').html('切换到英文').
+                        attr('href', pageUrls.createArticleForEn.format(articleStore.business_id, articleStore.id));
+                });
             }
 
             // 情况4 不带有id的中文版,表示新建中文版,此时不显示切换到英文版,因为中文版还没有新建,拿不到中文版id
@@ -59,19 +67,28 @@ var initPage = function () {
     }
 
     // 获取到其他版本语言的信息
-    function fetchLangInfo(type,id, success, error){
+    function fetchLangInfo(type,id, successCallback, errorCallback){
         $.ajax({
             url: apiUrls.articleEditData.format(id) + '&type=' + type,
             type: 'GET',
             success: function(data){
                 if(data.code === '0'){
-
+                    articleStore[window.lang] = data.data;
+                    if(typeof successCallback === 'function'){
+                        successCallback(data.data);
+                    }
                 } else{
-
+                    console.error('获取文章信息失败');
+                    if(typeof errorCallback === 'function'){
+                        errorCallback(data.msg);
+                    }
                 }
             },
             error: function(data){
-
+                console.error('获取文章信息失败');
+                if(typeof errorCallback === 'function'){
+                    errorCallback(data.msg);
+                }
             }
         })
     }
@@ -117,7 +134,13 @@ var initPage = function () {
      */
     var initEvent = function () {
         // 事件绑定  保存按钮点击事件
-        document.querySelector('.save').addEventListener('click', function (e) {
+        document.querySelector('.save').addEventListener('click', saveData);
+
+        // 事件绑定 发布按钮点击事件
+        document.querySelector('.publish').addEventListener('click', saveData);
+
+
+        function saveData(e) {
             articleStore.content = ue.getContent();
             var error = articleStore.checkEmpty().error;
             if (error) {
@@ -137,9 +160,22 @@ var initPage = function () {
                 column_id: articleStore.category,
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
+
+            var url, type;
+            if(articleStore.id){
+                url = Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]);
+                type = Inter.getApiUrl().articleUpdate.type;
+            } else{
+                url = Inter.getApiUrl().articleCreate.url;
+                type = Inter.getApiUrl().articleCreate.type;
+            }
+            if(event.target.className.indexOf('publish') > -1){
+                url +='?saveAndPublish';
+            }
+
             $.ajax({
-                url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
-                type: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
+                url: url,
+                type: type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -147,7 +183,8 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href', pageUrls.articleForEn.format(articleStore.id));
+                            $('.change-lang').removeClass('hidden').html('切换到英文').attr('href',
+                                pageUrls.createArticleForEn.format(articleStore.business_id, articleStore.id));
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
                         showMessage("保存成功");
@@ -159,7 +196,7 @@ var initPage = function () {
                     showMessage("保存失败");
                 }
             });
-        });
+        }
 
         // 事件绑定 预览按钮点击事件
         document.querySelector('.preview').addEventListener('click', function (e) {
@@ -171,27 +208,6 @@ var initPage = function () {
             }
         });
 
-        // 事件绑定 发布按钮点击事件
-        document.querySelector('.publish').addEventListener('click', function (e) {
-            document.querySelector('.save').click();
-            $.ajax({
-                url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
-                type: Inter.getApiUrl().articlePublish.type,
-                async: true,
-                data: { id: articleStore.id },
-                dataType: "json",
-                success: function (data) {
-                    if (data.code == "0") {
-                        showMessage("发布成功");
-                    } else {
-                        showMessage("发布失败");
-                    }
-                },
-                error: function (data) {
-                    showMessage("发布失败");
-                }
-            });
-        });
 
         // 事件绑定  文章标题输入框onChange事件 
         // 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
