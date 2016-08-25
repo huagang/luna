@@ -341,10 +341,11 @@ function getShareController(data) {
 			//上传图片功能以及预览功能
 			var tipSel = ['.share-item.order-', order, ' .fileupload-tip'].join('');
 			$(tipSel).html("上传中...");
+			var file  = event.target.files[0];
 
 			FileUploader.uploadMediaFile({
 				type: 'pic',
-				file: event.target.files[0],
+				file: file,
 				resourceType: 'app',
 				success: function (data) {
 					var shareEle = $('.share-item.order-' + order);

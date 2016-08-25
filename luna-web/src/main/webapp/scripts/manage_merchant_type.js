@@ -14,6 +14,9 @@ function MerchantType($scope, $http){
     // 操作 初始化参数以及拉取数据
     vm.init = init;
 
+    // 操作 事件绑定
+    vm.bindEvent = bindEvent;
+
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
     vm.checkValid = checkValid;
 
@@ -39,6 +42,12 @@ function MerchantType($scope, $http){
     // 事件 新建,编辑弹出框简称改变
     vm.handleAbbrChange = handleAbbrChange;
 
+    // 事件 新建,编辑搜索输入框onChange事件
+    vm.handleInputChange = handleInputChange;
+
+    // 事件 新建,编辑搜索输入框keydown事件
+    vm.clearTimeOut = clearTimeOut;
+
     // 事件&请求 添加类目
     vm.requestNew = requestNew;
 
@@ -54,8 +63,10 @@ function MerchantType($scope, $http){
     // 请求 保存数据
     vm.saveData = saveData;
 
-    // 请求 由于分页,需要获取所有的父级类目来满足编辑类目和添加类目的需求
-    vm.fetchParentCat = fetchParentCat;
+    // 请求 由于分页,需要搜索父级类目来满足编辑类目和添加类目的需求
+    vm.searchParentCat = searchParentCat;
+
+
 
     vm.init();
 
@@ -97,7 +108,13 @@ function MerchantType($scope, $http){
 
 
         vm.fetchMerchatTypeData();
-        vm.fetchParentCat();
+
+        vm.bindEvent();
+    }
+
+    function bindEvent(){
+        angular.element('.selectize-input input').on('input', vm.handleInputChange);
+        angular.element('.selectize-input input').on('keydown', vm.clearTimeOut);
     }
 
     function changeState(state, id){
@@ -136,15 +153,22 @@ function MerchantType($scope, $http){
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
     function checkValid(){
 
-
     }
 
     function handleNameChange(){
-
+        if(vm.opData.name.length > 32){
+            vm.opData.nameError = '名称长度超过32个字符限制';
+        } else if(vm.opData.nameError){
+            vm.opData.nameError = '';
+        }
     }
 
     function handleAbbrChange(){
-
+        if(vm.opData.abbreviation.length > 16){
+            vm.opData.abbrError = '简称长度超过16个字符限制';
+        } else if(vm.opData.abbrError){
+            vm.opData.abbrError = '';
+        }
     }
 
     function showMessage(msg){
@@ -164,15 +188,11 @@ function MerchantType($scope, $http){
                 // 将所有类目层级展开并顺序加到categoryData中
                 vm.transformData(res.data.data);
                 console.log(vm.categoryData);
-
-                // vm.parentCat = res.data.data.parentCat;
             } else{
                 vm.showMessage('获取商品类目列表失败');
             }
         }, function(res){
             vm.showMessage('获取商品类目列表失败');
-            vm.categoryData = [];
-            vm.parentCat = [];
         });
     }
 
@@ -183,13 +203,30 @@ function MerchantType($scope, $http){
                 url: vm.apiUrls.searchMerchantCat.url.format(vm.searchText, 0, 10),
                 method: vm.apiUrls.searchMerchantCat.type
             }).then(function(res){
-
+                if(res.data.code === '0'){
+                    // 将所有类目层级展开并顺序加到categoryData中
+                    vm.transformData(res.data.data);
+                    console.log(vm.categoryData);
+                } else{
+                    vm.showMessage('获取商品类目列表失败');
+                }
             }, function(res){
-
+                vm.showMessage('获取商品类目列表失败');
             })
         } else{
             vm.showMessage('搜索内容不能为空');
         }
+    }
+
+    function clearTimeOut(){
+        if(vm.timeoutId){
+            clearTimeout(vm.timeoutId);
+        }
+        vm.timeoutId = setTimeout(vm.searchParentCat, 400);
+    }
+
+    function handleInputChange(event){
+        vm.opData.searchParentText = event.target.value;
     }
 
     // 事件 展开,合并商品类目
@@ -223,9 +260,15 @@ function MerchantType($scope, $http){
 
     }
 
-    // 请求 获取所有的父级类目
-    function fetchParentCat(){
+    // 请求 搜索所有的父级类目
+    function searchParentCat(){
+        if(vm.opData.searchParentText){
+            $http({
+                url: vm.apiUrls.searchAllMerchatCat.url.format(vm.opData.searchParentText, 20),
+                method: vm.apiUrls.searchAllMerchatCat.type
 
+            })
+        }
     }
 
 }

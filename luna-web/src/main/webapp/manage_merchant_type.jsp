@@ -40,7 +40,7 @@
           <jsp:include page="/templete/menu.jsp"></jsp:include>
           <!--侧边菜单 end-->
           <!--主题内容 start-->
-          <div class="main">
+          <div class="main ng-cloak">
             <div class="main-hd"><h3>商品类目管理</h3></div>
             <div class="main-bd">
               <div class="search">
@@ -52,7 +52,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>名称</th>
+                    <th style="min-width: 150px">名称</th>
                     <th>简称</th>
                     <th>操作</th>
                   </tr>
@@ -75,15 +75,16 @@
                   </tr>
                 </tbody>
               </table>
+            <div class="message-wrapper" ng-hide="! cate.message">
+                <div class="message">{{cate.message}}</div>
+            </div>
             </div>
           </div>
 
         </div>
       </div>
     </div>
-    <div class="message-wrapper" ng-hide="cate.message === ''">
-      <div class="message">{{cate.message}}</div>
-    </div>
+
     <div class="add-edit-cate ng-hide" ng-show="['edit', 'new'].indexOf(cate.state) !== -1">
       <div class="mask" ng-click="cate.changeState('init')"></div>
       <div class="pop-modal">
@@ -96,13 +97,13 @@
         <div class="pop-cont">
             <div class="form-group name">
                 <label>名称</label>
-                <input type="text" ng-model="cate.opData.name" ng-change="cate.handleNameChange()" placeholder="名称不超过32个字符" />
-                <p class="warn"></p>
+                <input type="text" ng-model="cate.opData.name" ng-change="cate.handleNameChange()" placeholder="名称不超过32个字符" maxlength="32"/>
+                <p class="red">{{cate.opData.nameError}}</p>
             </div>
             <div class="form-group abbr">
                 <label>简称</label>
-                <input type="text" ng-model="cate.opData.abbr" ng-change="cate.handleAbbrChange()" placeholder="英文简称不超过16个字符" />
-                <p class="warn"></p>
+                <input type="text" ng-model="cate.opData.abbreviation" ng-change="cate.handleAbbrChange()" placeholder="英文简称不超过16个字符" maxlength="16"/>
+                <p class="red">{{cate.opData.abbrError}}</p>
             </div>
             <div class="form-group">
                 <label>父级</label>

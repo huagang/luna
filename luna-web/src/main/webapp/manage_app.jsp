@@ -16,6 +16,7 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/cropper/"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
@@ -253,9 +254,13 @@
     <!-- 弹出层底部功能区 -->
 </div>
 <a target="_blank" id="open_new_tab" style="display:none" href="#">在新窗口打开新的链接</a>
+
 <!--弹出层 end-->
 <jsp:include page="/templete/message.jsp"/>
+
+
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<jsp:include page="/templete/imgCropper.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
