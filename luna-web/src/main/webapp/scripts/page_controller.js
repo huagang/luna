@@ -454,6 +454,13 @@ function CanvasController($scope, $rootScope) {
     this.saveBackgroundImg = function () {
         this.currentComponent.bgimg = this.backgroundImg;
     };
+    /**
+     * 清空全景ID
+     */
+    this.clearPanoId = function () {
+        this.panoId = "";
+        this.changePano();
+    };
 
     this.changePano = function ($event) {
 
@@ -767,9 +774,13 @@ function PanoController($scope, $rootScope) {
     this.changePanoId = function () {
         if (this.content.panoId) {
             this.currentComponent.content.panoId = this.content.panoId;
-            console.log("change panoId");
         }
     };
+    this.clearPanoId =function(){
+        this.content.panoId = "";
+        this.changePanoId();
+    };
+
     this.changePanoType = function () {
         this.currentComponent.content.panoType = this.content.panoType;
         console.log('change panotype');

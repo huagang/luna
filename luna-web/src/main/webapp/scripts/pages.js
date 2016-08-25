@@ -222,8 +222,8 @@ var InitRightArea = function () {
     };
 
     /**
- *初始化收起功能 
- */
+    *初始化收起功能 
+    */
     var initSlide = function () {
 
         $('.btn-slide').on('click', function (e) {
