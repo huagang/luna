@@ -202,9 +202,44 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         }
     }
 
+    /**
+     * 根据当前文章id获取指定语言版本的的对应文章
+     * @param json
+     * @return
+     */
     @Override
     public JSONObject getArticle(String json) {
-        return null;
+
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        int id = jsonObject.getInteger(MsArticleTable.FIELD_ID);
+        int type = jsonObject.getInteger(MsArticleTable.FIELD_TYPE);
+        try {
+            MsArticleWithBLOBs targetArticle = null;
+            if(type == 0) {
+                MsArticleWithBLOBs msArticleWithBLOBs = msArticleDAO.selectByPrimaryKey(id);
+                if(msArticleWithBLOBs != null && msArticleWithBLOBs.getType() == 0) {
+                    logger.warn(String.format("article [%d] is already chinese version", id));
+                } else {
+                    targetArticle = msArticleDAO.selectByPrimaryKey(msArticleWithBLOBs.getRefId());
+                }
+            } else {
+                MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+                msArticleCriteria.createCriteria().andRefIdEqualTo(id).andTypeEqualTo(type);
+                List<MsArticleWithBLOBs> msArticleWithBLOBses = msArticleDAO.selectByCriteriaWithBLOBs(msArticleCriteria);
+                if(msArticleWithBLOBses != null && msArticleWithBLOBses.size() > 0) {
+                    targetArticle = msArticleWithBLOBses.get(0);
+                }
+            }
+            if(targetArticle != null) {
+                return FastJsonUtil.sucess("", toJson(targetArticle));
+            } else {
+                logger.warn(String.format("Failed to read specified article, id:[%d], type[%d]", id, type));
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "获取文章失败");
+            }
+        } catch (Exception ex) {
+            logger.error("Failed to get article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章失败");
+        }
     }
 
     @Override

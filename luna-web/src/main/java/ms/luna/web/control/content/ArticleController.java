@@ -176,13 +176,32 @@ public class ArticleController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "data")
     @ResponseBody
-    public JSONObject readArticle(@PathVariable int id, @RequestParam(value = "type") int type,
-                                HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject readArticle(@PathVariable int id,
+                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         if(id < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
         }
         try{
             JSONObject ret = manageArticleService.getArticleById(id);
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to read article: " + id, ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "读取文章信息失败");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = {"data", "type"})
+    @ResponseBody
+    public JSONObject readOtherLangArticle(@PathVariable int id, @RequestParam(value = "type") int type,
+                                HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(id < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
+        }
+        try{
+            JSONObject json = new JSONObject();
+            json.put(MsArticleTable.FIELD_ID, id);
+            json.put(MsArticleTable.FIELD_TYPE, type);
+            JSONObject ret = manageArticleService.getArticle(json.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to read article: " + id, ex);
