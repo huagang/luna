@@ -82,6 +82,7 @@ function ColumnController($scope, $rootScope, $http) {
         this.resetData();
         this.dialogBaseShow = true;
         this.newColumnShow = true;
+        event.preventDefault();
     };
 
     this.hideNewColumnDialog = function() {
@@ -142,7 +143,8 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentCategoryId = this.findCategoryIdByName(categoryName);
         this.nameValid = true;
         this.codeValid = true;
-        this.showDialog($("#updateColumnDialog"));
+        event.preventDefault();
+
     };
 
     this.hideUpdateColumnDialog = function() {
@@ -179,6 +181,7 @@ function ColumnController($scope, $rootScope, $http) {
         $.confirm("确定要删除栏目: {0}?".format(name), function() {
             $scope.column.submitDeleteColumn(id);
         });
+        event.preventDefault();
     };
 
     this.hideDeleteDialog = function() {

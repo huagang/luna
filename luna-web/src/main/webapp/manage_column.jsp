@@ -29,7 +29,7 @@
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
-<body ng-app="manageColumn" ng-controller="columnController as column" ng-class="{'modal-open': column.newColumnShow}">
+<body ng-app="manageColumn" ng-controller="columnController as column" ng-class="{'modal-open': column.newColumnShow || column.updateColumnShows}">
 <div class="container-fluid">
     <!--通用导航栏 start-->
     <jsp:include page="/templete/header.jsp"/>
@@ -126,7 +126,7 @@
 </div>
 <!--新建业务 end-->
 
-
+<div class="mask ng-hide" ng-show="column.updateColumnShow"></div>
 <div class="pop ng-hide" id="updateColumnDialog" ng-show="column.updateColumnShow">
     <div class="pop-title">
         <h4>更新栏目</h4>
