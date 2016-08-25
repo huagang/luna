@@ -49,7 +49,6 @@ var Inter = function () {
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
                 manageRouter: context + '/content/route',
-
             };
         },
         getApiUrl: function () {
