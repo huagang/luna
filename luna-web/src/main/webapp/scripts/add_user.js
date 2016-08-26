@@ -318,6 +318,9 @@
                 if(vm.data.extra){
                     data.extra = JSON.stringify(vm.data.extra);
                 }
+                if(! data.extra.auth){
+                    delete data.extra.auth;
+                }
                 if(! vm.userId){
                     data.emails = vm.data.emailList.join(',');
                     $http({
