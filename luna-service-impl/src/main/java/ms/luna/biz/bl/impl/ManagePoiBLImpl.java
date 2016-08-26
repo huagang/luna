@@ -732,26 +732,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if(document.containsKey("used_in_business")) {
+				JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+				if (used_in_business.size() > 0) {
+					isUsing = true;
+				}
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("LUNA.E0006");
-		}
-
-		// 检查在线路管理中是否使用
-		MongoCollection<Document> poi_route_index = mongoConnector.getDBCollection(MsRouteCollectionDAO.POI_ROUTE_INDEX);
-		document = poi_route_index.find(keyId).limit(1).first();
-		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_route"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0006");
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("该POI在线路配置中已经投入使用，请先从线路配置中移除。");
+			if(document.containsKey("used_in_route")) {
+				JSONArray used_in_route = FastJsonUtil.parse2Array(document.get("used_in_route"));
+				if (used_in_route.size() > 0) {
+					isUsing = true;
+				}
+			}
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0018");
+			}
 		}
 
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
@@ -1270,13 +1268,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if(document.containsKey("used_in_business")) {
+				JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+				if (used_in_business.size() > 0) {
+					isUsing = true;
+				}
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("LUNA.E0006");
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0006");
+			}
+			if (document.containsKey("used_in_route")) {
+				JSONArray used_in_route = FastJsonUtil.parse2Array(document.get("used_in_route"));
+				if (used_in_route.size() > 0) {
+					isUsing = true;
+				}
+			}
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0018");
+			}
 		}
 		return FastJsonUtil.sucess(MsLunaMessage.getInstance().getMessage("LUNA.I0001"));
 	}
