@@ -551,7 +551,7 @@ public class PoiController extends BasicController {
         Workbook wb = WorkbookFactory.create(inp);
         int sheetNum = wb.getNumberOfSheets();// sheet: excel的sheet页
 
-        // TODO 检查excel格式-----------------------------------------------------------------------------------------------------
+        // 检查excel格式
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = wb.getSheetAt(i);
             if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
@@ -593,8 +593,6 @@ public class PoiController extends BasicController {
                 }
             }
         }
-        // -----------------------------------------------------------------------------------------------------------------------
-
 
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = wb.getSheetAt(i);

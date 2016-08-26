@@ -837,7 +837,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			data.put("panorama_type", types);
 		} else{
 			String type = list.get(0).getExtensionAttrs();
-			JSONArray typeArray = JSONArray.parseArray(type != null? type:"[]");
+			JSONArray typeArray = JSONArray.parseArray(type != null ? type : "[]");
 			for(int i = 0; i < typeArray.size(); i++){
 				JSONObject panoType = new JSONObject();
 				panoType.put("panorama_type_id", i + 1);
@@ -873,7 +873,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id").toString());
+		if(docPoi.containsKey("_id")) {
+			commonFieldsVal.put("_id", docPoi.getObjectId("_id").toString());
+		}
 		
 		/*
 		 * 公共字段值
@@ -908,7 +910,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		if (docPoi.containsKey("sub_tag")) {
 			sub_tag = docPoi.getInteger("sub_tag");
 		}
-		if(sub_tag == 0) {// 兼容之前数据，如果未选择，默认为“其他”
+		if(sub_tag != null && sub_tag == 0) {// 兼容之前数据，如果未选择，默认为“其他”
 			sub_tag = getTopTag2SubTagOthersCache().get(tags_values.getInteger(0));
 		}
 		commonFieldsVal.put("subTag", sub_tag == null ? 0 : sub_tag);
