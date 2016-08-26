@@ -1,7 +1,11 @@
 /*平台商家入驻
 author:demi
 time:20160325*/
-button{
+button,
+.button,
+.button:hover,
+.button-close:hover,
+.button-close{
     padding: 7px 18px;;
 }
 .superscript{
@@ -113,6 +117,11 @@ input[type=radio][name=license]{
     z-index: 99;
     font-size: 14px;
 }
+
+#pop-newbusiness{
+    position: fixed;
+}
+
 #pop-newbusiness .confirm{
     border: 1px solid #C3c3c3;
     -webkit-border-radius: 3px;

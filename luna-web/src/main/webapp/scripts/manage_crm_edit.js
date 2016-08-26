@@ -467,10 +467,11 @@ function agentEdit(){
 function checkBusinessName(event){
 
 	var hasError = false;
-	var value = $(event.target).val() || '';
+	var target = $('#business-name-edit');
+	var value = target.val() || '';
 	if(value.length > 32){
 		hasError = true;
-		$(event.target).val(value.substr(0,32));
+		target.val(value.substr(0,32));
 		$('#warn-name-edit').text('业务名称不能超过32个字');
 	} else if(! value){
 		hasError = true;
@@ -482,16 +483,17 @@ function checkBusinessName(event){
 }
 
 // 检察业务简称
-function checkBusinessShortName(){
+function checkBusinessShortName(event){
 	var hasError = false;
-	var value = $(event.target).val() || '';
+	var target = $('#business-name-short-edit');
+	var value = target.val() || '';
 	if(! /^[a-zA-Z-_]*$/.test(value)){
 		hasError = true;
 		$('#warn-short-edit').text('业务简称只能由英文字母,下划线,中划线组成');
 	}
 	else if(value.length > 16){
 		hasError = true;
-		$(event.target).val(value.substr(0,16));
+		target.val(value.substr(0,16));
 		$('#warn-short-edit').text('业务简称不能超过16个字');
 	} else if(! value){
 		hasError = true;

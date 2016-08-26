@@ -162,7 +162,7 @@
 			            </div>
 					    <div style="position: relative;width: 100%;text-align: center;">
 					        <button type="submit" id="btn-addmerchant">确定</button>
-					        <button type="button" class="button-close" onclick="clcContent(this)">取消</button>
+					        <a type="button" class="button-close" href="<%=request.getContextPath() %>/content/crm">取消</a>
 					    </div>
 			        </div>
 		        </form>

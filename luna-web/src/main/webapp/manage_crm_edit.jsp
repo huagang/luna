@@ -166,8 +166,8 @@
 			            <input type="reset" style="display:none;" />
 				        <div style="position: relative;width: 100%;text-align: center;">
 					        <button type="submit" id="btn-editcrm">确定</button>
-					        <button type="button" class="button-close" onclick="clcContent(this)">取消</button>
-				    	</div>
+							<a type="button" class="button-close" href="<%=request.getContextPath() %>/content/crm">取消</a>
+						</div>
 			        </div>
 		        </form>
             </div>

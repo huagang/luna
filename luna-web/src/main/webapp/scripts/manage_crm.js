@@ -200,11 +200,12 @@ $(function () {
 
 		hasError = checkBusinessName() || hasError;
 
-		hasError = checkBusinessShortName || hasError ;
+		hasError = checkBusinessShortName() || hasError ;
 
 	    if(!hasError){
 	   	var options = {
 			dataType: "json",
+			async: true,
 			clearForm: false,
 			restForm: false,
 			success: function (returndata) {
@@ -505,10 +506,11 @@ function linkmanEmail(){
 function checkBusinessName(event){
 
 	var hasError = false;
-	var value = $(event.target).val() || '';
+	var target = $('#business-name');
+	var value = target.val() || '';
 	if(value.length > 32){
 		hasError = true;
-		$(event.target).val(value.substr(0,32));
+		target.val(value.substr(0,32));
 		$('#warn-business-name').text('业务名称不能超过32个字');
 	} else if(! value){
 		hasError = true;
@@ -520,16 +522,17 @@ function checkBusinessName(event){
 }
 
 // 检察业务简称
-function checkBusinessShortName(){
+function checkBusinessShortName(event){
 	var hasError = false;
-	var value = $(event.target).val() || '';
+	var target = $('#business-name-short');
+	var value = target.val() || '';
 	if(! /^[a-zA-Z-_]*$/.test(value)){
 		hasError = true;
 		$('#warn-short').text('业务简称只能由英文字母,下划线,中划线组成');
 	}
 	else if(value.length > 16){
 		hasError = true;
-		$(event.target).val(value.substr(0,16));
+		target.val(value.substr(0,16));
 		$('#warn-short').text('业务简称不能超过16个字');
 	} else if(! value){
 		hasError = true;

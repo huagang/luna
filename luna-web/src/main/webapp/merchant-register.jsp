@@ -193,7 +193,7 @@
 <div class="pop" id="pop-newbusiness">
     <div class="pop-title">
         <h4>温馨提示</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         <p style="color: #D0021B;">为确保工作人员快速响应并与您洽谈，需确保信息准确，请认真核对。</p>
