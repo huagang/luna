@@ -26,6 +26,8 @@ public interface LunaUserService {
 
     JSONObject loginUser(JSONObject jsonObject);
 
+    JSONObject getUserAuth(String userId);
+
     JSONObject deleteUser(String userId);
 
     JSONObject updateUserRole(JSONObject jsonObject);
