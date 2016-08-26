@@ -87,21 +87,7 @@ $(function () {
             $warn.css('display','none');
         }
     });
-//    $('#county').change(function(){
-//        var county = $("#county option:checked").val();
-//        var $warn = $("#addressitem-warn");
-//        if(county == 'ALL'){
-//            $("#county").addClass('remind').attr('data_accuracy','false');
-//        }else{
-//            $("#county").removeClass('remind').attr('data_accuracy','true');
-//        }
-//        var flag = $("#province").attr('data_accuracy') && $("#city").attr('data_accuracy') && $("#county").attr('data_accuracy');
-//        if(flag == 'false'){
-//            $warn.css('display','block');
-//        }else{
-//            $warn.css('display','none');
-//        }
-//    });
+
     //商户地址，详细地址
     $("#merchant_addr").blur(function(){
         merchantAddress();
@@ -161,101 +147,6 @@ $(function () {
             $(this).remove();
         });
     });
-    ////提交表单
-    //$("#btn-addmerchant").click(function(){
-    //	var hasError = false,hasFocus = false;
-    //
-    //	hasError = merchantNameExist() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#merchant_nm").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = merchantName() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#merchant_nm").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = merchantPhone() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#merchant_phonenum").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = merchantAddress() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#merchant_addr").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = linkmanName() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#contact_nm").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = linkmanPhone() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#contact_phonenum").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = linkmanEmail() || hasError;
-    //	if((hasError)&&(!hasFocus)){
-    //		$("#contact_mail").focus();
-    //		hasFocus=true;
-    //	}
-    //	hasError = latLonGet() || hasError;
-    //	hasError = licenseUpload() || hasError;
-    //	hasError = m_address() || hasError;
-    //	hasError = agent()||hasError;
-    //	hasError = merchantNameExist() || hasError;
-    //
-    //	var value = $("input[type=radio][name=license]:checked").val();
-    //	if (value != "是") {
-		//	$("#license-url").val("");
-		//}
-    //
-    //    if(!hasError){
-	 //   	var options = {
-		//		dataType: "json",
-		//		clearForm: false,
-		//		restForm: false,
-		//		success: function (returndata) {
-	 //   			var status = returndata.code;
-	 //   			var msg = returndata.msg;
-	 //   			switch(status){
-	 //   				case '0':
-	 //   					$("#pop-overlay").css("display","none");
-	 //   			        $("#pop-addmerchant").css("display","none");
-	 //   					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
-	 //   					break;
-	 //   				case '3':
-    //    					$("#merchant-name-warn").html('商户重名（您下手慢了）').show();
-    //    					$("#merchant-name-warn").attr("nameExist","true");
-    //    					break;
-	 //   				case '4':
-	 //   					$("#agent-warn").html('业务员不存在');
-	 //   					$("#agent-warn").css('display','block');
-	 //   					break;
-	 //   				default:
-	 //   					$("#pop-overlay").css("display","none");
-		//		        	$("#pop-addmerchant").css("display","none");
-		//		        	clcContent();
-		//		        	$("#status-message").html("创建失败").css('display','block');
-		//    				setTimeout(function(){
-		//    					$("#status-message").css('display','none');
-		//    				},2000);
-	 //   					break;	//创建失败
-	 //   			}
-		//		},
-	 //   		error: function(returndata){
-	 //   			$("#status-message").html("error").css('display','block');
-    //				setTimeout(function(){
-    //					$("#status-message").css('display','none');
-    //				},2000);
-	 //   		}
-		//    };
-	 //   	$("#form-add").ajaxForm(options);
-    //    }else{
-    //    	return false;
-    //    }
-    //});
 
 	//提交表单
 	$("#btn-addmerchant").click(function(){
@@ -404,48 +295,6 @@ $(function () {
         }  
     });
 });
-
-//异步上传图片
-function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
-	var $license= $(obj),
-		$license_url = $("#"+license_url);
-	var url = $license.val();
-	$warn = $("#"+warn);
-	var file = $license[0].files[0];
-	var res = FileUploader._checkValidation('pic', file);
-	if(! res.error){
-		$warn.css('display','none');
-		cropper.setFile(file, function(file){
-			cropper.close();
-			FileUploader.uploadMediaFile({
-				type: 'pic',
-				file: file,
-				resourceType: 'crm',
-				success: function(returndata){
-					if (returndata.code=='0') {
-						$license_url.val(returndata.data.access_url);
-						$("#thumbnail").attr("src",returndata.data.access_url);
-					} else {
-						$warn.html(returndata.msg);
-						$warn.css('display','block');
-						$("#thumbnail").attr("picExist","false");
-						$("#div-img").css("display","none");
-					}
-					$license.val('');
-				},
-				error: function(){
-					$warn.html('上传失败，请重试！！');
-					$warn.css('display','block');
-					$license.val('');
-				}
-			});
-		}, function(){});
-	}
-	else{
-		$warn.html(res.msg).css('display', 'block');
-		$license.val('');
-	}
-}
 
 //关闭按钮弹窗
 function closecrm(obj,merchant_id){
@@ -649,48 +498,6 @@ function linkmanEmail(){
     return hasError;
 }
 
-////检查是否需要上传营业执照及是否上传了营业执照
-//function licenseUpload(){
-//    var hasError = false;
-//    var $license = $("#license-upload"),
-//    	$warn = $("#license-upload-warn");
-//    var url = $license.val(),
-//        flag = $license.attr('data_upload');
-//    if(flag=='true'){
-//        if(url.length){
-//        	hasError = licenseVerify($license,url,$warn);
-//        }else{
-//            $("#license-upload-warn").html('请上传营业执照').css('display','block');
-//            hasError = true;
-//        }
-//    }else{
-//        $("#license-upload-warn").css('display','none');
-//        hasError = false;
-//    }
-//    return hasError;
-//}
-//检查是否需要上传营业执照及是否上传了营业执照
-function licenseUpload(){
-    var hasError = false;
-    var $license = $("#license-upload"),
-    	$license_url = $("#license-url"),
-    	$warn = $("#license-upload-warn");
-    var url = $license_url.val(),
-        flag = $license.attr('data_upload');
-    if(flag=='true'){
-        if(url.length){
-        	hasError = false;
-        	$("#license-upload-warn").css('display','none');
-        }else{
-            $("#license-upload-warn").html('请上传营业执照').css('display','block');
-            hasError = true;
-        }
-    }else{
-        $("#license-upload-warn").css('display','none');
-        hasError = false;
-    }
-    return hasError;
-}
 //检查地址是否为空
 function m_address(){
     var hasError = false;
@@ -725,53 +532,8 @@ function m_address(){
     }
     return hasError;
 }
-//是否获得经纬度
-function latLonGet(){
-    var hasError = false;
-    var $warn = $("#address-warn");
-    var lat = $("#lat").val(),
-    	lng = $("#lng").val();
-    var reg = /^([+-]?\d{1,3})(\.\d{0,6})$/;//整数最大为3，小数最大有6位
-    
-    // 允许不选择经纬度，但如有则需要同时选择
-    // 未选择经纬度
-    if(lat.length == 0 && lng.length == 0){
-    	return false;
-    }
-    if(lat.length == 0 || lng.length == 0){
-    	return true;
-    }
-    
-    if(reg.test(lat)){
-    	var floatLat = parseFloat(lat);
-		if (floatLat < -90 || floatLat > 90) {
-			$warn.html("纬度范围不正确").css("display",'inline-block');
-			hasError = true;
-		}
-    }else{
-    	$warn.html("纬度格式不正确").css('display','inline-block');
-    	hasError = true;
-	}
-    if(hasError == true){
-    	return true;
-    }
-    
-    if(reg.test(lng)){
-    	var floatLng = parseFloat(lng);
-		if (floatLng < -180 || floatLng > 180) {
-			$warn.html("经度范围不正确").css("display",'inline-block');
-			hasError = true;
-		}
-    }else{
-    	$warn.html("经度格式不正确").css('display','inline-block');
-    	hasError = true;
-	}
-    if(hasError == true){
-    	return true;
-    }
-    
-    return false;
-}
+
+
 //受理业务员是否为空
 function agent(){
     var hasError= false;
@@ -788,81 +550,9 @@ function agent(){
     return hasError;
 }
 
-//上传营业执照是否符合要求
-function licenseVerify(obj,url,warn){
-    var extStart = url.lastIndexOf("."),
-        ext = url.substring(extStart + 1, url.length).toUpperCase(),
-        format = new Array('PNG', 'JPG');    //图片格式
-    var hasError = false;
-    var sign = false;
-    for(var i=0;i<format.length;i++){
-        if(format[i]==ext){
-            sign=true;
-            hasError = false;
-            break;
-        }
-    }
-    if(!sign){
-    	warn.html('图片格式仅限于JPG，PNG').css('display','inline-block');
-        hasError = true;
-        obj.val("");
-    }
-    else{
-        var file_size = obj[0].files[0].size;
-        var size = file_size / 1024;
-        if(size>1024){
-        	warn.html('上传的文件大小不能超过1M！').css('display','inline-block');
-            hasError = true;
-            obj.val("");
-        }else{
-        	warn.css('display','none');
-            hasError = false;
-        }
-    }
-    return hasError;
-}
-
-//地图搜索，回车键触发搜索按钮
-function searchPos(mode){
-	var code = event.keyCode;
-	if(code == 13){
-		if(mode == undefined){
-			mode = "";
-		}else{
-			mode = "-"+mode;
-		}
-		document.getElementById("searchposition"+mode).click();
-	}
-}
-
-//上传图片显示缩略图
-function thumbnailDisplay(ImgD,height_s,width_s){
-	$("#thumbnail").attr("height","");
-	$("#thumbnail").attr("width","");
-	var image=new Image();
-	image.src=ImgD.src;
-	var height = image.height;
-	var width = image.width;
-	if(height > width){
-		$("#thumbnail").attr("height",""+height_s);
-	}else{
-		$("#thumbnail").attr("width",""+width_s);
-	}
-	$("#thumbnail").attr("picExist","true");
-	var value = $("input[type=radio][name=license]:checked").val();
-	if(value == "是"){
-		$("#div-img").css("display","inline-block");
-	}
-}
 
 // 跳转到编辑页面
 function editcrm2(merchant_id){
 	window.open(Util.strFormat(Inter.getApiUrl().crmEditPage.url,[merchant_id]));
 }
 
-// 纯属测试
-function test(){
-	}
-
-function testedit(){
-	}

@@ -43,7 +43,7 @@
                 	onkeydown="if(event.keyCode==13){return false;}">
                     <div class="information" id="information">
                         <div class="title-info">
-                        	<h5>联系人信息</h5>
+                        	<h4>联系人信息</h4>
                     	</div>
                     	<div class="item">
                         	<div class="item-label"><span class="superscript">*</span>您的姓名</div>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
                     	<div class="item">
 	                        <div class="item-label"><span class="superscript">*</span>商户名称</div>
