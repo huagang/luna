@@ -165,26 +165,11 @@ var Inter = function () {
                 }, //检查姓名
 
                 // 商户注册
-                merchantInit: {
-                    url: context + "/common/merchant/registPage",
-                    type: "GET"
-                }, // 注册初始页面
-                merchantRegist: {
-                    url: context + "/common/merchant",
-                    type: "POST"
-                }, // 注册
-                merchantCheckName: {
-                    url: context + "/common/merchant/checkName",
-                    type: "GET"
-                }, //检查用户名
-                merchantSuccess: {
-                    url: context + "common/merchant/successPage",
-                    type: "GET"
-                }, //注册成功页面
-                crmThumbnailUpload: {
-                    url: context + "/content/crm/thumbnail/upload",
-                    type: "POST"
-                }, // 上传图片
+                merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
+                merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
+                merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
+                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
+                crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
                 bizRelationInit: {
