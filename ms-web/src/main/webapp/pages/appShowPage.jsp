@@ -73,6 +73,7 @@
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/exmethod.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/luna.config.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/interface.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/app_base.js"></script>
 </body>
