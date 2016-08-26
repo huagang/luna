@@ -955,10 +955,10 @@ $(document).ready(function () {
                         });
                     } else {
                         if (!that.data[index] && that.menuIndex == index) {
-                            that.data[index] = { pois: [] };
+                            that.data[index] = null;
                             that.updateContent();
                         } else {
-                            that.data[index] = { pois: [] };
+                            that.data[index] = null;
                         }
                     }
                     break;
@@ -1099,7 +1099,7 @@ $(document).ready(function () {
             that.menuType = type;
             switch (type) {
                 case 'singlePoi':
-                    if (!data || data.pois.length == 0) {
+                    if (!data || data.length == 0) {
                         html = '<div id="detail-title-wrap"><div class="detail-more">更多内容，敬请期待…</div></div>';
                         break;
                     }
@@ -1291,7 +1291,7 @@ $(document).ready(function () {
                                     + '<br><span class="profile">' + panoTip + '</span>'
                                     + '</p>'
                                     + '</a>'
-                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
+                                    + '<a target="_blank" class="poi-detail" href="' + item.preview_url + '">'
                                     + '点击查看详情'
                                     + '</a>'
                                     + '</div>';

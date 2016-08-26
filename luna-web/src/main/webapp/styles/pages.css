@@ -1092,7 +1092,7 @@ a.wj-img-clc {
     color: #fff;
 }
 
-.imgListContainer a {
+.imgListContainer a,.imgListContainer a:link,.imgListContainer :visited {
     color: #fff;
 }
 
