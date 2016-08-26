@@ -1291,7 +1291,7 @@ $(document).ready(function () {
                                     + '<br><span class="profile">' + panoTip + '</span>'
                                     + '</p>'
                                     + '</a>'
-                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
+                                    + '<a target="_blank" class="poi-detail" href="' + item.preview_url + '">'
                                     + '点击查看详情'
                                     + '</a>'
                                     + '</div>';
