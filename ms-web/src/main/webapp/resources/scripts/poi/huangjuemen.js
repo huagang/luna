@@ -4,17 +4,18 @@
  * Date : 2016-7-4
  */
 var objdata = {
-    destPosition: {} //目的地位置信息
+    destPosition: {}, //目的地位置信息
+    lang: Util.location().lang || 'zh', //语言信息
 };
 /**
  * 初始化信息界面
  */
-var initHJMPoiPage = function() {
+var initHJMPoiPage = function () {
 
     /**
      * 初始化页面数据
      */
-    var initPageData = function() {
+    var initPageData = function () {
         var data = {
             poi_name: poiData.data.long_title,
             lat: poiData.data.lat,
@@ -26,21 +27,21 @@ var initHJMPoiPage = function() {
             panorama: poiData.data.panorama,
             panorama_type: poiData.data.panorama_type,
             category: '',
-            province: poiData.data.province ,
+            province: poiData.data.province,
             city: poiData.data.city,
             county: poiData.data.county,
             phone: poiData.data.contact_phone,
-            detail_address:poiData.data.detail_address,
+            detail_address: poiData.data.detail_address,
         };
 
         // 更新文章头图
         var img = document.querySelector('.banner img');
         img.src = data.abstract_pic;
-        img.onload = function() {
+        img.onload = function () {
             var banner = document.querySelector('.banner');
             if (banner.clientHeight > 100) {
                 var wrapper = document.querySelector('.content-wrapper');
-                wrapper.addEventListener('scroll', function() {
+                wrapper.addEventListener('scroll', function () {
                     if (wrapper.scrollTop > 0) {
                         banner.classList.add('sm');
                     } else {
@@ -49,12 +50,13 @@ var initHJMPoiPage = function() {
 
                 });
             }
-        }
+        };
 
         //设置导航目的地信息
         objdata.destPosition.lat = data.lat;
         objdata.destPosition.lng = data.lng;
         objdata.destPosition.navEndName = data.poi_name;
+        $('#navText').html(lunaConfig.poiAction.navigation[objdata.lang]);
 
         // 更新文章标题信息
         document.querySelector('#poiName').innerHTML = data.poi_name;
@@ -67,6 +69,7 @@ var initHJMPoiPage = function() {
 
         // 更新电话信息
         if (data.phone) {
+            $('#phoneText').html(lunaConfig.poiAction.phone[objdata.lang]);
             document.querySelector('#phoneLink').href = "tel://" + data.phone;
             $('#phoneLink').closest('.tool-item').removeClass('hidden');
         }
@@ -87,13 +90,15 @@ var initHJMPoiPage = function() {
                     break;
             }
             $('#panorama').attr('href', url);
+            $('#panoText').html(lunaConfig.poiAction.pano[objdata.lang]);
             document.querySelector('#panorama').classList.remove('hide');
-        }else{
+        } else {
+            $('#noPanoText').html(lunaConfig.poiAction.nopano[objdata.lang]);
             document.querySelector('#waitPanorama').classList.remove('hide');
         }
 
         //更新导航信息
-        $('#nav').on('click', function(e) {
+        $('#nav').on('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             var is_weixin = navigator.userAgent.match(/MicroMessenger/i);
@@ -106,7 +111,7 @@ var initHJMPoiPage = function() {
                             latitude: Number(data.lat), // 纬度，浮点数，范围为90 ~ -90
                             longitude: Number(data.lng), // 经度，浮点数，范围为180 ~ -180。
                             name: data.poi_name, // 位置名
-                            address: data.city+data.county+ data.detail_address, // 地址详情说明
+                            address: data.city + data.county + data.detail_address, // 地址详情说明
                             scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
                             infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
                         });
@@ -124,7 +129,7 @@ var initHJMPoiPage = function() {
     /**
      * 初始化回退控件
      */
-    var initGoBack = function() {
+    var initGoBack = function () {
         /**
          * 判断是否有url 中是否有ref,如果有则显示返回按钮
          * @param  {[type]} refUrl [description]
@@ -132,7 +137,7 @@ var initHJMPoiPage = function() {
          */
         if (document.referrer) {
             document.querySelector('.goback').classList.remove('hidden');
-            document.querySelector('.goback a').addEventListener('click', function(e) {
+            document.querySelector('.goback a').addEventListener('click', function (e) {
                 e.preventDefault();
                 //alert('hi!');
                 window.history.go(-1);
@@ -143,7 +148,7 @@ var initHJMPoiPage = function() {
     /**
      * 返回顶部功能
      */
-    var initGoTop = function() {
+    var initGoTop = function () {
         if (document.body.scrollHeight > document.body.clientHeight) {
             document.querySelector('.footer').classList.remove('hidden');
             document.querySelector('.go-top').addEventListener('click', pageScroll);
@@ -182,7 +187,7 @@ var initHJMPoiPage = function() {
         myLatitude = position.coords.latitude;
         // alert(myLatitude);
         //将经纬度转换成腾讯坐标
-        qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function(res) {
+        qq.maps.convertor.translate(new qq.maps.LatLng(myLatitude, myLongitude), 1, function (res) {
             //取出经纬度并且赋值
             latlng = res[0];
             var url = "http://map.qq.com/nav/drive?start=" + latlng.lng + "," + latlng.lat + "&dest=" + objdata.destPosition.lng + "%2C" + objdata.destPosition.lat + "&sword=我的位置&eword=" + objdata.destPosition.navEndName + "&ref=mobilemap&referer=";
@@ -223,20 +228,20 @@ var initHJMPoiPage = function() {
 
 
     return {
-        init: function() {
+        init: function () {
             initPageData();
             initGoBack();
             initGoTop();
         }
     }
-}()
+} ()
 
 /**
  * 内容里面的图片宽度调整
  */
 function filterImgInContent(content) {
     var clientWidth = document.querySelector('.content').clientWidth;
-    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function(word) {
+    content = content.replace(/<img .*? width="[0-9]*" .*?>|<video .*? width="[0-9]*" .*?>/g, function (word) {
         var reg = /width="([0-9]*?)"/;
         var widthNum;
         if (word.match(reg)) {
@@ -250,13 +255,13 @@ function filterImgInContent(content) {
         }
         return word;
     });
-    content = content.replace(/width\s*:\s*[0-9.]*/g, function(word) {
+    content = content.replace(/width\s*:\s*[0-9.]*/g, function (word) {
         var reg = /width\s*:\s*([0-9.]*)/;
         var widthNum;
         if (word.match(reg)) {
             widthNum = word.match(reg);
         }
-        if (Number( widthNum[1]) > clientWidth) {
+        if (Number(widthNum[1]) > clientWidth) {
             word = word.replace(/width="[0-9]*"/, 'width="' + clientWidth + '"');
             word = word.replace(/width\s*:\s*[0-9.]*/, 'width:' + clientWidth);
             //word = word.replace(/height="[0-9]*"/, '');
@@ -268,7 +273,7 @@ function filterImgInContent(content) {
 }
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     /**
      * 初始化微信环境
      */
