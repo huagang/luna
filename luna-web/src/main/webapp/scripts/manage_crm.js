@@ -133,6 +133,13 @@ $(function () {
     $("#contact_mail").blur(function(){
         linkmanEmail();
     });
+
+	// 业务名称
+	$("#business-name").blur(checkBusinessName);
+
+	// 业务简称
+	$("#business-name-short").blur(checkBusinessShortName);
+
     //修改业务员
     $("#editagent").click(function(){
         $("#agent").css('display','none');
@@ -188,16 +195,12 @@ $(function () {
 			hasFocus=true;
 		}
 		hasError = m_address() || hasError;
+
 		hasError = agent()||hasError;
 
-		var chkResult = checkResult(),
-			chkBusinessName = checkBusinessName(document.getElementById('business-name'), 'warn-name'),
-			chkBusinessShortName = checkBusinessShortName(document.getElementById('business-name-short'), 'warn-short');
-		if (!chkResult || !chkBusinessName || !chkBusinessShortName) {
-			return false;
-		}
+		hasError = checkBusinessName() || hasError;
 
-		hasError = merchantNameExist() || hasError;
+		hasError = checkBusinessShortName || hasError ;
 
 	    if(!hasError){
 	   	var options = {
@@ -498,6 +501,46 @@ function linkmanEmail(){
     return hasError;
 }
 
+// 检查业务名称
+function checkBusinessName(event){
+
+	var hasError = false;
+	var value = $(event.target).val() || '';
+	if(value.length > 32){
+		hasError = true;
+		$(event.target).val(value.substr(0,32));
+		$('#warn-business-name').text('业务名称不能超过32个字');
+	} else if(! value){
+		hasError = true;
+		$('#warn-business-name').text('业务名称不能为空');
+	} else{
+		$('#warn-business-name').text('');
+	}
+	return hasError;
+}
+
+// 检察业务简称
+function checkBusinessShortName(){
+	var hasError = false;
+	var value = $(event.target).val() || '';
+	if(! /^[a-zA-Z-_]*$/.test(value)){
+		hasError = true;
+		$('#warn-short').text('业务简称只能由英文字母,下划线,中划线组成');
+	}
+	else if(value.length > 16){
+		hasError = true;
+		$(event.target).val(value.substr(0,16));
+		$('#warn-short').text('业务简称不能超过16个字');
+	} else if(! value){
+		hasError = true;
+		$('#warn-short').text('业务简称不能为空');
+	} else{
+		$('#warn-short').text('');
+	}
+
+	return hasError;
+}
+
 //检查地址是否为空
 function m_address(){
     var hasError = false;
@@ -516,12 +559,7 @@ function m_address(){
     }else{
         $("#city").removeClass('remind').attr('data_accuracy','true');
     }
-    //目前取消对county的检测
-//    if(county=='ALL'){
-//        $("#county").addClass('remind').attr('data_accuracy','false');
-//    }else{
-//        $("#county").removeClass('remind').attr('data_accuracy','true');
-//    }
+
     var flag = $("#province").attr('data_accuracy')=='true'&& $("#city").attr('data_accuracy')=='true';
     if(!flag){
         $warn.css('display','block');

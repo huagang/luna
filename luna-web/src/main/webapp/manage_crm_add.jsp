@@ -128,15 +128,15 @@
 							<div class="item">
 								<div class="item-label"><span class="superscript">*</span>业务名称</div>
 								<div class="item-value">
-									<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" required />
-									<span id="warn-name" class="warn hide">格式不正确,请重新输入</span>
+									<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" maxlength="32" required />
+									<span id="warn-business-name" class="red"></span>
 								</div>
 							</div>
 							<div class="item">
 								<div class="item-label"><span class="superscript">*</span>业务简称</div>
 								<div class="item-value">
-									<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符"   required/>
-									<span id="warn-short" class="warn hide">格式不正确,请重新输入</span>
+									<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符" maxlength="16"   required/>
+									<span id="warn-short" class="red"></span>
 								</div>
 							</div>
 

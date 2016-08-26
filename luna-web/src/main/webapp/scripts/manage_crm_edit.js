@@ -81,23 +81,24 @@ $(function(){
     });
 
     //商户地址，详细地址
-    $("#merchant_addr_edit").blur(function(){
-        merchantAddressEdit();
-    });
-
+    $("#merchant_addr_edit").blur(merchantAddressEdit);
 
     //联系人姓名
-    $("#contact_nm_edit").blur(function(){
-        linkmanNameEdit();
-    });
+    $("#contact_nm_edit").blur(linkmanNameEdit);
+
     //联系人电话
-    $("#contact_phonenum_edit").blur(function(){
-        linkmanPhoneEdit();
-    });
+    $("#contact_phonenum_edit").blur(linkmanPhoneEdit);
+
     //联系人邮箱
-    $("#contact_mail_edit").blur(function(){
-        linkmanEmailEdit();
-    });
+    $("#contact_mail_edit").blur(linkmanEmailEdit);
+
+	// 业务名称
+	$('#business-name-edit').blur(checkBusinessName);
+
+	// 业务简称
+	$('#business-name-short-edit').blur(checkBusinessShortName);
+
+
     //修改业务员
     $("#editagent-edit").click(function(){
         $("#agent-edit").css('display','none');
@@ -124,44 +125,47 @@ $(function(){
 
 		var hasError = false,hasFocus = false;
 
-		hasError = linkmanNameEdit() || hasError;
+		hasError = hasError || linkmanNameEdit() ;
 		if((hasError)&&(!hasFocus)){
 			$("#contact_nm_edit").focus();
 			hasFocus=true;
 		}
-		hasError = linkmanPhoneEdit() || hasError;
+		hasError = hasError || linkmanPhoneEdit() ;
 		if((hasError)&&(!hasFocus)){
 			$("#contact_phonenum_edit").focus();
 			hasFocus=true;
 		}
-		hasError = linkmanEmailEdit() || hasError;
+		hasError = hasError || linkmanEmailEdit();
 		if((hasError)&&(!hasFocus)){
 			$("#contact_mail_edit").focus();
 			hasFocus=true;
 		}
-		hasError = merchantNameEditExist() || hasError;
+		hasError = hasError || merchantNameEditExist();
 		if((hasError)&&(!hasFocus)){
 			$("#merchant_nm_edit").focus();
 			hasFocus=true;
 		}
-		hasError = merchantNameEdit() || hasError;
+		hasError = hasError || merchantNameEdit();
 		if((hasError)&&(!hasFocus)){
 			$("#merchant_nm_edit").focus();
 			hasFocus=true;
 		}
-		hasError = merchantPhoneEdit() || hasError;
+		hasError = hasError || merchantPhoneEdit();
 		if((hasError)&&(!hasFocus)){
 			$("#merchant_phonenum_edit").focus();
 			hasFocus=true;
 		}
-		hasError = merchantAddressEdit() || hasError;
+		hasError = hasError || merchantAddressEdit();
 		if((hasError)&&(!hasFocus)){
 			$("#merchant_addr_edit").focus();
 			hasFocus=true;
 		}
-		hasError = m_addressEdit() || hasError;
-		hasError = agentEdit()||hasError;
-		hasError = merchantNameEditExist() || hasError;
+		hasError = hasError || m_addressEdit();
+
+		hasError = hasError || agentEdit();
+
+		hasError = hasError || checkBusinessName();
+
 		if(!hasError){
 			var options = {
 				dataType: "json",
@@ -241,6 +245,8 @@ function editcrm(obj){
 	    			$("#merchant-type-edit").val(returndata.data.category_id);
 	    			$("#status-edit").val(returndata.data.status_id);
 	    			$("#address-region-edit").val(country_nm+province_nm+city_nm+county_nm);
+					$('#business-name-edit').val(returndata.data.business_name);
+					$('#business-name-short-edit').val(returndata.data.business_code);
 	    			break;
 	    		default:
 	    			$("#status-message").html("请求失败").css('display','block');
@@ -455,3 +461,45 @@ function agentEdit(){
     }
     return hasError;
 }
+
+
+// 检查业务名称
+function checkBusinessName(event){
+
+	var hasError = false;
+	var value = $(event.target).val() || '';
+	if(value.length > 32){
+		hasError = true;
+		$(event.target).val(value.substr(0,32));
+		$('#warn-name-edit').text('业务名称不能超过32个字');
+	} else if(! value){
+		hasError = true;
+		$('#warn-name-edit').text('业务名称不能为空');
+	} else{
+		$('#warn-name-edit').text('');
+	}
+	return hasError;
+}
+
+// 检察业务简称
+function checkBusinessShortName(){
+	var hasError = false;
+	var value = $(event.target).val() || '';
+	if(! /^[a-zA-Z-_]*$/.test(value)){
+		hasError = true;
+		$('#warn-short-edit').text('业务简称只能由英文字母,下划线,中划线组成');
+	}
+	else if(value.length > 16){
+		hasError = true;
+		$(event.target).val(value.substr(0,16));
+		$('#warn-short-edit').text('业务简称不能超过16个字');
+	} else if(! value){
+		hasError = true;
+		$('#warn-short-edit').text('业务简称不能为空');
+	} else{
+		$('#warn-short-edit').text('');
+	}
+
+	return hasError;
+}
+

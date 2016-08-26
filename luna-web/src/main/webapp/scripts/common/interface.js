@@ -17,8 +17,10 @@ var Inter = function () {
             return 'local';
         } else if (/luna-test/.test(host)) {
             return 'test';
-        } else {
+        } else if(/luna\.visualbusiness/.test(host)){
             return 'online';
+        } else{
+            return 'others';
         }
     };
 
@@ -34,7 +36,12 @@ var Inter = function () {
         'online': 'http://luna-test.visualbusiness.cn '
     };
 
-    apiContext = apiHost[curHost()];
+    var curApiHost = curHost();
+    if(curApiHost === 'others'){
+        apiContext = 'http://' + location.host + '/luna-api/';
+    } else{
+        apiContext = apiHost[curHost()];
+    }
 
 
     return {
