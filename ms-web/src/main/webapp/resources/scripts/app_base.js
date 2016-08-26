@@ -263,7 +263,8 @@ $(document).ready(function () {
     $('.paraScene').each(function (n, item) {
         paraScene[n] = new Parallax(item);
     });
-    //设置首页滑动到第一页
+    //设置背景页滑动
+    setBgAnimation(3000, 0);
 
     if ($('.welcome').length > 0) {
 
@@ -274,26 +275,27 @@ $(document).ready(function () {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
-        setBgAnimation(pageTime);
 
         setTimeout(function () {
             //修改history 中的内容，来解决goback 中的问题
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () { });
+            var animaCanvas = $('.anima-canvas');
+            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
+                if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
+                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
+                    });
+                }
+            });
             $('.welcome').animate({ opacity: 0 }, 3000, function () {
                 $('.welcome').css('display', 'none');
                 // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
-
-                //$('.welcome').remove();
-                // delete paraScene;
             });
-
-            setBgAnimation(pageTime);
 
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
+
         }, pageTime);
     } else {
         var panoBg = document.querySelector('.panoBg');
@@ -1508,12 +1510,11 @@ function is_weixn() {
 /**
  * 设置背景的动画
  */
-function setBgAnimation(time) {
-    timt = time ? time * 0.618 : 1;
+function setBgAnimation(time, delayTime) {
+    time = time ? time * 0.618 : 1000;
+    delayTime = delayTime || 0;
     if ($('.anima-canvas').length > 0) {
-        $('.anima-canvas').each(function (n, item) {
-            $(this).animate({ 'margin-left': '-12.5%' }, timt, function () {
-            });
+        $('.anima-canvas').eq(0).css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {
         });
     }
 }
