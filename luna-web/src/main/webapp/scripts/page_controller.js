@@ -391,16 +391,16 @@ function InteractComponentController() {
         var pages = lunaPage.pages;
         var pageIdArr = Object.keys(pages);
         if (pageIdArr) {
-            pageIdArr.forEach(function (pageId) {
+            for (var i = 0; i < pageIdArr.length; i++) {
+                var pageId = pageIdArr[i];
                 this.action.href.pageOptions.push({
                     id: pageId,
                     name: pages[pageId].page_name
                 });
-            }, this);
+            }
         }
         this.action.href.innerValue = this.currentComponent.action.href.value;
         this.clearHrefInfo(this.currentComponent.action.href.type);
-        //console.log(this.currentComponent.action.href.type);
     };
 
     this.changeTab = function (tabName) {
@@ -806,7 +806,7 @@ function PanoController($scope, $rootScope) {
             this.currentComponent.content.panoId = this.content.panoId;
         }
     };
-    this.clearPanoId =function(){
+    this.clearPanoId = function () {
         this.content.panoId = "";
         this.changePanoId();
     };
@@ -972,10 +972,10 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.articleList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
-            alert('文章列表获取失败 \n' + ErrCode.get(''));
+        }).error(function (response) {
+            alert('文章列表获取失败 \n');
         });
 
         //获取Poi 一级数
@@ -995,10 +995,10 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.firstPoiList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
-            alert('一级Poi列表获取失败\n' + ErrCode.get(''));
+        }).error(function (response) {
+            alert('一级Poi列表获取失败\n');
         });
 
         //列表样式
@@ -1200,9 +1200,9 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.poiTypeList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
+        }).error(function (response) {
             alert('Poi类别获取失败\n' + ErrCode.get(''));
         });
     };
@@ -1215,10 +1215,9 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
 
     //初始化拾色器
     this.initColorSet = function () {
-        document.querySelectorAll('.menutab-colorset .color-set').forEach(function (element) {
-            $(element).trigger('keyup');
-            console.log(element.value);
-        }, this);
+        $('.menutab-colorset .color-set').each(function (element) {
+            $(this).trigger('keyup');
+        });
     };
 
     //初始化语言事件

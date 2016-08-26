@@ -49,7 +49,7 @@ public class SessionHelper {
     }
 
     public static void setSelectedMenu(HttpSession session, String menu) {
-        if(session == null || StringUtils.isBlank(menu)) {
+        if(session == null) {
             return;
         }
         session.setAttribute(KEY_SELECTED_MENU, menu);

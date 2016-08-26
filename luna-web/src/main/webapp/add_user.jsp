@@ -79,6 +79,11 @@
                     </select>
                     <span class="ng-hide" ng-show="user.extraData.optionLength === 1">{{user.extraData.option}}</span>
                 </div>
+                <div class='form-input ng-hide' ng-show="user.data.extra.type==='service'">
+                    <label>权限设置</label>
+                    <textarea class="settings-auth" ng-model="user.data.extra.auth">
+                    </textarea>
+                </div>
 
                 <div class="form-input" ng-show="user.choiceType">
                     <label>{{user.extraData.label}}</label>

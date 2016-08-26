@@ -76,7 +76,7 @@ var Inter = function () {
                     type: 'GET'
                 }, //检查是否能够删除
                 poiDelete: {
-                    url: context + '/data/poi/{0}',
+                    url: context + '/data/poi/{0}?note={1}',
                     type: 'DELETE'
                 }, //poi删除功能
                 poiAddPage: {
