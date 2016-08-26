@@ -9,6 +9,8 @@ public interface LunaTradeApplicationService {
 
     JSONObject createApplication(JSONObject jsonObject);
 
+    JSONObject recreateApplication(JSONObject jsonObject);
+
     JSONObject getApplication(JSONObject jsonObject);
 
     JSONObject updateApplication(JSONObject jsonObject);

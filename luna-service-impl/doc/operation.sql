@@ -80,6 +80,16 @@ CREATE TABLE `luna_trade_application` (
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
 
+ALTER TABLE `luna_dev`.`ms_merchant_manage`
+ADD COLUMN `trade_status` INT NOT NULL DEFAULT 0 COMMENT '商户交易直通车开通状态' AFTER `updated_by_unique_id`;
+
+INSERT INTO `luna_dev`.`luna_menu` (`name`, `code`, `module_id`, `status`) VALUES ('交易直通车', 'tradeApplication', '3', '1');
+UPDATE `luna_dev`.`luna_menu` SET `display_order`='2' WHERE `id`='9';
+UPDATE `luna_dev`.`luna_menu` SET `display_order`='4' WHERE `id`='10';
+UPDATE `luna_dev`.`luna_menu` SET `display_order`='5' WHERE `id`='11';
+UPDATE `luna_dev`.`luna_menu` SET `display_order`='6' WHERE `id`='12';
+UPDATE `luna_dev`.`luna_menu` SET `display_order`='3' WHERE `id`='22';
+
 
 
 
