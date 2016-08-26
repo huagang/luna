@@ -190,7 +190,7 @@
 	  				<div class='file-uploader'>
 	  					<img class='abstract-pic' src="<%=request.getContextPath() %>/img/pure-logo2x.png" />
 	   					<div class='fileup-container'>
-	   						<button class='button-close fileupload-tip'>更换缩略图</button>
+	   						<button class='button-close fileupload-tip'>设置分享图</button>
 	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
 	   					</div>
 	  				</div> 				
@@ -202,18 +202,18 @@
 	  							<img src='<%=request.getContextPath() %>/img/icon-edit.png'/>
 	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
 	  						</div>
-	  						<p class='fileupload-tip'>更换缩略图</p>
+	  						<p class='fileupload-tip'>设置分享图</p>
 	  					</div>
 	  				</div>
 	  			</div>
 	  			<div class='part-right'>
 	  				<div class='char-limit-wrapper'>
-	  					<input class='share-title' type="text" class="" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+	  					<input class='share-title' type="text" class="" max-length='32' placeholder="设置分享标题"/>
 	  					<span class='counter'>0/32</span>
 	  				</div>
 	  				<div class='char-limit-wrapper'>
 	  					<textarea type='text' class='share-description' maxlength='128'
-	  					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+	  					   placeholder="设置分享的描述文字，保持在30个汉字之内为佳" ></textarea>
 	  					<span class='counter'>0/128</span>
 	  				</div>	  				
 	  			</div>
