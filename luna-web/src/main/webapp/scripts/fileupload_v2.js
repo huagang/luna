@@ -49,6 +49,12 @@ var FileUploader = {
 	 */
 	
 	_checkValidation: function(type, file, limit){
+		if(! file){
+			return {error: 'nofile', msg:'没有选择文件'};
+		}
+		if(! type){
+			return {error: 'notype', msg:'没有设定文件类型'};
+		}
 		limit = limit || this._fileLimit ;
 
 		var fileExt = file.name.substr(file.name.lastIndexOf('.')+1).toUpperCase();

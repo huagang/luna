@@ -180,6 +180,10 @@ var initPage = function () {
         // 事件绑定  文章头图文件onChange事件 
         document.querySelector('#pic_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             var file = event.target.files[0];
             var res = FileUploader._checkValidation('pic',file);
             if(res.error){
@@ -216,6 +220,10 @@ var initPage = function () {
         // 事件绑定  视频文件onChange事件 
         document.querySelector('#video_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             showLoadingTip('.video_tip');
             FileUploader.uploadMediaFile({
                 type: 'video',
@@ -242,6 +250,10 @@ var initPage = function () {
         // 事件绑定  音频文件onChange事件 
         document.querySelector('#audio_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             showLoadingTip('.audio_tip');
 
             FileUploader.uploadMediaFile({
