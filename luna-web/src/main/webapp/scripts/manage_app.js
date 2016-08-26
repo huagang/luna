@@ -311,7 +311,7 @@ function getShareController(data) {
 			var errorMsg;
 			this.data.forEach(function (item, index) {
 				if (!errorMsg && (!item.title || !item.description || !item.pic)) {
-					errorMsg = "分享的标题、描述以及缩略图不能为空\n";
+					errorMsg = "分享的标题、描述以及分享图不能为空\n";
 				}
 			});
 
@@ -366,12 +366,12 @@ function getShareController(data) {
 						shareEle.find('.preview-container').removeClass('hidden');
 						shareEle.find('.preview-img').attr("src", data.data.access_url);
 						this.data[order].pic = data.data.access_url;
-						$(tipSel).html("更换缩略图");
+						$(tipSel).html("设置分享图");
 						event.target.value = '';
 
 					}.bind(this),
 					error: function (data) {
-						$(tipSel).html("更换缩略图");
+						$(tipSel).html("设置分享图");
 						showMessage(data.msg || '上传图片失败');
 						event.target.value = '';
 					}
