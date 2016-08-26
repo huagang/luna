@@ -178,6 +178,9 @@
                         vm.data.role = '';
                         if(vm.roles.length === 1){
                             vm.data.role = vm.roles[0].id;
+                            if(item.extra.type === 'business' && vm.roles[0].extra_value === 0){
+                                vm.businessSelectAll = true;
+                            }
                         }
 
                         if(item.extra.type === 'business'){
