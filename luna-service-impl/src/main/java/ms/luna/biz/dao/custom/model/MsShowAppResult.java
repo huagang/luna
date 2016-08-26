@@ -16,12 +16,11 @@ public class MsShowAppResult {
 	private String businessName;
 
 	// 根据类别获取微景展接口 添加属性
-	private String shareInfoDes;
-	private String shareInfoPic;
+	private String note;
+	private String picThumb;
 	private String categoryId; // 类别id
 	private String categoryName; // 类别名称
 	private Timestamp publishTime;
-
 	public int getAppId() {
 		return appId;
 	}
@@ -33,6 +32,7 @@ public class MsShowAppResult {
 	public String getAppName() {
 		return appName;
 	}
+
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
@@ -48,7 +48,6 @@ public class MsShowAppResult {
 	public void setType(int type) {
 		this.type = type;
 	}
-
 	public Timestamp getRegisthhmmss() {
 		return registhhmmss;
 	}
@@ -60,6 +59,7 @@ public class MsShowAppResult {
 	public Timestamp getUphhmmss() {
 		return uphhmmss;
 	}
+
 	public void setUphhmmss(Timestamp uphhmmss) {
 		this.uphhmmss = uphhmmss;
 	}
@@ -87,19 +87,6 @@ public class MsShowAppResult {
 	public void setBusinessName(String businessName) {
 		this.businessName = businessName;
 	}
-	public String getShareInfoDes() {
-		return shareInfoDes;
-	}
-	public void setShareInfoDes(String shareInfoDes) {
-		this.shareInfoDes = shareInfoDes;
-	}
-
-	public String getShareInfoPic() {
-		return shareInfoPic;
-	}
-	public void setShareInfoPic(String shareInfoPic) {
-		this.shareInfoPic = shareInfoPic;
-	}
 	public String getCategoryId() {
 		return categoryId;
 	}
@@ -112,11 +99,26 @@ public class MsShowAppResult {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-
 	public Timestamp getPublishTime() {
 		return publishTime;
 	}
+
 	public void setPublishTime(Timestamp publishTime) {
 		this.publishTime = publishTime;
+	}
+	public String getPicThumb() {
+		return picThumb;
+	}
+
+	public void setPicThumb(String picThumb) {
+		this.picThumb = picThumb;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

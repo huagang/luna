@@ -62,7 +62,7 @@ var Inter = function () {
                 getArticleListByBidAndColumn: { url: apiContext + 'article/businessId/{0}/columnIds/{1}', type: 'GET' }, //根据业务ID和栏目ids  获取数据
                 
                 //poi列表的获取
-                getPoiListByBidAndFPoi:{url:apiContext+'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}',type:'GET'},  //根据业务和一级poi数据获取
+                getPoiListByBidAndFPoi:{url:apiContext+'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}',type:'GET'},  //根据业务和一级poi数据获取
                 getPoiListByBidAndFPoiAndCate:{url:apiContext+'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}',type:'GET'},//根据业务和一级poi数据、一级类别获取数据
 
                 // poi around

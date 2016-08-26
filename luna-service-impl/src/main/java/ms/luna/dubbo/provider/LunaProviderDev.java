@@ -19,7 +19,7 @@ public class LunaProviderDev {
 
 	public static void main(String[] args) {
 		System.out.println("LunaProvider Service is starting......");
-		final LunaStarter lunaStarter = new LunaStarter("dubbo_provider.xml");
+		final LunaStarter lunaStarter = new LunaStarter("dubbo_provider_dev.xml");
 		// attach shutdown handler to catch control-c
 		Runtime.getRuntime().addShutdownHook(new Thread("shutdown-hook") {
 			public void run() {

@@ -254,7 +254,7 @@ function verifyCategoryNmZhAdd(){
 	    warn = $("#warn1");//-------------------------记得修改合适的id名称！！！！
 	    hasError = !verifyNmZh(category_nm_zh);
 	if(hasError == true){
-		warn.html("格式不正确，请重新输入").css('display','block');
+		warn.html("格式不正确，请输入2-16个汉字").css('display','block');
 	} else {
 		warn.css('display','none');
 	}
@@ -268,7 +268,7 @@ function verifyCategoryNmEnAdd(){
     warn = $("#warn2");//-------------------------记得修改合适的id名称！！！！
     hasError = !verifyNmEn(category_nm_en);
 	if(hasError == true){
-		warn.html("格式不正确，请重新输入").css('display','block');
+		warn.html("格式不正确，请输入3-13个英文字母").css('display','block');
 	} else {
 		warn.css('display','none');
 	}
@@ -282,7 +282,7 @@ function verifyCategoryNmZhEdit(){
     warn = $("#warn3");//-------------------------记得修改合适的id名称！！！！
     hasError = !verifyNmZh(category_nm_zh);
 	if(hasError == true){
-		warn.html("格式不正确，请重新输入").css('display','block');
+		warn.html("格式不正确，请输入2-16个汉字").css('display','block');
 	} else {
 		warn.css('display','none');
 	}
@@ -296,7 +296,7 @@ function verifyCategoryNmEnEdit(){
     warn = $("#warn4");//-------------------------记得修改合适的id名称！！！！
     hasError = !verifyNmEn(category_nm_en);
 	if(hasError == true){
-		warn.html("格式不正确，请重新输入").css('display','block');
+		warn.html("格式不正确，请输入3-13个英文字母").css('display','block');
 	} else {
 		warn.css('display','none');
 	}

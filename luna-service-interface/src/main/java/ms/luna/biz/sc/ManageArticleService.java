@@ -11,8 +11,11 @@ import com.alibaba.fastjson.JSONObject;
 public interface ManageArticleService {
 
     JSONObject createArticle(String json);
+    JSONObject createAndPublishArticle(String json);
     JSONObject getArticleById(int id);
+    JSONObject getArticle(String json);
     JSONObject updateArticle(String json);
+    JSONObject updateAndPublishArticle(String json);
     JSONObject deleteArticle(int id);
     JSONObject loadArticle(String json);
     JSONObject searchBusiness(String json);
@@ -21,6 +24,8 @@ public interface ManageArticleService {
     JSONObject getColumnByBusinessId(int businessId);
     JSONObject getArticleByBusinessAndColumnName(String businessName, String columnNames);
     JSONObject getArticleByBusinessAndColumnId(int businessId, String columnIds);
+    JSONObject getArticleByBusinessAndColumnName(String json);
+    JSONObject getArticleByBusinessAndColumnId(String json);
     JSONObject getOnlineArticleById(int id);
     JSONObject getOnlineArticleByIdForApi(int id);
 }

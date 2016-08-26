@@ -258,9 +258,6 @@ $(document).ready(function () {
             }
         }
     }
-    // var scene = document.querySelector('.scene');
-    // var parallax = new Parallax(scene);
-    // $('.scene').find('.img-wraper').addClass('go-right');
     //初始化 欢迎页的视差效果
     var paraScene = [];
     $('.paraScene').each(function (n, item) {
@@ -277,12 +274,12 @@ $(document).ready(function () {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
+        setBgAnimation(pageTime);
+
         setTimeout(function () {
             //修改history 中的内容，来解决goback 中的问题
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
-
-            });
+            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () { });
             $('.welcome').animate({ opacity: 0 }, 3000, function () {
                 $('.welcome').css('display', 'none');
                 // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
@@ -290,6 +287,9 @@ $(document).ready(function () {
                 //$('.welcome').remove();
                 // delete paraScene;
             });
+
+            setBgAnimation(pageTime);
+
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
@@ -377,23 +377,18 @@ $(document).ready(function () {
             if (typeof (this.value.action) != "undefined") {
                 var link, value = this.value.action.href.value;
                 switch (this.value.action.href.type) {
-
                     case "inner":
                         link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
                         break;
-
                     case 'outer':
                         link = value;
                         break;
-
                     case 'email':
                         link = 'mailto:' + value;
                         break;
-
                     case 'phone':
                         link = 'tel:' + value;
                         break;
-
                     case 'return':
                         link = 'return';
                         break;
@@ -435,7 +430,7 @@ $(document).ready(function () {
 
         this.setPanoBg = function () {
             this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
-                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-autoplay="' + (this.value.panoAnimaType && this.value.panoAnimaType.id == 'autoplay' ? 'true' : 'false') + '" data-heading="' + this.value.pano.heading
                 + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
             // this.html.attr('data-animaType', this.value.bgAnimaType.id);
         };
@@ -446,9 +441,8 @@ $(document).ready(function () {
             this.html.children("div").append($scene);
         };
         this.setAnimaBg = function () {
-            this.html.children("div").append('<div class="animaCanvas" style="width:100%;height:100%;" data-animaType ="' + this.value.bgAnimaType.id + '" style="background:url(' + this.value.bgimg + ');background-size:100% 100%" ></div>');
-            this.html.attr('data-animaType', this.value.bgAnimaType.id);
-
+            this.html.children("div").append('<div class="anima-canvas-wrapper" > <div  class="anima-canvas" style=" background:url(' + (this.value.bgimg || '') + ') no-repeat;background-size:100% 100%;"></div></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
         };
 
         this.build = function () {
@@ -559,8 +553,8 @@ $(document).ready(function () {
         this.getPoiList = function (data, successCallback) {
             if (data.businessId && data.firstPoi) {
                 var url = '';
-                if (data.poiType) {
-                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.dataType.id]);
+                if (data.poiType && data.poiType.id) {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.poiType.id]);
                 } else {
                     url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [data.businessId, data.firstPoi.id]);
                 }
@@ -937,52 +931,73 @@ $(document).ready(function () {
         function fetchSingleData(item, index) {
             switch (item.type) {
                 case 'singlePoi':
-                    var poiLangId = item.poiLang || 'zh';
-                    $.ajax({
-                        url: host + '/servicepoi.do?method=getPoiById',
-                        type: 'GET',
-                        data: { poi_id: item.singlePoiId },
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data[poiLangId];
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data[poiLangId];
+                    if (item.singlePoiId) {
+                        var poiLangId = item.poiLang.id || 'zh';
+                        $.ajax({
+                            url: host + '/servicepoi.do?method=getPoiById',
+                            type: 'GET',
+                            data: { poi_id: item.singlePoiId },
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data[poiLangId];
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data[poiLangId];
+                                    }
                                 }
-
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = null;
+                            that.updateContent();
+                        } else {
+                            that.data[index] = null;
                         }
-                    });
+                    }
                     break;
                 case 'singleArticle':
-                    $.ajax({
-                        url: [host, '/article/data/', item.articleId].join(''),
-                        type: 'GET',
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data;
+                    if (item.articleId) {
+                        $.ajax({
+                            url: [host, '/article/data/', item.articleId].join(''),
+                            type: 'GET',
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data;
+                                    }
                                 }
-                            }
 
+                            }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.updateContent();
+                        } else {
+                            that.data[index] = [];
                         }
-                    });
+                    }
                     break;
                 case 'poiList':
-                    var poiLangId = item.poiLang || 'zh';
+                    var poiLangId = item.poiLang.id || 'zh', url;
+                    if (item.firstPoiId && item.poiTypeId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [window.business_id, item.firstPoiId, item.poiTypeId]);
+                    } else if (item.firstPoiId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
+                    } else {
+                        that.data[index] = { pois: [] };
+                        that.updateContent();
+                        return;
+                    }
                     $.ajax({
-                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
+                        url: url,
                         type: 'GET',
-                        data: {
-                            business_id: window.business_id,
-                            poi_id: item.firstPoiId,
-                            category_id: item.poiTypeId,
-                            // lang:item.poiLang.id,
-                        },
+
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
@@ -996,20 +1011,29 @@ $(document).ready(function () {
                     });
                     break;
                 case 'articleList':
-                    $.ajax({
-                        url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
-                        type: 'GET',
-                        success: function (res) {
-                            if (res.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = res.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = res.data;
+                    if (item.columnId) {
+                        $.ajax({
+                            url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
+                            type: 'GET',
+                            success: function (res) {
+                                if (res.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = res.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = res.data;
+                                    }
                                 }
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.updateContent();
+                        } else {
+                            that.data[index] = [];
                         }
-                    });
+                    }
             }
 
         }
@@ -1070,6 +1094,10 @@ $(document).ready(function () {
             that.menuType = type;
             switch (type) {
                 case 'singlePoi':
+                    if (!data || data.length == 0) {
+                        html = '<div id="detail-title-wrap"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     html =
@@ -1090,6 +1118,10 @@ $(document).ready(function () {
                         + '</div>';
                     break;
                 case 'singleArticle':
+                    if (!data || data.length == 0) {
+                        html = '<div id="articleList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
@@ -1110,6 +1142,10 @@ $(document).ready(function () {
                     html = '<div id="article" class="content-details canscroll clearboth">' + (data.content) + '</div>';
                     break;
                 case 'poiList':
+                    if (!data || data.pois.length == 0) {
+                        html = '<div id="poiList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var typeInfo = {
                         '2': 'tour', //旅游
                         '3': 'hotel', //住宿
@@ -1250,7 +1286,7 @@ $(document).ready(function () {
                                     + '<br><span class="profile">' + panoTip + '</span>'
                                     + '</p>'
                                     + '</a>'
-                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
+                                    + '<a target="_blank" class="poi-detail" href="' + item.preview_url + '">'
                                     + '点击查看详情'
                                     + '</a>'
                                     + '</div>';
@@ -1288,10 +1324,6 @@ $(document).ready(function () {
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     break;
-
-
-
-
             }
 
             if (that.content.html()) {
@@ -1344,13 +1376,14 @@ function initPanoBg(panoBg) {
     }
     var pano = {},
         panoId = panoBg.dataset.panoid,
-        gravity = panoBg.dataset.gravity;
+        gravity = panoBg.dataset.gravity,
+        autoplay = panoBg.dataset.autoplay;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
     pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
     pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
     pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
-    pano.setAutoplayEnable(false); //自动播放
+    pano.setAutoplayEnable(eval(autoplay)); //自动播放
     pano.setGravityEnable(gravity == "true"); //重力感应
 }
 
@@ -1469,5 +1502,18 @@ function is_weixn() {
         return true;
     } else {
         return false;
+    }
+}
+
+/**
+ * 设置背景的动画
+ */
+function setBgAnimation(time) {
+    timt = time ? time * 0.618 : 1;
+    if ($('.anima-canvas').length > 0) {
+        $('.anima-canvas').each(function (n, item) {
+            $(this).animate({ 'margin-left': '-12.5%' }, timt, function () {
+            });
+        });
     }
 }

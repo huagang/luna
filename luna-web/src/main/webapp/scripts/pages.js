@@ -554,26 +554,27 @@ var InitCenterArea = function () {
             target: '#context-menu',
             before: function (e, element, target) {
                 e.preventDefault();
-                // if (e.target.tagName == 'SPAN') {
-                //     e.preventDefault();
-                //     this.closemenu();
-                //     return false;
-                // }
+
                 return true;
             },
             onItem: function (context, e) {
                 var domId = e.target.id;
+                var copmpnentType = currentComponent.type;
 
-                console.log(context);
                 switch (domId) {
                     case 'copy':
                         if ($('#' + currentComponentId).length > 0) {
-                            var copmpnentType = currentComponent.type;
+                            if (copmpnentType == "canvas") {
+                                return;
+                            }
                             createNewEelement(copmpnentType, 'copy');
                         }
                         break;
                     case 'delete':
                         if ($('#' + currentComponentId).length > 0) {
+                            if (copmpnentType == "canvas") {
+                                return;
+                            }
                             $('#' + currentComponentId).remove();
                             lunaPage.delPageComponents(currentPageId, currentComponentId);
                         }
@@ -611,7 +612,7 @@ var InitCenterArea = function () {
 
         //按delete按钮删除组件
         $(document).bind('keydown', 'del', function (e) {
-            if (e.target.nodeName == "INPUT") {
+            if (e.target.nodeName == "INPUT" || lunaPage.pages[currentPageId].page_content[currentComponentId].type == 'canvas') {
                 //如果是文本框，删除文本框中的内容，不删除画布中的插件
                 return true;
             }
@@ -855,7 +856,7 @@ function setPageHtml(pageID) {
             if (!value.timestamp) {
                 value.timestamp = new Date().getTime();
             }
-            if (value.type ==  "canvas") {
+            if (value.type == "canvas") {
                 componentArr = [value].concat(componentArr);
             } else {
                 componentArr.push(value);
