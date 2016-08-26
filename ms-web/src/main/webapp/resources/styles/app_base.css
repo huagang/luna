@@ -60,7 +60,11 @@ a:visited {
     color: #459AE9;
     text-decoration: none;
 }
-
+a ,img{
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
 a:hover,
 a:active {
     text-decoration: underline;
