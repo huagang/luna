@@ -100,7 +100,7 @@
 	        </div>
 	        <div class="cataAbbr">
 	            <label for="cata-abbr">类别简称</label>
-	            <input type="text" id="category_nm_en" name="category_nm_en">
+	            <input type="text" id="category_nm_en" name="category_nm_en" placeholder="输入类别的英文简称">
 	            <span id="pass2" class="glyphicon glyphicon-ok form-control-feedback pass" aria-hidden="true"></span>
 	            <span class="warn" id="warn2"></span>
 	        </div>

@@ -94,7 +94,10 @@ $(function(){
             			saveErrorcontent = saveErrorcontent + "</tr>";
             		}
             		$poi_save_error_list.html(saveErrorcontent);
-            	}
+            	} else {
+					$.alert(returndata.msg);
+					return;
+				}
             	var $popwindow = $('#pop-input-result');
         	    popWindow($popwindow);
             },

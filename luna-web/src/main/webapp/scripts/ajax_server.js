@@ -27,6 +27,7 @@ function getAppData(appID, successCallback) {
 
 function isValidPageInfo() {
     var validFlag = true,
+        pageCode = $("#txt-short").val(),
         $txtName = $("#txt-name").val();
     if ($txtName.length == 0) {
         $("#warn1").text("不能为空");
@@ -37,12 +38,22 @@ function isValidPageInfo() {
         $("#warn2").text("不能为空");
         validFlag = false;
     }
+    if (pageCode == 'welcome') {
+        var txtTime = document.querySelector('#txt-time').value,
+            numReg = /^[0-9](.[0-9]{1,3})?$|^[0-9]$/;
+        if (!numReg.test(txtTime)) {
+            $("#warn4").text("请输入10以内的数字，最长保留三位小数");
+            validFlag = false;
+        }
+    }
     var txtPageHeight = document.querySelector('#txtPageHeight').value,
         txtPageType = document.querySelector('[name=pageType]:checked').value;
     if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }
+    $("#warn1,#warn2,#warn4").text("");
+
     return validFlag;
 }
 // 创建app的一个新的页面
@@ -52,18 +63,26 @@ function creatPageID() {
         $.alert("请先创建app");
         return;
     }
+    var url, sourcePageId = $('#sourcePageId').val();
+    if (sourcePageId) {
+        url = Inter.getApiUrl().appCopyPage;
+    } else {
+        url = Inter.getApiUrl().appCreatePage;
+    }
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
+            'page_id': $('#sourcePageId').val(),
             'page_name': $("#txt-name").val(),
+            'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
             'page_order': $(".list-page .drop-item[page_id]").length + 1,
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value || '617',
         };
         $.ajax({
-            type: Inter.getApiUrl().appCreatePage.type,
-            url: Inter.getApiUrl().appCreatePage.url,
+            type: url.type,
+            url: url.url,
             // cache: false,
             async: false,
             data: params,
@@ -107,6 +126,7 @@ function modifyPageName() {
             'app_id': app_id,
             'page_id': pageId,
             'page_name': $("#txt-name").val(),
+            'page_time': $("#txt-time").val(),
             'page_code': $("#txt-short").val(),
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value,
@@ -128,6 +148,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_name = $("#txt-name").val();
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
+                lunaPage.pages[pageId].page_time = $("#txt-time").val();
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
                 $('#layermain').css('height', lunaPage.pages[pageId].page_height);
 
@@ -326,82 +347,91 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     if (url_id) {
         var urlElement = document.getElementById(url_id);
     }
-    var formdata = new FormData(formobj);
-    formdata.append("app_id", appId);
-    formdata.append('type', 'pic');
-    formdata.append('resource_type', 'app');
-    formdata.append('resource_id', '');
-    $.ajax({
-        url: Inter.getApiUrl().uploadPath.url,
-        type: Inter.getApiUrl().uploadPath.type,
-        cache: false,
-        async: false,
-        data: formdata,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        success: function (returndata) {
-            if (returndata.code != "0") {
-                $.alert(returndata.msg);
-                return;
-            }
-            if (flag) {
-                currentComponent.width = returndata.data.width;
-                currentComponent.height = returndata.data.height;
-                if (returndata.data.width >= objdata.canvas.width) {
-                    currentComponent.width = objdata.canvas.width;
-                    currentComponent.x = 0;
-                    currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
+    var file = file_obj.files[0];
+
+    cropper.setFile(file, function (file) {
+        var formdata = new FormData();
+        formdata.append("file", file);
+        formdata.append("app_id", appId);
+        formdata.append('type', 'pic');
+        formdata.append('resource_type', 'app');
+        formdata.append('resource_id', '');
+        $.ajax({
+            url: Inter.getApiUrl().uploadPath.url,
+            type: Inter.getApiUrl().uploadPath.type,
+            cache: false,
+            async: false,
+            data: formdata,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (returndata) {
+                if (returndata.code != "0") {
+                    $.alert(returndata.msg);
+                    return;
                 }
-                if (currentComponent.width >= objdata.canvas.width && currentComponent.height > objdata.canvas.height) {
-                    if ((currentComponent.width / currentComponent.height) > (objdata.canvas.width / objdata.canvas.height)) {
-                        //图片的宽高比 大于 画布的宽高比
+                if (flag) {
+                    currentComponent.width = returndata.data.width;
+                    currentComponent.height = returndata.data.height;
+                    if (returndata.data.width >= objdata.canvas.width) {
                         currentComponent.width = objdata.canvas.width;
                         currentComponent.x = 0;
                         currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
-                    } else {
-                        currentComponent.height = objdata.canvas.height;
-                        currentComponent.width = currentComponent.width * objdata.canvas.height / currentComponent.height;
-                        currentComponent.x = (currentComponent.width - currentComponent.width) / 2;
-                        currentComponent.y = 0;
                     }
+                    if (currentComponent.width >= objdata.canvas.width && currentComponent.height > objdata.canvas.height) {
+                        if ((currentComponent.width / currentComponent.height) > (objdata.canvas.width / objdata.canvas.height)) {
+                            //图片的宽高比 大于 画布的宽高比
+                            currentComponent.width = objdata.canvas.width;
+                            currentComponent.x = 0;
+                            currentComponent.height = returndata.data.height * objdata.canvas.width / returndata.data.width;
+                        } else {
+                            currentComponent.height = objdata.canvas.height;
+                            currentComponent.width = currentComponent.width * objdata.canvas.height / currentComponent.height;
+                            currentComponent.x = (currentComponent.width - currentComponent.width) / 2;
+                            currentComponent.y = 0;
+                        }
+                    }
+                    if (currentComponent.width < objdata.canvas.width && returndata.data.height > objdata.canvas.height) {
+                        currentComponent.height = objdata.canvas.height;
+                        currentComponent.width = currentComponent.width * objdata.canvas.height / returndata.data.height;
+                        currentComponent.y = 0;
+                        currentComponent.x = (objdata.canvas.width - currentComponent.width) / 2;
+                    }
+                    currentComponent.width = parseInt(currentComponent.width);
+                    currentComponent.height = parseInt(currentComponent.height);
+                    urlElement.value = returndata.data.access_url;
+                    var urlObj = $("#" + url_id);
+                    urlObj.trigger("focus");
+                    urlObj.trigger("change");
+                    urlObj.trigger("blur");
                 }
-                if (currentComponent.width < objdata.canvas.width && returndata.data.height > objdata.canvas.height) {
-                    currentComponent.height = objdata.canvas.height;
-                    currentComponent.width = currentComponent.width * objdata.canvas.height / returndata.data.height;
-                    currentComponent.y = 0;
-                    currentComponent.x = (objdata.canvas.width - currentComponent.width) / 2;
+                switch (thumbnail_id) {
+                    case 'wj-page-set':
+                        $("#wj-page").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    case 'wj-share-set':
+                        $("#wj-share").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    default:
+                        break;
                 }
-                currentComponent.width = parseInt(currentComponent.width);
-                currentComponent.height = parseInt(currentComponent.height);
-                urlElement.value = returndata.data.access_url;
-                var urlObj = $("#" + url_id);
-                urlObj.trigger("focus");
-                urlObj.trigger("change");
-                urlObj.trigger("blur");
+                if (clc) {
+                    $(clc).show();
+                }
+                //关闭cropper弹框
+                cropper.close();
+            },
+            error: function (returndata) {
+                $.alert(returndata);
             }
-            switch (thumbnail_id) {
-                case 'wj-page-set':
-                    $("#wj-page").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                case 'wj-share-set':
-                    $("#wj-share").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                default:
-                    break;
-            }
-            if (clc) {
-                $(clc).show();
-            }
-
-        },
-        error: function (returndata) {
-            $.alert(returndata);
-        }
+        });
+        // $('#thumbnail_fileup').val('');
+    }, function () {
+        // $('#thumbnail_fileup').val('');
     });
 }
 
@@ -527,55 +557,61 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
     if (url_id) {
         var urlElement = document.getElementById(url_id);
     }
-    var formdata = new FormData(formobj);
-    formdata.append("app_id", appId);
-    formdata.append('type', 'pic');
-    formdata.append('resource_type', 'app');
-    formdata.append('resource_id', '');
+    var file = file_obj.files[0];
+    cropper.setFile(file, function (file) {
 
-    $.ajax({
-        url: Inter.getApiUrl().uploadPath.url,
-        type: Inter.getApiUrl().uploadPath.type,
-        cache: false,
-        async: false,
-        data: formdata,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        success: function (returndata) {
-            if (returndata.code != "0") {
-                $.alert(returndata.msg);
-                return;
-            }
-            if (flag) {
-                urlElement.value = returndata.data.access_url;
-                var urlObj = $("#" + url_id);
-                urlObj.trigger("focus");
-                urlObj.trigger("change");
-                urlObj.trigger("blur");
-            }
-            switch (thumbnail_id) {
-                case 'wj-page-set':
-                    $("#wj-page").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                case 'wj-share-set':
-                    $("#wj-share").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                default:
-                    break;
-            }
-            if (clc) {
-                $(clc).show();
-            }
+        var formdata = new FormData();
+        formdata.append('file', file);
+        formdata.append("app_id", appId);
+        formdata.append('type', 'pic');
+        formdata.append('resource_type', 'app');
+        formdata.append('resource_id', '');
 
-        },
-        error: function (returndata) {
-            $.alert(returndata);
-        }
+        $.ajax({
+            url: Inter.getApiUrl().uploadPath.url,
+            type: Inter.getApiUrl().uploadPath.type,
+            cache: false,
+            async: false,
+            data: formdata,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (returndata) {
+                if (returndata.code != "0") {
+                    $.alert(returndata.msg);
+                    return;
+                }
+                if (flag) {
+                    urlElement.value = returndata.data.access_url;
+                    var urlObj = $("#" + url_id);
+                    urlObj.trigger("focus");
+                    urlObj.trigger("change");
+                    urlObj.trigger("blur");
+                }
+                switch (thumbnail_id) {
+                    case 'wj-page-set':
+                        $("#wj-page").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    case 'wj-share-set':
+                        $("#wj-share").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    default:
+                        break;
+                }
+                if (clc) {
+                    $(clc).show();
+                }
+                //关闭cropper弹框
+                cropper.close();
+            },
+            error: function (returndata) {
+                $.alert(returndata);
+            }
+        });
     });
 }
 
@@ -620,3 +656,93 @@ var uploadFileValidate = function () {
 
 
 } ();
+
+/**
+ * 获取文章类别列表 
+ */
+function getColumnListByBid(successCallback) {
+    //栏目列表
+    $.get(Util.strFormat(Inter.getApiUrl().articleColumn.url, [objdata.businessId]), function (res) {
+        if (res.code == '0') {
+            if (successCallback) {
+                successCallback(res);
+            }
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}
+/**
+ * 获取POI类别
+ * 
+ * @param {any} firstPoiId
+ * @param {any} successCallback
+ */
+function getPoiTypeListByPoiAndBid(firstPoiId, successCallback) {
+    $.get(Util.strFormat(Inter.getApiUrl().poiTypeListByBidAndFPoi, [objdata.businessId, firstPoiId]), function (res) {
+        if (res.code == '0') {
+            successCallback(res);
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}
+
+/**
+ * 获取一级POI函数
+ * 
+ * @param {any} successCallback
+ */
+function getFirstPoiListByBid(successCallback) {
+    $.get(Util.strFormat(Inter.getApiUrl().firstPoiByBid, [objdata.businessId]), function (res) {
+        if (res.code == '0') {
+            if (res.data) {
+                successCallback(res);
+            }
+        } else {
+            alert(ErrCode.get(res.code));
+        }
+    });
+}
+/**
+ * 根据业务ID和栏目获取文章列表数据
+ */
+function getArticleListByBidAndCid(bid, cid, successCallback) {
+    if (cid) {
+        $.ajax({
+            type: 'GET',
+            url: Util.strFormat(Inter.getApiUrl().articleListByBidAndCid, [bid, cid]),
+            async: false,
+            success: function (res) {
+                if (successCallback) {
+                    successCallback(res);
+                }
+            },
+            error: function (res) {
+                console.log('请求文章数据失败');
+                console.log(res);
+            }
+        });
+    } else {
+        successCallback([]);
+    }
+}
+/**
+ * 根据业务iD和一级POi和类别ID获取数据
+ */
+function getPoiListByBidAndFidAndTid(url, successCallback) {
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: function (res) {
+            if (successCallback) {
+                successCallback(res);
+            }
+        },
+        error: function (res) {
+            console.log('请求POI数据失败');
+            console.log(res);
+        }
+    });
+}

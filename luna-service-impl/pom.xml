@@ -343,6 +343,60 @@
 		</profile>
 
 		<profile>
+			<id>pre-release</id>
+			<properties>
+				<log4j.level>INFO</log4j.level>
+				<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+				<jdbc.url>jdbc:mysql://10.66.152.86:3306/luna</jdbc.url>
+				<jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password>vb@12345</jdbc.password>
+				<zookeeper.address>10.105.204.15:2181</zookeeper.address>
+				<mongo.hosts>115.159.50.183:27017</mongo.hosts>
+				<mongo.user>poi_rw</mongo.user>
+				<mongo.password>sdiedkdijdvmbm</mongo.password>
+				<mongo.dbname>luna</mongo.dbname>
+				<cosBaseDir>/release</cosBaseDir>
+				<msWebUrl>http://luna.visualbusiness.cn/ms-web</msWebUrl>
+				<mtaQQ>3186008740</mtaQQ>
+				<redis.host>10.66.172.227</redis.host>
+				<redis.instanceId>11da0ad3-35d8-4925-90bd-6f04fd313162</redis.instanceId>
+				<redis.password>vb2015redis</redis.password>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>2.4.3</version>
+						<executions>
+							<execution>
+								<configuration>
+									<transformers>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.handlers</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.schemas</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+											<manifestEntries>
+												<Main-Class>ms.luna.dubbo.provider.LunaProvider</Main-Class>
+											</manifestEntries>
+										</transformer>
+									</transformers>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
 			<id>release</id>
 			<properties>
 				<log4j.level>INFO</log4j.level>

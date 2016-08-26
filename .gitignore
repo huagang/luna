@@ -3,7 +3,6 @@ logs
 *.iml
 target
 .DS_Store
-lib
 RemoteSystemsTempFiles
 Servers
 .metadata
@@ -15,3 +14,4 @@ jquery.custmer.extend.js
 .vscode
 build
 *.log
+generatorConfig.xml

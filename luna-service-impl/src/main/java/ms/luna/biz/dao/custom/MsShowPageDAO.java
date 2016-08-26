@@ -24,6 +24,7 @@ public interface MsShowPageDAO {
 	public static final String FIELD_UPDATE_USER = "update_user";
 	public static final String FIELD_PAGE_TYPE = "page_type";
 	public static final String FIELD_PAGE_HEIGHT = "page_height";
+	public static final String FIELD_PAGE_TIME = "page_time";
 
 	public List<MsShowPage>	readAllPageDetailByAppId(int appId);
 	public List<MsShowPage> readIndexPageDetailByAppId(int appId);

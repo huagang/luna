@@ -352,6 +352,20 @@
 		</profile>
 
 		<profile>
+			<id>pre-release</id>
+			<properties>
+				<zookeeper.address>10.105.204.15:2181</zookeeper.address>
+				<log4j.level>INFO</log4j.level>
+				<cosBaseDir>/release</cosBaseDir>
+				<vodBaseDir>/release</vodBaseDir>
+				<app.develop>simon-test.visualbusiness.cn</app.develop>
+				<redis.host>10.66.172.227</redis.host>
+				<redis.instanceId>11da0ad3-35d8-4925-90bd-6f04fd313162</redis.instanceId>
+				<redis.password>vb2015redis</redis.password>
+			</properties>
+		</profile>
+
+		<profile>
 			<id>release</id>
 			<properties>
 				<zookeeper.address>10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181</zookeeper.address>

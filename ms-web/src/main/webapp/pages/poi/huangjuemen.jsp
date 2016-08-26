@@ -31,15 +31,15 @@
     </div>
     <div class="toolsbar">
         <div class="tool-item hidden">
-            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i><br/>联系电话</a>
+            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i><br/><span id="phoneText">联系电话</span></a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i><br/>到这去</a>
+        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i><br/><span id="navText">到这去</span></a>
             <div class="vr-line"></div>
         </div>
         <div class="tool-item ">
-            <a id="panorama" href="javascript:;" data-type="pano" class="hide" ><i class="icon icon-pano"></i><br/>看全景</a>
-            <a id="waitPanorama" href="javascript:;" data-type="pano" class="hide" style="margin: 21px auto;display: inline-block;">全景<br>拍摄中</a>
+            <a id="panorama" href="javascript:;" data-type="pano" class="hide" ><i class="icon icon-pano"></i><br/><span id="panoText">看全景</span></a>
+            <a id="waitPanorama" href="javascript:;" data-type="pano" class="hide" style="margin: 21px auto;display: inline-block;"><span id="noPanoText">全景<br>拍摄中</span></a>
         </div>
     </div>
     <div class="content-wrapper">
@@ -52,6 +52,8 @@
 <div class="goback hidden ">
     <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
+<input id="shareInfoTitle" type="hidden" name="" value="${title}">
+<input id="shareInfoDes" type="hidden" name="" value="${description}">
 
 <!-- BEGIN REFER LINK  -->
 <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
@@ -60,11 +62,12 @@
 <!-- END REFER LINK -->
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/util.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/common/luna.config.js"></script>
 <script type="text/javascript">
     var poiData = ${poiJson};
     var wechatOptions = {
-        title: "${title}",
-        desc: "${description}",
+        title: $('#shareInfoTitle').val(),
+        desc: $('#shareInfoDes').val(),
         link: window.location.href,
         imgUrl:poiData.data.thumbnail,
         dest:{

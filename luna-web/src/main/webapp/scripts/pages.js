@@ -43,7 +43,7 @@ var InitTopArea = function () {
                 componentType = divBtnDom.dataset.comtype;
 
             if (componentType.length > 0) {
-                createNewEelement(componentType,'create');
+                createNewEelement(componentType, 'create');
             }
         });
     };
@@ -85,6 +85,7 @@ var InitLeftArea = function () {
 
     //初始化页面创建、修改点击事件
     var initEditEvent = function () {
+        //新增界面
         $("#new-built").click(function () {
             $overlay.css("display", "block");
             var $pop_window = $("#pop-add");
@@ -99,40 +100,68 @@ var InitLeftArea = function () {
             });
             resetDialog();
             $("[name=pageType][value=1]").trigger('click');
+            $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
         });
 
-        //修改
-        $("#list-page").on('click', 'a.modify', function () {
-            modify();
+        //修改界面
+        $("#list-page").on('click', 'a.modify', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var pageItemDom = $(e.target).closest('li'),
+                pageCode = pageItemDom.data('pagecode');
+            if (pageCode == 'welcome' || pageCode == 'index') {
+                if (pageCode == 'welcome') {
+                    $('#txt-time').closest('.item-wrap').removeClass('hide');
+                } else {
+                    $('#txt-time').closest('.item-wrap').addClass('hide');
+                }
+                $('#txt-name,#txt-short').attr('readonly', 'readonly');
+            } else {
+                $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
+            }
+            modify(e);
+        });
+        //页面复用
+        $("#list-page").on('click', 'a.pageCopy', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            modify(e, 'copy');
         });
 
         //创建或更新，根据弹窗是否存在modify_page_id确定
-        $("#setup").click(function () {
-            modifyPageId = $("#modify_page_id").val();
+        $("#setup").click(function (e) {
+            var modifyPageId = $("#modify_page_id").val();
+            var sourcePageId = $('#sourcePageId').val();
             if (modifyPageId) {
                 modifyPageName();
+            } else if (sourcePageId) {
+                lunaPage.savePage(currentPageId);
+                creatPageID();
             } else {
                 creatPageID();
             }
         });
 
         $('[name=pageType]').on('change', function (e) {
-            console.log($(this).val());
             if ($(this).val() == 1) {
                 $('#txtPageHeight').attr('readonly', 'readonly');
                 document.querySelector('#txtPageHeight').value = '';
+            } else if ($('#sourcePageId').val()) {
+                $('#txtPageHeight').attr('readonly', 'readonly');
             } else {
                 $('#txtPageHeight').removeAttr('readonly');
             }
         });
 
         //取消
-        $("button.btn-clc").click(function () {
+        $("button.btn-clc").click(function (e) {
             $overlay.css("display", "none");
             $("div.pop").css("display", "none");
         });
 
-        $("#btn-delete").click(function () {
+        $("#btn-delete").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             deletePage($(this).attr("pageID"));
         });
     };
@@ -193,8 +222,8 @@ var InitRightArea = function () {
     };
 
     /**
- *初始化收起功能 
- */
+    *初始化收起功能 
+    */
     var initSlide = function () {
 
         $('.btn-slide').on('click', function (e) {
@@ -477,7 +506,7 @@ var InitRightArea = function () {
                 if (e.keyCode != 8) {
                     return false;
                 }
-            } 
+            }
         });
 
         //粘贴时去除样式
@@ -525,26 +554,27 @@ var InitCenterArea = function () {
             target: '#context-menu',
             before: function (e, element, target) {
                 e.preventDefault();
-                // if (e.target.tagName == 'SPAN') {
-                //     e.preventDefault();
-                //     this.closemenu();
-                //     return false;
-                // }
+
                 return true;
             },
             onItem: function (context, e) {
                 var domId = e.target.id;
+                var copmpnentType = currentComponent.type;
 
-                console.log(context);
                 switch (domId) {
                     case 'copy':
                         if ($('#' + currentComponentId).length > 0) {
-                            var copmpnentType = currentComponent.type;
+                            if (copmpnentType == "canvas") {
+                                return;
+                            }
                             createNewEelement(copmpnentType, 'copy');
                         }
                         break;
                     case 'delete':
                         if ($('#' + currentComponentId).length > 0) {
+                            if (copmpnentType == "canvas") {
+                                return;
+                            }
                             $('#' + currentComponentId).remove();
                             lunaPage.delPageComponents(currentPageId, currentComponentId);
                         }
@@ -582,7 +612,7 @@ var InitCenterArea = function () {
 
         //按delete按钮删除组件
         $(document).bind('keydown', 'del', function (e) {
-            if (e.target.nodeName == "INPUT") {
+            if (e.target.nodeName == "INPUT" || lunaPage.pages[currentPageId].page_content[currentComponentId].type == 'canvas') {
                 //如果是文本框，删除文本框中的内容，不删除画布中的插件
                 return true;
             }
@@ -698,7 +728,7 @@ $(document).ready(function () {
         updatePageComponents();
     };
 
-    $.creatPageComponents = function (pageID,  componentType, createType) {
+    $.creatPageComponents = function (pageID, componentType, createType) {
         creatPageComponentsHtml(pageID, currentComponent, createType);
     };
 
@@ -826,7 +856,7 @@ function setPageHtml(pageID) {
             if (!value.timestamp) {
                 value.timestamp = new Date().getTime();
             }
-            if (value.type ==  "canvas") {
+            if (value.type == "canvas") {
                 componentArr = [value].concat(componentArr);
             } else {
                 componentArr.push(value);

@@ -306,6 +306,24 @@ public class LunaUserServiceImpl implements LunaUserService {
     }
 
     @Override
+    public JSONObject getUserAuth(String userId) {
+
+        LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(userId);
+        LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+
+        LunaUserSession lunaUserSession = new LunaUserSession();
+        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
+        lunaUserSession.setLunaName(lunaUser.getLunaName());
+        lunaUserSession.setNickName(lunaUser.getNickName());
+        lunaUserSession.setEmail(lunaUser.getEmail());
+
+        lunaUserSession.setRoleId(userRole.getRoleId());
+        lunaUserSession.setExtra(userRole.getExtra());
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+    }
+
+    @Override
     public JSONObject getChildRoleAndModuleByUserId(String userId) {
         LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(userId);
         if(lunaUserRole == null) {

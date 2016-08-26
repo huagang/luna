@@ -109,6 +109,12 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             msArticle.setBusinessId(businessId);
         }
 
+        Integer type = articleObj.getInteger(MsArticleTable.FIELD_TYPE);
+
+        Integer refId = articleObj.getInteger(MsArticleTable.FIELD_REF_ID);
+        if(refId != null) {
+            msArticle.setRefId(refId);
+        }
         return msArticle;
     }
 
@@ -135,21 +141,41 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             JSONObject articleObj = JSONObject.parseObject(json);
             MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
             MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
-            msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
+            msArticleCriteria.createCriteria().andBusinessIdEqualTo(msArticle.getBusinessId())
+                                              .andTitleEqualTo(msArticle.getTitle());
             List<MsArticle> msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
             if(msArticles != null && msArticles.size() > 0) {
                 return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "文章标题已存在");
             }
-            msArticleDAO.insertSelective(msArticle);
-            msArticleCriteria.clear();
-            msArticleCriteria.createCriteria().andTitleEqualTo(msArticle.getTitle());
-            msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
-            if(msArticles != null && msArticles.size() == 1) {
-                JSONObject ret = new JSONObject();
-                ret.put(MsArticleTable.FIELD_ID, msArticles.get(0).getId());
-                ret.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticles.get(0).getId());
-                return FastJsonUtil.sucess("新建文章成功", ret);
+            Integer articleId = msArticleDAO.insertSelective(msArticle);
+            JSONObject ret = new JSONObject();
+            ret.put(MsArticleTable.FIELD_ID, articleId);
+            ret.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + articleId);
+            return FastJsonUtil.sucess("新建文章成功", ret);
+        } catch (Exception ex) {
+            logger.error("Failed to create article", ex);
+        }
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "新建文章失败");
+    }
+
+    @Override
+    public JSONObject createAndPublishArticle(String json) {
+        try {
+            JSONObject articleObj = JSONObject.parseObject(json);
+            MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
+            MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
+            msArticleCriteria.createCriteria().andBusinessIdEqualTo(msArticle.getBusinessId())
+                    .andTitleEqualTo(msArticle.getTitle());
+            List<MsArticle> msArticles = msArticleDAO.selectByCriteriaWithoutBLOBs(msArticleCriteria);
+            if(msArticles != null && msArticles.size() > 0) {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "文章标题已存在");
             }
+            msArticle.setStatus(true);
+            Integer articleId = msArticleDAO.insertSelective(msArticle);
+            JSONObject ret = new JSONObject();
+            ret.put(MsArticleTable.FIELD_ID, articleId);
+            ret.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + articleId);
+            return FastJsonUtil.sucess("新建文章成功", ret);
         } catch (Exception ex) {
             logger.error("Failed to create article", ex);
         }
@@ -176,6 +202,24 @@ public class ManageArticleBLImpl implements ManageArticleBL {
             int id = articleObj.getIntValue(MsArticleTable.FIELD_ID);
             if(id > 0) {
                 msArticle.setId(id);
+                msArticleDAO.updateByPrimaryKeySelective(msArticle);
+            }
+        } catch (Exception ex) {
+            logger.error("Failed to update article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败");
+        }
+        return FastJsonUtil.sucess("更新文章成功");
+    }
+
+    @Override
+    public JSONObject updateAndPublishArticle(String json) {
+        try{
+            JSONObject articleObj = JSONObject.parseObject(json);
+            MsArticleWithBLOBs msArticle = toJavaObject(articleObj);
+            int id = articleObj.getIntValue(MsArticleTable.FIELD_ID);
+            if(id > 0) {
+                msArticle.setId(id);
+                msArticle.setStatus(true);
                 msArticleDAO.updateByPrimaryKeySelective(msArticle);
             }
         } catch (Exception ex) {
