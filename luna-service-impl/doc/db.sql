@@ -454,8 +454,8 @@ CREATE TABLE `luna_goods_category` (
   CONSTRAINT `root` FOREIGN KEY (`root`) REFERENCES `luna_goods_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品类别表';
 
-CREATE TABLE `luna_deal_application` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '申请id',
+CREATE TABLE `luna_trade_application` (
+  `application_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '申请id',
   `contact_name` varchar(20) NOT NULL COMMENT '申请商户名称',
   `contact_phone` varchar(16) NOT NULL COMMENT '申请人联系方式',
   `email` varchar(36) NOT NULL COMMENT '申请人邮箱',
@@ -473,11 +473,12 @@ CREATE TABLE `luna_deal_application` (
   `account_address` varchar(36) NOT NULL COMMENT '商户账户开户行',
   `account_no` varchar(20) NOT NULL COMMENT '商户开户账号',
   `update_time` datetime NOT NULL COMMENT '申请更新时间',
-  `app_state` int(11) NOT NULL COMMENT '申请状态',
-  `user_id` char(32) NOT NULL COMMENT '申请人ID',
-  PRIMARY KEY (`id`),
-  KEY `user_id_idx` (`user_id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `luna_user` (`unique_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `app_status` int(11) NOT NULL COMMENT '申请状态',
+  `merchant_id` varchar(32) NOT NULL COMMENT '申请商户ID',
+  PRIMARY KEY (`application_id`),
+  KEY `user_id_idx` (`merchant_id`),
+  CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
+
 
 
