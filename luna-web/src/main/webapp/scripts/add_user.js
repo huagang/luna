@@ -322,11 +322,11 @@
                     role_id: parseInt(vm.data.role),
                 };
 
-                if(! vm.data.extra.auth){
-                    delete data.extra.auth;
-                }
 
                 if(vm.data.extra){
+                    if(! vm.data.extra.auth){
+                        delete vm.data.extra.auth;
+                    }
                     data.extra = JSON.stringify(vm.data.extra);
                 }
 

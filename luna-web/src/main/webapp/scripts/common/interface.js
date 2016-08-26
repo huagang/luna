@@ -15,17 +15,14 @@ var Inter = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        } else if (/luna-test/.test(host)) {
-            return 'test';
         } else {
-            return 'online';
+            return 'current';
         }
     };
 
     var apiHost = {
         'local': 'http://localhost:8082/',
-        'test': 'http://luna-test.visualbusiness.cn/luna-api/',
-        'online': 'http://luna.visualbusiness.cn/luna-api/'
+        'current': window.location.host +'/luna-api/',
     };
 
     var lunaEditor = {
