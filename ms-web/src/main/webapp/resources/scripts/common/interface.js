@@ -21,7 +21,7 @@ var Inter = function () {
 
     var apiHost = {
         'local': 'http://localhost:8082/',
-        'current': window.location.host +'/luna-api/',
+        'current': 'http://' + window.location.host + '/luna-api/',
     };
     var apiContext;
     if (curHost() === 'local-mobile') {
