@@ -955,10 +955,10 @@ $(document).ready(function () {
                         });
                     } else {
                         if (!that.data[index] && that.menuIndex == index) {
-                            that.data[index] = { pois: [] };
+                            that.data[index] = null;
                             that.updateContent();
                         } else {
-                            that.data[index] = { pois: [] };
+                            that.data[index] = null;
                         }
                     }
                     break;
@@ -1099,7 +1099,7 @@ $(document).ready(function () {
             that.menuType = type;
             switch (type) {
                 case 'singlePoi':
-                    if (!data || data.pois.length == 0) {
+                    if (!data || data.length == 0) {
                         html = '<div id="detail-title-wrap"><div class="detail-more">更多内容，敬请期待…</div></div>';
                         break;
                     }
