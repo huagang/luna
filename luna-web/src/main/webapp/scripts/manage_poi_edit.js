@@ -168,7 +168,7 @@ function delPOI(obj, _id, poiName){
                 	        url: Util.strFormat( Inter.getApiUrl().poiDelete.url,[_id, reason]),
                 	        type: 'DELETE',
                 	        async: false,
-                	        data: {"_id":_id},
+                	        data: {"_id":_id, "note": reason},
                 	        dataType:"json",
                 	        success: function (returndata) {
                 	            var result = returndata;
