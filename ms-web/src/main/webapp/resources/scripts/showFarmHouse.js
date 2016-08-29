@@ -77,6 +77,7 @@ function showAnimation(){
             this.markerName = data.markerName || '';
             this.href = data.href;
             this.visible = data.visible; // default false
+            this.zIndex = data.zIndex;
             if (this.visible) {
                 this.show();
             }
@@ -242,7 +243,12 @@ function showAnimation(){
             vm.id = location.pathname.split('farmhouse/')[1];
 
             // 全景相关
-            vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            try{
+                vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            } catch(e){
+
+            }
+
 
             vm.curPanoIndex = 0;
             vm.isFullScreen = false;
@@ -344,7 +350,7 @@ function showAnimation(){
         }
 
         // 更新地图mark
-        function updateMapMarkers() {
+        function updateMapMarkers(callback) {
             if (vm.poiList) {
                 vm.poiList.forEach(function (item, index) {
 
@@ -375,6 +381,9 @@ function showAnimation(){
                     item.markerTip.setMap(vm.map);
                     qq.maps.event.addListener(item.marker, 'click', vm.handleMarkerClick.bind(vm, index));
                 });
+                if(callback){
+                    setTimeout(callback, 100);
+                }
             }
 
             var center = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng);
@@ -536,8 +545,10 @@ function showAnimation(){
                     });
 
                     vm.panoAutoPlay = false;
-                    vm.setPano();
-                    vm.listenScroll();
+                    if(vm.pano){
+                        vm.setPano();
+                        vm.listenScroll();
+                    }
 
                 } else {
                     //alert('获取全景信息失败,若想观看全景,请刷新重试');
@@ -563,10 +574,7 @@ function showAnimation(){
                         }
                         return true;
                     });
-                    vm.updateMapMarkers();
-                    setTimeout(function(){
-                        vm.updateAllDistance();
-                    }, 100);
+                    vm.updateMapMarkers(vm.updateAllDistance);
                 } else {
                     alert(res.msg || '获取周围poi点信息失败');
                 }
