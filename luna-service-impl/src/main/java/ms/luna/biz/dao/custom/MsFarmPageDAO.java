@@ -20,7 +20,7 @@ public interface MsFarmPageDAO {
 
     void insertPage(Document data, String lunaName);
 
-    void updatePage(Document data, ObjectId pageId, Integer appId, String lunaName);
+    void updatePage(Document data, Integer appId, String lunaName);
 
     void deletePage(Integer appId);
 

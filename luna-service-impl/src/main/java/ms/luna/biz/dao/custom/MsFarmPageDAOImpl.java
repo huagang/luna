@@ -40,10 +40,10 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
     }
 
     @Override
-    public void updatePage(Document document, ObjectId pageId, Integer appId, String lunaName) {
+    public void updatePage(Document document, Integer appId, String lunaName) {
         document.put(MsFarmFieldTable.UPDATE_TIME, new Date());
         document.put(MsFarmFieldTable.UPDATE_USER, lunaName);
-        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId).append(MsShowPageDAO.FIELD_PAGE_ID, pageId);
+        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId);
         collection.updateOne(filter, new Document().append("$set", document));
     }
 

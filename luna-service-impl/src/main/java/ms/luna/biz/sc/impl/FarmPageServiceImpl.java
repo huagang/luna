@@ -103,11 +103,7 @@ public class FarmPageServiceImpl implements FarmPageService {
 
             // 检查mongo数据是否存在
             if (this.isPageExist(appId)) { // --exist
-                ObjectId pageId = msFarmPageDAO.getPageId(appId);
-                if(pageId == null) {
-                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "app_id doesn't exist in mongo");
-                }
-                msFarmPageDAO.updatePage(document, pageId, appId, lunaName);
+                msFarmPageDAO.updatePage(document, appId, lunaName);
             } else { // --not exist
                 msFarmPageDAO.insertPage(document, lunaName);
             }
