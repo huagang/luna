@@ -47,5 +47,23 @@ public class SMSController {
         inData.put("target", target);
         return smsService.sendCode(inData);
     }
-    
+
+    @RequestMapping(method = RequestMethod.GET, value = "/checkCode")
+    @ResponseBody
+    public JSONObject checkCode(HttpServletRequest request,
+                                @RequestParam String phone,
+                                @RequestParam String target,
+                                @RequestParam String code) {
+        HttpSession session = request.getSession(false);
+        JSONObject inData = new JSONObject();
+        if (session != null) {
+            LunaUserSession user = SessionHelper.getUser(session);
+            inData.put("uniqueId", user.getUniqueId());
+        } else {
+            inData.put("uniqueId", phone);
+        }
+        inData.put("target", target);
+        inData.put("code", code);
+        return smsService.checkCode(inData);
+    }
 }

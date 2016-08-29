@@ -37,6 +37,11 @@ public class SMSServiceImpl implements SMSService {
         }
     }
 
+    /**
+     * @param jsonObject the JSON Object include: uniqueId, phoneNo, target;
+     *                   the param uniqueId can be user's Id or phone number
+     * @return
+     */
     @Override
     public JSONObject sendCode(JSONObject jsonObject) {
         try {
