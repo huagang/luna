@@ -625,12 +625,12 @@ $(document).ready(function () {
                         arrUlHtml.push('<div class="imglist-title-wrapper">');
                         arrUlHtml.push('<div class="imglist-title">' + arrdata[i].poi_name + '</div>');
                         if (arrdata[i].panorama.panorama_type_id) {
-                            arrUlHtml.push('<div class="imglist-subtitle">点击看全景</div>');
+                            arrUlHtml.push('<div class="imglist-subtitle">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</div>');
                         }
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</a>');
-                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">点击查看详情</a>');
+                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</a>');
                         arrUlHtml.push('</li>');
                     }
                     arrUlHtml.push('</ul>');
@@ -943,7 +943,7 @@ $(document).ready(function () {
                                 if (data.code == '0') {
                                     if (!that.data[index] && that.menuIndex == index) {
                                         that.data[index] = data.data[poiLangId];
-                                        that.updateContent();
+                                        that.updateContent(poiLangId);
                                     } else {
                                         that.data[index] = data.data[poiLangId];
                                     }
@@ -953,7 +953,7 @@ $(document).ready(function () {
                     } else {
                         if (!that.data[index] && that.menuIndex == index) {
                             that.data[index] = null;
-                            that.updateContent();
+                            that.updateContent(poiLangId);
                         } else {
                             that.data[index] = null;
                         }
@@ -993,7 +993,7 @@ $(document).ready(function () {
                         url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
                     } else {
                         that.data[index] = { pois: [] };
-                        that.updateContent();
+                        that.updateContent(poiLangId);
                         return;
                     }
                     $.ajax({
@@ -1004,7 +1004,7 @@ $(document).ready(function () {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
                                     that.data[index] = data.data[poiLangId];
-                                    that.updateContent();
+                                    that.updateContent(poiLangId);
                                 } else {
                                     that.data[index] = data.data[poiLangId];
                                 }
@@ -1086,8 +1086,13 @@ $(document).ready(function () {
 
             return html;
         }
-
-        function updateContent() {
+        /**
+         * 
+         * 
+         * @param {any} poiLangId
+         */
+        function updateContent(poiLangId) {
+            poiLangId = poiLangId || 'zh';
             var data = that.data[that.menuIndex];
             var html = '', toolbar = '';
             var type = that.value.content.tabList[that.menuIndex].type,
@@ -1097,7 +1102,7 @@ $(document).ready(function () {
             switch (type) {
                 case 'singlePoi':
                     if (!data || data.length == 0) {
-                        html = '<div id="detail-title-wrap"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        html = '<div id="detail-title-wrap"><div class="detail-more">'+ lunaConfig.poiAction.more[poiLangId] +'</div></div>';
                         break;
                     }
                     var videoClass = data.video ? '' : 'hidden',
@@ -1250,7 +1255,7 @@ $(document).ready(function () {
                             var poiList = '', panoTip, panoLink;
                             data.pois.forEach(function (item, index) {
                                 if (item.panorama.panorama_id) {
-                                    panoTip = '点击看全景';
+                                    panoTip = lunaConfig.poiAction.pano[poiLangId];
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
                                             panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
@@ -1289,7 +1294,7 @@ $(document).ready(function () {
                                     + '</p>'
                                     + '</a>'
                                     + '<a target="_blank" class="poi-detail" href="' + item.preview_url + '">'
-                                    + '点击查看详情'
+                                    + lunaConfig.poiAction.detail[poiLangId]
                                     + '</a>'
                                     + '</div>';
 

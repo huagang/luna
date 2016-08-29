@@ -15,17 +15,14 @@ var Inter = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        } else if (/luna-test/.test(host)) {
-            return 'test';
         } else {
-            return 'online';
+            return 'current';
         }
     };
 
     var apiHost = {
         'local': 'http://localhost:8082/',
-        'test': 'http://luna-test.visualbusiness.cn/luna-api/',
-        'online': 'http://luna.visualbusiness.cn/luna-api/'
+        'current': 'http://' + window.location.host + '/luna-api/',
     };
 
     var lunaEditor = {
@@ -168,26 +165,11 @@ var Inter = function () {
                 }, //检查姓名
 
                 // 商户注册
-                merchantInit: {
-                    url: context + "/common/merchant/registPage",
-                    type: "GET"
-                }, // 注册初始页面
-                merchantRegist: {
-                    url: context + "/common/merchant",
-                    type: "POST"
-                }, // 注册
-                merchantCheckName: {
-                    url: context + "/common/merchant/checkName",
-                    type: "GET"
-                }, //检查用户名
-                merchantSuccess: {
-                    url: context + "common/merchant/successPage",
-                    type: "GET"
-                }, //注册成功页面
-                crmThumbnailUpload: {
-                    url: context + "/content/crm/thumbnail/upload",
-                    type: "POST"
-                }, // 上传图片
+                merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
+                merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
+                merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
+                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
+                crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
                 bizRelationInit: {
@@ -555,13 +537,13 @@ var Inter = function () {
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
                 // 线路管理
-                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
-                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
-                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
-                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
-                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
-                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
-                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
+                createRoute: { url: context + '/content/route', type: 'POST' }, //创建路线
+                editRoute: { url: context + '/content/route/{0}', type: 'PUT' }, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET' },  //获取线路列表
+                delRoute: { url: context + '/content/route/{0}', type: 'DELETE' }, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}', type: 'GET' }, // 检查线路名称是否合法
+                fetchRouteConfig: { url: context + '/content/route/configuration/{0}?data', type: 'GET' },
+                saveRouteConfig: { url: context + '/content/route/configuration/{0}', type: 'PUT' },
 
                 //全景搜索
                 searchSinglePano: {

@@ -178,6 +178,9 @@
                         vm.data.role = '';
                         if(vm.roles.length === 1){
                             vm.data.role = vm.roles[0].id;
+                            if(item.extra.type === 'business' && vm.roles[0].extra_value === 0){
+                                vm.businessSelectAll = true;
+                            }
                         }
 
                         if(item.extra.type === 'business'){
@@ -322,11 +325,11 @@
                     role_id: parseInt(vm.data.role),
                 };
 
-                if(! vm.data.extra.auth){
-                    delete data.extra.auth;
-                }
 
                 if(vm.data.extra){
+                    if(! vm.data.extra.auth){
+                        delete vm.data.extra.auth;
+                    }
                     data.extra = JSON.stringify(vm.data.extra);
                 }
 
