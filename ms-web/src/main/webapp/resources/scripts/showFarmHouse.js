@@ -32,6 +32,11 @@ function showAnimation(){
             duration: 3000,
             easing: "ease-in",
         });
+    $('.page-back .bg-mask').velocity({opacity: 1},
+        {
+            duration: 3000,
+            easing: "ease-in",
+        });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
             {
