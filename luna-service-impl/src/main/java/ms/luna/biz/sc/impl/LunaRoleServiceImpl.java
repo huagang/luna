@@ -121,10 +121,17 @@ public class LunaRoleServiceImpl implements LunaRoleService {
     @Override
     public JSONObject updateMenuForRole(int loginRoleId, int slaveRoleId, JSONArray menuArray) {
         try {
-            List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(loginRoleId);
-            Set<Integer> validMenuIdSet = new HashSet<>(lunaRoleMenus.size());
-            for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
-                validMenuIdSet.add(lunaRoleMenu.getMenuId());
+            Set<Integer> validMenuIdSet = new HashSet<>();
+            if(loginRoleId == DbConfig.ROOT_ROLE_ID) {
+                List<LunaMenu> allMenu = moduleMenuCache.getAllMenu();
+                for(LunaMenu lunaMenu : allMenu) {
+                    validMenuIdSet.add(lunaMenu.getId());
+                }
+            } else {
+                List<LunaRoleMenu> lunaRoleMenus = roleMenuCache.getMenuForRole(loginRoleId);
+                for (LunaRoleMenu lunaRoleMenu : lunaRoleMenus) {
+                    validMenuIdSet.add(lunaRoleMenu.getMenuId());
+                }
             }
 
             for (int i = 0; i < menuArray.size(); i++) {

@@ -16,6 +16,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css"/>
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/imgCropper.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
@@ -65,7 +67,7 @@
                                     	<th data-field="business_name" data-align="left">所属业务</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
-						                <th data-formatter="operationFormatter" data-align="right">操作</th>
+						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
 						            </tr>
 						        </thead>
 						    </table>
@@ -102,7 +104,7 @@
 				</div>
 				<p class="spec">基础项目版</p>
 			</div>
-			<div class="template dev" style="display: none" data-value="dev">
+			<div class="template dev" data-value="dev">
 				<div class="img-container">
 					<div class="img"></div>
 				</div>
@@ -188,7 +190,7 @@
 	  				<div class='file-uploader'>
 	  					<img class='abstract-pic' src="<%=request.getContextPath() %>/img/pure-logo2x.png" />
 	   					<div class='fileup-container'>
-	   						<button class='button-close fileupload-tip'>更换缩略图</button>
+	   						<button class='button-close fileupload-tip'>设置分享图</button>
 	   						<input type='file' name='thumbnail_fileup' accept="image/*" />
 	   					</div>
 	  				</div> 				
@@ -200,18 +202,18 @@
 	  							<img src='<%=request.getContextPath() %>/img/icon-edit.png'/>
 	  							<input type='file' name='thumbnail_fileup' accept="image/*" />
 	  						</div>
-	  						<p class='fileupload-tip'>更换缩略图</p>
+	  						<p class='fileupload-tip'>设置分享图</p>
 	  					</div>
 	  				</div>
 	  			</div>
 	  			<div class='part-right'>
 	  				<div class='char-limit-wrapper'>
-	  					<input class='share-title' type="text" class="" max-length='32' placeholder="输入微景展名称，不超过32个字符"/>
+	  					<input class='share-title' type="text" class="" max-length='32' placeholder="设置分享标题"/>
 	  					<span class='counter'>0/32</span>
 	  				</div>
 	  				<div class='char-limit-wrapper'>
 	  					<textarea type='text' class='share-description' maxlength='128'
-	  					   placeholder="点击添加微景展描述，对移动搜索有一定好处哦" ></textarea>
+	  					   placeholder="设置分享的描述文字，保持在30个汉字之内为佳" ></textarea>
 	  					<span class='counter'>0/128</span>
 	  				</div>	  				
 	  			</div>
@@ -256,6 +258,7 @@
 <!--弹出层 end-->
 <jsp:include page="/templete/message.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<jsp:include page="/templete/imgCropper.jsp" />
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>

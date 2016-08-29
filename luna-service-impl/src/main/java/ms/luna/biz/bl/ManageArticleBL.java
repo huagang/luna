@@ -11,8 +11,10 @@ import com.alibaba.fastjson.JSONObject;
 public interface ManageArticleBL {
 
     JSONObject createArticle(String json);
+    JSONObject createAndPublishArticle(String json);
     JSONObject getArticleById(int id);
     JSONObject updateArticle(String json);
+    JSONObject updateAndPublishArticle(String json);
     JSONObject deleteArticle(int id);
     JSONObject loadArticle(String json);
     JSONObject searchBusiness(String json);

@@ -64,7 +64,7 @@ public class AppController extends BasicController {
 
         String appName = RequestHelper.getString(request, MsShowAppTable.FIELD_APP_NAME);
         int businessId = RequestHelper.getInteger(request, MsShowAppTable.FIELD_BUSINESS_ID);
-        if(AuthHelper.hasBusinessAuth(request, businessId)) {
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有此业务权限");
         }
         int type = RequestHelper.getInteger(request, MsShowAppTable.FIELD_TYPE);

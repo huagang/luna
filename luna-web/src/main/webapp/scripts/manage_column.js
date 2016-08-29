@@ -77,26 +77,12 @@ function ColumnController($scope, $rootScope, $http) {
         return -1;
     };
 
-    this.showDialog = function($popwindow) {
-        var h = $popwindow.height();
-        var w = $popwindow.width();
-        var $height = $(window).height();
-        var $width = $(window).width();
-        if($height < h){
-            h = $height;
-        }
-        $popwindow.css({
-            "display":"block",
-            "top":($height-h)/2,
-            "left":($width-w)/2
-        });
-    };
 
     this.newColumnDialog = function() {
         this.resetData();
         this.dialogBaseShow = true;
         this.newColumnShow = true;
-        this.showDialog($("#newColumnDialog"));
+        event.preventDefault();
     };
 
     this.hideNewColumnDialog = function() {
@@ -157,7 +143,8 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentCategoryId = this.findCategoryIdByName(categoryName);
         this.nameValid = true;
         this.codeValid = true;
-        this.showDialog($("#updateColumnDialog"));
+        event.preventDefault();
+
     };
 
     this.hideUpdateColumnDialog = function() {
@@ -194,6 +181,7 @@ function ColumnController($scope, $rootScope, $http) {
         $.confirm("确定要删除栏目: {0}?".format(name), function() {
             $scope.column.submitDeleteColumn(id);
         });
+        event.preventDefault();
     };
 
     this.hideDeleteDialog = function() {

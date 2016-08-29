@@ -32,7 +32,8 @@
 		    <div class="content">
 		        <div class="inner-wrap">
 		            <div class="content-header">
-		                	新建文章
+						<span class="title">新建文章</span>
+						<a href='javascript:void(0)' class="change-lang hidden">切换到英文</a>
 		            </div>
 		            <div class="main-content">
 		                <div class="group article-title">
@@ -140,11 +141,14 @@
 		<jsp:include page="/templete/imgCropper.jsp" />
 		<script type='text/javascript'>
 			window.UEDITOR_HOME_URL = '<%=request.getContextPath() %>' + "/plugins/ueditor/";
+			window.context = '<%=request.getContextPath() %>';
+			window.businessId = "${business_id}";
 		</script>
         <script src='<%=request.getContextPath() %>/scripts/lunaweb.js'></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.config.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/ueditor.all.js"></script>
     	<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>

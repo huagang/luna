@@ -10,6 +10,13 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.Set;
 
+import ms.luna.biz.cons.DbConfig;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.LunaRoleCategoryExtra;
+import ms.luna.biz.dao.custom.LunaUserRoleDAO;
+import ms.luna.biz.dao.custom.model.LunaUserRole;
+import ms.luna.biz.table.LunaUserTable;
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +60,8 @@ import ms.luna.common.PoiCommon;
 @Service("manageBusinessTreeBL")
 public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
+	private final static Logger logger = Logger.getLogger(ManageBusinessTreeBLImpl.class);
+
 	@Autowired
 	private MsPoiTagDAO msPoiTagDAO;
 
@@ -64,6 +73,9 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 
 	@Autowired
 	private MongoConnector mongoConnector;
+
+	@Autowired
+	private LunaUserRoleDAO lunaUserRoleDAO;
 
 	@Override
 	public JSONObject saveBusinessTree(String json) {
@@ -439,7 +451,29 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 	 * @return
 	 */
 	private List<MsBusinessResult> findBusiness(JSONObject param) {
+		String uniqueId = param.getString(LunaUserTable.FIELD_ID);
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
+		if(lunaUserRole == null) {
+			logger.warn("user not found, unique_id: " + uniqueId);
+			return null;
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return null;
+		}
 		MsBusinessParameter msBusinessParameter = new MsBusinessParameter();
+		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
+
+		} else if(businessIdList.size() > 0){
+			msBusinessParameter.setBusinessIds(businessIdList);
+		} else {
+			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
+			return null;
+		}
 		String keyword = FastJsonUtil.getString(param, "keyWord");
 		String provinceId = FastJsonUtil.getString(param, "provinceId");
 		String cityId = FastJsonUtil.getString(param, "cityId");

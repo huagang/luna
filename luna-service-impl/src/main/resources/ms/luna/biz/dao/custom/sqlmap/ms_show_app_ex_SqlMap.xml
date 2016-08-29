@@ -61,15 +61,15 @@
 		<result column="app_name" property="appName" jdbcType="VARCHAR" />
 		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
-		<result column="share_info_des" property="shareInfoDes" jdbcType="VARCHAR" />
-		<result column="share_info_pic" property="shareInfoPic" jdbcType="VARCHAR" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+		<result column="pic_thumb" property="picThumb" jdbcType="VARCHAR" />
 		<result column="owner" property="owner" jdbcType="VARCHAR" />
 		<result column="regist_hhmmss" property="registhhmmss" jdbcType="TIMESTAMP"/>
 		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP"/>
 		<result column="app_status" property="appStatus" jdbcType="TIMESTAMP"/>
 
 	</resultMap>
-	<select id="selectShowAppByCtgrId" resultMap="MsShowAppResult"
+	<select id="selectShowAppByCategoryId" resultMap="MsShowAppResult"
 			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
 		SELECT
 			CATEGORY_MERCHANT_BUSINESS.category_id AS category_id,
@@ -80,8 +80,8 @@
 			ms_show_app.app_code AS app_code,
 			ms_show_app.app_name AS app_name,
 			ms_show_app.type AS type,
-			ms_show_app.share_info_des AS share_info_des,
-			ms_show_app.share_info_pic AS share_info_pic,
+			ms_show_app.note AS note,
+			ms_show_app.pic_thumb AS pic_thumb,
 			ms_show_app.owner AS owner,
 			ms_show_app.regist_hhmmss AS regist_hhmmss,
 			ms_show_app.publish_time AS publish_time,
@@ -125,7 +125,7 @@
 		</isEqual>
 	</select>
 
-	<select id="countShowAppsByCtgrId" resultClass="java.lang.Integer"
+	<select id="countShowAppsByCategoryId" resultClass="java.lang.Integer"
 			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
 		SELECT
 			count(1)

@@ -74,4 +74,10 @@ public class MsShowPageServiceImpl implements MsShowPageService{
 		return msShowPageBL.getIndexPage(appId);
 	}
 
+	@Override
+	public JSONObject duplicateOnePage(String json, String lunaName) {
+		// TODO Auto-generated method stub
+		return msShowPageBL.duplicateOnePage(json, lunaName);
+	}
+
 }
