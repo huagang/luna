@@ -35,7 +35,7 @@ function showAnimation(){
     $('.page-back .bg-mask').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: "ease-in",
+            easing: [0,.97,.07,.96],
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
