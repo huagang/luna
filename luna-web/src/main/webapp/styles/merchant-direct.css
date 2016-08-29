@@ -1,0 +1,15 @@
+.launch {
+    height: 85px;
+    background-color: #f2f2f2;
+    padding: 27px 25px;
+}
+
+.launch span {
+    line-height: 30px;
+}
+
+.launch button {
+    float: right;
+    background-color: #169bd5;
+    border: 1px solid #169bd5;
+}
