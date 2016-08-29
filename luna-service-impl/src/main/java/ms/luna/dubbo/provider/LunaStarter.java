@@ -74,6 +74,7 @@ public class LunaStarter {
 
     public void shutdown() {
         emailService.shutdown();
+        smsService.shutdown();
         shutdownLatch.countDown();
         logger.info("shutdown luna starter");
     }
