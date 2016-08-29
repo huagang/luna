@@ -348,10 +348,9 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
         var urlElement = document.getElementById(url_id);
     }
     var file = file_obj.files[0];
-
     cropper.setFile(file, function (file) {
         var formdata = new FormData();
-        formdata.append("file", file);
+        formdata.append("file",file);
         formdata.append("app_id", appId);
         formdata.append('type', 'pic');
         formdata.append('resource_type', 'app');
