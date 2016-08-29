@@ -229,7 +229,7 @@ $(function () {
 	   					$("#pop-overlay").css("display","none");
 			        	$("#pop-addmerchant").css("display","none");
 			        	clcContent();
-			        	$("#status-message").html("创建失败").css('display','block');
+			        	$("#status-message").html(msg || "创建失败").css('display','block');
 	    				setTimeout(function(){
 	    					$("#status-message").css('display','none');
 	    				},2000);

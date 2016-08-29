@@ -186,5 +186,6 @@
 	<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
 	<%--<script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script>--%>
 	<script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 </body>
 </html>
