@@ -15,20 +15,25 @@ var Inter = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        } else {
+        }
+        else if(/luna-test/.test(host)) {
+            return 'test';
+        }
+        else {
             return 'current';
         }
     };
 
     var apiHost = {
         'local': 'http://localhost:8082/',
-        'current': 'http://' + window.location.host + '/luna-api/',
+        'test': 'http://' + window.location.host + '/luna-api/',
+        'current': 'http://' + window.location.host + '/luna-api/'
     };
 
     var lunaEditor = {
         'local': 'http://simon-test.visualbusiness.cn',
         'test': 'http://simon-test.visualbusiness.cn',
-        'online': 'http://luna-test.visualbusiness.cn '
+        'current': 'http://webapp.visualbusiness.cn '
     };
 
     apiContext = apiHost[curHost()];
