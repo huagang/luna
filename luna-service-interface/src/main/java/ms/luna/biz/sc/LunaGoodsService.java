@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * Created: by greek on 16/8/29.
  */
-public interface ManageGoodsService {
+public interface LunaGoodsService {
 
     // 获取商品列表
     JSONObject loadGoods(JSONObject param);
@@ -23,5 +23,5 @@ public interface ManageGoodsService {
     JSONObject getGoodsInfo(Integer id);
 
     // 检查商品名称
-    JSONObject checkGoodsName(String name, Integer id);
+    JSONObject checkGoodsName(String name, Integer id, Integer business_id);
 }

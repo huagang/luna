@@ -42,6 +42,6 @@
 	<dubbo:reference interface="ms.luna.biz.sc.FarmPageService" id="farmPageService" />
 	<dubbo:reference interface="ms.luna.biz.sc.LunaAuthService" id="lunaAuthService" />
 	<dubbo:reference id="manageRouteService" interface="ms.luna.biz.sc.ManageRouteService" />
-	<dubbo:reference id="manageGoodsService" interface="ms.luna.biz.sc.ManageGoodsService" />
+	<dubbo:reference id="lunaGoodsService" interface="ms.luna.biz.sc.LunaGoodsService" />
 
 </beans>
