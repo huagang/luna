@@ -25,6 +25,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +103,11 @@ public class FarmPageServiceImpl implements FarmPageService {
 
             // 检查mongo数据是否存在
             if (this.isPageExist(appId)) { // --exist
-                msFarmPageDAO.updatePage(document, appId, lunaName);
+                ObjectId pageId = msFarmPageDAO.getPageId(appId);
+                if(pageId == null) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "app_id doesn't exist in mongo");
+                }
+                msFarmPageDAO.updatePage(document, pageId, appId, lunaName);
             } else { // --not exist
                 msFarmPageDAO.insertPage(document, lunaName);
             }
