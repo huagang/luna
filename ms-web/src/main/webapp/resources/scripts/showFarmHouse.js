@@ -177,9 +177,6 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
-        // 获取两个poi点之间的距离
-        vm.getRouteDistance = getRouteDistance;
-
         // 监听事件
         vm.listenScroll = listenScroll;
 
@@ -424,55 +421,14 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         function updateAllDistance() {
             vm.poiList.forEach(function (item, index) {
-                // get from localstorage key "`poi_id`&`poi_id`"
-
-               /* var distance = localStorage.getItem(vm.poiData.poi_id + '&' + item.poi_id);
-                if (distance) {
-                    item.distance = distance;
-                } else {*/
-                    //var drivingService = new qq.maps.DrivingService({
-                    //    location: "中国"
-                    //});
-                   // vm.getRouteDistance(item, drivingService);
                 var start = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng),
                     end = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
                 item.distance = (qq.maps.geometry.spherical.computeDistanceBetween(start, end) / 1000).toFixed(1);
-                // localStorage.setItem(vm.poiData.poi_id + '&' + item.poi_id, item.distance);
                 item.markerTip.setDistance(item.distance);
                // }
             });
         }
 
-
-        // 获取两个poi点之间的距离
-        function getRouteDistance(item) {
-           // drivingService = drivingService || vm.drivingService;
-
-
-
-           /* drivingService.setComplete(vm.getRouteDistanceSuccess.bind(vm, item));
-            drivingService.setError(vm.getRouteDistanceError.bind(vm, item));
-            drivingService.search(start, end); */
-        }
-/*
-        function getRouteDistanceError(item, res) {
-            console.log('error', res);
-        }
-
-        function getRouteDistanceSuccess(item, res) {
-            console.log('success', res);
-            if (res.type == qq.maps.ServiceResultType.MULTI_DESTINATION) {
-            } else {
-                try {
-                    item.distance = (res.detail.distance / 1000).toFixed(1);
-                    localStorage.setItem(vm.poiData.poi_id + '&' + item.poi_id, item.distance);
-                    item.markerTip.setDistance(item.distance);
-                } catch (e) {
-                }
-            }
-
-        }
-*/
         function handleMapClick() {
             if (event.target.nodeName.toLocaleLowerCase() !== 'area') {
                 // 点击地图而不是点击marker 清楚当前marker的效果
