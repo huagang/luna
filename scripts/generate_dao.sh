@@ -21,7 +21,7 @@ if [ $# = 1 ];then
     action=$1
     if [ $action = "new" ];then
         echo "create new dao"
-        cp -r $custom_dao_dir/ms/luna/biz/dao/custom/sqlmap/*.xml luna-service-impl/src/main/resources/ms/luna/biz/dao/custom/sqlmap/ 
+        cp -r $custom_dao_dir/ms/luna/biz/dao/custom/sqlmap/*.xml luna-service-impl/src/main/resources/ms/luna/biz/dao/custom/sqlmap/
         cp -r $custom_dao_dir/ms/luna/biz/dao/custom/*.java luna-service-impl/src/main/java/ms/luna/biz/dao/custom/
     fi
 fi
