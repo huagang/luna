@@ -1,6 +1,5 @@
 package ms.luna.web.control.merchant;
 
-import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaTradeApplicationService;
@@ -101,10 +100,6 @@ public class LunaTradeApplicationController {
 
         JSONObject result = lunaTradeApplicationService.createApplication(inData);
 
-        if (result.getInteger("code").intValue() == 0) {
-            //TODO  SEND EMAIL
-        }
-
         return result;
     }
 
@@ -153,10 +148,6 @@ public class LunaTradeApplicationController {
         inData.put(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE, merchantPhone);
 
         JSONObject result = lunaTradeApplicationService.recreateApplication(inData);
-
-        if (result.getInteger("code").intValue() == 0) {
-            //TODO  SEND EMAIL
-        }
 
         return result;
     }

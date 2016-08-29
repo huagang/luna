@@ -13,7 +13,10 @@ import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsMerchantManageTable;
+import ms.luna.biz.util.CreateHtmlUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.model.MailMessage;
+import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,9 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
     @Autowired
     private ManageMerchantBL manageMerchantBL;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public JSONObject createApplication(JSONObject jsonObject) {
@@ -72,12 +78,24 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             data.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
             data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_CHECKING);
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
+
+            //SEND EMAIL
+            sendEmail();
         } catch (Exception ex) {
             logger.error("Failed to create lunaTradeApplication", ex);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
         return FastJsonUtil.sucess("success");
+    }
+
+    private void sendEmail(){
+        MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+        message.setContent("");
+        //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
+        //luna_nm, role_nm, webAddr)
+
+        emailService.sendEmail(message);
     }
 
     @Override
@@ -102,6 +120,10 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             data.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
             data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_CHECKING);
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
+
+            //SEND EMAIL
+            sendEmail();
+
             return FastJsonUtil.sucess("success");
         } catch (Exception ex) {
             logger.error("Failed to update the application", ex);
