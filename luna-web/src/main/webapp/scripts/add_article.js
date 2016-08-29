@@ -51,7 +51,7 @@ var initPage = function () {
             allowDivTransToP: false,
             elementPathEnabled: false,
             toolbars: [
-                ['fontfamily', '|',
+                ['source','|','fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
                     'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',

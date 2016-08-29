@@ -108,7 +108,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             }
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
-            MsLogger.debug("Fail to edit page." + e.getMessage());
+            MsLogger.error("Fail to edit page." + e.getMessage());
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to edit page");
         }
 
