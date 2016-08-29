@@ -15,6 +15,23 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/message.css">
 </head>
 <body>
+<style>
+    .message {
+        position: relative;
+        font-size: 18px;
+        top: 28%;
+    }
+    .img-info {
+        display: inline-block;
+        position: relative;
+        top: 7px;
+        padding-right: 5px;
+        vertical-align: middle;
+        margin-bottom: 18px;
+        height: 32px;
+        width: 32px;
+    }
+</style>
 <div class="container-fluid">
     <!--通用导航栏 start-->
     <jsp:include page="/templete/header_without_logout.jsp"/>

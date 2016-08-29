@@ -52,8 +52,7 @@
 <div class="goback hidden ">
     <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
-<input id="shareInfoTitle" type="hidden" name="" value="${title}">
-<input id="shareInfoDes" type="hidden" name="" value="${description}">
+<input id="shareInfoDes" type="hidden" name="" value="">
 
 <!-- BEGIN REFER LINK  -->
 <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
@@ -66,8 +65,8 @@
 <script type="text/javascript">
     var poiData = ${poiJson};
     var wechatOptions = {
-        title: $('#shareInfoTitle').val(),
-        desc: $('#shareInfoDes').val(),
+        title: ${title},
+        desc: ${description},
         link: window.location.href,
         imgUrl:poiData.data.thumbnail,
         dest:{

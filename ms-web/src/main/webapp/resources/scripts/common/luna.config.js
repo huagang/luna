@@ -22,6 +22,12 @@ var lunaConfig = function () {
             }, 'pano': {
                 'zh': '看全景',
                 'en': 'Panorama',
+            }, 'detail': {
+                'zh': '查看详情',
+                'en': 'Detail',
+            }, 'more': {
+                'zh': '更多内容，敬请期待…',
+                'en': 'More',
             }
         }
     };

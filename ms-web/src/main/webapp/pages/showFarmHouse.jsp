@@ -182,7 +182,7 @@
         var nope = "${share_info_des.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}";
         var pageData = ${pageData};
         var wechatOptions = {
-            title: "${share_info_title}" || pageData.poi_info.poi_name,
+            title: "${share_info_title.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}" || pageData.poi_info.poi_name,
             desc: "${share_info_des.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}" || pageData.poi_info.share_desc,
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail
