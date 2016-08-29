@@ -10,13 +10,11 @@ var objdata = {
         "lng": "116.355246"
     },
     destPosition: {
-
     }
 };
 
 
 $(document).ready(function () {
-
     function init() {
         var w = $(".app-wrap");
         var m = w.width();
@@ -27,7 +25,6 @@ $(document).ready(function () {
             content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-
     var iftab = false,
         iflongpage = false;
     if (pageData.data instanceof Array && pageData.data.length > 0) {
@@ -261,43 +258,44 @@ $(document).ready(function () {
             }
         }
     }
-
-
     //初始化 欢迎页的视差效果
     var paraScene = [];
     $('.paraScene').each(function (n, item) {
         paraScene[n] = new Parallax(item);
     });
-    // var scene = document.querySelector('.scene');
-    // var parallax = new Parallax(scene);
-    // $('.scene').find('.img-wraper').addClass('go-right');
-    //设置首页滑动到第一页
+    //设置背景页滑动
+    setBgAnimation(3000, 0);
 
     if ($('.welcome').length > 0) {
 
-        //修改history 中的内容，来解决goback 中的问题
         var pageTime = $('.welcome').data('pagetime');
+
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
-        setTimeout(function () {
-            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
+        setTimeout(function () {
+            //修改history 中的内容，来解决goback 中的问题
+            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            var animaCanvas = $('.anima-canvas');
+            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
+                if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
+                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
+                    });
+                }
             });
             $('.welcome').animate({ opacity: 0 }, 3000, function () {
                 $('.welcome').css('display', 'none');
                 // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
-
-                //$('.welcome').remove();
-                // delete paraScene;
             });
+
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
+
         }, pageTime);
     } else {
         var panoBg = document.querySelector('.panoBg');
@@ -372,10 +370,7 @@ $(document).ready(function () {
             this.html.attr("id", this.value._id);
             //this.html.attr("name_value", this.value.name);
             //this.html.attr("default_value",this.value.default_value);
-            this.html.css("background-color", this.value.bgc);
-            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
-            }
+
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
@@ -384,23 +379,18 @@ $(document).ready(function () {
             if (typeof (this.value.action) != "undefined") {
                 var link, value = this.value.action.href.value;
                 switch (this.value.action.href.type) {
-
                     case "inner":
                         link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
                         break;
-
                     case 'outer':
                         link = value;
                         break;
-
                     case 'email':
                         link = 'mailto:' + value;
                         break;
-
                     case 'phone':
                         link = 'tel:' + value;
                         break;
-
                     case 'return':
                         link = 'return';
                         break;
@@ -433,32 +423,39 @@ $(document).ready(function () {
         BaseComponent.call(this);
 
         this.setCanvasBg = function () {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" ></div>');
+            this.html.css("background-color", this.value.bgc);
+            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
+                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
+            }
         };
 
         this.setPanoBg = function () {
             this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
-                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-autoplay="' + (this.value.panoAnimaType && this.value.panoAnimaType.id == 'autoplay' ? 'true' : 'false') + '" data-heading="' + this.value.pano.heading
                 + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
         };
 
         this.setParaBg = function () {
             var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
-            // $scene.append('<li class="layer" data-depth="1.00"><div class="img-wrapeÎr"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
-        }
+        };
+        this.setAnimaBg = function () {
+            this.html.children("div").append('<div class="anima-canvas-wrapper" > <div  class="anima-canvas" style=" background:url(' + (this.value.bgimg || '') + ') no-repeat;background-size:100% 100%;"></div></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
+        };
 
         this.build = function () {
-
-            //this.setPosition();
-            // Canvas.prototype.setPosition.call();
+            var bgAnimaType = this.value.bgAnimaType || { id: 'none', name: '无动画' };//图片背景
 
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (this.value.gravity && !this.value.panoId) {
+            } else if (!this.value.panoId && bgAnimaType.id == "gravity") {
                 this.setParaBg.call(this);
+            } else if (!this.value.panoId && bgAnimaType.id == "rtol") {
+                this.setAnimaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);
             }
@@ -1386,13 +1383,14 @@ function initPanoBg(panoBg) {
     }
     var pano = {},
         panoId = panoBg.dataset.panoid,
-        gravity = panoBg.dataset.gravity;
+        gravity = panoBg.dataset.gravity,
+        autoplay = panoBg.dataset.autoplay;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
     pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
     pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
     pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
-    pano.setAutoplayEnable(false); //自动播放
+    pano.setAutoplayEnable(eval(autoplay)); //自动播放
     pano.setGravityEnable(gravity == "true"); //重力感应
 }
 
@@ -1511,5 +1509,17 @@ function is_weixn() {
         return true;
     } else {
         return false;
+    }
+}
+
+/**
+ * 设置背景的动画
+ */
+function setBgAnimation(time, delayTime) {
+    time = time ? time * 0.618 : 1000;
+    delayTime = delayTime || 0;
+    if ($('.anima-canvas').length > 0) {
+        $('.anima-canvas').eq(0).css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {
+        });
     }
 }
