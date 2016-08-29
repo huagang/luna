@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -68,8 +69,13 @@ public class SMSService extends Thread {
     }
 
 
-    private void doSend(SMSModel smsModel) {
+    private String doSend(SMSModel smsModel) {
         //TODO SEND SMS MESSAGE
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("apikey", smsModel.getUserName());
+        params.put("text", smsModel.getMessage().getContent());
+        params.put("mobile", smsModel.getMessage().getToPhoneNumber());
+        return post(smsModel.getUrl(), params);
 
     }
 
@@ -80,7 +86,7 @@ public class SMSService extends Thread {
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        doSend(smsModel);
+                        String result = doSend(smsModel);
                     }
                 });
             } catch (InterruptedException e) {

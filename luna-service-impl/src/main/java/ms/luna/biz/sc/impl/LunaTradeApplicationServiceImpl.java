@@ -29,7 +29,7 @@ import java.util.List;
  * Created by SDLL18 on 16/8/25.
  */
 
-@Service("lunaGoodsCategoryService")
+@Service("lunaTradeApplicationService")
 public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationService {
 
     private static final Logger logger = Logger.getLogger(LunaTradeApplicationServiceImpl.class);
