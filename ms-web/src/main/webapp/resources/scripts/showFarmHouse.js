@@ -35,7 +35,7 @@ function showAnimation(){
     $('.page-back .bg-mask').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: [0,.97,.07,.96],
+            easing: [.77,.07,0,.63],
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
@@ -179,12 +179,6 @@ function showAnimation(){
 
         // 获取两个poi点之间的距离
         vm.getRouteDistance = getRouteDistance;
-
-        // 获取两个poi点之间的距离 失败回调
-        vm.getRouteDistanceError = getRouteDistanceError;
-
-        // 获取两个poi点之间的距离 成功回调
-        vm.getRouteDistanceSuccess = getRouteDistanceSuccess;
 
         // 监听事件
         vm.listenScroll = listenScroll;
@@ -344,30 +338,6 @@ function showAnimation(){
             vm.map.panTo(center);
 
 
-            var marker = new qq.maps.Marker({
-                position: center,
-                map: vm.map,
-                clickable: false,
-                draggable: false,
-                flat: true,
-                icon: new qq.maps.MarkerImage(window.context + '/resources/images/farmhouse/marker.png',
-                    undefined, undefined, undefined, new qq.maps.Size(21, 28)),
-                shape: new qq.maps.MarkerShape([0, 0, 25, 25], 'rect'),
-                visible: true
-            });
-
-            var markerName = new qq.maps.Label({
-                map: vm.map,
-                position: center,
-                offset: new qq.maps.Size(-50, 0),
-                visible: true,
-                style: {
-                    color: '#c30000', 'background-color': 'transparent', border: 'none',
-                    display: 'block', 'text-align': 'center', width: '100px'
-                },
-                clickable: true,
-                content: vm.poiData.poi_name || '',
-            });
 
 
             vm.drivingService = new qq.maps.DrivingService({
@@ -381,12 +351,7 @@ function showAnimation(){
             if (vm.poiList) {
                 vm.poiList.forEach(function (item, index) {
 
-                    if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
-                        return;
-                    }
-                    if(item.category.category_id === 3 && item.sub_category.sub_category_id === 21){
-                        return;
-                    }
+
                     var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
 
 
@@ -399,7 +364,7 @@ function showAnimation(){
                         icon: new qq.maps.MarkerImage(vm.markerImg[vm.poiType[item.category.category_id]].normal,
                             undefined, undefined, undefined, new qq.maps.Size(20, 20)),
                         shape: new qq.maps.MarkerShape([-5, -5, 25, 25], 'rect'),
-                        visible: true
+                        visible: true,
                     });
 
                     item.markerTip = new MarkerTip({
@@ -407,13 +372,41 @@ function showAnimation(){
                         distance: item.distance,
                         position: position,
                         visible: false,
-                        onClick: vm.navigate.bind(vm,item)
+                        onClick: vm.navigate.bind(vm,item),
                     });
 
                     item.markerTip.setMap(vm.map);
                     qq.maps.event.addListener(item.marker, 'click', vm.handleMarkerClick.bind(vm, index));
                 });
             }
+
+            var center = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng);
+            var marker = new qq.maps.Marker({
+                position: center,
+                map: vm.map,
+                clickable: true,
+                draggable: false,
+                flat: true,
+                icon: new qq.maps.MarkerImage(window.context + '/resources/images/farmhouse/marker.png',
+                    undefined, undefined, undefined, new qq.maps.Size(21, 28)),
+                shape: new qq.maps.MarkerShape([0, 0, 25, 25], 'rect'),
+                visible: true,
+                zIndex: 100000
+            });
+
+            var markerName = new qq.maps.Label({
+                map: vm.map,
+                position: center,
+                offset: new qq.maps.Size(-50, 0),
+                visible: true,
+                style: {
+                    color: '#c30000', 'background-color': 'transparent', border: 'none',
+                    display: 'block', 'text-align': 'center', width: '100px'
+                },
+                clickable: true,
+                content: vm.poiData.poi_name || '',
+                zIndex: 100000
+            });
         }
 
         // 点击marker事件来激活marker
@@ -433,30 +426,35 @@ function showAnimation(){
             vm.poiList.forEach(function (item, index) {
                 // get from localstorage key "`poi_id`&`poi_id`"
 
-                var distance = localStorage.getItem(vm.poiData.poi_id + '&' + item.poi_id);
+               /* var distance = localStorage.getItem(vm.poiData.poi_id + '&' + item.poi_id);
                 if (distance) {
                     item.distance = distance;
-                } else {
-                    var drivingService = new qq.maps.DrivingService({
-                        location: "中国"
-                    });
-                    vm.getRouteDistance(item, drivingService);
-
-                }
+                } else {*/
+                    //var drivingService = new qq.maps.DrivingService({
+                    //    location: "中国"
+                    //});
+                   // vm.getRouteDistance(item, drivingService);
+                var start = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng),
+                    end = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
+                item.distance = (qq.maps.geometry.spherical.computeDistanceBetween(start, end) / 1000).toFixed(1);
+                // localStorage.setItem(vm.poiData.poi_id + '&' + item.poi_id, item.distance);
+                item.markerTip.setDistance(item.distance);
+               // }
             });
         }
 
 
         // 获取两个poi点之间的距离
-        function getRouteDistance(item, drivingService) {
-            drivingService = drivingService || vm.drivingService;
-            var start = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng),
-                end = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
-            drivingService.setComplete(vm.getRouteDistanceSuccess.bind(vm, item));
-            drivingService.setError(vm.getRouteDistanceError.bind(vm, item));
-            drivingService.search(start, end);
-        }
+        function getRouteDistance(item) {
+           // drivingService = drivingService || vm.drivingService;
 
+
+
+           /* drivingService.setComplete(vm.getRouteDistanceSuccess.bind(vm, item));
+            drivingService.setError(vm.getRouteDistanceError.bind(vm, item));
+            drivingService.search(start, end); */
+        }
+/*
         function getRouteDistanceError(item, res) {
             console.log('error', res);
         }
@@ -474,7 +472,7 @@ function showAnimation(){
             }
 
         }
-
+*/
         function handleMapClick() {
             if (event.target.nodeName.toLocaleLowerCase() !== 'area') {
                 // 点击地图而不是点击marker 清楚当前marker的效果
@@ -600,9 +598,19 @@ function showAnimation(){
                 method: vm.apiUrls.aroundPois.type,
             }).then(function (res) {
                 if (res.data.code === '0') {
-                    vm.poiList = res.data.data.zh.pois;
-                    vm.updateAllDistance();
+                    vm.poiList = res.data.data.zh.pois.filter(function(item){
+                        if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
+                            return false;
+                        }
+                        if(item.category.category_id === 3 && item.sub_category.sub_category_id === 21){
+                            return false;
+                        }
+                        return true;
+                    });
                     vm.updateMapMarkers();
+                    setTimeout(function(){
+                        vm.updateAllDistance();
+                    }, 100);
                 } else {
                     alert(res.msg || '获取周围poi点信息失败');
                 }

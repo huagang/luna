@@ -164,7 +164,7 @@
         <div class="to-top" ng-click="farm.scrollToTop()">返回顶部</div>
     </div>
     <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV"></script>
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV&libraries=drawing,geometry,autocomplete,convertor"></script>
 
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
