@@ -29,7 +29,7 @@ public class IdentifyCodeService {
     }
 
     /**
-     * @param uniqueId   This param can be user's uniqueId or phone number
+     * @param uniqueId   This param can be user's uniqueId or phone number or any other unique no
      * @param target
      * @param timeMillis
      * @return
@@ -50,8 +50,18 @@ public class IdentifyCodeService {
         return code;
     }
 
+    public static void saveCode(String uniqueId, String target, String code, long timeMillis) throws Exception {
+        Jedis jedis = QRedisUtil.getJedis();
+        if (jedis == null) {
+            throw new Exception("Failed to get redis instance");
+        }
+        String key = "LUNA_CODE_" + uniqueId + "_" + target;
+        jedis.set(key, code, "NX", "PX", timeMillis);
+        jedis.close();
+    }
+
     /**
-     * @param uniqueId   This param can be user's uniqueId or phone number
+     * @param uniqueId   This param can be user's uniqueId or phone number or any other unique no
      * @param target
      * @param timeMillis
      * @return

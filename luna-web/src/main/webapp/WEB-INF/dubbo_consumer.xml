@@ -46,5 +46,6 @@
     <dubbo:reference interface="ms.luna.biz.sc.LunaTradeApplicationService" id="lunaTradeApplicationService"/>
     <dubbo:reference interface="ms.luna.biz.sc.SMSService" id="smsService"/>
     <dubbo:reference interface="ms.luna.biz.sc.EmailService" id="emailService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.PicCodeService" id="picCodeService"/>
 
 </beans>

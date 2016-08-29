@@ -66,4 +66,5 @@ public class SMSController {
         inData.put("code", code);
         return smsService.checkCode(inData);
     }
+
 }
