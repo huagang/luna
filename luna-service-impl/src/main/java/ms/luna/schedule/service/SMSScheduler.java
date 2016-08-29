@@ -8,9 +8,7 @@
 
 package ms.luna.schedule.service;
 
-import ms.luna.biz.util.MailSender;
-import ms.luna.model.MailMessage;
-import ms.luna.model.MailModel;
+import com.alibaba.fastjson.JSONObject;
 import ms.luna.model.SMSMessage;
 import ms.luna.model.SMSModel;
 import org.apache.http.HttpEntity;
@@ -37,16 +35,16 @@ import java.util.concurrent.*;
  */
 @Service("smsScheduler")
 @Scope(value = "singleton")
-public class SMSService extends Thread {
+public class SMSScheduler extends Thread {
 
-    private final static Logger logger = Logger.getLogger(SMSService.class);
+    private final static Logger logger = Logger.getLogger(SMSScheduler.class);
     private ExecutorService executorService;
     private BlockingDeque<SMSModel> sendQueue;
     private final static int DEFAULT_QUEUE_SIZE = 1000;
     private final static int DEFAULT_QUEUE_TIME_MILLIS = 50;
     private boolean isStop = false;
 
-    private SMSService() {
+    private SMSScheduler() {
         executorService = Executors.newCachedThreadPool();
         sendQueue = new LinkedBlockingDeque<>(DEFAULT_QUEUE_SIZE);
         this.setName("thread-sms-service");
@@ -70,7 +68,6 @@ public class SMSService extends Thread {
 
 
     private String doSend(SMSModel smsModel) {
-        //TODO SEND SMS MESSAGE
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", smsModel.getUserName());
         params.put("text", smsModel.getMessage().getContent());
@@ -87,6 +84,10 @@ public class SMSService extends Thread {
                     @Override
                     public void run() {
                         String result = doSend(smsModel);
+                        JSONObject object = JSONObject.parseObject(result);
+                        if (object.getInteger("code").intValue() != 0) {
+                            logger.error("Send SMS failed. Detail:\n" + result);
+                        }
                     }
                 });
             } catch (InterruptedException e) {

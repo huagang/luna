@@ -6,6 +6,7 @@ import ms.luna.biz.bl.PoiApiBL;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.schedule.service.CacheService;
 import ms.luna.schedule.service.EmailService;
+import ms.luna.schedule.service.SMSScheduler;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
@@ -26,6 +27,7 @@ public class LunaStarter {
 
     private String contextFile;
     private EmailService emailService;
+    private SMSScheduler smsService;
     private CountDownLatch shutdownLatch = new CountDownLatch(1);
 
     public LunaStarter(String contextFile) {
@@ -47,7 +49,7 @@ public class LunaStarter {
                 // TODO Auto-generated catch block
                 logger.error("Failed to load config", e);
             }
-            MsZoneCacheBL msZoneCacheBL = (MsZoneCacheBL)context.getBean("msZoneCacheBL");
+            MsZoneCacheBL msZoneCacheBL = (MsZoneCacheBL) context.getBean("msZoneCacheBL");
             msZoneCacheBL.init();
             PoiApiBL poiApiBL = (PoiApiBL) context.getBean("poiApiBL");
             poiApiBL.init();
@@ -57,6 +59,9 @@ public class LunaStarter {
 
             emailService = (EmailService) context.getBean("emailScheduler");
             emailService.start();
+
+            smsService = (SMSScheduler) context.getBean("smsScheduler");
+            smsService.start();
 
             System.out.println("LunaProvider Service is started!");
             shutdownLatch.await();

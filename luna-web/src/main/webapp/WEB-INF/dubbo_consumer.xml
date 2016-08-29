@@ -44,5 +44,7 @@
     <dubbo:reference id="manageRouteService" interface="ms.luna.biz.sc.ManageRouteService"/>
     <dubbo:reference interface="ms.luna.biz.sc.LunaGoodsCategoryService" id="lunaGoodsCategoryService"/>
     <dubbo:reference interface="ms.luna.biz.sc.LunaTradeApplicationService" id="lunaTradeApplicationService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.SMSService" id="smsService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.EmailService" id="emailService"/>
 
 </beans>

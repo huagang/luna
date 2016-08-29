@@ -21,20 +21,6 @@ import java.util.UUID;
 public class IdentifyCodeService {
 
 
-    private volatile IdentifyCodeService instance = null;
-
-    public IdentifyCodeService getInstance() {
-        if (instance == null) {
-            synchronized (this) {
-                if (instance == null) {
-                    instance = new IdentifyCodeService();
-                }
-            }
-        }
-        return instance;
-    }
-
-
     public final static Logger logger = Logger.getLogger(IdentifyCodeService.class);
     public final static Long DEFAULT_EXPIRE_TIME_MILLIS = 10000l;
 
@@ -42,6 +28,13 @@ public class IdentifyCodeService {
 
     }
 
+    /**
+     * @param uniqueId   This param can be user's uniqueId or phone number
+     * @param target
+     * @param timeMillis
+     * @return
+     * @throws Exception
+     */
     public static String getCode(String uniqueId, String target, long timeMillis) throws Exception {
         Jedis jedis = QRedisUtil.getJedis();
         if (jedis == null) {
@@ -57,6 +50,13 @@ public class IdentifyCodeService {
         return code;
     }
 
+    /**
+     * @param uniqueId   This param can be user's uniqueId or phone number
+     * @param target
+     * @param timeMillis
+     * @return
+     * @throws Exception
+     */
     public static boolean checkCode(String uniqueId, String target, String code) throws Exception {
         Jedis jedis = QRedisUtil.getJedis();
         if (jedis == null) {
@@ -77,7 +77,7 @@ public class IdentifyCodeService {
     }
 
 
-    public static String generateCode(int length, boolean onlyNumber) {
+    private static String generateCode(int length, boolean onlyNumber) {
         StringBuffer sb = new StringBuffer();
         Random random = new Random();
         if (onlyNumber) {

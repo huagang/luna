@@ -17,6 +17,11 @@ public class SMSMessage {
 
     private String content;
 
+    public SMSMessage() {
+        toPhoneNumber = "";
+        content = "";
+    }
+
     public SMSMessage(String toPhoneNumber) {
         this.toPhoneNumber = toPhoneNumber;
         this.content = "";
