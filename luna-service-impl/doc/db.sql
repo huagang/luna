@@ -480,5 +480,25 @@ CREATE TABLE `luna_trade_application` (
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
 
+CREATE TABLE `luna_bank_branch` (
+  `bnkcode` VARCHAR(12) NOT NULL COMMENT '银行支行编号',
+  `clscode` VARCHAR(3) NOT NULL COMMENT '银行总行编号',
+  `citycode` VARCHAR(4) NOT NULL COMMENT '城市编号',
+  `lname` VARCHAR(60) NOT NULL COMMENT '银行支行名称',
+  PRIMARY KEY (`bnkcode`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行支行表';
+
+CREATE TABLE luna_bank` (
+  `bankCode` VARCHAR(3) NOT NULL COMMENT '银行总行编号',
+  `bankName` VARCHAR(45) NOT NULL COMMENT '银行总行名称',
+  PRIMARY KEY (`bankCode`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行总行表';;
+
+
+
+
+
+
+
 
 
