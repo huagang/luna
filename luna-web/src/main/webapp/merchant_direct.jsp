@@ -95,10 +95,10 @@
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>手机号码</label>
                                     <div class="col-md-4">
-                                        <select name="phoneArea" class="form-control">
+                                        <select name="phoneArea" class="form-control phone-area">
                                             <option value="+86">+86</option>
                                         </select>
-                                        <input type="text" class="form-control" id="" name="phone" required="required" placeholder="请输入您的手机号码">
+                                        <input type="text" class="form-control phone-num" id="" name="phone" required="required" placeholder="请输入您的手机号码">
                                         <span class="help-block"> 请输入您的手机号码 </span>
                                     </div>
                                     <div class="col-md-4">
@@ -227,40 +227,36 @@
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>开户银行</label>
                                     <div class="col-md-4">
-                                        <select>
-                                        <option value="1">对公账户</option>
-                                    </select>
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <select id="bankCode" class="form-control">
+                                        </select>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>支行城市</label>
-                                    <div class="col-md-4">
-                                        <select>
-                                        <option value="1">省</option>
-                                    </select>
-                                        <select>
-                                        <option value="1">市</option>
-                                    </select>
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                    <div class="col-md-4 cityInfo">
+                                        <select id="provinceCode" class="form-control">
+                                        </select>
+                                        <select id="cityCode" class="form-control">
+                                        </select>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>开户支行</label>
                                     <div class="col-md-4">
-                                        <select>
-                                        <option value="1">对公账户</option>
-                                    </select>
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <select id="branchBankCode" class="form-control">
+                                        </select>
+                                        <span class="help-block"> </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -268,7 +264,7 @@
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <span class="help-block">  </span>
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +350,7 @@
     <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/select2.full.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/i18n/zh-CN.js"></script>
-    <script src="<%=request.getContextPath()%>/common/selectBank.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/selectBank.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
     <!-- 页面级文件 End -->
 

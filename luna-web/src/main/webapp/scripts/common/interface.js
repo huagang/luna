@@ -16,7 +16,7 @@ var Inter = function () {
         if (/localhost/.test(host)) {
             return 'local';
         }
-        else if(/luna-test/.test(host)) {
+        else if (/luna-test/.test(host)) {
             return 'test';
         }
         else {
@@ -557,6 +557,12 @@ var Inter = function () {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
+
+
+                //银行选择
+                selectCity: { url: '', type: 'GET' }, //选择城市
+                selectBranchBank: { url: '', type: 'GET' }, //选择支行
+
             };
         }
     };
