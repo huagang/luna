@@ -1,17 +1,15 @@
 package ms.luna.web.common;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import ms.luna.biz.cons.QCosConfig;
 import ms.luna.biz.cons.QRedisConfig;
 import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.QRedisUtil;
 import ms.luna.biz.util.VODUtil;
 import ms.luna.web.control.api.AppApiController;
-import ms.luna.web.util.WebHelper;
 import org.apache.log4j.Logger;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.io.IOException;
 
 public class ApplicationListener implements ServletContextListener {
@@ -25,8 +23,6 @@ public class ApplicationListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		// webHelper
-		event.getServletContext().setAttribute("webHelper", new WebHelper());
 		String cosBaseDir = event.getServletContext().getInitParameter("cosBaseDir");
 		COSUtil.cosBaseDir = cosBaseDir;
 		QCosConfig.ENV = cosBaseDir;

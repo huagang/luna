@@ -3,7 +3,6 @@ package ms.luna.web.control.common;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
-import ms.luna.web.control.ManageMerchantCtrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +32,6 @@ public class MerchantController extends BasicController {
 
     @Autowired
     private PulldownController pulldownController;
-
-    @Autowired
-    private ManageMerchantCtrl manageMerchantCtrl;
 
     @Autowired
     private ManageMerchantService manageMerchantService;
