@@ -93,7 +93,12 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 					row.put(MsShowAppTable.FIELD_APP_ID, result.getAppId());
 					row.put(MsShowAppTable.FIELD_APP_NAME,result.getAppName());
 					row.put(MsShowAppTable.FIELD_APP_CODE, result.getAppCode());
-					String indexUrl = msWebUrl + String.format(showPageUriTemplate, result.getAppId());
+					String indexUrl = "";
+					if(result.getType() == 1) {
+						indexUrl = result.getAppAddr();
+					} else {
+						indexUrl = msWebUrl + String.format(showPageUriTemplate, result.getAppId());
+					}
 					row.put(MsShowAppTable.FIELD_APP_ADDR, indexUrl);
 					row.put(MsShowAppTable.FIELD_TYPE, result.getType());
 					row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(result.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
@@ -454,7 +459,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		if(record == null) {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}
-		
+		String appAddr = jsonObject.getString(MsShowAppTable.FIELD_APP_ADDR);
 		int businessId = record.getBusinessId();
 		//自己已在线的可以重新发布并覆盖
 //		if(record.getAppStatus() == MsShowAppConfig.AppStatus.ONLINE) {
@@ -470,36 +475,28 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			record = new MsShowApp();
 			record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
 			msShowAppDAO.updateByCriteriaSelective(record, example);
-			
-			example.clear();
-			criteria = example.createCriteria();
-			criteria.andAppIdEqualTo(appId);
-			record = new MsShowApp();
-			record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
-			record.setPublishTime(new Date());
-			msShowAppDAO.updateByCriteriaSelective(record, example);
-			
 		} else {
 			//判断是否存在
 			if(existOnlineAppByAppId(appId)) {
 				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "已存在在线微景展");
 			}
-			//不存在则上线此微景展
-			MsShowAppCriteria example = new MsShowAppCriteria();
-			MsShowAppCriteria.Criteria criteria = example.createCriteria();
-			criteria.andAppIdEqualTo(appId);
-			record = new MsShowApp();
-			record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
-			record.setPublishTime(new Date());
-			msShowAppDAO.updateByCriteriaSelective(record, example);
 		}
+
+		record = new MsShowApp();
+		record.setAppId(appId);
+		record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
+		record.setPublishTime(new Date());
+		if(StringUtils.isNotBlank(appAddr)) {
+			record.setAppAddr(appAddr);
+		}
+		msShowAppDAO.updateByPrimaryKeySelective(record);
 		// 更新business对应的appId
 		MsBusiness business = new MsBusiness();
 		business.setBusinessId(businessId);
 		business.setAppId(appId);
 		msBusinessDAO.updateByPrimaryKeySelective(business);
 		
-		business = msBusinessDAO.selectByPrimaryKey(businessId);
+//		business = msBusinessDAO.selectByPrimaryKey(businessId);
 		
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
