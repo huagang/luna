@@ -269,4 +269,17 @@ public class LunaTradeApplicationController {
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
         return lunaTradeApplicationService.getApplication(inData);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/sign/{businessId}")
+    @ResponseBody
+    public JSONObject signAgreement(HttpServletRequest request,
+                                    @PathVariable Integer businessId) {
+        if (checkAuth(request, businessId)) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
+        }
+        JSONObject inData = new JSONObject();
+        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        return manageMerchantService.signAgreement(inData);
+    }
+
 }

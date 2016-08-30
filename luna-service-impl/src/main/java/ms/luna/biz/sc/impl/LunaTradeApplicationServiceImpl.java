@@ -225,13 +225,13 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_STATUS_CHECKING)
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "申请已经审核完毕,不可重复审核");
             if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_ACCEPT) {
-                application.setAppStatus(LunaTradeApplicationTable.APP_CHECK_ACCEPT);
+                application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_OK);
                 JSONObject data = new JSONObject();
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
-                application.setAppStatus(LunaTradeApplicationTable.APP_CHECK_REFUSE);
+                application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
                 JSONObject data = new JSONObject();
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_FAILED);
