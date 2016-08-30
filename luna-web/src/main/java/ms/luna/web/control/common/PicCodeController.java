@@ -35,10 +35,14 @@ public class PicCodeController {
             Pattern pattern = Pattern.compile(CODE_REGEX);
             Matcher matcher = pattern.matcher(key);
             Boolean result = matcher.matches();
-            if (!result) return new byte[1];
+            if (!result) {
+                return new byte[1];
+            }
             Pair<String, BufferedImage> code = CheckCodeUtil.generateCheckCode();
             result = picCodeService.saveCode(key, code.getLeft());
-            if (!result) return new byte[1];
+            if (!result) {
+                return new byte[1];
+            }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageIO.write(code.getRight(), "jpg", out);
             return out.toByteArray();
@@ -51,7 +55,7 @@ public class PicCodeController {
     @ResponseBody
     public JSONObject checkPicCode(@PathVariable String key,
                                    @RequestParam String code) {
-        return picCodeService.checkCode(key,code);
+        return picCodeService.checkCode(key, code);
     }
 
 }

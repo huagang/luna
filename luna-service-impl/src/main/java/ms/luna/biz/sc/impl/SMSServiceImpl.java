@@ -51,7 +51,7 @@ public class SMSServiceImpl implements SMSService {
             Long time = jsonObject.getLong("time");
             SMSMessage smsMessage = new SMSMessage(phoneNo);
             String code = IdentifyCodeService.getCode((uniqueId == null ? phoneNo : uniqueId), target, time);
-            smsMessage.setContent("【微景皓月】您的验证码是:" + code);
+            smsMessage.setContent("【微景皓月】您的验证码是" + code);
             smsScheduler.sendSMS(smsMessage);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {

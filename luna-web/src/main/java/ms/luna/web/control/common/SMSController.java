@@ -45,7 +45,9 @@ public class SMSController {
         }
         inData.put("phoneNo", phoneNo);
         inData.put("target", target);
-        return smsService.sendCode(inData);
+        inData.put("time", 120000L);
+        JSONObject result = smsService.sendCode(inData);
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/checkCode")
@@ -64,7 +66,8 @@ public class SMSController {
         }
         inData.put("target", target);
         inData.put("code", code);
-        return smsService.checkCode(inData);
+        JSONObject result = smsService.checkCode(inData);
+        return result;
     }
 
 }

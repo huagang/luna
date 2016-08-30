@@ -63,7 +63,6 @@ public class IdentifyCodeService {
     /**
      * @param uniqueId   This param can be user's uniqueId or phone number or any other unique no
      * @param target
-     * @param timeMillis
      * @return
      * @throws Exception
      */

@@ -58,6 +58,19 @@ public class SMSScheduler extends Thread {
         sendSMS(smsModel);
     }
 
+    public static void main(String[] args) {
+        SMSModel smsModel = new SMSModel();
+        SMSMessage message = new SMSMessage();
+        message.setToPhoneNumber("15659831720");
+        message.setContent("【微景皓月】您的验证码是098766");
+        smsModel.setMessage(message);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("apikey", smsModel.getUserName());
+        params.put("text", smsModel.getMessage().getContent());
+        params.put("mobile", smsModel.getMessage().getToPhoneNumber());
+        System.out.println(post(smsModel.getUrl(), smsModel.getEncode(), params));
+    }
+
     public void sendSMS(SMSModel smsModel) {
         try {
             sendQueue.offer(smsModel, DEFAULT_QUEUE_TIME_MILLIS, TimeUnit.MILLISECONDS);
@@ -72,14 +85,15 @@ public class SMSScheduler extends Thread {
         params.put("apikey", smsModel.getUserName());
         params.put("text", smsModel.getMessage().getContent());
         params.put("mobile", smsModel.getMessage().getToPhoneNumber());
-        return post(smsModel.getUrl(), params);
-
+        String result = post(smsModel.getUrl(), smsModel.getEncode(), params);
+        return result;
     }
 
     public void run() {
         while (!isStop) {
             try {
                 final SMSModel smsModel = sendQueue.poll(DEFAULT_QUEUE_TIME_MILLIS, TimeUnit.MILLISECONDS);
+                if (smsModel == null) continue;
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
@@ -87,6 +101,8 @@ public class SMSScheduler extends Thread {
                         JSONObject object = JSONObject.parseObject(result);
                         if (object.getInteger("code").intValue() != 0) {
                             logger.error("Send SMS failed. Detail:\n" + result);
+                        } else {
+                            logger.info("SMS message sended successfully. Info:\n" + result);
                         }
                     }
                 });
@@ -103,7 +119,7 @@ public class SMSScheduler extends Thread {
         }
     }
 
-    private static String post(String url, Map<String, String> paramsMap) {
+    private static String post(String url, String encode, Map<String, String> paramsMap) {
         CloseableHttpClient client = HttpClients.createDefault();
         String responseText = "";
         CloseableHttpResponse response = null;
@@ -115,7 +131,7 @@ public class SMSScheduler extends Thread {
                     NameValuePair pair = new BasicNameValuePair(param.getKey(), param.getValue());
                     paramList.add(pair);
                 }
-                method.setEntity(new UrlEncodedFormEntity(paramList, "UTF-8"));
+                method.setEntity(new UrlEncodedFormEntity(paramList, encode));
             }
             response = client.execute(method);
             HttpEntity entity = response.getEntity();
@@ -126,7 +142,9 @@ public class SMSScheduler extends Thread {
             e.printStackTrace();
         } finally {
             try {
-                response.close();
+                if (response != null) {
+                    response.close();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

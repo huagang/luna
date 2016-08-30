@@ -24,11 +24,10 @@ public class SMSModel {
     private SMSMessage message;
 
     public SMSModel() {
-        //TODO fill the detail information
-        url = "";
-        userName = "";
+        url = "https://sms.yunpian.com/v2/sms/single_send.json";
+        userName = "2fc24b5a28afcd4af2209a6f32421a43";
         password = "";
-        encode = "";
+        encode = "UTF-8";
     }
 
     public String getUrl() {
@@ -69,5 +68,16 @@ public class SMSModel {
 
     public void setMessage(SMSMessage message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "SMSModel{" +
+                "url='" + url + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", encode='" + encode + '\'' +
+                ", message=" + message +
+                '}';
     }
 }

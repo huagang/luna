@@ -3,7 +3,9 @@ package ms.luna.dubbo.provider;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.bl.MsZoneCacheBL;
 import ms.luna.biz.bl.PoiApiBL;
+import ms.luna.biz.cons.QRedisConfig;
 import ms.luna.biz.util.COSUtil;
+import ms.luna.biz.util.QRedisUtil;
 import ms.luna.schedule.service.CacheService;
 import ms.luna.schedule.service.EmailService;
 import ms.luna.schedule.service.SMSScheduler;
@@ -57,11 +59,25 @@ public class LunaStarter {
             CacheService cacheService = new CacheService(context);
             cacheService.start();
 
+            //redis 初始化
+            try {
+                QRedisConfig.loadRedisConf();
+                QRedisUtil.init();
+                logger.info("init redis: " + QRedisConfig.HOST);
+            } catch (IOException e) {
+                logger.error("Failed to load redis conf");
+                throw new RuntimeException("Failed to load conf");
+            }
+
+            //初始化发送邮件线程池
             emailService = (EmailService) context.getBean("emailScheduler");
             emailService.start();
+            logger.info("init email scheduler");
 
+            //初始化发送短信线程池
             smsService = (SMSScheduler) context.getBean("smsScheduler");
             smsService.start();
+            logger.info("init SMS scheduler");
 
             System.out.println("LunaProvider Service is started!");
             shutdownLatch.await();

@@ -79,11 +79,6 @@
         </dependency>
 
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.5.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
             <version>0.1</version>
@@ -253,9 +248,9 @@
                 <cosBaseDir>/dev</cosBaseDir>
                 <msWebUrl>http://localhost:8081</msWebUrl>
                 <mtaQQ>3463673430</mtaQQ>
-                <redis.host>10.66.152.87</redis.host>
-                <redis.instanceId>4246cb82-81d6-45f3-8482-a71cbb7015af</redis.instanceId>
-                <redis.password>vb2015redis</redis.password>
+                <redis.host>115.159.87.160</redis.host>
+                <redis.instanceId></redis.instanceId>
+                <redis.password>ssdoiw32237ejcu#R%#@</redis.password>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
