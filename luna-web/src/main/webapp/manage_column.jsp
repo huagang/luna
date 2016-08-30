@@ -65,7 +65,6 @@
 						                <th data-field="id" data-align="left">栏目ID</th>
                                     	<th data-field="name" data-align="left">栏目名称</th>
                                     	<th data-field="code" data-align="left">简称</th>
-                                    	<th data-field="category_name" data-align="left">所属类别</th>
                                         <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
 						            </tr>
