@@ -75,13 +75,13 @@ public class GoodsController extends BasicController {
             Integer stock = RequestHelper.getInteger(request, "stock");
             String transport_fee = RequestHelper.getString(request, "transport_fee");
             String note = RequestHelper.getString(request, "note");
-            Integer sales = RequestHelper.getInteger(request, "sales");
-            String online_status = RequestHelper.getString(request, "online_status");
             String merchant_id = RequestHelper.getString(request, "merchant_id");
             Integer business_id = RequestHelper.getInteger(request, "business_id");
+//            Integer sales = RequestHelper.getInteger(request, "sales");
+//            String online_status = RequestHelper.getString(request, "online_status");
             // id, account, unique_id, update_time, create_time
 
-            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, sales, online_status, merchant_id, business_id);
+            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
             if (message != null && message.length() != 0) {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, message);
             }
@@ -89,8 +89,8 @@ public class GoodsController extends BasicController {
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             String unique_id = user.getUniqueId();
 
-            String[] keys = new String[]{"name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "sales", "online_status", "merchant_id", "business_id", "unique_id"};
-            String[] values = new String[]{name, category_id + "", description, pic, price, stock + "", transport_fee, note, sales + "", online_status, merchant_id, business_id + "", unique_id};
+            String[] keys = new String[]{"name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "merchant_id", "business_id", "unique_id"};
+            String[] values = new String[]{name, category_id + "", description, pic, price, stock + "", transport_fee, note, merchant_id, business_id + "", unique_id};
             JSONObject param = setParameters2Json(keys, values);
             JSONObject result = lunaGoodsService.createGoods(param);
             MsLogger.debug(request.toString());
@@ -145,13 +145,13 @@ public class GoodsController extends BasicController {
             Integer stock = RequestHelper.getInteger(request, "stock");
             String transport_fee = RequestHelper.getString(request, "transport_fee");
             String note = RequestHelper.getString(request, "note");
-            Integer sales = RequestHelper.getInteger(request, "sales");
-            String online_status = RequestHelper.getString(request, "online_status");
             String merchant_id = RequestHelper.getString(request, "merchant_id");
             Integer business_id = RequestHelper.getInteger(request, "business_id");
+//            Integer sales = RequestHelper.getInteger(request, "sales");
+//            String online_status = RequestHelper.getString(request, "online_status");
             // id, account, unique_id, update_time, create_time
 
-            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, sales, online_status, merchant_id, business_id);
+            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
             if (message != null && message.length() != 0) {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, message);
             }
@@ -159,10 +159,10 @@ public class GoodsController extends BasicController {
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             String unique_id = user.getUniqueId();
 
-            String[] keys = new String[]{"id", "name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "sales", "online_status", "merchant_id", "business_id", "unique_id"};
-            String[] values = new String[]{id+"", name, category_id + "", description, pic, price, stock + "", transport_fee, note, sales + "", online_status, merchant_id, business_id + "", unique_id};
+            String[] keys = new String[]{"name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "sales", "online_status", "merchant_id", "business_id", "unique_id"};
+            String[] values = new String[]{name, category_id + "", description, pic, price, stock + "", transport_fee, note, merchant_id, business_id + "", unique_id};
             JSONObject param = setParameters2Json(keys, values);
-            JSONObject result = lunaGoodsService.updateGoods(param);
+            JSONObject result = lunaGoodsService.updateGoods(param, id);
             MsLogger.debug(request.toString());
             return result;
         } catch (Exception e) {
@@ -190,7 +190,7 @@ public class GoodsController extends BasicController {
     }
 
     // 参数检查
-    private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, Integer sales, String online_status, String merchant_id, Integer business_id) {
+    private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
         return "";
     }
 

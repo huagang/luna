@@ -3,12 +3,14 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaGoodsDAO;
+import ms.luna.biz.dao.model.LunaGoods;
 import ms.luna.biz.dao.model.LunaGoodsCriteria;
 import ms.luna.biz.sc.LunaGoodsService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /**
  * Created: by greek on 16/8/29.
@@ -26,12 +28,28 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
 
     @Override
     public JSONObject createGoods(JSONObject param) {
-        return null;
+        try{
+            // id, account, update_time, create_time, sales, online_status
+            LunaGoods lunaGoods = JSONObject.toJavaObject(param, LunaGoods.class);
+            lunaGoodsDAO.insert(lunaGoods);
+            return FastJsonUtil.sucess("success");
+        } catch (Exception e) {
+            MsLogger.error("Failed to create goods. " + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to create goods.");
+        }
     }
 
     @Override
-    public JSONObject updateGoods(JSONObject param) {
-        return null;
+    public JSONObject updateGoods(JSONObject param, Integer id) {
+        // id, account, update_time, create_time, sales, online_status
+        try {
+
+        } catch (Exception e) {
+            MsLogger.error("Failed to update goods. " + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to update goods.");
+        }
     }
 
     @Override
