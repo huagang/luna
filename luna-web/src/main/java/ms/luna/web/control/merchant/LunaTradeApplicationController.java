@@ -41,11 +41,9 @@ public class LunaTradeApplicationController {
     }
 
     private boolean checkAuth(HttpServletRequest request, Integer businessId) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return false;
-        }
-        LunaUserSession user = SessionHelper.getUser(session);
+
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        if (user == null) return false;
         if (!AuthHelper.hasBusinessAuth(user, businessId)) {
             return false;
         }
@@ -205,11 +203,10 @@ public class LunaTradeApplicationController {
     public JSONObject checkApplication(HttpServletRequest request,
                                        @PathVariable Integer applicationId,
                                        @RequestParam Integer checkResult) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        if (user == null) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
-        LunaUserSession user = SessionHelper.getUser(session);
         if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
@@ -233,11 +230,10 @@ public class LunaTradeApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/status/{applicationId}")
     public JSONObject getApplicationStatusByAppId(HttpServletRequest request,
                                                   @PathVariable Integer applicationId) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        if (user == null) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
-        LunaUserSession user = SessionHelper.getUser(session);
         if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
@@ -262,11 +258,10 @@ public class LunaTradeApplicationController {
     @ResponseBody
     public JSONObject getApplication(HttpServletRequest request,
                                      @PathVariable Integer applicationId) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        if (user == null) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
-        LunaUserSession user = SessionHelper.getUser(session);
         if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
