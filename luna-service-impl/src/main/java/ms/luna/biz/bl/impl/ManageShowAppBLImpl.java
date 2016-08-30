@@ -77,32 +77,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			parameter.setMax(Integer.parseInt(max));
 			parameter.setMin(Integer.parseInt(min));
 		}
-
-		String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
-		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
-		if(lunaUserRole == null) {
-			logger.warn("user not found, unique_id: " + uniqueId);
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
-		}
-		Map<String, Object> extra = lunaUserRole.getExtra();
-		String type = extra.get("type").toString();
-		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
-			// current user might not have business
-			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-			return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
-		}
-		List<Integer> businessIdList = (List<Integer>) extra.get("value");
-		if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
-
-		} else if(businessIdList.size() > 0){
-			parameter.setBusinessIds(businessIdList);
-			criteria.andBusinessIdIn(businessIdList);
-		} else {
-			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
-		}
+		int businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+		parameter.setBusinessIds(Arrays.asList(businessId));
+		criteria.andBusinessIdEqualTo(businessId);
 		
-		JSONObject data = JSONObject.parseObject("{}");
+		JSONObject data = new JSONObject();
 		int total = 0;
 		try {
 			List<MsShowAppResult> results = msShowAppDAO.selectShowAppWithFilter(parameter);
@@ -110,11 +89,16 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 				JSONArray rows = new JSONArray();
 				String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 				for(MsShowAppResult result : results) {
-					JSONObject row = JSONObject.parseObject("{}");
+					JSONObject row = new JSONObject();
 					row.put(MsShowAppTable.FIELD_APP_ID, result.getAppId());
 					row.put(MsShowAppTable.FIELD_APP_NAME,result.getAppName());
 					row.put(MsShowAppTable.FIELD_APP_CODE, result.getAppCode());
-					String indexUrl = msWebUrl + String.format(showPageUriTemplate, result.getAppId());
+					String indexUrl = "";
+					if(result.getType() == 1) {
+						indexUrl = result.getAppAddr();
+					} else {
+						indexUrl = msWebUrl + String.format(showPageUriTemplate, result.getAppId());
+					}
 					row.put(MsShowAppTable.FIELD_APP_ADDR, indexUrl);
 					row.put(MsShowAppTable.FIELD_TYPE, result.getType());
 					row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(result.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
@@ -122,7 +106,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 					row.put(MsShowAppTable.FIELD_OWNER, result.getOwner());
 					row.put(MsShowAppTable.FIELD_APP_STATUS, result.getAppStatus());
 					row.put(MsShowAppTable.FIELD_BUSINESS_ID, result.getBusinessId());
-					row.put(MsBusinessTable.FIELD_BUSINESS_NAME, result.getBusinessName() == null ? "" : result.getBusinessName());
 					rows.add(row);
 				}
 				data.put("rows", rows);
@@ -476,7 +459,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		if(record == null) {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}
-		
+		String appAddr = jsonObject.getString(MsShowAppTable.FIELD_APP_ADDR);
 		int businessId = record.getBusinessId();
 		//自己已在线的可以重新发布并覆盖
 //		if(record.getAppStatus() == MsShowAppConfig.AppStatus.ONLINE) {
@@ -492,36 +475,28 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			record = new MsShowApp();
 			record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
 			msShowAppDAO.updateByCriteriaSelective(record, example);
-			
-			example.clear();
-			criteria = example.createCriteria();
-			criteria.andAppIdEqualTo(appId);
-			record = new MsShowApp();
-			record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
-			record.setPublishTime(new Date());
-			msShowAppDAO.updateByCriteriaSelective(record, example);
-			
 		} else {
 			//判断是否存在
 			if(existOnlineAppByAppId(appId)) {
 				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "已存在在线微景展");
 			}
-			//不存在则上线此微景展
-			MsShowAppCriteria example = new MsShowAppCriteria();
-			MsShowAppCriteria.Criteria criteria = example.createCriteria();
-			criteria.andAppIdEqualTo(appId);
-			record = new MsShowApp();
-			record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
-			record.setPublishTime(new Date());
-			msShowAppDAO.updateByCriteriaSelective(record, example);
 		}
+
+		record = new MsShowApp();
+		record.setAppId(appId);
+		record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
+		record.setPublishTime(new Date());
+		if(StringUtils.isNotBlank(appAddr)) {
+			record.setAppAddr(appAddr);
+		}
+		msShowAppDAO.updateByPrimaryKeySelective(record);
 		// 更新business对应的appId
 		MsBusiness business = new MsBusiness();
 		business.setBusinessId(businessId);
 		business.setAppId(appId);
 		msBusinessDAO.updateByPrimaryKeySelective(business);
 		
-		business = msBusinessDAO.selectByPrimaryKey(businessId);
+//		business = msBusinessDAO.selectByPrimaryKey(businessId);
 		
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());

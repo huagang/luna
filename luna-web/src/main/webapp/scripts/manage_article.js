@@ -74,12 +74,21 @@ function operationFormatter(value, row, index) {
 
 function queryParams(params) {
     //alert(JSON.stringify(params));
-    return {
+    var business = localStorage.getItem('business'), businessId;
+    if(business){
+        businessId = JSON.parse(business).id;
+    }
+    var params = {
         limit: params.limit,
         offset: params.offset,
         sort: params.sort,
-        order: params.order
+        order: params.order,
     };
+    if(businessId){
+        params.business_id = businessId;
+
+    }
+    return params;
 }
 
 var manageArticle = angular.module('manageArticle', []);
