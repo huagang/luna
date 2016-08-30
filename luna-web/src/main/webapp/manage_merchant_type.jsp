@@ -44,9 +44,6 @@
             <div class="main-hd"><h3>商品类目管理</h3></div>
             <div class="main-bd">
               <div class="search">
-                <input type="text" class="search-txt" ng-model="cate.searchText" placeholder="请输入关键字进行搜索">
-                <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
-                <button type="button" class="btn-search" ng-click="cate.handleSearch()">搜 索</button>
                 <button type="button" class="pull-right" ng-click="cate.changeState('new')">添加类目</button>
               </div>
               <table class="table">
@@ -107,7 +104,22 @@
             </div>
             <div class="form-group">
                 <label>父级</label>
-                <select class="parent-select"></select>
+                <div class="select" ng-click="cate.optionsToggle()">
+                    <span>{{cate.opData.parentName || '无'}}</span>
+                    <div class="glyphicon pull-right arrow" ng-class="{'glyphicon-triangle-bottom': ! cate.opData.showSelectList, 'glyphicon-triangle-top': cate.opData.showSelectList}"></div>
+                </div>
+                <div class="select-parent ng-hide" ng-show="cate.opData.showSelectList">
+                    <div class="option" data-value="">
+                        <span>无</span>
+                    </div>
+                    <div class="option" ng-repeat="row in cate.categoryData"
+                         ng-hide="row.id == cate.opData.id"  data-value="{{row.id}}">
+                        <div class="ng-hide" ng-class=
+                                "{'icon-close': cate.opData.openList.indexOf(row.id) !== -1, 'icon-open':  cate.opData.openList.indexOf(row.id) === -1}"
+                             ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleOptionToggle(row.id)"></div>
+                        <span class="depth-{{row.depth}}">{{row.name}}</span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="pop-fun">

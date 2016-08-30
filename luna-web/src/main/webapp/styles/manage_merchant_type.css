@@ -81,3 +81,18 @@
 .form-group .red{
     padding: 5px 0 0 40px;
 }
+
+.select {
+    display: inline-block;
+    width: 470px;
+    border: 1px solid #ccc;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 4px;
+    padding: 0 10px;
+}
+
+.select .arrow{
+    padding-top: 8px;
+    color: #555;
+}
