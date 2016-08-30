@@ -189,6 +189,20 @@ public class GoodsController extends BasicController {
         }
     }
 
+    // 获取类别列表
+    @RequestMapping(method = RequestMethod.GET, value = "/category/{keyword}")
+    @ResponseBody
+    public JSONObject getGoodsCatgories(@PathVariable("keyword") String keyword) {
+        try{
+            JSONObject result = lunaGoodsService.getGoodsCategories(keyword);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to get goods categories. " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Failed to get goods categories.");
+        }
+    }
+
     // 参数检查
     private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
         return "";

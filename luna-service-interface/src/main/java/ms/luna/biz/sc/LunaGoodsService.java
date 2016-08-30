@@ -24,4 +24,7 @@ public interface LunaGoodsService {
 
     // 检查商品名称
     JSONObject checkGoodsName(String name, Integer id, Integer business_id);
+
+    // 获取商品类别目录
+    JSONObject getGoodsCategories(String keyword);
 }

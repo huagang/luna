@@ -1,38 +1,42 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.LunaGoodsTable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class LunaGoods implements Serializable {
+    @JSONField(name = LunaGoodsTable.FIELD_ID)
     private Integer id;
-
+    @JSONField(name = LunaGoodsTable.FIELD_NAME)
     private String name;
-
+    @JSONField(name = LunaGoodsTable.FIELD_CATEGORY_ID)
     private Integer categoryId;
-
+    @JSONField(name = LunaGoodsTable.FIELD_DESCRIPTION)
     private String description;
-
+    @JSONField(name = LunaGoodsTable.FIELD_PIC)
     private String pic;
-
+    @JSONField(name = LunaGoodsTable.FIELD_PRICE)
     private BigDecimal price;
-
+    @JSONField(name = LunaGoodsTable.FIELD_STOCK)
     private Integer stock;
-
+    @JSONField(name = LunaGoodsTable.FIELD_TRANSPORT_FEE)
     private BigDecimal transportFee;
-
+    @JSONField(name = LunaGoodsTable.FIELD_NOTE)
     private String note;
-
+    @JSONField(name = LunaGoodsTable.FIELD_SALES)
     private Integer sales;
-
+    @JSONField(name = LunaGoodsTable.FIELD_ONLINE_STATUS)
     private String onlineStatus;
-
+    @JSONField(name = LunaGoodsTable.FIELD_MERCHANT_ID)
     private String merchantId;
-
+    @JSONField(name = LunaGoodsTable.FIELD_BUSINESS_ID)
     private Integer businessId;
-
+    @JSONField(name = LunaGoodsTable.FIELD_ACCOUNT)
     private BigDecimal account;
-
+    @JSONField(name = LunaGoodsTable.FIELD_UNIQUE_ID)
     private String uniqueId;
 
     private Date updateTime;
