@@ -8,8 +8,12 @@
 
 package ms.luna.web.control.common;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.sc.PicCodeService;
 import ms.luna.biz.sc.SMSService;
+import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,38 +36,36 @@ public class SMSController {
     @Autowired
     private SMSService smsService;
 
+    @Autowired
+    private PicCodeService picCodeService;
+
     @RequestMapping(method = RequestMethod.POST, value = "/getCode")
     @ResponseBody
-    public JSONObject getCode(HttpServletRequest request,
+    public JSONObject getCode(@RequestParam String key,
+                              @RequestParam String code,
                               @RequestParam String phoneNo,
                               @RequestParam String target) {
-        HttpSession session = request.getSession(false);
-        JSONObject inData = new JSONObject();
-        if (session != null) {
-            LunaUserSession user = SessionHelper.getUser(session);
-            inData.put("uniqueId", user.getUniqueId());
+        JSONObject r = picCodeService.checkCode(key, code);
+        if (r.getJSONObject("data").getBoolean("result")) {
+            JSONObject inData = new JSONObject();
+            inData.put("uniqueId", phoneNo);
+            inData.put("phoneNo", phoneNo);
+            inData.put("target", target);
+            inData.put("time", 120000L);
+            JSONObject result = smsService.sendCode(inData);
+            return result;
+        } else {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "图片验证码错误");
         }
-        inData.put("phoneNo", phoneNo);
-        inData.put("target", target);
-        inData.put("time", 120000L);
-        JSONObject result = smsService.sendCode(inData);
-        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/checkCode")
     @ResponseBody
-    public JSONObject checkCode(HttpServletRequest request,
-                                @RequestParam String phone,
+    public JSONObject checkCode(@RequestParam String phone,
                                 @RequestParam String target,
                                 @RequestParam String code) {
-        HttpSession session = request.getSession(false);
         JSONObject inData = new JSONObject();
-        if (session != null) {
-            LunaUserSession user = SessionHelper.getUser(session);
-            inData.put("uniqueId", user.getUniqueId());
-        } else {
-            inData.put("uniqueId", phone);
-        }
+        inData.put("uniqueId", phone);
         inData.put("target", target);
         inData.put("code", code);
         JSONObject result = smsService.checkCode(inData);

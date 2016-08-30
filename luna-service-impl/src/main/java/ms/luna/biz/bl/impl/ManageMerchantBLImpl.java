@@ -135,6 +135,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
         msMerchantManage.setRegistHhmmss(date);
         msMerchantManage.setUpHhmmss(date);
         msMerchantManage.setUpdatedByUniqueId(salesman_id);
+        msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_NORMAL);
         if (lat != null) {
             msMerchantManage.setLat(new BigDecimal(lat));
         }
@@ -455,6 +456,18 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
         } else {
             throw new RuntimeException("异常, merchant_id：" + merchant_id + "存在" + count + "个");
         }
+    }
+
+    @Override
+    public JSONObject signAgreement(JSONObject jsonObject) {
+        Integer businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+        if (msBusiness == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
+        }
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUE_ON);
+        return FastJsonUtil.sucess("success");
     }
 
     // ---------------------------------------------------------

@@ -151,4 +151,13 @@ public class ManageMerchantServiceImpl implements ManageMerchantService {
         }
         return result;
     }
+
+    @Override
+    public JSONObject signAgreement(JSONObject json) {
+        try {
+            return manageMerchantBL.signAgreement(json);
+        } catch (RuntimeException e) {
+            return FastJsonUtil.error("-1", e);
+        }
+    }
 }

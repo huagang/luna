@@ -20,6 +20,7 @@ import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsArticleTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -307,33 +308,13 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             parameter.setMin(min);
         }
 
+        int businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+
         MsArticleCriteria msArticleCriteria = new MsArticleCriteria();
         MsArticleCriteria.Criteria criteria = msArticleCriteria.createCriteria();
-
-        String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
-        LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
-        if(lunaUserRole == null) {
-            logger.warn("user not found, unique_id: " + uniqueId);
-            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
-        }
-        Map<String, Object> extra = lunaUserRole.getExtra();
-        String type = extra.get("type").toString();
-        if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
-            // current user might not have business
-            logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
-        }
-        List<Integer> businessIdList = (List<Integer>) extra.get("value");
-        if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
-
-        } else if(businessIdList.size() > 0){
-            parameter.setBusinessIds(businessIdList);
-            criteria.andBusinessIdIn(businessIdList);
-        } else {
-            logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
-        }
-
+        // 避免修改底层sql, 暂时兼容传入多个业务
+        parameter.setBusinessIds(Arrays.asList(businessId));
+        criteria.andBusinessIdEqualTo(businessId);
         JSONObject data = new JSONObject();
         try {
             List<MsArticleResult> msArticleResults = msArticleDAO.selectArticleWithFilter(parameter);

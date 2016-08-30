@@ -1,5 +1,6 @@
 package ms.luna.web.control.merchant;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.LunaGoodsCategoryService;
 import ms.luna.web.control.common.BasicController;
@@ -90,13 +91,15 @@ public class LunaGoodsCategoryController extends BasicController {
                                      @PathVariable("id") Integer id,
                                      @RequestParam(value = "abbreviation", required = true) String abbreviation,
                                      @RequestParam(value = "root", required = true) Integer root,
-                                     @RequestParam(value = "depth", required = true) Integer depth) {
+                                     @RequestParam(value = "depth", required = true) Integer depth,
+                                     @RequestParam String children) {
         JSONObject inData = new JSONObject();
         inData.put("id", id);
         inData.put("name", name);
         inData.put("abbreviation", abbreviation);
         inData.put("root", root);
         inData.put("depth", depth);
+        inData.put("children", JSONArray.parse(children));
         return lunaGoodsCategoryService.updateCategory(inData);
     }
 

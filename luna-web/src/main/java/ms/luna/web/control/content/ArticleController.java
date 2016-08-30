@@ -6,8 +6,10 @@ import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsArticleTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -299,8 +301,18 @@ public class ArticleController extends BasicController {
         if (limit != null) {
             jsonQuery.put("max", limit);
         }
-        LunaUserSession user = SessionHelper.getUser(request.getSession());
-        jsonQuery.put(LunaUserTable.FIELD_ID, user.getUniqueId());
+        int businessId = RequestHelper.getInteger(request, "business_id");
+        if(businessId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
+        }
+
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+            LunaUserSession user = SessionHelper.getUser(request.getSession());
+            logger.warn(String.format("user[%s] does not has auth with business[%d]", user.getLunaName(), businessId));
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+        }
+
+        jsonQuery.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
         try {
             JSONObject ret = manageArticleService.loadArticle(jsonQuery.toJSONString());
             if ("0".equals(ret.getString("code"))) {

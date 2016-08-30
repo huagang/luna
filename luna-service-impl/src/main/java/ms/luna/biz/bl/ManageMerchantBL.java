@@ -72,7 +72,7 @@ public interface ManageMerchantBL {
     /**
      * 检测业务员是否存在
      *
-     * @param salesman_nm
+     * @param json
      * @return
      */
     JSONObject isSalesmanNmExit(String json);
@@ -108,6 +108,14 @@ public interface ManageMerchantBL {
      * @return
      */
     JSONObject openMerchantById(String json);
+
+    /**
+     * 商户签署直通车协议
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject signAgreement(JSONObject jsonObject);
 
 
 }

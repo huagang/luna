@@ -21,7 +21,7 @@
             <div class="email-main" style="position: relative;width: 510px;height: 636px;background:#4F6499;padding: 18px 12px;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;margin-top: 5%;left: 25%;">
                 <div style="height: 61px;vertical-align: middle;padding: 6px 58px 23px 58px;">
                     <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Logo.png" style="height: 61px;width: 160px;">
-                </div>
+                </div>email-template.vm
                 <div style="background: #FFFFFF;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding: 48px 48px 15px 48px;">
                     <p style="font-size: 20px;line-height: 28px;margin:0;padding-bottom: 8px;font-weight: 500;">您好，</p>
                     <p style="line-height: 2em; margin: 0;">

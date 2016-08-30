@@ -474,8 +474,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.width());
             componentObj.height = parseInt($currenthtml.height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
         case 'tab':
@@ -483,8 +483,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.width());
             componentObj.height = parseInt($currenthtml.height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
         default:
@@ -492,8 +492,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.find("div.con").width());
             componentObj.height = parseInt($currenthtml.find("div.con").height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
     }
@@ -1205,4 +1205,84 @@ function getImgListHtml(content) {
             break;
     }
     return arrHtml;
+}
+
+/**
+ * 判断上下左右移动是否移出框外
+ * 
+ * @param {any} $target
+ * @param {any} direction
+ * @param {any} len
+ */
+function componentMove($target, direction, len) {
+    var moveLen, reg = /[0-9]*/;
+    var position = $target.position(),
+        bottom = $('#layermain').height() - position.top - $target.height(),
+        right = $('#layermain').width() - position.left - $target.width();
+
+    console.log(bottom);
+    console.log(right);
+    style = $target[0].style;
+    switch (direction) {
+        case 'up':
+            if ($target.css('top') == '0px') {
+                console.log('已经到顶部');
+            } else if (position.top - len <= 0) {
+                moveLen = position.top - 0;
+                position.top = 0;
+                $target.css("top", '0px');
+            } else {
+                position.top = position.top - len;
+                $target.css("top", position.top + 'px');
+                bottom = bottom + len;
+                $target.css("bottom", bottom + 'px');
+            }
+            break;
+        case 'down':
+            if ($target.css('bottom') == '0px') {
+                console.log('已经到底部');
+                return false;
+            } else if (reg.test(bottom) && bottom - len <= 0) {
+                moveLen = bottom - 0;
+                position.top = position.top + moveLen;
+                $target.css("top", position.top + 'px');
+            } else {
+                position.top = position.top + len;
+                bottom = bottom - len;
+                $target.css("top", position.top + 'px');
+                $target.css("bottom", bottom + 'px');
+            }
+            break;
+        case 'left':
+            if ($target.css('left') == '0px') {
+                console.log('已经到左侧');
+                return false;
+            } else if (position.left - len <= 0) {
+                position.left = 0;
+                $target.css("left", '0px');
+            } else {
+                position.left = position.left - len;
+                $target.css("left", position.left + 'px');
+                right = right + len;
+                $target.css("right", right + 'px');
+            }
+            break;
+        case 'right':
+            if ($target.css('right') == '0px') {
+                console.log('已经到右侧');
+                return false;
+            } else if (reg.test(right) && right - len <= 0) {
+                moveLen = right - 0;
+                position.left = position.left + moveLen;
+                $target.css("left", position.left + 'px');
+            } else {
+                position.left = position.left + len;
+                $target.css("left", position.left + 'px');
+                right = right - len;
+                $target.css("right", right + 'px');
+            }
+            break;
+    }
+    lunaPage.updatePageComponents();
+    componentPanel.update();
 }

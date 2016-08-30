@@ -64,7 +64,6 @@
 						                <th data-formatter="nameFormatter" data-align="left">名称</th>
 						                <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
-                                    	<th data-field="business_name" data-align="left">所属业务</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
 						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
@@ -304,8 +303,8 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class=\'wrapper\' data-app-id=\'{0}\' data-app-name=\'{1}\' data-business-id=\'{2}\' \
-				data-business-name=\'{3}\' data-app-type='{4}'>".format(row.app_id, row.app_name, row.business_id, row.business_name, row.type);
+		var wrapperStart = "<div class='wrapper' data-app-id='{0}' data-app-name='{1}' data-business-id='{2}'" +
+				" data-app-type='{4}'>".format(row.app_id, row.app_name, row.business_id, row.type);
 		var editOp = '<a class="property" href="javascript:void(0)">发布设置</a>';
 		var href = '', clickEvent = '';
 		switch(row.type){
@@ -329,12 +328,17 @@
 
 	function queryParams(params) {
 		/* alert(JSON.stringify(params)); */
-		return {
+		var params = {
 			limit : params.limit,
 			offset : params.offset,
 			order : params.order,
-			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
+			like_filter_nm : encodeURI($('#like_filter_nm').val())
+		};
+		var business = localStorage.getItem('business');
+		if(business){
+			params.business_id = JSON.parse(business).id;
 		}
+		return params;
 	}
 
 </script>

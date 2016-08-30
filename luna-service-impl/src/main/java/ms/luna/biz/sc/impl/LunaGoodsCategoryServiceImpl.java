@@ -202,8 +202,16 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
             category.setRoot(jsonObject.getInteger("root"));
             category.setDepth(jsonObject.getInteger("depth"));
             lunaGoodsCategoryDAO.updateByPrimaryKey(category);
+            JSONArray array = jsonObject.getJSONArray("children");
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject o = array.getJSONObject(i);
+                LunaGoodsCategory c = lunaGoodsCategoryDAO.selectByPrimaryKey(o.getInteger("id"));
+                c.setDepth(o.getInteger("depth"));
+                lunaGoodsCategoryDAO.updateByPrimaryKey(c);
+            }
         } catch (Exception ex) {
             logger.error("Failed to update lunaGoodsCategory", ex);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
         return FastJsonUtil.sucess("success");
