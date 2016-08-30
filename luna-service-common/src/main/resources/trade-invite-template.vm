@@ -1,4 +1,4 @@
-<!--POI数据管理页面  author:Demi-->
+<!-- 直通车邀请激活 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,26 +21,18 @@
             <div class="email-main" style="position: relative;width: 510px;height: 636px;background:#4F6499;padding: 18px 12px;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;margin-top: 5%;left: 25%;">
                 <div style="height: 61px;vertical-align: middle;padding: 6px 58px 23px 58px;">
                     <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Logo.png" style="height: 61px;width: 160px;">
-                </div>email-template.vm
+                </div>
                 <div style="background: #FFFFFF;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding: 48px 48px 15px 48px;">
                     <p style="font-size: 20px;line-height: 28px;margin:0;padding-bottom: 8px;font-weight: 500;">您好，</p>
                     <p style="line-height: 2em; margin: 0;">
-                        <span>${luna_nm}</span>邀请您加入皓月平台，以<span id="role_nm">${role_nm}</span>的身份进行业务工作运营，来看看吧。
+                        为民农家院商户申请开通皓月交易直通车服务，请您尽快进行商户资料合适，并在1~3个工作日内给予结果反馈，感谢。
                     </p>
                     <p style="line-height: 2em; margin: 0;">
-                        	点击下面的链接设置账户名密码进行确认，设置成功之后，您就可以登陆皓月平台进行工作管理了：
+                        点击下方按钮，进行资料核实，并进行结果反馈。
                     </p>
                     <p style="line-height: 2em;margin: 12px 0;">
-                        <a href="${webAddr}?token=${token}" id="link-address" style="color: #004FA8;text-decoration: none;word-wrap:break-word;word-break:break-all;overflow:hidden;">${webAddr}?token=${token}</a>
+                        <a href="${webAddr}?token=${token}" id="link-address" style="color: #004FA8;text-decoration: none;word-wrap:break-word;word-break:break-all;overflow:hidden;">商户核实资料</a>
                     </p>
-                    <p style="line-height: 2em; margin: 0;">
-                        	如果您的email不支持链接点击，请将上面的地址复制到浏览器（例如IE、Chrome）的地址栏进入皓月平台。
-                    </p>
-                    <p style="line-height: 2em; margin: 0;">期待您的加入！</p>
-                    <div style="width: 100%;text-align: right;margin-top: 58px;">
-                        <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Luna%20Team.png" style="width: 91px;height: 14px;">
-                        <p id="time" style="margin: 0;padding-top: 10px;padding-right: 5px;;">${currentDate}</p>
-                    </div>
                 </div>
             </div>
         </div>
