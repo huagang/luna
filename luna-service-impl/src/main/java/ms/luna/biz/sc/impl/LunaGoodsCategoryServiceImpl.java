@@ -56,6 +56,7 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
                 object.put("name", category.getName());
                 object.put("child", new JSONArray());
                 object.put("abbreviation", category.getAbbreviation());
+                object.put("depth", category.getDepth());
                 result.add(object);
                 nowDepth.add(object);
             } else {
@@ -67,6 +68,7 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
                         object.put("name", category.getName());
                         object.put("child", new JSONArray());
                         object.put("abbreviation", category.getAbbreviation());
+                        object.put("depth", category.getDepth());
                         rootObject.getJSONArray("child").add(object);
                         nextDepth.add(object);
                     }
@@ -123,7 +125,17 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
         try {
             LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria = new LunaGoodsCategoryCriteria();
             lunaGoodsCategoryCriteria.createCriteria().andNameLikeInsensitive("%" + jsonObject.getString("searchWord") + "%");
-            JSONArray temp = getCategoriesByCriteria(lunaGoodsCategoryCriteria);
+            //JSONArray temp = getCategoriesByCriteria(lunaGoodsCategoryCriteria);
+            List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
+            JSONArray temp = new JSONArray();
+            for (LunaGoodsCategory lunaGoodsCategory : categories) {
+                JSONObject object = new JSONObject();
+                object.put("id", lunaGoodsCategory.getId());
+                object.put("name", lunaGoodsCategory.getName());
+                object.put("abbreviation", lunaGoodsCategory.getAbbreviation());
+                object.put("depth", lunaGoodsCategory.getDepth());
+                temp.add(object);
+            }
             Integer max = jsonObject.getInteger("limit");
             Integer min = jsonObject.getInteger("offset");
             if (max == null && min == null) {

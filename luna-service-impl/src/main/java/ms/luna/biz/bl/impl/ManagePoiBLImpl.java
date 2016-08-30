@@ -667,8 +667,8 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 					enDoc.put("tags", doc.get("tags"));
 					// 二级分类
 					enDoc.put("sub_tag", doc.get("sub_tag"));
-					// 分享摘要
-					enDoc.put("share_desc", doc.get("share_desc"));
+//					// 分享摘要
+//					enDoc.put("share_desc", doc.get("share_desc"));
 					// 经纬度
 					enDoc.put("lnglat", doc.get("lnglat"));
 					// zone_id
@@ -732,26 +732,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if(document.containsKey("used_in_business")) {
+				JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+				if (used_in_business.size() > 0) {
+					isUsing = true;
+				}
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("LUNA.E0006");
-		}
-
-		// 检查在线路管理中是否使用
-		MongoCollection<Document> poi_route_index = mongoConnector.getDBCollection(MsRouteCollectionDAO.POI_ROUTE_INDEX);
-		document = poi_route_index.find(keyId).limit(1).first();
-		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_route"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0006");
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("该POI在线路配置中已经投入使用，请先从线路配置中移除。");
+			if(document.containsKey("used_in_route")) {
+				JSONArray used_in_route = FastJsonUtil.parse2Array(document.get("used_in_route"));
+				if (used_in_route.size() > 0) {
+					isUsing = true;
+				}
+			}
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0018");
+			}
 		}
 
 		MongoCollection<Document> poi_collection = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_POI_ZH);
@@ -837,7 +835,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			data.put("panorama_type", types);
 		} else{
 			String type = list.get(0).getExtensionAttrs();
-			JSONArray typeArray = JSONArray.parseArray(type != null? type:"[]");
+			JSONArray typeArray = JSONArray.parseArray(type != null ? type : "[]");
 			for(int i = 0; i < typeArray.size(); i++){
 				JSONObject panoType = new JSONObject();
 				panoType.put("panorama_type_id", i + 1);
@@ -873,7 +871,9 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 
 	private JSONObject getCommmFieldVal(Document docPoi) {
 		JSONObject commonFieldsVal = new JSONObject();
-		commonFieldsVal.put("_id" ,docPoi.getObjectId("_id".toString()));
+		if(docPoi.containsKey("_id")) {
+			commonFieldsVal.put("_id", docPoi.getObjectId("_id").toString());
+		}
 		
 		/*
 		 * 公共字段值
@@ -908,7 +908,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		if (docPoi.containsKey("sub_tag")) {
 			sub_tag = docPoi.getInteger("sub_tag");
 		}
-		if(sub_tag == 0) {// 兼容之前数据，如果未选择，默认为“其他”
+		if(sub_tag != null && sub_tag == 0) {// 兼容之前数据，如果未选择，默认为“其他”
 			sub_tag = getTopTag2SubTagOthersCache().get(tags_values.getInteger(0));
 		}
 		commonFieldsVal.put("subTag", sub_tag == null ? 0 : sub_tag);
@@ -1008,7 +1008,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id + "?lang=" + lang);
 		return FastJsonUtil.sucess("success", data);
 	}
 
@@ -1211,7 +1211,6 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 	@Override
 	public JSONObject initFixPoi(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-		String _id = param.getString("_id");
 
 		Document docPoi = this.json2BsonForInsertOrUpdate(param, Boolean.TRUE, Boolean.TRUE);
 
@@ -1220,7 +1219,6 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
 		return FastJsonUtil.sucess("success", data);
 	}
 
@@ -1270,13 +1268,24 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		Document document = poi_business_tree_index.find(keyId).limit(1).first();
 		Boolean isUsing = false;
 		if (document != null) {
-			JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
-			if (used_in_business.size() > 0) {
-				isUsing = true;
+			if(document.containsKey("used_in_business")) {
+				JSONArray used_in_business = FastJsonUtil.parse2Array(document.get("used_in_business"));
+				if (used_in_business.size() > 0) {
+					isUsing = true;
+				}
 			}
-		}
-		if (isUsing) {
-			return FastJsonUtil.errorWithMsg("LUNA.E0006");
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0006");
+			}
+			if (document.containsKey("used_in_route")) {
+				JSONArray used_in_route = FastJsonUtil.parse2Array(document.get("used_in_route"));
+				if (used_in_route.size() > 0) {
+					isUsing = true;
+				}
+			}
+			if (isUsing) {
+				return FastJsonUtil.errorWithMsg("LUNA.E0018");
+			}
 		}
 		return FastJsonUtil.sucess(MsLunaMessage.getInstance().getMessage("LUNA.I0001"));
 	}

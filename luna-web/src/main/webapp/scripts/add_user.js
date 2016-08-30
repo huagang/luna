@@ -178,6 +178,9 @@
                         vm.data.role = '';
                         if(vm.roles.length === 1){
                             vm.data.role = vm.roles[0].id;
+                            if(item.extra.type === 'business' && vm.roles[0].extra_value === 0){
+                                vm.businessSelectAll = true;
+                            }
                         }
 
                         if(item.extra.type === 'business'){
@@ -298,7 +301,10 @@
             if(window.roleData){
                 vm.data.module = roleData.category_id;
                 vm.data.role = roleData.role_id + '';
-                vm.data.extra = roleData.extra;
+                vm.data.extra = roleData.extra || {};
+                if(vm.data.extra.type !== 'business' && toString.call(vm.data.extra.value) === '[object Array]'){
+                    vm.data.extra.value = (vm.data.extra.value || [''])[0] + '';
+                }
             }
         }
 
@@ -306,6 +312,9 @@
         function handleInviteUser() {
             if( vm.extraData && vm.extraData.type === 'business'){
                 vm.transformBusinessData();
+            }
+            else if(vm.data.extra.value){
+                vm.data.extra.value = [parseInt(vm.data.extra.value)];
             }
             var res = vm._checkValidation();
             if (!res.error) {
@@ -315,9 +324,15 @@
                     category_id: vm.data.module,
                     role_id: parseInt(vm.data.role),
                 };
+
+
                 if(vm.data.extra){
+                    if(! vm.data.extra.auth){
+                        delete vm.data.extra.auth;
+                    }
                     data.extra = JSON.stringify(vm.data.extra);
                 }
+
                 if(! vm.userId){
                     data.emails = vm.data.emailList.join(',');
                     $http({

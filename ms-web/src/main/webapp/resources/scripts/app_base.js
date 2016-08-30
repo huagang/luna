@@ -10,23 +10,11 @@ var objdata = {
         "lng": "116.355246"
     },
     destPosition: {
-
     }
 };
 
-
-String.prototype.format = function () {
-    var s = this,
-        i = arguments.length;
-
-    while (i--) {
-        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
-    }
-    return s;
-};
 
 $(document).ready(function () {
-
     function init() {
         var w = $(".app-wrap");
         var m = w.width();
@@ -37,7 +25,6 @@ $(document).ready(function () {
             content: "width=375,initial-scale=" + o + ",user-scalable=no"
         });
     }
-
     var iftab = false,
         iflongpage = false;
     if (pageData.data instanceof Array && pageData.data.length > 0) {
@@ -70,6 +57,7 @@ $(document).ready(function () {
     });
 
     $('body').on('touchmove', function (event) {
+        // 判断能不能滑动
         var canscroll = $(event.target).parents(".canscroll");
         if (canscroll.length > 0) {
 
@@ -79,10 +67,12 @@ $(document).ready(function () {
     });
 
     $('.welcome').on('touchstart', function (event) {
+        //欢迎页的触摸事件
         event.preventDefault();
     });
 
     $(".app-wrap").on("click", "[hrefurl]", function (e) {
+        //带链接的点击事件
         e.stopPropagation();
         if ($('.welcome').length > 0 && $('.welcome').css('display') != 'none') {
             //禁止欢迎页面的点击事件
@@ -112,6 +102,7 @@ $(document).ready(function () {
         $(this).toggleClass('playing');
     });
 
+    //导航点击事件
     $(".app-wrap").on("click", ".navimg", function (e) {
         //获取地理位置和导航等信息
         // var myLongitude;
@@ -152,7 +143,7 @@ $(document).ready(function () {
             'address': $(this).attr('address') || ''
         };
         showNav(detailData);
-    };
+    }
 
     // 弹框视频弹出效果  
     $(".app-wrap").on("click", ".btn-playVideo", function (e) {
@@ -186,7 +177,7 @@ $(document).ready(function () {
         var arrPageDatas = pageData.data || [],
             curPageGroup = {};
 
-
+        //判断是不是
         if (location.href.match(/\?disableWelcome=true/)) {
             if (arrPageDatas.length > 0 && arrPageDatas[0].page_code == 'welcome') {
                 // 过滤welcome页面
@@ -194,14 +185,19 @@ $(document).ready(function () {
             }
         }
 
+        /**
+         * 对不同页面进行渲染
+         */
         for (var i = 0; i < arrPageDatas.length; i++) {
             var item = arrPageDatas[i],
-                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '';
+                pageHeight = item.page_type == "2" ? 'height:' + item.page_height + 'px;' : '',
+                pageTime = item.page_time ? item.page_time * 1000 : 4000;
             if (item.page_type == "2") {
+                //如果是长页面
                 $("body").addClass("canscroll");
             }
-            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"><i class="icon icon-goback goback"></i></div>');
-            console.log(item);
+            $comGroup = $('<div class="component-group ' + item.page_code + '" style="' + pageHeight + '"  data-pagetime="' + pageTime + '"><i class="icon icon-goback goback"></i></div>');
+
             if (document.querySelector('.component-group')) {
                 $comGroup.css('opacity', 0);
             }
@@ -213,8 +209,6 @@ $(document).ready(function () {
                 componentArr.push(item.page_content[key]);
             }
             componentArr.sort(Util.arraySortBy('timestamp'));
-
-
 
             for (var n in componentArr) {
                 var value = componentArr[n];
@@ -234,6 +228,10 @@ $(document).ready(function () {
                     case 'img':
                         var img = new Img(value);
                         componentHtml = img.build();
+                        break;
+                    case 'imgList':
+                        var imgList = new ImgList(value);
+                        componentHtml = imgList.build();
                         break;
                     case 'pano':
                         var pano = new Pano(value);
@@ -260,46 +258,45 @@ $(document).ready(function () {
             }
         }
     }
-
-
     //初始化 欢迎页的视差效果
     var paraScene = [];
     $('.paraScene').each(function (n, item) {
         paraScene[n] = new Parallax(item);
     });
-    // var scene = document.querySelector('.scene');
-    // var parallax = new Parallax(scene);
-    // $('.scene').find('.img-wraper').addClass('go-right');
-    //设置首页滑动到第一页
+    //设置背景页滑动
+    setBgAnimation(3000, 0);
 
     if ($('.welcome').length > 0) {
 
-        //修改history 中的内容，来解决goback 中的问题
-
+        var pageTime = $('.welcome').data('pagetime');
 
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
             initPanoBg(welcomePanoBg);
         }
-        setTimeout(function () {
-            // window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
 
+        setTimeout(function () {
+            //修改history 中的内容，来解决goback 中的问题
+            window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
+            var animaCanvas = $('.anima-canvas');
+            $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
+                if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
+                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
+                    });
+                }
             });
             $('.welcome').animate({ opacity: 0 }, 3000, function () {
                 $('.welcome').css('display', 'none');
                 // parallax.js 会持续运行影响性能 如果遇到性能问题,可以将下面注释掉的代码解除注释
-
-                //$('.welcome').remove();
-                // delete paraScene;
             });
+
             var panoBg = $('.welcome').next('.component-group').find('.panoBg')[0];
             if (panoBg) {
                 initPanoBg(panoBg);
             }
-        }, 4000);
+
+        }, pageTime);
     } else {
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
@@ -373,10 +370,7 @@ $(document).ready(function () {
             this.html.attr("id", this.value._id);
             //this.html.attr("name_value", this.value.name);
             //this.html.attr("default_value",this.value.default_value);
-            this.html.css("background-color", this.value.bgc);
-            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
-                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
-            }
+
             this.html.children("div").children().attr("style", this.value.style_other);
         };
 
@@ -385,23 +379,18 @@ $(document).ready(function () {
             if (typeof (this.value.action) != "undefined") {
                 var link, value = this.value.action.href.value;
                 switch (this.value.action.href.type) {
-
                     case "inner":
                         link = host + "/app/" + pageData.data[0].app_id + "/page/" + value;
                         break;
-
                     case 'outer':
                         link = value;
                         break;
-
                     case 'email':
                         link = 'mailto:' + value;
                         break;
-
                     case 'phone':
                         link = 'tel:' + value;
                         break;
-
                     case 'return':
                         link = 'return';
                         break;
@@ -434,32 +423,39 @@ $(document).ready(function () {
         BaseComponent.call(this);
 
         this.setCanvasBg = function () {
-            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" data-gravity="'
-                + this.value.gravity + '"></div>');
+            this.html.children("div").append('<div class="canvas" style="width:100%;height:100%;" ></div>');
+            this.html.css("background-color", this.value.bgc);
+            if (typeof (this.value.bgimg) != "undefined" && this.value.bgimg != "") {
+                this.html.css("background-image", 'url(' + this.value.bgimg + ')');
+            }
         };
 
         this.setPanoBg = function () {
             this.html.children("div").append('<div class="panoBg" style="width:100%;height:100%;pointer-events:none;" data-panoid="'
-                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-heading="' + this.value.pano.heading
+                + this.value.panoId + '" data-gravity="' + this.value.gravity + '" data-autoplay="' + (this.value.panoAnimaType && this.value.panoAnimaType.id == 'autoplay' ? 'true' : 'false') + '" data-heading="' + this.value.pano.heading
                 + '" data-pitch="' + this.value.pano.pitch + '" data-roll="' + this.value.pano.roll + '"></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
         };
 
         this.setParaBg = function () {
             var $scene = $('<ul class="paraScene" data-scalar-x="6" data-scalar-y="0"></ul>');
             $scene.append('<li class="layer" data-depth="1.00"><div class="img-wraper" style="background:url(' + this.value.bgimg + ');background-size:100% 100%"></li>');
-            // $scene.append('<li class="layer" data-depth="1.00"><div class="img-wrapeÎr"><img src="' + this.value.bgimg + '"></div></li>');
             this.html.children("div").append($scene);
-        }
+        };
+        this.setAnimaBg = function () {
+            this.html.children("div").append('<div class="anima-canvas-wrapper" > <div  class="anima-canvas" style=" background:url(' + (this.value.bgimg || '') + ') no-repeat;background-size:100% 100%;"></div></div>');
+            // this.html.attr('data-animaType', this.value.bgAnimaType.id);
+        };
 
         this.build = function () {
-
-            //this.setPosition();
-            // Canvas.prototype.setPosition.call();
+            var bgAnimaType = this.value.bgAnimaType || { id: 'none', name: '无动画' };//图片背景
 
             if (this.value.panoId) {
                 this.setPanoBg.call(this);
-            } else if (this.value.gravity && !this.value.panoId) {
+            } else if (!this.value.panoId && bgAnimaType.id == "gravity") {
                 this.setParaBg.call(this);
+            } else if (!this.value.panoId && bgAnimaType.id == "rtol") {
+                this.setAnimaBg.call(this);
             } else {
                 this.setCanvasBg.call(this);
             }
@@ -519,6 +515,130 @@ $(document).ready(function () {
             this.setAction();
 
             return this.html;
+        };
+    }
+
+    /**
+     * 图集组件
+     * 
+     * @param {any} data
+     */
+    function ImgList(data) {
+        this.value = data;
+
+        /**
+         * 获取文章列表
+         */
+        this.getArticleList = function (data, successCallback) {
+            if (data.businessId && data.column) {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: Util.strFormat(Inter.getApiUrl().getArticleListByBidAndColumn.url, [data.businessId, data.column.id]),
+                    async: false,
+                    success: function (res) {
+                        if (res.code == "0") {
+                            successCallback(res);
+                        }
+                    },
+                    error: function (res) {
+                        alert('保存出现问题');
+                    }
+                });
+            } else {
+                console.log('文章数据有问题');
+            }
+        };
+        /**
+         * 获取POI列表
+         */
+        this.getPoiList = function (data, successCallback) {
+            if (data.businessId && data.firstPoi) {
+                var url = '';
+                if (data.poiType && data.poiType.id) {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.poiType.id]);
+                } else {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [data.businessId, data.firstPoi.id]);
+                }
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: url,
+                    async: false,
+                    success: function (res) {
+                        if (res.code == "0") {
+                            successCallback(res);
+                        }
+                    },
+                    error: function (res) {
+                        alert('保存出现问题');
+                    }
+                });
+                console.log(data);
+            } else {
+
+            }
+        };
+
+
+        BaseComponent.call(this);
+        this.build = function () {
+            var that = this;
+            this.setPosition();
+            this.setMoreInfo();
+            this.setAction();
+            that.html.css('width', '100%');
+            that.html.css('height', '100%');
+            if (this.value.content.dataType.id == "1") {
+                this.getArticleList(this.value.content, function (res) {
+                    var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
+                    for (var i = 0; i < res.data.length; i++) {
+                        arrUlHtml.push('<li class="imglist-li-wrapper">');
+                        arrUlHtml.push(' <a href="' + res.data[i].url + '">');
+                        arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + res.data[i].abstract_pic + ') no-repeat;background-size:100% 100%;">');
+                        arrUlHtml.push('<div class="imglist-filter"></div>');
+                        arrUlHtml.push('<div class="imglist-title-wrapper">');
+                        arrUlHtml.push('<div class="imglist-title">' + res.data[i].title + '</div>');
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</a>');
+                        arrUlHtml.push('</li>');
+                    }
+                    arrUlHtml.push('</ul>');
+                    that.html.children("div").append(arrUlHtml.join(''));
+                });
+            } else {
+                this.getPoiList(this.value.content, function (res) {
+                    console.log(that.value);
+                    var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
+                    var arrdata = res.data[that.value.content.poiLang.id].pois;
+                    var poiPanoUrl = {
+                        1: Inter.getApiUrl().singlePano,
+                        2: Inter.getApiUrl().multiplyPano,
+                        3: Inter.getApiUrl().customPano,
+                    };
+                    for (var i = 0; i < arrdata.length; i++) {
+                        arrUlHtml.push('<li class="imglist-poi-wrapper">');
+                        arrUlHtml.push('<a href="' + (arrdata[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[arrdata[i].panorama.panorama_type_id], [arrdata[i].panorama.panorama_id]) : "javascript:;") + '">');
+                        arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + arrdata[i].thumbnail + ') no-repeat;background-size:100% 100%;">');
+                        arrUlHtml.push('<div class="imglist-filter"></div>');
+                        arrUlHtml.push('<div class="imglist-title-wrapper">');
+                        arrUlHtml.push('<div class="imglist-title">' + arrdata[i].poi_name + '</div>');
+                        if (arrdata[i].panorama.panorama_type_id) {
+                            arrUlHtml.push('<div class="imglist-subtitle">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</div>');
+                        }
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</div>');
+                        arrUlHtml.push('</a>');
+                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</a>');
+                        arrUlHtml.push('</li>');
+                    }
+                    arrUlHtml.push('</ul>');
+                    that.html.children("div").append(arrUlHtml.join(''));
+                });
+            }
+            return that.html;
+
         };
     }
 
@@ -775,10 +895,6 @@ $(document).ready(function () {
                 }
 
             });
-
-
-
-
             that.html.on('click', '.icon-video', function (event) {
                 var radio = that.html.find(".icon-radio");
                 if (radio.hasClass('icon-radio-on')) {
@@ -817,76 +933,109 @@ $(document).ready(function () {
         function fetchSingleData(item, index) {
             switch (item.type) {
                 case 'singlePoi':
-                    $.ajax({
-                        url: host + '/servicepoi.do?method=getPoiById',
-                        type: 'GET',
-                        data: { poi_id: item.firstPoiId, lang: 'zh' },
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data.zh;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data.zh;
+                    if (item.singlePoiId) {
+                        var poiLangId = item.poiLang.id || 'zh';
+                        $.ajax({
+                            url: host + '/servicepoi.do?method=getPoiById',
+                            type: 'GET',
+                            data: { poi_id: item.singlePoiId },
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data[poiLangId];
+                                        that.updateContent(poiLangId);
+                                    } else {
+                                        that.data[index] = data.data[poiLangId];
+                                    }
                                 }
-
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = null;
+                            that.updateContent(poiLangId);
+                        } else {
+                            that.data[index] = null;
                         }
-                    });
+                    }
                     break;
                 case 'singleArticle':
-                    $.ajax({
-                        url: [host, '/article/data/', item.articleId].join(''),
-                        type: 'GET',
-                        success: function (data) {
-                            if (data.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = data.data;
+                    if (item.articleId) {
+                        $.ajax({
+                            url: [host, '/article/data/', item.articleId].join(''),
+                            type: 'GET',
+                            success: function (data) {
+                                if (data.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data;
+                                    }
                                 }
-                            }
 
+                            }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.updateContent();
+                        } else {
+                            that.data[index] = [];
                         }
-                    });
+                    }
                     break;
                 case 'poiList':
+                    var poiLangId = item.poiLang.id || 'zh', url;
+                    if (item.firstPoiId && item.poiTypeId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [window.business_id, item.firstPoiId, item.poiTypeId]);
+                    } else if (item.firstPoiId) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
+                    } else {
+                        that.data[index] = { pois: [] };
+                        that.updateContent(poiLangId);
+                        return;
+                    }
                     $.ajax({
-                        url: host + '/servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId',
+                        url: url,
                         type: 'GET',
-                        data: {
-                            business_id: window.business_id,
-                            poi_id: item.firstPoiId,
-                            category_id: item.poiTypeId
-                        },
+
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data.zh || data.data.en;
-                                    that.updateContent();
+                                    that.data[index] = data.data[poiLangId];
+                                    that.updateContent(poiLangId);
                                 } else {
-                                    that.data[index] = data.data.zh || data.data.en;
+                                    that.data[index] = data.data[poiLangId];
                                 }
                             }
                         },
                     });
                     break;
                 case 'articleList':
-                    $.ajax({
-                        url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
-                        type: 'GET',
-                        success: function (res) {
-                            if (res.code == '0') {
-                                if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = res.data;
-                                    that.updateContent();
-                                } else {
-                                    that.data[index] = res.data;
+                    if (item.columnId) {
+                        $.ajax({
+                            url: [host, '/article/businessId/', window.business_id, '/columnIds/', item.columnId].join(''),
+                            type: 'GET',
+                            success: function (res) {
+                                if (res.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = res.data;
+                                        that.updateContent();
+                                    } else {
+                                        that.data[index] = res.data;
+                                    }
                                 }
                             }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.updateContent();
+                        } else {
+                            that.data[index] = [];
                         }
-                    });
+                    }
             }
 
         }
@@ -937,8 +1086,13 @@ $(document).ready(function () {
 
             return html;
         }
-
-        function updateContent() {
+        /**
+         * 
+         * 
+         * @param {any} poiLangId
+         */
+        function updateContent(poiLangId) {
+            poiLangId = poiLangId || 'zh';
             var data = that.data[that.menuIndex];
             var html = '', toolbar = '';
             var type = that.value.content.tabList[that.menuIndex].type,
@@ -947,6 +1101,10 @@ $(document).ready(function () {
             that.menuType = type;
             switch (type) {
                 case 'singlePoi':
+                    if (!data || data.length == 0) {
+                        html = '<div id="detail-title-wrap"><div class="detail-more">'+ lunaConfig.poiAction.more[poiLangId] +'</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     html =
@@ -967,6 +1125,10 @@ $(document).ready(function () {
                         + '</div>';
                     break;
                 case 'singleArticle':
+                    if (!data || data.length == 0) {
+                        html = '<div id="articleList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var videoClass = data.video ? '' : 'hidden',
                         audioClass = data.audio ? '' : 'hidden';
                     var title = data.title || '';
@@ -987,6 +1149,10 @@ $(document).ready(function () {
                     html = '<div id="article" class="content-details canscroll clearboth">' + (data.content) + '</div>';
                     break;
                 case 'poiList':
+                    if (!data || data.pois.length == 0) {
+                        html = '<div id="poiList"><div class="detail-more">更多内容，敬请期待…</div></div>';
+                        break;
+                    }
                     var typeInfo = {
                         '2': 'tour', //旅游
                         '3': 'hotel', //住宿
@@ -1089,7 +1255,7 @@ $(document).ready(function () {
                             var poiList = '', panoTip, panoLink;
                             data.pois.forEach(function (item, index) {
                                 if (item.panorama.panorama_id) {
-                                    panoTip = '点击看全景';
+                                    panoTip = lunaConfig.poiAction.pano[poiLangId];
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
                                             panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
@@ -1127,8 +1293,8 @@ $(document).ready(function () {
                                     + '<br><span class="profile">' + panoTip + '</span>'
                                     + '</p>'
                                     + '</a>'
-                                    + '<a target="_blank" class="poi-detail" href="' + host + '/poi/' + item.poi_id + '">'
-                                    + '点击查看详情'
+                                    + '<a target="_blank" class="poi-detail" href="' + item.preview_url + '">'
+                                    + lunaConfig.poiAction.detail[poiLangId]
                                     + '</a>'
                                     + '</div>';
 
@@ -1165,10 +1331,6 @@ $(document).ready(function () {
                     });
                     html = '<div id="articleList">' + articleList + '<div class="detail-more">更多内容，敬请期待…</div></div>';
                     break;
-
-
-
-
             }
 
             if (that.content.html()) {
@@ -1221,13 +1383,14 @@ function initPanoBg(panoBg) {
     }
     var pano = {},
         panoId = panoBg.dataset.panoid,
-        gravity = panoBg.dataset.gravity;
+        gravity = panoBg.dataset.gravity,
+        autoplay = panoBg.dataset.autoplay;
     pano = new com.vbpano.Panorama(panoBg);
     pano.setPanoId(panoId); //panoId
     pano.setHeading(parseInt(panoBg.dataset.heading || 180)); //左右
     pano.setPitch(parseInt(panoBg.dataset.pitch || 0)); //俯仰角
     pano.setRoll(parseInt(panoBg.dataset.roll || 0)); //未知
-    pano.setAutoplayEnable(false); //自动播放
+    pano.setAutoplayEnable(eval(autoplay)); //自动播放
     pano.setGravityEnable(gravity == "true"); //重力感应
 }
 
@@ -1346,5 +1509,17 @@ function is_weixn() {
         return true;
     } else {
         return false;
+    }
+}
+
+/**
+ * 设置背景的动画
+ */
+function setBgAnimation(time, delayTime) {
+    time = time ? time * 0.618 : 1000;
+    delayTime = delayTime || 0;
+    if ($('.anima-canvas').length > 0) {
+        $('.anima-canvas').eq(0).css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {
+        });
     }
 }

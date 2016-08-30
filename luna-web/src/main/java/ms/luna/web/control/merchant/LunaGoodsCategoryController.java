@@ -19,7 +19,7 @@ public class LunaGoodsCategoryController extends BasicController {
     @Autowired
     private LunaGoodsCategoryService lunaGoodsCategoryService;
 
-    private JSONObject getJSONCategories(Integer offset,Integer limit){
+    private JSONObject getJSONCategories(Integer offset, Integer limit) {
         JSONObject toReturn = null;
         if (offset == null && limit == null) {
             toReturn = lunaGoodsCategoryService.getCategories();
@@ -43,20 +43,29 @@ public class LunaGoodsCategoryController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/get")
     @ResponseBody
     public JSONObject getCategories(@RequestParam(required = false) Integer offset,
-                             @RequestParam(required = false) Integer limit) {
-        JSONObject toReturn = getJSONCategories(offset,limit);
+                                    @RequestParam(required = false) Integer limit) {
+        JSONObject toReturn = getJSONCategories(offset, limit);
         return toReturn;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject searchCategories(@RequestParam(required = false) Integer offset,
-                                    @RequestParam(required = false) Integer limit,
-                                    @RequestParam(required = true) String searchWord) {
+                                       @RequestParam(required = false) Integer limit,
+                                       @RequestParam(required = true) String searchWord) {
         JSONObject inData = new JSONObject();
-        inData.put("searchWord",searchWord);
-        inData.put("offset",offset);
-        inData.put("limit",limit);
+        inData.put("searchWord", searchWord);
+        inData.put("offset", offset);
+        inData.put("limit", limit);
+        JSONObject toReturn = lunaGoodsCategoryService.searchCategories(inData);
+        return toReturn;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/searchRoot")
+    @ResponseBody
+    public JSONObject searchRootCategories(@RequestParam(required = true) String searchWord) {
+        JSONObject inData = new JSONObject();
+        inData.put("searchWord", searchWord);
         JSONObject toReturn = lunaGoodsCategoryService.searchCategories(inData);
         return toReturn;
     }

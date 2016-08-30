@@ -25,6 +25,7 @@ public class MsArticleTable {
     public static final String FIELD_REF_ID = "ref_id";
     public static final String FIELD_CREATE_TIME = "regist_hhmmss";
     public static final String FIELD_UPDATE_TIME = "up_hhmmss";
+    public static final String FIELD_PUBLISH_TIME = "publish_time";
     public static final String FIELD_STATUS = "status";
 
     public static final String FIELD_COLUMN_NAME = "column_name";

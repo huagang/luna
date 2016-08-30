@@ -115,7 +115,7 @@
 
                         <div class="name-filter">
                             <label class="">搜索筛选</label>
-                            <input text="text" class="txt" id="keyWord" placeholder="输入POI名称进行搜索" />
+                            <input text="text" class="txt" id="keyWord" ng-model="editor.filterData.poiName" placeholder="输入POI名称进行搜索" />
                             <button type="button" ng-click='editor.handleSearch()' class="btn-search">搜索</button>
                         </div>
 

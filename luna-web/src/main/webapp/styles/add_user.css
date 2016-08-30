@@ -155,3 +155,9 @@
 .business-name:hover + .full-name{
     display: block;
 }
+
+.settings-auth {
+    vertical-align: top;
+    width: 490px;
+    height: 150px;
+}

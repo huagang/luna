@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_column.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
@@ -28,7 +29,7 @@
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
-<body ng-app="manageColumn" ng-controller="columnController as column">
+<body ng-app="manageColumn" ng-controller="columnController as column" ng-class="{'modal-open': column.newColumnShow || column.updateColumnShows}">
 <div class="container-fluid">
     <!--通用导航栏 start-->
     <jsp:include page="/templete/header.jsp"/>
@@ -61,7 +62,7 @@
 								>
 						        <thead>
 						            <tr>
-						                <th data-field="id" data-visible="false"></th>
+						                <th data-field="id" data-align="left">栏目ID</th>
                                     	<th data-field="name" data-align="left">栏目名称</th>
                                     	<th data-field="code" data-align="left">简称</th>
                                     	<th data-field="category_name" data-align="left">所属类别</th>
@@ -88,6 +89,7 @@
 <!--模态窗口 -->
 <div id="pop-overlay" class="ng-hide" ng-show="column.dialogBaseShow"></div>
 <!--新建业务 start-->
+<div class="mask ng-hide" ng-show="column.newColumnShow"></div>
 <div class="pop ng-hide" id="newColumnDialog" ng-show="column.newColumnShow">
     <div class="pop-title">
         <h4>新建栏目</h4>
@@ -124,7 +126,7 @@
 </div>
 <!--新建业务 end-->
 
-
+<div class="mask ng-hide" ng-show="column.updateColumnShow"></div>
 <div class="pop ng-hide" id="updateColumnDialog" ng-show="column.updateColumnShow">
     <div class="pop-title">
         <h4>更新栏目</h4>

@@ -28,7 +28,11 @@
     <dubbo:service interface="ms.luna.biz.sc.MenuService" ref="menuService"/>
     <dubbo:service interface="ms.luna.biz.sc.FarmPageService" ref="farmPageService"/>
     <dubbo:service interface="ms.luna.biz.sc.LunaGoodsCategoryService" ref="lunaGoodsCategoryService"/>
-	<dubbo:service interface="ms.luna.biz.sc.LunaAuthService" ref="lunaAuthService" />
-	<dubbo:service interface="ms.luna.biz.sc.ManageRouteService" ref="manageRouteService" />
+    <dubbo:service interface="ms.luna.biz.sc.LunaAuthService" ref="lunaAuthService"/>
+    <dubbo:service interface="ms.luna.biz.sc.ManageRouteService" ref="manageRouteService"/>
+    <dubbo:service interface="ms.luna.biz.sc.LunaTradeApplicationService" ref="lunaTradeApplicationService"/>
+    <dubbo:service interface="ms.luna.biz.sc.SMSService" ref="smsService"/>
+    <dubbo:service interface="ms.luna.biz.sc.EmailService" ref="emailService"/>
+    <dubbo:service interface="ms.luna.biz.sc.PicCodeService" ref="picCodeService"/>
 
 </beans>

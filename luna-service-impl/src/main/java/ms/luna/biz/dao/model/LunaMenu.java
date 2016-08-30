@@ -19,7 +19,6 @@ public class LunaMenu implements Serializable {
     @JSONField(name = LunaMenuTable.FIELD_URL)
     private String url;
     @JSONField(name = LunaMenuTable.FIELD_AUTH)
-
     private String auth;
 
     private Integer moduleId;

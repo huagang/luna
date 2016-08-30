@@ -96,7 +96,7 @@ public class AppApiController {
     // 根据category id获取show app
     @RequestMapping(method = RequestMethod.GET, value = "/category/app")
     @ResponseBody
-    public JSONObject getShowAppByCtgrId(
+    public JSONObject getShowAppByCategoryId(
             @RequestParam(required = false, value = "categoryIds") String categoryIds,
             @RequestParam(required = false, value = "types") String types,
             @RequestParam(required = false, value = "app_status", defaultValue = "1") Integer status,
@@ -112,7 +112,7 @@ public class AppApiController {
             param.put("app_status", status);
             param.put("offset", offset);
             param.put("limit", limit);
-            JSONObject result = farmPageService.getShowAppsByCtgrId(param);
+            JSONObject result = farmPageService.getShowAppByCategoryId(param);
             logger.debug(result.toString());
             return result;
         } catch (Exception e) {
