@@ -27,7 +27,11 @@ public class LunaTradeApplicationTable {
     public static final String FIELD_APP_STATUS = "appStatus";
     public static final String FIELD_MERCHANT_ID = "merchantId";
 
+
     public static final String FIELD_APP_CHECK_RESULT = "checkResult";
+
+    public static final int ACCOUNT_TYPE_PERSONAL = 0;
+    public static final int ACCOUNT_TYPE_COMPANY = 1;
 
     public static final int APP_STATUS_CHECKING = 0;
     public static final int APP_STATUS_OK = 1;

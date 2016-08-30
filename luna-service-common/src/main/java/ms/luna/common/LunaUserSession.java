@@ -1,5 +1,6 @@
 package ms.luna.common;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
 import ms.luna.biz.table.LunaUserRoleTable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -31,9 +33,8 @@ public class LunaUserSession implements Serializable {
     private int roleId;
     @JSONField(name = LunaUserRoleTable.FIELD_EXTRA)
     private Map<String, Object> extra;
-
-    @JSONField(name = "uri_set")
-    private Set<String> uriSet;
+    @JSONField(name = "menu_auth")
+    private Map<String, JSONObject> menuAuth;
 
     public String getEmail() {
         return email;
@@ -83,11 +84,12 @@ public class LunaUserSession implements Serializable {
         this.extra = extra;
     }
 
-    public Set<String> getUriSet() {
-        return uriSet;
+
+    public Map<String, JSONObject> getMenuAuth() {
+        return menuAuth;
     }
 
-    public void setUriSet(Set<String> uriSet) {
-        this.uriSet = uriSet;
+    public void setMenuAuth(Map<String, JSONObject> menuAuth) {
+        this.menuAuth = menuAuth;
     }
 }

@@ -6,12 +6,12 @@
 		<result column="app_name" property="appName" jdbcType="VARCHAR" />
 		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="app_addr" property="appAddr" jdbcType="VARCHAR" />
 		<result column="regist_hhmmss" property="registhhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
 		<result column="up_hhmmss" property="uphhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
 		<result column="owner" property="owner" jdbcType="VARCHAR" />
 		<result column="app_status" property="appStatus" jdbcType="INTEGER" />
 		<result column="business_id" property="businessId" jdbcType="INTEGER" />
-		<result column="business_name" property="businessName" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectShowAppWithFilter" resultMap="MsShowAppResult"
 		parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter">
@@ -20,13 +20,13 @@
 			a.app_name app_name,
 			a.app_code app_code,
 			a.type type,
+			a.app_addr app_addr,
 			a.regist_hhmmss regist_hhmmss,
 			a.up_hhmmss up_hhmmss,
 			a.owner owner,
 			a.app_status app_status,
-			a.business_id business_id,
-			b.business_name business_name
-		from ms_show_app a left join ms_business b on a.business_id = b.business_id
+			a.business_id business_id
+		from ms_show_app a
 		<dynamic prepend="where" >
 			<isNotEmpty prepend="and" property="keyword">
 				a.app_name like #keyword#

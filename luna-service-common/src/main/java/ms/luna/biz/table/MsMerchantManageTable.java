@@ -18,4 +18,6 @@ public class MsMerchantManageTable {
     public static final Integer TRADE_STATUS_SUCCESS = 2;
 
     public static final Integer TRADE_STATUS_FAILED = 3;
+
+    public static final Integer TRADE_STATUE_ON = 4;
 }

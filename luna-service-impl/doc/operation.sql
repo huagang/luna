@@ -94,6 +94,26 @@ UPDATE `luna_menu` SET `display_order`='3' WHERE `id`='22';
 
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
 
+alter table ms_column add column business_id int(11) not null default 0 comment '业务id' after code;
+alter table ms_column add UNIQUE (business_id, name);
+alter table ms_column add UNIQUE (business_id, code);
+alter table ms_column drop INDEX name;
+alter table ms_column drop index code;
+alter table ms_column add index(name);
+
+CREATE TABLE `luna_bank_branch` (
+  `bnkcode` VARCHAR(12) NOT NULL COMMENT '银行支行编号',
+  `clscode` VARCHAR(3) NOT NULL COMMENT '银行总行编号',
+  `citycode` VARCHAR(4) NOT NULL COMMENT '城市编号',
+  `lname` VARCHAR(60) NOT NULL COMMENT '银行支行名称',
+  PRIMARY KEY (`bnkcode`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行支行表';
+
+CREATE TABLE luna_bank` (
+  `bankCode` VARCHAR(3) NOT NULL COMMENT '银行总行编号',
+  `bankName` VARCHAR(45) NOT NULL COMMENT '银行总行名称',
+  PRIMARY KEY (`bankCode`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行总行表';;
 
 
 

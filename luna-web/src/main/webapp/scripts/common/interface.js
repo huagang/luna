@@ -542,13 +542,21 @@ var Inter = function () {
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
                 // 线路管理
-                createRoute: { url: context + '/content/route', type: 'POST' }, //创建路线
-                editRoute: { url: context + '/content/route/{0}', type: 'PUT' }, //编辑路线
-                getRouteList: { url: context + '/content/route/search', type: 'GET' },  //获取线路列表
-                delRoute: { url: context + '/content/route/{0}', type: 'DELETE' }, // 删除线路
-                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}', type: 'GET' }, // 检查线路名称是否合法
-                fetchRouteConfig: { url: context + '/content/route/configuration/{0}?data', type: 'GET' },
-                saveRouteConfig: { url: context + '/content/route/configuration/{0}', type: 'PUT' },
+                createRoute: { url:context + '/content/route', type: 'POST'}, //创建路线
+                editRoute: {url: context + '/content/route/{0}', type: 'PUT'}, //编辑路线
+                getRouteList: { url: context + '/content/route/search', type: 'GET'},  //获取线路列表
+                delRoute: {url: context + '/content/route/{0}', type: 'DELETE'}, // 删除线路
+                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}' , type: 'GET'}, // 检查线路名称是否合法
+                fetchRouteConfig:{url: context + '/content/route/configuration/{0}?data', type: 'GET'},
+                saveRouteConfig: {url: context + '/content/route/configuration/{0}', type: 'PUT'},
+
+                // 商品类目
+                fetchMerchantCat: {url: context + '/merchant/goodsCategory/get?offset={0}&limit={1}', type: 'GET'}, // 获取商品类目信息
+                createMerchantCat: {url: context + '/merchant/goodsCategory', type: 'POST'},  // 新建商品类目信息
+                saveMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'PUT'},  // 保存商品类目信息
+                deleteMerchantCat: {url: context + '/merchant/goodsCategory/{0}', type: 'DELETE'},  // 删除商品类目
+                searchMerchantCat: {url: context + '/merchant/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET'},
+                searchAllMerchatCat: {url: context + '/merchant/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET'},
 
                 //全景搜索
                 searchSinglePano: {

@@ -352,29 +352,25 @@ function getShareController(data) {
 		uploadImg: function (event, order) {
 			//上传图片功能以及预览功能
 			var tipSel = ['.share-item.order-', order, ' .fileupload-tip'].join('');
-			var file = event.target.files[0];
-			cropper.setFile(file, function(file) {
-				$(tipSel).html("上传中...");
-				cropper.close();
-				FileUploader.uploadMediaFile({
-					type: 'pic',
-					file: file,
-					resourceType: 'app',
-					success: function (data) {
-						var shareEle = $('.share-item.order-' + order);
-						shareEle.find('.file-uploader').addClass('hidden');
-						shareEle.find('.preview-container').removeClass('hidden');
-						shareEle.find('.preview-img').attr("src", data.data.access_url);
-						this.data[order].pic = data.data.access_url;
-						$(tipSel).html("设置分享图");
-						event.target.value = '';
+			$(tipSel).html("上传中...");
+			var file  = event.target.files[0];
 
-					}.bind(this),
-					error: function (data) {
-						$(tipSel).html("设置分享图");
-						showMessage(data.msg || '上传图片失败');
-						event.target.value = '';
-					}
+			FileUploader.uploadMediaFile({
+				type: 'pic',
+				file: file,
+				resourceType: 'app',
+				success: function (data) {
+					var shareEle = $('.share-item.order-' + order);
+					shareEle.find('.file-uploader').addClass('hidden');
+					shareEle.find('.preview-container').removeClass('hidden');
+					shareEle.find('.preview-img').attr("src", data.data.access_url);
+					this.data[order].pic = data.data.access_url;
+					$(tipSel).html("更换缩略图");
+				}.bind(this),
+				error: function (data) {
+					$(tipSel).html("更换缩略图");
+					showMessage(data.msg || '上传图片失败');
+				}
 
 				});
 			}.bind(this), function(){
