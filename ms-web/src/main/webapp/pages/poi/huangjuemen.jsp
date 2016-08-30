@@ -53,7 +53,7 @@
     <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
 <input id="shareInfoDes" type="hidden" name="" value="">
-
+<div id="fuck">${description}</div>
 <!-- BEGIN REFER LINK  -->
 <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
@@ -65,8 +65,8 @@
 <script type="text/javascript">
     var poiData = ${poiJson};
     var wechatOptions = {
-        title: ${title},
-        desc: ${description},
+        title: "${title.replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
+        desc: "${description.replaceAll("\\r", '').replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
         link: window.location.href,
         imgUrl:poiData.data.thumbnail,
         dest:{
@@ -74,7 +74,7 @@
             lng:poiData.data.lng,//经度
             name:poiData.data.long_title,//名字
             address:poiData.data.city+poiData.data.city.county, // 地址
-            debug:true,
+            debug:false,
         }
     };
 </script>
