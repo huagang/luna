@@ -25,8 +25,7 @@
 			a.owner owner,
 			a.app_status app_status,
 			a.business_id business_id,
-			b.business_name business_name
-		from ms_show_app a left join ms_business b on a.business_id = b.business_id
+		from ms_show_app a
 		<dynamic prepend="where" >
 			<isNotEmpty prepend="and" property="keyword">
 				a.app_name like #keyword#

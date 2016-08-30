@@ -77,32 +77,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			parameter.setMax(Integer.parseInt(max));
 			parameter.setMin(Integer.parseInt(min));
 		}
-
-		String uniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
-		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
-		if(lunaUserRole == null) {
-			logger.warn("user not found, unique_id: " + uniqueId);
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户不存在");
-		}
-		Map<String, Object> extra = lunaUserRole.getExtra();
-		String type = extra.get("type").toString();
-		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
-			// current user might not have business
-			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-			return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
-		}
-		List<Integer> businessIdList = (List<Integer>) extra.get("value");
-		if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
-
-		} else if(businessIdList.size() > 0){
-			parameter.setBusinessIds(businessIdList);
-			criteria.andBusinessIdIn(businessIdList);
-		} else {
-			logger.warn(String.format("no business for current user[%s], type[%s] ", uniqueId, type));
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "没有业务权限");
-		}
+		int businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+		parameter.setBusinessIds(Arrays.asList(businessId));
+		criteria.andBusinessIdEqualTo(businessId);
 		
-		JSONObject data = JSONObject.parseObject("{}");
+		JSONObject data = new JSONObject();
 		int total = 0;
 		try {
 			List<MsShowAppResult> results = msShowAppDAO.selectShowAppWithFilter(parameter);
@@ -110,7 +89,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 				JSONArray rows = new JSONArray();
 				String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 				for(MsShowAppResult result : results) {
-					JSONObject row = JSONObject.parseObject("{}");
+					JSONObject row = new JSONObject();
 					row.put(MsShowAppTable.FIELD_APP_ID, result.getAppId());
 					row.put(MsShowAppTable.FIELD_APP_NAME,result.getAppName());
 					row.put(MsShowAppTable.FIELD_APP_CODE, result.getAppCode());
@@ -122,7 +101,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 					row.put(MsShowAppTable.FIELD_OWNER, result.getOwner());
 					row.put(MsShowAppTable.FIELD_APP_STATUS, result.getAppStatus());
 					row.put(MsShowAppTable.FIELD_BUSINESS_ID, result.getBusinessId());
-					row.put(MsBusinessTable.FIELD_BUSINESS_NAME, result.getBusinessName() == null ? "" : result.getBusinessName());
 					rows.add(row);
 				}
 				data.put("rows", rows);
