@@ -6,12 +6,14 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ms.luna.model;
+package ms.luna.model.adapter;
+
+import ms.luna.model.SMSModel;
 
 /**
  * Created by SDLL18 on 16/8/30.
  */
-public interface MailSendAdapter {
+public interface SMSSendAdapter {
 
-    void sendMail(MailModel mailModel);
+    String sendSMS(SMSModel smsModel);
 }

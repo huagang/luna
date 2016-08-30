@@ -6,9 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ms.luna.model;
+package ms.luna.model.adapter;
 
 import ms.luna.biz.util.MailSender;
+import ms.luna.model.MailModel;
 
 /**
  * Created by SDLL18 on 16/8/30.

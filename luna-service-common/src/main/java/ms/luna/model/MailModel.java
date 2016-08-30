@@ -8,6 +8,9 @@
 
 package ms.luna.model;
 
+import ms.luna.model.adapter.DefaultMailSender;
+import ms.luna.model.adapter.MailSendAdapter;
+
 /**
  * Created by SDLL18 on 16/8/26.
  */
