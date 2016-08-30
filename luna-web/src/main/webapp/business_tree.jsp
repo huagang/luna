@@ -1,4 +1,4 @@
-<!--业务管理页面  author:Demi-->
+<!--poi关系配置页面  author:Demi-->
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -43,19 +43,26 @@
     <div class="content">
         <div class="inner-wrap">
             <div class="main-content">
-	            <div class="luna-tree">
-	             	<div class="business-title">数据应用业务:<span id="biz_name"></span></div>
-				    <ul>
-				        <li class="luna-tree-parent">
-				            <div class="item-name" href="#">
-				                <span class="item-title" id="business_name"></span><span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>
-				                <div class="item-opt-wrap">
-				                    <div class="item-opt addchild">添加子节点</div>
-				                </div>
-				            </div>
-				        </li>
-				    </ul>
-				</div>
+                <jsp:include page="/templete/menu.jsp"></jsp:include>
+                <div class="main">
+                    <div class="main-hd"><h3>POI数据关系配置</h3></div>
+                    <div class="luna-tree hidden">
+                        <ul>
+                            <li class="luna-tree-parent">
+                                <div class="item-name" href="#">
+                                    <span class="item-title" id="business_name"></span><span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>
+                                    <div class="item-opt-wrap">
+                                        <div class="item-opt addchild">添加子节点</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="guidance hidden">
+                        <button class="button button-add-child">+添加关系树节点</button> </br>
+                        <span>首次进入POI关系树, 点击"添加关系树节点按钮",为业务配置POI的数据关系吧</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

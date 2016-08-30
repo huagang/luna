@@ -180,7 +180,18 @@ $(document).ready(function(){
         parents_poi_li={},
     	ps=[],
         ps_li=[];
-    
+
+    $(".button-add-child").on('click', function(){
+        searchPois();
+        _this_poi = $('.luna-tree-parent > .item-name > .item-opt-wrap > .addchild');
+        parents_poi = $('.luna-tree-parent').parent();
+        parents_poi_li = $('.luna-tree-parent');
+        ps=[];
+        typeId = undefined;
+        var $pop_window = $("#childPoi");
+        popWindow($pop_window);
+    });
+
     $(".luna-tree").on('click','.item-opt.addchild',function(){
     	// 点击添加子节点时，需要加载默认的poi列表数据
     	searchPois();
@@ -312,11 +323,7 @@ $(document).ready(function(){
     	        var newchild=$.extend(true, {}, PoiDataTemplate);
     	        newchild._id=chk_value[c][0];
                 current_data.c_list.push(newchild);
-    	        // if(_this.attr("item_id") && _this.attr("item_id") !=""){
-    	        //     current_data.c_list[_this.attr("item_id")].c_list[chk_value[c][0]]=newchild;
-    	        // }else{
-    	        //     current_data.c_list[chk_value[c][0]]=newchild;
-    	        // }
+
 
     	        if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
 	    	        var newDefChild=$.extend(true, {}, poiDefTemplate);
@@ -338,7 +345,13 @@ $(document).ready(function(){
      * 初始化业务树
      */
     function initBusinessTreeData(){
-    	var business_id = $('#business_id').val();
+        var business = localStorage.getItem('business'),business_id ;
+        if(business){
+            business_id = JSON.parse(business).id ;
+        } else{
+            $.alert('请您选择业务');
+            return;
+        }
         $.ajax({
             type: "GET",
             url: Util.strFormat(Inter.getApiUrl().bizRelationBizTreeView.url,[business_id]),
@@ -353,7 +366,13 @@ $(document).ready(function(){
                     if(typeof(treeDate.c_list.length)=="undefined"){
                         treeDate=formateCList(treeDate);
                     }
-            		showTreeData();
+
+                    if(Object.keys(poiDef).length > 0){
+                        showTreeData();
+                    } else{
+                        showGuidance();
+                    }
+
             	} else {
             		 $.alert('请求结果出错');
             	}
@@ -364,8 +383,17 @@ $(document).ready(function(){
         });
     }
 
+    function showGuidance(){
+        $('.guidance').removeClass('hidden');
+        $('.luna-tree').addClass('hidden');
+
+    }
 
     function showTreeData(){
+
+        $('.luna-tree').removeClass('hidden');
+        $('.guidance').addClass('hidden');
+
 
     	lunaTreeShowData=formateTreeData(treeDate);
     	// 设定业务名称
@@ -374,7 +402,6 @@ $(document).ready(function(){
 
         $(".luna-tree-parent").children("ul").remove();
         $(".luna-tree-parent").append(initTreeHtml(lunaTreeShowData));
-        $(".luna-tree-parent").css("width",deep*240+"px");
         deep=1;
     }
 
