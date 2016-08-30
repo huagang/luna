@@ -38,17 +38,17 @@ function MerchantType($scope, $http){
     // 事件 新建,编辑商品类目时点击select时显示或隐藏选项
     vm.optionsToggle = optionsToggle;
 
+    // 事件 新建,编辑商品类目时点击其他地方隐藏选项
+    vm.hideOptions = hideOptions;
+
     // 事件 新建,编辑弹出框名称改变
     vm.handleNameChange = handleNameChange;
 
     // 事件 新建,编辑弹出框简称改变
     vm.handleAbbrChange = handleAbbrChange;
 
-    // 事件&请求 添加类目
-    vm.requestNew = requestNew;
-
-    // 事件&请求 编辑类目
-    vm.requestEdit = requestEdit;
+    // 事件 选中新建,编辑弹出框中的父级类目
+    vm.handleOptionClick = handleOptionClick;
 
     // 事件&请求 删除类目
     vm.requestDelete = requestDelete;
@@ -84,15 +84,44 @@ function MerchantType($scope, $http){
         angular.element('.selectize-input input').on('keydown', vm.clearTimeOut);
     }
 
-    function changeState(state, id){
+    function changeState(state, id, obj){
         vm.state = state;
         switch(state) {
             case 'new':
-                vm.opData = {};
+                vm.opData = {
+                    openList: [],
+                    options : vm.categoryData
+
+                };
                 break;
             case 'edit':
+                var id = obj.id, depth = -1, obj;
+                var options = vm.categoryData.filter(function(item){
+                    if(item.id === id){
+                        depth = item.depth;
+                        obj = item;
+                        return false;
+                    } else if(depth > -1 && item.depth > depth){
+                        return false;
+                    } else if(depth > -1 && item.depth <= depth){
+                        depth = undefined;
+                    }
+                    return true;
+                });
+
+                vm.opData = {
+                    id: obj.id,
+                    name: obj.name,
+                    abbreviation: obj.abbreviation,
+                    parentId: obj.parent || obj.id,
+                    parentName: obj.parentName,
+                    options: options,
+                    openList: []
+                };
+                vm.checkValid();
                 break;
             case 'delete':
+                vm.deleteId  = id;
                 break;
         }
     }
@@ -110,6 +139,7 @@ function MerchantType($scope, $http){
                 i = parent.child.length -1;
                 for(; i > -1; i -= 1){
                     parent.child[i].parent = parent.parent || parent.id;
+                    parent.child[i].parentName = parent.name || '';
                     parent.child[i].depth = parent.depth + 1;
                     data.unshift(parent.child[i]);
                 }
@@ -119,23 +149,33 @@ function MerchantType($scope, $http){
 
     // 操作 检查添加或者编辑的商品类目信息是否符合要求
     function checkValid(){
-
+        if(vm.opData.name && vm.opData.abbreviation && !vm.opData.abbrError && !vm.opData.nameError){
+            vm.opData.valid = true;
+        } else{
+            vm.opData.valid = false;
+        }
     }
 
     function handleNameChange(){
         if(vm.opData.name.length > 32){
             vm.opData.nameError = '名称超过最大字符限制';
+            vm.opData.name = vm.opData.name.substr(0,32);
         } else if(vm.opData.nameError){
             vm.opData.nameError = '';
         }
+        vm.checkValid();
     }
 
     function handleAbbrChange(){
         if(vm.opData.abbreviation.length > 16){
             vm.opData.abbrError = '英文简称超过最大字符限制';
+            vm.opData.abbreviation = vm.opData.abbreviation.substr(0,16);
+        } else if(vm.opData.abbreviation && ! /[a-zA-Z_-]+/.test(vm.opData.abbreviation)){
+            vm.opData.abbrError = '英文简称只能包含英文字母,下划线和中划线';
         } else if(vm.opData.abbrError){
             vm.opData.abbrError = '';
         }
+        vm.checkValid();
     }
 
     function showMessage(msg){
@@ -186,28 +226,93 @@ function MerchantType($scope, $http){
         }
     }
 
-    // 事件&请求 添加类目
-    function requestNew(){
-
-    }
-
-    // 事件&请求 编辑类目
-    function requestEdit(){
-
-    }
-
-    // 事件&请求 删除类目
-    function requestDelete(){
-
-    }
-
     // 请求 保存数据
     function saveData(){
+        if(! vm.opData.valid){
+            return;
+        }
+        var url = vm.opData.id ? vm.apiUrls.saveMerchantCat.url.format(vm.opData.id) : vm.apiUrls.createMerchantCat.url,
+            type = vm.opData.id ? vm.apiUrls.saveMerchantCat.type: vm.apiUrls.createMerchantCat.type
+        var data = {
+            name: vm.opData.name,
+            abbreviation: vm.opData.abbreviation,
+            depth: vm.opData.parentDepth || 0
+        };
+        var root = vm.opData.parentId || vm.opData.id;
+        if(root){
+            data.root = root;
+        };
 
+        if(vm.opData.id){
+            var depth = -1;
+            var children = vm.categoryData.reduce(function(memo,item){
+                if(item.id === vm.opData.id){
+                    depth = item.depth;
+                } else if(depth > -1 && depth < item.depth){
+                    memo.push({
+                        id: item.id,
+                        depth: item.depth  - depth + data.depth
+                    });
+                } else if(depth > -1 && depth >= item.depth){
+                    depth = -1
+                }
+                return memo;
+            },[]);
+
+            data.children = JSON.stringify(children);
+        }
+
+        $http({
+            url: url,
+            method: type,
+            data: data
+        }).then(function(res){
+            if(res.data.code === '0'){
+                vm.changeState('init');
+                vm.fetchMerchatTypeData();
+            } else{
+                vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+            }
+        }, function(res){
+            vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+        });
+    }
+
+    function requestDelete(){
+        if(vm.deleteId){
+            $http({
+                url: vm.apiUrls.deleteMerchantCat.url.format(vm.deleteId),
+                method:  vm.apiUrls.deleteMerchantCat.type
+            }).then(function(res){
+                if(res.data.code === '0'){
+                    vm.changeState('init');
+                    vm.fetchMerchatTypeData();
+                } else{
+                    vm.showMessage(res.data.msg || '删除失败');
+                }
+            }, function(res){
+                vm.showMessage(res.data.msg || '删除失败');
+            })
+        }
     }
 
     function optionsToggle(){
         vm.opData.showSelectList = !vm.opData.showSelectList;
     }
 
+    function hideOptions(){
+        if(event.target.className.indexOf('select') === -1 && ! $(event.target).parents('.select-parent')[0]){
+            vm.opData.showSelectList = false;
+        }
+
+    }
+
+    function handleOptionClick(id, name, depth){
+        if(event.target.className.indexOf('icon') === -1){
+            vm.opData.parentId = id;
+            vm.opData.parentName = name;
+            vm.opData.parentDepth = depth;
+            vm.opData.showSelectList = false;
+        }
+    }
 }

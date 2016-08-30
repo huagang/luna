@@ -36,7 +36,7 @@ public class LunaTradeApplicationController {
     public ModelAndView init() {
         ModelAndView modelAndView = new ModelAndView();
         //TODO 指定返回页面jsp
-        modelAndView.setViewName("");
+        modelAndView.setViewName("merchant_direct.jsp");
         return modelAndView;
     }
 

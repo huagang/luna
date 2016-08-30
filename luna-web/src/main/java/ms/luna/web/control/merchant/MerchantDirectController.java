@@ -23,18 +23,18 @@ public class MerchantDirectController extends BasicController {
 
     public static final String menu = "merchant";
 
-    @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView tradeApplication(HttpServletRequest request, HttpServletResponse response) {
-
-        SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return buildModelAndView("/merchant_direct");
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
-    public ModelAndView serveProtocol(HttpServletRequest request, HttpServletResponse response) {
-
-        SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return buildModelAndView("/tradeserve_protocol");
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "")
+//    public ModelAndView tradeApplication(HttpServletRequest request, HttpServletResponse response) {
+//
+//        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+//        return buildModelAndView("/merchant_direct");
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
+//    public ModelAndView serveProtocol(HttpServletRequest request, HttpServletResponse response) {
+//
+//        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+//        return buildModelAndView("/tradeserve_protocol");
+//    }
 
 }

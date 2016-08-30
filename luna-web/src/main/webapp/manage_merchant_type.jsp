@@ -61,18 +61,18 @@
                       <td>
                           <div class="ng-hide " ng-class="{'icon-close': cate.openList.indexOf(row.id) !== -1, 'icon-open':  cate.openList.indexOf(row.id) === -1}"
                                ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleToggle(row.id)"></div>
-                          <span class="depth-{{row.depth}}">{{'—'.repeat(row.depth-1) + row.name}}</span>
+                          <span class="depth-{{row.depth}}"><span class="gray">{{'—'.repeat(row.depth-1)}}</span> {{row.name}}</span>
                       </td>
                       <td>{{row.abbreviation}}</td>
                       <td>
                          <a href="javascript:void(0)" class='edit'
-                                 ng-click="cate.changeState('edit', row.id)">编辑</a>
+                                 ng-click="cate.changeState('edit', row.id, row)">编辑</a>
                          <a href="javascript:void(0)" ng-click="cate.changeState('delete', row.id)">删除</a>
                       </td>
                   </tr>
                 </tbody>
               </table>
-            <div class="message-wrapper" ng-hide="! cate.message">
+            <div class="message-wrapper ng-hide" ng-show="cate.message">
                 <div class="message">{{cate.message}}</div>
             </div>
             </div>
@@ -84,7 +84,7 @@
 
     <div class="add-edit-cate ng-hide" ng-show="['edit', 'new'].indexOf(cate.state) !== -1">
       <div class="mask" ng-click="cate.changeState('init')"></div>
-      <div class="pop-modal">
+      <div class="pop-modal" ng-click="cate.hideOptions()">
         <div class="pop-title">
           <h4>{{cate.state === 'new' ? '新建商品类目' : '编辑商品类目'}}</h4>
           <a href="#" class="btn-close" ng-click="cate.changeState('init')">
@@ -109,11 +109,11 @@
                     <div class="glyphicon pull-right arrow" ng-class="{'glyphicon-triangle-bottom': ! cate.opData.showSelectList, 'glyphicon-triangle-top': cate.opData.showSelectList}"></div>
                 </div>
                 <div class="select-parent ng-hide" ng-show="cate.opData.showSelectList">
-                    <div class="option" data-value="">
+                    <div class="option" ng-click="cate.handleOptionClick(undefined, '无', 0)">
                         <span>无</span>
                     </div>
-                    <div class="option" ng-repeat="row in cate.categoryData"
-                         ng-hide="row.id == cate.opData.id"  data-value="{{row.id}}">
+                    <div class="option" ng-repeat="row in cate.opData.options" ng-click="cate.handleOptionClick(row.id, row.name, row.depth)"
+                         ng-show="row.depth === 1 || cate.opData.openList.indexOf(row.parent) !== -1">
                         <div class="ng-hide" ng-class=
                                 "{'icon-close': cate.opData.openList.indexOf(row.id) !== -1, 'icon-open':  cate.opData.openList.indexOf(row.id) === -1}"
                              ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleOptionToggle(row.id)"></div>
@@ -124,7 +124,7 @@
         </div>
         <div class="pop-fun">
             <div class="pull-right">
-              <button class="button" type="button">确定</button>
+              <button class="button" ng-class="{'disabled': ! cate.opData.valid}" ng-click="cate.saveData()" type="button">确定</button>
               <button class="button-close" ng-click="cate.changeState('init')" type="button">取消</button>
             </div>
         </div>
@@ -144,7 +144,7 @@
         </div>
         <div class="pop-fun">
           <div class="pull-right">
-            <button class="button" type="button">确定</button>
+            <button class="button" type="button" ng-click="cate.requestDelete()">确定</button>
             <button class="button-close" ng-click="cate.changeState('init')" type="button">取消</button>
           </div>
         </div>
