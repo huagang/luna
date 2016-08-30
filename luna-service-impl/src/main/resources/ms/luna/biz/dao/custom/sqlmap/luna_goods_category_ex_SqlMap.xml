@@ -35,7 +35,7 @@
 
     <resultMap class="ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode" id="lunaGoodsCategoryNode">
         <result column="id" property="id" jdbcType="INTEGER"/>
-        <result column="root" property="root" jdbcType="INTEGER"/>
+        <result column="root" property="parent" jdbcType="INTEGER"/>
     </resultMap>
     <select id="selectLunaGoodsCategoryNodes" resultMap="lunaGoodsCategoryNode"
             parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter">
@@ -46,7 +46,7 @@
             luna_goods_category
         <dynamic prepend="where">
             <isNotNull prepend="and" property="keyword">
-                luna_goods_category.name = #keyword#
+                luna_goods_category.name LIKE #keyword#
             </isNotNull>
         </dynamic>
         ORDER BY

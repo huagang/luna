@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created: by greek on 16/8/29.
@@ -147,7 +144,7 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             LunaGoodsCategoryParameter parameter = new LunaGoodsCategoryParameter();
             parameter.setKeyword("%" + keyword +"%");
             List<LunaGoodsCategoryNode> categories = lunaGoodsCategoryDAO.selectLunaGoodsCategoryNodes(parameter);
-            if (categories == null) {
+            if (categories == null || categories.isEmpty()) {
                 // todo
                 return FastJsonUtil.sucess("success", new JSONArray());
             }
@@ -160,11 +157,11 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
                 nodesMap.put(node.getId(), node);
             }
             for(LunaGoodsCategoryNode node : nodes){
-                if(node.getId() == node.getParent()) {// 第一层. 第一层node 的parrent还是本身(数据库决定),额外添加一个root指向第一层
+                if(node.getId() == node.getParent()) {// 第一层. 第一层node 的parent还是本身(数据库决定),额外添加一个root指向第一层
                     root.getChilds().add(node);
                 } else { // 第i层
-                    Integer parrent = node.getParent();
-                    nodesMap.get(parrent).getChilds().add(node);
+                    Integer parent = node.getParent();
+                    nodesMap.get(parent).getChilds().add(node);
                 }
             }
 
@@ -189,28 +186,31 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
      * 从父节点中清除兄弟结点信息(如果兄弟结点不属于keyword搜索范围)
      *
      * @param root 顶层结点
-     * @param node 当前结点
+     * @param category 当前结点
      * @param nodesMap 结点映射表 id -- node
      */
-    private void clearBrotherNodes(LunaGoodsCategoryNode root, LunaGoodsCategoryNode node, Map<Integer, LunaGoodsCategoryNode> nodesMap) {
+    private void clearBrotherNodes(LunaGoodsCategoryNode root, LunaGoodsCategoryNode category, Map<Integer, LunaGoodsCategoryNode> nodesMap) {
         // 当前结点为root
-        if(node.getId() == null)
+        if(category.getId() == 0)
             return;
+        LunaGoodsCategoryNode node = nodesMap.get(category.getId());
+        node.setIschildCleared(true);
         // 父节点
-        LunaGoodsCategoryNode parrent;
-        if(node.getId() == node.getParent()) {// 第一层节点.
-            parrent = root;
+        LunaGoodsCategoryNode parent;
+        if(category.getId() == category.getParent()) {// 第一层节点.
+            parent = root;
         } else {
-            parrent = nodesMap.get(node.getParent());
+            parent = nodesMap.get(category.getParent());
         }
 
         // 若兄弟结点已经做过操作,则不需要继续迭代向上一层. 目的:清除所有与keyword无关的结点
-        if (parrent.ischildCleared()) {
-            parrent.getChilds().add(node);
+        if (parent.ischildCleared()) {
+            parent.getChilds().add(node);
         } else {
-            parrent.getChilds().clear();
-            parrent.getChilds().add(node);
-            clearBrotherNodes(root, parrent, nodesMap);
+            parent.getChilds().clear();
+            parent.getChilds().add(node);
+            parent.setIschildCleared(true);
+            clearBrotherNodes(root, parent, nodesMap);
         }
     }
 
@@ -227,5 +227,13 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
         return result;
     }
 
+    public static void main(String[] args) {
+        Set<LunaGoods> set = new HashSet<>();
+        LunaGoods lunaGoods = new LunaGoods();
+        set.add(lunaGoods);
+        lunaGoods.setId(1);
+        set.add(lunaGoods);
+        System.out.println(set.size());
+    }
 
 }

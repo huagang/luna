@@ -7,15 +7,15 @@ import java.util.List;
  * Created: by greek on 16/8/30.
  */
 public class LunaGoodsCategoryNode {
-    private Integer id;
+    private int id = 0;
 
-    private Integer parent;
+    private int parent = 0;
 
     private boolean ischildCleared = false;
 
     private List<LunaGoodsCategoryNode> childs = new ArrayList<>();
 
-    public Integer getParent() {
+    public int getParent() {
         return parent;
     }
 
@@ -23,7 +23,7 @@ public class LunaGoodsCategoryNode {
         this.parent = parent;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
     public void setId(Integer id) {
