@@ -25,5 +25,6 @@ public class LunaGoodsTable {
     public final static String OFFSET = "offset";
     public final static String LIMIT = "limit";
     public final static String KEYWORD = "keyword";
+    public final static String CHILDLIST = "childList";
 
 }

@@ -32,4 +32,25 @@
         </isEqual>
 
     </select>
+
+    <resultMap class="ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode" id="lunaGoodsCategoryNode">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="root" property="root" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectLunaGoodsCategoryNodes" resultMap="lunaGoodsCategoryNode"
+            parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter">
+        SELECT
+            luna_goods_category.id as id,
+            luna_goods_category.root as root
+        FROM
+            luna_goods_category
+        <dynamic prepend="where">
+            <isNotNull prepend="and" property="keyword">
+                luna_goods_category.name = #keyword#
+            </isNotNull>
+        </dynamic>
+        ORDER BY
+            luna_goods_category.depth
+    </select>
+
 </sqlMap>
