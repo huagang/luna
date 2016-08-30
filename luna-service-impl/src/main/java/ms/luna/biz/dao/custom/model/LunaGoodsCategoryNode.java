@@ -11,23 +11,32 @@ public class LunaGoodsCategoryNode {
 
     private int parent = 0;
 
+    private String name;
+
     private boolean ischildCleared = false;
 
-    private List<LunaGoodsCategoryNode> childs = new ArrayList<>();
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getParent() {
         return parent;
     }
 
-    public void setParent(Integer parent) {
+    public void setParent(int parent) {
         this.parent = parent;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
-    public void setId(Integer id) {
-        this.id = id;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean ischildCleared() {
@@ -45,5 +54,9 @@ public class LunaGoodsCategoryNode {
     public void setChilds(List<LunaGoodsCategoryNode> childs) {
         this.childs = childs;
     }
+
+    private List<LunaGoodsCategoryNode> childs = new ArrayList<>();
+
+
 
 }

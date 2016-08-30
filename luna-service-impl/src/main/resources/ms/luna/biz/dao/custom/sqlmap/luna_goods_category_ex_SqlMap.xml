@@ -36,12 +36,14 @@
     <resultMap class="ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode" id="lunaGoodsCategoryNode">
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="root" property="parent" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
     </resultMap>
     <select id="selectLunaGoodsCategoryNodes" resultMap="lunaGoodsCategoryNode"
             parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter">
         SELECT
             luna_goods_category.id as id,
-            luna_goods_category.root as root
+            luna_goods_category.root as root,
+            luna_goods_category.name as name
         FROM
             luna_goods_category
         <dynamic prepend="where">

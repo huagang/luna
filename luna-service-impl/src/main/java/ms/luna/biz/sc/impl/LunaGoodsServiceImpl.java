@@ -143,19 +143,19 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
 
             LunaGoodsCategoryParameter parameter = new LunaGoodsCategoryParameter();
             parameter.setKeyword("%" + keyword +"%");
-            List<LunaGoodsCategoryNode> categories = lunaGoodsCategoryDAO.selectLunaGoodsCategoryNodes(parameter);
+            List<LunaGoodsCategoryNode> categories = lunaGoodsCategoryDAO.selectLunaGoodsCategoryNodes(parameter);// 根据keyword获取直接相关的结点
             if (categories == null || categories.isEmpty()) {
                 // todo
                 return FastJsonUtil.sucess("success", new JSONArray());
             }
-            // 整体时间复杂度 o(n)
-            // 取结点信息,构建类目树
+            // 整体时间复杂度 o(n), 空间复杂度o(n)
+            // 1.取结点信息,构建商品类目树
             List<LunaGoodsCategoryNode> nodes = lunaGoodsCategoryDAO.selectLunaGoodsCategoryNodes(new LunaGoodsCategoryParameter()); // 按depth排序
-            Map<Integer, LunaGoodsCategoryNode> nodesMap = new LinkedHashMap<>();// map -- 用于快速寻找某个结点的父结点
-            LunaGoodsCategoryNode root = new LunaGoodsCategoryNode();
+            Map<Integer, LunaGoodsCategoryNode> nodesMap = new LinkedHashMap<>();// map -- 用于快速寻找某个id对应的结点
             for(LunaGoodsCategoryNode node : nodes){
                 nodesMap.put(node.getId(), node);
             }
+            LunaGoodsCategoryNode root = new LunaGoodsCategoryNode();// 根结点
             for(LunaGoodsCategoryNode node : nodes){
                 if(node.getId() == node.getParent()) {// 第一层. 第一层node 的parent还是本身(数据库决定),额外添加一个root指向第一层
                     root.getChilds().add(node);
@@ -165,12 +165,12 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
                 }
             }
 
-            // 过滤结点.取所选结点的子树和上级,上上级,...
+            // 2.过滤结点.取所选结点的子树和上级,上上级,...
             for(LunaGoodsCategoryNode category : categories) {
                 clearBrotherNodes(root, category, nodesMap);
             }
 
-            // 获取结点具体信息(当前树仅保留与keyword有关的结点)
+            // 3.获取结点具体信息(当前树仅保留与keyword有关的结点)
             JSONObject data = convertNode2Json(root);
 
             JSONArray childList = data.getJSONArray(LunaGoodsTable.CHILDLIST);
@@ -205,15 +205,23 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
 
         // 若兄弟结点已经做过操作,则不需要继续迭代向上一层. 目的:清除所有与keyword无关的结点
         if (parent.ischildCleared()) {
-            parent.getChilds().add(node);
+            if(!parent.getChilds().contains(node)) {
+                parent.getChilds().add(node);
+            }
         } else {
             parent.getChilds().clear();
-            parent.getChilds().add(node);
             parent.setIschildCleared(true);
+            parent.getChilds().add(node);
             clearBrotherNodes(root, parent, nodesMap);
         }
     }
 
+    /**
+     * 将某个结点和其子树转换为json结构数据
+     *
+     * @param node 树结点
+     * @return
+     */
     private JSONObject convertNode2Json(LunaGoodsCategoryNode node) {
         JSONObject result = new JSONObject();
         JSONArray childList = new JSONArray();
@@ -223,17 +231,9 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             childList.add(category);
         }
         result.put(LunaGoodsTable.FIELD_ID, node.getId());
+        result.put(LunaGoodsTable.FIELD_NAME, node.getName());
         result.put(LunaGoodsTable.CHILDLIST, childList);
         return result;
-    }
-
-    public static void main(String[] args) {
-        Set<LunaGoods> set = new HashSet<>();
-        LunaGoods lunaGoods = new LunaGoods();
-        set.add(lunaGoods);
-        lunaGoods.setId(1);
-        set.add(lunaGoods);
-        System.out.println(set.size());
     }
 
 }

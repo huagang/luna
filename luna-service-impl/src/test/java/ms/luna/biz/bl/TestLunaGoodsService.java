@@ -42,7 +42,7 @@ public class TestLunaGoodsService {
 
     @Test
     public void getGoodsCategories(){
-        String keyword = "";
+        String keyword = "banana";
         JSONObject result = lunaGoodsService.getGoodsCategories(keyword);
         System.out.println("---------------------------------");
         System.out.println(result.toString());
