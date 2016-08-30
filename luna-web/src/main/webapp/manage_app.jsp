@@ -16,12 +16,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-<<<<<<< Updated upstream
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common/imgCropper.css"/>
-=======
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/cropper/"/>
->>>>>>> Stashed changes
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_app.css">
@@ -68,7 +64,6 @@
 						                <th data-formatter="nameFormatter" data-align="left">名称</th>
 						                <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
-                                    	<th data-field="business_name" data-align="left">所属业务</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
 						                <th data-formatter="statusFormatter" data-align="left">状态</th>
 						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
@@ -265,11 +260,7 @@
 
 
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-<<<<<<< Updated upstream
-<jsp:include page="/templete/imgCropper.jsp" />
-=======
 <jsp:include page="/templete/imgCropper.jsp"/>
->>>>>>> Stashed changes
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
@@ -337,12 +328,17 @@
 
 	function queryParams(params) {
 		/* alert(JSON.stringify(params)); */
-		return {
+		var params = {
 			limit : params.limit,
 			offset : params.offset,
 			order : params.order,
-			like_filter_nm : encodeURI($('#like_filter_nm').val()) 
+			like_filter_nm : encodeURI($('#like_filter_nm').val())
+		};
+		var business = localStorage.getItem('business');
+		if(business){
+			params.business_id = JSON.parse(business).id;
 		}
+		return params;
 	}
 
 </script>

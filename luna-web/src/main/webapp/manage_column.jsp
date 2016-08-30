@@ -218,12 +218,17 @@
 
 	function queryParams(params) {
 		//alert(JSON.stringify(params));
-		return {
-			limit : params.limit,
-			offset : params.offset,
-			sort : params.sort,
-			order : params.order
-		}
+        var params = {
+            limit : params.limit,
+            offset : params.offset,
+            sort : params.sort,
+            order : params.order
+        };
+        var business = localStorage.getItem('business');
+        if(business){
+            params.business_id = JSON.parse(business).id;
+        }
+		return params;
 	};
 </script>
 
