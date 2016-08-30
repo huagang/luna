@@ -58,35 +58,12 @@ public class SMSScheduler extends Thread {
         sendSMS(smsModel);
     }
 
-    public static void main(String[] args) {
-        SMSModel smsModel = new SMSModel();
-        SMSMessage message = new SMSMessage();
-        message.setToPhoneNumber("15659831720");
-        message.setContent("【微景皓月】您的验证码是098766");
-        smsModel.setMessage(message);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("apikey", smsModel.getUserName());
-        params.put("text", smsModel.getMessage().getContent());
-        params.put("mobile", smsModel.getMessage().getToPhoneNumber());
-        System.out.println(post(smsModel.getUrl(), smsModel.getEncode(), params));
-    }
-
     public void sendSMS(SMSModel smsModel) {
         try {
             sendQueue.offer(smsModel, DEFAULT_QUEUE_TIME_MILLIS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             logger.error("Failed to insert email task into queue", e);
         }
-    }
-
-
-    private String doSend(SMSModel smsModel) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("apikey", smsModel.getUserName());
-        params.put("text", smsModel.getMessage().getContent());
-        params.put("mobile", smsModel.getMessage().getToPhoneNumber());
-        String result = post(smsModel.getUrl(), smsModel.getEncode(), params);
-        return result;
     }
 
     public void run() {
@@ -97,7 +74,7 @@ public class SMSScheduler extends Thread {
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        String result = doSend(smsModel);
+                        String result = smsModel.sendMsg();
                         JSONObject object = JSONObject.parseObject(result);
                         if (object.getInteger("code").intValue() != 0) {
                             logger.error("Send SMS failed. Detail:\n" + result);
@@ -117,38 +94,5 @@ public class SMSScheduler extends Thread {
         if (executorService != null) {
             executorService.shutdownNow();
         }
-    }
-
-    private static String post(String url, String encode, Map<String, String> paramsMap) {
-        CloseableHttpClient client = HttpClients.createDefault();
-        String responseText = "";
-        CloseableHttpResponse response = null;
-        try {
-            HttpPost method = new HttpPost(url);
-            if (paramsMap != null) {
-                List<NameValuePair> paramList = new ArrayList<NameValuePair>();
-                for (Map.Entry<String, String> param : paramsMap.entrySet()) {
-                    NameValuePair pair = new BasicNameValuePair(param.getKey(), param.getValue());
-                    paramList.add(pair);
-                }
-                method.setEntity(new UrlEncodedFormEntity(paramList, encode));
-            }
-            response = client.execute(method);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                responseText = EntityUtils.toString(entity);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (response != null) {
-                    response.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return responseText;
     }
 }

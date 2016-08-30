@@ -23,11 +23,18 @@ public class SMSModel {
 
     private SMSMessage message;
 
+    private SMSSendAdapter smsSendAdapter;
+
     public SMSModel() {
         url = "https://sms.yunpian.com/v2/sms/single_send.json";
         userName = "2fc24b5a28afcd4af2209a6f32421a43";
         password = "";
         encode = "UTF-8";
+        smsSendAdapter = new DefaultSMSSender();
+    }
+
+    public String sendMsg() {
+        return smsSendAdapter.sendSMS(this);
     }
 
     public String getUrl() {
@@ -70,6 +77,14 @@ public class SMSModel {
         this.message = message;
     }
 
+    public SMSSendAdapter getSmsSendAdapter() {
+        return smsSendAdapter;
+    }
+
+    public void setSmsSendAdapter(SMSSendAdapter smsSendAdapter) {
+        this.smsSendAdapter = smsSendAdapter;
+    }
+
     @Override
     public String toString() {
         return "SMSModel{" +
@@ -78,6 +93,7 @@ public class SMSModel {
                 ", password='" + password + '\'' +
                 ", encode='" + encode + '\'' +
                 ", message=" + message +
+                ", smsSendAdapter=" + smsSendAdapter +
                 '}';
     }
 }

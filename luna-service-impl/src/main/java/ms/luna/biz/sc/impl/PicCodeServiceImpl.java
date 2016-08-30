@@ -39,9 +39,9 @@ public class PicCodeServiceImpl implements PicCodeService {
     @Override
     public JSONObject checkCode(String key, String code) {
         try {
-            IdentifyCodeService.checkCode(key, "picValidate", code);
+            Boolean result = IdentifyCodeService.checkCode(key, "picValidate", code);
             JSONObject toSend = new JSONObject();
-            toSend.put("result", true);
+            toSend.put("result", result);
             return FastJsonUtil.sucess("success", toSend);
         } catch (Exception e) {
             logger.error("Failed to check picCode in redis", e);

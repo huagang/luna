@@ -61,7 +61,7 @@ public class IdentifyCodeService {
     }
 
     /**
-     * @param uniqueId   This param can be user's uniqueId or phone number or any other unique no
+     * @param uniqueId This param can be user's uniqueId or phone number or any other unique no
      * @param target
      * @return
      * @throws Exception
@@ -76,6 +76,7 @@ public class IdentifyCodeService {
             String value = jedis.get(key);
             jedis.close();
             if (code.equals(value)) {
+                jedis.del(key);
                 return true;
             } else {
                 return false;

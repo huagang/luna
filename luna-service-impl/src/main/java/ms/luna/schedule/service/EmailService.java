@@ -66,22 +66,6 @@ public class EmailService extends Thread {
         }
     }
 
-
-    private void doSend(MailModel mailModel) {
-        MailSender.MailProperty mail = new MailSender().new MailProperty();
-        mail.setMailServerHost(mailModel.getHost());
-        mail.setMailServerPort(mailModel.getPort());
-        mail.setValidate(mailModel.getValidate());
-        mail.setUserName(mailModel.getUserName());
-        mail.setPassword(mailModel.getPassword());
-        mail.setFromAddress(mailModel.getFromAddress());
-        mail.setSubject(mailModel.getMailMessage().getSubject());
-        mail.setToAddress(mailModel.getMailMessage().getToAddress());
-        mail.setContent(mailModel.getMailMessage().getContent());
-        MailSender send = new MailSender();
-        send.sendHtmlMail(mail);
-    }
-
     public void run() {
         while (!isStop) {
             try {
@@ -90,10 +74,11 @@ public class EmailService extends Thread {
                     executorService.submit(runnable);
                 }
                 final MailModel mailModel = sendQueue.poll(DEFAULT_QUEUE_TIME_MILLIS, TimeUnit.MILLISECONDS);
+                if (mailModel == null) continue;
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        doSend(mailModel);
+                        mailModel.sendMail();
                     }
                 });
             } catch (InterruptedException e) {

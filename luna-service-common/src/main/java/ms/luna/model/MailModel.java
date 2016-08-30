@@ -27,6 +27,8 @@ public class MailModel {
 
     private MailMessage mailMessage;
 
+    private MailSendAdapter mailSendAdapter;
+
     public MailModel() {
         host = "smtp.exmail.qq.com"; // 服务器
         port = "25"; // 端口号
@@ -34,6 +36,7 @@ public class MailModel {
         password = "Vb12345"; // 邮箱密码
         fromAddress = "luna@visualbusiness.com"; // 邮箱名（发件人）
         validate = true;
+        mailSendAdapter = new DefaultMailSender();
     }
 
     public MailModel(String host, String port, String userName, String password, String fromAddress) {
@@ -43,6 +46,11 @@ public class MailModel {
         this.password = password;
         this.fromAddress = fromAddress;
         validate = true;
+        mailSendAdapter = new DefaultMailSender();
+    }
+
+    public void sendMail() {
+        mailSendAdapter.sendMail(this);
     }
 
     public String getHost() {
@@ -99,5 +107,27 @@ public class MailModel {
 
     public void setMailMessage(MailMessage mailMessage) {
         this.mailMessage = mailMessage;
+    }
+
+    public MailSendAdapter getMailSendAdapter() {
+        return mailSendAdapter;
+    }
+
+    public void setMailSendAdapter(MailSendAdapter mailSendAdapter) {
+        this.mailSendAdapter = mailSendAdapter;
+    }
+
+    @Override
+    public String toString() {
+        return "MailModel{" +
+                "host='" + host + '\'' +
+                ", port='" + port + '\'' +
+                ", validate=" + validate +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", fromAddress='" + fromAddress + '\'' +
+                ", mailMessage=" + mailMessage +
+                ", mailSendAdapter=" + mailSendAdapter +
+                '}';
     }
 }
