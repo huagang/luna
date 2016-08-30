@@ -13,10 +13,7 @@ import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.LunaUserService;
-import ms.luna.biz.table.LunaRoleCategoryTable;
-import ms.luna.biz.table.LunaRoleTable;
-import ms.luna.biz.table.LunaUserRoleTable;
-import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.*;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.UUIDGenerator;
 import ms.luna.biz.util.VbMD5;
@@ -275,9 +272,33 @@ public class LunaUserServiceImpl implements LunaUserService {
 
         lunaUserSession.setRoleId(userRole.getRoleId());
         lunaUserSession.setExtra(userRole.getExtra());
+        lunaUserSession.setMenuAuth(getMenuAuthByRoleId(userRole.getRoleId()));
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+    }
+
+
+    @Override
+    public JSONObject getUserAuth(String userId) {
+        LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(userId);
+        LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+        LunaUserSession lunaUserSession = new LunaUserSession();
+        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
+        lunaUserSession.setLunaName(lunaUser.getLunaName());
+        lunaUserSession.setNickName(lunaUser.getNickName());
+        lunaUserSession.setEmail(lunaUser.getEmail());
+
+        lunaUserSession.setRoleId(userRole.getRoleId());
+        lunaUserSession.setExtra(userRole.getExtra());
+        lunaUserSession.setMenuAuth(getMenuAuthByRoleId(userRole.getRoleId()));
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+    }
+
+    private Map<String, JSONObject> getMenuAuthByRoleId(int roleId) {
 
         LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-        lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(userRole.getRoleId());
+        lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(roleId);
         List<LunaRoleMenu> lunaRoleMenuList = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
 
         List<Integer> menuIdList = new ArrayList<>(lunaRoleMenuList.size());
@@ -288,39 +309,24 @@ public class LunaUserServiceImpl implements LunaUserService {
         List<Pair<LunaModule, List<LunaMenu>>> moduleAndMenuInfoList =
                 moduleMenuCache.getModuleAndMenuByMenuIds(menuIdList);
 
-        Set<String> uriSet = new HashSet<>();
+        Map<String, JSONObject> menuAuth = new TreeMap<>();
+
         for (Pair<LunaModule, List<LunaMenu>> moduleAndMenuInfo : moduleAndMenuInfoList) {
             LunaModule module = moduleAndMenuInfo.getLeft();
             List<LunaMenu> menuList = moduleAndMenuInfo.getRight();
             for (LunaMenu menu : menuList) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(LunaMenuTable.FIELD_AUTH, menu.getAuth());
+                String menuUrl = MenuHelper.formatMenuUrl(module, menu);
                 if (menu.getUrl() == null) {
-                    uriSet.add(MenuHelper.formatMenuUrl(module, menu));
+                    jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
                 } else {
-                    uriSet.add(menu.getUrl());
+                    jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
                 }
+                menuAuth.put(menuUrl, jsonObject);
             }
         }
-        lunaUserSession.setUriSet(uriSet);
-
-        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
-    }
-
-    @Override
-    public JSONObject getUserAuth(String userId) {
-
-        LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(userId);
-        LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(userId);
-
-        LunaUserSession lunaUserSession = new LunaUserSession();
-        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
-        lunaUserSession.setLunaName(lunaUser.getLunaName());
-        lunaUserSession.setNickName(lunaUser.getNickName());
-        lunaUserSession.setEmail(lunaUser.getEmail());
-
-        lunaUserSession.setRoleId(userRole.getRoleId());
-        lunaUserSession.setExtra(userRole.getExtra());
-
-        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+        return menuAuth;
     }
 
     @Override

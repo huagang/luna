@@ -1,5 +1,6 @@
 package ms.luna.web.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
@@ -13,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -86,7 +84,8 @@ public class LunaLoginFilter implements Filter {
                 return;
             }
             HttpSession session = httpServletRequest.getSession(false);
-            if(SessionHelper.getUser(session) == null) {
+            LunaUserSession user = SessionHelper.getUser(session);
+            if(user == null) {
                 httpServletResponse.sendRedirect(contextPath + CommonURI.LOGIN_SERVLET_PATH);
                 return;
             }
@@ -97,18 +96,11 @@ public class LunaLoginFilter implements Filter {
                     return;
                 }
             }
-            LunaUserSession user = SessionHelper.getUser(session);
-            Set<String> uriSet = user.getUriSet();
 
-            boolean isAuth = false;
-            for(String validUri : uriSet) {
-                if(servletPath.startsWith(validUri)) {
-                    isAuth = true;
-                    break;
-                }
-            }
-
-            if(isAuth) {
+            TreeMap<String, JSONObject> menuAuth = (TreeMap<String, JSONObject>) user.getMenuAuth();
+            String menuPath = menuAuth.floorKey(servletPath);
+            logger.debug(String.format("servlet[%s] mapping menu path[%s]: ", servletPath, menuPath));
+            if(servletPath.startsWith(menuPath)) {
                 chain.doFilter(request, response);
                 return;
             } else {
