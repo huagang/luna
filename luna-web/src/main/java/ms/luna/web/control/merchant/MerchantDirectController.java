@@ -13,22 +13,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 /**
  * Created by herrdu on 16/8/29.
  */
 @Controller
 @RequestMapping("/merchant/tradeApplication")
-public class MerchantDirectController extends BasicController{
+public class MerchantDirectController extends BasicController {
     private final static Logger logger = Logger.getLogger(MerchantDirectController.class);
 
     public static final String menu = "merchant";
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView  tradeApplication (HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView tradeApplication(HttpServletRequest request, HttpServletResponse response) {
 
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return buildModelAndView("/merchant_direct");
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
+    public ModelAndView serveProtocol(HttpServletRequest request, HttpServletResponse response) {
+
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return buildModelAndView("/tradeserve_protocol");
     }
 
 }
