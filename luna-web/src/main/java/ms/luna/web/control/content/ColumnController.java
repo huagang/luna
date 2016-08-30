@@ -13,10 +13,7 @@ import ms.luna.web.util.RequestHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,14 +49,16 @@ public class ColumnController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public JSONObject loadColumn(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject loadColumn(@RequestParam(required = false) Integer offset,
+                                 @RequestParam(required = false) Integer limit,
+                                 HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        int min = RequestHelper.getInteger(request, "offset");
-        int max = RequestHelper.getInteger(request, "limit");
         JSONObject jsonQuery = new JSONObject();
-        if(min > 0 && max > 0) {
-            jsonQuery.put("min", min);
-            jsonQuery.put("max", max);
+        if (offset != null) {
+            jsonQuery.put("min", offset);
+        }
+        if (limit != null) {
+            jsonQuery.put("max", limit);
         }
         try {
             JSONObject ret = manageColumnService.loadColumn(jsonQuery.toJSONString());

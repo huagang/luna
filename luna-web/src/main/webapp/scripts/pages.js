@@ -236,6 +236,7 @@ var InitRightArea = function () {
      * 初始化字体的功能
      */
     var initFontSet = function () {
+        var $editor = $("#editor");
         //字体
         $('#font-select').on('click', 'li', function () {
             var fontFamily = $(this).text();
@@ -301,6 +302,8 @@ var InitRightArea = function () {
     };
 
     var initPositionSet = function () {
+        var $editor = $("#editor");
+
         //按up键上移1px
         $(document).bind('keydown', 'up', function (e) {
             var $target = $("div.componentbox-selected");
