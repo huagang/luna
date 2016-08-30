@@ -5,8 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaGoodsCategoryDAO;
 import ms.luna.biz.dao.custom.LunaGoodsDAO;
-import ms.luna.biz.dao.custom.model.*;
-import ms.luna.biz.dao.model.*;
+import ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode;
+import ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter;
+import ms.luna.biz.dao.custom.model.LunaGoodsParameter;
+import ms.luna.biz.dao.custom.model.LunaGoodsResult;
+import ms.luna.biz.dao.model.LunaGoods;
+import ms.luna.biz.dao.model.LunaGoodsCriteria;
 import ms.luna.biz.sc.LunaGoodsService;
 import ms.luna.biz.table.LunaGoodsTable;
 import ms.luna.biz.util.FastJsonUtil;
@@ -15,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created: by greek on 16/8/29.
@@ -148,7 +154,7 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
                 // todo
                 return FastJsonUtil.sucess("success", new JSONArray());
             }
-            // 整体时间复杂度 o(n), 空间复杂度o(n)
+            
             // 1.取结点信息,构建商品类目树
             List<LunaGoodsCategoryNode> nodes = lunaGoodsCategoryDAO.selectLunaGoodsCategoryNodes(new LunaGoodsCategoryParameter()); // 按depth排序
             Map<Integer, LunaGoodsCategoryNode> nodesMap = new LinkedHashMap<>();// map -- 用于快速寻找某个id对应的结点
@@ -190,20 +196,24 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
      * @param nodesMap 结点映射表 id -- node
      */
     private void clearBrotherNodes(LunaGoodsCategoryNode root, LunaGoodsCategoryNode category, Map<Integer, LunaGoodsCategoryNode> nodesMap) {
-        // 当前结点为root
-        if(category.getId() == 0)
+        if(category.getId() == 0)// 当前结点为root
             return;
-        LunaGoodsCategoryNode node = nodesMap.get(category.getId());
-        node.setIschildCleared(true);
-        // 父节点
-        LunaGoodsCategoryNode parent;
+        LunaGoodsCategoryNode node = nodesMap.get(category.getId());//由category找到类目树中对应结点
+        node.setIsSelected(true);//
+
+        // 1.判断当前结点的上级,上上级...是否有被keyword直接选中的结点.
+        boolean flag = isInSelectedChildTree(node, nodesMap);
+        if(flag) return;
+
+        // 2.迭代,仅保留本结点的子树及上级,上上级...信息
+        LunaGoodsCategoryNode parent;// 父节点
         if(category.getId() == category.getParent()) {// 第一层节点.
             parent = root;
         } else {
             parent = nodesMap.get(category.getParent());
         }
 
-        // 若兄弟结点已经做过操作,则不需要继续迭代向上一层. 目的:清除所有与keyword无关的结点
+        // 若兄弟结点已经做过操作,则不需要继续迭代向上一层.由于本结点在父节点中的信息已经被清除,需要重新添加. 目的:清除所有与keyword无关的结点
         if (parent.ischildCleared()) {
             if(!parent.getChilds().contains(node)) {
                 parent.getChilds().add(node);
@@ -214,6 +224,26 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             parent.getChilds().add(node);
             clearBrotherNodes(root, parent, nodesMap);
         }
+    }
+
+    /**
+     * 判断当前结点的上级,上上级...是否有被keyword直接选中的结点,如果有,则表明当前结点处于另一个选中结点的子树下.
+     *
+     * @param node 当前结点
+     * @param nodesMap 结点映射表 id -- node
+     * @return
+     */
+    private boolean isInSelectedChildTree(LunaGoodsCategoryNode node, Map<Integer, LunaGoodsCategoryNode> nodesMap) {
+        // root结点或第一层结点,不处于任何选中点的子树下
+        if(node.getId() == 0 || node.getId() == node.getParent()) {
+            return false;
+        }
+        // 父节点为被keyword直接选中的结点
+        LunaGoodsCategoryNode parent = nodesMap.get(node.getParent());
+        if(parent.isSelected()) {
+            return true;
+        }
+        return isInSelectedChildTree(parent, nodesMap);
     }
 
     /**

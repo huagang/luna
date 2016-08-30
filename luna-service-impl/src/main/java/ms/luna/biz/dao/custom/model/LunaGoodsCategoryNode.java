@@ -13,7 +13,9 @@ public class LunaGoodsCategoryNode {
 
     private String name;
 
-    private boolean ischildCleared = false;
+    private boolean isSelected = false; // 是否为被keyword直接选择的结点.若是,则其子树都应该被纳入到结果中.
+
+    private boolean ischildCleared = false;// 标识子节点是否被清空过<==>该节点是否被子结点访问过,第一个来访问的子结点会清空其所有兄弟结点,即清空当前结点的子结点
 
     public int getId() {
         return id;
@@ -37,6 +39,14 @@ public class LunaGoodsCategoryNode {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
     public boolean ischildCleared() {

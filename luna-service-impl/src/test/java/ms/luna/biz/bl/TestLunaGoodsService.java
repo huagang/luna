@@ -1,11 +1,8 @@
 package ms.luna.biz.bl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.ServiceConfig;
-import ms.luna.biz.sc.FarmPageService;
 import ms.luna.biz.sc.LunaGoodsService;
-import ms.luna.biz.util.COSUtil;
 import ms.luna.biz.util.MsLogger;
 import org.junit.Before;
 import org.junit.Test;
