@@ -2,6 +2,10 @@ ul {
     list-style: none;
 }
 
+.form-control {
+    border-radius: 0;
+}
+
 .launch {
     height: 85px;
     background-color: #f2f2f2;
@@ -77,6 +81,16 @@ ul {
     color: red;
 }
 
+.pic-wrapper {
+    float: left
+}
+
+.pic-wrapper img {
+    width: 150px;
+    height: 150px;
+    margin: 10px 10px 10px 0;
+}
+
 .form-section {
     margin: 30px 0;
     padding-bottom: 5px;
@@ -91,8 +105,16 @@ ul {
 
 
 /*确认提交*/
+
 .confirm-wrapper {
     width: 600px;
     margin: auto;
     margin-top: 200px;
+}
+
+
+/*额外的样式*/
+
+.font-red-sunglo {
+    color: #E26A6A!important;
 }

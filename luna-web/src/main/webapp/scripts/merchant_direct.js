@@ -15,12 +15,26 @@ var initProcessPage = function () {
             });
         }
     };
-}();
+} ();
 
+
+/**
+ * 初始化创建页面数据
+ */
+var initCreatePage = function () {
+    return {
+        init: function () {
+            $('.datepicker').datepicker({
+                language: "zh-CN",
+            });
+        }
+    };
+} ();
 
 $('document').ready(function () {
     showDiv();
     initProcessPage.init();
+    initCreatePage.init();
 });
 
 function showDiv() {

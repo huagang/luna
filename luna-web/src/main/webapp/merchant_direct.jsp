@@ -14,10 +14,12 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-direct.css">
 </head>
 
-<body >
+<body>
     <div class="container-fluid">
         <!--通用导航栏 start-->
         <jsp:include page="/templete/header.jsp" />
@@ -34,7 +36,7 @@
                     <!-- 隐藏文本域 END-->
                     <!--主题内容 start-->
                     <!-- 开通流程 -->
-                    <div id="process" class="main hide" >
+                    <div id="process" class="main hide">
                         <div class="main-hd">
                             <h3>交易直通车</h3></div>
                         <p class="launch">
@@ -93,11 +95,11 @@
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>手机号码</label>
                                     <div class="col-md-4">
-                                        <select name="phoneArea">
+                                        <select name="phoneArea" class="form-control">
                                             <option value="+86">+86</option>
                                         </select>
                                         <input type="text" class="form-control" id="" name="phone" required="required" placeholder="请输入您的手机号码">
-                                        <span class="help-block"> 请输入正确的手机号码 </span>
+                                        <span class="help-block"> 请输入您的手机号码 </span>
                                     </div>
                                     <div class="col-md-4">
                                         <button type="button" id="getVerMsg">获取短信验证码</button>
@@ -122,18 +124,36 @@
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>联系人身份证</label>
-                                    <div class="col-md-4">
-                                        <button type="button">依次上传身份证正反面电子照片</button>
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                    <div class="col-md-8">
+                                        <div class="">
+                                            <button type="button">依次上传身份证正反面电子照片</button>
+                                            <span class="font-red-sunglo"> 需保证图片中文字清晰可见 </span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="pic-wrapper">
+                                                <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证">
+                                                <div class="text-center">
+                                                    <a href="javascript:;">删除</a>
+                                                </div>
+                                            </div>
+                                            <div class="pic-wrapper">
+                                                <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证">
+                                                <div class="text-center">
+                                                    <a href="javascript:;">删除</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>身份证有效期</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="IDStartDate" required="required"> 至
-                                        <input type="text" class="form-control" id="" name="IDEndDate" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <div class="input-daterange input-group" id="">
+                                            <input type="text" class="input-sm form-control datepicker" name="start" />
+                                            <span class="input-group-addon">至</span>
+                                            <input type="text" class="input-sm form-control datepicker" name="end" />
+                                        </div>
                                     </div>
                                 </div>
                                 <h4 class="form-section">商户信息</h4>
@@ -142,7 +162,7 @@
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <span class="help-block"> 填写商户的全称 </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -150,7 +170,7 @@
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -158,35 +178,48 @@
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <span class="help-block"> </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>*营业执照副本电子版</label>
-                                    <div class="col-md-4">
-                                        <button type="button">证件资料上传</button>
-                                        <span class="help-block"> 需保证图片中文字清晰可见 </span>
+                                    <div class="col-md-8">
+                                        <div>
+                                            <button type="button">证件资料上传</button>
+                                            <span class="font-red-sunglo"> 需保证图片中文字清晰可见 </span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="pic-wrapper">
+                                                <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="营业执照副本">
+                                                <div class="text-center">
+                                                    <a href="javascript:;">删除</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
                                         class="required" aria-required="true"> * </span>有效期</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="BLStartDate" required="required"> 至
-                                        <input type="text" class="form-control" id="" name="BLEndDate" required="required">
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <div class="input-daterange input-group" id="">
+                                            <input type="text" class="input-sm form-control datepicker" name="start" />
+                                            <span class="input-group-addon">至</span>
+                                            <input type="text" class="input-sm form-control datepicker" name="end" />
+                                        </div>
                                     </div>
                                 </div>
                                 <h4 class="form-section">商户结算账户信息</h4>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for="inputWarning"><span
-                                        class="required" aria-required="true"> * </span>商户结算账户信息</label>
+                                        class="required" aria-required="true"> * </span>账户类型</label>
                                     <div class="col-md-4">
-                                        <select>
-                                        <option value="1">对公账户</option>
-                                    </select>
-                                        <span class="help-block"> Something may have gone wrong </span>
+                                        <select class="form-control">
+                                            <option value="0">个人账户</option>
+                                            <option value="1">对公账户</option>
+                                        </select>
+                                        <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -317,6 +350,11 @@
     <!-- Angular文件 End -->
 
     <!-- 页面级文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/select2/js/select2.full.min.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/select2/js/i18n/zh-CN.js"></script>
+    <script src="<%=request.getContextPath()%>/common/selectBank.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
     <!-- 页面级文件 End -->
 
