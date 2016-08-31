@@ -1,0 +1,51 @@
+/* 分页组件 */
+.pagination-wrapper{
+    text-align: right;
+}
+
+.pagination-sm  li.pagination-prev,
+.pagination-sm  li.pagination-next{
+    margin: 20px 9px 20px 0;
+}
+
+.pagination-sm li.pagination-next.disabled a,
+.pagination-sm li.pagination-prev.disabled a{
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.pagination-sm  li.pagination-prev a,
+.pagination-sm  li.pagination-next a,
+.pagination-sm  li.pagination-page a{
+    border-radius: 0;
+    padding: 0 14px;
+    line-height: 34px;
+    border: 1px solid #ddd;
+    color: #445FA8;
+    text-decoration: none;
+    background-color: #fff;
+    cursor: pointer;
+    text-align: center;
+}
+
+
+.pagination-sm  li.pagination-page.active a{
+    color: #fff;
+    cursor: default;
+    background-color: #445FA8;
+    border-color: #445FA8;
+}
+
+.pagination-sm li + li a{
+    margin-left: 10px;
+}
+
+
+
+
+
+.tr-operation{
+    background-color: #efefef;
+}

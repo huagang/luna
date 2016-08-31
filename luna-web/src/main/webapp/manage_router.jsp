@@ -72,8 +72,8 @@
                 		</tbody>
                 	</table>
 					<div class="pagination-wrapper">
-						<ul  uib-pagination total-items="router.pagination.totalItems" ng-model="router.pagination.curPage" ng-change="router.handlePageChanged()"
-										previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="router.pagination.maxRowNum" max-size="router.pagination.maxPageNum"
+						<ul  uib-pagination total-items="router.pagination.totalItems" ng-model="router.pagination.curPage" ng-change="manage.fetchMerchantList()"
+										previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="manage.pagination.limit" max-size="manage.pagination.maxPageNum"
 										class="pagination-sm"  rotate="true"></ul>
 					</div>
 				</div>

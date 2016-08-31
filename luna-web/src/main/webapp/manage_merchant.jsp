@@ -12,11 +12,7 @@
   <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
   <title>皓月平台</title>
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-  <link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" type="text/css" />
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_article.css">
 </head>
 <body ng-app="manageMerchant" ng-controller="ManageMerchantController as manage">
 <div class="container-fluid">
@@ -53,7 +49,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr class="tr-operation">
                   <td colspan="0">
                       <label>
                           <input type="checkbox" /> 全选
@@ -65,11 +61,26 @@
                 </tr>
               </tbody>
             </table>
+            <div class="pagination-wrapper">
+              <ul  uib-pagination total-items="manage.pagination.totalItems" ng-model="manage.pagination.curPage" ng-change="manage.handlePageChanged()"
+                   previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="router.pagination.maxRowNum" max-size="router.pagination.maxPageNum"
+                   class="pagination-sm"  rotate="true"></ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<div class="message-wrapper ng-hide" ng-show="manage.message">
+  <div class="message">{{manage.message}}</div>
+</div>
+<script>
+  window.context = "<%=request.getContextPath() %>";
+</script>
+<script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-2.0.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/manage_merchant.js"></script>
 </body>
 </html>
