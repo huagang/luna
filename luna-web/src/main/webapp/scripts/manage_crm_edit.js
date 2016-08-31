@@ -191,8 +191,8 @@ $(function(){
 						default:
 							$("#pop-overlay").css("display","none");
 							$("#pop-editmerchant").css("display","none");
-							clcContent();
-							$("#status-message").html("编辑失败").css('display','block');
+							//clcContent();
+							$("#status-message").html(returndata.msg).css('display','block');
 							setTimeout(function(){
 								$("#status-message").css('display','none');
 							},2000);
@@ -228,7 +228,7 @@ function editcrm(obj){
 	    		case '0':
 	    			$.each(returndata.data,function(i,n){
 	    				$("#"+i+"_edit:not(select)").val(n);
-	    				console.log($("#"+i+"_edit:not(select)").length);
+	    				console.log($("#"+i+"_edit:not(select)").val());
 	    			})
 
 	    			$("#agent-edit").html($("#salesman_nm_edit").val());
@@ -247,6 +247,7 @@ function editcrm(obj){
 	    			$("#address-region-edit").val(country_nm+province_nm+city_nm+county_nm);
 					$('#business-name-edit').val(returndata.data.business_name);
 					$('#business-name-short-edit').val(returndata.data.business_code);
+
 	    			break;
 	    		default:
 	    			$("#status-message").html("请求失败").css('display','block');
