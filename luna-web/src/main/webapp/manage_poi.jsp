@@ -232,7 +232,6 @@
 <!--弹出层 end-->
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 <script src="<%=request.getContextPath() %>/plugins/hotkey/jquery.hotkeys.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/common/iframe.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/manage_poi_edit.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 <script type="text/javascript">
