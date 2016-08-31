@@ -571,6 +571,12 @@ var Inter = function () {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
 
+                //交易直通车
+                
+                //获取短信验证码
+                getSMSCode:{url:context+'/common/sms/getCode',type:'GET'},
+                checkSMSCode: { url: context + '/common/sms/checkCode', type:'GET'},
+
 
                 //银行选择
                 selectCity: { url: '', type: 'GET' }, //选择城市

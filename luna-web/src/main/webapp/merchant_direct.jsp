@@ -84,7 +84,7 @@
                             <div class="form-body">
                                 <h5 class="form-section">联系信息</h5>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required" placeholder="请输入你的真实姓名">
@@ -92,13 +92,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>手机号码</label>
                                     <div class="col-md-4">
                                         <select name="phoneArea" class="form-control phone-area">
                                             <option value="+86">+86</option>
                                         </select>
-                                        <input type="text" class="form-control phone-num" id="" name="phone" required="required" placeholder="请输入您的手机号码">
+                                        <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码">
                                         <span class="help-block"> 请输入您的手机号码 </span>
                                     </div>
                                     <div class="col-md-4">
@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>短信验证码</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="verMsg" required="required">
@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="email" required="required">
@@ -122,7 +122,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人身份证</label>
                                     <div class="col-md-8">
                                         <div class="">
@@ -146,43 +146,43 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>身份证有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <input type="text" class="input-sm form-control datepicker" name="start" />
+                                            <input type="text" class="input-sm form-control datepicker" name="startIDDate" />
                                             <span class="input-group-addon">至</span>
-                                            <input type="text" class="input-sm form-control datepicker" name="end" />
+                                            <input type="text" class="input-sm form-control datepicker" name="endIDDate" />
                                         </div>
                                     </div>
                                 </div>
                                 <h4 class="form-section">商户信息</h4>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required">
+                                        <input type="text" class="form-control" id="" name="merchantName" required="required">
                                         <span class="help-block"> 填写商户的全称 </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required">
+                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required">
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required">
+                                        <input type="text" class="form-control" id="" name="businessLicense" required="required">
                                         <span class="help-block"> </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>*营业执照副本电子版</label>
                                     <div class="col-md-8">
                                         <div>
@@ -200,22 +200,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <input type="text" class="input-sm form-control datepicker" name="start" />
+                                            <input type="text" class="input-sm form-control datepicker" name="startBLDate" />
                                             <span class="input-group-addon">至</span>
-                                            <input type="text" class="input-sm form-control datepicker" name="end" />
+                                            <input type="text" class="input-sm form-control datepicker" name="endBLDate" />
                                         </div>
                                     </div>
                                 </div>
                                 <h4 class="form-section">商户结算账户信息</h4>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>账户类型</label>
                                     <div class="col-md-4">
-                                        <select class="form-control">
+                                        <select class="form-control" name="accountType">
                                             <option value="0">个人账户</option>
                                             <option value="1">对公账户</option>
                                         </select>
@@ -223,49 +223,52 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required">
+                                        <input type="text" class="form-control" id="" name="accountName" required="required">
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户银行</label>
                                     <div class="col-md-4">
-                                        <select id="bankCode" class="form-control">
+                                        <select id="bankCode" class="form-control" name="accountBank">
                                         </select>
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>支行城市</label>
                                     <div class="col-md-4 cityInfo">
-                                        <select id="provinceCode" class="form-control">
+                                        <select id="provinceCode" class="form-control" name="accountProvince">
                                         </select>
-                                        <select id="cityCode" class="form-control">
+                                        <select id="cityCode" class="form-control" name="accountCity">
                                         </select>
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户支行</label>
                                     <div class="col-md-4">
-                                        <select id="branchBankCode" class="form-control">
+                                        <select id="branchBankCode" class="form-control" name="accountBranchBank">
                                         </select>
                                         <span class="help-block"> </span>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
-                                    <label class="control-label col-md-3 text-right" for="inputWarning"><span
+                                    <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required">
+                                        <input type="text" class="form-control" id="" name="accountBank" required="required">
                                         <span class="help-block">  </span>
                                     </div>
+                                </div>
+                                <div class="form-group clearfix text-center">
+                                    <button type="button" id="btnSubmit" class="btn primary">提交</button>
                                 </div>
                             </div>
                         </form>
@@ -285,16 +288,15 @@
                     </div>
                     <!-- 确认提交End -->
                     <!-- 申请后界面 -->
-                    <div class="check main hide">
+                    <div id="check" class=" main hide">
                         <div class="main-hd">
                             <h3>交易直通车</h3></div>
                         <p class="launch">
                             <span>你所在的商户还未开通交易直通车</span>
-                            <button type="button">申请中</button>
+                            <button type="button" disabled="disabled">已申请</button>
                         </p>
                         <section class="section-wrapper">
                             <h5><i class="iconfont icon-profile"></i>介绍</h5>
-
                             <p class="">
                                 交易直通车是微景天下针对有商品交易需求的商户提供的一整套解决方案，开通交易直通车的商户可通过商户自己的后台发布商品，并对产生交易的订单进行管理，同时可结合实际的交易数据，优化自身的服务方向。</p>
                         </section>
@@ -309,7 +311,7 @@
                                     </span>
                                     </div>
                                     <div class="process-content-wrapper">
-                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日
+                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <a href="">查看资料</a>
                                     </div>
                                 </li>
                                 <li class="process-two">
@@ -320,6 +322,7 @@
                                     </span>
                                     </div>
                                     <div class="process-content-wrapper">确认商户信息，在线签署 <a href="">《微景天下交易服务协议》</a>，开启商户交易服务
+                                        <button type="button" class="sign-aggreement" id="btnSign">签署协议</button>
                                     </div>
                                 </li>
                             </ul>
@@ -336,6 +339,28 @@
         <jsp:include page="/templete/bottom.jsp" />
         <!--底部版权 end-->
     </div>
+    <!-- 签署协议 start-->
+    <div class="pop-overlay"></div>
+    <div class="pop pop-agreement" id="pop-agreement">
+        <div class="pop-title">
+            <!--<h4>驳回理由</h4>-->
+            <a href="javascript:;" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
+        </div>
+        <div class="pop-cont">
+            <!--协议内容 start-->
+            <jsp:include page="/templete/tradeAgreement.jsp" />
+            <!--协议内容 end-->
+        </div>
+        <div class="text-center">
+            <input id="signStatus" type="checkbox" name="signStatus" value="1"><label for="signStatus">同意以上协议</label>
+        </div>
+        <!-- 底部功能区 -->
+        <div class="pop-button text-center">
+            <button type="button" id="btnSignAgreement">签署</button>
+        </div>
+        <!-- 底部功能区 end -->
+    </div>
+    <!--签署协议 end-->
 
     <!-- jQuery 文件 -->
     <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
@@ -350,7 +375,11 @@
     <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/select2.full.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/i18n/zh-CN.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery-validation/localization/messages_zh.min.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/common/selectBank.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
     <!-- 页面级文件 End -->
 
