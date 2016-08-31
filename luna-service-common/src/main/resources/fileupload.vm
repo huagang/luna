@@ -4,7 +4,8 @@
         <input type="text"  #if (${readonly} !="") readonly="readonly" #end value="${privateField.field_val.value}" id="${privateField.field_def.field_name}" name="${privateField.field_def.field_name}" placeholder="${privateField.field_def.placeholder}" class="img-url"/>
 		#if (${readonly} == "")
 	        <div class="upload-thumbnail">
-	            <input id="${privateField.field_def.field_name}_fileup" name="${privateField.field_def.field_name}_fileup"
+##	            <input id="${privateField.field_def.field_name}_fileup" name="${privateField.field_def.field_name}_fileup"
+	            <input id="${privateField.field_def.field_name}_fileup" name="file"
 	            	 class="fileup" type="file" file_type=""
 	            	 file_size="${privateField.field_def.field_size}"
 	            	 onchange="asyncUploadFile(this,'${privateField.field_def.field_name}_fileup','${privateField.field_def.field_name}')"

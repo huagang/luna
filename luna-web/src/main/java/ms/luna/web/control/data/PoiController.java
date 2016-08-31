@@ -3,6 +3,7 @@ package ms.luna.web.control.data;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.QCosConfig;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
@@ -14,8 +15,7 @@ import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
-import ms.luna.web.model.managepoi.PoiModel;
-import ms.luna.web.util.RequestHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -66,6 +66,8 @@ public class PoiController extends BasicController {
     private VodPlayService vodPlayService;
 
     public static final String menu = "poi";
+
+    private Random random = new Random();
 
     /**
      * 二级菜单缓存
@@ -130,45 +132,46 @@ public class PoiController extends BasicController {
         ModelAndView mav = new ModelAndView();
         SessionHelper.setSelectedMenu(session, menu);
 
-        PoiModel poiModel = new PoiModel();
+//        PoiModel poiModel = new PoiModel();
 
         // 省份信息
-        List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
-        SimpleModel simpleModel = null;
-        try {
-            for (Map<String, String> map : pulldownController.loadProvinces()) {
-                simpleModel = new SimpleModel();
-                simpleModel.setValue(map.get("province_id"));
-                simpleModel.setLabel(map.get("province_nm_zh"));
-                lstProvinces.add(simpleModel);
-            }
-        } catch (Exception e) {
-            MsLogger.error(e);
-            mav.setViewName("/error.jsp");
-            return mav;
-        }
-        session.setAttribute("provinces", lstProvinces);
-
-        // 城市信息
-        List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
-        simpleModel = new SimpleModel();
-        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
-        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
-        lstCitys.add(simpleModel);
-        session.setAttribute("citys", lstCitys);
-
-        // 区/县信息
-        List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
-        simpleModel = new SimpleModel();
-        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
-        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_COUNTY_NM);
-        lstCountys.add(simpleModel);
-        session.setAttribute("countys", lstCountys);
-
-        mav.addObject("addPoiModel", poiModel);
-        mav.addObject("editPoiModel", new PoiModel());
-
-        session.setAttribute("poi_tags_length", poiModel.getPoiTags().size());
+//        List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
+//        SimpleModel simpleModel = null;
+//        try {
+//            for (Map<String, String> map : pulldownController.loadProvinces()) {
+//                simpleModel = new SimpleModel();
+//                simpleModel.setValue(map.get("province_id"));
+//                simpleModel.setLabel(map.get("province_nm_zh"));
+//                lstProvinces.add(simpleModel);
+//                lstProvinces.add(simpleModel);
+//            }
+//        } catch (Exception e) {
+//            MsLogger.error(e);
+//            mav.setViewName("/error.jsp");
+//            return mav;
+//        }
+//        session.setAttribute("provinces", lstProvinces);
+//
+//        // 城市信息
+//        List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
+//        simpleModel = new SimpleModel();
+//        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+//        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
+//        lstCitys.add(simpleModel);
+//        session.setAttribute("citys", lstCitys);
+//
+//        // 区/县信息
+//        List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
+//        simpleModel = new SimpleModel();
+//        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+//        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_COUNTY_NM);
+//        lstCountys.add(simpleModel);
+//        session.setAttribute("countys", lstCountys);
+//
+//        mav.addObject("addPoiModel", poiModel);
+//        mav.addObject("editPoiModel", new PoiModel());
+//
+//        session.setAttribute("poi_tags_length", poiModel.getPoiTags().size());
         mav.setViewName("/manage_poi.jsp");
         return mav;
     }
@@ -414,7 +417,7 @@ public class PoiController extends BasicController {
      * @param common_fields_def
      * @param topTag
      */
-    public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
+    public void initTags(ModelAndView mav, JSONObject common_fields_def, Integer topTag) {
         List<SimpleModel> topTags = new ArrayList<SimpleModel>();
         JSONArray tags = common_fields_def.getJSONArray("tags_def");
         List<SimpleModel> panoramaTypes = new ArrayList<SimpleModel>();
@@ -451,11 +454,14 @@ public class PoiController extends BasicController {
         }
 
         // 一级下拉列表
-        session.setAttribute("topTags", topTags);
+//        session.setAttribute("topTags", topTags);
+        mav.addObject("topTags", topTags);
         // 二级下拉列表
-        session.setAttribute("subTags", lstSubTag);
+//        session.setAttribute("subTags", lstSubTag);
+        mav.addObject("subTags", lstSubTag);
         // 全景类型列表
-        session.setAttribute("panoramaTypes", panoramaTypes);
+//        session.setAttribute("panoramaTypes", panoramaTypes);
+        mav.addObject("panoramaTypes", panoramaTypes);
     }
 
     /**
@@ -741,8 +747,11 @@ public class PoiController extends BasicController {
                             if (ext != null) {
                                 String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
                                 String fileName = "/" + VbMD5.generateToken() + ext;
+//                                JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + thumbnail,
+//                                        COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+                                String path = String.format("%s/%s/%s", QCosConfig.ENV, "pic", "poi") + "/";
                                 JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + thumbnail,
-                                        COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+                                        COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                                 if ("0".equals(uploadResult.getString("code"))) {
                                     JSONObject uploadedData = uploadResult.getJSONObject("data");
                                     thumbnail = uploadedData.getString("access_url");
@@ -1200,10 +1209,13 @@ public class PoiController extends BasicController {
                     try {
                         String ext = VbUtility.getExtensionOfPicFileName(value);
                         if (ext != null) {
-                            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-                            String fileName = "/" + VbMD5.generateToken() + ext;
+//                            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+//                            String fileName = "/" + VbMD5.generateToken() + generateFileName(ext);
+//                            JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
+//                                    COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "pic", "poi") + "/";
                             JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-                                    COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                                    COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("access_url");
@@ -1230,8 +1242,11 @@ public class PoiController extends BasicController {
                         if (ext != null) {
                             String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
                             String fileName = "/" + VbMD5.generateToken() + ext;
+//                            JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
+//                                    COSUtil.LUNA_BUCKET, COSUtil.getCosPoiAudioFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "audio", "poi") + "/";
                             JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-                                    COSUtil.LUNA_BUCKET, COSUtil.getCosPoiAudioFolderPath() + "/" + date, fileName);
+                                    COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("access_url");
@@ -1283,5 +1298,11 @@ public class PoiController extends BasicController {
             default:
                 return value;
         }
+    }
+
+    private String generateFileName(String ext) {
+        String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10, '0') + ext;
+        return fileNameInCloud;
     }
 }

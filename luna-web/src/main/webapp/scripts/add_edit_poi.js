@@ -154,34 +154,85 @@ $(function () {
     });
 
     $('#thumbnail_fileup').on('change', function(event){
-            var file = event.target.files[0];
-            var res = FileUploader._checkValidation('pic',file);
-            if(res.error){
-                    $('#thumbnail_warn').html(res.msg).css('display','block');
-                    event.target.value = '';
-                    return;
-             }
-            cropper.setFile(file, function(file){
-                cropper.close();
-                FileUploader.uploadMediaFile({
-                        type: 'pic',
-                            file: file,
-                            resourceType: 'poi',
-                            resourceId: window.poiId,
-                            success: function(data){
-                                $('#thumbnail').val(data.data.access_url);
-                                $('#thumbnail-show').attr('src', data.data.access_url);
-                                $('#thumbnail_warn').css('display', 'none');
-                            },
-                        error: function(data){
-                                $('#thumbnail_warn').html(data.msg).css('display','block');
-                                alert('上传失败');
-                            }
-                    });
-                $('#thumbnail_fileup').val('');
-            }, function(){
-                $('#thumbnail_fileup').val('');
+        var file = event.target.files[0];
+        var res = FileUploader._checkValidation('pic',file);
+        if(res.error){
+            $('#thumbnail_warn').html(res.msg).css('display','block');
+            event.target.value = '';
+            return;
+        }
+        cropper.setFile(file, function(file){
+            cropper.close();
+            FileUploader.uploadMediaFile({
+                type: 'pic',
+                file: file,
+                resourceType: 'poi',
+                resourceId: window.poiId,
+                success: function(data){
+                    $('#thumbnail').val(data.data.access_url);
+                    $('#thumbnail-show').attr('src', data.data.access_url);
+                    $('#thumbnail_warn').css('display', 'none');
+                },
+                error: function(data){
+                    $('#thumbnail_warn').html(data.msg).css('display','block');
+                    alert('上传失败');
+                }
             });
+            $('#thumbnail_fileup').val('');
+        }, function(){
+            $('#thumbnail_fileup').val('');
+        });
+    });
+
+    $('#audio_fileup').on('change', function(event){
+        var file = event.target.files[0];
+        var res = FileUploader._checkValidation('audio',file);
+        if(res.error){
+            $('#audio_warn').html(res.msg).css('display','block');
+            event.target.value = '';
+            return;
+        }
+        FileUploader.uploadMediaFile({
+            type: 'audio',
+            file: file,
+            resourceType: 'poi',
+            resourceId: window.poiId,
+            success: function(data){
+                $('#audio').val(data.data.access_url);
+                $('#audio_warn').css('display', 'none');
+            },
+            error: function(data){
+                $('#audio_warn').html(data.msg).css('display','block');
+                alert('上传失败');
+            }
+        });
+        $('#audio_fileup').val('');
+    });
+
+    $('#video_fileup').on('change', function(event){
+        var file = event.target.files[0];
+        var res = FileUploader._checkValidation('video',file);
+        if(res.error){
+            $('#video_warn').html(res.msg).css('display','block');
+            event.target.value = '';
+            return;
+        }
+        FileUploader.uploadMediaFile({
+            //url:Inter.getApiUrl().poiVideoUpload.url,
+            type: 'video',
+            file: file,
+            resourceType: 'poi',
+            resourceId: window.poiId,
+            success: function(data){
+                $('#video').val(data.data.vod_file_id);
+                $('#video_warn').css('display', 'none');
+            },
+            error: function(data){
+                $('#video_warn').html(data.msg).css('display','block');
+                alert('上传失败');
+            }
+        });
+        $('#video_fileup').val('');
     });
 
     //页卡项选中
