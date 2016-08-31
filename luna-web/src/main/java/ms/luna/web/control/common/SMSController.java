@@ -63,7 +63,7 @@ public class SMSController {
             JSONObject inData = new JSONObject();
             inData.put("uniqueId", phoneNo);
             inData.put("phoneNo", phoneNo);
-            inData.put("target", target);
+
             inData.put("time", 120000L);
             JSONObject result = smsService.sendCode(inData);
             return result;

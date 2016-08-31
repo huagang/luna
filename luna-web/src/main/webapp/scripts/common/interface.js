@@ -68,7 +68,6 @@ var Inter = function () {
                     url: context + '/content/app/token',
                     type: 'GET'
                 },
-
                 //数据管理
                 poiInit: {
                     url: context + "/data/poi",
@@ -574,7 +573,7 @@ var Inter = function () {
                 //交易直通车
                 
                 //获取短信验证码
-                getSMSCode:{url:context+'/common/sms/getCode',type:'GET'},
+                getSMSCode:{url:context+'/common/sms/getCodeS',type:'POST'},
                 checkSMSCode: { url: context + '/common/sms/checkCode', type:'GET'},
 
 

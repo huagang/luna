@@ -14,8 +14,6 @@ var Util = function() {
          */
         setAjax: function(url, args, sucCall, errCall, method) {
             var self = this;
-
-            // args = self.objectToStr(args);
             var ajaxOptions = {
                 type: method || 'POST',
                 dataType: 'json',
@@ -68,11 +66,11 @@ var Util = function() {
                     }
                 }
             };
-            if (method && method === 'GET') {
-                ajaxOptions.data = args;
-            } else {
-                ajaxOptions.contentType = 'application/json; charset=utf-8';
-            }
+            // if (method && method === 'GET') {
+            //     ajaxOptions.data = args;
+            // } else {
+            //     ajaxOptions.contentType = 'application/json; charset=utf-8';
+            // }
             return $.ajax(ajaxOptions);
         },
 

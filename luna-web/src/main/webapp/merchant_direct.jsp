@@ -88,7 +88,7 @@
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="name" required="required" placeholder="请输入你的真实姓名">
-                                        <span class="help-block">请填写商户业务对接联系人的真实姓名</span>
+                                        <!--<span class="help-block">请填写商户业务对接联系人的真实姓名</span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -99,7 +99,7 @@
                                             <option value="+86">+86</option>
                                         </select>
                                         <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码">
-                                        <span class="help-block"> 请输入您的手机号码 </span>
+                                        <!--<span class="help-block"> 请输入您的手机号码 </span>-->
                                     </div>
                                     <div class="col-md-4">
                                         <button type="button" id="getVerMsg">获取短信验证码</button>
@@ -109,8 +109,8 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>短信验证码</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="verMsg" required="required">
-                                        <span class="help-block"> 请输入6位手机短信验证码 </span>
+                                        <input id="verCode" type="text" class="form-control" id="" name="verCode" required="required" placeholder="请输入6位手机验证码">
+                                        <!--<span class="help-block"> 请输入6位手机短信验证码 </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -118,7 +118,7 @@
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="email" required="required">
-                                        <span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>
+                                        <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -162,7 +162,7 @@
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="merchantName" required="required">
-                                        <span class="help-block"> 填写商户的全称 </span>
+                                        <!--<span class="help-block"> 填写商户的全称 </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -170,7 +170,7 @@
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="merchantPhone" required="required">
-                                        <span class="help-block"></span>
+                                        <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -178,7 +178,7 @@
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="businessLicense" required="required">
-                                        <span class="help-block"> </span>
+                                        <!--<span class="help-block"> </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -219,7 +219,7 @@
                                             <option value="0">个人账户</option>
                                             <option value="1">对公账户</option>
                                         </select>
-                                        <span class="help-block"></span>
+                                        <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -227,7 +227,7 @@
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="accountName" required="required">
-                                        <span class="help-block"></span>
+                                        <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -236,7 +236,7 @@
                                     <div class="col-md-4">
                                         <select id="bankCode" class="form-control" name="accountBank">
                                         </select>
-                                        <span class="help-block"></span>
+                                        <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -247,7 +247,7 @@
                                         </select>
                                         <select id="cityCode" class="form-control" name="accountCity">
                                         </select>
-                                        <span class="help-block"></span>
+                                        <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -256,7 +256,7 @@
                                     <div class="col-md-4">
                                         <select id="branchBankCode" class="form-control" name="accountBranchBank">
                                         </select>
-                                        <span class="help-block"> </span>
+                                        <!--<span class="help-block"> </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
@@ -264,7 +264,7 @@
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" id="" name="accountBank" required="required">
-                                        <span class="help-block">  </span>
+                                        <!--<span class="help-block">  </span>-->
                                     </div>
                                 </div>
                                 <div class="form-group clearfix text-center">
@@ -366,9 +366,10 @@
     <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
     <!-- jQuery 文件 End -->
 
-    <!-- Angular文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-    <!-- Angular文件 End -->
+    <!-- common文件 -->
+    <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
+    <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>
+    <!-- common文件 End -->
 
     <!-- 页面级文件 -->
     <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>

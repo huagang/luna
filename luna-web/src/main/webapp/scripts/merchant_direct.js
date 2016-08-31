@@ -97,23 +97,55 @@ var initCreatePage = function () {
     //点击获取验证码
     var getValidateMsg = function () {
         $('#getVerMsg').on('click', function (e) {
-            var phone = $('#phone').val();
-            if (phone) {
+            var phone = $('#phone').val(),
+                mobileReg = /^((1[0-9]{2})+\d{8})$/;
+            if (phone && mobileReg.test(phone)) {
                 var second = 60,
-                    self = this;
-                $(self).text(second + 's');
-                $(self).addClass('disabled').attr('disabled', 'disabled');
-                var conutS = setInterval(function () {
-                    second -= 1;
-                    $(self).text(second + 's');
-                    if (second == 0) {
-                        $(self).removeClass('disabled').text('重新发送').removeAttr('disabled');
-                        clearInterval(conutS);
+                    self = this,
+                    ajaxData = {
+                        'phoneNo': phone,
+                        'target': phone,
+                    };
+                Util.setAjax(Inter.getApiUrl().getSMSCode.url, ajaxData, function (res) {
+                    if (res.code == "0") {
+                        $(self).text(second + 's').addClass('disabled').attr('disabled', 'disabled');
+                        var conutS = setInterval(function () {
+                            second -= 1;
+                            $(self).text(second + 's');
+                            if (second == 0) {
+                                $(self).removeClass('disabled').text('重新发送').removeAttr('disabled');
+                                clearInterval(conutS);
+                            }
+                        }, 1000);
+                    } else {
+                        console.log('验证码发送失败');
                     }
-                }, 1000);
-                $.ajax({
-                    url:Inter.getApiUrl().getSMSCode.url,
-                });
+                }, function (res) {
+                    console.log('服务出现问题，请稍后再试');
+                }, Inter.getApiUrl().getSMSCode.type);
+            } else {
+                console.log('手机号码错误');
+            }
+        });
+        $('#verCode').on('blur', function (e) {
+            var verCode = $(this).val(),
+                codeReg = /^[0-9]{6}$/,
+                phone = $('#phone').val(),
+                ajaxData = {
+                    'phoneNo': phone,
+                    'target': phone,
+                    'code':,
+                };
+            if (codeReg.test(verCode)) {
+                Util.setAjax(Inter.getApiUrl().checkSMSCode.url, ajaxData, function (res) {
+                    if (res.code == "0") {
+                        console.log('验证成功');
+                    } else {
+                        console.log('验证码验证失败');
+                    }
+                }, function (res) {
+                    console.log('服务出现问题，请稍后再试');
+                }, Inter.getApiUrl().checkSMSCode.type);
             }
         });
     };
