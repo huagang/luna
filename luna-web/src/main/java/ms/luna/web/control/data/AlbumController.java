@@ -38,7 +38,7 @@ public class AlbumController extends BasicController {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         Map<String, JSONObject> menuAuth = user.getMenuAuth();
         JSONObject jsonObject = menuAuth.get("/data/album");
-        String url = jsonObject.getString(LunaMenuTable.FIELD_URL);
+        String url = jsonObject.getString(LunaMenuTable.FIELD_OUTER_URL);
         String uniqueId = user.getUniqueId();
         try {
             String token = TokenUtil.generateTokenByUserId(uniqueId);
