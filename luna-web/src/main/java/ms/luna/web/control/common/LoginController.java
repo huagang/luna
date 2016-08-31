@@ -8,6 +8,7 @@ import ms.luna.biz.sc.MenuService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.CommonURI;
 import ms.luna.web.common.SessionHelper;
 import org.apache.commons.lang.StringUtils;
@@ -84,6 +85,7 @@ public class LoginController extends BasicController {
 
         session = request.getSession(true);
         SessionHelper.setUser(session, lunaUserSession);
+        SessionHelper.setIsRoleBusiness(session, AuthHelper.hasBusinessAuth(lunaUserSession));
 
         JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
         logger.trace(moduleAndMenuByRoleId);
