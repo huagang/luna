@@ -5,8 +5,4 @@
 
 $(function(){
 
-    $('#album-system').on('load', function(){
-        alert('hhaa');
-    });
-
 });
