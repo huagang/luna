@@ -94,19 +94,17 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     private static final int TYPE_TO_USER = 1;
 
     private void sendEmail(int type) {
-//        if (type == TYPE_TO_MANAGER) {
-//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-//            message.setContent("");
-//            CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
-//            luna_nm, role_nm, webAddr)
-//            emailService.sendEmail(message);
-//        } else if (type == TYPE_TO_USER) {
-//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-//            message.setContent("");
-//            CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
-//                    luna_nm, role_nm, webAddr)
-//            emailService.sendEmail(message);
-//        }
+        if (type == TYPE_TO_MANAGER) {
+            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+            message.setContent("");
+            //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
+            //luna_nm, role_nm, webAddr)
+            emailService.sendEmail(message);
+        } else if (type == TYPE_TO_USER) {
+            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+            message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
+            emailService.sendEmail(message);
+        }
     }
 
     @Override
@@ -241,6 +239,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
+                sendEmail(TYPE_TO_USER);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
                 JSONObject data = new JSONObject();

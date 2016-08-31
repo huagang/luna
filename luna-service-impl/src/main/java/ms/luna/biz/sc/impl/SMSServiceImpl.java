@@ -72,9 +72,11 @@ public class SMSServiceImpl implements SMSService {
             String code = jsonObject.getString("code");
             String target = jsonObject.getString("target");
             boolean result = IdentifyCodeService.checkCode(uniqueId, target, code);
-            JSONObject toSend = new JSONObject();
-            toSend.put("result", result);
-            return FastJsonUtil.sucess("success", toSend);
+            if (result) {
+                return FastJsonUtil.sucess("success");
+            } else {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "验证码错误");
+            }
         } catch (Exception e) {
             logger.error("Failed to check the code.", e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
