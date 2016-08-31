@@ -80,7 +80,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
             //SEND EMAIL
-            sendEmail();
+            sendEmail(TYPE_TO_MANAGER);
         } catch (Exception ex) {
             logger.error("Failed to create lunaTradeApplication", ex);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -89,13 +89,18 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         return FastJsonUtil.sucess("success");
     }
 
-    private void sendEmail(){
-        MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-        message.setContent("");
-        //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
-        //luna_nm, role_nm, webAddr)
+    private static final int TYPE_TO_MANAGER = 0;
 
-        emailService.sendEmail(message);
+    private static final int TYPE_TO_USER = 1;
+
+    private void sendEmail(int type) {
+        if (type == TYPE_TO_MANAGER) {
+            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+            message.setContent("");
+            //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
+            //luna_nm, role_nm, webAddr)
+            emailService.sendEmail(message);
+        }
     }
 
     @Override
@@ -122,7 +127,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
             //SEND EMAIL
-            sendEmail();
+            sendEmail(TYPE_TO_MANAGER);
 
             return FastJsonUtil.sucess("success");
         } catch (Exception ex) {

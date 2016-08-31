@@ -34,8 +34,8 @@ public class BankAndCityController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/city/{provinceCode}")
     @ResponseBody
-    public JSONObject getCityList(@PathVariable Integer provinceCode,
-                                  @RequestParam String cityName) {
+    public JSONObject getCityList(@PathVariable(value = "provinceCode") Integer provinceCode,
+                                  @RequestParam(value = "cityName") String cityName) {
         JSONObject inData = new JSONObject();
         inData.put("cityName", cityName);
         inData.put("provinceCode", provinceCode);
@@ -44,9 +44,9 @@ public class BankAndCityController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/branch/{bankCode}")
     @ResponseBody
-    public JSONObject getBranchList(@PathVariable String bankCode,
-                                    @RequestParam String branchName,
-                                    @RequestParam String cityCode) {
+    public JSONObject getBranchList(@PathVariable(value = "bankCode") String bankCode,
+                                    @RequestParam(value = "branchName") String branchName,
+                                    @RequestParam(value = "cityCode") String cityCode) {
         JSONObject inData = new JSONObject();
         inData.put("bankCode", bankCode);
         inData.put("branchName", branchName);
