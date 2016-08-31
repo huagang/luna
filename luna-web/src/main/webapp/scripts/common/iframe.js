@@ -23,15 +23,28 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     setInterval(function(){
-        oldHeight = height;
-        height = document.body.lastElementChild.offsetTop;
+        var children = document.body.childNodes, cur;
+        height=0;
+        for(var i = children.length - 1 ; i >= 0 ;i--){
+            cur = (children[i].clientHeight || 0) + (children[i].offsetTop || 0);
+            if(height < cur){
+                height = cur;
+            }
+        }
+
+        if(height < 400){
+            height = 400;
+        }
+
         if(oldHeight !== height){
             iframe.src = iframe.src.replace(/height=(\d+)/, "height=" + height);
             if(iframe2){
                 iframe2.src = iframe2.src.replace(/height=(\d+)/, "height=" + height);
             }
         }
-    }, 1000);
+    }, 500);
+
+
 
     function resize(){
         iframe.src = iframe.src.replace(/height=(\d+)/, "height=" + 520);
