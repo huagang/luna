@@ -319,11 +319,10 @@ public class LunaUserServiceImpl implements LunaUserService {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(LunaMenuTable.FIELD_AUTH, menu.getAuth());
                 String menuUrl = MenuHelper.formatMenuUrl(module, menu);
-                if (StringUtils.isBlank(menu.getUrl())) {
-                    jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
-                } else {
-                    jsonObject.put(LunaMenuTable.FIELD_URL, menu.getUrl());
+                if (StringUtils.isNotBlank(menu.getUrl())) {
+                    jsonObject.put(LunaMenuTable.FIELD_OUTER_URL, menu.getUrl());
                 }
+                jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
                 menuAuth.put(menuUrl, jsonObject);
             }
         }
