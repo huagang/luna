@@ -60,7 +60,6 @@
                 		<tbody bn-rows>
                 			<tr ng-repeat="rowData in router.rowsData" data-id={{rowData.id}}>
                 				<td>{{rowData.name}}</td>
-                				<td>{{rowData.businessName}}</td>
                 				<td>{{rowData.costName}}</td>
                 				<td>{{rowData.creator}}</td>
                 				<td>

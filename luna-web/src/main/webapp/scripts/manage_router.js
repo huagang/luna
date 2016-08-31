@@ -121,10 +121,19 @@ function routerController($rootScope, $scope, $http){
 
 	// 拉取线路数据
 	vm.fetchData = function(){
+		var params ={
+				offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1),
+				limit: vm.pagination.maxRowNum
+		};
+		var business = localStorage.getItem('business') || '';
+		if(business){
+			params.business_id = JSON.parse(business).id;
+		}
+
 		$http({
 			url: vm.urls.getRouteList.url,
 			method: vm.urls.getRouteList.type,
-			params: {offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1), limit: vm.pagination.maxRowNum},
+			params: params
 		}).then(function(res){
 			if(res.data.code === 0){
 				vm.rowsData = res.data.rows.map(function(item){
@@ -221,13 +230,7 @@ function routerController($rootScope, $scope, $http){
 			return;
 		}
 		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
-			/*var data = new FormData();
-			data.append('id', vm.data.id || null);
-			data.append('name', vm.data.name);
-			data.append('description', vm.data.description);
-			data.append('cost_id', parseInt(vm.data.energyCost));
-			data.append('business_id',vm.data.businessId);
-			data.append('cover', vm.data.pic);*/
+
 			var data = {
 				name: vm.data.name,
 				description: vm.data.description,
