@@ -75,6 +75,25 @@
 <div class="message-wrapper ng-hide" ng-show="manage.message">
   <div class="message">{{manage.message}}</div>
 </div>
+<div class="new-merchant">
+  <div class="mask"></div>
+  <div class="pop-modal">
+    <div class="pop-title">
+      <h4>选择类目</h4>
+      <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+    </div>
+    <div class="pop-cont">
+
+    </div>
+    <div class="pop-fun">
+      <div class="pull-right">
+        <button type="button" class="confirm">确定</button>
+        <button type="button" class="cancel button-close">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   window.context = "<%=request.getContextPath() %>";
 </script>
