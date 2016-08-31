@@ -15,17 +15,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import ms.luna.web.control.common.BasicController;
+import ms.luna.web.common.SessionHelper;
 /**
  * Created by SDLL18 on 16/8/25.
  */
 
 @Controller
 @RequestMapping("/merchant/tradeApplication")
-public class LunaTradeApplicationController {
-
+public class LunaTradeApplicationController extends BasicController {
+    public static final String menu = "merchant";
     @Autowired
     private LunaTradeApplicationService lunaTradeApplicationService;
 
@@ -33,12 +36,21 @@ public class LunaTradeApplicationController {
     private ManageMerchantService manageMerchantService;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView init() {
-        ModelAndView modelAndView = new ModelAndView();
+    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         //TODO 指定返回页面jsp
-        modelAndView.setViewName("");
-        return modelAndView;
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return buildModelAndView("/merchant_direct");
     }
+
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
+    public ModelAndView serveProtocol(HttpServletRequest request, HttpServletResponse response) {
+
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return buildModelAndView("/tradeserve_protocol");
+    }
+
 
     private boolean checkAuth(HttpServletRequest request, Integer businessId) {
 

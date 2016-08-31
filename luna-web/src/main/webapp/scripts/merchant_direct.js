@@ -22,11 +22,20 @@ var initProcessPage = function () {
  * 初始化创建页面数据
  */
 var initCreatePage = function () {
+    var initSelectBank = function () {
+        $.initSelectBank({
+            bankCode: 'bankCode', //银行ID
+            provinceCode: 'provinceCode',
+            cityCode: 'cityCode',
+            branchBankCode: 'branchBankCode',
+        });
+    };
     return {
         init: function () {
             $('.datepicker').datepicker({
                 language: "zh-CN",
             });
+            initSelectBank();
         }
     };
 } ();
