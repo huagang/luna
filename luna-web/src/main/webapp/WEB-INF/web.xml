@@ -97,7 +97,7 @@
 		<filter-class>ms.luna.web.filter.LunaLoginFilter</filter-class>
 		<init-param>
 			<param-name>exclude</param-name>
-			<param-value>/img/*,/plugins/*,/styles/*,/scripts/*,/resources/*,/api/*,/common/*,*/vm/*,*.ico,*/auth_failed.jsp,*/login.jsp,*/error.jsp</param-value>
+			<param-value>/img/*,/plugins/*,/styles/*,/scripts/*,/resources/*,/api/*,/common/*,*/vm/*,*.ico,*/auth_failed.jsp,*/login.jsp,*/error.jsp, */iframe.jsp</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

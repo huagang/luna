@@ -5,31 +5,7 @@
 
 .main{
     min-height: 600px;
-    padding-bottom: 10px;
-}
-
-@media screen and (max-height: 700px){
-    div.main{
-        min-height: 520px;
-    }
-}
-
-@media screen and (min-height: 700px) and (max-height: 800px){
-    div.main{
-        min-height: 550px;
-    }
-}
-
-@media screen and (min-height: 800px) and (max-height: 1000px){
-    div.main{
-        min-height: 700px;
-    }
-}
-
-@media screen and (min-height: 1000px){
-    div.main{
-        min-height: 850px;
-    }
+    padding: 27px 27px 10px 27px;
 }
 
 
