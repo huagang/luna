@@ -60,5 +60,4 @@
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/canvas-toblob/canvas-to-blob.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/cropper/cropper.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/plugins/canvas"></script>
 <script type="text/javascript" charset="uf-8" src="<%=request.getContextPath() %>/scripts/common/imgCropper.js"></script>
