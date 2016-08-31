@@ -16,6 +16,7 @@ import ms.luna.biz.table.LunaModuleTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleMenuCache;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,12 +99,13 @@ public class MenuServiceImpl implements MenuService {
                 JSONArray menuArray = new JSONArray();
                 for (LunaMenu menu : menuList) {
                     JSONObject menuJson = (JSONObject) JSON.toJSON(menu);
-                    if (menu.getUrl() == null) {
+                    if (StringUtils.isBlank(menu.getUrl())) {
                         menuJson.put(LunaMenuTable.FIELD_IS_OUTER, 0);
-                        menuJson.put(LunaMenuTable.FIELD_URL, MenuHelper.formatMenuUrl(module, menu));
                     } else {
                         menuJson.put(LunaMenuTable.FIELD_IS_OUTER, 1);
+                        menuJson.put(LunaMenuTable.FIELD_OUTER_URL, menu.getUrl());
                     }
+                    menuJson.put(LunaMenuTable.FIELD_URL, MenuHelper.formatMenuUrl(module, menu));
                     menuArray.add(menuJson);
                 }
 

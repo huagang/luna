@@ -350,7 +350,6 @@ public class PoiController extends BasicController {
         }
 
         try {
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject result = this.savePois(savedExcel, unZipped, user);
             MsLogger.info(result.toJSONString());
