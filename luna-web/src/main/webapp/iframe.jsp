@@ -13,7 +13,20 @@
 </head>
 <body>
   <script>
-     top.
+          var height, oldHeight=0;
+          setInterval(function(){
+              try{
+                  height = location.href.match(/height=(\d+)/)[1];
+                  console.log(height);
+                  if(height !== oldHeight){
+                      window.top.document.getElementsByTagName('iframe')[0].height = parseInt(height);
+                  }
+              } catch(e){
+                console.log(e);
+              }
+
+          }, 1000);
+
   </script>
 </body>
 </html>
