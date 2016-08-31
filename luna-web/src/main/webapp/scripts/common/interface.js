@@ -557,6 +557,9 @@ var Inter = function () {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
+
+                // 商品管理
+                fetchMerchantList: {url: context + '/content'}
             };
         }
     };

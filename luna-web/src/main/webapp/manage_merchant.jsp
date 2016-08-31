@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" type="text/css" />
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_article.css">
 </head>
-<body ng-app="manageArticle" ng-controller="articleController as article">
+<body ng-app="manageMerchant" ng-controller="ManageMerchantController as manage">
 <div class="container-fluid">
   <!--通用导航栏 start-->
   <jsp:include page="/templete/header.jsp"/>
@@ -43,14 +43,27 @@
             <table class="table">
               <thead>
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>商品名称</td>
+                  <td>价格(元)</td>
+                  <td>库存</td>
+                  <td>总销量</td>
+                  <td>发布时间</td>
+                  <td>状态</td>
+                  <td>操作</td>
                 </tr>
               </thead>
+              <tbody>
+                <tr>
+                  <td colspan="0">
+                      <label>
+                          <input type="checkbox" /> 全选
+                      </label>
+                      <button type="button">上架</button>
+                      <button type="button">下架</button>
+                      <button type="button">删除</button>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
