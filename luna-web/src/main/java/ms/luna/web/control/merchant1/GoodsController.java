@@ -29,7 +29,7 @@ public class GoodsController extends BasicController {
     @Autowired
     private LunaGoodsService lunaGoodsService;
 
-    private final static String menu = "goods";
+    private final static String menu = "deal";
 
     // 页面初始化
     @RequestMapping(method = RequestMethod.GET, value = "")
@@ -43,9 +43,9 @@ public class GoodsController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject asyncSearchGoods(
-            @RequestParam(required = false, defaultValue = "0") Integer offset,
-            @RequestParam(required = false, defaultValue = Integer.MAX_VALUE + "") Integer limit,
-            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, value = "offset", defaultValue = "0") int offset,
+            @RequestParam(required = false, value = "limit", defaultValue = Integer.MAX_VALUE + "") int limit,
+            @RequestParam(required = false, value = "keyword", defaultValue = "") String keyword,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             JSONObject param = new JSONObject();
@@ -105,7 +105,7 @@ public class GoodsController extends BasicController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseBody
     public JSONObject deleteGoods(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") int id,
             HttpServletRequest request, HttpServletResponse response) {
         try {
             JSONObject result = lunaGoodsService.deleteGoods(id);
@@ -119,7 +119,7 @@ public class GoodsController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public JSONObject getGoodsInfo(@PathVariable("id") Integer id) {
+    public JSONObject getGoodsInfo(@PathVariable("id") int id) {
         try {
             JSONObject result = lunaGoodsService.getGoodsInfo(id);
             MsLogger.debug(result.toString());
@@ -134,7 +134,7 @@ public class GoodsController extends BasicController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     @ResponseBody
     public JSONObject updateGoods(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") int id,
             HttpServletRequest request, HttpServletResponse response) {
         try {
             String name = RequestHelper.getString(request, "name");
@@ -159,7 +159,7 @@ public class GoodsController extends BasicController {
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             String unique_id = user.getUniqueId();
 
-            String[] keys = new String[]{"name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "sales", "online_status", "merchant_id", "business_id", "unique_id"};
+            String[] keys = new String[]{"name", "category_id", "description", "pic", "price", "stock", "transport_fee", "note", "merchant_id", "business_id", "unique_id"};
             String[] values = new String[]{name, category_id + "", description, pic, price, stock + "", transport_fee, note, merchant_id, business_id + "", unique_id};
             JSONObject param = setParameters2Json(keys, values);
             JSONObject result = lunaGoodsService.updateGoods(param, id);
@@ -176,8 +176,8 @@ public class GoodsController extends BasicController {
     @ResponseBody
     public JSONObject checkName(
             @RequestParam(required = true, value = "name") String name,
-            @RequestParam(required = false, value = "id") Integer id,
-            @RequestParam(required = true, value = "business_id") Integer business_id,
+            @RequestParam(required = false, value = "id") int id,
+            @RequestParam(required = true, value = "business_id") int business_id,
             HttpServletRequest request, HttpServletResponse response) {
         try{
             JSONObject result = lunaGoodsService.checkGoodsName(name, id, business_id);
@@ -190,10 +190,14 @@ public class GoodsController extends BasicController {
     }
 
     // 获取类别列表
-    @RequestMapping(method = RequestMethod.GET, value = "/category/{keyword}")
+    @RequestMapping(method = RequestMethod.GET, value = "/category")
     @ResponseBody
-    public JSONObject getGoodsCatgories(@PathVariable("keyword") String keyword) {
+    public JSONObject getGoodsCatgories(
+            @RequestParam(required = false, value = "keyword", defaultValue = "") String keyword) {
         try{
+            if(keyword == null){
+                keyword = "";
+            }
             JSONObject result = lunaGoodsService.getGoodsCategories(keyword);
             MsLogger.debug(result.toString());
             return result;

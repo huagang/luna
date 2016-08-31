@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +54,8 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
                 if(list != null && list.size() != 0) {
                     for(LunaGoodsResult lunaGoodsResult : list) {
                         JSONObject row = (JSONObject)JSONObject.toJSON(lunaGoodsResult);
-                        JSONArray pics = JSONArray.parseArray(lunaGoodsResult.getPic());
-                        row.put("pic", pics);
+                        JSONArray pics = FastJsonUtil.parse2Array(lunaGoodsResult.getPic().split(","));
+                        row.put(LunaGoodsTable.FIELD_PIC, pics);
                         rows.add(row);
                     }
                 }
@@ -76,6 +77,7 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
         try{
             // id, account, update_time, create_time, sales, online_status
             LunaGoods lunaGoods = JSONObject.toJavaObject(param, LunaGoods.class);
+            lunaGoods.setCreateTime(new Date());
             lunaGoodsDAO.insertSelective(lunaGoods);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
@@ -90,7 +92,8 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
         // id, account, update_time, create_time, sales, online_status
         try {
             LunaGoods lunaGoods = JSONObject.toJavaObject(param, LunaGoods.class);
-            lunaGoodsDAO.updateByPrimaryKey(lunaGoods);
+            lunaGoods.setId(id);
+            lunaGoodsDAO.updateByPrimaryKeySelective(lunaGoods);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to update goods. " + e.getMessage());
@@ -120,6 +123,9 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "goods id doesn't exist. id = " + id);
             }
             JSONObject data = (JSONObject)JSONObject.toJSON(lunaGoods);
+            String pic = lunaGoods.getPic();
+            JSONArray picArray = FastJsonUtil.parse2Array(pic.split(","));
+            data.put(LunaGoodsTable.FIELD_PIC, picArray);
             return FastJsonUtil.sucess("success", data);
         } catch (Exception e) {
             MsLogger.error("Failed to get goods info by id. " + e.getMessage());

@@ -13,7 +13,7 @@
         <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
         <result column="online_status" property="online_status" jdbcType="VARCHAR"/>
     </resultMap>
-    <select id="selectGoodsWithFilter" resultMap="LunaGoodsResult" parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsResult">
+    <select id="selectGoodsWithFilter" resultMap="LunaGoodsResult" parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsParameter">
         SELECT
             luna_goods.id as id,
             luna_goods.name as name,
@@ -39,7 +39,7 @@
         </isEqual>
     </select>
 
-    <select id="countGoodsWithFilter" resultClass="java.lang.Integer" parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsResult">
+    <select id="countGoodsWithFilter" resultClass="java.lang.Integer" parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsParameter">
         SELECT
             COUNT(1)
         FROM
