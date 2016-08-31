@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/common/bnkAndCity")
-public class BrankAndCityController {
+public class BankAndCityController {
 
     @Autowired
     private LunaCityService lunaCityService;
