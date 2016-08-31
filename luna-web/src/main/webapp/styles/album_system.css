@@ -5,11 +5,12 @@
 
 .main{
     min-height: 600px;
+    padding-bottom: 10px;
 }
 
 @media screen and (max-height: 700px){
     div.main{
-        min-height: 500px;
+        min-height: 520px;
     }
 }
 
