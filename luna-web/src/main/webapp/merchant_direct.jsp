@@ -126,11 +126,12 @@
                                         class="required" aria-required="true"> * </span>联系人身份证</label>
                                     <div class="col-md-8">
                                         <div class="">
-                                            <button type="button">依次上传身份证正反面电子照片</button>
+                                            <input type="file" onchange="" class="file" id="btnUploadIdPic" name="file" />
+                                            <button id="" type="button">依次上传身份证正反面电子照片</button>
                                             <span class="font-red-sunglo"> 需保证图片中文字清晰可见 </span>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="pic-wrapper">
+                                        <div class="col-md-12 idPic">
+                                            <!--<div class="pic-wrapper">
                                                 <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证">
                                                 <div class="text-center">
                                                     <a href="javascript:;">删除</a>
@@ -141,7 +142,7 @@
                                                 <div class="text-center">
                                                     <a href="javascript:;">删除</a>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -380,6 +381,7 @@
     <script src="<%=request.getContextPath()%>/plugins/jquery-validation/additional-methods.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/jquery-validation/localization/messages_zh.min.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/common/selectBank.js"></script>
+    <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
     <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
     <!-- 页面级文件 End -->

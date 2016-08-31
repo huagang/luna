@@ -132,9 +132,9 @@ var initCreatePage = function () {
                 codeReg = /^[0-9]{6}$/,
                 phone = $('#phone').val(),
                 ajaxData = {
-                    'phoneNo': phone,
+                    'phone': phone,
                     'target': phone,
-                    'code':,
+                    'code': verCode,
                 };
             if (codeReg.test(verCode)) {
                 Util.setAjax(Inter.getApiUrl().checkSMSCode.url, ajaxData, function (res) {
@@ -147,6 +147,27 @@ var initCreatePage = function () {
                     console.log('服务出现问题，请稍后再试');
                 }, Inter.getApiUrl().checkSMSCode.type);
             }
+        });
+    };
+
+    //上传身份证
+    var uploadIDPicture = function (e) {
+        $('#btnUploadIdPic').on('click', function (e) {
+            var picNum = $('.idPic .pic-wrapper').length;
+            if (picNum >= 2) {
+                e.preventDefault();
+                // e.stop
+                alert('请删除需要替换的照片，然后再上传');
+                return false;
+            } else {
+                return true;
+                // $('.idPic').append('<div class="pic-wrapper"><img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证"><div class="text-center"><a href="javascript:;">删除</a></div></div>');
+            }
+        });
+        $('#btnUploadIdPic').on('change', function (e) {
+            uploadPicture(this, function (res) {
+                console.log(res)
+            });
         });
     };
 
@@ -164,6 +185,7 @@ var initCreatePage = function () {
             initSelectBank();
             getValidateMsg();
             initSubmit();
+            uploadIDPicture();
             // initValidate();
         }
     };
@@ -226,4 +248,32 @@ function showDiv() {
         default:
             break;
     }
+}
+
+function uploadPicture(obj, callBack) {
+    var file = obj.files[0];
+    var res = FileUploader._checkValidation('pic', file);
+    if (res.error) {
+        $('#pic_warn').html(res.msg);
+        obj.value = '';
+        return;
+    }
+    cropper.setFile(file, function (file) {
+        cropper.close();
+        showLoadingTip('.pic_tip');
+        FileUploader.uploadMediaFile({
+            type: 'pic',
+            file: file,
+            resourceType: 'trade',
+            resourceId: '',
+            success: function (data) {
+                callBack(data);
+            },
+            error: function (data) {
+                obj.value = '';
+            }
+        });
+    }, function () {
+        event.target.value = '';
+    });
 }
