@@ -32,4 +32,17 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
     }, 1000);
+
+    function resize(){
+        iframe.src = iframe.src.replace(/height=(\d+)/, "height=" + 520);
+        if(iframe2){
+            iframe2.src = iframe2.src.replace(/height=(\d+)/, "height=" + 520);
+        }
+    }
+
+    window.lunaIframe = {
+        resize: resize
+    };
+
+
 });
