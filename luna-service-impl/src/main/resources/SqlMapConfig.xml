@@ -81,4 +81,10 @@
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_goods_category_ex_SqlMap.xml"/>
     <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_trade_application_SqlMap.xml"/>
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_trade_application_ex_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_bank_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_bank_ex_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_bank_branch_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_bank_branch_ex_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_city_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_city_ex_SqlMap.xml"/>
 </sqlMapConfig>

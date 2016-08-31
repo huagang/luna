@@ -87,8 +87,12 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="ms_merchant_manage">
+		<table tableName="luna_bank">
 			<!-- <generatedKey column="id" sqlStatement="MySql" identity="true"/> -->
+		</table>
+		<table tableName="luna_bank_branch">
+		</table>
+		<table tableName="luna_city">
 		</table>
 	</context>
 </generatorConfiguration>
