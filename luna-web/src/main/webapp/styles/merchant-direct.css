@@ -17,10 +17,13 @@ ul {
     line-height: 30px;
 }
 
-.launch button {
+.launch button,
+.sign-aggreement {
     float: right;
     background-color: #169bd5;
     border: 1px solid #169bd5;
+    height: 30px;
+    line-height: 20px;
 }
 
 .section-wrapper {
@@ -77,11 +80,12 @@ ul {
     border-left: 2px solid #e6e7ec;
 }
 
-
 .phone-num {
     width: 80%;
     float: left;
 }
+
+
 /*填写信息*/
 
 .icon-required {
@@ -95,7 +99,6 @@ ul {
     height: 30px;
 }
 
-
 .pic-wrapper {
     float: left
 }
@@ -105,9 +108,11 @@ ul {
     height: 150px;
     margin: 10px 10px 10px 0;
 }
-.cityInfo .select2{
+
+.cityInfo .select2 {
     float: left;
 }
+
 .form-section {
     margin: 30px 0;
     padding-bottom: 5px;
@@ -134,4 +139,19 @@ ul {
 
 .font-red-sunglo {
     color: #E26A6A!important;
+}
+
+
+/*弹出框样式*/
+
+.pop-button {
+    margin: 0 0 30px 0;
+}
+
+.pop-agreement .agreement-content {
+    overflow-y: scroll;
+    width: 1000px;
+    height: 600px;
+    border: 1px solid #ddd;
+    padding: 20px;
 }
