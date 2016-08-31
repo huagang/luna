@@ -1,8 +1,13 @@
 package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.QCosConfig;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
+import ms.luna.web.control.inner.UploadController;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +40,9 @@ public class MerchantController extends BasicController {
 
     @Autowired
     private ManageMerchantService manageMerchantService;
+
+    @Autowired
+    private UploadController uploadController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/registPage")
     public ModelAndView init_regist(
@@ -190,6 +198,17 @@ public class MerchantController extends BasicController {
             MsLogger.debug("Failed to upload thumbnail: " + e.getMessage());
             return FastJsonUtil.error("-1", "Failed to upload thumbnail: ").toString();
         }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/upload")
+    @ResponseBody
+    public JSONObject uploadFile2Cloud(@RequestParam(required = true, value = "file") MultipartFile file,
+                                       @RequestParam(required = true, value = "type") String type,
+                                       @RequestParam(required = true, value = "resource_type") String resourceType,
+                                       @RequestParam(required = false, value = "resource_id") String resourceId,
+                                       HttpServletRequest request) throws IOException {
+
+        return uploadController.uploadFile2Cloud( file, type, resourceType, resourceId, request);
     }
 
     /**
