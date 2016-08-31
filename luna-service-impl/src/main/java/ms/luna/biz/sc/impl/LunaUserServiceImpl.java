@@ -22,6 +22,7 @@ import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
 import ms.luna.common.LunaUserSession;
 import ms.luna.schedule.service.EmailService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,10 +319,10 @@ public class LunaUserServiceImpl implements LunaUserService {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(LunaMenuTable.FIELD_AUTH, menu.getAuth());
                 String menuUrl = MenuHelper.formatMenuUrl(module, menu);
-                if (menu.getUrl() == null) {
+                if (StringUtils.isBlank(menu.getUrl())) {
                     jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
                 } else {
-                    jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
+                    jsonObject.put(LunaMenuTable.FIELD_URL, menu.getUrl());
                 }
                 menuAuth.put(menuUrl, jsonObject);
             }
