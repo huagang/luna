@@ -14,6 +14,7 @@
 <body>
   <script>
           var height, oldHeight=0;
+          window.top.document.getElementsByTagName('iframe')[0].height = 500;
           setInterval(function(){
               try{
                   height = location.href.match(/height=(\d+)/)[1];
@@ -25,7 +26,7 @@
                 console.log(e);
               }
 
-          }, 1000);
+          }, 500);
 
   </script>
 </body>
