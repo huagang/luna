@@ -76,7 +76,7 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
         try{
             // id, account, update_time, create_time, sales, online_status
             LunaGoods lunaGoods = JSONObject.toJavaObject(param, LunaGoods.class);
-            lunaGoodsDAO.insert(lunaGoods);
+            lunaGoodsDAO.insertSelective(lunaGoods);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to create goods. " + e.getMessage());

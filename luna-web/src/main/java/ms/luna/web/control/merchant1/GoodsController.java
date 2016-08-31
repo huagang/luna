@@ -23,7 +23,7 @@ import java.io.IOException;
  * Created: by greek on 16/8/29.
  */
 @Controller
-@RequestMapping("/merchant/goods")
+@RequestMapping("/merchant/deal")
 public class GoodsController extends BasicController {
 
     @Autowired
