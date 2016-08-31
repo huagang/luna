@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
-    setTimeout(function(){
+    setInterval(function(){
         oldHeight = height;
         height = document.body.lastElementChild.offsetTop;
         if(oldHeight !== height){
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 iframe2.src = iframe2.src.replace(/height=(\d+)/, "height=" + height);
             }
         }
-    }, 2000);
+    }, 1000);
 
     function resize(){
         iframe.src = iframe.src.replace(/height=(\d+)/, "height=" + 520);
