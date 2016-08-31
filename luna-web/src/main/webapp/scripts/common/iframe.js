@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     setInterval(function(){
+        oldHeight = height;
         var children = document.body.childNodes, cur;
         height=0;
         for(var i = children.length - 1 ; i >= 0 ;i--){
