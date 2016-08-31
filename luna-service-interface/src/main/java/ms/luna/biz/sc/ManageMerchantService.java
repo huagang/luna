@@ -89,14 +89,6 @@ public interface ManageMerchantService {
 	 */
 	JSONObject openMerchantById(String json);
 
-    /**
-     * 商户签署直通车协议
-     *
-     * @param json
-     * @return
-     */
-    JSONObject signAgreement(JSONObject json);
-
 	/**
 	 * 商户注册
 	 *
@@ -104,5 +96,13 @@ public interface ManageMerchantService {
 	 * @return
 	 */
 	JSONObject registMerchant(String json);
+
+    /**
+     * 商户签署直通车协议
+     *
+     * @param json
+     * @return
+     */
+    JSONObject signAgreement(JSONObject json);
 
 }

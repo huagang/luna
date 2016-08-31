@@ -98,6 +98,14 @@ public interface ManageMerchantBL {
     JSONObject openMerchantById(String json);
 
     /**
+     * 商户注册
+     *
+     * @param json
+     * @return
+     */
+    JSONObject registMerchant(String json);
+
+    /**
      * 商户签署直通车协议
      *
      * @param jsonObject
@@ -106,15 +114,19 @@ public interface ManageMerchantBL {
     JSONObject signAgreement(JSONObject jsonObject);
 
     /**
-     * 商户注册
+     * 更改商户直通车开通状态
      *
      * @param json
      * @return
      */
-    JSONObject registMerchant(String json);
-
-    JSONObject getMerchantTradeStatus(String json);
-
     JSONObject changeMerchantTradeStatus(String json);
 
+    /**
+     * 获取商户直通车开通状态
+     *
+     * @param json
+     * @return
+     */
+    JSONObject getMerchantTradeStatus(String json);
 }
+

@@ -101,36 +101,5 @@ alter table ms_column drop INDEX name;
 alter table ms_column drop index code;
 alter table ms_column add index(name);
 
-CREATE TABLE `luna_bank_branch` (
-  `bnkcode` VARCHAR(12) NOT NULL COMMENT '银行支行编号',
-  `clscode` VARCHAR(3) NOT NULL COMMENT '银行总行编号',
-  `citycode` VARCHAR(4) NOT NULL COMMENT '城市编号',
-  `lname` VARCHAR(60) NOT NULL COMMENT '银行支行名称',
-  PRIMARY KEY (`bnkcode`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行支行表';
-
-CREATE TABLE `luna_bank` (
-  `bankCode` VARCHAR(13) NOT NULL COMMENT '银行总行编号',
-  `bankName` VARCHAR(45) NOT NULL COMMENT '银行总行名称',
-  PRIMARY KEY (`bankCode`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='银行总行表';
-
-CREATE TABLE `luna_city` (
-  `city_kind` INT NOT NULL COMMENT '城市类别',
-  `city_no` INT NOT NULL COMMENT '城市编号',
-  `city_name` VARCHAR(50) NOT NULL COMMENT '城市名称',
-  `no1` INT NOT NULL,
-  `city_root` INT NULL COMMENT '所属城市编号',
-  `no2` INT NOT NULL,
-  PRIMARY KEY (`city_no`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='城市表';
-
-
-
-
-
-
-
-
 
 update luna_menu set auth='pano-viewer:login:*,pano-viewer:album:*,pano-viewer:pano:*', url='http://pano.visualbusiness.cn/backstage/htmls/albumEdit.html' where id=7;
