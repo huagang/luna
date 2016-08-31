@@ -13,6 +13,7 @@ import ms.luna.biz.dao.custom.model.MsColumnParameter;
 import ms.luna.biz.dao.custom.model.MsColumnResult;
 import ms.luna.biz.dao.model.MsColumn;
 import ms.luna.biz.dao.model.MsColumnCriteria;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsColumnTable;
 import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
@@ -131,6 +132,10 @@ public class ManageColumnBLImpl implements ManageColumnBL {
         JSONObject jsonObject = JSONObject.parseObject(json);
         Integer min = jsonObject.getInteger(CommonQueryParam.LIMIT_MIN);
         Integer max = jsonObject.getInteger(CommonQueryParam.LIMIT_MAX);
+        int businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+        MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId);
 
         MsColumnParameter parameter = new MsColumnParameter();
         if(min != null && max != null) {
@@ -138,11 +143,12 @@ public class ManageColumnBLImpl implements ManageColumnBL {
             parameter.setMax(max);
             parameter.setMin(min);
         }
+        parameter.setBusinessId(businessId);
 
         JSONObject data = new JSONObject();
         try {
             List<MsColumnResult> msColumnResults = msColumnDAO.selectColumnWithFilter(parameter);
-            int total = msColumnDAO.countByCriteria(new MsColumnCriteria());
+            int total = msColumnDAO.countByCriteria(msColumnCriteria);
             if(msColumnResults != null) {
                 data.put("rows", JSON.parse(JSON.toJSONString(msColumnResults, SerializerFeature.WriteDateUseDateFormat)));
                 data.put("total", total);
