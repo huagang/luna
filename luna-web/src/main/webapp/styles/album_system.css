@@ -2,3 +2,28 @@
     vertical-align: top;
     padding-top: 37px;
 }
+
+.main{
+    min-height: 600px;
+}
+
+@media screen and (max-height: 700px){
+    div.main{
+        min-height: 500px;
+    }
+}
+
+@media screen and (min-height: 700px) and (max-height: 800px){
+    div.main{
+        min-height: 550px;
+    }
+}
+
+@media screen and (min-height: 800px){
+    div.main{
+        min-height: 700px;
+    }
+}
+
+
+
