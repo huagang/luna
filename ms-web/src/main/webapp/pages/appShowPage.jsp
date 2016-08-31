@@ -62,7 +62,7 @@
         var host = "<%=request.getContextPath() %>";
         var wechatOptions = {
             title: "${share_info_title.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
-            desc:  "${share_info_des.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
+            desc:  "${share_info_des.replaceAll("\\r", '').replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
             link:  "${share_info_link}",
             imgUrl: "${share_info_pic}"
         };

@@ -55,7 +55,7 @@
 			var pageData = ${articleJson};
 			var wechatOptions = {
 		        title: "${title}",
-		        desc: "${description.replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
+		        desc: "${description.replaceAll("\\r", '').replaceAll("\\n", "\\\\n").replaceAll("\\\"", "\\\\\\\"").replaceAll("\\\'", "\\\\\\\'")}",
 		        link: window.location.href,
         		imgUrl:pageData.data.abstract_pic
 			};
