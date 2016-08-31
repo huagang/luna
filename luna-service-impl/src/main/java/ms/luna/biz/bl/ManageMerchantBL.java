@@ -18,18 +18,6 @@ public interface ManageMerchantBL {
     JSONObject createMerchant(String json);
 
     /**
-     * @param json
-     * @return
-     */
-    JSONObject getMerchantTradeStatus(String json);
-
-    /**
-     * @param json
-     * @return
-     */
-    JSONObject changeMerchantTradeStatus(String json);
-
-    /**
      * 根据具体ID获取单个商户信息
      *
      * @param json
@@ -117,5 +105,16 @@ public interface ManageMerchantBL {
      */
     JSONObject signAgreement(JSONObject jsonObject);
 
+    /**
+     * 商户注册
+     *
+     * @param json
+     * @return
+     */
+    JSONObject registMerchant(String json);
+
+    JSONObject getMerchantTradeStatus(String json);
+
+    JSONObject changeMerchantTradeStatus(String json);
 
 }

@@ -85,7 +85,7 @@ CREATE TABLE `luna_trade_application` (
 ALTER TABLE `ms_merchant_manage`
 ADD COLUMN `trade_status` INT NOT NULL DEFAULT 0 COMMENT '商户交易直通车开通状态' AFTER `updated_by_unique_id`;
 
-INSERT INTO luna_menu` (`name`, `code`, `module_id`, `status`) VALUES ('交易直通车', 'tradeApplication', '3', '1');
+INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `status`) VALUES ('交易直通车', 'tradeApplication', '3', '1');
 UPDATE `luna_menu` SET `display_order`='2' WHERE `id`='9';
 UPDATE `luna_menu` SET `display_order`='4' WHERE `id`='10';
 UPDATE `luna_menu` SET `display_order`='5' WHERE `id`='11';
@@ -130,3 +130,7 @@ CREATE TABLE `luna_city` (
 
 
 
+
+
+
+update luna_menu set auth='pano-viewer:login:*,pano-viewer:album:*,pano-viewer:pano:*', url='http://pano.visualbusiness.cn/backstage/htmls/albumEdit.html' where id=7;

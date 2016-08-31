@@ -62,12 +62,12 @@ public class MerchantController extends BasicController {
     public JSONObject createMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String contact_nm = request.getParameter("contact_nm"); // 联系人名字
-            String contact_phonenum = request.getParameter("contact_phonenum");//
-            // 联系人手机
+            String contact_phonenum = request.getParameter("contact_phonenum");// 联系人手机
+
             String contact_mail = request.getParameter("contact_mail");// 联系人邮箱
             String merchant_nm = request.getParameter("merchant_nm");// 商户名字
-            String merchant_phonenum = request.getParameter("merchant_phonenum");//
-            // 商户电话
+            String merchant_phonenum = request.getParameter("merchant_phonenum");// 商户电话
+
             String category_id = request.getParameter("merchant_cata");// 业务种类
             String province_id = request.getParameter("province");// 省份id
             String city_id = request.getParameter("city");// 城市id
@@ -80,43 +80,42 @@ public class MerchantController extends BasicController {
 
             String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum, category_id, resource_content, province_id, city_id, county_id, merchant_addr, lat, lng, merchant_info);
             // 输入校验通过
-            if (inputInfo.equals("")) {
-                JSONObject param = JSONObject.parseObject("{}");
-
-                param.put("contact_nm", contact_nm);
-                param.put("contact_phonenum", contact_phonenum);
-                param.put("contact_mail", contact_mail);
-                param.put("merchant_nm", merchant_nm);
-                param.put("merchant_phonenum", merchant_phonenum);
-                param.put("category_id", category_id);
-                param.put("province_id", province_id);
-                param.put("city_id", city_id);
-                param.put("merchant_addr", merchant_addr);
-                param.put("lat", lat);
-                param.put("lng", lng);
-                param.put("merchant_info", merchant_info);
-                if(!county_id.equals("ALL")){
-                    param.put("county_id", county_id);
-                }
-                if(!resource_content.equals("")){
-                    param.put("resource_content", resource_content);
-                }
-
-                JSONObject result = manageMerchantService.createMerchant(param.toString());
-                MsLogger.debug("method:createMerchant, result from service: " + result.toString());
-
-                String code = result.getString("code");
-                if ("0".equals(code)) {
-                    return FastJsonUtil.sucess("编辑成功！");
-                } else if ("1".equals(code)) {
-                    return FastJsonUtil.error("3", "用户重名！");
-                } else if ("2".equals(code)) {
-                    return FastJsonUtil.error("4", "业务员不存在！");
-                } else {
-                    return FastJsonUtil.error("-1", "编辑失败！");
-                }
-            } else {
+            if (!"".equals(inputInfo)){
                 return FastJsonUtil.error("1", "校验错误！");
+            }
+            JSONObject param = JSONObject.parseObject("{}");
+
+            param.put("contact_nm", contact_nm);
+            param.put("contact_phonenum", contact_phonenum);
+            param.put("contact_mail", contact_mail);
+            param.put("merchant_nm", merchant_nm);
+            param.put("merchant_phonenum", merchant_phonenum);
+            param.put("category_id", category_id);
+            param.put("province_id", province_id);
+            param.put("city_id", city_id);
+            param.put("merchant_addr", merchant_addr);
+            param.put("lat", lat);
+            param.put("lng", lng);
+            param.put("merchant_info", merchant_info);
+            if(!county_id.equals("ALL")){
+                param.put("county_id", county_id);
+            }
+            if(!resource_content.equals("")){
+                param.put("resource_content", resource_content);
+            }
+
+            JSONObject result = manageMerchantService.registMerchant(param.toString());
+            MsLogger.debug("method:createMerchant, result from service: " + result.toString());
+
+            String code = result.getString("code");
+            if ("0".equals(code)) {
+                return FastJsonUtil.sucess("编辑成功！");
+            } else if ("1".equals(code)) {
+                return FastJsonUtil.error("3", "用户重名！");
+            } else if ("2".equals(code)) {
+                return FastJsonUtil.error("4", "业务员不存在！");
+            } else {
+                return FastJsonUtil.error("-1", "编辑失败！");
             }
         } catch (Exception e) {
             MsLogger.error("Failed to regist merchant: " + e.getMessage());

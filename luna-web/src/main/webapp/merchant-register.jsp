@@ -43,7 +43,7 @@
                 	onkeydown="if(event.keyCode==13){return false;}">
                     <div class="information" id="information">
                         <div class="title-info">
-                        	<h5>联系人信息</h5>
+                        	<h4>联系人信息</h4>
                     	</div>
                     	<div class="item">
                         	<div class="item-label"><span class="superscript">*</span>您的姓名</div>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
                     	<div class="item">
 	                        <div class="item-label"><span class="superscript">*</span>商户名称</div>
@@ -193,7 +193,7 @@
 <div class="pop" id="pop-newbusiness">
     <div class="pop-title">
         <h4>温馨提示</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         <p style="color: #D0021B;">为确保工作人员快速响应并与您洽谈，需确保信息准确，请认真核对。</p>

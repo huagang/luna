@@ -35,13 +35,18 @@ public class MerchantsResult implements Serializable {
 	
 	private String del_flg = null;
 
+	private String business_name = null;
+
+	private String business_code = null;
+
+	private Integer business_id = null;
+
 	/**
 	 * @return the merchant_id
 	 */
 	public String getMerchant_id() {
 		return merchant_id;
 	}
-
 	/**
 	 * @param merchant_id the merchant_id to set
 	 */
@@ -201,6 +206,30 @@ public class MerchantsResult implements Serializable {
 	 */
 	public void setDel_flg(String del_flg) {
 		this.del_flg = del_flg;
+	}
+
+	public Integer getBusiness_id() {
+		return business_id;
+	}
+
+	public void setBusiness_id(Integer business_id) {
+		this.business_id = business_id;
+	}
+
+	public String getBusiness_name() {
+		return business_name;
+	}
+
+	public void setBusiness_name(String business_name) {
+		this.business_name = business_name;
+	}
+
+	public String getBusiness_code() {
+		return business_code;
+	}
+
+	public void setBusiness_code(String business_code) {
+		this.business_code = business_code;
 	}
 
 
