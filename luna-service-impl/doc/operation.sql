@@ -103,3 +103,9 @@ alter table ms_column add index(name);
 
 
 update luna_menu set auth='pano-viewer:login:*,pano-viewer:album:*,pano-viewer:pano:*', url='http://pano.visualbusiness.cn/backstage/htmls/albumEdit.html' where id=7;
+
+INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`) VALUES ('消息管理', 'message', '1', '5');
+
+INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
+
+INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));

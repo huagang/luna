@@ -1,21 +1,19 @@
 package ms.luna.biz.sc.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.bl.ManageMerchantBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaTradeApplicationDAO;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.model.LunaTradeApplication;
-import ms.luna.biz.dao.model.LunaTradeApplicationCriteria;
-import ms.luna.biz.dao.model.MsBusiness;
-import ms.luna.biz.dao.model.MsBusinessCriteria;
+import ms.luna.biz.dao.custom.MsMerchantManageDAO;
+import ms.luna.biz.dao.custom.model.LunaTradeApplicationParameter;
+import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsMerchantManageTable;
-import ms.luna.biz.util.CreateHtmlUtil;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.model.MailMessage;
 import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,9 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
     @Autowired
     private ManageMerchantBL manageMerchantBL;
+
+    @Autowired
+    private MsMerchantManageDAO msMerchantManageDAO;
 
     @Autowired
     private EmailService emailService;
@@ -80,7 +81,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
             //SEND EMAIL
-            sendEmail(TYPE_TO_MANAGER);
+            //sendEmail(TYPE_TO_MANAGER);
         } catch (Exception ex) {
             logger.error("Failed to create lunaTradeApplication", ex);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -89,23 +90,23 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         return FastJsonUtil.sucess("success");
     }
 
-    private static final int TYPE_TO_MANAGER = 0;
+//    private static final int TYPE_TO_MANAGER = 0;
 
-    private static final int TYPE_TO_USER = 1;
+//    private static final int TYPE_TO_USER = 1;
 
-    private void sendEmail(int type) {
-        if (type == TYPE_TO_MANAGER) {
-            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-            message.setContent("");
-            //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
-            //luna_nm, role_nm, webAddr)
-            emailService.sendEmail(message);
-        } else if (type == TYPE_TO_USER) {
-            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-            message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
-            emailService.sendEmail(message);
-        }
-    }
+//    private void sendEmail(int type) {
+//        if (type == TYPE_TO_MANAGER) {
+//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+//            message.setContent("");
+//            //CreateHtmlUtil.getInstance().convert2EmailHtml(toAddress, token, module_nm, currentDate,
+//            //luna_nm, role_nm, webAddr)
+//            emailService.sendEmail(message);
+//        } else if (type == TYPE_TO_USER) {
+//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
+//            message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
+//            emailService.sendEmail(message);
+//        }
+//    }
 
     @Override
     public JSONObject recreateApplication(JSONObject jsonObject) {
@@ -131,7 +132,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
             //SEND EMAIL
-            sendEmail(TYPE_TO_MANAGER);
+            //sendEmail(TYPE_TO_MANAGER);
 
             return FastJsonUtil.sucess("success");
         } catch (Exception ex) {
@@ -157,29 +158,77 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             } else {
                 result.put(MsBusinessTable.FIELD_BUSINESS_ID, msBusinessList.get(0).getBusinessId());
             }
-            result.put(LunaTradeApplicationTable.FIELD_ID, application.getId());
-            result.put(LunaTradeApplicationTable.FIELD_LICENCE_PERIOD, application.getLicencePeriod());
-            result.put(LunaTradeApplicationTable.FIELD_CONTACT_PHONE, application.getContactPhone());
-            result.put(LunaTradeApplicationTable.FIELD_CONTACT_NAME, application.getContactName());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE, application.getAccountType());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NO, application.getAccountNo());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME, application.getAccountName());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, application.getAccountAddress());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, application.getAccountBank());
-            result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
-            result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
-            result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
-            result.put(LunaTradeApplicationTable.FIELD_APP_STATUS, application.getAppStatus());
-            result.put(LunaTradeApplicationTable.FIELD_EMAIL, application.getEmail());
-            result.put(LunaTradeApplicationTable.FIELD_LICENCE_PIC_URL, application.getLicencePicUrl());
-            result.put(LunaTradeApplicationTable.FIELD_MERCHANT_ID, application.getMerchantId());
-            result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NAME, application.getMerchantName());
-            result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NO, application.getMerchantNo());
-            result.put(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE, application.getMerchantPhone());
+            assembleApplication(result, application);
 
             return FastJsonUtil.sucess("success", result);
         } catch (Exception ex) {
             logger.error("Failed to get lunaTradeApplication", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    private void assembleApplication(JSONObject result, LunaTradeApplication application) {
+        result.put(LunaTradeApplicationTable.FIELD_ID, application.getApplicationId());
+        result.put(LunaTradeApplicationTable.FIELD_LICENCE_PERIOD, application.getLicencePeriod());
+        result.put(LunaTradeApplicationTable.FIELD_CONTACT_PHONE, application.getContactPhone());
+        result.put(LunaTradeApplicationTable.FIELD_CONTACT_NAME, application.getContactName());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE, application.getAccountType());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NO, application.getAccountNo());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME, application.getAccountName());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, application.getAccountAddress());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, application.getAccountBank());
+        result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
+        result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
+        result.put(LunaTradeApplicationTable.FIELD_APP_STATUS, application.getAppStatus());
+        result.put(LunaTradeApplicationTable.FIELD_EMAIL, application.getEmail());
+        result.put(LunaTradeApplicationTable.FIELD_LICENCE_PIC_URL, application.getLicencePicUrl());
+        result.put(LunaTradeApplicationTable.FIELD_MERCHANT_ID, application.getMerchantId());
+        result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NAME, application.getMerchantName());
+        result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NO, application.getMerchantNo());
+        result.put(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE, application.getMerchantPhone());
+    }
+
+    @Override
+    public JSONObject getApplicationList(int offset, int limit) {
+        try {
+            LunaTradeApplicationParameter lunaTradeApplicationParameter = new LunaTradeApplicationParameter();
+            lunaTradeApplicationParameter.setMax(limit);
+            lunaTradeApplicationParameter.setMin(offset);
+            lunaTradeApplicationParameter.setRange("true");
+            List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectTradeApplicationListWithLimit(
+                    lunaTradeApplicationParameter);
+            JSONArray r = assembleApplicationForManager(applicationList);
+            return FastJsonUtil.sucess("success", r);
+        } catch (Exception e) {
+            logger.error("Failed to get application list with limit", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    private JSONArray assembleApplicationForManager(List<LunaTradeApplication> applicationList) {
+        JSONArray toSend = new JSONArray(applicationList.size());
+        for (LunaTradeApplication application : applicationList) {
+            JSONObject object = new JSONObject();
+            String merchantId = application.getMerchantId();
+            MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
+            object.put("merchantName", msMerchantManage.getMerchantNm());
+            assembleApplication(object, application);
+            toSend.add(object);
+        }
+        return toSend;
+    }
+
+    @Override
+    public JSONObject getApplicationList() {
+        try {
+            LunaTradeApplicationCriteria criteria = new LunaTradeApplicationCriteria();
+            criteria.setOrderByClause("app_status ASC, update_time DESC");
+            List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(criteria);
+            JSONArray toSend = assembleApplicationForManager(applicationList);
+            return FastJsonUtil.sucess("success", toSend);
+        } catch (Exception ex) {
+            logger.error("Failed to get the application list", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
     }
@@ -239,7 +288,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
-                sendEmail(TYPE_TO_USER);
+                //sendEmail(TYPE_TO_USER);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
                 JSONObject data = new JSONObject();

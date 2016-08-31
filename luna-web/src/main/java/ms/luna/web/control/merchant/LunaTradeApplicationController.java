@@ -19,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.common.SessionHelper;
+
 /**
  * Created by SDLL18 on 16/8/25.
  */
@@ -37,11 +39,9 @@ public class LunaTradeApplicationController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        //TODO 指定返回页面jsp
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return buildModelAndView("/merchant_direct");
     }
-
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
@@ -217,24 +217,6 @@ public class LunaTradeApplicationController extends BasicController {
         return lunaTradeApplicationService.updateApplication(inData);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/check/{applicationId}")
-    @ResponseBody
-    public JSONObject checkApplication(HttpServletRequest request,
-                                       @PathVariable Integer applicationId,
-                                       @RequestParam Integer checkResult) {
-        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-        if (user == null) {
-            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
-        }
-        if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
-            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
-        }
-        JSONObject inData = new JSONObject();
-        inData.put(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT, checkResult);
-        inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
-        return lunaTradeApplicationService.checkApplication(inData);
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/status")
     public JSONObject getApplicationStatus(HttpServletRequest request,
                                            @RequestParam Integer businessId) {
@@ -276,12 +258,9 @@ public class LunaTradeApplicationController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/get/{applicationId}")
     @ResponseBody
     public JSONObject getApplication(HttpServletRequest request,
-                                     @PathVariable Integer applicationId) {
-        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-        if (user == null) {
-            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
-        }
-        if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
+                                     @PathVariable Integer applicationId,
+                                     @RequestParam Integer businessId) {
+        if (checkAuth(request, businessId)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();

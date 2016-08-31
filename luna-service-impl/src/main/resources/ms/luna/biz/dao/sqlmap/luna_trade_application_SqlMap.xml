@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="luna_trade_application">
   <resultMap class="ms.luna.biz.dao.model.LunaTradeApplication" id="BaseResultMap">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
     <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
     <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
     <result column="email" jdbcType="VARCHAR" property="email" />
@@ -49,10 +49,10 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, merchant_name, 
-    merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, account_name, 
-    account_bank, account_city, account_address, account_no, update_time, app_status, 
-    merchant_id
+    application_id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, 
+    merchant_name, merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, 
+    account_name, account_bank, account_city, account_address, account_no, update_time, 
+    app_status, merchant_id
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria" resultMap="BaseResultMap">
     select
@@ -74,11 +74,11 @@
     select 
     <include refid="luna_trade_application.Base_Column_List" />
     from luna_trade_application
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </select>
   <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaTradeApplication">
     delete from luna_trade_application
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </delete>
   <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria">
     delete from luna_trade_application
@@ -95,7 +95,7 @@
       #licencePicUrl:VARCHAR#, #licencePeriod:VARCHAR#, #accountType:INTEGER#, #accountName:VARCHAR#, 
       #accountBank:VARCHAR#, #accountCity:VARCHAR#, #accountAddress:VARCHAR#, #accountNo:VARCHAR#, 
       #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#)
-    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+    <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
@@ -222,7 +222,7 @@
       </isNotNull>
       )
     </dynamic>
-    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+    <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
@@ -233,8 +233,8 @@
   <update id="updateByExampleSelective">
     update luna_trade_application
     <dynamic prepend="set">
-      <isNotNull prepend="," property="record.id">
-        id = #record.id:INTEGER#
+      <isNotNull prepend="," property="record.applicationId">
+        application_id = #record.applicationId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="record.contactName">
         contact_name = #record.contactName:VARCHAR#
@@ -300,7 +300,7 @@
   </update>
   <update id="updateByExample">
     update luna_trade_application
-    set id = #record.id:INTEGER#,
+    set application_id = #record.applicationId:INTEGER#,
       contact_name = #record.contactName:VARCHAR#,
       contact_phone = #record.contactPhone:VARCHAR#,
       email = #record.email:VARCHAR#,
@@ -385,7 +385,7 @@
         merchant_id = #merchantId:VARCHAR#
       </isNotNull>
     </dynamic>
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </update>
   <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaTradeApplication">
     update luna_trade_application
@@ -408,6 +408,6 @@
       update_time = #updateTime:TIMESTAMP#,
       app_status = #appStatus:INTEGER#,
       merchant_id = #merchantId:VARCHAR#
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </update>
 </sqlMap>

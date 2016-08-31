@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class LunaTradeApplication implements Serializable {
-    private Integer id;
+    private Integer applicationId;
 
     private String contactName;
 
@@ -46,12 +46,12 @@ public class LunaTradeApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getApplicationId() {
+        return applicationId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setApplicationId(Integer applicationId) {
+        this.applicationId = applicationId;
     }
 
     public String getContactName() {
@@ -218,7 +218,7 @@ public class LunaTradeApplication implements Serializable {
             return false;
         }
         LunaTradeApplication other = (LunaTradeApplication) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+        return (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
             && (this.getContactName() == null ? other.getContactName() == null : this.getContactName().equals(other.getContactName()))
             && (this.getContactPhone() == null ? other.getContactPhone() == null : this.getContactPhone().equals(other.getContactPhone()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
@@ -244,7 +244,7 @@ public class LunaTradeApplication implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getContactName() == null) ? 0 : getContactName().hashCode());
         result = prime * result + ((getContactPhone() == null) ? 0 : getContactPhone().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
@@ -269,6 +269,6 @@ public class LunaTradeApplication implements Serializable {
 
     @Override
     public String toString() {
-        return "LunaTradeApplication [id=" + id + ",contactName=" + contactName + ",contactPhone=" + contactPhone + ",email=" + email + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantName=" + merchantName + ",merchantPhone=" + merchantPhone + ",merchantNo=" + merchantNo + ",licencePicUrl=" + licencePicUrl + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",updateTime=" + updateTime + ",appStatus=" + appStatus + ",merchantId=" + merchantId + "]";
+        return "LunaTradeApplication [applicationId=" + applicationId + ",contactName=" + contactName + ",contactPhone=" + contactPhone + ",email=" + email + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantName=" + merchantName + ",merchantPhone=" + merchantPhone + ",merchantNo=" + merchantNo + ",licencePicUrl=" + licencePicUrl + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",updateTime=" + updateTime + ",appStatus=" + appStatus + ",merchantId=" + merchantId + "]";
     }
 }
