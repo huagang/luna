@@ -184,6 +184,7 @@ var Inter = function () {
                 crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
+                bizRelationExist: {url: context + "/content/businessRelation/exist/{0}", type: 'GET'},
                 bizRelationInit: {
                     url: context + "/content/businessRelation",
                     type: "GET"

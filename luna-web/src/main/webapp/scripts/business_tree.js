@@ -31,9 +31,41 @@ var TypeDataTemplate={
 var typeId = undefined;
 
 $(document).ready(function(){
-	initBusinessTreeData();
 
-	
+    var apiUrls = Inter.getApiUrl();
+    checkBusinessTree();
+
+    // 初始化
+    function checkBusinessTree(){
+        var business = localStorage.getItem('business'),business_id ;
+        if(business){
+            business_id = JSON.parse(business).id ;
+        }
+
+        if(!business_id){
+            $.alert('请您选择业务');
+            return;
+        }
+        $.ajax({
+            url: apiUrls.bizRelationExist.url.format(business_id),
+            type: apiUrls.bizRelationExist.type,
+            success: function(data){
+                if(data.code === '0'){
+                    showGuidance();
+                } else if(data.code === '409'){
+                    initBusinessTreeData();
+                } else{
+                    $.alert('获取数据出错,请刷新重试');
+                }
+            },
+            error: function(data){
+                $.alert('获取数据出错,请刷新重试');
+            }
+
+        });
+    }
+
+
 	function searchPois() {
 		var tag_id = $(".btn-tags.current").attr("tag_id");
 
@@ -125,7 +157,6 @@ $(document).ready(function(){
     	$(this).addClass("current");
     	showSearchPois($(this).attr("tag_id"));
         $('#chkbox-selcet-all').attr("checked",false);
-//    	searchPois();
     });
 
     //绑定操作按钮下拉框和事件
@@ -182,14 +213,29 @@ $(document).ready(function(){
         ps_li=[];
 
     $(".button-add-child").on('click', function(){
-        searchPois();
-        _this_poi = $('.luna-tree-parent > .item-name > .item-opt-wrap > .addchild');
-        parents_poi = $('.luna-tree-parent').parent();
-        parents_poi_li = $('.luna-tree-parent');
-        ps=[];
-        typeId = undefined;
-        var $pop_window = $("#childPoi");
-        popWindow($pop_window);
+        var business = localStorage.getItem('business'),business_id ;
+        if(business) {
+            business_id = JSON.parse(business).id;
+        }
+
+        if (!business_id) {
+            $.alert('请您选择业务');
+            return;
+        }
+        $.ajax({
+            url: apiUrls.bizRelationCreate.url.format(business_id),
+            type: apiUrls.bizRelationCreate.type,
+            success: function (data) {
+                if (data.code === '0') {
+                    initBusinessTreeData();
+                } else {
+                    $.alert('新建关系树失败');
+                }
+            },
+            error: function (data) {
+                $.alert('新建关系树失败');
+            }
+        });
     });
 
     $(".luna-tree").on('click','.item-opt.addchild',function(){
@@ -366,13 +412,7 @@ $(document).ready(function(){
                     if(typeof(treeDate.c_list.length)=="undefined"){
                         treeDate=formateCList(treeDate);
                     }
-
-                    if(Object.keys(poiDef).length > 0){
-                        showTreeData();
-                    } else{
-                        showGuidance();
-                    }
-
+                    showTreeData();
             	} else {
             		 $.alert('请求结果出错');
             	}
