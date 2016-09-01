@@ -127,6 +127,7 @@ function ColumnController($scope, $rootScope, $http) {
                 'id': this.currentId,
                 'name': this.currentName,
                 'code': this.currentCode,
+                'business_id': this.businessId
             }
         };
         $http(request).then(function success(response) {
