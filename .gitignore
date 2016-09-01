@@ -14,4 +14,3 @@ jquery.custmer.extend.js
 build
 *.log
 generatorConfig.xml
-mybatis-generater/mybatis-generator/src/main/resources/generatorConfig.xml
