@@ -60,6 +60,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             lunaTradeApplication.setAccountAddress(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS));
             lunaTradeApplication.setAccountBank(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK));
             lunaTradeApplication.setAccountCity(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY));
+            lunaTradeApplication.setAccountProvince(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE));
             lunaTradeApplication.setAccountName(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME));
             lunaTradeApplication.setAccountNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_NO));
             lunaTradeApplication.setAccountType(jsonObject.getInteger(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE));
@@ -180,6 +181,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE,application.getAccountProvince());
         result.put(LunaTradeApplicationTable.FIELD_APP_STATUS, application.getAppStatus());
         result.put(LunaTradeApplicationTable.FIELD_EMAIL, application.getEmail());
         result.put(LunaTradeApplicationTable.FIELD_LICENCE_PIC_URL, application.getLicencePicUrl());
@@ -239,6 +241,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         application.setAccountAddress(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS));
         application.setAccountBank(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK));
         application.setAccountCity(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY));
+        application.setAccountProvince(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE));
         application.setAccountName(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME));
         application.setAccountNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_NO));
         application.setAccountType(jsonObject.getInteger(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE));

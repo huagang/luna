@@ -77,10 +77,13 @@ CREATE TABLE `luna_trade_application` (
   `update_time` datetime NOT NULL COMMENT '申请更新时间',
   `app_status` int(11) NOT NULL COMMENT '申请状态',
   `merchant_id` varchar(32) NOT NULL COMMENT '申请商户ID',
+  `account_province` varchar(36) NOT NULL COMMENT '商户账户开户省市',
   PRIMARY KEY (`application_id`),
   KEY `user_id_idx` (`merchant_id`),
+  KEY `sort_idx` (`app_status`,`update_time`),
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
+
 
 ALTER TABLE `ms_merchant_manage`
 ADD COLUMN `trade_status` INT NOT NULL DEFAULT 0 COMMENT '商户交易直通车开通状态' AFTER `updated_by_unique_id`;
@@ -109,10 +112,6 @@ INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`) VALUES ('
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
 
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
-
-
-ALTER TABLE `luna_trade_application`
-ADD INDEX `sort_idx` (`app_status` ASC, `update_time` DESC);
 
 ALTER TABLE `luna_city`
 ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);

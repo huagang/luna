@@ -22,6 +22,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="app_status" jdbcType="INTEGER" property="appStatus" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -52,7 +53,7 @@
     application_id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, 
     merchant_name, merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, 
     account_name, account_bank, account_city, account_address, account_no, update_time, 
-    app_status, merchant_id
+    app_status, merchant_id, account_province
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria" resultMap="BaseResultMap">
     select
@@ -89,12 +90,14 @@
       idcard_period, merchant_name, merchant_phone, merchant_no, 
       licence_pic_url, licence_period, account_type, account_name, 
       account_bank, account_city, account_address, account_no, 
-      update_time, app_status, merchant_id)
+      update_time, app_status, merchant_id, account_province
+      )
     values (#contactName:VARCHAR#, #contactPhone:VARCHAR#, #email:VARCHAR#, #idcardPicUrl:VARCHAR#, 
       #idcardPeriod:VARCHAR#, #merchantName:VARCHAR#, #merchantPhone:VARCHAR#, #merchantNo:VARCHAR#, 
       #licencePicUrl:VARCHAR#, #licencePeriod:VARCHAR#, #accountType:INTEGER#, #accountName:VARCHAR#, 
       #accountBank:VARCHAR#, #accountCity:VARCHAR#, #accountAddress:VARCHAR#, #accountNo:VARCHAR#, 
-      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#)
+      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#, #accountProvince:VARCHAR#
+      )
     <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -159,6 +162,9 @@
       <isNotNull prepend="," property="merchantId">
         merchant_id
       </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province
+      </isNotNull>
       )
     </dynamic>
     values
@@ -219,6 +225,9 @@
       </isNotNull>
       <isNotNull prepend="," property="merchantId">
         #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        #accountProvince:VARCHAR#
       </isNotNull>
       )
     </dynamic>
@@ -293,6 +302,9 @@
       <isNotNull prepend="," property="record.merchantId">
         merchant_id = #record.merchantId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.accountProvince">
+        account_province = #record.accountProvince:VARCHAR#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
@@ -319,7 +331,8 @@
       account_no = #record.accountNo:VARCHAR#,
       update_time = #record.updateTime:TIMESTAMP#,
       app_status = #record.appStatus:INTEGER#,
-      merchant_id = #record.merchantId:VARCHAR#
+      merchant_id = #record.merchantId:VARCHAR#,
+      account_province = #record.accountProvince:VARCHAR#
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
     </isParameterPresent>
@@ -384,6 +397,9 @@
       <isNotNull prepend="," property="merchantId">
         merchant_id = #merchantId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province = #accountProvince:VARCHAR#
+      </isNotNull>
     </dynamic>
     where application_id = #applicationId:INTEGER#
   </update>
@@ -407,7 +423,8 @@
       account_no = #accountNo:VARCHAR#,
       update_time = #updateTime:TIMESTAMP#,
       app_status = #appStatus:INTEGER#,
-      merchant_id = #merchantId:VARCHAR#
+      merchant_id = #merchantId:VARCHAR#,
+      account_province = #accountProvince:VARCHAR#
     where application_id = #applicationId:INTEGER#
   </update>
 </sqlMap>

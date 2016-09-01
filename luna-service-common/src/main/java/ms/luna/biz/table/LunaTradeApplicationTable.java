@@ -22,6 +22,7 @@ public class LunaTradeApplicationTable {
     public static final String FIELD_ACCOUNT_NAME = "accountName";
     public static final String FIELD_ACCOUNT_BANK = "accountBank";
     public static final String FIELD_ACCOUNT_CITY = "accountCity";
+    public static final String FIELD_ACCOUNT_PROVINCE = "accountProvince";
     public static final String FIELD_ACCOUNT_ADDRESS = "accountAddress";
     public static final String FIELD_ACCOUNT_NO = "accountNo";
     public static final String FIELD_APP_STATUS = "appStatus";

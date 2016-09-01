@@ -89,7 +89,8 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountName,
                                         @RequestParam String accountBank,
                                         @RequestParam String accountCity,
-                                        @RequestParam String accountAddresss,
+                                        @RequestParam String accountProvince,
+                                        @RequestParam String accountAddress,
                                         @RequestParam String accountNo,
                                         @RequestParam Integer businessId) {
         if (!checkAuth(request, businessId)) {
@@ -98,9 +99,10 @@ public class LunaTradeApplicationController extends BasicController {
 
         JSONObject inData = new JSONObject();
         inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
-        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddresss);
+        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
+        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, accountProvince);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME, accountName);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NO, accountNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE, accountType);
@@ -138,7 +140,8 @@ public class LunaTradeApplicationController extends BasicController {
                                           @RequestParam String accountName,
                                           @RequestParam String accountBank,
                                           @RequestParam String accountCity,
-                                          @RequestParam String accountAddresss,
+                                          @RequestParam String accountProvince,
+                                          @RequestParam String accountAddress,
                                           @RequestParam String accountNo,
                                           @RequestParam Integer businessId) {
         if (!checkAuth(request, businessId)) {
@@ -147,9 +150,10 @@ public class LunaTradeApplicationController extends BasicController {
 
         JSONObject inData = new JSONObject();
         inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
-        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddresss);
+        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
+        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, accountProvince);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME, accountName);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NO, accountNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE, accountType);
@@ -188,6 +192,7 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountName,
                                         @RequestParam String accountBank,
                                         @RequestParam String accountCity,
+                                        @RequestParam String accountProvince,
                                         @RequestParam String accountAddresss,
                                         @RequestParam String accountNo,
                                         @RequestParam Integer businessId) {
@@ -200,6 +205,7 @@ public class LunaTradeApplicationController extends BasicController {
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddresss);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
+        inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, accountProvince);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NAME, accountName);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_NO, accountNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_TYPE, accountType);
