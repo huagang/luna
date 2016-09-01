@@ -8,10 +8,10 @@ Servers
 .metadata
 .recommenders
 .xml
-ReadJson.java
 video.js
 jquery.custmer.extend.js
 .vscode
 build
 *.log
 generatorConfig.xml
+mybatis-generater/mybatis-generator/src/main/resources/generatorConfig.xml
