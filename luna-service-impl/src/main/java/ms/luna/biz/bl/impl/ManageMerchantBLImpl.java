@@ -162,25 +162,25 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		//注：新加入province_id，city_id和county_id，作用：编辑商户时的地理位置加载
 	}
 
-//	@Override
-//	// 目前没有删除用户选项
-//	public JSONObject deleteMerchantById(String json) {
-//		JSONObject param = JSONObject.parseObject(json);
-//		String merchant_id = param.getString("merchant_id");
-//		String salesman_id = param.getString("salesman_id");
-//
-//		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
-//		if(msMerchantManage == null){
-//			return FastJsonUtil.error("2", "商户id不存在,merchant_id:" + merchant_id);
-//		}
-//
-//		// 只有业务员和登录账户相同时才可删除
-//		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
-//			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
-//			return FastJsonUtil.sucess("成功删除商户信息！merchant_id:" + merchant_id);
-//		}
-//		return FastJsonUtil.error("1", "非本商户业务员无权删除！salesman_id:" + salesman_id + ", merchant_id:" + merchant_id);
-//	}
+	@Override
+	// 目前没有删除用户选项
+	public JSONObject deleteMerchantById(String json) {
+		JSONObject param = JSONObject.parseObject(json);
+		String merchant_id = param.getString("merchant_id");
+		String salesman_id = param.getString("salesman_id");
+
+		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
+		if(msMerchantManage == null){
+			return FastJsonUtil.error("2", "商户id不存在,merchant_id:" + merchant_id);
+		}
+
+		// 只有业务员和登录账户相同时才可删除
+		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
+			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
+			return FastJsonUtil.sucess("成功删除商户信息！merchant_id:" + merchant_id);
+		}
+		return FastJsonUtil.error("1", "非本商户业务员无权删除！salesman_id:" + salesman_id + ", merchant_id:" + merchant_id);
+	}
 
 	@Override
 	public JSONObject loadMerchantById(String json) {
