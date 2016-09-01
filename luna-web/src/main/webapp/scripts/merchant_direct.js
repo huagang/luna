@@ -3,6 +3,12 @@
  * merchantStutas: 0-未申请，1-已申请，2-已完成，3-失败，4-已开通
  */
 
+//获取当前的业务数据
+var business = {};
+if (window.localStorage.business) {
+    business = JSON.parse(window.localStorage.business);
+}
+
 /**
  * 初始化显示过程界面
  */
@@ -35,9 +41,10 @@ var initCreatePage = function () {
         $('#merchantInfo').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block help-block-error', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            ignore: "",  // validate all fields including form hidden input
             rules: {
-                name: "required",
-                phoneArea: {
+                contactName: {
                     required: true,
                 },
                 phone: {
@@ -48,25 +55,36 @@ var initCreatePage = function () {
                     required: true,
                     email: true
                 },
+                verCode: {
+                    digits: true,
+                    minlength: 6,
+                    maxlength: 6,
+                },
                 startIDDate: {
                     required: true,
                 },
                 endIDDate: "required",
                 merchantName: 'required',
                 merchantPhone: {
-                    required: require,
+                    required: true,
                     isPhone: true,
                 },
-                businessLicense: {
+                merchantNo: {
                     required: true,
                 }
             },
             messages: {
-                name: "请填写商户业务对接联系人的真实姓名",
+                contactName: "请填写商户业务对接联系人的真实姓名",
                 phoneArea: "请选择电话区号",
                 phone: {
                     required: "请输入您的手机号码",
                     isMobile: "请输入正确的国内手机号码"
+                },
+                verCode: {
+                    required: '请输入验证码',
+                    digits: '验证码不正确',
+                    minlength: '请输入6位验证码',
+                    maxlength: '请输入6位验证码',
                 },
                 email: "请输入正确的Email地址",
                 merchantPhone: {
@@ -75,7 +93,14 @@ var initCreatePage = function () {
                 }
             },
             errorPlacement: function (error, element) {
-                error.appendTo(element.next().next());
+                // if (element.is(':checkbox')) {
+                //     error.insertAfter(element.closest(".md-checkbox-list, .md-checkbox-inline, .checkbox-list, .checkbox-inline"));
+                // } else if (element.is(':radio')) {
+                //     error.insertAfter(element.closest(".md-radio-list, .md-radio-inline, .radio-list,.radio-inline"));
+                // } else {
+                error.insertAfter(element); // for other inputs, just perform default behavior
+                // }
+                // error.appendTo(element.next().next());
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)
@@ -141,52 +166,127 @@ var initCreatePage = function () {
                     if (res.code == "0") {
                         console.log('验证成功');
                     } else {
-                        console.log('验证码验证失败');
+                        var validator = $("#merchantInfo").validate();
+                        validator.showErrors({
+                            "verCode": "验证码不正确"
+                        });
                     }
                 }, function (res) {
                     console.log('服务出现问题，请稍后再试');
                 }, Inter.getApiUrl().checkSMSCode.type);
+            } else {
+
             }
         });
     };
 
     //上传身份证
     var uploadIDPicture = function (e) {
-        $('#btnUploadIdPic').on('click', function (e) {
-            var picNum = $('.idPic .pic-wrapper').length;
-            if (picNum >= 2) {
+        $('.btnUploadPic').on('click', function (e) {
+            var wrapper = $(this).data('wrapper'),
+                picNum = $('.' + wrapper + ' .pic-wrapper').length,
+                maxnum = $(this).data('maxnum');
+            if (picNum >= maxnum) {
                 e.preventDefault();
                 // e.stop
                 alert('请删除需要替换的照片，然后再上传');
                 return false;
             } else {
                 return true;
-                // $('.idPic').append('<div class="pic-wrapper"><img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证"><div class="text-center"><a href="javascript:;">删除</a></div></div>');
             }
         });
-        $('#btnUploadIdPic').on('change', function (e) {
+        $('.btnUploadPic').on('change', function (e) {
+            var wrapper = $(this).data('wrapper');
             uploadPicture(this, function (res) {
-                console.log(res)
+                if (res.code == '0') {
+                    $('.' + wrapper).append('<div class="pic-wrapper"><img src="' + res.data.access_url + '" alt=""><div class="text-center"><a href="javascript:;" class="del-picture">删除</a></div></div>');
+                } else {
+                    alert(res.msg);
+                }
             });
+        });
+        $('.blPic,.idPic').on('click', '.del-picture', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).closest('.pic-wrapper').remove();
         });
     };
 
     //提交事件
     var initSubmit = function () {
         $('#btnSubmit').on('click', function () {
-            console.log('提交事件' + $('#merchantInfo').valid());
+            $('#merchantInfo').valid();
+            var formDataZero = Util.formToJson($('#merchantInfo')),
+                formData = {
+                    accountAddresss: formDataZero.accountAddresss + '|' + $('#branchBankCode').select2('data')[0].text,
+                    accountBank: formDataZero.accountBank + '|' + $('#bankCode').select2('data')[0].text,
+                    accountCity: formDataZero.accountCity + '|' + $('#cityCode').select2('data')[0].text,
+                    accountProvince: formDataZero.accountProvince + '|' + $('#provinceCode').select2('data')[0].text,
+                    accountName: formDataZero.accountName,
+                    accountNo: formDataZero.accountNo,
+                    accountType: formDataZero.accountType,
+                    contactName: formDataZero.contactName,
+                    email: formDataZero.email,
+                    merchantName: formDataZero.merchantName,
+                    merchantNo: formDataZero.merchantNo,
+                    merchantPhone: formDataZero.merchantPhone,
+                    businessId: 48,
+                },
+                idPicObj = $('.idPic .pic-wrapper'),
+                idcardPicUrl = [],
+                blPicObj = $('.blPicÎ .pic-wrapper'),
+                licencePicUrl = [];
+            // console.log('提交事件' +);
+            formData.contactPhone = formDataZero.phoneArea + '|' + formDataZero.phone;
+            idPicObj.each(function (e) {
+                var imgSrc = $(this).find('img').attr('src');
+                idcardPicUrl.push(imgSrc);
+            });
+            formData.idcardPicUrl = idcardPicUrl.join('|');
+            idPicObj.each(function (e) {
+                var imgSrc = $(this).find('img').attr('src');
+                licencePicUrl.push(imgSrc);
+            });
+            formData.licencePicUrl = licencePicUrl.join('|');
+            formData.idcardPeriod = $('#startIDDate').val() + "|" + $('#endIDDate').val();
+            formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
+            console.log(formData);
+            Util.setAjax(Inter.getApiUrl().saveMerchantInfo.url, formData, function (res) {
+                if (res.code == "0") {
+                    $('#create').addClass('hide');
+                    $('#confirmSubmit').removeClass('hide');
+                } else {
+                    alert(res.msg);
+                }
+            }, function (res) {
+
+            });
+
         });
     };
     return {
         init: function () {
             $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
                 language: "zh-CN",
             });
             initSelectBank();
             getValidateMsg();
             initSubmit();
             uploadIDPicture();
-            // initValidate();
+            initValidate();
+        }
+    };
+} ();
+/**
+ * 初始化确认提交按钮
+ */
+var initConfirmSubmitPage = function () {
+    return {
+        init: function () {
+            $('#btnConfirmSubmit').on('click', function (e) {
+                window.location.href = Inter.getPageUrl().merchantApply;
+            });
         }
     };
 } ();
@@ -229,21 +329,46 @@ var initDialogEvent = function () {
 } ();
 
 $('document').ready(function () {
-    showDiv();
+    showPage();
     initProcessPage.init();
     initCreatePage.init();
     initAuditCompletePage.init();
     initDialogEvent.init();
+    initConfirmSubmitPage.init();
 });
 
-function showDiv() {
+function showPage() {
+    $.ajax({
+        url: Inter.getApiUrl().getMerchantStatus,    //请求的url地址
+        dataType: "json",   //返回格式为json
+        async: true, //请求是否异步，默认为异步，这也是ajax重要特性
+        data: { "id": "value" },    //参数值
+        type: "GET",   //请求方式
+        beforeSend: function () {
+            //请求前的处理
+        },
+        success: function (req) {
+            //请求成功时处理
+        },
+        complete: function () {
+            //请求完成的处理
+        },
+        error: function () {
+            //请求出错处理
+        }
+    });
+
+
     var status = $('#merchantStutas').val();
     switch (status) {
         case '0':
             $('#process').removeClass('hide');
             break;
         case '1':
-            $('#check').removeClass('hide');
+            $('#checkAndPass,.checking').removeClass('hide');
+            break;
+        case '2':
+            $('#checkAndPass,.pass').removeClass('hide');
             break;
         default:
             break;
@@ -260,13 +385,14 @@ function uploadPicture(obj, callBack) {
     }
     cropper.setFile(file, function (file) {
         cropper.close();
-        showLoadingTip('.pic_tip');
+        // showLoadingTip('.pic_tip');
         FileUploader.uploadMediaFile({
             type: 'pic',
             file: file,
             resourceType: 'trade',
             resourceId: '',
             success: function (data) {
+                obj.value = '';
                 callBack(data);
             },
             error: function (data) {

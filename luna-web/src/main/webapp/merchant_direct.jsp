@@ -17,6 +17,13 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-direct.css">
+    <!-- imgCropper引用的css文件 -->
+    <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
+    <!-- imgCropper引用的css文件 -->
+    <!-- jQuery 文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+    <!-- jQuery 文件 End -->
 </head>
 
 <body>
@@ -38,7 +45,7 @@
                     <!-- 开通流程 -->
                     <div id="process" class="main hide">
                         <div class="main-hd">
-                            <h3>交易直通车</h3></div>
+                            <h4>交易直通车</h4></div>
                         <p class="launch">
                             <span>你所在的商户还未开通交易直通车</span>
                             <button type="button" id="register">马上开通</button>
@@ -87,7 +94,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="name" required="required" placeholder="请输入你的真实姓名">
+                                        <input type="text" class="form-control" id="" name="contactName" required="required" placeholder="请输入你的真实姓名" value="杜玉涛">
                                         <!--<span class="help-block">请填写商户业务对接联系人的真实姓名</span>-->
                                     </div>
                                 </div>
@@ -98,7 +105,7 @@
                                         <select name="phoneArea" class="form-control phone-area">
                                             <option value="+86">+86</option>
                                         </select>
-                                        <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码">
+                                        <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码" value="18911133162">
                                         <!--<span class="help-block"> 请输入您的手机号码 </span>-->
                                     </div>
                                     <div class="col-md-4">
@@ -109,7 +116,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>短信验证码</label>
                                     <div class="col-md-4">
-                                        <input id="verCode" type="text" class="form-control" id="" name="verCode" required="required" placeholder="请输入6位手机验证码">
+                                        <input id="verCode" type="text" class="form-control" id="" name="verCode" placeholder="请输入6位手机验证码" maxlength="6">
                                         <!--<span class="help-block"> 请输入6位手机短信验证码 </span>-->
                                     </div>
                                 </div>
@@ -117,7 +124,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="email" required="required">
+                                        <input type="text" class="form-control" id="" name="email" required="required" value="1@qq.com">
                                         <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
                                     </div>
                                 </div>
@@ -126,18 +133,12 @@
                                         class="required" aria-required="true"> * </span>联系人身份证</label>
                                     <div class="col-md-8">
                                         <div class="">
-                                            <input type="file" onchange="" class="file" id="btnUploadIdPic" name="file" />
+                                            <input type="file" onchange="" class="file btnUploadPic" name="file" data-maxnum="2" data-wrapper="idPic" />
                                             <button id="" type="button">依次上传身份证正反面电子照片</button>
                                             <span class="font-red-sunglo"> 需保证图片中文字清晰可见 </span>
                                         </div>
                                         <div class="col-md-12 idPic">
                                             <!--<div class="pic-wrapper">
-                                                <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证">
-                                                <div class="text-center">
-                                                    <a href="javascript:;">删除</a>
-                                                </div>
-                                            </div>
-                                            <div class="pic-wrapper">
                                                 <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="身份证">
                                                 <div class="text-center">
                                                     <a href="javascript:;">删除</a>
@@ -151,9 +152,13 @@
                                         class="required" aria-required="true"> * </span>身份证有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <input type="text" class="input-sm form-control datepicker" name="startIDDate" />
+                                            <div>
+                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="2016-01-01" />
+                                            </div>
                                             <span class="input-group-addon">至</span>
-                                            <input type="text" class="input-sm form-control datepicker" name="endIDDate" />
+                                            <div>
+                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="2016-08-08" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -162,7 +167,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="merchantName" required="required">
+                                        <input type="text" class="form-control" id="" name="merchantName" required="required" placeholder="请填写商户的全称" value="杜玉涛">
                                         <!--<span class="help-block"> 填写商户的全称 </span>-->
                                     </div>
                                 </div>
@@ -170,7 +175,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required">
+                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required" value="010-62338499">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -178,7 +183,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="businessLicense" required="required">
+                                        <input type="text" class="form-control" id="" name="merchantNo" required="required" placeholder="请输入18位的商户社会信用代码" value="8885444666445564">
                                         <!--<span class="help-block"> </span>-->
                                     </div>
                                 </div>
@@ -187,16 +192,17 @@
                                         class="required" aria-required="true"> * </span>*营业执照副本电子版</label>
                                     <div class="col-md-8">
                                         <div>
+                                            <input type="file" onchange="" class="file btnUploadPic" name="file" data-maxnum="1" data-wrapper="blPic" />
                                             <button type="button">证件资料上传</button>
                                             <span class="font-red-sunglo"> 需保证图片中文字清晰可见 </span>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="pic-wrapper">
+                                        <div class="col-md-12 blPic">
+                                            <!--<div class="pic-wrapper">
                                                 <img src="http://cdn.visualbusiness.cn/public/vb/img/sample.png" alt="营业执照副本">
                                                 <div class="text-center">
                                                     <a href="javascript:;">删除</a>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -205,9 +211,9 @@
                                         class="required" aria-required="true"> * </span>有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <input type="text" class="input-sm form-control datepicker" name="startBLDate" />
+                                            <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="2016-03-03" />
                                             <span class="input-group-addon">至</span>
-                                            <input type="text" class="input-sm form-control datepicker" name="endBLDate" />
+                                            <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="2018-01-01" />
                                         </div>
                                     </div>
                                 </div>
@@ -227,7 +233,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="accountName" required="required">
+                                        <input type="text" class="form-control" id="" name="accountName" required="required" placeholder="请输入开户名称" value="杜玉涛">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -255,7 +261,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户支行</label>
                                     <div class="col-md-4">
-                                        <select id="branchBankCode" class="form-control" name="accountBranchBank">
+                                        <select id="branchBankCode" class="form-control" name="accountAddresss">
                                         </select>
                                         <!--<span class="help-block"> </span>-->
                                     </div>
@@ -264,7 +270,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" id="" name="accountBank" required="required">
+                                        <input type="text" class="form-control" id="" name="accountNo" required="required" value="62335445656879789978">
                                         <!--<span class="help-block">  </span>-->
                                     </div>
                                 </div>
@@ -277,22 +283,25 @@
                     </div>
                     <!-- 填写信息End -->
                     <!-- 确认提交  -->
-                    <div class="main hide">
+                    <div id="confirmSubmit" class="main hide">
                         <div class="main-hd">
-                            <h3><a href="#">交易直通车</a>/确认提交</h3></div>
+                            <h4><a href="#">交易直通车</a>/确认提交</h4></div>
                         <div class="confirm-wrapper">
                             <i class="iconfont  icon-profile"></i>
                             <p>资料提交完成，正在为您审核，请耐心等待 <br/> 您提交的资料，将在1～3个工作日内审核完毕，您可登录皓月平台查看进度
                                 <br/> 资料审核通过后，您需要和微景天下在线签署服务协议，成功后，将自动开通直通车服务。
                             </p>
+                            <p>
+                                <button type="button" id="btnConfirmSubmit">完成</button>
+                            </p>
                         </div>
                     </div>
                     <!-- 确认提交End -->
                     <!-- 申请后界面 -->
-                    <div id="check" class=" main hide">
+                    <div id="checkAndPass" class="main hide">
                         <div class="main-hd">
-                            <h3>交易直通车</h3></div>
-                        <p class="launch">
+                            <h4>交易直通车</h4></div>
+                        <p class="launch hide checking">
                             <span>你所在的商户还未开通交易直通车</span>
                             <button type="button" disabled="disabled">已申请</button>
                         </p>
@@ -323,7 +332,7 @@
                                     </span>
                                     </div>
                                     <div class="process-content-wrapper">确认商户信息，在线签署 <a href="">《微景天下交易服务协议》</a>，开启商户交易服务
-                                        <button type="button" class="sign-aggreement" id="btnSign">签署协议</button>
+                                        <button type="button" class="sign-aggreement pass hide" id="btnSign">签署协议</button>
                                     </div>
                                 </li>
                             </ul>
@@ -362,10 +371,9 @@
         <!-- 底部功能区 end -->
     </div>
     <!--签署协议 end-->
+    <jsp:include page="/templete/imgCropper.jsp" />
 
-    <!-- jQuery 文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-    <!-- jQuery 文件 End -->
+
 
     <!-- common文件 -->
     <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>

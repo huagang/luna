@@ -5,24 +5,24 @@
  * @update:2016-6-22
  */
 
-var Util = function() {
+var Util = function () {
 
     return {
         /**
          * ajax封装函数
          * 参数：url 请求连接  data 参数  sucCall 成功回调函数  errCall失败回调函数
          */
-        setAjax: function(url, args, sucCall, errCall, method) {
+        setAjax: function (url, args, sucCall, errCall, method) {
             var self = this;
             var ajaxOptions = {
                 type: method || 'POST',
                 dataType: 'json',
                 data: args,
-                // data: args,
                 cache: false,
                 crossDomain: true, //跨域问题
                 url: url,
-                success: function(json) {
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (json) {
                     if (json) {
                         if (json.errCode && json.errCode == 10001) {
                             location.href = '/?referer=' + encodeURIComponent(location.href);
@@ -37,7 +37,7 @@ var Util = function() {
                         }
                     }
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
                     switch (textStatus) {
                         case "timeout":
                             //alert('服务无反应，请稍后再试！');
@@ -69,15 +69,15 @@ var Util = function() {
             // if (method && method === 'GET') {
             //     ajaxOptions.data = args;
             // } else {
-            //     ajaxOptions.contentType = 'application/json; charset=utf-8';
+            //     ajaxOptions.contentType = 'application/x-www-form-urlencoded';
             // }
             return $.ajax(ajaxOptions);
         },
 
-        objectToStr: function(args) {
+        objectToStr: function (args) {
             var self = this;
             if (typeof args === 'object') {
-                $.each(args, function(i, n) {
+                $.each(args, function (i, n) {
                     args[i] = self.objectToStr(n);
                 });
             } else {
@@ -90,7 +90,7 @@ var Util = function() {
          * 参数：str_url 需要验证的字符串
          * 返回：布尔值
          */
-        isURL: function(str_url) {
+        isURL: function (str_url) {
             var strRegex = /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
             var re = new RegExp(strRegex);
             return re.test(str_url);
@@ -100,7 +100,7 @@ var Util = function() {
          * 参数：s 模板  arr 数据数组
          * 返回：格式化后的字符串
          */
-        strFormat: function(s, arr) {
+        strFormat: function (s, arr) {
             if (!s || s.length == 0) {
                 s = '';
             } else {
@@ -115,7 +115,7 @@ var Util = function() {
          * @param {[type]} url 需要添加参数的url
          * @param {[type]} obj 添加的参数对象
          */
-        addUrlParam: function(url, obj) {
+        addUrlParam: function (url, obj) {
             if (!url || url.length == 0) {
                 url = '';
             } else {
@@ -134,7 +134,7 @@ var Util = function() {
          * 参数：src 模板  options 数据JSON  ori 规则
          * 返回：HTML代码
          */
-        template: function(src, options, ori) {
+        template: function (src, options, ori) {
             var curStr = '';
             if (this.isIE()) {
                 curStr = src;
@@ -149,7 +149,7 @@ var Util = function() {
             }
 
             var formatReg = new RegExp("#{([a-z0-9_]+)}", "ig");
-            curStr = curStr.replace(formatReg, function(match, f1, index, srcStr) {
+            curStr = curStr.replace(formatReg, function (match, f1, index, srcStr) {
                 //如果option[f1]返回undefined或null，将会被转为空字符串""
                 //如果option[f1]返回0, 将会返回0
                 //options[f1] = (options[f1] == 0 || options[f1] == "0") ? "0" : options[f1];
@@ -168,10 +168,10 @@ var Util = function() {
                  nomCls 处于普通状态的按钮样式；（非必须）；
                  callBack：回调（非必须）；
          */
-        tab: function(obj, curCls, nomCls, callBack) {
+        tab: function (obj, curCls, nomCls, callBack) {
             var that = this,
                 tabPanel = $(obj);
-            tabPanel.on('click', function(e) {
+            tabPanel.on('click', function (e) {
                 var self = $(this),
                     index = tabPanel.index(this);
 
@@ -191,7 +191,7 @@ var Util = function() {
         /**
          * 设置/获取地址栏参数
          */
-        location: function() {
+        location: function () {
             var args = {},
                 data = null,
                 urlData = location.search,
@@ -225,7 +225,7 @@ var Util = function() {
                 urlData = urlData.replace('?', '');
                 if (urlData.indexOf('&') > -1) {
                     arrData = urlData.split('&');
-                    $.each(arrData, function(i, n) {
+                    $.each(arrData, function (i, n) {
                         if (n.indexOf('=') > -1) {
                             n = n.split('=');
                             args[n[0]] = decodeURIComponent((n[1] + '').replace(/\+/ig, ' '));
@@ -247,7 +247,7 @@ var Util = function() {
         /**
          * 格式化时间戳
          */
-        dateFormat: function(date, format) {
+        dateFormat: function (date, format) {
             var dateTime = new Date(date);
             var o = {
                 "M+": dateTime.getMonth() + 1, //month 
@@ -273,7 +273,7 @@ var Util = function() {
          * 参数：name 表单的name属性
          * 返回：jquery object 对象
          */
-        getByName: function(name) {
+        getByName: function (name) {
             var objInput = $('.main input[name="' + name + '"]'),
                 objSelect = $('.main select[name="' + name + '"]'),
                 objTextArea = $('.main textarea[name="' + name + '"]');
@@ -286,15 +286,15 @@ var Util = function() {
 
         //判断是否是空字符串 => ''
         //
-        isNullString: function(s) {
+        isNullString: function (s) {
             return s.replace(/(^\s*)|(\s*$)/g, "").length == 0;
         },
         //判断是否是数组
-        isArray: function(obj) {
+        isArray: function (obj) {
             return Object.prototype.toString.call(obj) === '[object Array]';
         },
         //数组去重
-        distinctArray: function(arr) {
+        distinctArray: function (arr) {
             var obj = {};
             for (var i = 0; i < arr.length; i++) {
                 obj[arr[i]] = 1;
@@ -309,7 +309,7 @@ var Util = function() {
          * 获取email,使用星号隐藏部分内容,例如:ice****@qq.com
          * @return 例如:ice****@qq.com
          */
-        getMaskEmail: function(email) {
+        getMaskEmail: function (email) {
             if (this.isNullString(email)) {
                 return email;
             } else {
@@ -330,11 +330,11 @@ var Util = function() {
         /**
          * 图片加载失败处理
          */
-        imgLoadError: function(obj, size) {
+        imgLoadError: function (obj, size) {
             var oImg = obj || $('img'),
                 imgSize = size || 30;
-            oImg.each(function(i, n) {
-                n.onerror = function() {
+            oImg.each(function (i, n) {
+                n.onerror = function () {
                     $(n).prop('src', ued_conf.root + 'images/common/default-' + imgSize + 'x' + imgSize + '.png');
                 }
             })
@@ -342,7 +342,7 @@ var Util = function() {
         /**
          * 转换为安全的HTML
          */
-        safeHTML: function(str) {
+        safeHTML: function (str) {
             if (str && typeof str === 'string') {
                 str = str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             }
@@ -351,7 +351,7 @@ var Util = function() {
         /**
          * 转换用户头像
          */
-        getAvatar: function(avatar, w, h) {
+        getAvatar: function (avatar, w, h) {
             !h && (h = w);
             if (avatar != null) {
                 if (avatar.indexOf("http://") == -1) {
@@ -368,7 +368,7 @@ var Util = function() {
         /**
          * 清除HTML
          */
-        removeHTMLTag: function(str) {
+        removeHTMLTag: function (str) {
             if (str && typeof str === 'string') {
                 str = str.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
                 str = str.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
@@ -381,11 +381,11 @@ var Util = function() {
         /**
          * 字符串计数
          */
-        wordsCount: function(input, tips, num, defaultNum) {
+        wordsCount: function (input, tips, num, defaultNum) {
             if (defaultNum && tips) {
                 $(tips).text(num - defaultNum);
             }
-            $(input).on('keydown keyup blur mousecenter mouseleave mousemove', function() {
+            $(input).on('keydown keyup blur mousecenter mouseleave mousemove', function () {
                 var len = $(this).val().length || 0,
                     chrLen = num - len;
                 tips && $(tips).text(chrLen > 0 ? chrLen : 0);
@@ -404,7 +404,7 @@ var Util = function() {
          *
          * return: 截取后的字符串
          */
-        autoAddEllipsis: function(pStr, pLen, pEll) {
+        autoAddEllipsis: function (pStr, pLen, pEll) {
             var self = this,
                 _ret = self.cutString(pStr, pLen),
                 _cutFlag = _ret.cutFlag,
@@ -426,7 +426,7 @@ var Util = function() {
          *
          * return: 截取后的字符串
          */
-        cutString: function(pStr, pLen) {
+        cutString: function (pStr, pLen) {
             var self = this;
             if (!pStr) {
                 return {
@@ -488,7 +488,7 @@ var Util = function() {
          * return: true:全角
          *         false:半角
          */
-        isFull: function(pChar) {
+        isFull: function (pChar) {
             for (var i = 0; i < pChar.length; i++) {
                 return pChar.charCodeAt(i) > 128
             }
@@ -497,7 +497,7 @@ var Util = function() {
          * 关闭标签/浏览器 或 刷新浏览器
          * call: 回调函数
          */
-        onBeforeBomUnload: function(call) {
+        onBeforeBomUnload: function (call) {
             if (this.isIE()) {
                 window.document.body.onbeforeunload = call;
             } else {
@@ -508,14 +508,14 @@ var Util = function() {
         /**
          * JSON序列化表单
          */
-        formToJson: function(form) {
+        formToJson: function (form) {
             var param = $.type(form) == 'string' ? form : (form.serialize() || ''),
                 arrParam = [],
                 arrMap = [],
                 returnJSON = {};
             if (param.indexOf('&') > -1) {
                 arrParam = param.split('&');
-                $.each(arrParam, function(i, n) {
+                $.each(arrParam, function (i, n) {
                     if (n.indexOf('=') > -1) {
                         arrMap = n.split('=');
                         returnJSON[arrMap[0]] = decodeURIComponent(arrMap[1]);
@@ -528,7 +528,7 @@ var Util = function() {
          * 保留2位或多位小数
          * pos 需要保留小数的位数，默认为2位
          */
-        toFixed: function(num, pos) {
+        toFixed: function (num, pos) {
             var floatNum = parseFloat(num),
                 floatPos = pos || 2,
                 roundNum = Math.pow(10, floatPos),
@@ -558,7 +558,7 @@ var Util = function() {
         /**
          * 判断是否为IE 并返回IE版本
          */
-        isIE: function() {
+        isIE: function () {
             var ua = navigator.userAgent,
                 returnBrowser = null;
             if (ua) {
@@ -573,7 +573,7 @@ var Util = function() {
         /**
          * 阿拉伯数字转中文
          */
-        numToCharacter: function(num) {
+        numToCharacter: function (num) {
             if (!/^\d*(\.\d*)?$/.test(num)) {
                 return num;
             }
@@ -607,14 +607,14 @@ var Util = function() {
         /**
          * 本地图片预览
          */
-        previewImage: function(divPreview, fileObj, noCall) {
+        previewImage: function (divPreview, fileObj, noCall) {
             var browserVersion = window.navigator.userAgent.toUpperCase(),
                 imgPreview = divPreview.find('img');
 
             if (fileObj.files) { //HTML5实现预览，兼容chrome、火狐7+等
                 if (window.FileReader) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         imgPreview.prop("src", e.target.result);
                     };
                     reader.readAsDataURL(fileObj.files[0]);
@@ -668,7 +668,7 @@ var Util = function() {
          *             2 包含后不包含前
          *             3 包含前后
          */
-        createTime: function(start, end, split, containType) {
+        createTime: function (start, end, split, containType) {
             var timeArr = [];
             start = (start || 0) * 60;
             end = (end || 24) * 60;
@@ -692,7 +692,7 @@ var Util = function() {
         /**
          * 控制台输出
          */
-        trace: function(msg, color) {
+        trace: function (msg, color) {
             if (ued_conf.mode === 'dev') {
                 if (window.console) {
                     if (color) {
@@ -706,11 +706,11 @@ var Util = function() {
         /**
          * 相关转码函数
          */
-        arrayBufferToString: function(arrayBuffer) {
+        arrayBufferToString: function (arrayBuffer) {
             var binarry = this.arrayBufferToBase64(arrayBuffer);
             return this.binaryToString(binarry);
         },
-        binaryToString: function(binary) {
+        binaryToString: function (binary) {
             var error;
             try {
                 console.info(decodeURIComponent(escape(binary)));
@@ -724,7 +724,7 @@ var Util = function() {
                 }
             }
         },
-        arrayBufferToBase64: function(buffer) {
+        arrayBufferToBase64: function (buffer) {
             var binary = '';
             var bytes = new Uint8Array(buffer);
             var len = bytes.byteLength;
@@ -737,7 +737,7 @@ var Util = function() {
          * 移动端微信或QQ访问
          * 0-否 1-微信 2-QQ
          */
-        mobileQQOrWx: function() {
+        mobileQQOrWx: function () {
             var agent = window.navigator.userAgent;
             if (agent.indexOf('Android') > -1 || agent.indexOf('iPhone') > -1 || agent.indexOf('iPad') > -1) {
                 if (agent.indexOf('MicroMessenger') > -1) {
@@ -755,7 +755,7 @@ var Util = function() {
         /**
          * 获取当月的最后一天
          */
-        getLastDay: function(date) {
+        getLastDay: function (date) {
             date = new Date(date.replace(/-/g, '/') + '/01');
             var new_year = date.getFullYear(),
                 new_month = date.getMonth() + 1,
@@ -763,20 +763,20 @@ var Util = function() {
 
             return (new Date(new_date.getTime() - 1000 * 60 * 60 * 24)).getDate();
         },
-        alertDialog: function(content, call, closetext) {
+        alertDialog: function (content, call, closetext) {
             if ($('#confirmDialog').length) {
                 $('#confirmDialog').removeClass('hide').dialog({
                     modal: true,
                     title: '<div class="widget-header widget-header-small "><h4 class="smaller">提示</h4></div>',
                     title_html: true,
-                    open: function() {
+                    open: function () {
                         $(this).html('<div class="alert-dialog">' + content + '</div>');
                     },
                     buttons: [{
                         text: closetext || '关闭',
                         'id': 'switchGroupConfirmBtn',
                         'class': 'btn btn-primary btn-minier',
-                        click: function() {
+                        click: function () {
                             $('#confirmDialog').dialog('close');
                             if (call) {
                                 call();
@@ -786,15 +786,15 @@ var Util = function() {
                 });
             }
         },
-        confirm: function(options) {
+        confirm: function (options) {
             var defaults = {
                 targetObj: $('#confirmDialog'),
                 headTitle: '提示',
                 okValue: '确定',
                 content: '',
-                okCall: function() {},
+                okCall: function () { },
                 cancelValue: '取消',
-                cancelCall: function() {}
+                cancelCall: function () { }
             };
             var opts = $.extend(defaults, options);
             if (opts.targetObj.length) {
@@ -804,7 +804,7 @@ var Util = function() {
                         text: opts.okValue,
                         'id': 'switchGroupConfirmBtn',
                         'class': 'btn btn-primary btn-minier',
-                        click: function() {
+                        click: function () {
                             opts.targetObj.dialog('close');
                             opts.okCall();
                         }
@@ -815,7 +815,7 @@ var Util = function() {
                         text: opts.cancelValue,
                         'id': 'switchGroupConfirmBtn',
                         'class': 'btn btn-minier',
-                        click: function() {
+                        click: function () {
                             opts.targetObj.dialog('close');
                             opts.cancelCall();
                         }
@@ -825,7 +825,7 @@ var Util = function() {
                     modal: true,
                     title: '<div class="widget-header widget-header-small "><h4 class="smaller">' + opts.headTitle + '</h4></div>',
                     title_html: true,
-                    open: function() {
+                    open: function () {
                         $(this).html('<div class="alert-dialog">' + opts.content + '</div>');
                     },
                     buttons: buttons
@@ -855,4 +855,4 @@ var Util = function() {
             };
         },
     };
-}();
+} ();

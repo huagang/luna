@@ -19,8 +19,10 @@ import ms.luna.web.common.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by SDLL18 on 16/8/31.
@@ -67,6 +69,19 @@ public class CheckTradeApplicationController {
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
         return lunaTradeApplicationService.getApplication(inData);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
+//        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return new ModelAndView("/manage_merchant_apply.jsp");
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/page/{applyID}")
+    public ModelAndView applyDetail(HttpServletRequest request, HttpServletResponse response) {
+
+//        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return new ModelAndView("/merchant_detail.jsp");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getList")
