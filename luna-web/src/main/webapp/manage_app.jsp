@@ -61,11 +61,11 @@
 						        <thead>
 						            <tr>
 						            	<th data-field="app_id" data-visible="false" data-align="left">微景展编号</th>
-						                <th data-formatter="nameFormatter" data-align="left">名称</th>
-						                <th data-formatter="timeFormatter" data-align="left">时间</th>
+						                <th data-formatter="nameFormatter" data-align="left" data-width="240">名称</th>
+						                <th data-formatter="timeFormatter" data-align="left" data-width="230">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
-						                <th data-formatter="statusFormatter" data-align="left">状态</th>
+						                <th data-formatter="statusFormatter" data-align="center">状态</th>
 						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
 						            </tr>
 						        </thead>

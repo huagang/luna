@@ -124,6 +124,18 @@ var lunaConfig = function () {
                 name: '乌江画廊',
                 code: 'wujianghualang',
                 type: 'default',
+            }, {
+                name: '客房',
+                code: 'kefang',
+                type: 'default',
+            }, {
+                name: '雅致',
+                code: 'yazhi',
+                type: 'default',
+            }, {
+                name: '尊享',
+                code: 'zunxiang',
+                type: 'default',
             }],
     };
 } ();

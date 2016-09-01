@@ -55,12 +55,12 @@
                                 <thead>
                                 <tr>
                                     <th data-field="id" data-visible="false"></th>
-                                    <th data-formatter="titleFormatter" data-field="title" data-align="left" data-width="140" >标题</th>
+                                    <th data-formatter="titleFormatter" data-field="title" data-align="left" data-width="240" >标题</th>
                                     <th data-field="author" data-align="left">作者</th>
                                     <th data-field="column_name" data-align="left">栏目</th>
-                                    <th data-formatter="timeFormatter" data-align="left" data-width="210">时间</th>
-                                    <th data-formatter="statusFormatter" data-align="left">状态</th>
-                                    <th data-formatter="operationFormatter" data-events="operationEvents" data-width="150" data-align="right">操作</th>
+                                    <th data-formatter="timeFormatter" data-align="left" data-width="230">时间</th>
+                                    <th data-formatter="statusFormatter" data-align="center">状态</th>
+                                    <th data-formatter="operationFormatter" data-events="operationEvents" data-width="150"  data-align="right">操作</th>
                                 </tr>
                                 </thead>
                             </table>
