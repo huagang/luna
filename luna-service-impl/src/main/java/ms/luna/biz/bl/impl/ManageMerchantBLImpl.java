@@ -68,7 +68,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 		// 检查业务是否重名
 		if(existBusiness(businessName, businessCode)) {
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务名称或简称已经存在");
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "下手慢了,业务名称或简称已经存在");
 		}
 		// 根据业务员名字得到业务员id
 		String salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();// 业务员id
@@ -162,24 +162,25 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		//注：新加入province_id，city_id和county_id，作用：编辑商户时的地理位置加载
 	}
 
-	@Override
-	public JSONObject deleteMerchantById(String json) {
-		JSONObject param = JSONObject.parseObject(json);
-		String merchant_id = param.getString("merchant_id");
-		String salesman_id = param.getString("salesman_id");
-
-		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
-		if(msMerchantManage == null){
-			return FastJsonUtil.error("2", "商户id不存在,merchant_id:" + merchant_id);
-		}
-
-		// 只有业务员和登录账户相同时才可删除
-		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
-			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
-			return FastJsonUtil.sucess("成功删除商户信息！merchant_id:" + merchant_id);
-		}
-		return FastJsonUtil.error("1", "非本商户业务员无权删除！salesman_id:" + salesman_id + ", merchant_id:" + merchant_id);
-	}
+//	@Override
+//	// 目前没有删除用户选项
+//	public JSONObject deleteMerchantById(String json) {
+//		JSONObject param = JSONObject.parseObject(json);
+//		String merchant_id = param.getString("merchant_id");
+//		String salesman_id = param.getString("salesman_id");
+//
+//		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchant_id);
+//		if(msMerchantManage == null){
+//			return FastJsonUtil.error("2", "商户id不存在,merchant_id:" + merchant_id);
+//		}
+//
+//		// 只有业务员和登录账户相同时才可删除
+//		if (msMerchantManage.getSalesmanId().equals(salesman_id)) {
+//			msMerchantManageDAO.deleteByPrimaryKey(merchant_id);
+//			return FastJsonUtil.sucess("成功删除商户信息！merchant_id:" + merchant_id);
+//		}
+//		return FastJsonUtil.error("1", "非本商户业务员无权删除！salesman_id:" + salesman_id + ", merchant_id:" + merchant_id);
+//	}
 
 	@Override
 	public JSONObject loadMerchantById(String json) {
@@ -229,7 +230,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		merchant.put("business_code", business_code);
 		merchant.put("business_name", business_name);
 		merchant.put("business_id", business_id);
-		return FastJsonUtil.sucess("用户信息检索成功！", merchant);
+		return FastJsonUtil.sucess("success", merchant);
 	}
 
 	/**
@@ -266,6 +267,10 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 业务更新 -- 首先判断业务是否存在
 		String businessName = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_NAME);
 		String businessCode = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_CODE);
+		// 检查业务是否重名
+		if(existBusiness(businessName, businessCode)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "下手慢了,业务名称或简称已经存在");
+		}
 		if(existBusiness(merchant_id)) {
 			this.updateBusiness(businessName, businessCode, merchant_id);
 		} else {
@@ -289,8 +294,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setDelFlg("1");// 非物理删除
 		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
-
-		return FastJsonUtil.sucess("成功关闭商户！merchant_id:" + merchant_id);
+		return FastJsonUtil.sucess("success");
 	}
 
 	@Override
@@ -301,13 +305,8 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
 		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setDelFlg("0");
-		int count = msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
-
-		if (count == 1) {
-			return FastJsonUtil.sucess("成功开启商户！");
-		} else {
-			throw new RuntimeException("异常, merchant_id：" + merchant_id + "存在" + count + "个");
-		}
+		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
+		return FastJsonUtil.sucess("success");
 	}
 	
 	// ---------------------------------------------------------
@@ -429,7 +428,6 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			business.setSecretKey(statData.getString("secret_key"));
 		} else {
 			MsLogger.error("Failed to create qq stats account");
-//			return FastJsonUtil.error("-1", "创建腾讯统计账号失败");
 			throw new RuntimeException("创建腾讯统计账号失败");
 		}
 

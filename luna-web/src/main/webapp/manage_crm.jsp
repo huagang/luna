@@ -69,8 +69,7 @@
 					            <tr>
 					                <th data-field="merchant_nm" data-align="left">商户名称</th>
                                  	<th data-field="category_nm" data-align="left">商户类型</th>
-                                    <th data-field="business_name" data-align="left">业务名称</th>
-                                    <th data-field="business_code" data-align="left">业务简称</th>
+                                    <th data-field="business_id" data-align="left">业务ID</th>
                                  	<th data-field="contact_nm" data-align="left">联系人姓名</th>
                                  	<th data-field="contact_phonenum" data-align="left">联系人手机</th>
                                  	<th data-field="salesman_nm" data-align="left">业务员</th>                              
