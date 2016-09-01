@@ -97,9 +97,11 @@ public class CheckTradeApplicationController {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         if (offset != null && limit != null) {
-            return lunaTradeApplicationService.getApplicationList(offset, limit);
+            JSONObject r = lunaTradeApplicationService.getApplicationList(offset, limit);
+            return r.getJSONObject("data");
         } else {
-            return lunaTradeApplicationService.getApplicationList();
+            JSONObject r = lunaTradeApplicationService.getApplicationList();
+            return r.getJSONObject("data");
         }
 
     }

@@ -204,7 +204,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             JSONArray r = assembleApplicationForManager(applicationList);
             int count = lunaTradeApplicationDAO.countLunaTradeApplication();
             JSONObject result = new JSONObject();
-            result.put("raws", r);
+            result.put("rows", r);
             result.put("total", count);
             return FastJsonUtil.sucess("success", result);
         } catch (Exception e) {
@@ -235,7 +235,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             JSONArray toSend = assembleApplicationForManager(applicationList);
             int count = lunaTradeApplicationDAO.countLunaTradeApplication();
             JSONObject result = new JSONObject();
-            result.put("raws", toSend);
+            result.put("rows", toSend);
             result.put("total", count);
             return FastJsonUtil.sucess("success", result);
         } catch (Exception ex) {
