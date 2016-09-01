@@ -1,53 +1,61 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.MsCRMTable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class MsMerchantManage implements Serializable {
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ID)
     private String merchantId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_NM)
     private String merchantNm;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_PHONENUM)
     private String merchantPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CATEGORY_ID)
     private String categoryId;
-
+    @JSONField(name = MsCRMTable.FIELD_PROVINCE_ID)
     private String provinceId;
-
+    @JSONField(name = MsCRMTable.FIELD_CITY_ID)
     private String cityId;
-
+    @JSONField(name = MsCRMTable.FIELD_COUNTY_ID)
     private String countyId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ADDR)
     private String merchantAddr;
-
+    @JSONField(name = MsCRMTable.FIELD_RESOURCE_CONTENT)
     private String resourceContent;
-
+    @JSONField(name = MsCRMTable.FIELD_LAT)
     private BigDecimal lat;
-
+    @JSONField(name = MsCRMTable.FIELD_LNG)
     private BigDecimal lng;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_INFO)
     private String merchantInfo;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_NM)
     private String contactNm;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_PHONENUM)
     private String contactPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_MAIL)
     private String contactMail;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_ID)
     private String salesmanId;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_NM)
     private String salesmanNm;
-
+    @JSONField(name = MsCRMTable.FIELD_STATUS_ID)
     private String statusId;
-
+    @JSONField(name = MsCRMTable.FIELD_DEL_FLG)
     private String delFlg;
-
+    @JSONField(name = MsCRMTable.FIELD_REGIST_HHMMSS)
     private Date registHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UP_HHMMSS)
     private Date upHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UPDATED_BY_UNIQUE_ID)
     private String updatedByUniqueId;
+
+    private Integer tradeStatus;
+
+    private String uniqueId;
 
     private static final long serialVersionUID = 1L;
 
@@ -227,6 +235,22 @@ public class MsMerchantManage implements Serializable {
         this.updatedByUniqueId = updatedByUniqueId == null ? null : updatedByUniqueId.trim();
     }
 
+    public Integer getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(Integer tradeStatus) {
+        this.tradeStatus = tradeStatus;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId == null ? null : uniqueId.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -240,27 +264,29 @@ public class MsMerchantManage implements Serializable {
         }
         MsMerchantManage other = (MsMerchantManage) that;
         return (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()))
-            && (this.getMerchantNm() == null ? other.getMerchantNm() == null : this.getMerchantNm().equals(other.getMerchantNm()))
-            && (this.getMerchantPhonenum() == null ? other.getMerchantPhonenum() == null : this.getMerchantPhonenum().equals(other.getMerchantPhonenum()))
-            && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
-            && (this.getProvinceId() == null ? other.getProvinceId() == null : this.getProvinceId().equals(other.getProvinceId()))
+                && (this.getMerchantNm() == null ? other.getMerchantNm() == null : this.getMerchantNm().equals(other.getMerchantNm()))
+                && (this.getMerchantPhonenum() == null ? other.getMerchantPhonenum() == null : this.getMerchantPhonenum().equals(other.getMerchantPhonenum()))
+                && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
+                && (this.getProvinceId() == null ? other.getProvinceId() == null : this.getProvinceId().equals(other.getProvinceId()))
             && (this.getCityId() == null ? other.getCityId() == null : this.getCityId().equals(other.getCityId()))
-            && (this.getCountyId() == null ? other.getCountyId() == null : this.getCountyId().equals(other.getCountyId()))
+                && (this.getCountyId() == null ? other.getCountyId() == null : this.getCountyId().equals(other.getCountyId()))
             && (this.getMerchantAddr() == null ? other.getMerchantAddr() == null : this.getMerchantAddr().equals(other.getMerchantAddr()))
-            && (this.getResourceContent() == null ? other.getResourceContent() == null : this.getResourceContent().equals(other.getResourceContent()))
+                && (this.getResourceContent() == null ? other.getResourceContent() == null : this.getResourceContent().equals(other.getResourceContent()))
             && (this.getLat() == null ? other.getLat() == null : this.getLat().equals(other.getLat()))
-            && (this.getLng() == null ? other.getLng() == null : this.getLng().equals(other.getLng()))
+                && (this.getLng() == null ? other.getLng() == null : this.getLng().equals(other.getLng()))
             && (this.getMerchantInfo() == null ? other.getMerchantInfo() == null : this.getMerchantInfo().equals(other.getMerchantInfo()))
             && (this.getContactNm() == null ? other.getContactNm() == null : this.getContactNm().equals(other.getContactNm()))
-            && (this.getContactPhonenum() == null ? other.getContactPhonenum() == null : this.getContactPhonenum().equals(other.getContactPhonenum()))
-            && (this.getContactMail() == null ? other.getContactMail() == null : this.getContactMail().equals(other.getContactMail()))
+                && (this.getContactPhonenum() == null ? other.getContactPhonenum() == null : this.getContactPhonenum().equals(other.getContactPhonenum()))
+                && (this.getContactMail() == null ? other.getContactMail() == null : this.getContactMail().equals(other.getContactMail()))
             && (this.getSalesmanId() == null ? other.getSalesmanId() == null : this.getSalesmanId().equals(other.getSalesmanId()))
             && (this.getSalesmanNm() == null ? other.getSalesmanNm() == null : this.getSalesmanNm().equals(other.getSalesmanNm()))
             && (this.getStatusId() == null ? other.getStatusId() == null : this.getStatusId().equals(other.getStatusId()))
             && (this.getDelFlg() == null ? other.getDelFlg() == null : this.getDelFlg().equals(other.getDelFlg()))
-            && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
+                && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
-            && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()));
+            && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()))
+            && (this.getTradeStatus() == null ? other.getTradeStatus() == null : this.getTradeStatus().equals(other.getTradeStatus()))
+            && (this.getUniqueId() == null ? other.getUniqueId() == null : this.getUniqueId().equals(other.getUniqueId()));
     }
 
     @Override
@@ -289,11 +315,13 @@ public class MsMerchantManage implements Serializable {
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getUpdatedByUniqueId() == null) ? 0 : getUpdatedByUniqueId().hashCode());
+        result = prime * result + ((getTradeStatus() == null) ? 0 : getTradeStatus().hashCode());
+        result = prime * result + ((getUniqueId() == null) ? 0 : getUniqueId().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + "]";
+        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + ",uniqueId=" + uniqueId + "]";
     }
 }

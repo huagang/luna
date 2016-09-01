@@ -139,6 +139,7 @@
 									<span id="warn-short" class="red"></span>
 								</div>
 							</div>
+						</div>
 
 							<div class="item">
 			                <div class="item-label"><span class="superscript">*</span>受理业务员</div>
@@ -149,6 +150,7 @@
 			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
 			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
 			                </div>
+
 			            </div>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>商户状态</div>

@@ -102,7 +102,7 @@
 	                            <label><input type="radio" id="license" name="license" value="否" />否</label>
 	                            <div id="license-area" style="position:relative;">
 	                            	<input id="license-url" name="resource_content" style="display:none;"/>
-	                                <input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true" accept="image/*"
+	                                <input type="file" id="license-upload" name="file" data_upload="true" accept="image/*"
 										   onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
 	                                <button id="btn-license-upload" >营业执照副本电子版</button><span class="remind">*需要保证图片中文字清晰可见</span>
 									<div class="warn" id="license-upload-warn">必须填写</div>

@@ -53,7 +53,6 @@
     <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
 <input id="shareInfoDes" type="hidden" name="" value="">
-<div id="fuck">${description}</div>
 <!-- BEGIN REFER LINK  -->
 <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>

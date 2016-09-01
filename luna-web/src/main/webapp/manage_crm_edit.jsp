@@ -145,7 +145,7 @@
 						</div>
 
 			            <div class="item">
-			                <div class="item-label"><span class="superscript">*</span>受理业务员：</div>
+			                <div class="item-label"><span class="superscript">*</span>受理业务员</div>
 			                <div class="item-value">
 			                	<input id="salesman_nm_edit" name="salesman_edit" style="display:none" />
 			                    <span id="agent-edit"></span>

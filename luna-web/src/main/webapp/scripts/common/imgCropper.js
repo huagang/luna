@@ -111,11 +111,18 @@ $(function(){
         function _confirmCrop(){
             that.image.cropper('getCroppedCanvas').toBlob(function(blob){
                 if(typeof that.successCallback === 'function'){
-                    var file = new File([blob], that.file.name);
+                    var file;
+                    try{
+                        file = new File([blob], that.file.name);
+                    } catch(e){
+                        file = blob;
+                        file.lastModifiedDate = new Date();
+                        file.lastModified = Date.now();
+                        file.name = that.file.name;
+                    }
                     that.successCallback(file);
                 }
             }, that.file.type, that.compressSelect.prop('checked') ? 0.8 : 1);
-
         }
 
         // 取消上传

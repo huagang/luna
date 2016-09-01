@@ -200,6 +200,7 @@ public class UploadController {
                     param.put("vod_file_id", vodFileId);
                     param.put("vod_original_file_url", originFileUrl);
                     vodPlayService.createVodRecord(param.toString());
+                    retData.put("vod_file_id", vodFileId);
                     retData.put(QCosConfig.ACCESS_URL, originFileUrl);
                     retData.put("status", "SUCCESS");
                     result = FastJsonUtil.sucess("success", retData);

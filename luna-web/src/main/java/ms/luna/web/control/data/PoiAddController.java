@@ -76,8 +76,9 @@ public class PoiAddController extends BasicController {
         if ("0".equals(result.getString("code"))) {
             JSONObject data = result.getJSONObject("data");
             JSONArray private_fields_def = data.getJSONArray("private_fields_def");
-            poiController.initTags(session, data.getJSONObject("common_fields_def"), null);
-            session.setAttribute("private_fields", private_fields_def);
+            poiController.initTags(mav, data.getJSONObject("common_fields_def"), null);
+//            session.setAttribute("private_fields", private_fields_def);
+            mav.addObject("private_fields", private_fields_def);
         } else {
             mav.setViewName("/error.jsp");
             return mav;
@@ -101,7 +102,7 @@ public class PoiAddController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("provinces", lstProvinces);
+        mav.addObject("provinces", lstProvinces);
 
         // 城市信息
         List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
@@ -122,7 +123,7 @@ public class PoiAddController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("citys", lstCitys);
+        mav.addObject("citys", lstCitys);
 
         // 区/县信息
         List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
@@ -130,7 +131,7 @@ public class PoiAddController extends BasicController {
         simpleModel.setValue(VbConstant.ZonePulldown.ALL);
         simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
         lstCountys.add(simpleModel);
-        session.setAttribute("countys", lstCountys);
+        mav.addObject("countys", lstCountys);
 
         // 设置默认全景类型
         poiModel.setPanoramaType("2");
@@ -167,47 +168,6 @@ public class PoiAddController extends BasicController {
     }
 
     /**
-     * 异步上传图片
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
-    @ResponseBody
-    public String uploadThumbnail(
-            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
-        if (ext == null) {
-            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
-        }
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String fileNameInCloud = VbMD5.generateToken() + ext;
-        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
-    }
-
-    /**
-     * 异步上传音频
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/audio/upload")
-    @ResponseBody
-    public String uploadAudio(
-            @RequestParam(required = true, value = "audio_fileup") MultipartFile file,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
-        if (ext == null) {
-            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
-        }
-
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String fileNameInCloud = VbMD5.generateToken() + ext;
-        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
-    }
-
-    /**
      * 异步上传视频
      * @param request
      * @param response
@@ -216,9 +176,8 @@ public class PoiAddController extends BasicController {
     @RequestMapping(method = RequestMethod.POST, value = "/video/upload")
     @ResponseBody
     public String uploadVideo(
-            @RequestParam(required = true, value = "video_fileup") MultipartFile file,
+            @RequestParam(required = true, value = "file") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // super.uploadLocalFile2Cloud(request, response, file, pic_address);
         try {
             String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
             if (ext == null) {

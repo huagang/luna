@@ -175,6 +175,8 @@ var Inter = function () {
                 }, //检查姓名
 
                 // 商户注册
+                merchantPicUpload: { url: context + "/common/merchant/upload", type: "POST" },// 图片上传
+
                 merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名

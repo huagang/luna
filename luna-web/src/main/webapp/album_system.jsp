@@ -39,7 +39,10 @@
         <!--侧边菜单 end-->
         <!--主题内容 start-->
         <div class="main">
-            <iframe id="album-system" height="100%" width="100%" src="${albumUrl}"  frameborder="0" scrolling="auto"></iframe>
+            <iframe id="album-system" height="100%" width="100%" src="${albumUrl}"   frameborder="0" scrolling="no">
+              <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
+
+            </iframe>
         </div>
       </div>
     </div>
