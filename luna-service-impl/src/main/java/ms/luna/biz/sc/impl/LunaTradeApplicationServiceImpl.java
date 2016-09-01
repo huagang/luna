@@ -181,7 +181,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
-        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE,application.getAccountProvince());
+        result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, application.getAccountProvince());
         result.put(LunaTradeApplicationTable.FIELD_APP_STATUS, application.getAppStatus());
         result.put(LunaTradeApplicationTable.FIELD_EMAIL, application.getEmail());
         result.put(LunaTradeApplicationTable.FIELD_LICENCE_PIC_URL, application.getLicencePicUrl());
@@ -189,6 +189,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NAME, application.getMerchantName());
         result.put(LunaTradeApplicationTable.FIELD_MERCHANT_NO, application.getMerchantNo());
         result.put(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE, application.getMerchantPhone());
+        result.put(LunaTradeApplicationTable.FIELD_UPDATE_TIME, application.getUpdateTime());
     }
 
     @Override
