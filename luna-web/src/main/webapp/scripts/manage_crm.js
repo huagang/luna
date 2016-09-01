@@ -161,101 +161,200 @@ $(function () {
             $(this).remove();
         });
     });
-    //提交表单
-    $("#btn-addmerchant").click(function(){
-    	var hasError = false,hasFocus = false;
+    ////提交表单
+    //$("#btn-addmerchant").click(function(){
+    //	var hasError = false,hasFocus = false;
+    //
+    //	hasError = merchantNameExist() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#merchant_nm").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = merchantName() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#merchant_nm").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = merchantPhone() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#merchant_phonenum").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = merchantAddress() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#merchant_addr").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = linkmanName() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#contact_nm").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = linkmanPhone() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#contact_phonenum").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = linkmanEmail() || hasError;
+    //	if((hasError)&&(!hasFocus)){
+    //		$("#contact_mail").focus();
+    //		hasFocus=true;
+    //	}
+    //	hasError = latLonGet() || hasError;
+    //	hasError = licenseUpload() || hasError;
+    //	hasError = m_address() || hasError;
+    //	hasError = agent()||hasError;
+    //	hasError = merchantNameExist() || hasError;
+    //
+    //	var value = $("input[type=radio][name=license]:checked").val();
+    //	if (value != "是") {
+		//	$("#license-url").val("");
+		//}
+    //
+    //    if(!hasError){
+	 //   	var options = {
+		//		dataType: "json",
+		//		clearForm: false,
+		//		restForm: false,
+		//		success: function (returndata) {
+	 //   			var status = returndata.code;
+	 //   			var msg = returndata.msg;
+	 //   			switch(status){
+	 //   				case '0':
+	 //   					$("#pop-overlay").css("display","none");
+	 //   			        $("#pop-addmerchant").css("display","none");
+	 //   					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
+	 //   					break;
+	 //   				case '3':
+    //    					$("#merchant-name-warn").html('商户重名（您下手慢了）').show();
+    //    					$("#merchant-name-warn").attr("nameExist","true");
+    //    					break;
+	 //   				case '4':
+	 //   					$("#agent-warn").html('业务员不存在');
+	 //   					$("#agent-warn").css('display','block');
+	 //   					break;
+	 //   				default:
+	 //   					$("#pop-overlay").css("display","none");
+		//		        	$("#pop-addmerchant").css("display","none");
+		//		        	clcContent();
+		//		        	$("#status-message").html("创建失败").css('display','block');
+		//    				setTimeout(function(){
+		//    					$("#status-message").css('display','none');
+		//    				},2000);
+	 //   					break;	//创建失败
+	 //   			}
+		//		},
+	 //   		error: function(returndata){
+	 //   			$("#status-message").html("error").css('display','block');
+    //				setTimeout(function(){
+    //					$("#status-message").css('display','none');
+    //				},2000);
+	 //   		}
+		//    };
+	 //   	$("#form-add").ajaxForm(options);
+    //    }else{
+    //    	return false;
+    //    }
+    //});
 
-    	hasError = merchantNameExist() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_nm").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantName() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_nm").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantPhone() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_phonenum").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantAddress() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_addr").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanName() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_nm").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanPhone() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_phonenum").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanEmail() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_mail").focus();
-    		hasFocus=true;
-    	}
-    	hasError = latLonGet() || hasError;
-    	hasError = licenseUpload() || hasError;
-    	hasError = m_address() || hasError;   	
-    	hasError = agent()||hasError;   
-    	hasError = merchantNameExist() || hasError; 
-    	
-    	var value = $("input[type=radio][name=license]:checked").val();
-    	if (value != "是") {
-			$("#license-url").val("");
+	//提交表单
+	$("#btn-addmerchant").click(function(){
+		var hasError = false,hasFocus = false;
+
+		hasError = linkmanName() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_nm").focus();
+			hasFocus=true;
 		}
-    	
-        if(!hasError){
-	    	var options = {
-				dataType: "json",
-				clearForm: false,
-				restForm: false,
-				success: function (returndata) {
-	    			var status = returndata.code;
-	    			var msg = returndata.msg;
-	    			switch(status){
-	    				case '0': 
-	    					$("#pop-overlay").css("display","none");
-	    			        $("#pop-addmerchant").css("display","none");
-	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
+		hasError = linkmanPhone() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_phonenum").focus();
+			hasFocus=true;
+		}
+		hasError = linkmanEmail() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_mail").focus();
+			hasFocus=true;
+		}
+		hasError = merchantNameExist() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_nm").focus();
+			hasFocus=true;
+		}
+		hasError = merchantName() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_nm").focus();
+			hasFocus=true;
+		}
+		hasError = merchantPhone() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_phonenum").focus();
+			hasFocus=true;
+		}
+		hasError = merchantAddress() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_addr").focus();
+			hasFocus=true;
+		}
+		hasError = m_address() || hasError;
+		hasError = agent()||hasError;
+
+		var chkResult = checkResult(),
+			chkBusinessName = checkBusinessName(document.getElementById('business-name'), 'warn-name'),
+			chkBusinessShortName = checkBusinessShortName(document.getElementById('business-name-short'), 'warn-short');
+		if (!chkResult || !chkBusinessName || !chkBusinessShortName) {
+			return false;
+		}
+
+		hasError = merchantNameExist() || hasError;
+
+	    if(!hasError){
+	   	var options = {
+			dataType: "json",
+			clearForm: false,
+			restForm: false,
+			success: function (returndata) {
+	   			var status = returndata.code;
+	   			var msg = returndata.msg;
+	   			switch(status){
+	   				case '0':
+	   					$("#pop-overlay").css("display","none");
+	   			        $("#pop-addmerchant").css("display","none");
+	   					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
+	   					break;
+	   				case '3':
+	    					$("#merchant-name-warn").html('商户重名（您下手慢了）').show();
+	    					$("#merchant-name-warn").attr("nameExist","true");
 	    					break;
-	    				case '3':
-        					$("#merchant-name-warn").html('商户重名（您下手慢了）').show();
-        					$("#merchant-name-warn").attr("nameExist","true");
-        					break;
-	    				case '4':
-	    					$("#agent-warn").html('业务员不存在');
-	    					$("#agent-warn").css('display','block');
-	    					break;
-	    				default: 
-	    					$("#pop-overlay").css("display","none");
-				        	$("#pop-addmerchant").css("display","none");
-				        	clcContent();
-				        	$("#status-message").html("创建失败").css('display','block');
-		    				setTimeout(function(){
-		    					$("#status-message").css('display','none');
-		    				},2000);
-	    					break;	//创建失败
-	    			}
-				},
-	    		error: function(returndata){
-	    			$("#status-message").html("error").css('display','block');
-    				setTimeout(function(){
-    					$("#status-message").css('display','none');
-    				},2000);
-	    		}
-		    };
-	    	$("#form-add").ajaxForm(options);
-        }else{
-        	return false;
-        }
-    });
+	   				case '4':
+	   					$("#agent-warn").html('业务员不存在');
+	   					$("#agent-warn").css('display','block');
+	   					break;
+	   				default:
+	   					$("#pop-overlay").css("display","none");
+			        	$("#pop-addmerchant").css("display","none");
+			        	//clcContent();
+			        	$("#status-message").html(returndata.msg).css('display','block');
+	    				setTimeout(function(){
+	    					$("#status-message").css('display','none');
+	    				},2000);
+	   					break;	//创建失败
+	   			}
+			},
+	   		error: function(returndata){
+	   			$("#status-message").html("error").css('display','block');
+					setTimeout(function(){
+						$("#status-message").css('display','none');
+					},2000);
+	   		}
+	    };
+	   	$("#form-add").ajaxForm(options);
+	    }else{
+	    	return false;
+	    }
+	});
+
+
     //关闭用户确定按钮
     $("#btn-close").click(function () {
         $("#pop-overlay").css("display","none");

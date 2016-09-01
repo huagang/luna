@@ -42,7 +42,6 @@ public class LunaAuthServiceImpl implements LunaAuthService {
     @Override
     public JSONObject hasBusinessAuth(String uniqueId, int businessId) {
 
-
         LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(uniqueId);
         Map<String, Object> extra = lunaUserRole.getExtra();
 
@@ -53,9 +52,7 @@ public class LunaAuthServiceImpl implements LunaAuthService {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
         }
         List<Integer> businessIdList = (List<Integer>) extra.get("value");
-        if(businessIdList.size() == 1 && businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
-            return FastJsonUtil.sucess("");
-        } else if(businessIdList.size() > 0 && businessIdList.contains(businessId)){
+        if(businessIdList.contains(businessId) || businessIdList.get(0) == DbConfig.BUSINESS_ALL) {
             return FastJsonUtil.sucess("");
         }
         logger.warn(String.format("no business for current user[%s] ", uniqueId));

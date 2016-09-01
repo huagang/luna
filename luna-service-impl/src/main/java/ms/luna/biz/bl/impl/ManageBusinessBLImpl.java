@@ -47,8 +47,8 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	private MsShowAppDAO msShowAppDAO;
 	@Autowired
 	private LunaUserRoleDAO lunaUserRoleDAO;
-	
-	public boolean existBusiness(String json) {
+
+	private boolean existBusiness(String json) {
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		String businessName = FastJsonUtil.getString(jsonObject, "business_name");
 		String businessCode = FastJsonUtil.getString(jsonObject, "business_code");
@@ -65,7 +65,8 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		
 		return true;
 	}
-	
+
+	@Override
 	public boolean existBusinessName(String json) {
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		String businessName = FastJsonUtil.getString(jsonObject, "business_name");
@@ -79,7 +80,8 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		
 		return true;
 	}
-	
+
+	@Override
 	public boolean existBusinessCode(String json) {
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		String businessCode = FastJsonUtil.getString(jsonObject, "business_code");
@@ -93,7 +95,6 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		
 		return true;
 	}
-	
 	
 	@Override
 	public JSONObject createBusiness(String json) {
@@ -138,6 +139,7 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		
 	}
 
+	@Override
 	public JSONObject searchMerchant(String json) {
 		
 		JSONObject jsonObject = JSONObject.parseObject(json);
@@ -345,4 +347,39 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 		return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
 	}
 
+	@Override
+	public JSONObject checkBusinessNameExist(String business_name, String merchant_id) {
+		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
+		MsBusinessCriteria.Criteria criteria = msBusinessCriteria.createCriteria();
+		Integer count;
+		if(merchant_id == null) {// 创建
+			criteria.andBusinessNameEqualTo(business_name);
+			count = msBusinessDAO.countByCriteria(msBusinessCriteria);
+		} else {// 编辑
+			criteria.andBusinessNameEqualTo(business_name).andMerchantIdNotEqualTo(merchant_id);
+			count = msBusinessDAO.countByCriteria(msBusinessCriteria);
+		}
+		if(count > 0) {
+			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "business name exists");
+		}
+		return FastJsonUtil.sucess("business name does not exit");
+	}
+
+	@Override
+	public JSONObject checkBusinessCodeExist(String business_code, String merchant_id) {
+		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
+		MsBusinessCriteria.Criteria criteria = msBusinessCriteria.createCriteria();
+		Integer count;
+		if(merchant_id == null) {// 创建
+			criteria.andBusinessCodeEqualTo(business_code);
+			count = msBusinessDAO.countByCriteria(msBusinessCriteria);
+		} else {// 编辑
+			criteria.andBusinessCodeEqualTo(business_code).andMerchantIdNotEqualTo(merchant_id);
+			count = msBusinessDAO.countByCriteria(msBusinessCriteria);
+		}
+		if(count > 0) {
+			return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "business code exists");
+		}
+		return FastJsonUtil.sucess("business code does not exit");
+	}
 }

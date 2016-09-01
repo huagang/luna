@@ -155,113 +155,191 @@ $(function(){
             $(this).remove();
         });
     });
-    //提交表单
-    $("#btn-editcrm").click(function(){
-//    	var hasError = false;
+//    //提交表单
+//    $("#btn-editcrm").click(function(){
+//
+//    	var hasError = false,hasFocus = false;
+//
+//    	hasError = merchantNameEditExist() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#merchant_nm_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = merchantNameEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#merchant_nm_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = merchantPhoneEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#merchant_phonenum_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = merchantAddressEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#merchant_addr_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = linkmanNameEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#contact_nm_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = linkmanPhoneEdit() || hasError;
-//    	hasError = latLonGetEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#contact_phonenum_edit").focus();
+//    		hasFocus=true;
+//    	}
 //    	hasError = linkmanEmailEdit() || hasError;
+//    	if((hasError)&&(!hasFocus)){
+//    		$("#contact_mail_edit").focus();
+//    		hasFocus=true;
+//    	}
+//    	hasError = latLonGetEdit() || hasError;
 //    	hasError = licenseUploadEdit() || hasError;
 //    	hasError = m_addressEdit() || hasError;
-//    	hasError = agentEdit()||hasError;    
-//    	hasError = merchantNameEditExist()||hasError;
-    	
-    	var hasError = false,hasFocus = false;
+//    	hasError = agentEdit()||hasError;
+//    	hasError = merchantNameEditExist() || hasError;
+//    	// 如果选“否”，点击确定按钮时传出的url值为"无"。
+//    	var value = $("input[type=radio][name=license-edit]:checked").val();
+//    	if(value == "否"){
+//    		$("#license-url-edit").val("无");//"无"
+//    	}
+//        if(!hasError){
+//	    	var options = {
+//				dataType: "json",
+//				clearForm: false,
+//				restForm: false,
+//				success: function (returndata) {
+//	    			var status = returndata.code;
+//	    			var msg = returndata.msg;
+//	    			switch(status){
+//	    				case '0':
+//	    					$("#pop-overlay").css("display","none");
+//	    			        $("#pop-editmerchant").css("display","none");
+//	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
+//	    					break;
+//	    				case '3':
+//        					$("#merchant-name-edit-warn").html('商户重名（您下手慢了）').show();
+//        					$("#merchant-name-edit-warn").attr("nameExist","true");
+//        					break;
+//	    				case '4':
+//	    					$("#agent-edit-warn").html('业务员不存在');
+//	    					$("#agent-edit-warn").css('display','block');
+//	    					break;
+//	    				default:
+//	    					$("#pop-overlay").css("display","none");
+//				        	$("#pop-editmerchant").css("display","none");
+//				        	clcContent();
+//				        	$("#status-message").html("编辑失败").css('display','block');
+//		    				setTimeout(function(){
+//		    					$("#status-message").css('display','none');
+//		    				},2000);
+//	    					break;	//创建失败
+//	    			}
+//				},
+//				error: function(returndata){
+//					$("#status-message").html("error").css('display','block');
+//    				setTimeout(function(){
+//    					$("#status-message").css('display','none');
+//    				},2000);
+//				}
+//		    };
+//	    	$("#form-edit").ajaxForm(options);
+//        }else{
+//        	return false;
+//        }
+//    });
+//});
 
-    	hasError = merchantNameEditExist() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_nm_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantNameEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_nm_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantPhoneEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_phonenum_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = merchantAddressEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#merchant_addr_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanNameEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_nm_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanPhoneEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_phonenum_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = linkmanEmailEdit() || hasError;
-    	if((hasError)&&(!hasFocus)){
-    		$("#contact_mail_edit").focus();
-    		hasFocus=true;
-    	}
-    	hasError = latLonGetEdit() || hasError;
-    	hasError = licenseUploadEdit() || hasError;
-    	hasError = m_addressEdit() || hasError;   	
-    	hasError = agentEdit()||hasError;   
-    	hasError = merchantNameEditExist() || hasError; 
-    	// 如果选“否”，点击确定按钮时传出的url值为"无"。
-    	var value = $("input[type=radio][name=license-edit]:checked").val();
-    	if(value == "否"){
-    		$("#license-url-edit").val("无");//"无"
-    	}
-        if(!hasError){
-	    	var options = {
+	//提交表单
+	$("#btn-editcrm").click(function(){
+
+		var hasError = false,hasFocus = false;
+
+		hasError = linkmanNameEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_nm_edit").focus();
+			hasFocus=true;
+		}
+		hasError = linkmanPhoneEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_phonenum_edit").focus();
+			hasFocus=true;
+		}
+		hasError = linkmanEmailEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#contact_mail_edit").focus();
+			hasFocus=true;
+		}
+		hasError = merchantNameEditExist() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_nm_edit").focus();
+			hasFocus=true;
+		}
+		hasError = merchantNameEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_nm_edit").focus();
+			hasFocus=true;
+		}
+		hasError = merchantPhoneEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_phonenum_edit").focus();
+			hasFocus=true;
+		}
+		hasError = merchantAddressEdit() || hasError;
+		if((hasError)&&(!hasFocus)){
+			$("#merchant_addr_edit").focus();
+			hasFocus=true;
+		}
+		hasError = m_addressEdit() || hasError;
+		hasError = agentEdit()||hasError;
+		hasError = merchantNameEditExist() || hasError;
+		if(!hasError){
+			var options = {
 				dataType: "json",
 				clearForm: false,
 				restForm: false,
 				success: function (returndata) {
-	    			var status = returndata.code;
-	    			var msg = returndata.msg;
-	    			switch(status){
-	    				case '0': 
-	    					$("#pop-overlay").css("display","none");
-	    			        $("#pop-editmerchant").css("display","none");
-	    					window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
-	    					break;
-	    				case '3':
-        					$("#merchant-name-edit-warn").html('商户重名（您下手慢了）').show();
-        					$("#merchant-name-edit-warn").attr("nameExist","true");
-        					break;
-	    				case '4':
-	    					$("#agent-edit-warn").html('业务员不存在');
-	    					$("#agent-edit-warn").css('display','block');
-	    					break;	
-	    				default: 
-	    					$("#pop-overlay").css("display","none");
-				        	$("#pop-editmerchant").css("display","none");
-				        	clcContent();
-				        	$("#status-message").html("编辑失败").css('display','block');
-		    				setTimeout(function(){
-		    					$("#status-message").css('display','none');
-		    				},2000);
-	    					break;	//创建失败
-	    			}
+					var status = returndata.code;
+					var msg = returndata.msg;
+					switch(status){
+						case '0':
+							$("#pop-overlay").css("display","none");
+							$("#pop-editmerchant").css("display","none");
+							window.location.href= Inter.getApiUrl().crmInit.url;//成功后更新列表
+							break;
+						case '3':
+							$("#merchant-name-edit-warn").html('商户重名（您下手慢了）').show();
+							$("#merchant-name-edit-warn").attr("nameExist","true");
+							break;
+						case '4':
+							$("#agent-edit-warn").html('业务员不存在');
+							$("#agent-edit-warn").css('display','block');
+							break;
+						default:
+							$("#pop-overlay").css("display","none");
+							$("#pop-editmerchant").css("display","none");
+							//clcContent();
+							$("#status-message").html(returndata.msg).css('display','block');
+							setTimeout(function(){
+								$("#status-message").css('display','none');
+							},2000);
+							break;	//创建失败
+					}
 				},
 				error: function(returndata){
 					$("#status-message").html("error").css('display','block');
-    				setTimeout(function(){
-    					$("#status-message").css('display','none');
-    				},2000);
+					setTimeout(function(){
+						$("#status-message").css('display','none');
+					},2000);
 				}
-		    };
-	    	$("#form-edit").ajaxForm(options);
-        }else{
-        	return false;
-        }
-    });
+			};
+			$("#form-edit").ajaxForm(options);
+		}else{
+			return false;
+		}
+	});
 });
 
 //异步上传图片
@@ -322,22 +400,10 @@ function editcrm(obj){
 	    		case '0':
 	    			$.each(returndata.data,function(i,n){
 	    				$("#"+i+"_edit:not(select)").val(n);
-	    				console.log($("#"+i+"_edit:not(select)").length);
+	    				console.log($("#"+i+"_edit:not(select)").val());
 	    			})
-	    			if(returndata.data.resource_content){
-	    				$("#license-url-edit").val(returndata.data.resource_content);
-	    	            $("#license-upload-edit").attr('data_upload','true');
-	    	            $("input[name='license-edit']")[0].click();//选中“是”
-	    	            $("#thumbnail").attr("src",returndata.data.resource_content);
-	    	            $("#div-img").css("display","none");
-	    			}else{
-	    				$("#license-url-edit").val("无");
-	    				$("input[name='license-edit']")[1].click();//选中“否”
-	    	            $("#license-upload-edit").attr('data_upload','false');
-	    			}
 	    			$("#agent-edit").html($("#salesman_nm_edit").val());
-	    			mapInitial();
-	    			
+
 	    			var province_id = returndata.data.province_id;
 	    			var city_id = returndata.data.city_id;
 	    			var county_id = returndata.data.county_id;//#address-region-edit
@@ -350,6 +416,8 @@ function editcrm(obj){
 	    			$("#merchant-type-edit").val(returndata.data.category_id);
 	    			$("#status-edit").val(returndata.data.status_id);
 	    			$("#address-region-edit").val(country_nm+province_nm+city_nm+county_nm);
+					$("#business-name-edit").val(returndata.data.business_name);
+					$("#business-name-short-edit").val(returndata.data.business_code);
 	    			break;
 	    		default:
 	    			$("#status-message").html("请求失败").css('display','block');

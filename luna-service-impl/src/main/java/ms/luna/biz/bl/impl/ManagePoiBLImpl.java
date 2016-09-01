@@ -1008,7 +1008,7 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 		data.put("common_fields_val", this.getCommmFieldVal(docPoi));
 
 		data.put("private_fields", this.getPrivateFields(docPoi));
-		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id);
+		data.put("preview_url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/poi/" + _id + "?lang=" + lang);
 		return FastJsonUtil.sucess("success", data);
 	}
 

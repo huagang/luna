@@ -205,5 +205,19 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 		}
 		return FastJsonUtil.error(ErrorCode.NOT_FOUND, "页面未找到");
 	}
-	
+
+	@Override
+	public JSONObject duplicateOnePage(String json, String lunaName) {
+		// 先取page_id内容,修改基本信息后存储
+		MsShowPage pageParam = JSONObject.parseObject(json, MsShowPage.class);
+		MsShowPage page = msShowPageDAO.readPageDetail(pageParam.getPageId());
+		page.setPageName(pageParam.getPageName());
+		page.setPageCode(pageParam.getPageCode());
+		page.setPageOrder(pageParam.getPageOrder());
+		page.setUpdateUser(lunaName);
+		String pageId = msShowPageDAO.createOnePage(page);
+		page.setPageId(pageId);
+		return FastJsonUtil.sucess("创建成功", JSON.toJSON(page));
+	}
+
 }

@@ -27,6 +27,10 @@ import java.util.List;
 /**
  * Created by greek on 16/8/5.
  */
+
+/**
+ * 关系树编辑页
+ */
 @Controller("businessTreeController")
 @RequestMapping("/content/businessRelation")
 public class BusinessTreeController extends BasicController {

@@ -94,7 +94,9 @@ body {
     max-width: 100%;
     margin: 0 auto;
 }
-
+.content>p{
+    word-break:break-word;
+}
 
 .icon-geoLocation {
     background: url('../../images/hjm/geoLocation.png') no-repeat;

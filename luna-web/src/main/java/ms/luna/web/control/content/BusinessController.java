@@ -6,6 +6,7 @@ import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AreaOptionQueryBuilder;
 import ms.luna.web.common.SessionHelper;
@@ -192,6 +193,38 @@ public class BusinessController extends BasicController {
         } catch(Exception e) {
             logger.error("Failed to delete business", e);
             return FastJsonUtil.error("-1", "处理异常");
+        }
+    }
+
+    // 检查业务名称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessName/check")
+    @ResponseBody
+    public JSONObject checkBusinessName(
+            @RequestParam(required=true, value="business_name") String business_name,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessNameExist(business_name, merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
+        }
+    }
+
+    // 检查业务简称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessCode/check")
+    @ResponseBody
+    public JSONObject checkBusinessCode(
+            @RequestParam(required=true, value="business_code") String business_code,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessCodeExist(business_code, merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
         }
     }
 }
