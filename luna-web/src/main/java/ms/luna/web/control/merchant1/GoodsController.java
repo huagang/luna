@@ -1,5 +1,6 @@
 package ms.luna.web.control.merchant1;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaGoodsService;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created: by greek on 16/8/29.
@@ -204,6 +207,31 @@ public class GoodsController extends BasicController {
         } catch (Exception e) {
             MsLogger.error("Failed to get goods categories. " + e.getMessage());
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Failed to get goods categories.");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/onlineStatus")
+    @ResponseBody
+    public JSONObject updateOnlineStatus(
+            @RequestParam(required = true, value = "ids") String ids,
+            @RequestParam(required = false, value = "status", defaultValue = "0") int status) {
+        try {
+            // 检查ids是否正确
+            String pattern = "((\\d+),)*(\\d+)";
+            boolean flag = Pattern.matches(pattern, ids.trim());
+            if(!flag) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "goods ids are invalid");
+            }
+
+            JSONObject param = new JSONObject();
+            param.put("ids", ids);
+            param.put("online_status", status);
+            JSONObject result = lunaGoodsService.updateOnlineStatus(param);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to update online status. " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Failed to update online status.");
         }
     }
 

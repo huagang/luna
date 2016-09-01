@@ -27,4 +27,7 @@ public interface LunaGoodsService {
 
     // 获取商品类别目录
     JSONObject getGoodsCategories(String keyword);
+
+    // 更新商品状态
+    JSONObject updateOnlineStatus(JSONObject data);
 }

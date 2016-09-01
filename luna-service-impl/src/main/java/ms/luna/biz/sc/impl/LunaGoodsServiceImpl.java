@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created: by greek on 16/8/29.
@@ -192,6 +189,25 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to get goods categories.");
         }
 
+    }
+
+    @Override
+    public JSONObject updateOnlineStatus(JSONObject param) {
+        try {
+            String ids = param.getString("ids");
+            int status = param.getInteger(LunaGoodsTable.FIELD_ONLINE_STATUS);
+            String[] idStr = ids.split(",");
+            List<Integer> array = new ArrayList<>();
+            for(String id : idStr) {
+                array.add(Integer.parseInt(id));
+            }
+
+
+        } catch (Exception e) {
+            MsLogger.error("Failed to update online status. " + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to update online status.");
+        }
     }
 
     /**
