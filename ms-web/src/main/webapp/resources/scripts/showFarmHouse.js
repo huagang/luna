@@ -103,7 +103,10 @@ function showAnimation(){
 
         MarkerTip.prototype.setDistance = function (distance) {
             this.distance = distance;
-            this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
+            try{
+                this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
+            } catch(e){
+            }
         };
 
         MarkerTip.prototype.hide = function () {

@@ -202,6 +202,7 @@ var initPage = function () {
                     resourceId: articleStore.id,
                     success: function (data) {
                         preview.src = articleStore.thumbnail = data.data.access_url;
+                        preview.classList.remove('hide');
                         clearWarn('#pic_warn');
                         hideLoadingTip('.pic_tip');
                         document.querySelector('#clearHeadImg').classList.remove('hide');
@@ -414,7 +415,7 @@ var initPage = function () {
         // }, 500);
         $("#summary").val(articleStore.summary);
         if (articleStore.thumbnail) {
-            $("#thumbnail_show").attr('src', articleStore.thumbnail);
+            $("#thumbnail_show").attr('src', articleStore.thumbnail).removeClass('hide');
             document.querySelector('#clearHeadImg').classList.remove('hide');
         }
         if (articleStore.audio) {
@@ -425,7 +426,8 @@ var initPage = function () {
             $("#video").val(articleStore.video);
             document.querySelector('#clearVideo').classList.remove('hide');
         }
-        $("#category option[value='" + articleStore.category + "']").attr("selected", "selected")
+        // $("#category option[value='" + articleStore.category + "']").attr("selected", "selected").prop('selected', true);
+        $("#category option[value='" + articleStore.category + "']").prop('selected', true);
     }
 
     return {
@@ -435,7 +437,7 @@ var initPage = function () {
                 var dataFor = $(this).data('for');
                 switch (dataFor) {
                     case 'img':
-                        $('#thumbnail_show').attr('src', '');
+                        $('#thumbnail_show').attr('src', '').addClass('hide');
                         $('[name=thumbnail_fileup]').val('');
                         articleStore.thumbnail = '';
                         break;
