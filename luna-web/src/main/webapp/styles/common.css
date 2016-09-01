@@ -436,6 +436,9 @@ a.button.disable:hover{
     opacity: 0 !important;
 }
 
+#pop-message{
+    position: fixed !important;
+}
 #pop-message:before{
     content: '.';
     position: fixed;
@@ -452,6 +455,7 @@ a.button.disable:hover{
 #pop-message .pop-cont,
 #pop-message .pop-fun{
     position: relative;
+    overflow: hidden !important;
     z-index: 20;
 }
 .pop-cont,

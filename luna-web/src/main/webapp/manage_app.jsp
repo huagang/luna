@@ -303,8 +303,7 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class='wrapper' data-app-id='{0}' data-app-name='{1}' data-business-id='{2}'" +
-				" data-app-type='{4}'>".format(row.app_id, row.app_name, row.business_id, row.type);
+		var wrapperStart = "<div class='wrapper' data-app-id='{0}' data-app-name='{1}' data-business-id='{2}' data-app-type='{3}'>".format(row.app_id, row.app_name, row.business_id, row.type);
 		var editOp = '<a class="property" href="javascript:void(0)">发布设置</a>';
 		var href = '', clickEvent = '';
 		switch(row.type){
