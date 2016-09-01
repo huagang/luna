@@ -61,7 +61,7 @@ public class SMSServiceImpl implements SMSService {
     }
 
     /**
-     * @param jsonObject the JSON Object include: uniqueId, code, target;
+     * @param jsonObject the JSON Object include: uniqueId, code, target, isRemove;
      *                   the param uniqueId can be user's Id or phone number
      * @return
      */
@@ -71,7 +71,8 @@ public class SMSServiceImpl implements SMSService {
             String uniqueId = jsonObject.getString("uniqueId");
             String code = jsonObject.getString("code");
             String target = jsonObject.getString("target");
-            boolean result = IdentifyCodeService.checkCode(uniqueId, target, code);
+            Boolean isRemove = jsonObject.getBoolean("isRemove");
+            boolean result = IdentifyCodeService.checkCode(uniqueId, target, code, isRemove);
             if (result) {
                 return FastJsonUtil.sucess("success");
             } else {

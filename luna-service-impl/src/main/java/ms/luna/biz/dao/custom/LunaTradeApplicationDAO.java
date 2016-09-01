@@ -9,4 +9,6 @@ import java.util.List;
 public interface LunaTradeApplicationDAO extends LunaTradeApplicationDAOBase {
 
     List<LunaTradeApplication> selectTradeApplicationListWithLimit(LunaTradeApplicationParameter lunaTradeApplicationParameter);
+
+    int countLunaTradeApplication();
 }

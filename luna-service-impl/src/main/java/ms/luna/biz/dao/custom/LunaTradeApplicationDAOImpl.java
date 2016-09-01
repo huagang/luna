@@ -19,4 +19,10 @@ public class LunaTradeApplicationDAOImpl extends LunaTradeApplicationDAOBaseImpl
                 lunaTradeApplicationParameter);
         return list;
     }
+
+    @Override
+    public int countLunaTradeApplication() {
+        Integer count = (Integer) getSqlMapClientTemplate().queryForObject("luna_trade_application.countApplications");
+        return count;
+    }
 }

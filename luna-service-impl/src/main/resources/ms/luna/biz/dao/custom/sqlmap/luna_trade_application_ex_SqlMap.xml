@@ -13,4 +13,13 @@
         </isEqual>
 
     </select>
+
+    <select id="countApplications" resultClass="java.lang.Integer">
+
+        SELECT
+        count(*)
+        FROM
+        luna_trade_application
+
+    </select>
 </sqlMap>

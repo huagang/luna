@@ -81,6 +81,7 @@ public class SMSController {
         inData.put("uniqueId", phone);
         inData.put("target", target);
         inData.put("code", code);
+        inData.put("isRemove", false);
         JSONObject result = smsService.checkCode(inData);
         return result;
     }

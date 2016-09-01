@@ -19,5 +19,10 @@ public interface SMSService {
 
     JSONObject sendCode(JSONObject jsonObject);
 
+    /**
+     * @param jsonObject the JSON Object include: uniqueId, code, target, isRemove;
+     *                   the param uniqueId can be user's Id or phone number
+     * @return
+     */
     JSONObject checkCode(JSONObject jsonObject);
 }

@@ -202,7 +202,11 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectTradeApplicationListWithLimit(
                     lunaTradeApplicationParameter);
             JSONArray r = assembleApplicationForManager(applicationList);
-            return FastJsonUtil.sucess("success", r);
+            int count = lunaTradeApplicationDAO.countLunaTradeApplication();
+            JSONObject result = new JSONObject();
+            result.put("raws", r);
+            result.put("total", count);
+            return FastJsonUtil.sucess("success", result);
         } catch (Exception e) {
             logger.error("Failed to get application list with limit", e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
@@ -229,7 +233,11 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             criteria.setOrderByClause("app_status ASC, update_time DESC");
             List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(criteria);
             JSONArray toSend = assembleApplicationForManager(applicationList);
-            return FastJsonUtil.sucess("success", toSend);
+            int count = lunaTradeApplicationDAO.countLunaTradeApplication();
+            JSONObject result = new JSONObject();
+            result.put("raws", toSend);
+            result.put("total", count);
+            return FastJsonUtil.sucess("success", result);
         } catch (Exception ex) {
             logger.error("Failed to get the application list", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");

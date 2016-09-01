@@ -66,7 +66,7 @@ public class IdentifyCodeService {
      * @return
      * @throws Exception
      */
-    public static boolean checkCode(String uniqueId, String target, String code) throws Exception {
+    public static boolean checkCode(String uniqueId, String target, String code, Boolean isRemove) throws Exception {
         Jedis jedis = QRedisUtil.getJedis();
         if (jedis == null) {
             throw new Exception("Failed to get redis instance");
@@ -76,7 +76,9 @@ public class IdentifyCodeService {
             String value = jedis.get(key);
             jedis.close();
             if (code.equals(value)) {
-                jedis.del(key);
+                if (isRemove) {
+                    jedis.del(key);
+                }
                 return true;
             } else {
                 return false;

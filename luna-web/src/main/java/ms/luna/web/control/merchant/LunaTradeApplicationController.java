@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.sc.ManageMerchantService;
+import ms.luna.biz.sc.SMSService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.MsBusinessTable;
+import ms.luna.biz.table.SMSCodeTarget;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AuthHelper;
@@ -36,6 +38,9 @@ public class LunaTradeApplicationController extends BasicController {
 
     @Autowired
     private ManageMerchantService manageMerchantService;
+
+    @Autowired
+    private SMSService smsService;
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
@@ -92,9 +97,20 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountProvince,
                                         @RequestParam String accountAddress,
                                         @RequestParam String accountNo,
-                                        @RequestParam Integer businessId) {
+                                        @RequestParam Integer businessId,
+                                        @RequestParam String smsCode) {
         if (!checkAuth(request, businessId)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
+        }
+
+        JSONObject checkData = new JSONObject();
+        checkData.put("uniqueId", contactPhone);
+        checkData.put("code", smsCode);
+        checkData.put("target", SMSCodeTarget.TRADE_APPLICATION);
+        checkData.put("isRemove", true);
+        JSONObject r = smsService.checkCode(checkData);
+        if (r.getInteger("code").intValue() != 0) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "短信验证码错误");
         }
 
         JSONObject inData = new JSONObject();
