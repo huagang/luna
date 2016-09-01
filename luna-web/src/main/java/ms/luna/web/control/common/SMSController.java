@@ -58,7 +58,7 @@ public class SMSController {
                               @RequestParam String code,
                               @RequestParam String phoneNo,
                               @RequestParam String target) {
-        JSONObject r = picCodeService.checkCode(key, code);
+        JSONObject r = picCodeService.checkCode(key, code, true);
         if (r.getJSONObject("data").getBoolean("result")) {
             JSONObject inData = new JSONObject();
             inData.put("uniqueId", phoneNo);
