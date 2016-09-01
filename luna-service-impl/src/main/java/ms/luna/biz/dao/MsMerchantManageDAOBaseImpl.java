@@ -1,10 +1,9 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.biz.common.MsBaseDAO;
 import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.dao.model.MsMerchantManageCriteria;
-
-import java.util.List;
 
 public abstract class MsMerchantManageDAOBaseImpl extends MsBaseDAO implements MsMerchantManageDAOBase {
 
@@ -70,6 +69,24 @@ public abstract class MsMerchantManageDAOBaseImpl extends MsBaseDAO implements M
     public int updateByPrimaryKey(MsMerchantManage record) {
         int rows = getSqlMapClientTemplate().update("ms_merchant_manage.updateByPrimaryKey", record);
         return rows;
+    }
+
+    public MsMerchantManage selectByPrimaryKeyWithoutDeleted(String merchantId) {
+        MsMerchantManageCriteria criteria = new MsMerchantManageCriteria();
+        criteria.createCriteria()
+        .andMerchantIdEqualTo(merchantId)
+        .andDelFlgEqualTo("0");
+        MsMerchantManage record = (MsMerchantManage) getSqlMapClientTemplate().queryForObject("ms_merchant_manage.selectByExample", criteria);
+        return record;
+    }
+
+    public int selectCountByPrimaryKeyWithoutDeleted(String merchantId) {
+        MsMerchantManageCriteria criteria = new MsMerchantManageCriteria();
+        criteria.createCriteria()
+        .andMerchantIdEqualTo(merchantId)
+        .andDelFlgEqualTo("0");
+        Integer count = (Integer) getSqlMapClientTemplate().queryForObject("ms_merchant_manage.countByExample", criteria);
+        return count;
     }
 
     protected static class UpdateByExampleParms extends MsMerchantManageCriteria {

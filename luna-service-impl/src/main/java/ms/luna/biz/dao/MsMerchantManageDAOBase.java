@@ -1,9 +1,8 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.dao.model.MsMerchantManageCriteria;
-
-import java.util.List;
 
 public interface MsMerchantManageDAOBase {
     int countByCriteria(MsMerchantManageCriteria example);
@@ -27,4 +26,8 @@ public interface MsMerchantManageDAOBase {
     int updateByPrimaryKeySelective(MsMerchantManage record);
 
     int updateByPrimaryKey(MsMerchantManage record);
+
+    MsMerchantManage selectByPrimaryKeyWithoutDeleted(String merchantId);
+
+    int selectCountByPrimaryKeyWithoutDeleted(String merchantId);
 }
