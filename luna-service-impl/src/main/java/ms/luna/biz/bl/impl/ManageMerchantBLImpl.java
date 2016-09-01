@@ -9,6 +9,7 @@ import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.MsCRMTable;
 import ms.luna.biz.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,22 +49,11 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	
 	@Override
 	public JSONObject createMerchant(String json) {
-		// todo 精简代码
 		// 创建商户和创建业务合并——创建商户
 		JSONObject param = JSONObject.parseObject(json);
-		String merchant_nm = param.getString("merchant_nm"); // 商户名字
-		String merchant_phonenum = param.getString("merchant_phonenum"); // 商户电话
-		String category_id = param.getString("category_id"); // 商户类型id
-		String province_id = param.getString("province_id"); // 省份id
-		String city_id = param.getString("city_id"); // 城市id
-		String merchant_addr = param.getString("merchant_addr"); // 商户地址
-		String contact_nm = param.getString("contact_nm"); // 联系人姓名
-		String contact_phonenum = param.getString("contact_phonenum"); // 联系人电话
-		String contact_mail = param.getString("contact_mail"); // 联系人邮箱
-		String county_id = param.containsKey("county_id")?  param.getString("county_id") : null;
-		String unique_id = param.getString("unique_id");
-		String salesman_nm = param.getString("salesman_nm"); // 业务员名字
-		String status_id = param.getString("status_id"); // 商户状态
+		MsMerchantManage msMerchantManage = JSONObject.toJavaObject(param, MsMerchantManage.class);
+		String merchant_nm = msMerchantManage.getMerchantNm(); // 商户名字
+		String salesman_nm = msMerchantManage.getSalesmanNm(); // 业务员名字
 		String businessName = FastJsonUtil.getString(param, "business_name");
 		String businessCode = FastJsonUtil.getString(param, "business_code");
 		String createUser = FastJsonUtil.getString(param, "create_user");
@@ -83,29 +73,13 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		// 根据业务员名字得到业务员id
 		String salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();// 业务员id
 		String merchant_id = UUIDGenerator.generateUUID();
-
-		MsMerchantManage msMerchantManage = new MsMerchantManage();
-		msMerchantManage.setMerchantId(merchant_id);
-		msMerchantManage.setMerchantNm(merchant_nm);
-		msMerchantManage.setMerchantPhonenum(merchant_phonenum);
-		msMerchantManage.setCategoryId(category_id);
-		msMerchantManage.setProvinceId(province_id);
-		msMerchantManage.setCityId(city_id);
-		msMerchantManage.setMerchantAddr(merchant_addr);
-		msMerchantManage.setContactNm(contact_nm);
-		msMerchantManage.setContactPhonenum(contact_phonenum);
-		msMerchantManage.setContactMail(contact_mail);
-		msMerchantManage.setStatusId(status_id);
 		msMerchantManage.setSalesmanId(salesman_id);
-		msMerchantManage.setSalesmanNm(salesman_nm);
-		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
+		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setRegistHhmmss(new Date());
 		msMerchantManage.setUpHhmmss(new Date());
-		msMerchantManage.setUpdatedByUniqueId(unique_id);
-		msMerchantManage.setCountyId(county_id);
+		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
 
 		msMerchantManageDAO.insertSelective(msMerchantManage);
-
 		// 创建业务
 		this.createBusiness(businessName, businessCode, merchant_id, createUser);
 
@@ -115,24 +89,9 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	@Override
 	public JSONObject registMerchant(String json) {
-		// todo 精简代码
 		JSONObject param = JSONObject.parseObject(json);
-		String merchant_nm = param.getString("merchant_nm"); // 商户名字
-		String merchant_phonenum = param.getString("merchant_phonenum"); // 商户电话
-		String category_id = param.getString("category_id"); // 商户类型id
-		String province_id = param.getString("province_id"); // 省份id
-		String city_id = param.getString("city_id"); // 城市id
-		String merchant_addr = param.getString("merchant_addr"); // 商户地址
-		String merchant_info = param.getString("merchant_info"); // 商户概况
-		String contact_nm = param.getString("contact_nm"); // 联系人姓名
-		String contact_phonenum = param.getString("contact_phonenum"); // 联系人电话
-		String contact_mail = param.getString("contact_mail"); // 联系人邮箱
-		String county_id = param.containsKey("county_id")? param.getString("county_id") : null;
-		String resource_content = param.containsKey("resource_content")?param.getString("resource_content") : null;
-		String lat = param.containsKey("lat")? param.getString("lat") : null;
-		String lng = param.containsKey("lng")? param.getString("lng") : null;
-		String salesman_id = ""; // 业务员名字
-		String salesman_nm = ""; // 业务员id
+		MsMerchantManage msMerchantManage = JSONObject.toJavaObject(param, MsMerchantManage.class);
+		String merchant_nm = msMerchantManage.getMerchantNm();
 		String status_id = VbConstant.MERCHANT_STATUS.CODE.待处理 + ""; // 处理状态
 		String merchant_id = UUIDGenerator.generateUUID();
 
@@ -140,38 +99,11 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if (isMerchantNmExit(merchant_nm)) {
 			return FastJsonUtil.error("1", "商户重名(下手慢了)！merchant_nm:" + merchant_nm);
 		}
-
-		MsMerchantManage msMerchantManage = new MsMerchantManage();
-		msMerchantManage.setMerchantId(merchant_id);
-		msMerchantManage.setMerchantNm(merchant_nm);
-		msMerchantManage.setMerchantPhonenum(merchant_phonenum);
-		msMerchantManage.setCategoryId(category_id);
-		msMerchantManage.setProvinceId(province_id);
-		msMerchantManage.setCityId(city_id);
-		msMerchantManage.setMerchantAddr(merchant_addr);
-		msMerchantManage.setMerchantInfo(merchant_info);
-		msMerchantManage.setContactNm(contact_nm);
-		msMerchantManage.setContactPhonenum(contact_phonenum);
-		msMerchantManage.setContactMail(contact_mail);
 		msMerchantManage.setStatusId(status_id);
-		msMerchantManage.setSalesmanId(salesman_id);
-		msMerchantManage.setSalesmanNm(salesman_nm);
+		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
 		msMerchantManage.setRegistHhmmss(new Date());
 		msMerchantManage.setUpHhmmss(new Date());
-		msMerchantManage.setUpdatedByUniqueId(salesman_id);
-		if(lat != null){
-			msMerchantManage.setLat(new BigDecimal(lat));
-		}
-		if(lng != null){
-			msMerchantManage.setLng(new BigDecimal(lng));
-		}
-		if(county_id != null){
-			msMerchantManage.setCountyId(county_id);
-		}
-		if(resource_content != null){
-			msMerchantManage.setResourceContent(resource_content);
-		}
 
 		msMerchantManageDAO.insertSelective(msMerchantManage);
 		return FastJsonUtil.sucess("新商户创建成功！");
@@ -182,25 +114,11 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 		JSONObject param = JSONObject.parseObject(json);
 		MerchantsParameter merchantsParameter = new MerchantsParameter();
-		Integer max = null;
-		Integer min = null;
-		if (param.containsKey("max")) {
-			max = param.getInteger("max");
-		}
-		if (param.containsKey("min")) {
-			min = param.getInteger("min");
-		}
-		if (max != null || min != null) {
-			merchantsParameter.setRange("true");
-		}
-		if (min == null) {
-			min = 0;
-		}
-		if (max == null) {
-			max = Integer.MAX_VALUE;
-		}
-		merchantsParameter.setMin(min);
-		merchantsParameter.setMax(max);
+
+		Integer limit = param.getInteger("limit");
+		Integer offset = param.getInteger("offset");
+		merchantsParameter.setMin(offset);
+		merchantsParameter.setMax(limit);
 
 		if (param.containsKey("like_filter_nm")) {
 			String likeFilterNm = param.getString("like_filter_nm");
@@ -217,29 +135,22 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if (list != null) {
 			for (MerchantsResult merchantsResult : list) {
 				JSONObject merchant = JSONObject.parseObject("{}");
-				merchant.put("merchant_id", merchantsResult.getMerchant_id());
-				merchant.put("merchant_nm", merchantsResult.getMerchant_nm());
-				merchant.put("category_id", merchantsResult.getCategory_id());
-				merchant.put("contact_nm", merchantsResult.getContact_nm());
-				merchant.put("contact_phonenum", merchantsResult.getContact_phonenum());
-				merchant.put("salesman_nm", merchantsResult.getSalesman_nm());
+				merchant.put(MsCRMTable.FIELD_MERCHANT_ID, merchantsResult.getMerchant_id());
+				merchant.put(MsCRMTable.FIELD_MERCHANT_NM, merchantsResult.getMerchant_nm());
+				merchant.put(MsCRMTable.FIELD_CATEGORY_ID, merchantsResult.getCategory_id());
+				merchant.put(MsCRMTable.FIELD_CONTACT_NM, merchantsResult.getContact_nm());
+				merchant.put(MsCRMTable.FIELD_CONTACT_PHONENUM, merchantsResult.getContact_phonenum());
+				merchant.put(MsCRMTable.FIELD_SALESMAN_NM, merchantsResult.getSalesman_nm());
 				Byte status_id = Byte.parseByte(merchantsResult.getStatus_id());
-				merchant.put("status", VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
-				merchant.put("province_id", merchantsResult.getProvince_id());
-				merchant.put("city_id", merchantsResult.getCity_id());
-				merchant.put("del_flg", merchantsResult.getDel_flg());
-				merchant.put("business_id", merchantsResult.getBusiness_id());
-				merchant.put("business_name", merchantsResult.getBusiness_name());
-				merchant.put("business_code", merchantsResult.getBusiness_code());
-				if(merchantsResult.getCounty_id() != null){
-					merchant.put("county_id", merchantsResult.getCounty_id());
-				}
-				// 可能出现某些category类别被删除后category_nm 为null的情况
-				if( merchantsResult.getCategory_nm() != null){
-					merchant.put("category_nm", merchantsResult.getCategory_nm());
-				}else{
-					merchant.put("category_nm", "");
-				}
+				merchant.put(MsCRMTable.STATUS, VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
+				merchant.put(MsCRMTable.FIELD_PROVINCE_ID, merchantsResult.getProvince_id());
+				merchant.put(MsCRMTable.FIELD_CITY_ID, merchantsResult.getCity_id());
+				merchant.put(MsCRMTable.FIELD_DEL_FLG, merchantsResult.getDel_flg());
+				merchant.put(MsCRMTable.FIELD_BUSINESS_ID, merchantsResult.getBusiness_id());
+				merchant.put(MsCRMTable.FIELD_BUSINESS_NAME, merchantsResult.getBusiness_name());
+				merchant.put(MsCRMTable.FIELD_BUSINESS_CODE, merchantsResult.getBusiness_code());
+				merchant.put(MsCRMTable.FIELD_COUNTY_ID, merchantsResult.getCounty_id());
+				merchant.put(MsCRMTable.FIELD_CATEGORY_NM, merchantsResult.getCategory_nm());
 				merchants.add(merchant);
 			}
 		}
@@ -282,24 +193,24 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid merchant id: " + merchant_id);
 		}
 
-		merchant.put("merchant_id", msMerchantManage.getMerchantId());
-		merchant.put("merchant_nm", msMerchantManage.getMerchantNm());
-		merchant.put("merchant_phonenum", msMerchantManage.getMerchantPhonenum());
-		merchant.put("category_id", msMerchantManage.getCategoryId());
-		merchant.put("province_id", msMerchantManage.getProvinceId());
-		merchant.put("city_id", msMerchantManage.getCityId());
-		merchant.put("merchant_addr", msMerchantManage.getMerchantAddr());
-		merchant.put("merchant_info", msMerchantManage.getMerchantInfo());
-		merchant.put("contact_nm", msMerchantManage.getContactNm());
-		merchant.put("contact_phonenum", msMerchantManage.getContactPhonenum());
-		merchant.put("contact_mail", msMerchantManage.getContactMail());
-		merchant.put("salesman_id", msMerchantManage.getSalesmanId());
-		merchant.put("salesman_nm", msMerchantManage.getSalesmanNm());
-		merchant.put("status_id", msMerchantManage.getStatusId());
-		merchant.put("lat", msMerchantManage.getLat());
-		merchant.put("lng", msMerchantManage.getLng());
-		merchant.put("county_id", msMerchantManage.getCountyId());
-		merchant.put("resource_content", msMerchantManage.getResourceContent());
+		merchant.put(MsCRMTable.FIELD_MERCHANT_ID, msMerchantManage.getMerchantId());
+		merchant.put(MsCRMTable.FIELD_MERCHANT_NM, msMerchantManage.getMerchantNm());
+		merchant.put(MsCRMTable.FIELD_MERCHANT_PHONENUM, msMerchantManage.getMerchantPhonenum());
+		merchant.put(MsCRMTable.FIELD_CATEGORY_ID, msMerchantManage.getCategoryId());
+		merchant.put(MsCRMTable.FIELD_PROVINCE_ID, msMerchantManage.getProvinceId());
+		merchant.put(MsCRMTable.FIELD_CITY_ID, msMerchantManage.getCityId());
+		merchant.put(MsCRMTable.FIELD_MERCHANT_ADDR, msMerchantManage.getMerchantAddr());
+		merchant.put(MsCRMTable.FIELD_MERCHANT_INFO, msMerchantManage.getMerchantInfo());
+		merchant.put(MsCRMTable.FIELD_CONTACT_NM, msMerchantManage.getContactNm());
+		merchant.put(MsCRMTable.FIELD_CONTACT_PHONENUM, msMerchantManage.getContactPhonenum());
+		merchant.put(MsCRMTable.FIELD_CONTACT_MAIL, msMerchantManage.getContactMail());
+		merchant.put(MsCRMTable.FIELD_SALESMAN_ID, msMerchantManage.getSalesmanId());
+		merchant.put(MsCRMTable.FIELD_SALESMAN_NM, msMerchantManage.getSalesmanNm());
+		merchant.put(MsCRMTable.FIELD_STATUS_ID, msMerchantManage.getStatusId());
+		merchant.put(MsCRMTable.FIELD_LAT, msMerchantManage.getLat());
+		merchant.put(MsCRMTable.FIELD_LNG, msMerchantManage.getLng());
+		merchant.put(MsCRMTable.FIELD_COUNTY_ID, msMerchantManage.getCountyId());
+		merchant.put(MsCRMTable.FIELD_RESOURCE_CONTENT, msMerchantManage.getResourceContent());
 
 		// 获取业务名称
 		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
@@ -328,10 +239,10 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 	@Override
 	public JSONObject updateMerchant(String json) {
 		JSONObject param = JSONObject.parseObject(json);
-
-		String merchant_id = param.getString("merchant_id");
-		String merchant_nm = param.getString("merchant_nm"); // 商户名字
-		String salesman_nm = param.getString("salesman_nm"); // 业务员名字
+		MsMerchantManage msMerchantManage = JSONObject.toJavaObject(param, MsMerchantManage.class);
+		String merchant_id = msMerchantManage.getMerchantId();
+		String merchant_nm = msMerchantManage.getMerchantNm(); // 商户名字
+		String salesman_nm = msMerchantManage.getSalesmanNm(); // 业务员名字
 		String create_user = param.getString("create_user");
 		// 检测商户是否重名
 		if (isMerchantNmExit(merchant_id,merchant_nm)) {
@@ -343,37 +254,8 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 		//根据业务员名字得到业务员id
 		String salesman_id = msUserPwDAO.selectByPrimaryKey(salesman_nm).getUniqueId();
-		String county_id = param.containsKey("county_id")? param.getString("county_id") : null; // 区/县id
-//		String resource_content = param.containsKey("resource_content")? param.getString("resource_content") : null;// 图片地址
-//		String lat = param.containsKey("lat")? param.getString("lat") : null;
-//		String lng = param.containsKey("lng")? param.getString("lng") : null;
-
-		// 取出该条数据
-		MsMerchantManage msMerchantManage = new MsMerchantManage();
-		msMerchantManage.setMerchantId(merchant_id);
-		msMerchantManage.setMerchantNm(merchant_nm);
-		msMerchantManage.setMerchantPhonenum(param.getString("merchant_phonenum"));
-		msMerchantManage.setCategoryId(param.getString("category_id"));
-		msMerchantManage.setProvinceId(param.getString("province_id"));
-		msMerchantManage.setCityId(param.getString("city_id"));
-		msMerchantManage.setMerchantAddr(param.getString("merchant_addr"));
-//		msMerchantManage.setMerchantInfo(param.getString("merchant_info"));
-		msMerchantManage.setContactNm(param.getString("contact_nm"));
-		msMerchantManage.setContactPhonenum(param.getString("contact_phonenum"));
-		msMerchantManage.setContactMail(param.getString("contact_mail"));
-		msMerchantManage.setStatusId(param.getString("status_id"));
 		msMerchantManage.setSalesmanId(salesman_id);
-		msMerchantManage.setSalesmanNm(salesman_nm);
-		msMerchantManage.setCountyId(county_id);
-//		msMerchantManage.setResourceContent(resource_content);
 		msMerchantManage.setUpHhmmss(new Date());
-		msMerchantManage.setUpdatedByUniqueId(param.getString("unique_id"));
-//		if(lat != null){
-//			msMerchantManage.setLat(new BigDecimal(lat));
-//		}
-//		if(lng != null){
-//			msMerchantManage.setLng(new BigDecimal(lng));
-//		}
 
 		// 商户基本信息更新
 		MsMerchantManageCriteria msMerchantManageCriteria = new MsMerchantManageCriteria();
@@ -382,8 +264,8 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManageDAO.updateByCriteriaSelective(msMerchantManage, msMerchantManageCriteria);
 
 		// 业务更新 -- 首先判断业务是否存在
-		String businessName = FastJsonUtil.getString(param, "business_name");
-		String businessCode = FastJsonUtil.getString(param, "business_code");
+		String businessName = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_NAME);
+		String businessCode = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_CODE);
 		if(existBusiness(merchant_id)) {
 			this.updateBusiness(businessName, businessCode, merchant_id);
 		} else {

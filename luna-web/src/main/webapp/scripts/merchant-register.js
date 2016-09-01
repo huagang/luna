@@ -303,6 +303,7 @@ function asyncUploadPicAdd(obj,fileElementId,warn,license_url){
 		cropper.setFile(file, function(file){
 			cropper.close();
 			FileUploader.uploadMediaFile({
+				url: Inter.getApiUrl().merchantPicUpload.url,
 				type: 'pic',
 				file: file,
 				resourceType: 'crm',
