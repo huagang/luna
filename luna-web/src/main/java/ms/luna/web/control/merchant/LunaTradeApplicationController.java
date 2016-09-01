@@ -218,6 +218,7 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/status")
+    @ResponseBody
     public JSONObject getApplicationStatus(HttpServletRequest request,
                                            @RequestParam Integer businessId) {
         if (!checkAuth(request, businessId)) {
@@ -229,6 +230,7 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/status/{applicationId}")
+    @ResponseBody
     public JSONObject getApplicationStatusByAppId(HttpServletRequest request,
                                                   @PathVariable Integer applicationId) {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
