@@ -54,6 +54,7 @@ public class BusinessTreeController extends BasicController {
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         try {
+            SessionHelper.setSelectedMenu(request.getSession(false), menu);
             // 省份列表
             view.addObject("provinces", pulldownController.loadProvinces());
             JSONObject result = managePoiService.getTagsDef("{}");

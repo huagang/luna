@@ -63,6 +63,9 @@ public class BusinessRelationController extends BasicController {
                 throw new Exception("session is null");
             }
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            if(! AuthHelper.hasBusinessAuth(user, businessId)) {
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+            }
             String uniqueId = user.getUniqueId();
             param.put("uniqueId", uniqueId);
             JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString());
@@ -79,6 +82,9 @@ public class BusinessRelationController extends BasicController {
             @PathVariable("businessId") Integer businessId,
             HttpServletRequest request, HttpServletResponse response ) throws IOException {
         try {
+            if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+            }
             JSONObject json = new JSONObject();
             json.put("businessId", businessId);
             JSONObject jsonObject = manageBusinessTreeService.deleteBusinessTree(json.toJSONString());
