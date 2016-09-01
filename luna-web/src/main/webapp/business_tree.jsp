@@ -59,8 +59,8 @@
                         </ul>
                     </div>
                     <div class="guidance hidden">
-                        <button class="button button-add-child">+添加关系树节点</button> </br>
-                        <span>首次进入POI关系树, 点击"添加关系树节点按钮",为业务配置POI的数据关系吧</span>
+                        <button class="button button-add-child">+创建关系树</button> </br>
+                        <span>首次进入POI关系树, 点击"创建关系树",为业务配置POI的数据关系吧</span>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,6 @@
       </div>
     </div>
   </div>
-  <div class="status-message" id="status-message">成功</div>
   <!-- 底部功能区 -->
   <div class="pop-fun">
       <button type="button" id="btn-add-poi" >确定</button>
@@ -150,6 +149,7 @@
   <!-- 底部功能区 -->
 </div>
 <!-- 添加子节点弹层 end-->
+<div class="status-message" id="status-message">成功</div>
 
 <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
