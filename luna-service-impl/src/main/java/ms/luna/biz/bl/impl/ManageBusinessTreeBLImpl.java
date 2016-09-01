@@ -313,21 +313,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 	 */
 	private Boolean isBusinessIdExist(Integer businessId) {
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-		if (msBusiness == null) {
-			return Boolean.FALSE;
-		}
-		String merchantId = msBusiness.getMerchantId();
-		if (CharactorUtil.isEmpyty(merchantId)) {
-			return Boolean.FALSE;
-		}
-		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
-		// 暂定商户被逻辑删除后业务将不应该继续维护
-		if (msMerchantManage == null
-				|| VbConstant.DEL_FLG.删除.equals(msMerchantManage.getDelFlg())
-			) {
-			return Boolean.FALSE;
-		}
-		return Boolean.TRUE;
+		return msBusiness != null;
 	}
 
 	/**

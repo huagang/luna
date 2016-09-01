@@ -122,9 +122,9 @@
 			            </div>
                     </div>
 			        <div class="information" >
-			            <div class="title-info">
-			            	<h4>业务信息</h4>
-			            </div>
+						<div class="info-tip">
+							为商户同步创建业务(作为商户在平台内的身份标识)
+						</div>
 							<div class="item">
 								<div class="item-label"><span class="superscript">*</span>业务名称</div>
 								<div class="item-value">

@@ -18,7 +18,6 @@
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
 
 </head>
@@ -32,14 +31,14 @@
         <div class="inner-wrap">
             <div class="main-information">
             	<div class="title-main">
-                    <h3编辑商户</h3>
+                    <h3>编辑商户</h3>
                 </div>
                 <form id="form-edit" action="<%=request.getContextPath() %>/content/crm/edit" method="post"
         			onkeydown="if(event.keyCode==13){return false;}">
 
 					<div class="information" >
 						<div class="title-info">
-							<h5>联系人信息</h5>
+							<h4>商户联系人</h4>
 							</div>
 						<div class="item">
 							<div class="item-label"><span class="superscript">*</span>联系人姓名</div>
@@ -67,7 +66,7 @@
 
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
                     	<div class="item-value" style="display:none">
                    		 	<input type="text" id="merchant_id_edit" val="${merchant_id}" name="merchant_id_edit" placeholder="请输入商户完整名称">
@@ -126,9 +125,9 @@
 			            </div>
                     </div>
 			        <div class="information" >
-			            <div class="title-info">
-			            	<h5>联系人信息</h5>
-			            </div>
+						<div class="info-tip">
+							为商户同步创建业务(作为商户在平台内的身份标识)
+						</div>
 						<div class="item">
 							<div class="item-label"><span class="superscript">*</span>业务名称</div>
 							<div class="item-value">
