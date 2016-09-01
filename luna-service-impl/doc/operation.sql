@@ -109,3 +109,14 @@ INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`) VALUES ('
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
 
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
+
+
+ALTER TABLE `luna_trade_application`
+ADD INDEX `sort_idx` (`app_status` ASC, `update_time` DESC);
+
+ALTER TABLE `luna_city`
+ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
+
+ALTER TABLE `luna_bank_branch`
+ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
+
