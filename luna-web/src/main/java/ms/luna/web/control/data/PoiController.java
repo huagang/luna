@@ -1277,8 +1277,11 @@ public class PoiController extends BasicController {
                         if (ext != null) {
                             String fileName = VbMD5.generateToken() + ext;// 生成文件名
                             String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+//                            JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
+//                                    unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "video", "poi") + "/";
                             JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
-                                    unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                                    unzipedDir + value, path, fileName);
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("vod_file_id");
