@@ -7,3 +7,6 @@ alter table ms_column add index(name);
 
 
 update luna_menu set auth='pano-viewer:login:*,pano-viewer:album:*,pano-viewer:pano:*', url='http://pano.visualbusiness.cn/backstage/htmls/albumEdit.html' where id=7;
+
+ALTER TABLE ms_merchant_manage ADD unique_id char(32) default NULL comment "关联用户的id";
+ALTER TABLE ms_merchant_manage ADD unique (`unique_id`);
