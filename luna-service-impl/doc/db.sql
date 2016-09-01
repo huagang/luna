@@ -475,10 +475,13 @@ CREATE TABLE `luna_trade_application` (
   `update_time` datetime NOT NULL COMMENT '申请更新时间',
   `app_status` int(11) NOT NULL COMMENT '申请状态',
   `merchant_id` varchar(32) NOT NULL COMMENT '申请商户ID',
+  `account_province` varchar(36) NOT NULL COMMENT '商户账户开户省市',
   PRIMARY KEY (`application_id`),
   KEY `user_id_idx` (`merchant_id`),
+  KEY `sort_idx` (`app_status`,`update_time`),
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
+
 
 CREATE TABLE `luna_bank_branch` (
   `bnkcode` VARCHAR(12) NOT NULL COMMENT '银行支行编号',
