@@ -630,7 +630,7 @@ $(document).ready(function () {
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</a>');
-                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</a>');
+                        arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">' + lunaConfig.poiAction.detail[that.value.content.poiLang.id] + '</a>');
                         arrUlHtml.push('</li>');
                     }
                     arrUlHtml.push('</ul>');
