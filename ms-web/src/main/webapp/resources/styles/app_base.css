@@ -61,6 +61,13 @@ a:visited {
     text-decoration: none;
 }
 
+a,
+img {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
 a:hover,
 a:active {
     text-decoration: underline;
@@ -172,6 +179,22 @@ video {
     height: 100% !important;
 }
 
+.anima-canvas {
+    width: 125%;
+    height: 100%;
+}
+
+.go-right {
+    margin-left: -15%;
+    transition: margin-left 4s;
+    -webkit-transition: margin-left 4s;
+    /*width: 126%;*/
+    height: 100%;
+}
+
+
+/* 重力感应背景样式 End */
+
 .component-group {
     top: 0;
     width: 100%;
@@ -218,14 +241,6 @@ video {
     margin-top: -5%;
 }
 
-.go-right {
-    margin-left: -15%;
-    transition: margin-left 4s;
-    -webkit-transition: margin-left 4s;
-    width: 126%;
-    margin-left: -10%;
-    height: 100%;
-}
 
 .componentbox .navimg:hover {
     cursor: pointer;
@@ -813,7 +828,8 @@ video {
     color: #fff;
     height: 30px;
 }
-.imglist-poi-wrapper .imglist-title-wrapper{
+
+.imglist-poi-wrapper .imglist-title-wrapper {
     height: 65px;
 }
 

@@ -7,7 +7,7 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
             <div class="navbar-right info-user">
-                <span class="navbar-business">
+                <span class="navbar-business ${sessionScope.is_business != 'true' ? 'hidden' : ''}">
                     <span class="navbar-business-name"></span>
                     <a href="<%=request.getContextPath() %>/common/business/select"><span class="select-business"></span></a>
                     <span class="sep">|</span>

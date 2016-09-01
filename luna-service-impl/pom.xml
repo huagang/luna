@@ -352,12 +352,12 @@
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>vb@12345</jdbc.password>
 				<zookeeper.address>10.105.204.15:2181</zookeeper.address>
-				<mongo.hosts>115.159.50.183:27017</mongo.hosts>
+				<mongo.hosts>10.105.36.78:27017,10.105.25.54:27017</mongo.hosts>
 				<mongo.user>poi_rw</mongo.user>
 				<mongo.password>sdiedkdijdvmbm</mongo.password>
 				<mongo.dbname>luna</mongo.dbname>
 				<cosBaseDir>/release</cosBaseDir>
-				<msWebUrl>http://luna.visualbusiness.cn/ms-web</msWebUrl>
+				<msWebUrl>http://115.159.94.146/ms-web</msWebUrl>
 				<mtaQQ>3186008740</mtaQQ>
 				<redis.host>10.66.172.227</redis.host>
 				<redis.instanceId>11da0ad3-35d8-4925-90bd-6f04fd313162</redis.instanceId>
@@ -406,7 +406,7 @@
 				<jdbc.user>root</jdbc.user>
 				<jdbc.password>vb@12345</jdbc.password>
 				<zookeeper.address>10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181</zookeeper.address>
-				<mongo.hosts>115.159.50.183:27017</mongo.hosts>
+				<mongo.hosts>10.105.36.78:27017,10.105.25.54:27017</mongo.hosts>
 				<mongo.user>poi_rw</mongo.user>
 				<mongo.password>sdiedkdijdvmbm</mongo.password>
 				<mongo.dbname>luna</mongo.dbname>

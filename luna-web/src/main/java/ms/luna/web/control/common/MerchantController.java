@@ -1,9 +1,13 @@
 package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.QCosConfig;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
-import ms.luna.web.control.ManageMerchantCtrl;
+import ms.luna.web.control.inner.UploadController;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +39,10 @@ public class MerchantController extends BasicController {
     private PulldownController pulldownController;
 
     @Autowired
-    private ManageMerchantCtrl manageMerchantCtrl;
+    private ManageMerchantService manageMerchantService;
 
     @Autowired
-    private ManageMerchantService manageMerchantService;
+    private UploadController uploadController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/registPage")
     public ModelAndView init_regist(
@@ -168,32 +172,15 @@ public class MerchantController extends BasicController {
         return new ModelAndView(SUCCESS_URI);
     }
 
-    /**
-     * 异步上传图片
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload")
     @ResponseBody
-    public String uploadThumbnail(
-            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try{
-            String orignalFileName = file.getOriginalFilename();
-            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String fileName = "/"+sdf.format(date) + "/" + VbMD5.generateToken() + ext;
-            byte[] bytes = file.getBytes();// 获得文件内容
-            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
-                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
-            return result.toString();
-        } catch (Exception e) {
-            MsLogger.debug("Failed to upload thumbnail: " + e.getMessage());
-            return FastJsonUtil.error("-1", "Failed to upload thumbnail: ").toString();
-        }
+    public JSONObject uploadFile2Cloud(@RequestParam(required = true, value = "file") MultipartFile file,
+                                       @RequestParam(required = true, value = "type") String type,
+                                       @RequestParam(required = true, value = "resource_type") String resourceType,
+                                       @RequestParam(required = false, value = "resource_id") String resourceId,
+                                       HttpServletRequest request) throws IOException {
+
+        return uploadController.uploadFile2Cloud( file, type, resourceType, resourceId, request);
     }
 
     /**

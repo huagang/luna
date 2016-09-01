@@ -6,8 +6,10 @@ import ms.luna.biz.sc.ManageArticleService;
 import ms.luna.biz.sc.ManageColumnService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsArticleTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
@@ -104,6 +106,19 @@ public class ArticleController extends BasicController {
         }
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, columnId);
 
+        int type = RequestHelper.getInteger(request, MsArticleTable.FIELD_TYPE);
+        if(type < 0) {
+            type = 0;
+        }
+        jsonObject.put(MsArticleTable.FIELD_TYPE, type);
+        if(type != 0) {
+            int refId = RequestHelper.getInteger(request, MsArticleTable.FIELD_REF_ID);
+            if(refId < 0) {
+                errMsg = "中文版id不合法";
+                return Pair.of(jsonObject, errMsg);
+            }
+            jsonObject.put(MsArticleTable.FIELD_REF_ID, refId);
+        }
         return Pair.of(jsonObject, errMsg);
 
     }
@@ -118,10 +133,29 @@ public class ArticleController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
         }
         try {
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             JSONObject ret = manageArticleService.createArticle(articleJson.toJSONString());
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to create article", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建文章失败，请重试");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "", params = "saveAndPublish")
+    @ResponseBody
+    public JSONObject submitCreateAndPublishArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Pair<JSONObject, String> pair = toJson(request, true);
+        JSONObject articleJson = pair.getLeft();
+        if(pair.getRight() != null) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
+        }
+        try {
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            articleJson.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
+            JSONObject ret = manageArticleService.createAndPublishArticle(articleJson.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to create article", ex);
@@ -144,12 +178,32 @@ public class ArticleController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = "data")
     @ResponseBody
-    public JSONObject readArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JSONObject readArticle(@PathVariable int id,
+                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         if(id < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
         }
         try{
             JSONObject ret = manageArticleService.getArticleById(id);
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to read article: " + id, ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "读取文章信息失败");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", params = {"data", "type"})
+    @ResponseBody
+    public JSONObject readOtherLangArticle(@PathVariable int id, @RequestParam(value = "type") int type,
+                                HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(id < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
+        }
+        try{
+            JSONObject json = new JSONObject();
+            json.put(MsArticleTable.FIELD_ID, id);
+            json.put(MsArticleTable.FIELD_TYPE, type);
+            JSONObject ret = manageArticleService.getArticle(json.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to read article: " + id, ex);
@@ -183,11 +237,37 @@ public class ArticleController extends BasicController {
 
         try{
             JSONObject jsonObject = pair.getLeft();
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
             jsonObject.put(MsArticleTable.FIELD_ID, id);
             JSONObject ret = manageArticleService.updateArticle(jsonObject.toJSONString());
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to update article: " + id , ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "更新文章失败，请重试");
+
+        }
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}", params = "saveAndPublish")
+    @ResponseBody
+    public JSONObject submitUpdateAndPublishArticle(@PathVariable int id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if(id < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "文章Id不合法");
+        }
+        Pair<JSONObject, String> pair = toJson(request, false);
+        if(pair.getRight() != null) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, pair.getRight());
+        }
+
+        try{
+            JSONObject jsonObject = pair.getLeft();
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            jsonObject.put(MsArticleTable.FIELD_AUTHOR, user.getNickName());
+            jsonObject.put(MsArticleTable.FIELD_ID, id);
+            JSONObject ret = manageArticleService.updateAndPublishArticle(jsonObject.toJSONString());
             return ret;
         } catch (Exception ex) {
             logger.error("Failed to update article: " + id , ex);
@@ -211,16 +291,28 @@ public class ArticleController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public JSONObject loadArticle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int min = RequestHelper.getInteger(request, "offset");
-        int max = RequestHelper.getInteger(request, "limit");
+    public JSONObject loadArticle(@RequestParam(required = false) Integer offset,
+                                  @RequestParam(required = false) Integer limit,
+                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
         JSONObject jsonQuery = new JSONObject();
-        if(min > 0 && max > 0) {
-            jsonQuery.put("min", min);
-            jsonQuery.put("max", max);
+        if (offset != null) {
+            jsonQuery.put("min", offset);
         }
-        LunaUserSession user = SessionHelper.getUser(request.getSession());
-        jsonQuery.put(LunaUserTable.FIELD_ID, user.getUniqueId());
+        if (limit != null) {
+            jsonQuery.put("max", limit);
+        }
+        int businessId = RequestHelper.getInteger(request, "business_id");
+        if(businessId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
+        }
+
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+            LunaUserSession user = SessionHelper.getUser(request.getSession());
+            logger.warn(String.format("user[%s] does not has auth with business[%d]", user.getLunaName(), businessId));
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+        }
+
+        jsonQuery.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
         try {
             JSONObject ret = manageArticleService.loadArticle(jsonQuery.toJSONString());
             if ("0".equals(ret.getString("code"))) {
@@ -229,7 +321,7 @@ public class ArticleController extends BasicController {
         } catch (Exception ex) {
             logger.error("Failed to load column", ex);
         }
-        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取栏目列表失败");
+        return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取文章列表失败");
 
     }
 

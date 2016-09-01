@@ -25,6 +25,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,7 +109,7 @@ public class FarmPageServiceImpl implements FarmPageService {
             }
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
-            MsLogger.debug("Fail to edit page." + e.getMessage());
+            MsLogger.error("Fail to edit page." + e.getMessage());
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Fail to edit page");
         }
 
@@ -225,30 +226,33 @@ public class FarmPageServiceImpl implements FarmPageService {
             msShowAppParameter.setMax(param.getInteger(MsShowAppTable.LIMIT));
             msShowAppParameter.setRange(true);
 
+            Integer total = msShowAppDAO.countShowAppsByCategoryId(msShowAppParameter);
             JSONArray rows = new JSONArray();
-            List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCategoryId(msShowAppParameter);
-            String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
-            for (MsShowAppResult msShowAppResult : msShowAppResults) {
-                JSONObject row = new JSONObject();
-                row.put(MsShowAppTable.FIELD_CATEGORY_ID, msShowAppResult.getCategoryId());
-                row.put(MsShowAppTable.FIELD_CATEGORY_NAME, msShowAppResult.getCategoryName());
-                row.put(MsShowAppTable.FIELD_BUSINESS_ID, msShowAppResult.getBusinessId());
-                row.put(MsShowAppTable.FIELD_BUSINESS_NAME, msShowAppResult.getBusinessName());
-                row.put(MsShowAppTable.FIELD_APP_ID, msShowAppResult.getAppId());
-                row.put(MsShowAppTable.FIELD_APP_CODE, msShowAppResult.getAppCode());
-                row.put(MsShowAppTable.FIELD_APP_NAME, msShowAppResult.getAppName());
-                row.put(MsShowAppTable.FIELD_TYPE, msShowAppResult.getType());
-                row.put(MsShowAppTable.FIELD_SHARE_INFO_DES, msShowAppResult.getShareInfoDes() != null ? msShowAppResult.getShareInfoDes() : "");
-                row.put(MsShowAppTable.FIELD_SHARE_INFO_PIC, msShowAppResult.getShareInfoPic() != null ? msShowAppResult.getShareInfoPic() : "");
-                row.put(MsShowAppTable.FIELD_OWNER, msShowAppResult.getOwner());
-                row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(msShowAppResult.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
-                row.put(MsShowAppTable.FIELD_PUBLISH_TIME, DateUtil.format(new Date(msShowAppResult.getPublishTime().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
-                row.put(MsShowAppTable.INDEXURL, msWebUrl + String.format(showPageUriTemplate, msShowAppResult.getAppId()));
-                row.put(MsShowAppTable.FIELD_APP_STATUS, msShowAppResult.getAppStatus());
-                rows.add(row);
+            if(total > 0) {
+                List<MsShowAppResult> msShowAppResults = msShowAppDAO.selectShowAppByCategoryId(msShowAppParameter);
+                String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
+                for (MsShowAppResult msShowAppResult : msShowAppResults) {
+                    JSONObject row = new JSONObject();
+                    row.put(MsShowAppTable.FIELD_CATEGORY_ID, msShowAppResult.getCategoryId());
+                    row.put(MsShowAppTable.FIELD_CATEGORY_NAME, msShowAppResult.getCategoryName());
+                    row.put(MsShowAppTable.FIELD_BUSINESS_ID, msShowAppResult.getBusinessId());
+                    row.put(MsShowAppTable.FIELD_BUSINESS_NAME, msShowAppResult.getBusinessName());
+                    row.put(MsShowAppTable.FIELD_APP_ID, msShowAppResult.getAppId());
+                    row.put(MsShowAppTable.FIELD_APP_CODE, msShowAppResult.getAppCode());
+                    row.put(MsShowAppTable.FIELD_APP_NAME, msShowAppResult.getAppName());
+                    row.put(MsShowAppTable.FIELD_TYPE, msShowAppResult.getType());
+                    row.put(MsShowAppTable.FIELD_NOTE, msShowAppResult.getNote() != null ? msShowAppResult.getNote() : "");
+                    row.put(MsShowAppTable.FIELD_PIC_THUMB, msShowAppResult.getPicThumb() != null ? msShowAppResult.getPicThumb() : "");
+                    row.put(MsShowAppTable.FIELD_OWNER, msShowAppResult.getOwner());
+                    row.put(MsShowAppTable.FIELD_CREATE_TIME, DateUtil.format(new Date(msShowAppResult.getRegisthhmmss().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+                    row.put(MsShowAppTable.FIELD_PUBLISH_TIME, DateUtil.format(new Date(msShowAppResult.getPublishTime().getTime()), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
+                    row.put(MsShowAppTable.INDEXURL, msWebUrl + String.format(showPageUriTemplate, msShowAppResult.getAppId()));
+                    row.put(MsShowAppTable.FIELD_APP_STATUS, msShowAppResult.getAppStatus());
+                    rows.add(row);
+                }
             }
             JSONObject result = FastJsonUtil.sucess("success", rows);
-            result.put("total", msShowAppResults.size());
+            result.put("total", total);
             return result;
         } catch (Exception e) {
             MsLogger.error("Failed to get show apps by category id:" + e.getMessage());

@@ -16,143 +16,150 @@ $(function(){
 		asyncUploadVideo(this);
 	});
 });
+//
+////上传图片
+//function asyncUploadThumb(obj,fileElementId){
+//	var host = window.host || '';
+//	var $thumb = $(obj); //当前触发事件的元素
+//	var thumbId = $thumb.attr("id"),
+//		globalId = thumbId.indexOf("_");
+//	var $thumburl = $("#"+thumbId.substring(0,globalId)),
+//		$warn = $("#"+thumbId.substring(0,globalId)+"_warn");
+//	var filePath = $(obj).val(),
+//		fileSize = $(obj).attr("file_size"),
+//		extStart = filePath.lastIndexOf("."),
+//    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
+//    	format = new Array('PNG','JPG'),    //图片格式
+//    	info = "图片仅限于png，jpg格式",
+//		data = {type:'pic', resource_type: 'poi'}
+//    	hasError = false; //标志格式及大小是否符合要求
+//	hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info);
+//	if(!hasError){
+//		$warn.css('display','none');
+//		jQuery.ajaxFileUpload({
+//			//处理文件上传操作的服务器端地址
+//			data:data,
+//			url:Inter.getApiUrl().uploadPath.url,
+//			secureuri:false,                       //是否启用安全提交,默认为false
+//			fileElementId:fileElementId,           //文件选择框的id属性
+//			dataType:'json',                       //服务器返回的格式,可以是json或xml等
+//			success:function(returndata){          //服务器响应成功时的处理函数
+//					if (returndata.code=='0') {
+//					$thumburl.val(returndata.data.access_url);
+//					//----------------------------
+//					$("#thumbnail-show").attr("src",returndata.data.access_url);
+//				} else {
+//					$warn.html(returndata.msg);
+//					$warn.css('display','block');
+//					//----------------------------
+//					$("#thumbnail-show").attr("picExist","false");
+//					$("#div-img").css("display","none");
+//				}
+//				$thumb.val("");
+//			},
+//			error:function(returndata){ //服务器响应失败时的处理函数
+//				$warn.html('图片上传失败，请重试！！');
+//				$warn.css('display','block');
+//				$thumb.val("");
+//			}
+//		});
+//	} else {
+//
+//	}
+//}
 
-//上传图片
-function asyncUploadThumb(obj,fileElementId){
-	var host = window.host || '';
-	var $thumb = $(obj); //当前触发事件的元素
-	var thumbId = $thumb.attr("id"),
-		globalId = thumbId.indexOf("_");
-	var $thumburl = $("#"+thumbId.substring(0,globalId)),
-		$warn = $("#"+thumbId.substring(0,globalId)+"_warn");
-	var filePath = $(obj).val(), 
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
-    	format = new Array('PNG','JPG'),    //图片格式
-    	info = "图片仅限于png，jpg格式",
-    	hasError = false; //标志格式及大小是否符合要求
-	hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info);
-	if(!hasError){
-		$warn.css('display','none');
-		jQuery.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:Inter.getApiUrl().poiThumbnailUpload.url,
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId:fileElementId,           //文件选择框的id属性
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){          //服务器响应成功时的处理函数
-					if (returndata.code=='0') {
-					$thumburl.val(returndata.data.access_url);
-					//----------------------------
-					$("#thumbnail-show").attr("src",returndata.data.access_url);
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display','block');
-					//----------------------------
-					$("#thumbnail-show").attr("picExist","false");
-					$("#div-img").css("display","none");
-				}
-				$thumb.val("");
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$warn.html('图片上传失败，请重试！！');
-				$warn.css('display','block');
-				$thumb.val("");
-			}
-		});
-	} else {
-		
-	}
-}
 
+////上传音频文件
+//function asyncUploadAudio(obj,fileElementId){
+//	var $audio = $(obj); //当前触发事件的元素
+//	var audioId = $audio.attr("id"),
+//		globalId = audioId.indexOf("_");
+////	var $audiourl = $("#"+audioId.substring(0,globalId-1)),
+////		$warn = $("#"+audioId.substring(0,globalId-1)+"_warn");
+//	var $audiourl = $("#"+audioId.substring(0,globalId)),
+//		$warn = $("#"+audioId.substring(0,globalId)+"_warn");
+//	var filePath = $(obj).val(),
+//		fileSize = $(obj).attr("file_size"),
+//		extStart = filePath.lastIndexOf("."),
+//    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
+//    	format = new Array('MP3','WAV','WMA','WAV'),    //图片格式
+//    	info = "音频仅限于MP3，WAV，WMA，WAV格式",
+//		data = {type:'audio', resource_type: 'poi'};
+//    	hasError = false; //标志格式及大小是否符合要求
+////	fileFormatLimit($audio,format,ext,fileSize,$warn,info);
+//		hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info);
+//	if(!hasError){
+//		$warn.css('display','none');
+//		$.ajaxFileUpload({
+//			//处理文件上传操作的服务器端地址
+//			data:data,
+//			url:Inter.getApiUrl().uploadPath.url,
+//			secureuri:false,                       //是否启用安全提交,默认为false
+//			fileElementId:fileElementId,           //文件选择框的id属性
+//			//dataType:'text',                       //服务器返回的格式,可以是json或xml等
+//			success:function(returndata){        //服务器响应成功时的处理函数
+//				var str = $(returndata).find("body").text();//获取返回的字符串
+//				var json = $.parseJSON(str);//把字符串转化为json对象
+//
+//				if (json.code=='0') {
+//					$audiourl.val(json.data.access_url);
+//				} else {
+//					$warn.html(json.msg);
+//					$warn.css('display','block');
+//				}
+//			},
+//			error:function(returndata){ //服务器响应失败时的处理函数
+//				$warn.html('音频上传失败，请重试！！');
+//				$warn.css('display','block');
+//			}
+//		});
+//	}
+//	$audio.val("");
+//}
 
-//上传音频文件
-function asyncUploadAudio(obj,fileElementId){
-	var $audio = $(obj); //当前触发事件的元素
-	var audioId = $audio.attr("id"),
-		globalId = audioId.indexOf("_");
-//	var $audiourl = $("#"+audioId.substring(0,globalId-1)),
-//		$warn = $("#"+audioId.substring(0,globalId-1)+"_warn");
-	var $audiourl = $("#"+audioId.substring(0,globalId)),
-		$warn = $("#"+audioId.substring(0,globalId)+"_warn");
-	var filePath = $(obj).val(), 
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
-    	format = new Array('MP3','WAV','WMA','WAV'),    //图片格式
-    	info = "音频仅限于MP3，WAV，WMA，WAV格式",
-    	hasError = false; //标志格式及大小是否符合要求
-//	fileFormatLimit($audio,format,ext,fileSize,$warn,info);
-		hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info);
-	if(!hasError){
-		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:Inter.getApiUrl().poiAudioUpload.url,
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId:fileElementId,           //文件选择框的id属性
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-					$audiourl.val(returndata.data.access_url);
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display','block');
-				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$warn.html('音频上传失败，请重试！！');
-				$warn.css('display','block');
-			}
-		});
-	}
-	$audio.val("");
-}
-
-//上传视频文件
-function asyncUploadVideo(obj,fileElementId){
-	var $video = $(obj); //当前触发事件的元素
-	var videoId = $video.attr("id"),
-		globalId = videoId.indexOf("_");
-//	var $videourl = $("#"+videoId.substring(0,globalId-1)),
-//		$warn = $("#"+videoId.substring(0,globalId-1)+"_warn");
-	var $videourl = $("#"+videoId.substring(0,globalId)),
-		$warn = $("#"+videoId.substring(0,globalId)+"_warn");
-	var filePath = $(obj).val(), 
-		fileSize = $(obj).attr("file_size"),
-		extStart = filePath.lastIndexOf("."),
-    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
-    	format = new Array('RM','RMVB','AVI','MP4','3GP'),    //图片格式
-    	info = "视频仅限于RM，RMVB，AVI，MP4，3GP格式",
-    	hasError = false; //标志格式及大小是否符合要求
-//	fileFormatLimit($audio,format,ext,fileSize,$warn,info);
-    	hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info); //标志格式及大小是否符合要求
-	if(!hasError){
-		$warn.css('display','none');
-		$.ajaxFileUpload({
-			//处理文件上传操作的服务器端地址
-			url:Inter.getApiUrl().poiVideoUpload.url,
-			secureuri:false,                       //是否启用安全提交,默认为false
-			fileElementId:fileElementId,           //文件选择框的id属性
-			dataType:'json',                       //服务器返回的格式,可以是json或xml等
-			success:function(returndata){        //服务器响应成功时的处理函数
-				if (returndata.code=='0') {
-//					$videourl.val(returndata.data.access_url);
-					$videourl.val(returndata.data.vod_file_id);//只能得到id
-				} else {
-					$warn.html(returndata.msg);
-					$warn.css('display','block');
-				}
-			},
-			error:function(returndata){ //服务器响应失败时的处理函数
-				$warn.html('视频上传失败，请重试！！');
-				$warn.css('display','block');
-			}
-		});
-	}
-	$video.val("");
-}
+////上传视频文件
+//function asyncUploadVideo(obj,fileElementId){
+//	var $video = $(obj); //当前触发事件的元素
+//	var videoId = $video.attr("id"),
+//		globalId = videoId.indexOf("_");
+////	var $videourl = $("#"+videoId.substring(0,globalId-1)),
+////		$warn = $("#"+videoId.substring(0,globalId-1)+"_warn");
+//	var $videourl = $("#"+videoId.substring(0,globalId)),
+//		$warn = $("#"+videoId.substring(0,globalId)+"_warn");
+//	var filePath = $(obj).val(),
+//		fileSize = $(obj).attr("file_size"),
+//		extStart = filePath.lastIndexOf("."),
+//    	ext = filePath.substring(extStart+1,filePath.length).toUpperCase(),
+//    	format = new Array('RM','RMVB','AVI','MP4','3GP'),    //图片格式
+//    	info = "视频仅限于RM，RMVB，AVI，MP4，3GP格式",
+//    	hasError = false; //标志格式及大小是否符合要求
+////	fileFormatLimit($audio,format,ext,fileSize,$warn,info);
+//    	hasError = fileFormatLimit(obj,format,ext,fileSize,$warn,info); //标志格式及大小是否符合要求
+//	if(!hasError){
+//		$warn.css('display','none');
+//		$.ajaxFileUpload({
+//			//处理文件上传操作的服务器端地址
+//			url:Inter.getApiUrl().poiVideoUpload.url,
+//			secureuri:false,                       //是否启用安全提交,默认为false
+//			fileElementId:fileElementId,           //文件选择框的id属性
+//			dataType:'json',                       //服务器返回的格式,可以是json或xml等
+//			success:function(returndata){        //服务器响应成功时的处理函数
+//				if (returndata.code=='0') {
+////					$videourl.val(returndata.data.access_url);
+//					$videourl.val(returndata.data.vod_file_id);//只能得到id
+//				} else {
+//					$warn.html(returndata.msg);
+//					$warn.css('display','block');
+//				}
+//			},
+//			error:function(returndata){ //服务器响应失败时的处理函数
+//				$warn.html('视频上传失败，请重试！！');
+//				$warn.css('display','block');
+//			}
+//		});
+//	}
+//	$video.val("");
+//}
 
 //上传文件格式及大小限制
 function fileFormatLimit(obj,format,ext,fileSize,warn,info){

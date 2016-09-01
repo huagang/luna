@@ -19,12 +19,12 @@ public class MsArticleResult {
     private String title;
     @JSONField(name="author")
     private String author;
+    @JSONField(name = "type")
+    private int type;
     @JSONField(name="status")
     private short status;
     @JSONField(name="column_name")
     private String columnName;
-    @JSONField(name="business_name")
-    private String businessName;
     @JSONField(name="url")
     private String url;
     @JSONField(name="regist_hhmmss", format="yyyy-MM-dd HH:mm:ss")
@@ -57,6 +57,14 @@ public class MsArticleResult {
         this.author = author;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public short getStatus() {
         return status;
     }
@@ -71,14 +79,6 @@ public class MsArticleResult {
 
     public void setColumnName(String columnName) {
         this.columnName = columnName;
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public void setBusinessName(String businessName) {
-        this.businessName = businessName;
     }
 
     public String getUrl() {

@@ -347,14 +347,14 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     if (url_id) {
         var urlElement = document.getElementById(url_id);
     }
-    var formdata = new FormData(formobj),
-        file = file_obj.files[0];
-    formdata.append("app_id", appId);
-    formdata.append('type', 'pic');
-    formdata.append('resource_type', 'app');
-    formdata.append('resource_id', '');
-
+    var file = file_obj.files[0];
     cropper.setFile(file, function (file) {
+        var formdata = new FormData();
+        formdata.append("file", file, file.name);
+        formdata.append("app_id", appId);
+        formdata.append('type', 'pic');
+        formdata.append('resource_type', 'app');
+        formdata.append('resource_id', '');
         $.ajax({
             url: Inter.getApiUrl().uploadPath.url,
             type: Inter.getApiUrl().uploadPath.type,
@@ -556,55 +556,61 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
     if (url_id) {
         var urlElement = document.getElementById(url_id);
     }
-    var formdata = new FormData(formobj);
-    formdata.append("app_id", appId);
-    formdata.append('type', 'pic');
-    formdata.append('resource_type', 'app');
-    formdata.append('resource_id', '');
+    var file = file_obj.files[0];
+    cropper.setFile(file, function (file) {
 
-    $.ajax({
-        url: Inter.getApiUrl().uploadPath.url,
-        type: Inter.getApiUrl().uploadPath.type,
-        cache: false,
-        async: false,
-        data: formdata,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        success: function (returndata) {
-            if (returndata.code != "0") {
-                $.alert(returndata.msg);
-                return;
-            }
-            if (flag) {
-                urlElement.value = returndata.data.access_url;
-                var urlObj = $("#" + url_id);
-                urlObj.trigger("focus");
-                urlObj.trigger("change");
-                urlObj.trigger("blur");
-            }
-            switch (thumbnail_id) {
-                case 'wj-page-set':
-                    $("#wj-page").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                case 'wj-share-set':
-                    $("#wj-share").remove();
-                    var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
-                    thumbnail.append(img_up);
-                    break;
-                default:
-                    break;
-            }
-            if (clc) {
-                $(clc).show();
-            }
+        var formdata = new FormData();
+        formdata.append('file', file, file.name);
+        formdata.append("app_id", appId);
+        formdata.append('type', 'pic');
+        formdata.append('resource_type', 'app');
+        formdata.append('resource_id', '');
 
-        },
-        error: function (returndata) {
-            $.alert(returndata);
-        }
+        $.ajax({
+            url: Inter.getApiUrl().uploadPath.url,
+            type: Inter.getApiUrl().uploadPath.type,
+            cache: false,
+            async: false,
+            data: formdata,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (returndata) {
+                if (returndata.code != "0") {
+                    $.alert(returndata.msg);
+                    return;
+                }
+                if (flag) {
+                    urlElement.value = returndata.data.access_url;
+                    var urlObj = $("#" + url_id);
+                    urlObj.trigger("focus");
+                    urlObj.trigger("change");
+                    urlObj.trigger("blur");
+                }
+                switch (thumbnail_id) {
+                    case 'wj-page-set':
+                        $("#wj-page").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-page" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    case 'wj-share-set':
+                        $("#wj-share").remove();
+                        var img_up = $('<img class="thumbnail" id="wj-share" src="' + returndata.data.access_url + '" >')
+                        thumbnail.append(img_up);
+                        break;
+                    default:
+                        break;
+                }
+                if (clc) {
+                    $(clc).show();
+                }
+                //关闭cropper弹框
+                cropper.close();
+            },
+            error: function (returndata) {
+                $.alert(returndata);
+            }
+        });
     });
 }
 

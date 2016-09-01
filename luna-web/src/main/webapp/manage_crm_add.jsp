@@ -17,12 +17,8 @@
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
-	<link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
-	<link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_crm.css">
-	<link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-register.css">
 </head>
 <body>
@@ -42,7 +38,7 @@
 			        onkeydown="if(event.keyCode==13){return false;}" >
 					<div class="information" >
 						<div class="title-info">
-							<h5>商户联系人</h5>
+							<h4>商户联系人</h4>
 						</div>
 						<div class="item">
 							<div class="item-label"><span class="superscript">*</span>联系人姓名</div>
@@ -68,7 +64,7 @@
 					</div>
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>商户名称</div>
@@ -94,26 +90,6 @@
 				               	</select>                    
 			                </div>
 			            </div>
-						<%--<div class="item">--%>
-				            <%--<div class="item-label item-ver"><span class="superscript">*</span>是否有营业执照</div>--%>
-				            <%--<div class="item-value">--%>
-				                <%--<label class="license-label"><input type="radio" name="license" value="是" checked="checked"/>是</label>--%>
-				                <%--<label><input type="radio" id="license" name="license" value="否" />否</label>--%>
-			                    <%--<div id="license-area" style="position:relative;">--%>
-				              		<%--<input id="license-url" name="resource_content" style="display:none;"/>--%>
-				                   	<%--<input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true"  accept="image/*"--%>
-										   <%--onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>--%>
-				                   	<%--<button id="btn-license-upload" >营业执照副本电子版</button><span class="info-add">*需要保证图片中文字清晰可见</span>--%>
-									<%--<div class="warn" id="license-upload-warn">必须填写</div>--%>
-			                	<%--</div>--%>
-			            	<%--</div>--%>
-			            <%--</div>--%>
-	   	        <%--<div id="div-img" class="item" style="display:none;height:100px;">--%>
-	           	 	<%--<div class="item-label"></div>--%>
-	             	<%--<div class="item-value" >--%>
-	             		<%--<img id="thumbnail" picExist="false" alt="" src="" onload="thumbnailDisplay(this,100,120)">--%>
-	             	<%--</div>--%>
-	            <%--</div>--%>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>地址</div>
 							<div class="item-value">
@@ -138,87 +114,43 @@
 							</div>
 			            </div>
 			            <div class="item">
-			                <div class="item-label">商户地址</div>
+			                <div class="item-label"></div>
 			                <div class="item-value">
 			                    <input type="text" id="merchant_addr" name="merchant_addr" placeholder="请填写详细地址（省市区无需重复填写）"/>
 			                	<div class="warn" id="merchant-address-warn">不能为空</div>
 			                </div>
 			            </div>
-	            		<%--<div class="item">--%>
-			                <%--<div class="item-label">地图坐标</div>--%>
-			                <%--<div class="item-value">--%>
-			                    <%--<button type="button" id="btn-address">在地图上标注</button>--%>
-			                    <%--<div class="warn warn-inline" id="address-warn">请选择您所在商户的地理坐标</div>--%>
-			                    <%--<input type="text" id="lat" name="lat" style="position: absolute;display: none;">--%>
-			                    <%--<input type="text" id="lng" name="lng" style="position: absolute;display: none;">--%>
-			                    <%--<div id="address-container" class="address-container">--%>
-			                        <%--<div id="address-search" class="address-search" style="position: absolute;">--%>
-			                            <%--<input type="text" id="address-keyvalue" onkeyup="searchPos()" style="width: 100px;margin-left: 5px;margin-top: 3px; display: inline-block;"/>--%>
-			                            <%--<input type="text" id="address-region" onkeyup="searchPos()" style="width: 110px;display: inline-block;margin-right: 1px;"/>--%>
-			                            <%--<button type="button" id="searchposition" style="display: inline-block;">搜索</button>--%>
-			                        <%--</div>--%>
-			                    <%--</div>--%>
-			                <%--</div>--%>
-			            <%--</div>--%>
-			            <%--<div class="item">--%>
-			                <%--<div class="item-label item-ver">商家概况(选填)</div>--%>
-			                <%--<div class="item-value">--%>
-			                    <%--<textarea id="merchant_info" name="merchant_info" class="description"--%>
-			                              <%--placeholder="景区：&#10;评级、旺季时间、景区特色、当前需求点&#10;&#10;酒店：&#10;星级、酒店特色、当前需求点&#10;&#10;农家院：&#10;特色、当前需求点"--%>
-			                            <%--></textarea>--%>
-			                <%--</div>--%>
-			            <%--</div>--%>
                     </div>
 			        <div class="information" >
 			            <div class="title-info">
-			            	<h5>业务信息</h5>
+			            	<h4>业务信息</h4>
 			            </div>
-			            <%--<div class="item">--%>
-			                <%--<div class="item-label"><span class="superscript">*</span>联系人姓名</div>--%>
-			                <%--<div class="item-value">--%>
-			                    <%--<input type="text" id="contact_nm" name="contact_nm" placeholder="输入您的真实姓名"/>--%>
-			                    <%--<div class="warn" id="name-warn">必须填写</div>--%>
-			                <%--</div>--%>
-			            <%--</div>--%>
-			            <%--<div class="item">--%>
-			                <%--<div class="item-label"><span class="superscript">*</span>联系人手机</div>--%>
-			                <%--<div class="item-value">--%>
-			                    <%--<input type="text" id="contact_phonenum" name="contact_phonenum" placeholder="输入您的联系方式"/>--%>
-			                    <%--<div class="warn" id="tel-warn">必须填写</div>--%>
-			                <%--</div>--%>
-			            <%--</div>--%>
-			            <%--<div class="item">--%>
-			                <%--<div class="item-label">联系人邮箱</div>--%>
-			                <%--<div class="item-value">--%>
-			                    <%--<input type="text" id="contact_mail" name="contact_mail" placeholder="输入您的邮箱地址"/>--%>
-			                    <%--<div class="warn" id="email-warn">必须填写</div>--%>
-			                <%--</div>--%>
-			            <%--</div>--%>
-
-						<div class="item">
-							<div class="item-label"><span class="superscript">*</span>业务名称</div>
-							<div class="item-value">
-								<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" onblur="checkBusinessName(this, 'warn-name', 'btn-add')" required />
-								<span id="warn-name" class="warn hide">格式不正确,请重新输入</span>
+							<div class="item">
+								<div class="item-label"><span class="superscript">*</span>业务名称</div>
+								<div class="item-value">
+									<input type="text" id="business-name" name="business_name" placeholder="名称不超过32个字符" maxlength="32" required />
+									<span id="warn-business-name" class="red"></span>
+								</div>
 							</div>
-						</div>
-						<div class="item">
-							<div class="item-label"><span class="superscript">*</span>业务简称</div>
-							<div class="item-value">
-								<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符" onblur="checkBusinessShortName(this, 'warn-short', 'btn-add')" required/>
-								<span id="warn-short" class="warn hide">格式不正确,请重新输入</span>
+							<div class="item">
+								<div class="item-label"><span class="superscript">*</span>业务简称</div>
+								<div class="item-value">
+									<input type="text" id="business-name-short" name="business_code" placeholder="英文简称不超过16个字符" maxlength="16"   required/>
+									<span id="warn-short" class="red"></span>
+								</div>
 							</div>
 						</div>
 
-						<div class="item">
-						<div class="item-label"><span class="superscript">*</span>受理业务员</div>
-						<div class="item-value">
-							<span id="agent" >${luna_nm}</span>
-							<span><img src="<%=request.getContextPath() %>/img/edit.png" id="editagent"/></span>
-							<div class="warn" id="agent-warn">必须填写</div>
-							<input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
-							<input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
-						</div>
+							<div class="item">
+			                <div class="item-label"><span class="superscript">*</span>受理业务员</div>
+			                <div class="item-value">
+			                    <span id="agent" >${luna_nm}</span>
+			                    <span><img src="<%=request.getContextPath() %>/img/edit.png" id="editagent"/></span>
+			                    <div class="warn" id="agent-warn">必须填写</div>
+			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
+			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
+			                </div>
+
 			            </div>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>商户状态</div>
@@ -232,7 +164,7 @@
 			            </div>
 					    <div style="position: relative;width: 100%;text-align: center;">
 					        <button type="submit" id="btn-addmerchant">确定</button>
-					        <button type="button" class="button-close" onclick="clcContent(this)">取消</button>
+					        <a type="button" class="button-close" href="<%=request.getContextPath() %>/content/crm">取消</a>
 					    </div>
 			        </div>
 		        </form>
@@ -245,22 +177,17 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
-<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 
-<jsp:include page="/templete/imgCropper.jsp" />
-
-<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
-<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
-<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-<script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/business_manage.js"></script>
-<%-- <script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script> --%>
-<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/map_init.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/jquery.form.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
+	<%--<script src="<%=request.getContextPath() %>/scripts/manage_crm_edit.js"></script>--%>
+	<script src="<%=request.getContextPath() %>/scripts/manage_crm.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
 </body>
 </html>

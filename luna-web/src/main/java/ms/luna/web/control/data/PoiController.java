@@ -2,6 +2,8 @@ package ms.luna.web.control.data;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.QCosConfig;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.sc.VodPlayService;
@@ -13,8 +15,7 @@ import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
-import ms.luna.web.model.managepoi.PoiModel;
-import ms.luna.web.util.RequestHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -66,10 +67,13 @@ public class PoiController extends BasicController {
 
     public static final String menu = "poi";
 
+    private Random random = new Random();
+
     /**
      * 二级菜单缓存
      */
     private volatile Map<Integer, JSONObject> subTagsCache = new ConcurrentHashMap<Integer, JSONObject>();
+    private ArrayList<String> commonFieldsShowName = new ArrayList<>();
 
     /**
      * 加载模板资源
@@ -87,6 +91,21 @@ public class PoiController extends BasicController {
                 String zone_id = getCellValueAsString(row.getCell(0));
                 ZONENAME_2_CODE_MAP.put(merger_name, zone_id);
             }
+            // TODO 将公共字段名称放入commonFieldsShowName.用于批量上传时excel文件的检查(批量上传中公共字段采用hardcode的形式规定字段顺序)
+            commonFieldsShowName.add("名称");
+            commonFieldsShowName.add("别名");
+            commonFieldsShowName.add("纬度");
+            commonFieldsShowName.add("经度");
+            commonFieldsShowName.add("地址");
+            commonFieldsShowName.add("");    //地址占两列
+            commonFieldsShowName.add("二级分类");
+            commonFieldsShowName.add("分享摘要");
+            commonFieldsShowName.add("详细介绍");
+            commonFieldsShowName.add("缩略图");
+            commonFieldsShowName.add("全景类型");
+            commonFieldsShowName.add("全景标识");
+            commonFieldsShowName.add("联系电话");
+
         } catch (EncryptedDocumentException e) {
             MsLogger.error(e);
         } catch (InvalidFormatException e) {
@@ -113,45 +132,46 @@ public class PoiController extends BasicController {
         ModelAndView mav = new ModelAndView();
         SessionHelper.setSelectedMenu(session, menu);
 
-        PoiModel poiModel = new PoiModel();
+//        PoiModel poiModel = new PoiModel();
 
         // 省份信息
-        List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
-        SimpleModel simpleModel = null;
-        try {
-            for (Map<String, String> map : pulldownController.loadProvinces()) {
-                simpleModel = new SimpleModel();
-                simpleModel.setValue(map.get("province_id"));
-                simpleModel.setLabel(map.get("province_nm_zh"));
-                lstProvinces.add(simpleModel);
-            }
-        } catch (Exception e) {
-            MsLogger.error(e);
-            mav.setViewName("/error.jsp");
-            return mav;
-        }
-        session.setAttribute("provinces", lstProvinces);
-
-        // 城市信息
-        List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
-        simpleModel = new SimpleModel();
-        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
-        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
-        lstCitys.add(simpleModel);
-        session.setAttribute("citys", lstCitys);
-
-        // 区/县信息
-        List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
-        simpleModel = new SimpleModel();
-        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
-        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_COUNTY_NM);
-        lstCountys.add(simpleModel);
-        session.setAttribute("countys", lstCountys);
-
-        mav.addObject("addPoiModel", poiModel);
-        mav.addObject("editPoiModel", new PoiModel());
-
-        session.setAttribute("poi_tags_length", poiModel.getPoiTags().size());
+//        List<SimpleModel> lstProvinces = new ArrayList<SimpleModel>();
+//        SimpleModel simpleModel = null;
+//        try {
+//            for (Map<String, String> map : pulldownController.loadProvinces()) {
+//                simpleModel = new SimpleModel();
+//                simpleModel.setValue(map.get("province_id"));
+//                simpleModel.setLabel(map.get("province_nm_zh"));
+//                lstProvinces.add(simpleModel);
+//                lstProvinces.add(simpleModel);
+//            }
+//        } catch (Exception e) {
+//            MsLogger.error(e);
+//            mav.setViewName("/error.jsp");
+//            return mav;
+//        }
+//        session.setAttribute("provinces", lstProvinces);
+//
+//        // 城市信息
+//        List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
+//        simpleModel = new SimpleModel();
+//        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+//        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
+//        lstCitys.add(simpleModel);
+//        session.setAttribute("citys", lstCitys);
+//
+//        // 区/县信息
+//        List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
+//        simpleModel = new SimpleModel();
+//        simpleModel.setValue(VbConstant.ZonePulldown.ALL);
+//        simpleModel.setLabel(VbConstant.ZonePulldown.ALL_COUNTY_NM);
+//        lstCountys.add(simpleModel);
+//        session.setAttribute("countys", lstCountys);
+//
+//        mav.addObject("addPoiModel", poiModel);
+//        mav.addObject("editPoiModel", new PoiModel());
+//
+//        session.setAttribute("poi_tags_length", poiModel.getPoiTags().size());
         mav.setViewName("/manage_poi.jsp");
         return mav;
     }
@@ -333,7 +353,6 @@ public class PoiController extends BasicController {
         }
 
         try {
-            HttpSession session = request.getSession(false);
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject result = this.savePois(savedExcel, unZipped, user);
             MsLogger.info(result.toJSONString());
@@ -397,7 +416,7 @@ public class PoiController extends BasicController {
      * @param common_fields_def
      * @param topTag
      */
-    public void initTags(HttpSession session, JSONObject common_fields_def, Integer topTag) {
+    public void initTags(ModelAndView mav, JSONObject common_fields_def, Integer topTag) {
         List<SimpleModel> topTags = new ArrayList<SimpleModel>();
         JSONArray tags = common_fields_def.getJSONArray("tags_def");
         List<SimpleModel> panoramaTypes = new ArrayList<SimpleModel>();
@@ -434,11 +453,14 @@ public class PoiController extends BasicController {
         }
 
         // 一级下拉列表
-        session.setAttribute("topTags", topTags);
+//        session.setAttribute("topTags", topTags);
+        mav.addObject("topTags", topTags);
         // 二级下拉列表
-        session.setAttribute("subTags", lstSubTag);
+//        session.setAttribute("subTags", lstSubTag);
+        mav.addObject("subTags", lstSubTag);
         // 全景类型列表
-        session.setAttribute("panoramaTypes", panoramaTypes);
+//        session.setAttribute("panoramaTypes", panoramaTypes);
+        mav.addObject("panoramaTypes", panoramaTypes);
     }
 
     /**
@@ -533,6 +555,50 @@ public class PoiController extends BasicController {
         InputStream inp = new FileInputStream(savedExcel);
         Workbook wb = WorkbookFactory.create(inp);
         int sheetNum = wb.getNumberOfSheets();// sheet: excel的sheet页
+
+        // 检查excel格式
+        for (int i = 0; i < sheetNum; i++) {
+            Sheet sheet = wb.getSheetAt(i);
+            if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
+                continue;
+            }
+            Row row0 = sheet.getRow(0);// excel sheet第一行
+            String tag_name = sheet.getSheetName();
+            // 检查sheet页名称
+            if(!fieldsGroupByTagName.containsKey(tag_name)) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")名称");
+            }
+            Map<String, JSONObject> fieldsJsonByTag = fieldsGroupByTagName.get(tag_name);
+            // 检查字段长度是否匹配
+            int fieldsNum = PoiCommon.Excel.公有字段个数 + fieldsJsonByTag.size();// 实际字段个数
+            for (int k = PoiCommon.Excel.公有字段个数; k < fieldsNum; k++) {// 地址两列占一列
+                String field_show_name = getCellValueAsString(row0.getCell(k)).trim();
+                if (field_show_name.length() == 0 ) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")列数");
+                }
+            }
+            String field_show_name = getCellValueAsString(row0.getCell(fieldsNum)).trim();
+            if (field_show_name.length() != 0 ) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")列数");
+            }
+            // 检查公有字段是否符合要求
+            for(int k = 0; k < PoiCommon.Excel.公有字段个数; k++) {
+                String excel_field_name = getCellValueAsString(row0.getCell(k)).trim();
+                String real_field_name = commonFieldsShowName.get(k);
+                if(!excel_field_name.equals(real_field_name)) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")公共字段名称");
+                }
+            }
+
+            // 检查私有字段是否符合要求
+            for(int k = PoiCommon.Excel.公有字段个数; k < PoiCommon.Excel.公有字段个数 + fieldsJsonByTag.size(); k++) {
+                String excel_field_name = getCellValueAsString(row0.getCell(k)).trim();
+                if(!fieldsJsonByTag.containsKey(excel_field_name)) {
+                    return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "Excel不符合模板要求,请检查sheet页("+ tag_name +")私有字段名称");
+                }
+            }
+        }
+
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = wb.getSheetAt(i);
             if ("Templete_(备注)".equals(sheet.getSheetName())) { // Templete_(备注)": 第一页sheet页的名称
@@ -680,8 +746,11 @@ public class PoiController extends BasicController {
                             if (ext != null) {
                                 String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
                                 String fileName = "/" + VbMD5.generateToken() + ext;
+//                                JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + thumbnail,
+//                                        COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+                                String path = String.format("%s/%s/%s", QCosConfig.ENV, "pic", "poi") + "/";
                                 JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + thumbnail,
-                                        COSUtil.LUNA_BUCKET, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileName);
+                                        COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                                 if ("0".equals(uploadResult.getString("code"))) {
                                     JSONObject uploadedData = uploadResult.getJSONObject("data");
                                     thumbnail = uploadedData.getString("access_url");
@@ -1139,10 +1208,13 @@ public class PoiController extends BasicController {
                     try {
                         String ext = VbUtility.getExtensionOfPicFileName(value);
                         if (ext != null) {
-                            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-                            String fileName = "/" + VbMD5.generateToken() + ext;
+//                            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+//                            String fileName = "/" + VbMD5.generateToken() + generateFileName(ext);
+//                            JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
+//                                    COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "pic", "poi") + "/";
                             JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-                                    COSUtil.LUNA_BUCKET, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                                    COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("access_url");
@@ -1169,8 +1241,11 @@ public class PoiController extends BasicController {
                         if (ext != null) {
                             String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
                             String fileName = "/" + VbMD5.generateToken() + ext;
+//                            JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
+//                                    COSUtil.LUNA_BUCKET, COSUtil.getCosPoiAudioFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "audio", "poi") + "/";
                             JSONObject uploadResult = COSUtil.getInstance().upload2Cloud(unzipedDir + value,
-                                    COSUtil.LUNA_BUCKET, COSUtil.getCosPoiAudioFolderPath() + "/" + date, fileName);
+                                    COSUtil.LUNA_BUCKET, path, generateFileName(ext));
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("access_url");
@@ -1201,8 +1276,11 @@ public class PoiController extends BasicController {
                         if (ext != null) {
                             String fileName = VbMD5.generateToken() + ext;// 生成文件名
                             String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+//                            JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
+//                                    unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                            String path = String.format("%s/%s/%s", QCosConfig.ENV, "video", "poi") + "/";
                             JSONObject uploadResult = VODUtil.getInstance().upload2Cloud(
-                                    unzipedDir + value, VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName);
+                                    unzipedDir + value, path, fileName);
                             if ("0".equals(uploadResult.getString("code"))) {
                                 JSONObject uploadedData = uploadResult.getJSONObject("data");
                                 value = uploadedData.getString("vod_file_id");
@@ -1222,5 +1300,11 @@ public class PoiController extends BasicController {
             default:
                 return value;
         }
+    }
+
+    private String generateFileName(String ext) {
+        String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String fileNameInCloud = date + "_" + StringUtils.leftPad(String.valueOf(random.nextInt()), 10, '0') + ext;
+        return fileNameInCloud;
     }
 }

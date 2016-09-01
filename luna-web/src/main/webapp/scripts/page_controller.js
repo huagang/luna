@@ -391,16 +391,16 @@ function InteractComponentController() {
         var pages = lunaPage.pages;
         var pageIdArr = Object.keys(pages);
         if (pageIdArr) {
-            pageIdArr.forEach(function (pageId) {
+            for (var i = 0; i < pageIdArr.length; i++) {
+                var pageId = pageIdArr[i];
                 this.action.href.pageOptions.push({
                     id: pageId,
                     name: pages[pageId].page_name
                 });
-            }, this);
+            }
         }
         this.action.href.innerValue = this.currentComponent.action.href.value;
         this.clearHrefInfo(this.currentComponent.action.href.type);
-        //console.log(this.currentComponent.action.href.type);
     };
 
     this.changeTab = function (tabName) {
@@ -430,29 +430,31 @@ function CanvasController($scope, $rootScope) {
         this.backgroundImg = this.currentComponent.bgimg;
         this.panoId = this.currentComponent.panoId || '';
         this.gravity = this.currentComponent.gravity || false;
+
+        this.bgAnimaTypeList = [{ id: 'none', name: '无动画' }, { id: 'gravity', name: '重力感应' }, { id: 'rtol', name: '从右到左动画' }];
+        this.bgAnimaType = this.currentComponent.bgAnimaType || this.bgAnimaTypeList[0];
+
+        this.panoAnimaTypeList = [{ id: 'none', name: '无动画' }, { id: 'gravity', name: '重力感应' }, { id: 'autoplay', name: '自动播放' }];
+        this.panoAnimaType = this.currentComponent.panoAnimaType || this.panoAnimaTypeList[0];
+
         this.pano = angular.extend(defaultPano, this.currentComponent.pano);
     };
-
+    //改变背景颜色
     this.changeBackgroundColor = function () {
-
         updatePageComponentsHtml();
-
     };
-
+    //改变背景图片
     this.changeBackgroundImg = function () {
         if (this.backgroundImg) {
             this.currentComponent.bgimg = this.backgroundImg;
             updatePageComponentsHtml();
         }
     };
+    //删除背景图片
     this.removeBackgroundImg = function () {
         this.backgroundImg = '';
         this.currentComponent.bgimg = '';
         updatePageComponentsHtml();
-    };
-
-    this.saveBackgroundImg = function () {
-        this.currentComponent.bgimg = this.backgroundImg;
     };
     /**
      * 清空全景ID
@@ -461,7 +463,7 @@ function CanvasController($scope, $rootScope) {
         this.panoId = "";
         this.changePano();
     };
-
+    //更改全景设置
     this.changePano = function ($event) {
 
         this.pano.heading = this.pano.heading % 360;
@@ -477,10 +479,38 @@ function CanvasController($scope, $rootScope) {
 
         this.currentComponent.panoId = this.panoId;
         this.currentComponent.pano = this.pano;
-        this.currentComponent.gravity = this.gravity;
+        var animaType = '';
+        if (this.panoId.length > 0) {
+            animaType = this.panoAnimaType.id;
+        } else {
+            animaType = this.bgAnimaType.id;
+        }
 
+        if (animaType == 'gravity') {
+            this.gravity = true;
+        } else {
+            this.gravity = false;
+        }
+
+        this.currentComponent.gravity = this.gravity;
         updatePageComponentsHtml();
     };
+    /**
+     * 图片背景动画设置
+     */
+    this.changeBgAnimaType = function () {
+        this.currentComponent.bgAnimaType = this.bgAnimaType;
+        this.changePano();
+
+    };
+    /**
+     * 全景背景设置
+     */
+    this.changePanoAnimaType = function () {
+        this.currentComponent.panoAnimaType = this.panoAnimaType;
+        this.changePano();
+    };
+
     this.selectPano = function () {
         $overlay.css("display", "block");
         var $pop_window = $("#pop-selectPano");
@@ -644,7 +674,7 @@ function ImgListController($scope, $rootScope, $http) {
         this.currentComponent.content.column = this.content.column = {};
         this.currentComponent.content.poiType = this.content.poiType = {};
         this.currentComponent.content.firstPoi = this.content.firstPoi = {};
-        this.currentComponent.content.poiLang = this.content.poiLang = this.poiLang[0];
+        this.currentComponent.content.poiLang = this.content.poiLang = this.langList[0];
         updatePageComponentsHtml();
     };
 
@@ -776,7 +806,7 @@ function PanoController($scope, $rootScope) {
             this.currentComponent.content.panoId = this.content.panoId;
         }
     };
-    this.clearPanoId =function(){
+    this.clearPanoId = function () {
         this.content.panoId = "";
         this.changePanoId();
     };
@@ -942,10 +972,10 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.articleList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
-            alert('文章列表获取失败 \n' + ErrCode.get(''));
+        }).error(function (response) {
+            alert('文章列表获取失败 \n');
         });
 
         //获取Poi 一级数
@@ -965,10 +995,10 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.firstPoiList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
-            alert('一级Poi列表获取失败\n' + ErrCode.get(''));
+        }).error(function (response) {
+            alert('一级Poi列表获取失败\n');
         });
 
         //列表样式
@@ -1170,9 +1200,9 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
                     _self.poiTypeList = reArr;
                 }
             } else {
-                alert(ErrCode.get(res.code));
+                alert(ErrCode.get(response.code));
             }
-        }).error(function (res) {
+        }).error(function (response) {
             alert('Poi类别获取失败\n' + ErrCode.get(''));
         });
     };
@@ -1185,10 +1215,9 @@ function MenuTabController($scope, $rootScope, $http, $timeout, customerMenuTabI
 
     //初始化拾色器
     this.initColorSet = function () {
-        document.querySelectorAll('.menutab-colorset .color-set').forEach(function (element) {
-            $(element).trigger('keyup');
-            console.log(element.value);
-        }, this);
+        $('.menutab-colorset .color-set').each(function (element) {
+            $(this).trigger('keyup');
+        });
     };
 
     //初始化语言事件

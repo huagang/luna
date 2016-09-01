@@ -49,6 +49,12 @@ var FileUploader = {
 	 */
 	
 	_checkValidation: function(type, file, limit){
+		if(! file){
+			return {error: 'nofile', msg:'没有选择文件'};
+		}
+		if(! type){
+			return {error: 'notype', msg:'没有设定文件类型'};
+		}
 		limit = limit || this._fileLimit ;
 
 		var fileExt = file.name.substr(file.name.lastIndexOf('.')+1).toUpperCase();
@@ -86,14 +92,14 @@ var FileUploader = {
 		}
 		var data = new FormData();
 		data.append('type', options.type);
-		data.append('file', options.file);
+		data.append('file', options.file, options.file.name);
 		data.append('resource_type', options.resourceType || 'business');
 		if(options.resourceId){
 			data.append('resource_id', options.resourceId);
 		}
 
 		$.ajax({
-			url: this.path.url,
+			url: options.url || this.path.url,
 			type: this.path.type,
 			contentType: false,
 			data: data,

@@ -3,6 +3,8 @@
  * author:wumengqiang & duyutao
  * Date:2016-6-22
  */
+
+
 //获取当前的业务数据
 var business = {};
 if (window.localStorage.business) {
@@ -16,6 +18,16 @@ var initPage = function () {
     var ue;
     var articleStore = getArticleStore();
     window.a = articleStore;
+    var pageUrls = Inter.getPageUrl();
+    var apiUrls = Inter.getApiUrl();
+
+    if(/lang=en/.test(location.search)) {
+        window.lang = 'en';
+    }
+    else{
+        window.lang = 'zh';
+    }
+
     /**
      * 初始化编辑器
      * @return {[type]} [description]
@@ -39,7 +51,7 @@ var initPage = function () {
             allowDivTransToP: false,
             elementPathEnabled: false,
             toolbars: [
-                ['fontfamily', '|',
+                ['source','|','fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
                     'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
@@ -57,7 +69,13 @@ var initPage = function () {
      */
     var initEvent = function () {
         // 事件绑定  保存按钮点击事件
-        document.querySelector('.save').addEventListener('click', function (e) {
+        document.querySelector('.save').addEventListener('click', saveData);
+
+        // 事件绑定 发布按钮点击事件
+        document.querySelector('.publish').addEventListener('click', saveData);
+
+
+        function saveData(e) {
             articleStore.content = ue.getContent();
             var error = articleStore.checkEmpty().error;
             if (error) {
@@ -67,7 +85,7 @@ var initPage = function () {
 
             var data = {
                 id: articleStore.id || null,
-                business_id: business.id,
+                business_id: articleStore.business_id,
                 title: articleStore.title,
                 content: articleStore.content,
                 abstract_content: articleStore.summary,
@@ -77,9 +95,23 @@ var initPage = function () {
                 column_id: articleStore.category,
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
+
+            var url, type;
+            if(articleStore.id){
+                url = Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]);
+                type = Inter.getApiUrl().articleUpdate.type;
+            } else{
+                url = Inter.getApiUrl().articleCreate.url;
+                type = Inter.getApiUrl().articleCreate.type;
+            }
+            var op = '保存';
+            if(e.target.className.indexOf('publish') > -1){
+                url += '?saveAndPublish';
+                op = '保存并发布';
+            }
             $.ajax({
-                url: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.url, [articleStore.id]) : Inter.getApiUrl().articleCreate.url,
-                type: articleStore.id ? Util.strFormat(Inter.getApiUrl().articleUpdate.type, [articleStore.id]) : Inter.getApiUrl().articleCreate.type,
+                url: url,
+                type: type,
                 async: true,
                 data: data,
                 dataType: "json",
@@ -89,16 +121,16 @@ var initPage = function () {
                             articleStore.id = data.data.id;
                             articleStore.previewUrl = data.data.url + '?preview';
                         }
-                        showMessage("保存成功");
+                            showMessage(op + "成功");
                     } else {
-                        showMessage(data.msg || "保存失败");
+                        showMessage(data.msg || op + "失败");
                     }
                 },
                 error: function (data) {
-                    showMessage("保存失败");
+                    showMessage(op + "失败");
                 }
             });
-        });
+        }
 
         // 事件绑定 预览按钮点击事件
         document.querySelector('.preview').addEventListener('click', function (e) {
@@ -110,27 +142,6 @@ var initPage = function () {
             }
         });
 
-        // 事件绑定 发布按钮点击事件
-        document.querySelector('.publish').addEventListener('click', function (e) {
-            document.querySelector('.save').click();
-            $.ajax({
-                url: Util.strFormat(Inter.getApiUrl().articlePublish.url, [articleStore.id]),
-                type: Inter.getApiUrl().articlePublish.type,
-                async: true,
-                data: { id: articleStore.id },
-                dataType: "json",
-                success: function (data) {
-                    if (data.code == "0") {
-                        showMessage("发布成功");
-                    } else {
-                        showMessage("发布失败");
-                    }
-                },
-                error: function (data) {
-                    showMessage("发布失败");
-                }
-            });
-        });
 
         // 事件绑定  文章标题输入框onChange事件 
         // 通过onChange事件可以获取输入框中改变的内容， 下面onChange事件作用同样如此
@@ -169,6 +180,10 @@ var initPage = function () {
         // 事件绑定  文章头图文件onChange事件 
         document.querySelector('#pic_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             var file = event.target.files[0];
             var res = FileUploader._checkValidation('pic',file);
             if(res.error){
@@ -205,6 +220,10 @@ var initPage = function () {
         // 事件绑定  视频文件onChange事件 
         document.querySelector('#video_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             showLoadingTip('.video_tip');
             FileUploader.uploadMediaFile({
                 type: 'video',
@@ -231,6 +250,10 @@ var initPage = function () {
         // 事件绑定  音频文件onChange事件 
         document.querySelector('#audio_fileup').addEventListener('change', function (event) {
             // 进行文件的上传以及显示文件上传效果
+            if( event.target.files.length === 0){
+                event.preventDefault();
+                return;
+            }
             showLoadingTip('.audio_tip');
 
             FileUploader.uploadMediaFile({
@@ -303,7 +326,7 @@ var initPage = function () {
                     { id: 'content', name: '正文' },
                     // { id: 'thumbnail', name: '首图' },
                     // { id: 'summary', name: '摘要' },
-                    // { id: 'category', name: '栏目' }
+                     { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function (item) {
                     if (!this[item.id]) {
@@ -431,10 +454,11 @@ var initPage = function () {
             });
             initEditor();
             initEvent();
+            var title = '';
             if (articleStore.id) {
-                $(".content-header").html("更新文章");
                 updateArticleData(articleStore.id);
             }
+            $(".content-header .title").html(title);
         }
     };
 } ();
@@ -462,3 +486,4 @@ function showMessage(msg){
     }
 
 }
+

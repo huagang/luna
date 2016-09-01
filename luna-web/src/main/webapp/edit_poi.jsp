@@ -281,7 +281,7 @@
 									<div class="ng-hide empty-result"  ng-show="poi.searchResult.length === 0">
 										这里空空的
 									</div>
-									<div class="pano" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">
+									<div class="pano ng-cloak" ng-repeat="item in poi.searchResult" ng-click="poi.handleSelect(item.id)">
                                         <div class="thumbnail" style="background: #DEEEF8 url({{item.pic}}) center center no-repeat;background-size: contain;"></div>
                                         <div class="pano-info">
                                             <p class="pano-name" title="{{item.name}}">{{item.name}}</p>

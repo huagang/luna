@@ -43,7 +43,7 @@
                 	onkeydown="if(event.keyCode==13){return false;}">
                     <div class="information" id="information">
                         <div class="title-info">
-                        	<h5>联系人信息</h5>
+                        	<h4>联系人信息</h4>
                     	</div>
                     	<div class="item">
                         	<div class="item-label"><span class="superscript">*</span>您的姓名</div>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
                     	<div class="item">
 	                        <div class="item-label"><span class="superscript">*</span>商户名称</div>
@@ -102,7 +102,7 @@
 	                            <label><input type="radio" id="license" name="license" value="否" />否</label>
 	                            <div id="license-area" style="position:relative;">
 	                            	<input id="license-url" name="resource_content" style="display:none;"/>
-	                                <input type="file" id="license-upload" name="thumbnail_fileup" data_upload="true" accept="image/*"
+	                                <input type="file" id="license-upload" name="file" data_upload="true" accept="image/*"
 										   onchange="asyncUploadPicAdd(this,'license-upload','license-upload-warn','license-url')"/>
 	                                <button id="btn-license-upload" >营业执照副本电子版</button><span class="remind">*需要保证图片中文字清晰可见</span>
 									<div class="warn" id="license-upload-warn">必须填写</div>
@@ -193,7 +193,7 @@
 <div class="pop" id="pop-newbusiness">
     <div class="pop-title">
         <h4>温馨提示</h4>
-        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="img/close.png" /></a>
+        <a href="#" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
     </div>
     <div class="pop-cont">
         <p style="color: #D0021B;">为确保工作人员快速响应并与您洽谈，需确保信息准确，请认真核对。</p>

@@ -12,7 +12,7 @@ import java.util.Set;
 public interface MsRouteCollectionDAO {
 
     String ROUTE_COLLECTION = "route_collection";
-    String POI_ROUTE_INDEX = "poi_route_index";
+    String POI_ROUTE_INDEX = "poi_business_tree_index";
     String POI_COLLECTION = "poi_collection";
 
     /**

@@ -5,26 +5,30 @@
  * @update:2016-6-27
  */
 
-var lunaConfig = function(){
+var lunaConfig = function () {
     return {
-    	"host":'',
-        "imghost":"http://cdn.visualbusiness.cn/public/vb",
-        'microPanoType':{
-            '0':'基础版',
-            '1':'开发版',
-            '2':'数据版',
+        "host": '',
+        "imghost": "http://cdn.visualbusiness.cn/public/vb",
+        'microPanoType': {
+            '0': '基础版',
+            '1': '开发版',
+            '2': '数据版',
         },
-        'panoTypeObj':{
-            '1':'单场景点',
-            '2':'相册',
-            '3':'自定义',
+        'panoTypeObj': {
+            '1': '单场景点',
+            '2': '相册',
+            '3': '自定义',
         },
-        'poiLang':[ { id: 'zh', name: "中文" },{ id: 'en', name: "英文" }],
-        'menuTabIcon':[{
-            name: '概况',
-            code: 'profile',
-            type: 'default',
+        'poiLang': [{ id: 'zh', name: "中文" }, { id: 'en', name: "英文" }],
+        'menuTabIcon': [{
+            name: '文字',
+            code: 'text',
+            type: 'text',
         }, {
+                name: '概况',
+                code: 'profile',
+                type: 'default',
+            }, {
                 name: '交通',
                 code: 'traffic',
                 type: 'default',
@@ -85,9 +89,41 @@ var lunaConfig = function(){
                 code: 'fengqing',
                 type: 'default',
             }, {
-                name: '文字',
-                code: 'text',
-                type: 'text',
+                name: '长江三峡',
+                code: 'changjiangsanxia',
+                type: 'default',
+            }, {
+                name: '世界遗产',
+                code: 'shijieyichan',
+                type: 'default',
+            }, {
+                name: '渝西走廊',
+                code: 'yuxizoulang',
+                type: 'default',
+            }, {
+                name: '邮轮游艇',
+                code: 'youlunyouting',
+                type: 'default',
+            }, {
+                name: '温泉之都',
+                code: 'wenquanzhidu',
+                type: 'default',
+            }, {
+                name: '山水都市',
+                code: 'shanshuidushi',
+                type: 'default',
+            }, {
+                name: '美丽乡村',
+                code: 'meilixiangcun',
+                type: 'default',
+            }, {
+                name: '红岩联线',
+                code: 'hongyanlianxian',
+                type: 'default',
+            }, {
+                name: '乌江画廊',
+                code: 'wujianghualang',
+                type: 'default',
             }],
     };
-}();
+} ();
