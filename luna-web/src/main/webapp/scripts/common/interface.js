@@ -248,6 +248,8 @@ var Inter = function () {
                     url: context + '/common/business/selectForEdit?unique_id={0}',
                     type: 'GET'
                 },
+                checkBusinessNameRepeat: {url: context + '/content/business/businessName/check?business_name={0}&merchant_id={1}', type: 'GET'},
+                checkBusinessCodeRepeat: {url: context + '/content/business/businessCode/check?business_code={0}&merchant_id={1}', type: 'GET'},
 
 
                 //栏目管理

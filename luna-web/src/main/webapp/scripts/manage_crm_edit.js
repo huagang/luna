@@ -1,6 +1,7 @@
 //编辑商户脚本
 //20160504
 //author:Demi
+window.apiUrls = Inter.getApiUrl();
 $(function(){
 	//商户名称
 	window.onload = function() {
@@ -464,10 +465,12 @@ function agentEdit(){
 
 // 检查业务名称
 function checkBusinessName(event){
-
 	var hasError = false;
 	var target = $('#business-name-edit');
 	var value = target.val() || '';
+	if(value){
+		hasError = hasError || checkNameRepeat(value);
+	}
 	if(value.length > 32){
 		hasError = true;
 		target.val(value.substr(0,32));
@@ -475,10 +478,43 @@ function checkBusinessName(event){
 	} else if(! value){
 		hasError = true;
 		$('#warn-name-edit').text('业务名称不能为空');
-	} else{
+	} else if(!hasError){
 		$('#warn-name-edit').text('');
 	}
 	return hasError;
+
+}
+
+function checkNameRepeat(value){
+	var error = false;
+	$.ajax({
+		url: apiUrls.urls.checkBusinessNameRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
+		type: apiUrls.urls.checkBusinessNameRepeat.type,
+		async: false,
+		success: function(data){
+			if(data.code === '409'){
+				$('#warn-name-edit').text('业务名称重复');
+				error = true;
+			}
+		}
+	});
+	return error;
+}
+
+function checkCodeRepeat(value){
+	var error = false;
+	$.ajax({
+		url: apiUrls.urls.checkBusinessCodeRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
+		type: apiUrls.urls.checkBusinessCodeRepeat.type,
+		async: false,
+		success: function(data){
+			if(data.code === '409'){
+				$('#warn-short-edit').text('业务简称重复');
+				error = true;
+			}
+		}
+	});
+	return error;
 }
 
 // 检察业务简称
@@ -486,6 +522,9 @@ function checkBusinessShortName(event){
 	var hasError = false;
 	var target = $('#business-name-short-edit');
 	var value = target.val() || '';
+	if(value){
+		hasError = hasError || checkCodeRepeat(value);
+	}
 	if(! /^[a-zA-Z-_]*$/.test(value)){
 		hasError = true;
 		$('#warn-short-edit').text('业务简称只能由英文字母,下划线,中划线组成');
@@ -497,7 +536,7 @@ function checkBusinessShortName(event){
 	} else if(! value){
 		hasError = true;
 		$('#warn-short-edit').text('业务简称不能为空');
-	} else{
+	} else if(!hasError){
 		$('#warn-short-edit').text('');
 	}
 

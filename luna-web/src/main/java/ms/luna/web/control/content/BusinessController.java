@@ -121,9 +121,9 @@ public class BusinessController extends BasicController {
             String createUser = user.getNickName();
             JSONObject param = JSONObject.parseObject("{}");
             param.put("business_name", businessName);
-            param.put("business_code", businessCode);
-            param.put("merchant_id", merchantId);
-            param.put("create_user", createUser);
+            param.put("business_code",businessCode);
+            param.put("merchant_id",merchantId);
+            param.put("create_user",createUser);
             // manageAppService
             JSONObject result = manageBusinessService.createBusiness(param.toString());
 
@@ -142,8 +142,8 @@ public class BusinessController extends BasicController {
             AreaOptionQueryBuilder.Builder builder = AreaOptionQueryBuilder.builder();
             builder.newStringParam("province_id", request.getParameter("province_id"));
             builder.newStringParam("city_id", request.getParameter("city_id"));
-            builder.newStringParam("county_id", request.getParameter("county_id"));
-            builder.newStringParam("keyword", request.getParameter("keyword"));
+            builder.newStringParam("county_id",request.getParameter("county_id"));
+            builder.newStringParam("keyword",request.getParameter("keyword"));
 
             JSONObject jsonObject = builder.buildJsonQuery();
             JSONObject result = manageBusinessService.searchMerchant(jsonObject.toString());
@@ -203,7 +203,7 @@ public class BusinessController extends BasicController {
             @RequestParam(required=true, value="business_name") String business_name,
             @RequestParam(required=false, value="merchant_id") String merchant_id) {
         try {
-            JSONObject result = manageBusinessService.checkBusinessNameExist(business_name, merchant_id);
+            JSONObject result = manageBusinessService.checkBusinessNameExist(business_name,merchant_id);
             MsLogger.debug(result.toString());
             return result;
         } catch (Exception e) {
@@ -219,7 +219,7 @@ public class BusinessController extends BasicController {
             @RequestParam(required=true, value="business_code") String business_code,
             @RequestParam(required=false, value="merchant_id") String merchant_id) {
         try {
-            JSONObject result = manageBusinessService.checkBusinessCodeExist(business_code, merchant_id);
+            JSONObject result = manageBusinessService.checkBusinessCodeExist(business_code,merchant_id);
             MsLogger.debug(result.toString());
             return result;
         } catch (Exception e) {
