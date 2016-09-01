@@ -37,9 +37,9 @@ public class PicCodeServiceImpl implements PicCodeService {
     }
 
     @Override
-    public JSONObject checkCode(String key, String code) {
+    public JSONObject checkCode(String key, String code, Boolean isRemove) {
         try {
-            Boolean result = IdentifyCodeService.checkCode(key, "picValidate", code);
+            Boolean result = IdentifyCodeService.checkCode(key, "picValidate", code, isRemove);
             if (result) {
                 return FastJsonUtil.sucess("success");
             } else {

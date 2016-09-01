@@ -55,7 +55,7 @@ public class PicCodeController {
     @ResponseBody
     public JSONObject checkPicCode(@PathVariable String key,
                                    @RequestParam String code) {
-        return picCodeService.checkCode(key, code);
+        return picCodeService.checkCode(key, code, true);
     }
 
 }

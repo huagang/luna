@@ -17,5 +17,5 @@ public interface PicCodeService {
 
     Boolean saveCode(String key, String code);
 
-    JSONObject checkCode(String key, String code);
+    JSONObject checkCode(String key, String code, Boolean isRemove);
 }
