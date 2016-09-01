@@ -26,10 +26,13 @@ $(function () {
 
 //名称格式化
 function nameFormatter(value, row, index) {
+    console.log(value);
     return '<a class="name" href="' + Util.strFormat(Inter.getApiUrl().merchantDetail, [row.application_id]) + '">' + value + '</a>';
 }
 
 function statusFormatter(value, row, index) {
+    console.log(value);
+
     var html = "";
     switch (value) {
         case '1':
@@ -44,11 +47,6 @@ function statusFormatter(value, row, index) {
     }
 
     return html;
-}
-window.operationEvents = {
-    'click .search': function (e, value, row, index) {
-        permissionSetting(row.wjnm, row.province_id, row.city_id, row.category_id, row.region_id);
-    }
 }
 
 function queryParams(params) {
