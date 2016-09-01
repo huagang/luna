@@ -25,60 +25,28 @@ function ColumnController($scope, $rootScope, $http) {
         this.updateColumnShow = false;
         this.deleteColumnShow = false;
 
-        this.resetData();
-        this.categoryOptions = {};
-        this.loadCategory();
-
+        var business = localStorage.getItem('business');
+        if(business){
+            this.businessId = JSON.parse(business).id;
+        }
+        if(! this.businessId){
+            alert('请您选择业务');
+        }
     };
 
     this.resetData = function() {
         this.currentId = 0;
         this.currentName = "";
         this.currentCode = "";
-        this.currentCategoryId = "";
         this.nameValid = false;
         this.codeValid = false;
     };
 
-    this.loadCategory = function() {
-        if(! $.isEmptyObject(this.categoryOptions)) {
+    this.newColumnDialog = function() {
+        if(! this.businessId){
+            alert('请您先选择业务');
             return;
         }
-        var url = Inter.getApiUrl().pullDownCategorys.url;
-        $http.get(url).then(function success(response) {
-            var data = response.data;
-            if('0' == data.code) {
-                var categories = data.data.categorys;
-                if($.isEmptyObject(categories)) {
-                    $scope.column.categoryOptions[""] = "无";
-                } else {
-                    $scope.column.categoryOptions[""] = "请选择";
-                    categories.forEach(function (categoryItem) {
-                        this.categoryOptions[categoryItem.category_id] = categoryItem.nm_zh;
-                    }, $scope.column);
-                }
-
-            }
-        },
-        function error(response) {
-            //$.alert(response.data.msg);
-        });
-
-    };
-
-    this.findCategoryIdByName = function(categoryName) {
-        for(var categoryId in this.categoryOptions) {
-            if(this.categoryOptions.hasOwnProperty(categoryId)) {
-                if(this.categoryOptions[categoryId] == categoryName) {
-                    return categoryId;
-                }
-            }
-        }
-        return -1;
-    };
-
-
-    this.newColumnDialog = function() {
         this.resetData();
         this.dialogBaseShow = true;
         this.newColumnShow = true;
@@ -117,7 +85,7 @@ function ColumnController($scope, $rootScope, $http) {
             data: {
                 'name': this.currentName,
                 'code': this.currentCode,
-                'category_id': this.currentCategoryId
+                'business_id': this.businessId
             }
         };
         $http(request).then(function success(response) {
@@ -140,7 +108,6 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentId = id;
         this.currentName = name;
         this.currentCode = code;
-        this.currentCategoryId = this.findCategoryIdByName(categoryName);
         this.nameValid = true;
         this.codeValid = true;
         event.preventDefault();
@@ -160,7 +127,7 @@ function ColumnController($scope, $rootScope, $http) {
                 'id': this.currentId,
                 'name': this.currentName,
                 'code': this.currentCode,
-                'category_id': this.currentCategoryId
+                'business_id': this.businessId
             }
         };
         $http(request).then(function success(response) {

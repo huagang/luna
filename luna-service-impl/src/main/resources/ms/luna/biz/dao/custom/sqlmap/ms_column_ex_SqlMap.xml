@@ -5,7 +5,6 @@
         <result column="id" property="id" jdbcType="INTEGER" />
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="code" property="code" jdbcType="VARCHAR" />
-        <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
         <result column="regist_hhmmss" property="registhhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
         <result column="up_hhmmss" property="uphhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </resultMap>
@@ -15,12 +14,12 @@
         a.id id,
         a.name name,
         a.code code,
-        b.nm_zh category_name,
         a.regist_hhmmss regist_hhmmss,
         a.up_hhmmss up_hhmmss
         FROM
-        ms_column a left join ms_category b on a.category_id = b.category_id
+        ms_column a
         <dynamic prepend="where">
+            a.business_id = #businessId#
             <isNotEmpty prepend="and" property="keyword">
                 a.name like #keyword#
             </isNotEmpty>
