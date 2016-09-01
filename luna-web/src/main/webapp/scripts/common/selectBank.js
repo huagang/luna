@@ -34,7 +34,7 @@
             $selBank.trigger('change');
 
             var $province = $("#" + options.provinceCode).select2({
-                width: "50%",
+                width: "100%",
                 placeholder: "请输入选择省份",
                 allowClear: true,
                 data: objProvinceNam,
@@ -58,7 +58,7 @@
     function initCitySelect(options, provinceCode) {
         if (provinceCode) {
             $("#" + options.cityCode).select2({
-                width: "50%",
+                width: "100%",
                 placeholder: '请输入选择城市',
                 allowClear: true,
                 language: "zh-CN",
@@ -101,7 +101,7 @@
             //     $("#" + options.cityCode).html('');
             // }
             var $citySelect = $("#" + options.cityCode).select2({
-                width: "50%",
+                width: "100%",
                 allowClear: true,
                 language: "zh-CN",
                 placeholder: '请先选择省份'

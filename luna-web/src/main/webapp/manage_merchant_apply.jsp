@@ -43,8 +43,8 @@
                                     data-show-refresh="false" data-query-params="queryParams">
                                     <thead>
                                         <tr>
-                                            <th data-field="merchantName" data-align="left" data-formatter="nameFormatter">名称</th>
-                                            <th data-field="business_name" data-align="left">日期</th>
+                                            <th data-field="merchantName" data-align="left" data-formatter="nameFormatter" data-width="33%">名称</th>
+                                            <th data-field="updateTime" data-align="left" data-formatter="dateFormatter" data-width="33%">日期</th>
                                             <th data-field="appStatus" data-align="left" data-formatter="statusFormatter">状态</th>
                                         </tr>
                                     </thead>

@@ -1067,8 +1067,10 @@
         var tel = /^\d{3,4}-?\d{7,9}$/;
         return this.optional(element) || (tel.test(value) || mobile.test(value));
     }, "请正确填写您的联系电话");
+
 	jQuery.validator.addMethod("isBusinessCode", function (value, element) {
-        return this.optional(element) || checkBusinessCode(value);
+		var reg = /^[0-9a-zA-Z]{15,18}$/;
+        return this.optional(element) || reg.test(value);
     }, "请正确填写您的联系电话");
 }));
 

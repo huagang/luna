@@ -20,7 +20,8 @@ var lunaConfig = function () {
             '3': '自定义',
         },
         'poiLang': [{ id: 'zh', name: "中文" }, { id: 'en', name: "英文" }],
-        'merchantAuditStatus': { 0: '未申请', 1: '待审批', 2: '已同意', 3: '已拒绝' },
+        'merchantAuditStatus': { 0: '待审批', 1: '已同意', 2: '已拒绝' },
+        'accountType': { 0: '个人账户', 1: '对公账户' },
         'menuTabIcon': [{
             name: '文字',
             code: 'text',

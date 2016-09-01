@@ -37,6 +37,7 @@ var initCreatePage = function () {
         });
     };
 
+
     var initValidate = function () {
         $('#merchantInfo').validate({
             errorElement: 'span', //default input error message container
@@ -63,7 +64,17 @@ var initCreatePage = function () {
                 startIDDate: {
                     required: true,
                 },
-                endIDDate: "required",
+                endIDDate: {
+                    required: function () {
+                        if ($('[name=idforever]:checked').val() == "forever") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                },
+                startBLDate: 'required',
+                endBLDate: 'required',
                 merchantName: 'required',
                 merchantPhone: {
                     required: true,
@@ -71,7 +82,12 @@ var initCreatePage = function () {
                 },
                 merchantNo: {
                     required: true,
-                }
+                    isBusinessCode: true,
+                },
+                accountBank: 'required',
+                accountProvince: 'required',
+                accountCity: 'required',
+                accountAddresss: 'required',
             },
             messages: {
                 contactName: "请填写商户业务对接联系人的真实姓名",
@@ -90,15 +106,23 @@ var initCreatePage = function () {
                 merchantPhone: {
                     required: '请输入客服电话',
                     isPhone: '电话格式为 010-62338799 或 13500000000 ',
+                },
+                merchantNo: {
+                    required: '请输入营业执照注册号/社会信用代码',
+                    isBusinessCode: "请输入正确的营业执照注册号/社会信用代码",
                 }
             },
             errorPlacement: function (error, element) {
-                // if (element.is(':checkbox')) {
+                if (element.hasClass('select2-hidden-accessible')) {
+                    error.insertAfter(element.next('.select2')); // for other inputs, just perform default behavior
+                } else {
+                    error.insertAfter(element); // for other inputs, just perform default behavior
+                }
                 //     error.insertAfter(element.closest(".md-checkbox-list, .md-checkbox-inline, .checkbox-list, .checkbox-inline"));
                 // } else if (element.is(':radio')) {
                 //     error.insertAfter(element.closest(".md-radio-list, .md-radio-inline, .radio-list,.radio-inline"));
                 // } else {
-                error.insertAfter(element); // for other inputs, just perform default behavior
+                // error.insertAfter(element); // for other inputs, just perform default behavior
                 // }
                 // error.appendTo(element.next().next());
             },
@@ -152,32 +176,34 @@ var initCreatePage = function () {
                 console.log('手机号码错误');
             }
         });
-        $('#verCode').on('blur', function (e) {
-            var verCode = $(this).val(),
-                codeReg = /^[0-9]{6}$/,
-                phone = $('#phone').val(),
-                ajaxData = {
-                    'phone': phone,
-                    'target': phone,
-                    'code': verCode,
-                };
-            if (codeReg.test(verCode)) {
-                Util.setAjax(Inter.getApiUrl().checkSMSCode.url, ajaxData, function (res) {
-                    if (res.code == "0") {
-                        console.log('验证成功');
-                    } else {
-                        var validator = $("#merchantInfo").validate();
-                        validator.showErrors({
-                            "verCode": "验证码不正确"
-                        });
-                    }
-                }, function (res) {
-                    console.log('服务出现问题，请稍后再试');
-                }, Inter.getApiUrl().checkSMSCode.type);
-            } else {
 
-            }
-        });
+        //验证码校验
+        // $('#verCode').on('blur', function (e) {
+        //     var verCode = $(this).val(),
+        //         codeReg = /^[0-9]{6}$/,
+        //         phone = $('#phone').val(),
+        //         ajaxData = {
+        //             'phone': phone,
+        //             'target': phone,
+        //             'code': verCode,
+        //         };
+        //     if (codeReg.test(verCode)) {
+        //         Util.setAjax(Inter.getApiUrl().checkSMSCode.url, ajaxData, function (res) {
+        //             if (res.code == "0") {
+        //                 console.log('验证成功');
+        //             } else {
+        //                 var validator = $("#merchantInfo").validate();
+        //                 validator.showErrors({
+        //                     "verCode": "验证码不正确"
+        //                 });
+        //             }
+        //         }, function (res) {
+        //             console.log('服务出现问题，请稍后再试');
+        //         }, Inter.getApiUrl().checkSMSCode.type);
+        //     } else {
+
+        //     }
+        // });
     };
 
     //上传身份证
@@ -215,6 +241,9 @@ var initCreatePage = function () {
     //提交事件
     var initSubmit = function () {
         $('#btnSubmit').on('click', function () {
+            // $('#create').addClass('hide');
+            // $('#confirmSubmit').removeClass('hide');
+
             $('#merchantInfo').valid();
             var formDataZero = Util.formToJson($('#merchantInfo')),
                 formData = {
@@ -269,6 +298,13 @@ var initCreatePage = function () {
             $('.datepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 language: "zh-CN",
+            });
+            $('#idForever').on('click',function(){
+                if($(this).prop('checked')){
+                    $('#endIDDate').attr('disabled','disabled');
+                }else{
+                    $('#endIDDate').removeAttr('disabled');
+                }
             });
             initSelectBank();
             getValidateMsg();

@@ -51,12 +51,12 @@
                             <button type="button" id="register">马上开通</button>
                         </p>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>介绍</h5>
+                            <h5><i class="iconfont icon-liucheng"></i>介绍</h5>
                             <p class="">
                                 交易直通车是微景天下针对有商品交易需求的商户提供的一整套解决方案，开通交易直通车的商户可通过商户自己的后台发布商品，并对产生交易的订单进行管理，同时可结合实际的交易数据，优化自身的服务方向。</p>
                         </section>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>流程</h5>
+                            <h5><i class="iconfont icon-liucheng"></i>流程</h5>
                             <ul class="process-wrapper">
                                 <li class="process-one">
                                     <div class="process-title-wrapper">
@@ -152,14 +152,19 @@
                                         class="required" aria-required="true"> * </span>身份证有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <div>
+                                            <div class="datepicker-wrapper">
                                                 <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="2016-01-01" />
                                             </div>
-                                            <span class="input-group-addon">至</span>
-                                            <div>
+                                            <div class="datepicker-wrapper">
+                                                <span class="input-group-addon">至</span>
+                                            </div>
+                                            <div class="datepicker-wrapper">
                                                 <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="2016-08-08" />
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-4  idforever-wrapper">
+                                        <input type="checkbox" name="idforever" value="forever" id="idForever"><label for="idForever">永久</label>
                                     </div>
                                 </div>
                                 <h4 class="form-section">商户信息</h4>
@@ -211,9 +216,15 @@
                                         class="required" aria-required="true"> * </span>有效期</label>
                                     <div class="col-md-4">
                                         <div class="input-daterange input-group" id="">
-                                            <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="2016-03-03" />
-                                            <span class="input-group-addon">至</span>
-                                            <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="2018-01-01" />
+                                            <div class="datepicker-wrapper">
+                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="2016-03-03" />
+                                            </div>
+                                            <div class="datepicker-wrapper">
+                                                <span class="input-group-addon">至</span>
+                                            </div>
+                                            <div class="datepicker-wrapper">
+                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="2018-01-01" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -250,10 +261,12 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>支行城市</label>
                                     <div class="col-md-4 cityInfo">
-                                        <select id="provinceCode" class="form-control" name="accountProvince">
-                                        </select>
-                                        <select id="cityCode" class="form-control" name="accountCity">
-                                        </select>
+                                        <div>
+                                            <select id="provinceCode" class="form-control" name="accountProvince"></select>
+                                        </div>
+                                        <div>
+                                            <select id="cityCode" class="form-control" name="accountCity"></select>
+                                        </div>
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -287,7 +300,7 @@
                         <div class="main-hd">
                             <h4><a href="#">交易直通车</a>/确认提交</h4></div>
                         <div class="confirm-wrapper">
-                            <i class="iconfont  icon-profile"></i>
+                            <!--<i class="iconfont  icon-profile"></i>-->
                             <p>资料提交完成，正在为您审核，请耐心等待 <br/> 您提交的资料，将在1～3个工作日内审核完毕，您可登录皓月平台查看进度
                                 <br/> 资料审核通过后，您需要和微景天下在线签署服务协议，成功后，将自动开通直通车服务。
                             </p>
@@ -322,6 +335,7 @@
                                     </div>
                                     <div class="process-content-wrapper">
                                         微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <a href="">查看资料</a>
+                                        <div class="pass-flag pass hide">审核通过</div>
                                     </div>
                                 </li>
                                 <li class="process-two">
@@ -331,7 +345,7 @@
                                         协议签署
                                     </span>
                                     </div>
-                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="">《微景天下交易服务协议》</a>，开启商户交易服务
+                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务
                                         <button type="button" class="sign-aggreement pass hide" id="btnSign">签署协议</button>
                                     </div>
                                 </li>

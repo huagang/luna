@@ -576,6 +576,7 @@ var Inter = function () {
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' },
                 getMerchantStatus: { url: context + '/merchant/tradeApplication/status', type: 'GET' },
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
+                getMerchatDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
 
                 //获取短信验证码
                 getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },
