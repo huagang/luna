@@ -10,6 +10,7 @@ import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.util.RequestHelper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -245,8 +246,13 @@ public class GoodsController extends BasicController {
 
     // 参数检查
     private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
-        return "";
+        isGoodsNameValid(name);
 
+        isPicValid(pic);
+
+        isStockValid(stock);
+
+        is
 
 
     }
