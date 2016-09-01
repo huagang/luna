@@ -52,6 +52,7 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
 
+
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     public ModelAndView merchantDetail(HttpServletRequest request, HttpServletResponse response) {
 

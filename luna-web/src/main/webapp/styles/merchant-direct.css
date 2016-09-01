@@ -2,6 +2,10 @@ ul {
     list-style: none;
 }
 
+label {
+    font-weight: normal;
+}
+
 .form-control {
     border-radius: 0;
 }
@@ -15,6 +19,12 @@ ul {
 
 .launch span {
     line-height: 30px;
+}
+
+button,
+button:hover {
+    background-color: #169bd5;
+    border: 1px solid #169bd5;
 }
 
 .launch button,
@@ -160,4 +170,10 @@ input[type=file] {
     opacity: 0;
     position: absolute;
     height: 30px;
+}
+
+#btnConfirmSubmit {
+    margin: 70px 0 0 0;
+    width: 120px;
+    height: 35px;
 }

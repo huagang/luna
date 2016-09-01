@@ -63,13 +63,12 @@
                 allowClear: true,
                 language: "zh-CN",
                 ajax: {
-                    url: Inter.getApiUrl().selectCity.url,
+                    url: Util.strFormat(Inter.getApiUrl().selectCity.url, [provinceCode]),
                     dataType: 'json',
                     delay: 1000,
                     data: function (params) {
                         return {
-                            q: params.term, // search term
-                            provinceCode: provinceCode,
+                            cityName: params.term, // search term
                         };
                     },
                     processResults: function (data, params) {
@@ -78,7 +77,11 @@
                         // alter the remote JSON data, except to indicate that infinite
                         // scrolling can be used
                         params.page = params.page || 1;
-
+                        console.log(data);
+                        for (var i = 0; i < data.data.length; i++) {
+                            data.data[i].id = data.data[i].cityCode;
+                            data.data[i].text = data.data[i].cityName;
+                        }
                         return {
                             results: data.data,
                             pagination: {
@@ -88,12 +91,8 @@
                     },
                     cache: true
                 },
-                escapeMarkup: function (markup) {
-                    return markup;
-                }, // let our custom formatter work
                 minimumInputLength: 1,
-                // templateResult: formatRepo,
-                // templateSelection: formatRepoSelection
+                // templateResult: formatCityState,
             }).change(function (event) {
                 initBranchBankSelect(options);
             });
@@ -114,11 +113,26 @@
     }
 
     /**
+     * 初始化城市数据
+     * 
+     * @param {any} state
+     * @returns
+     */
+    function formatCityState(state) {
+        state.id = state.cityCode;
+        state.text = state.cityName;
+        console.log(state);
+        if (!state.id) { return state.text; }
+        var $state = $('<span>' + state.text + '</span>');
+        return state.text;
+    };
+
+    /**
      * 选择支行信息
      */
     function initBranchBankSelect(options) {
         var proviceCode = $("#" + options.cityCode).val(),
-            bankCode = $('#' + options.clsCode).val();
+            bankCode = $('#' + options.bankCode).val();
         if (proviceCode && bankCode) {
             $("#" + options.branchBankCode).select2({
                 width: "100%",
@@ -126,15 +140,13 @@
                 allowClear: true,
                 language: "zh-CN",
                 ajax: {
-                    url: Inter.getApiUrl().selectBranchBank.url,
+                    url: Util.strFormat(Inter.getApiUrl().selectBranchBank.url, [bankCode.substring(0, 3)]),
                     dataType: 'json',
                     delay: 1000,
                     data: function (params) {
                         return {
-                            q: params.term, // search term
+                            branchName: params.term, // search term
                             cityCode: proviceCode,
-                            bankCode: bankCode.substring(0, 3),
-                            page: params.page
                         };
                     },
                     processResults: function (data, params) {
@@ -143,7 +155,11 @@
                         // alter the remote JSON data, except to indicate that infinite
                         // scrolling can be used
                         params.page = params.page || 1;
-
+                        console.log(data);
+                        for (var i = 0; i < data.data.length; i++) {
+                            data.data[i].id = data.data[i].branchCode;
+                            data.data[i].text = data.data[i].branchName;
+                        }
                         return {
                             results: data.data, //返回的数据
                             pagination: {
