@@ -39,7 +39,7 @@
 
 					<div class="information" >
 						<div class="title-info">
-							<h5>联系人信息</h5>
+							<h4>商户联系人</h4>
 							</div>
 						<div class="item">
 							<div class="item-label"><span class="superscript">*</span>联系人姓名</div>
@@ -67,7 +67,7 @@
 
                     <div class="information" >
                     	<div class="title-info">
-                        	<h5>商户基本信息</h5>
+                        	<h4>商户基本信息</h4>
                     	</div>
                     	<div class="item-value" style="display:none">
                    		 	<input type="text" id="merchant_id_edit" val="${merchant_id}" name="merchant_id_edit" placeholder="请输入商户完整名称">
