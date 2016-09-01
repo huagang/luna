@@ -100,14 +100,22 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
     }
 
     @Override
-    public JSONObject deleteGoods(Integer id) {
+    public JSONObject deleteGoods(JSONObject param) {
         try {
-            lunaGoodsDAO.deleteByPrimaryKey(id);
+            List<Integer> array = new ArrayList<>();
+            String[] str = param.getString("ids").split(",");
+            for(String id : str) {
+                array.add(Integer.parseInt(id));
+            }
+            LunaGoodsCriteria lunaGoodsCriteria = new LunaGoodsCriteria();
+            LunaGoodsCriteria.Criteria criteria = lunaGoodsCriteria.createCriteria();
+            criteria.andIdIn(array);
+            lunaGoodsDAO.deleteByCriteria(lunaGoodsCriteria);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
-            MsLogger.error("Failed to delete goods by id. " + e.getMessage());
+            MsLogger.error("Failed to delete goods by ids. " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to delete goods by id. id = " + id);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to delete goods by ids. ids = " + param.getString("ids"));
         }
     }
 

@@ -17,7 +17,7 @@ public interface LunaGoodsService {
     JSONObject updateGoods(JSONObject param, Integer id);
 
     // 删除商品
-    JSONObject deleteGoods(Integer id);
+    JSONObject deleteGoods(JSONObject param);
 
     // 获取商品信息
     JSONObject getGoodsInfo(Integer id);

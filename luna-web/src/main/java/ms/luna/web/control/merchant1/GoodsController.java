@@ -105,13 +105,21 @@ public class GoodsController extends BasicController {
     }
 
     // 删除商品
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "")
     @ResponseBody
     public JSONObject deleteGoods(
-            @PathVariable("id") int id,
+            @RequestParam(required = true, value = "ids") String ids,
             HttpServletRequest request, HttpServletResponse response) {
         try {
-            JSONObject result = lunaGoodsService.deleteGoods(id);
+            // 检查ids是否正确
+            String pattern = "((\\d+),)*(\\d+)";
+            boolean flag = Pattern.matches(pattern, ids.trim());
+            if(!flag) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "goods ids are invalid");
+            }
+            JSONObject param = new JSONObject();
+            param.put("ids", ids);
+            JSONObject result = lunaGoodsService.deleteGoods(param);
             MsLogger.debug(request.toString());
             return result;
         } catch (Exception e) {
@@ -238,6 +246,9 @@ public class GoodsController extends BasicController {
     // 参数检查
     private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
         return "";
+
+
+
     }
 
     // 将参数对放入json
