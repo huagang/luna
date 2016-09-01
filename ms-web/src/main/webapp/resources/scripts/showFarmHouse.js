@@ -106,7 +106,6 @@ function showAnimation(){
             try{
                 this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
             } catch(e){
-                console.log(this.markerName);
             }
         };
 
