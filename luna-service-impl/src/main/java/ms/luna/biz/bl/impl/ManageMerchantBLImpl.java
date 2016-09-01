@@ -119,6 +119,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		Integer offset = param.getInteger("offset");
 		merchantsParameter.setMin(offset);
 		merchantsParameter.setMax(limit);
+		merchantsParameter.setRange("true");
 
 		if (param.containsKey("like_filter_nm")) {
 			String likeFilterNm = param.getString("like_filter_nm");
