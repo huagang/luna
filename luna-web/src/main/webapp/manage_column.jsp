@@ -108,12 +108,6 @@
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
         	</div>
-            <div>
-                <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategoryId">
-                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
-                </select>
-            </div>
     	</form>
     </div>
     <!-- 底部功能区 -->
@@ -144,12 +138,6 @@
                 <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
                 <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
                 <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
-            </div>
-            <div>
-                <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategoryId">
-                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
-                </select>
             </div>
         </form>
     </div>
