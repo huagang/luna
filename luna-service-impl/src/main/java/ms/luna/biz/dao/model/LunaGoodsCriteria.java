@@ -916,73 +916,61 @@ public class LunaGoodsCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusEqualTo(String value) {
+        public Criteria andOnlineStatusEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status =", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusNotEqualTo(String value) {
+        public Criteria andOnlineStatusNotEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status <>", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusGreaterThan(String value) {
+        public Criteria andOnlineStatusGreaterThan(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status >", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusGreaterThanOrEqualTo(String value) {
+        public Criteria andOnlineStatusGreaterThanOrEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status >=", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusLessThan(String value) {
+        public Criteria andOnlineStatusLessThan(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status <", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusLessThanOrEqualTo(String value) {
+        public Criteria andOnlineStatusLessThanOrEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("online_status <=", value, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusLike(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("online_status like", value, "onlineStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andOnlineStatusNotLike(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("online_status not like", value, "onlineStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andOnlineStatusIn(List<String> values) {
+        public Criteria andOnlineStatusIn(List<Byte> values) {
             if(values == null)return (Criteria)this;
             addCriterion("online_status in", values, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusNotIn(List<String> values) {
+        public Criteria andOnlineStatusNotIn(List<Byte> values) {
             if(values == null)return (Criteria)this;
             addCriterion("online_status not in", values, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusBetween(String value1, String value2) {
+        public Criteria andOnlineStatusBetween(Byte value1, Byte value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("online_status between", value1, value2, "onlineStatus");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineStatusNotBetween(String value1, String value2) {
+        public Criteria andOnlineStatusNotBetween(Byte value1, Byte value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("online_status not between", value1, value2, "onlineStatus");
             return (Criteria) this;
@@ -1453,12 +1441,6 @@ public class LunaGoodsCriteria {
         public Criteria andNoteLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(note) like", value.toUpperCase(), "note");
-            return (Criteria) this;
-        }
-
-        public Criteria andOnlineStatusLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(online_status) like", value.toUpperCase(), "onlineStatus");
             return (Criteria) this;
         }
 

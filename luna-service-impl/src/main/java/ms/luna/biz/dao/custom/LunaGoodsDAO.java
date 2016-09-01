@@ -11,4 +11,6 @@ public interface LunaGoodsDAO extends LunaGoodsDAOBase {
     List<LunaGoodsResult> selectGoodsWithFilter(LunaGoodsParameter lunaGoodsParameter);
 
     Integer countGoodsWithFilter(LunaGoodsParameter lunaGoodsParameter);
+
+
 }

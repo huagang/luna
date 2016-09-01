@@ -214,7 +214,7 @@ public class GoodsController extends BasicController {
     @ResponseBody
     public JSONObject updateOnlineStatus(
             @RequestParam(required = true, value = "ids") String ids,
-            @RequestParam(required = false, value = "status", defaultValue = "0") int status) {
+            @RequestParam(required = false, value = "status", defaultValue = "0") byte status) {
         try {
             // 检查ids是否正确
             String pattern = "((\\d+),)*(\\d+)";

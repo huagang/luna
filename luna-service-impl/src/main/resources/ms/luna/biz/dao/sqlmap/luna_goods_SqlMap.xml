@@ -12,7 +12,7 @@
     <result column="transport_fee" jdbcType="DECIMAL" property="transportFee" />
     <result column="note" jdbcType="VARCHAR" property="note" />
     <result column="sales" jdbcType="INTEGER" property="sales" />
-    <result column="online_status" jdbcType="VARCHAR" property="onlineStatus" />
+    <result column="online_status" jdbcType="TINYINT" property="onlineStatus" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
     <result column="business_id" jdbcType="INTEGER" property="businessId" />
     <result column="account" jdbcType="DECIMAL" property="account" />
@@ -86,7 +86,7 @@
       unique_id, update_time, create_time)
     values (#name:VARCHAR#, #categoryId:INTEGER#, #description:VARCHAR#, #pic:VARCHAR#, 
       #price:DECIMAL#, #stock:INTEGER#, #transportFee:DECIMAL#, #note:VARCHAR#, #sales:INTEGER#, 
-      #onlineStatus:VARCHAR#, #merchantId:VARCHAR#, #businessId:INTEGER#, #account:DECIMAL#, 
+      #onlineStatus:TINYINT#, #merchantId:VARCHAR#, #businessId:INTEGER#, #account:DECIMAL#, 
       #uniqueId:CHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
@@ -175,7 +175,7 @@
         #sales:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="onlineStatus">
-        #onlineStatus:VARCHAR#
+        #onlineStatus:TINYINT#
       </isNotNull>
       <isNotNull prepend="," property="merchantId">
         #merchantId:VARCHAR#
@@ -239,7 +239,7 @@
         sales = #record.sales:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="record.onlineStatus">
-        online_status = #record.onlineStatus:VARCHAR#
+        online_status = #record.onlineStatus:TINYINT#
       </isNotNull>
       <isNotNull prepend="," property="record.merchantId">
         merchant_id = #record.merchantId:VARCHAR#
@@ -276,7 +276,7 @@
       transport_fee = #record.transportFee:DECIMAL#,
       note = #record.note:VARCHAR#,
       sales = #record.sales:INTEGER#,
-      online_status = #record.onlineStatus:VARCHAR#,
+      online_status = #record.onlineStatus:TINYINT#,
       merchant_id = #record.merchantId:VARCHAR#,
       business_id = #record.businessId:INTEGER#,
       account = #record.account:DECIMAL#,
@@ -318,7 +318,7 @@
         sales = #sales:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="onlineStatus">
-        online_status = #onlineStatus:VARCHAR#
+        online_status = #onlineStatus:TINYINT#
       </isNotNull>
       <isNotNull prepend="," property="merchantId">
         merchant_id = #merchantId:VARCHAR#
@@ -352,7 +352,7 @@
       transport_fee = #transportFee:DECIMAL#,
       note = #note:VARCHAR#,
       sales = #sales:INTEGER#,
-      online_status = #onlineStatus:VARCHAR#,
+      online_status = #onlineStatus:TINYINT#,
       merchant_id = #merchantId:VARCHAR#,
       business_id = #businessId:INTEGER#,
       account = #account:DECIMAL#,

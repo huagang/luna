@@ -29,7 +29,7 @@ public class LunaGoods implements Serializable {
     @JSONField(name = LunaGoodsTable.FIELD_SALES)
     private Integer sales;
     @JSONField(name = LunaGoodsTable.FIELD_ONLINE_STATUS)
-    private String onlineStatus;
+    private Byte onlineStatus;
     @JSONField(name = LunaGoodsTable.FIELD_MERCHANT_ID)
     private String merchantId;
     @JSONField(name = LunaGoodsTable.FIELD_BUSINESS_ID)
@@ -125,12 +125,12 @@ public class LunaGoods implements Serializable {
         this.sales = sales;
     }
 
-    public String getOnlineStatus() {
+    public Byte getOnlineStatus() {
         return onlineStatus;
     }
 
-    public void setOnlineStatus(String onlineStatus) {
-        this.onlineStatus = onlineStatus == null ? null : onlineStatus.trim();
+    public void setOnlineStatus(Byte onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 
     public String getMerchantId() {

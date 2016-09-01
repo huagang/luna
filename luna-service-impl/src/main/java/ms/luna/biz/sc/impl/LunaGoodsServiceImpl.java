@@ -195,14 +195,19 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
     public JSONObject updateOnlineStatus(JSONObject param) {
         try {
             String ids = param.getString("ids");
-            int status = param.getInteger(LunaGoodsTable.FIELD_ONLINE_STATUS);
+            Byte status = param.getByte(LunaGoodsTable.FIELD_ONLINE_STATUS);
             String[] idStr = ids.split(",");
             List<Integer> array = new ArrayList<>();
             for(String id : idStr) {
                 array.add(Integer.parseInt(id));
             }
-
-
+            LunaGoodsCriteria lunaGoodsCriteria = new LunaGoodsCriteria();
+            LunaGoodsCriteria.Criteria criteria = lunaGoodsCriteria.createCriteria();
+            criteria.andIdIn(array);
+            LunaGoods lunaGoods = new LunaGoods();
+            lunaGoods.setOnlineStatus(status);
+            lunaGoodsDAO.updateByCriteriaSelective(lunaGoods, lunaGoodsCriteria);
+            return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to update online status. " + e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
