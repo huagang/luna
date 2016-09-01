@@ -1,47 +1,49 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
-<sqlMap namespace="ms_merchant_manage" >
-  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsMerchantManage" >
-    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
-    <result column="merchant_nm" property="merchantNm" jdbcType="VARCHAR" />
-    <result column="merchant_phonenum" property="merchantPhonenum" jdbcType="VARCHAR" />
-    <result column="category_id" property="categoryId" jdbcType="VARCHAR" />
-    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
-    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
-    <result column="county_id" property="countyId" jdbcType="VARCHAR" />
-    <result column="merchant_addr" property="merchantAddr" jdbcType="VARCHAR" />
-    <result column="resource_content" property="resourceContent" jdbcType="VARCHAR" />
-    <result column="lat" property="lat" jdbcType="DECIMAL" />
-    <result column="lng" property="lng" jdbcType="DECIMAL" />
-    <result column="merchant_info" property="merchantInfo" jdbcType="VARCHAR" />
-    <result column="contact_nm" property="contactNm" jdbcType="VARCHAR" />
-    <result column="contact_phonenum" property="contactPhonenum" jdbcType="VARCHAR" />
-    <result column="contact_mail" property="contactMail" jdbcType="VARCHAR" />
-    <result column="salesman_id" property="salesmanId" jdbcType="VARCHAR" />
-    <result column="salesman_nm" property="salesmanNm" jdbcType="VARCHAR" />
-    <result column="status_id" property="statusId" jdbcType="VARCHAR" />
-    <result column="del_flg" property="delFlg" jdbcType="VARCHAR" />
-    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
-    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
-    <result column="updated_by_unique_id" property="updatedByUniqueId" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ms_merchant_manage">
+  <resultMap class="ms.luna.biz.dao.model.MsMerchantManage" id="BaseResultMap">
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="merchant_nm" jdbcType="VARCHAR" property="merchantNm" />
+    <result column="merchant_phonenum" jdbcType="VARCHAR" property="merchantPhonenum" />
+    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="county_id" jdbcType="VARCHAR" property="countyId" />
+    <result column="merchant_addr" jdbcType="VARCHAR" property="merchantAddr" />
+    <result column="resource_content" jdbcType="VARCHAR" property="resourceContent" />
+    <result column="lat" jdbcType="DECIMAL" property="lat" />
+    <result column="lng" jdbcType="DECIMAL" property="lng" />
+    <result column="merchant_info" jdbcType="VARCHAR" property="merchantInfo" />
+    <result column="contact_nm" jdbcType="VARCHAR" property="contactNm" />
+    <result column="contact_phonenum" jdbcType="VARCHAR" property="contactPhonenum" />
+    <result column="contact_mail" jdbcType="VARCHAR" property="contactMail" />
+    <result column="salesman_id" jdbcType="VARCHAR" property="salesmanId" />
+    <result column="salesman_nm" jdbcType="VARCHAR" property="salesmanNm" />
+    <result column="status_id" jdbcType="VARCHAR" property="statusId" />
+    <result column="del_flg" jdbcType="VARCHAR" property="delFlg" />
+    <result column="regist_hhmmss" jdbcType="TIMESTAMP" property="registHhmmss" />
+    <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
+    <result column="updated_by_unique_id" jdbcType="VARCHAR" property="updatedByUniqueId" />
+    <result column="trade_status" jdbcType="INTEGER" property="tradeStatus" />
+    <result column="unique_id" jdbcType="CHAR" property="uniqueId" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
-      <isEqual property="oredCriteria[].valid" compareValue="true" >
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
         (
-        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
           $oredCriteria[].criteriaWithoutValue[]$
         </iterate>
-        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
           $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
         </iterate>
-        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
           $oredCriteria[].criteriaWithListValue[].condition$
-          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
             #oredCriteria[].criteriaWithListValue[].values[]#
           </iterate>
         </iterate>
-        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
           $oredCriteria[].criteriaWithBetweenValue[].condition$
           #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
           #oredCriteria[].criteriaWithBetweenValue[].values[1]#
@@ -50,277 +52,297 @@
       </isEqual>
     </iterate>
   </sql>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     merchant_id, merchant_nm, merchant_phonenum, category_id, province_id, city_id, county_id, 
     merchant_addr, resource_content, lat, lng, merchant_info, contact_nm, contact_phonenum, 
     contact_mail, salesman_id, salesman_nm, status_id, del_flg, regist_hhmmss, up_hhmmss, 
-    updated_by_unique_id
+    updated_by_unique_id, trade_status, unique_id
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" >
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultMap="BaseResultMap">
     select
-    <isParameterPresent >
-      <isEqual property="distinct" compareValue="true" >
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
         distinct
       </isEqual>
     </isParameterPresent>
     <include refid="ms_merchant_manage.Base_Column_List" />
     from ms_merchant_manage
-    <isParameterPresent >
+    <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
-      <isNotNull property="orderByClause" >
+      <isNotNull property="orderByClause">
         order by $orderByClause$
       </isNotNull>
     </isParameterPresent>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" resultMap="BaseResultMap">
     select 
     <include refid="ms_merchant_manage.Base_Column_List" />
     from ms_merchant_manage
     where merchant_id = #merchantId:VARCHAR#
   </select>
-  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     delete from ms_merchant_manage
     where merchant_id = #merchantId:VARCHAR#
   </delete>
-  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" >
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria">
     delete from ms_merchant_manage
     <include refid="ms_merchant_manage.Example_Where_Clause" />
   </delete>
-  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     insert into ms_merchant_manage (merchant_id, merchant_nm, merchant_phonenum, category_id, 
       province_id, city_id, county_id, merchant_addr, 
       resource_content, lat, lng, merchant_info, 
       contact_nm, contact_phonenum, contact_mail, salesman_id, 
       salesman_nm, status_id, del_flg, regist_hhmmss, 
-      up_hhmmss, updated_by_unique_id)
+      up_hhmmss, updated_by_unique_id, trade_status, unique_id
+      )
     values (#merchantId:VARCHAR#, #merchantNm:VARCHAR#, #merchantPhonenum:VARCHAR#, #categoryId:VARCHAR#, 
       #provinceId:VARCHAR#, #cityId:VARCHAR#, #countyId:VARCHAR#, #merchantAddr:VARCHAR#, 
       #resourceContent:VARCHAR#, #lat:DECIMAL#, #lng:DECIMAL#, #merchantInfo:VARCHAR#, 
       #contactNm:VARCHAR#, #contactPhonenum:VARCHAR#, #contactMail:VARCHAR#, #salesmanId:VARCHAR#, 
       #salesmanNm:VARCHAR#, #statusId:VARCHAR#, #delFlg:VARCHAR#, #registHhmmss:TIMESTAMP#, 
-      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#)
+      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#, #tradeStatus:INTEGER#, #uniqueId:CHAR#
+      )
   </insert>
-  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     insert into ms_merchant_manage
-    <dynamic prepend="(" >
-      <isNotNull prepend="," property="merchantId" >
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="merchantId">
         merchant_id
       </isNotNull>
-      <isNotNull prepend="," property="merchantNm" >
+      <isNotNull prepend="," property="merchantNm">
         merchant_nm
       </isNotNull>
-      <isNotNull prepend="," property="merchantPhonenum" >
+      <isNotNull prepend="," property="merchantPhonenum">
         merchant_phonenum
       </isNotNull>
-      <isNotNull prepend="," property="categoryId" >
+      <isNotNull prepend="," property="categoryId">
         category_id
       </isNotNull>
-      <isNotNull prepend="," property="provinceId" >
+      <isNotNull prepend="," property="provinceId">
         province_id
       </isNotNull>
-      <isNotNull prepend="," property="cityId" >
+      <isNotNull prepend="," property="cityId">
         city_id
       </isNotNull>
-      <isNotNull prepend="," property="countyId" >
+      <isNotNull prepend="," property="countyId">
         county_id
       </isNotNull>
-      <isNotNull prepend="," property="merchantAddr" >
+      <isNotNull prepend="," property="merchantAddr">
         merchant_addr
       </isNotNull>
-      <isNotNull prepend="," property="resourceContent" >
+      <isNotNull prepend="," property="resourceContent">
         resource_content
       </isNotNull>
-      <isNotNull prepend="," property="lat" >
+      <isNotNull prepend="," property="lat">
         lat
       </isNotNull>
-      <isNotNull prepend="," property="lng" >
+      <isNotNull prepend="," property="lng">
         lng
       </isNotNull>
-      <isNotNull prepend="," property="merchantInfo" >
+      <isNotNull prepend="," property="merchantInfo">
         merchant_info
       </isNotNull>
-      <isNotNull prepend="," property="contactNm" >
+      <isNotNull prepend="," property="contactNm">
         contact_nm
       </isNotNull>
-      <isNotNull prepend="," property="contactPhonenum" >
+      <isNotNull prepend="," property="contactPhonenum">
         contact_phonenum
       </isNotNull>
-      <isNotNull prepend="," property="contactMail" >
+      <isNotNull prepend="," property="contactMail">
         contact_mail
       </isNotNull>
-      <isNotNull prepend="," property="salesmanId" >
+      <isNotNull prepend="," property="salesmanId">
         salesman_id
       </isNotNull>
-      <isNotNull prepend="," property="salesmanNm" >
+      <isNotNull prepend="," property="salesmanNm">
         salesman_nm
       </isNotNull>
-      <isNotNull prepend="," property="statusId" >
+      <isNotNull prepend="," property="statusId">
         status_id
       </isNotNull>
-      <isNotNull prepend="," property="delFlg" >
+      <isNotNull prepend="," property="delFlg">
         del_flg
       </isNotNull>
-      <isNotNull prepend="," property="registHhmmss" >
+      <isNotNull prepend="," property="registHhmmss">
         regist_hhmmss
       </isNotNull>
-      <isNotNull prepend="," property="upHhmmss" >
+      <isNotNull prepend="," property="upHhmmss">
         up_hhmmss
       </isNotNull>
-      <isNotNull prepend="," property="updatedByUniqueId" >
+      <isNotNull prepend="," property="updatedByUniqueId">
         updated_by_unique_id
+      </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        trade_status
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        unique_id
       </isNotNull>
       )
     </dynamic>
     values
-    <dynamic prepend="(" >
-      <isNotNull prepend="," property="merchantId" >
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="merchantId">
         #merchantId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="merchantNm" >
+      <isNotNull prepend="," property="merchantNm">
         #merchantNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="merchantPhonenum" >
+      <isNotNull prepend="," property="merchantPhonenum">
         #merchantPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="categoryId" >
+      <isNotNull prepend="," property="categoryId">
         #categoryId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="provinceId" >
+      <isNotNull prepend="," property="provinceId">
         #provinceId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="cityId" >
+      <isNotNull prepend="," property="cityId">
         #cityId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="countyId" >
+      <isNotNull prepend="," property="countyId">
         #countyId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="merchantAddr" >
+      <isNotNull prepend="," property="merchantAddr">
         #merchantAddr:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="resourceContent" >
+      <isNotNull prepend="," property="resourceContent">
         #resourceContent:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="lat" >
+      <isNotNull prepend="," property="lat">
         #lat:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="lng" >
+      <isNotNull prepend="," property="lng">
         #lng:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="merchantInfo" >
+      <isNotNull prepend="," property="merchantInfo">
         #merchantInfo:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactNm" >
+      <isNotNull prepend="," property="contactNm">
         #contactNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactPhonenum" >
+      <isNotNull prepend="," property="contactPhonenum">
         #contactPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactMail" >
+      <isNotNull prepend="," property="contactMail">
         #contactMail:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="salesmanId" >
+      <isNotNull prepend="," property="salesmanId">
         #salesmanId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="salesmanNm" >
+      <isNotNull prepend="," property="salesmanNm">
         #salesmanNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="statusId" >
+      <isNotNull prepend="," property="statusId">
         #statusId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="delFlg" >
+      <isNotNull prepend="," property="delFlg">
         #delFlg:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="registHhmmss" >
+      <isNotNull prepend="," property="registHhmmss">
         #registHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="upHhmmss" >
+      <isNotNull prepend="," property="upHhmmss">
         #upHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="updatedByUniqueId" >
+      <isNotNull prepend="," property="updatedByUniqueId">
         #updatedByUniqueId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        #tradeStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        #uniqueId:CHAR#
       </isNotNull>
       )
     </dynamic>
   </insert>
-  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultClass="java.lang.Integer" >
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultClass="java.lang.Integer">
     select count(*) from ms_merchant_manage
     <include refid="ms_merchant_manage.Example_Where_Clause" />
   </select>
-  <update id="updateByExampleSelective" >
+  <update id="updateByExampleSelective">
     update ms_merchant_manage
-    <dynamic prepend="set" >
-      <isNotNull prepend="," property="record.merchantId" >
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.merchantId">
         merchant_id = #record.merchantId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.merchantNm" >
+      <isNotNull prepend="," property="record.merchantNm">
         merchant_nm = #record.merchantNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.merchantPhonenum" >
+      <isNotNull prepend="," property="record.merchantPhonenum">
         merchant_phonenum = #record.merchantPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.categoryId" >
+      <isNotNull prepend="," property="record.categoryId">
         category_id = #record.categoryId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.provinceId" >
+      <isNotNull prepend="," property="record.provinceId">
         province_id = #record.provinceId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.cityId" >
+      <isNotNull prepend="," property="record.cityId">
         city_id = #record.cityId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.countyId" >
+      <isNotNull prepend="," property="record.countyId">
         county_id = #record.countyId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.merchantAddr" >
+      <isNotNull prepend="," property="record.merchantAddr">
         merchant_addr = #record.merchantAddr:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.resourceContent" >
+      <isNotNull prepend="," property="record.resourceContent">
         resource_content = #record.resourceContent:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.lat" >
+      <isNotNull prepend="," property="record.lat">
         lat = #record.lat:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="record.lng" >
+      <isNotNull prepend="," property="record.lng">
         lng = #record.lng:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="record.merchantInfo" >
+      <isNotNull prepend="," property="record.merchantInfo">
         merchant_info = #record.merchantInfo:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.contactNm" >
+      <isNotNull prepend="," property="record.contactNm">
         contact_nm = #record.contactNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.contactPhonenum" >
+      <isNotNull prepend="," property="record.contactPhonenum">
         contact_phonenum = #record.contactPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.contactMail" >
+      <isNotNull prepend="," property="record.contactMail">
         contact_mail = #record.contactMail:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.salesmanId" >
+      <isNotNull prepend="," property="record.salesmanId">
         salesman_id = #record.salesmanId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.salesmanNm" >
+      <isNotNull prepend="," property="record.salesmanNm">
         salesman_nm = #record.salesmanNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.statusId" >
+      <isNotNull prepend="," property="record.statusId">
         status_id = #record.statusId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.delFlg" >
+      <isNotNull prepend="," property="record.delFlg">
         del_flg = #record.delFlg:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="record.registHhmmss" >
+      <isNotNull prepend="," property="record.registHhmmss">
         regist_hhmmss = #record.registHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="record.upHhmmss" >
+      <isNotNull prepend="," property="record.upHhmmss">
         up_hhmmss = #record.upHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="record.updatedByUniqueId" >
+      <isNotNull prepend="," property="record.updatedByUniqueId">
         updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.tradeStatus">
+        trade_status = #record.tradeStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.uniqueId">
+        unique_id = #record.uniqueId:CHAR#
+      </isNotNull>
     </dynamic>
-    <isParameterPresent >
+    <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
     </isParameterPresent>
   </update>
-  <update id="updateByExample" >
+  <update id="updateByExample">
     update ms_merchant_manage
     set merchant_id = #record.merchantId:VARCHAR#,
       merchant_nm = #record.merchantNm:VARCHAR#,
@@ -343,81 +365,89 @@
       del_flg = #record.delFlg:VARCHAR#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
-      updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
-    <isParameterPresent >
+      updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#,
+      trade_status = #record.tradeStatus:INTEGER#,
+      unique_id = #record.uniqueId:CHAR#
+    <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
     </isParameterPresent>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     update ms_merchant_manage
-    <dynamic prepend="set" >
-      <isNotNull prepend="," property="merchantNm" >
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="merchantNm">
         merchant_nm = #merchantNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="merchantPhonenum" >
+      <isNotNull prepend="," property="merchantPhonenum">
         merchant_phonenum = #merchantPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="categoryId" >
+      <isNotNull prepend="," property="categoryId">
         category_id = #categoryId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="provinceId" >
+      <isNotNull prepend="," property="provinceId">
         province_id = #provinceId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="cityId" >
+      <isNotNull prepend="," property="cityId">
         city_id = #cityId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="countyId" >
+      <isNotNull prepend="," property="countyId">
         county_id = #countyId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="merchantAddr" >
+      <isNotNull prepend="," property="merchantAddr">
         merchant_addr = #merchantAddr:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="resourceContent" >
+      <isNotNull prepend="," property="resourceContent">
         resource_content = #resourceContent:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="lat" >
+      <isNotNull prepend="," property="lat">
         lat = #lat:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="lng" >
+      <isNotNull prepend="," property="lng">
         lng = #lng:DECIMAL#
       </isNotNull>
-      <isNotNull prepend="," property="merchantInfo" >
+      <isNotNull prepend="," property="merchantInfo">
         merchant_info = #merchantInfo:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactNm" >
+      <isNotNull prepend="," property="contactNm">
         contact_nm = #contactNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactPhonenum" >
+      <isNotNull prepend="," property="contactPhonenum">
         contact_phonenum = #contactPhonenum:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="contactMail" >
+      <isNotNull prepend="," property="contactMail">
         contact_mail = #contactMail:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="salesmanId" >
+      <isNotNull prepend="," property="salesmanId">
         salesman_id = #salesmanId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="salesmanNm" >
+      <isNotNull prepend="," property="salesmanNm">
         salesman_nm = #salesmanNm:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="statusId" >
+      <isNotNull prepend="," property="statusId">
         status_id = #statusId:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="delFlg" >
+      <isNotNull prepend="," property="delFlg">
         del_flg = #delFlg:VARCHAR#
       </isNotNull>
-      <isNotNull prepend="," property="registHhmmss" >
+      <isNotNull prepend="," property="registHhmmss">
         regist_hhmmss = #registHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="upHhmmss" >
+      <isNotNull prepend="," property="upHhmmss">
         up_hhmmss = #upHhmmss:TIMESTAMP#
       </isNotNull>
-      <isNotNull prepend="," property="updatedByUniqueId" >
+      <isNotNull prepend="," property="updatedByUniqueId">
         updated_by_unique_id = #updatedByUniqueId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        trade_status = #tradeStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        unique_id = #uniqueId:CHAR#
       </isNotNull>
     </dynamic>
     where merchant_id = #merchantId:VARCHAR#
   </update>
-  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsMerchantManage" >
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     update ms_merchant_manage
     set merchant_nm = #merchantNm:VARCHAR#,
       merchant_phonenum = #merchantPhonenum:VARCHAR#,
@@ -439,7 +469,9 @@
       del_flg = #delFlg:VARCHAR#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
-      updated_by_unique_id = #updatedByUniqueId:VARCHAR#
+      updated_by_unique_id = #updatedByUniqueId:VARCHAR#,
+      trade_status = #tradeStatus:INTEGER#,
+      unique_id = #uniqueId:CHAR#
     where merchant_id = #merchantId:VARCHAR#
   </update>
 </sqlMap>

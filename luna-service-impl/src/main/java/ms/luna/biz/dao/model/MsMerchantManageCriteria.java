@@ -1,7 +1,11 @@
 package ms.luna.biz.dao.model;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MsMerchantManageCriteria {
     protected String orderByClause;
@@ -1910,6 +1914,272 @@ public class MsMerchantManageCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andTradeStatusIsNull() {
+            addCriterion("trade_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusIsNotNull() {
+            addCriterion("trade_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status =", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <>", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status >", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status >=", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <=", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_status in", values, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_status not in", values, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_status between", value1, value2, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_status not between", value1, value2, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIsNull() {
+            addCriterion("unique_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIsNotNull() {
+            addCriterion("unique_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id =", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id <>", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id >", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id >=", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id <", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id <=", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id like", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("unique_id not like", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("unique_id in", values, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("unique_id not in", values, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("unique_id between", value1, value2, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("unique_id not between", value1, value2, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantNmLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_nm) like", value.toUpperCase(), "merchantNm");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantPhonenumLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_phonenum) like", value.toUpperCase(), "merchantPhonenum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(category_id) like", value.toUpperCase(), "categoryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(province_id) like", value.toUpperCase(), "provinceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(city_id) like", value.toUpperCase(), "cityId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountyIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(county_id) like", value.toUpperCase(), "countyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantAddrLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_addr) like", value.toUpperCase(), "merchantAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andResourceContentLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(resource_content) like", value.toUpperCase(), "resourceContent");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantInfoLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_info) like", value.toUpperCase(), "merchantInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactNmLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(contact_nm) like", value.toUpperCase(), "contactNm");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactPhonenumLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(contact_phonenum) like", value.toUpperCase(), "contactPhonenum");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMailLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(contact_mail) like", value.toUpperCase(), "contactMail");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(salesman_id) like", value.toUpperCase(), "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanNmLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(salesman_nm) like", value.toUpperCase(), "salesmanNm");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(status_id) like", value.toUpperCase(), "statusId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlgLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(del_flg) like", value.toUpperCase(), "delFlg");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUniqueIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(updated_by_unique_id) like", value.toUpperCase(), "updatedByUniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(unique_id) like", value.toUpperCase(), "uniqueId");
+            return (Criteria) this;
+        }
+
         public Criteria andRegistHhmmssEqualToCurrentDate() {
             addCriterion("regist_hhmmss = ","CURRENT_DATE","registHhmmss");
             return (Criteria)this;
@@ -1980,114 +2250,6 @@ public class MsMerchantManageCriteria {
 
         protected Criteria() {
             super();
-        }
-
-        public Criteria andMerchantIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");
-            return this;
-        }
-
-        public Criteria andMerchantNmLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(merchant_nm) like", value.toUpperCase(), "merchantNm");
-            return this;
-        }
-
-        public Criteria andMerchantPhonenumLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(merchant_phonenum) like", value.toUpperCase(), "merchantPhonenum");
-            return this;
-        }
-
-        public Criteria andCategoryIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(category_id) like", value.toUpperCase(), "categoryId");
-            return this;
-        }
-
-        public Criteria andProvinceIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(province_id) like", value.toUpperCase(), "provinceId");
-            return this;
-        }
-
-        public Criteria andCityIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(city_id) like", value.toUpperCase(), "cityId");
-            return this;
-        }
-
-        public Criteria andCountyIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(county_id) like", value.toUpperCase(), "countyId");
-            return this;
-        }
-
-        public Criteria andMerchantAddrLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(merchant_addr) like", value.toUpperCase(), "merchantAddr");
-            return this;
-        }
-
-        public Criteria andResourceContentLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(resource_content) like", value.toUpperCase(), "resourceContent");
-            return this;
-        }
-
-        public Criteria andMerchantInfoLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(merchant_info) like", value.toUpperCase(), "merchantInfo");
-            return this;
-        }
-
-        public Criteria andContactNmLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(contact_nm) like", value.toUpperCase(), "contactNm");
-            return this;
-        }
-
-        public Criteria andContactPhonenumLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(contact_phonenum) like", value.toUpperCase(), "contactPhonenum");
-            return this;
-        }
-
-        public Criteria andContactMailLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(contact_mail) like", value.toUpperCase(), "contactMail");
-            return this;
-        }
-
-        public Criteria andSalesmanIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(salesman_id) like", value.toUpperCase(), "salesmanId");
-            return this;
-        }
-
-        public Criteria andSalesmanNmLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(salesman_nm) like", value.toUpperCase(), "salesmanNm");
-            return this;
-        }
-
-        public Criteria andStatusIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(status_id) like", value.toUpperCase(), "statusId");
-            return this;
-        }
-
-        public Criteria andDelFlgLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(del_flg) like", value.toUpperCase(), "delFlg");
-            return this;
-        }
-
-        public Criteria andUpdatedByUniqueIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(updated_by_unique_id) like", value.toUpperCase(), "updatedByUniqueId");
-            return this;
         }
 
         public Criteria setRowNum(String rowNum) {

@@ -41,7 +41,7 @@ public class AlbumController extends BasicController {
         String url = jsonObject.getString(LunaMenuTable.FIELD_OUTER_URL);
         String uniqueId = user.getUniqueId();
         try {
-            String token = TokenUtil.generateTokenByUserId(uniqueId);
+            String token = TokenUtil.generateTokenByUserId(uniqueId, 30000);
             String albumUrl = String.format("%s?token=%s&unique_id=%s", url, token, uniqueId);
             modelAndView.addObject("albumUrl", albumUrl);
         } catch (Exception e) {
