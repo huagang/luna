@@ -34,6 +34,19 @@ public class AuthHelper {
 
     }
 
+    public static boolean hasBusinessAuth(LunaUserSession lunaUserSession) {
+        if(lunaUserSession == null) {
+            return false;
+        }
+        Map<String, Object> extra = lunaUserSession.getExtra();
+        logger.debug("extra info: " + extra);
+
+        if(extra.get("type").toString().equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean hasBusinessAuth(LunaUserSession lunaUserSession, int businessId) {
 
         if(lunaUserSession == null) {

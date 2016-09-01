@@ -21,4 +21,5 @@ public class LunaMenuTable {
 
     //衍生字段,根据url是否为空判断
     public static final String FIELD_IS_OUTER = "is_outer";
+    public static final String FIELD_OUTER_URL = "out_url";
 }
