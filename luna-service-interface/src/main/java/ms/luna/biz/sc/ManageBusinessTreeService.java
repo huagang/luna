@@ -51,5 +51,7 @@ public interface ManageBusinessTreeService {
 	 * 保存业务树数据
 	 */
 	JSONObject saveBusinessTree(String json);
+
+	JSONObject existBusinessTree(int businessId);
 	
 }

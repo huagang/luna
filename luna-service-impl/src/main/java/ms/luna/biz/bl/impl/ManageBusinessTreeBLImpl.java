@@ -128,7 +128,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 		Document document = this.findWithBusinessIdInBussinessPoiTree(biz_tree, businessId);
 		if (document == null) {
-			FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
 		}
 
 		// 1.获取列表

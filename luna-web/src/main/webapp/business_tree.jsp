@@ -100,30 +100,9 @@
            	</select>
            	<select class="select" id="city" onchange="change_city()">
                	<option value="ALL">请选择市</option>
-               	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
-                   <c:choose>
-                   		<c:when test="${cityId==varCity['city_id']}">
-                   			<option value="${varCity['city_id']}" selected >${varCity['city_nm_zh']}</option>
-                   		</c:when>
-                   		<c:otherwise>
-                   			<option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option>
-                   		</c:otherwise>
-                   </c:choose>
-			  </c:forEach>
            	</select>
            	<select class="select" id="county" onchange="change_county()">
                	<option value="ALL">请选择区/县</option>
-               	<c:forEach items="${countys}" var="varCounty" varStatus="status"> 
-                   	 <c:choose>
-                   		<c:when test="${countyId==varCounty['county_id']}">
-                   			<option value="${varCounty['county_id']}" selected>${varCounty['county_nm_zh']}</option>
-                   		</c:when>
-                   		<c:otherwise>
-                   			<option value="${varCounty['county_id']}">${varCounty['county_nm_zh']}</option>
-                   		</c:otherwise>
-                   </c:choose>
-                   	
-			  </c:forEach>
            	</select>
         </div>
       </div>
