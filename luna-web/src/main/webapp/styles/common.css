@@ -98,6 +98,12 @@ a.button.disable:hover{
     width: 1200px;
     margin: auto;
 }
+
+
+.content{
+    margin-left: calc(100vw - 100%);
+}
+
 .content .main-content{
     position: relative;
     border: 1px solid #C3C3C3;
@@ -127,6 +133,8 @@ a.button.disable:hover{
 .navbar-brand{
     height: 64px;
     padding: 12px 0;
+    position: absolute;
+    padding-left: calc(50vw - 50%);
 }
 .navbar .navbar-business-name,
 .navbar .navbar-business-name:hover

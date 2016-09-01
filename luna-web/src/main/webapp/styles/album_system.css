@@ -1,6 +1,6 @@
 .menu{
     vertical-align: top;
-    padding-top: 37px;
+    padding-top: 36px;
 }
 
 .main{
@@ -8,5 +8,7 @@
     padding: 27px 27px 10px 27px;
 }
 
-
+.inner-wrap{
+    margin-bottom: 60px;
+}
 
