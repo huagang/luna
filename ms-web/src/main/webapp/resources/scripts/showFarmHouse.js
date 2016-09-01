@@ -626,7 +626,7 @@ function showAnimation(){
                     navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
                 } catch (e) {
                     //取出经纬度并且赋值
-                    console.log('定位出现了问题');
+                    alert('无法定位, 请更换其他支持定位的浏览器尝试！');
                 }
             } else {
                 //浏览器不支持geolocation
