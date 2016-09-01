@@ -103,7 +103,7 @@ public class ColumnController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目简称不合法");
         }
 
-        int businessId = RequestHelper.getInteger(request, "business_id");
+        int businessId = RequestHelper.getInteger(request, MsBusinessTable.FIELD_BUSINESS_ID);
         if(businessId < 0) {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务不合法");
         }
