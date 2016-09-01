@@ -488,8 +488,8 @@ function checkBusinessName(event){
 function checkNameRepeat(value){
 	var error = false;
 	$.ajax({
-		url: apiUrls.urls.checkBusinessNameRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
-		type: apiUrls.urls.checkBusinessNameRepeat.type,
+		url: apiUrls.checkBusinessNameRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
+		type: apiUrls.checkBusinessNameRepeat.type,
 		async: false,
 		success: function(data){
 			if(data.code === '409'){
@@ -504,8 +504,8 @@ function checkNameRepeat(value){
 function checkCodeRepeat(value){
 	var error = false;
 	$.ajax({
-		url: apiUrls.urls.checkBusinessCodeRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
-		type: apiUrls.urls.checkBusinessCodeRepeat.type,
+		url: apiUrls.checkBusinessCodeRepeat.url.format(value, $("#merchant_id_edit").attr("val")),
+		type: apiUrls.checkBusinessCodeRepeat.type,
 		async: false,
 		success: function(data){
 			if(data.code === '409'){
