@@ -87,7 +87,7 @@ public class MtaWrapper {
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(url);
 		HttpMethodParams params = new HttpMethodParams();
-		params.setSoTimeout(500);
+		params.setSoTimeout(2000);
 		getMethod.setParams(params);
 		try {
 			int statusCode = httpClient.executeMethod(getMethod);
