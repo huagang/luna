@@ -103,15 +103,19 @@ public class ColumnController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目简称不合法");
         }
 
-        String categoryId = RequestHelper.getString(request, MsColumnTable.FIELD_CATEGORY_ID);
-        if(StringUtils.isBlank(categoryId)) {
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "所属类别不合法");
+        int businessId = RequestHelper.getInteger(request, "business_id");
+        if(businessId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务不合法");
+        }
+
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
         }
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsColumnTable.FIELD_NAME, name);
         jsonObject.put(MsColumnTable.FIELD_CODE, code);
-        jsonObject.put(MsColumnTable.FIELD_CATEGORY_ID, categoryId);
+        jsonObject.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
         try {
             JSONObject ret = manageColumnService.createColumn(jsonObject.toJSONString());
             return ret;
@@ -148,16 +152,20 @@ public class ColumnController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "栏目简称不合法");
         }
 
-        String categoryId = RequestHelper.getString(request, MsColumnTable.FIELD_CATEGORY_ID);
-        if(StringUtils.isBlank(categoryId)) {
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "所属类别不合法");
+        int businessId = RequestHelper.getInteger(request, "business_id");
+        if(businessId < 0) {
+            return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务不合法");
+        }
+
+        if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
         }
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MsColumnTable.FIELD_ID, id);
         jsonObject.put(MsColumnTable.FIELD_NAME, name);
         jsonObject.put(MsColumnTable.FIELD_CODE, code);
-        jsonObject.put(MsColumnTable.FIELD_CATEGORY_ID, categoryId);
+        jsonObject.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
 
         try {
             JSONObject ret = manageColumnService.updateColumn(jsonObject.toJSONString());

@@ -65,10 +65,8 @@ public class ManageColumnBLImpl implements ManageColumnBL {
         if(! StringUtils.isBlank(code)) {
             msColumn.setCode(code);
         }
-        String categoryId = columnObj.getString(MsColumnTable.FIELD_CATEGORY_ID);
-        if(! StringUtils.isBlank(categoryId)) {
-            msColumn.setCategoryId(categoryId);
-        }
+        int businessId = columnObj.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        msColumn.setBusinessId(businessId);
 
         return msColumn;
     }
