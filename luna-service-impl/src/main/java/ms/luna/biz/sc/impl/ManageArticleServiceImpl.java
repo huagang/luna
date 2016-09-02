@@ -103,8 +103,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         }
         msArticle.setAuthor(author);
 
-        int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
-        if(column >= 0) {
+        Integer column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
+        if(column != null && column >= 0) {
             msArticle.setColumnId(column);
         }
 
