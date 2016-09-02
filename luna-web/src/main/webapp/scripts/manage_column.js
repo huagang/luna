@@ -120,7 +120,7 @@ function ColumnController($scope, $rootScope, $http) {
     };
 
     this.checkCode = function() {
-        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30) {
+        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30 && /^[a-zA-Z0-9\-_]+$/.test(this.currentCode)){
             this.codeValid = true;
         } else{
             this.codeValid = false;

@@ -99,9 +99,10 @@
         	</div>
         	<div class="short">
             	<label>栏目简称</label>
-            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
+            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" ng-pattern="/^[a-zA-Z0-9\-_]+$/" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
                 <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
+                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.pattern">简称只能由英文字母,数字,下划线,中划线组成</span>
         	</div>
     	</form>
     </div>
