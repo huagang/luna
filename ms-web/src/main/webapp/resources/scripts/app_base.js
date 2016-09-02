@@ -279,7 +279,6 @@ $(document).ready(function () {
         setTimeout(function () {
             //修改history 中的内容，来解决goback 中的问题
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            var animaCanvas = $('.anima-canvas');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
                 if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
                     $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
