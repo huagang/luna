@@ -54,7 +54,7 @@
 										 data-url="<%=request.getContextPath() %>/content/column/search"
 										 data-pagination="true"
 										 data-page-size=20
-										 data-side-pagination="server" 
+										 data-side-pagination="server"
 										 data-search="false"
 										 data-click-to-select="true"
 										 data-show-refresh="false"
@@ -112,7 +112,7 @@
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitNewColumn()">确定</button>
+        <button type="button"  ng-click="column.submitNewColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideNewColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -143,7 +143,7 @@
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitUpdateColumn()">确定</button>
+        <button type="button" ng-click="column.submitUpdateColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideUpdateColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -168,57 +168,6 @@
 <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
-<script type="text/javascript">
- 	$(function() {
-		var id = 0, getRows = function() {
-			var rows = [];
-			for (var i = 0; i < 10; i++) {
-				rows.push({
-					id : id
-				});
-				id++;
-			}
-			return rows;
-		}, $table = $('#table_column').bootstrapTable({
-			data : getRows()
-		});
-
-	}); 
-
-
-
-    function timeFormatter(value, row, index) {
-        return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
-                +'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
-    }
-
-    function operationFormatter(value, row, index) {
-        var id = row.id;
-        var name = row.name;
-        var code = row.code;
-        var categoryName = row.category_name;
-        var editOp = '<a class="edit" href="#" onclick="showUpdateColumnDialog({0},\'{1}\',\'{2}\',\'{3}\')">编辑</a>'.format(id,
-                name, code, categoryName);
-        var deleteOp = '<a class="delete" href="#" onclick="showDeleteColumnDialog({0}, \'{1}\')">删除</a>'.format(id, name);
-
-        return editOp + deleteOp;
-    }
-
-	function queryParams(params) {
-		//alert(JSON.stringify(params));
-        var params = {
-            limit : params.limit,
-            offset : params.offset,
-            sort : params.sort,
-            order : params.order
-        };
-        var business = localStorage.getItem('business');
-        if(business){
-            params.business_id = JSON.parse(business).id;
-        }
-		return params;
-	};
-</script>
 
 </body>
 </html>
