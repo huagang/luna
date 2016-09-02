@@ -52,8 +52,9 @@ function isValidPageInfo() {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }
-    $("#warn1,#warn2,#warn4").text("");
-
+    if (validFlag) {
+        $("#warn1,#warn2,#warn4").text("");
+    }
     return validFlag;
 }
 // 创建app的一个新的页面
