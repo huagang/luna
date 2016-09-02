@@ -942,10 +942,13 @@ $(document).ready(function () {
                             data: { poi_id: item.singlePoiId },
                             success: function (data) {
                                 if (data.code == '0') {
-                                    that.data[index] = data.data[poiLangId];
-                                    that.data[index].langId = poiLangId;
                                     if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = data.data[poiLangId];
+                                        that.data[index].langId = poiLangId;
                                         that.updateContent();
+                                    } else {
+                                        that.data[index] = data.data[poiLangId];
+                                        that.data[index].langId = poiLangId;
                                     }
                                 }
                             }
@@ -1002,11 +1005,13 @@ $(document).ready(function () {
 
                         success: function (data) {
                             if (data.code == '0') {
-                                that.data[index] = data.data[poiLangId];
-                                that.data[index].langId = poiLangId;
-
                                 if (!that.data[index] && that.menuIndex == index) {
+                                    that.data[index] = data.data[poiLangId];
+                                    that.data[index].langId = poiLangId;
                                     that.updateContent();
+                                } else {
+                                    that.data[index] = data.data[poiLangId];
+                                    that.data[index].langId = poiLangId;
                                 }
                             }
                         },
