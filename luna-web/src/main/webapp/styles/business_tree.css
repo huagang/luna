@@ -342,7 +342,8 @@ right connector from last child*/
 
 .guidance{
     position: absolute;
-    top: 45%;
+    top: 300px;
+    top: 40vh;
     left:0;
     width: 100%;
     height: 100px;
