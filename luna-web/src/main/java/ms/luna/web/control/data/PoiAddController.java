@@ -168,6 +168,26 @@ public class PoiAddController extends BasicController {
     }
 
     /**
+     * 异步上传图片
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    @ResponseBody
+    public String uploadThumbnail(
+            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
+        if (ext == null) {
+            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
+        }
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fileNameInCloud = VbMD5.generateToken() + ext;
+        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
+    }
+
+    /**
      * 异步上传视频
      * @param request
      * @param response
