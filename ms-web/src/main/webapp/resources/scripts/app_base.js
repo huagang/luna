@@ -263,13 +263,13 @@ $(document).ready(function () {
     $('.paraScene').each(function (n, item) {
         paraScene[n] = new Parallax(item);
     });
-    //设置背景页滑动
-    setBgAnimation(3000, 0);
+
 
     if ($('.welcome').length > 0) {
 
         var pageTime = $('.welcome').data('pagetime');
-
+        //设置背景页滑动
+        setBgAnimation(pageTime, 0);
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
@@ -279,10 +279,9 @@ $(document).ready(function () {
         setTimeout(function () {
             //修改history 中的内容，来解决goback 中的问题
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
-            var animaCanvas = $('.anima-canvas');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
                 if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
-                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
+                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, 3000, function () {
                     });
                 }
             });
@@ -298,6 +297,7 @@ $(document).ready(function () {
 
         }, pageTime);
     } else {
+        setBgAnimation(3000, 0);
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
     }
@@ -609,9 +609,9 @@ $(document).ready(function () {
                 });
             } else {
                 this.getPoiList(this.value.content, function (res) {
-                    console.log(that.value);
                     var arrUlHtml = ['<ul class="imglist-wrapper canscroll">'];
-                    var arrdata = res.data[that.value.content.poiLang.id].pois;
+                    var poiLangId = that.value.content.poiLang.id,
+                        arrdata = res.data[that.value.content.poiLang.id].pois;
                     var poiPanoUrl = {
                         1: Inter.getApiUrl().singlePano,
                         2: Inter.getApiUrl().multiplyPano,
@@ -619,17 +619,18 @@ $(document).ready(function () {
                     };
                     for (var i = 0; i < arrdata.length; i++) {
                         arrUlHtml.push('<li class="imglist-poi-wrapper">');
-                        arrUlHtml.push('<a href="' + (arrdata[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[arrdata[i].panorama.panorama_type_id], [arrdata[i].panorama.panorama_id]) : "javascript:;") + '">');
                         arrUlHtml.push('<div class="imglist-li-bg" style="background:url(' + arrdata[i].thumbnail + ') no-repeat;background-size:100% 100%;">');
                         arrUlHtml.push('<div class="imglist-filter"></div>');
                         arrUlHtml.push('<div class="imglist-title-wrapper">');
                         arrUlHtml.push('<div class="imglist-title">' + arrdata[i].poi_name + '</div>');
-                        if (arrdata[i].panorama.panorama_type_id) {
+                        if (arrdata[i].panorama.panorama_type_id && arrdata[i].panorama.panorama_id) {
+                            arrUlHtml.push('<a href="' + (arrdata[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[arrdata[i].panorama.panorama_type_id], [arrdata[i].panorama.panorama_id, poiLangId == 'zh' ? '' : poiLangId]) : "javascript:;") + '">');
                             arrUlHtml.push('<div class="imglist-subtitle">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</div>');
+                            arrUlHtml.push('</a>');
+
                         }
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</div>');
-                        arrUlHtml.push('</a>');
                         arrUlHtml.push('<a href="' + arrdata[i].preview_url + '" class="imglist-detail">' + lunaConfig.poiAction.detail[that.value.content.poiLang.id] + '</a>');
                         arrUlHtml.push('</li>');
                     }
@@ -668,13 +669,13 @@ $(document).ready(function () {
 
         this.build = function () {
             var panoUrl = '';
-
             switch (this.value.content.panoType.id) {
                 case 1:
                     panoUrl = Util.strFormat(Inter.getApiUrl().singlePano, [this.value.content.panoId]);
                     break;
                 case 2:
-                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
+                    var panoLangId = this.value.content.panoLang.id
+                    panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId, panoLangId == 'zh' ? '' : panoLangId]);
                     break;
                 case 3:
                     panoUrl = Util.strFormat(Inter.getApiUrl().customPano, [this.value.content.panoId]);
@@ -683,7 +684,6 @@ $(document).ready(function () {
                     panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId]);
                     break;
             }
-            console.log();
 
             this.setPosition();
             // Img.prototype.setPosition.call();
@@ -941,11 +941,10 @@ $(document).ready(function () {
                             data: { poi_id: item.singlePoiId },
                             success: function (data) {
                                 if (data.code == '0') {
+                                    that.data[index] = data.data[poiLangId];
+                                    that.data[index].langId = poiLangId;
                                     if (!that.data[index] && that.menuIndex == index) {
-                                        that.data[index] = data.data[poiLangId];
-                                        that.updateContent(poiLangId);
-                                    } else {
-                                        that.data[index] = data.data[poiLangId];
+                                        that.updateContent();
                                     }
                                 }
                             }
@@ -953,7 +952,7 @@ $(document).ready(function () {
                     } else {
                         if (!that.data[index] && that.menuIndex == index) {
                             that.data[index] = null;
-                            that.updateContent(poiLangId);
+                            that.updateContent();
                         } else {
                             that.data[index] = null;
                         }
@@ -993,7 +992,7 @@ $(document).ready(function () {
                         url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
                     } else {
                         that.data[index] = { pois: [] };
-                        that.updateContent(poiLangId);
+                        that.updateContent();
                         return;
                     }
                     $.ajax({
@@ -1002,12 +1001,12 @@ $(document).ready(function () {
 
                         success: function (data) {
                             if (data.code == '0') {
+                                that.data[index] = data.data[poiLangId];
+                                that.data[index].langId = poiLangId;
+
                                 if (!that.data[index] && that.menuIndex == index) {
-                                    that.data[index] = data.data[poiLangId];
-                                    that.updateContent(poiLangId);
-                                } else {
-                                    that.data[index] = data.data[poiLangId];
-                                }
+                                    that.updateContent();
+                                } 
                             }
                         },
                     });
@@ -1091,9 +1090,9 @@ $(document).ready(function () {
          * 
          * @param {any} poiLangId
          */
-        function updateContent(poiLangId) {
-            poiLangId = poiLangId || 'zh';
+        function updateContent() {
             var data = that.data[that.menuIndex];
+            var poiLangId = data.langId || 'zh';
             var html = '', toolbar = '';
             var type = that.value.content.tabList[that.menuIndex].type,
                 iconStyle = that.value.content.tabList[that.menuIndex].icon,
@@ -1102,7 +1101,7 @@ $(document).ready(function () {
             switch (type) {
                 case 'singlePoi':
                     if (!data || data.length == 0) {
-                        html = '<div id="detail-title-wrap"><div class="detail-more">'+ lunaConfig.poiAction.more[poiLangId] +'</div></div>';
+                        html = '<div id="detail-title-wrap"><div class="detail-more">' + lunaConfig.poiAction.more[poiLangId] + '</div></div>';
                         break;
                     }
                     var videoClass = data.video ? '' : 'hidden',
@@ -1175,22 +1174,16 @@ $(document).ready(function () {
                             //html = '';
                             var hotelList = '', panoLink;
                             data.pois.forEach(function (item, index) {
-                                // console.log(item);
                                 if (item.panorama.panorama_id) {
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
-                                            panoLink = 'http://pano.visualbusiness.cn/single/index.html?panoId='
-                                                + item.panorama.panorama_id;
+                                            panoLink = Util.strFormat(Inter.getApiUrl().singlePano, [item.panorama.panorama_id]);
                                             break;
                                         case 2: // 相册全景
-                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
-                                                + item.panorama.panorama_id;
-
+                                            panoLink = Util.strFormat(Inter.getApiUrl().multiplyPano, [item.panorama.panorama_id, poiLangId == 'zh' ? '' : poiLangId]);
                                             break;
                                         case 3: // 自定义全景
-                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
-                                                + item.panorama.panorama_id;
-                                            break;
+                                            panoLink = Util.strFormat(Inter.getApiUrl().customPano, [item.panorama.panorama_id]);
                                     }
                                 }
 
@@ -1201,7 +1194,6 @@ $(document).ready(function () {
                                     var address = item.address.city + item.address.county + item.address.detail_address;
                                     navAttr = ' endName="{0}" endPosition="{1},{2}" address="{3}" data-navtype="{4}"'.format(
                                         item.poi_name, item.lnglat.lat, item.lnglat.lng, address, 0);
-                                    // console.log(navAttr);
 
                                 }
                                 if (item.contact_phone) {
@@ -1213,7 +1205,6 @@ $(document).ready(function () {
                                             phones += '<a href="tel:' + item + '">' + item + '</a>  ';
                                         }
                                     });
-                                    // console.log(phones);
                                 }
                                 hotelList +=
                                     '<div class="hotel-item">'
@@ -1258,17 +1249,13 @@ $(document).ready(function () {
                                     panoTip = lunaConfig.poiAction.pano[poiLangId];
                                     switch (item.panorama.panorama_type_id) {
                                         case 1: // 单点全景
-                                            panoLink = 'http://single.pano.visualbusiness.cn/PanoViewer.html?panoId='
-                                                + item.panorama.panorama_id;
+                                            panoLink = Util.strFormat(Inter.getApiUrl().singlePano, [item.panorama.panorama_id]);
                                             break;
                                         case 2: // 相册全景
-                                            panoLink = 'http://pano.visualbusiness.cn/album/index.html?albumId='
-                                                + item.panorama.panorama_id;
-
+                                            panoLink = Util.strFormat(Inter.getApiUrl().multiplyPano, [item.panorama.panorama_id, poiLangId == 'zh' ? '' : poiLangId]);
                                             break;
                                         case 3: // 自定义全景
-                                            panoLink = 'http://data.pano.visualbusiness.cn/rest/album/view/'
-                                                + item.panorama.panorama_id;
+                                            panoLink = Util.strFormat(Inter.getApiUrl().customPano, [item.panorama.panorama_id]);
                                             break;
                                     }
                                 } else {
@@ -1400,7 +1387,6 @@ function initPanoBg(panoBg) {
  * @return {[type]}          [description]
  */
 function showNav(posiData) {
-    console.log(posiData);
     if (!is_weixn() || posiData.navType == "1") {
         var url;
         if (posiData.navType == 0 && !posiData.navStartLng && !posiData.navStartLat) { //+"&ref=mobilemap&referer=";
@@ -1516,7 +1502,7 @@ function is_weixn() {
  * 设置背景的动画
  */
 function setBgAnimation(time, delayTime) {
-    time = time ? time * 0.618 : 1000;
+    time = time ? (time * 1 + 1000) : 3000;
     delayTime = delayTime || 0;
     if ($('.anima-canvas').length > 0) {
         $('.anima-canvas').eq(0).css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {

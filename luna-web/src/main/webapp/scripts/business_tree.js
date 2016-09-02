@@ -176,13 +176,13 @@ $(document).ready(function(){
         var ps_li=[];
         $.confirm("确定要删除么？删除后无法恢复！", function(){
             for(var i=0;i<parents_li.length;i++){
-                if(($(parents_li[i]).attr("level-item-id") && $(parents_li[i]).attr("level-item-id")!="")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
-                    if($(parents_li[i]).attr("keyorder") && $(parents_li[i]).attr("keyorder")!=""){
+                if($(parents_li[i]).attr("level-item-id")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+                    if($(parents_li[i]).attr("keyorder")){
                         ps_li.push($(parents_li[i]).attr("keyorder"));
-                        // console.log($(parents_li[i]).attr("keyorder"));
+                         console.log($(parents_li[i]).attr("keyorder"));
                     }else{
                         ps_li.push($(parents_li[i]).index());
-                        // console.log($(parents_li[i]).index());
+                         console.log($(parents_li[i]).index());
                     }
                 }
             }
@@ -190,14 +190,35 @@ $(document).ready(function(){
             for(var i=(ps_li.length-1);i>0;i--){
                 current_data=current_data.c_list[ps_li[i]];
             }
+
             for(var m=0;m<current_data.c_list.length;m++){
                 if(current_data.c_list[m]._id==_this.attr("item_id")){
+                    var current_item = current_data.c_list[m];
+                    var stack=[current_item], i, len;
+                    while(stack.length > 0){
+                        if(poiDef[stack[0]._id]){
+                            try{
+                                delete poiDef[stack[0]._id];
+                            } catch(e){
+
+                            }
+                        }
+                        if(stack[0].c_list.length > 0){
+                            for(i = 0, len = stack[0].c_list.length ; i< len; i++){
+                                stack.push(stack[0].c_list[i]);
+                            }
+                        }
+                        stack.shift();
+                    }
+
                     current_data.c_list.splice(m, 1);
                     showTreeData();
                     saveTreeData();
                     return;
                 }
             }
+
+
             // delete current_data.c_list[_this.attr("item_id")];
         }, function(){
             

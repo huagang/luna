@@ -46,10 +46,10 @@
                                 <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
 								<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                                 <button type="button" id="condition_search" class="btn-search">搜 索</button>
+                                <a class="button" id='useradd' href="<%=request.getContextPath() %>/platform/user/invite">添加用户</a>
                             </div>
                             <!--用户搜索 end-->
                             <!--   添加用户按钮 -->
-                            <a class="button" id='useradd' href="<%=request.getContextPath() %>/platform/user/invite">添加用户</a>
                             <!--用户列表 start-->
                             <div class="user-list">
 
