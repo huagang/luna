@@ -194,14 +194,14 @@ public class PoiApiBLImpl implements PoiApiBL {
 		String lang = param.getString("lang");
 		List<String> fieldLst;
 		fieldLst = convertInputApiFields2DbFieldLst(fields);
-		MsLogger.debug("field list:" + fieldLst.toString());
+		MsLogger.debug("field list:" + fieldLst);
 		// 获取业务关系树
 		Document tree = getBizTreeById(biz_id);
 		if (tree != null) {
 			MsLogger.debug(tree.toString());
 			List<String> poiIdLst;
 			poiIdLst = getPoisWithLevelInBizTree(tree, 1);
-			MsLogger.debug("poi list:" + poiIdLst.toString());
+			MsLogger.debug("poi list:" + poiIdLst);
 
 			JSONObject data = new JSONObject();
 			JSONArray poiArray = new JSONArray();
@@ -382,7 +382,7 @@ public class PoiApiBLImpl implements PoiApiBL {
 			MsLogger.debug("convertApiField2DbField:" + type);
 		} else {// web端传入的是标签的名称
 			typesAndIds = getTypesAndIdsByTypeNms(tags, lang);// 返回的type值已经经过名称映射
-			MsLogger.debug("hotel_type:" + typesAndIds.get("type").toString() + " scene_type:" + typesAndIds.get("scene_type").toString());
+			MsLogger.debug("hotel_type:" + typesAndIds.get("type") + " scene_type:" + typesAndIds.get("scene_type"));
 		}
 
 		// 获取业务关系树
@@ -806,52 +806,6 @@ public class PoiApiBLImpl implements PoiApiBL {
 		}
 		return poiSceneTypeNm2IdLst;
 	}
-
-//	/**
-//	 * 缓存数据(key:type值,value:type的id)
-//	 *
-//	 * @return Map
-//	 */
-//	private Map<String, Integer> getPoiTypeNmEn2IdLst() {
-//		if (!poiTypeNmEn2IdLst.isEmpty()) {
-//			return poiTypeNmEn2IdLst;
-//		}
-//		synchronized (PoiApiBLImpl.class) {
-//			if (poiTypeNmEn2IdLst.isEmpty()) {
-//				Map<Integer, Map<String, String>> typeId2Nms = getPoiTypeId2NmLst();
-//				Set<Entry<Integer, Map<String, String>>> entrys = typeId2Nms.entrySet();
-//				for (Entry<Integer, Map<String, String>> entry : entrys) {
-//					int id = entry.getKey();
-//					Map<String, String> nm = entry.getValue();
-//					poiTypeNmEn2IdLst.put(nm.get(POI.EN), id);
-//				}
-//			}
-//		}
-//		return poiTypeNmEn2IdLst;
-//	}
-//
-//	/**
-//	 * 缓存数据(key:scene_type值,value:scene_type的id)
-//	 *
-//	 * @return Map
-//	 */
-//	private Map<String, Integer> getPoiSceneTypeNmEn2IdLst() {
-//		if (!poiSceneTypeNmEn2IdLst.isEmpty()) {
-//			return poiSceneTypeNmEn2IdLst;
-//		}
-//		synchronized (PoiApiBLImpl.class) {
-//			if (poiSceneTypeNmEn2IdLst.isEmpty()) {
-//				Map<Integer, Map<String, String>> sceneTypeId2Nms = getPoiSceneTypeId2NmLst();
-//				Set<Entry<Integer, Map<String, String>>> entrys = sceneTypeId2Nms.entrySet();
-//				for (Entry<Integer, Map<String, String>> entry : entrys) {
-//					int id = entry.getKey();
-//					Map<String, String> nm = entry.getValue();
-//					poiSceneTypeNmEn2IdLst.put(nm.get(POI.EN), id);
-//				}
-//			}
-//		}
-//		return poiSceneTypeNmEn2IdLst;
-//	}
 
 	private Map<Integer, String> getPoiPanoramaTypeId2NmLst() {
 		if (!poiPanoramaTypeId2NmLst.isEmpty()) {

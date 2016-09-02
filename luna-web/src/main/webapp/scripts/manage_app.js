@@ -17,6 +17,20 @@ $(document).ready(function () {
 			$('#table_apps').bootstrapTable("refresh");
         }
     });
+	$('#table_apps').on('load-success.bs.table', function(status,res){
+		if(! res.total){
+			setTimeout(function(){
+				$('.no-records-found td').addClass('visibility-show').text('内容为空');
+			}, 1);
+
+		}
+	});
+	$('#table_apps').on('load-error.bs.table', function(status, res){
+		setTimeout(function(){
+			$('.no-records-found td').addClass('visibility-show').text('请求错误,内容为空');
+		}, 1);
+	});
+
     window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
 
