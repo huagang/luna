@@ -269,7 +269,9 @@ $(document).ready(function () {
 
         var pageTime = $('.welcome').data('pagetime');
         //设置背景页滑动
-        setBgAnimation(pageTime, 0);
+        if ($('.welcome').find('.anima-canvas').length > 0) {
+            setBgAnimation($('.welcome').find('.anima-canvas'), pageTime, 0);
+        }
         var welcomePanoBg = document.querySelector('.welcome .panoBg');
         if (welcomePanoBg) {
             // 如果是全景背景
@@ -281,8 +283,7 @@ $(document).ready(function () {
             window.history.replaceState({ url: window.location.href + '?disableWelcome=true' }, document.title, window.location.href + '?disableWelcome=true');
             $('.welcome').next('.component-group').animate({ opacity: 1 }, 2000, function () {
                 if ($('.welcome').next('.component-group').find('.anima-canvas').length > 0) {
-                    $('.welcome').next('.component-group').find('.anima-canvas').css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, pageTime * 0.168, function () {
-                    });
+                    setBgAnimation($('.welcome').next('.component-group').find('.anima-canvas'), 3000, 0);
                 }
             });
             $('.welcome').animate({ opacity: 0 }, 3000, function () {
@@ -297,7 +298,7 @@ $(document).ready(function () {
 
         }, pageTime);
     } else {
-        setBgAnimation(3000, 0);
+        setBgAnimation($('.anima-canvas'), 3000, 0);
         var panoBg = document.querySelector('.panoBg');
         initPanoBg(panoBg);
     }
@@ -1006,7 +1007,7 @@ $(document).ready(function () {
 
                                 if (!that.data[index] && that.menuIndex == index) {
                                     that.updateContent();
-                                } 
+                                }
                             }
                         },
                     });
@@ -1501,11 +1502,11 @@ function is_weixn() {
 /**
  * 设置背景的动画
  */
-function setBgAnimation(time, delayTime) {
-    time = time ? (time * 1 + 1000) : 1000;
+function setBgAnimation(obj, time, delayTime) {
+    time = time ? (time * 1 + 1000) : 3000;
     delayTime = delayTime || 0;
-    if ($('.anima-canvas').length > 0) {
-        $('.anima-canvas').eq(0).css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {
+    if (obj.length > 0) {
+        obj.css({ 'margin-left': '0' }).animate({ 'margin-left': '-12.5%' }, time, function () {
         });
     }
 }
