@@ -459,18 +459,13 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
         }
         int businessId = msBusinesses.get(0).getBusinessId();
-        // 栏目需要通过业务类别来获取
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
-        }
         Map<Integer, String> columnInfoMap = new HashMap<>();
         if(StringUtils.isNotBlank(columnNames)) {
             String[] split = columnNames.split(",|，");
             List<String> columnNameList = Lists.newArrayList(split);
             MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
             MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
-            criteria.andCategoryIdEqualTo(categoryId);
+            criteria.andBusinessIdEqualTo(businessId);
             if(columnNameList != null) {
                 criteria.andNameIn(columnNameList);
             }
@@ -572,18 +567,13 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
         }
         int businessId = msBusinesses.get(0).getBusinessId();
-        // 栏目需要通过业务类别来获取
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
-        }
         Map<Integer, String> columnInfoMap = new HashMap<>();
         if(StringUtils.isNotBlank(columnNames)) {
             String[] split = columnNames.split(",|，");
             List<String> columnNameList = Lists.newArrayList(split);
             MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
             MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
-            criteria.andCategoryIdEqualTo(categoryId);
+            criteria.andBusinessIdEqualTo(businessId);
             if(columnNameList != null) {
                 criteria.andNameIn(columnNameList);
             }
