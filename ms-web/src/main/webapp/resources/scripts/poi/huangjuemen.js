@@ -150,7 +150,9 @@ var initHJMPoiPage = function () {
     var initGoTop = function () {
         if (document.body.scrollHeight > document.body.clientHeight) {
             document.querySelector('.footer').classList.remove('hidden');
-            document.querySelector('.go-top').addEventListener('click', pageScroll);
+            document.querySelector('.go-top').addEventListener('click', function (e) {
+                window.scrollTo(0, 0);
+            });
         }
     };
 
