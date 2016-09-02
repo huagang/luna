@@ -839,6 +839,13 @@
                           </select>
                         </div>
                       </div>
+                      <div ng-show="pano.content.panoType.id==2">全景语言:
+                        <div class="" ng-class="">
+                          <select class="form-control" name="panoLang" ng-model="pano.content.panoLang" required="required" ng-options="lang.name for lang in pano.panoLangList track by lang.id" ng-change="pano.changePanoLang()">
+                              <option value="">请选择</option>
+                          </select>
+                        </div>
+                      </div>
                       <div>全景ID：
                         <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
                           <div class="input-del-wrapper" style="width:252px;">

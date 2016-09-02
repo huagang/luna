@@ -776,6 +776,9 @@ function NavController($scope, $rootScope) {
 
 NavController.prototype = new InteractComponentController();
 
+/**
+ * 全景控件Controller 
+ * */
 function PanoController($scope, $rootScope) {
 
     this.init = function () {
@@ -791,6 +794,8 @@ function PanoController($scope, $rootScope) {
                 id: 3,
                 name: '自定义全景'
             }];
+        this.panoLangList = lunaConfig.panoLang;
+        this.currentComponent.content.panoLang = this.content.panoLang = this.content.panoLang || this.panoLangList[0];
     };
 
     this.changeIcon = function () {
@@ -805,6 +810,10 @@ function PanoController($scope, $rootScope) {
         if (this.content.panoId) {
             this.currentComponent.content.panoId = this.content.panoId;
         }
+    };
+    //改变全景语言
+    this.changePanoLang = function () {
+        this.currentComponent.content.panoLang = this.content.panoLang;
     };
     this.clearPanoId = function () {
         this.content.panoId = "";
