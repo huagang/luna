@@ -15,18 +15,13 @@
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_column.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
-    <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
 <body ng-app="manageColumn" ng-controller="columnController as column" ng-class="{'modal-open': column.newColumnShow || column.updateColumnShows}">
@@ -162,12 +157,17 @@
     <!-- 底部功能区 -->
 </div>
 <!--弹出层 end-->
-
-<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
-<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
 
 </body>
 </html>

@@ -23,6 +23,7 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
 </head>
@@ -47,6 +48,7 @@
                             <div class="business-list">
                             <table id="table_business" class="table"
                             			 data-toggle="table"
+                                         data-locale="zh-CN"
                             			 data-toolbar=""
 										 data-url="<%=request.getContextPath() %>/content/business/search"
 										 data-pagination="true"
@@ -217,19 +219,6 @@
 		}, $table = $('#table_business').bootstrapTable({
 			data : getRows()
 		});
-        $table.on('load-success.bs.table', function(status,res){
-            if(! res.total){
-                setTimeout(function(){
-                    $('.no-records-found td').addClass('visibility-show').text('内容为空');
-                }, 1);
-
-            }
-        });
-        $table.on('load-error.bs.table', function(status, res){
-            setTimeout(function(){
-                $('.no-records-found td').addClass('visibility-show').text('请求错误,内容为空');
-            }, 1);
-        });
 
 		$('#condition_search').click(function() {
 			$table.bootstrapTable('refresh');

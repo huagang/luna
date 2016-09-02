@@ -514,7 +514,3 @@ a.button.disable:hover{
     margin: 0 auto;
     display: inline-block;
 }
-
-.no-records-found td{
-    visibility: hidden;
-}

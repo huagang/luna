@@ -49,6 +49,7 @@
                         <!--微景展列表 start-->
                         <div class="app-list">
                         	<table id="table_apps" class="table"
+								   	     data-locale="zh-CN"
                             			 data-toggle="table"
                             			 data-toolbar=""
                             			 data-show-footer=false
@@ -263,6 +264,7 @@
 <jsp:include page="/templete/imgCropper.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>

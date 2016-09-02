@@ -23,6 +23,7 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
 </head>
 <body>
@@ -54,6 +55,7 @@
                             <div class="user-list">
 
                             <table id="table_users" class="table"
+                                         data-locale="zh-CN"
                             			 data-toggle="table"
                             			 data-toolbar=""
 										 data-url="<%=request.getContextPath() %>/platform/user/search"
@@ -128,20 +130,6 @@
 		}, $table = $('#table_users').bootstrapTable({
 			data : getRows()
 		});
-        $table.on('load-success.bs.table', function(status,res){
-            if(! res.total){
-                setTimeout(function(){
-                    $('.no-records-found td').addClass('visibility-show').text('内容为空');
-                }, 1);
-
-            }
-        });
-        $table.on('load-error.bs.table', function(status, res){
-            setTimeout(function(){
-                $('.no-records-found td').addClass('visibility-show').text('请求错误,内容为空');
-            }, 1);
-        });
-
 		$('#condition_search').click(function() {
 			$table.bootstrapTable('refresh');
 		});
