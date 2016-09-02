@@ -163,10 +163,19 @@ $(function(){
 		}
 		hasError = hasError || m_addressEdit();
 
-		hasError = hasError || agentEdit();
-
 		hasError = hasError || checkBusinessName();
+		if((hasError)&&(!hasFocus)){
+			$("#business-name-edit").focus();
+			hasFocus=true;
+		}
 
+		hasError = hasError || checkBusinessShortName();
+		if((hasError)&&(!hasFocus)){
+			$("business-name-short-edit").focus();
+			hasFocus=true;
+		}
+
+		hasError = hasError || agentEdit();
 		if(!hasError){
 			var options = {
 				dataType: "json",
@@ -475,11 +484,14 @@ function checkBusinessName(event){
 		hasError = true;
 		target.val(value.substr(0,32));
 		$('#warn-name-edit').text('业务名称不能超过32个字');
+		$("#business-name-edit").addClass('remind');
 	} else if(! value){
 		hasError = true;
 		$('#warn-name-edit').text('业务名称不能为空');
+		$("#business-name-edit").addClass('remind');
 	} else if(!hasError){
 		$('#warn-name-edit').text('');
+		$("#business-name-edit").removeClass('remind');
 	}
 	return hasError;
 
@@ -533,11 +545,15 @@ function checkBusinessShortName(event){
 		hasError = true;
 		target.val(value.substr(0,16));
 		$('#warn-short-edit').text('业务简称不能超过16个字');
+		$("#business-name-short-edit").addClass('remind');
 	} else if(! value){
 		hasError = true;
 		$('#warn-short-edit').text('业务简称不能为空');
+		$("#business-name-short-edit").addClass('remind');
 	} else if(!hasError){
 		$('#warn-short-edit').text('');
+		$("#business-name-short-edit").removeClass('remind');
+
 	}
 
 	return hasError;
