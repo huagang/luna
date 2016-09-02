@@ -13,3 +13,5 @@ update ms_column, ms_article set ms_column.business_id = ms_article.business_id 
 ALTER TABLE ms_merchant_manage ADD trade_status int(11) NOT NULL DEFAULT '0' COMMENT '商户交易直通车开通状态';
 ALTER TABLE ms_merchant_manage ADD unique_id char(32) default NULL comment "关联用户的id";
 ALTER TABLE ms_merchant_manage ADD unique (`unique_id`);
+
+UPDATE luna_menu SET status=0 WHERE code='business';
