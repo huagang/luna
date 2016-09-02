@@ -9,6 +9,7 @@ import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsMerchantManageTable;
 import ms.luna.biz.util.*;
@@ -201,31 +202,19 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
     @Override
     public JSONObject getMerchantTradeStatus(String json) {
         JSONObject param = JSONObject.parseObject(json);
-        Integer businessId = param.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
-        MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-        if (msBusiness == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
-        }
-        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        Integer businessId = param.getInteger(LunaUserTable.FIELD_ID);
+        //TODO 中间表查出商户ID
+        //TODO 传入商户ID
+        //MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
         JSONObject result = new JSONObject();
-        result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
+        //result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
         return FastJsonUtil.sucess("success", result);
     }
 
     @Override
     public JSONObject changeMerchantTradeStatus(String json) {
         JSONObject param = JSONObject.parseObject(json);
-        String merchantId = null;
-        if (param.containsKey(MsBusinessTable.FIELD_BUSINESS_ID)) {
-            Integer businessId = param.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
-            MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-            if (msBusiness == null) {
-                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
-            }
-            merchantId = msBusiness.getMerchantId();
-        } else {
-            merchantId = param.getString(MsMerchantManageTable.FIELD_MERCHANT_ID);
-        }
+        String merchantId = param.getString(MsMerchantManageTable.FIELD_MERCHANT_ID);
         MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
         msMerchantManage.setTradeStatus(param.getInteger(MsMerchantManageTable.FIELD_TRADE_STATUS));
         return FastJsonUtil.sucess("success");

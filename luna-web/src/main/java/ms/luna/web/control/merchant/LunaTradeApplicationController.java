@@ -6,6 +6,7 @@ import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.sc.SMSService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
+import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.SMSCodeTarget;
 import ms.luna.biz.util.FastJsonUtil;
@@ -65,13 +66,10 @@ public class LunaTradeApplicationController extends BasicController {
         return buildModelAndView("/merchant_detail");
     }
 
-    private boolean checkAuth(HttpServletRequest request, Integer businessId) {
+    private boolean checkAuth(HttpServletRequest request) {
 
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         if (user == null) return false;
-        if (!AuthHelper.hasBusinessAuth(user, businessId)) {
-            return false;
-        }
         if (user.getRoleId() != 10 && user.getRoleId() != 11) {
             return false;
         }
@@ -98,9 +96,8 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountProvince,
                                         @RequestParam String accountAddress,
                                         @RequestParam String accountNo,
-                                        @RequestParam Integer businessId,
                                         @RequestParam String smsCode) {
-        if (!checkAuth(request, businessId)) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
 
@@ -115,7 +112,7 @@ public class LunaTradeApplicationController extends BasicController {
         }
 
         JSONObject inData = new JSONObject();
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -159,14 +156,13 @@ public class LunaTradeApplicationController extends BasicController {
                                           @RequestParam String accountCity,
                                           @RequestParam String accountProvince,
                                           @RequestParam String accountAddress,
-                                          @RequestParam String accountNo,
-                                          @RequestParam Integer businessId) {
-        if (!checkAuth(request, businessId)) {
+                                          @RequestParam String accountNo) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
 
         JSONObject inData = new JSONObject();
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -211,14 +207,13 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountCity,
                                         @RequestParam String accountProvince,
                                         @RequestParam String accountAddresss,
-                                        @RequestParam String accountNo,
-                                        @RequestParam Integer businessId) {
-        if (!checkAuth(request, businessId)) {
+                                        @RequestParam String accountNo) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddresss);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -242,14 +237,13 @@ public class LunaTradeApplicationController extends BasicController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/status")
     @ResponseBody
-    public JSONObject getApplicationStatus(HttpServletRequest request,
-                                           @RequestParam Integer businessId) {
-        if (!checkAuth(request, businessId)) {
+    public JSONObject getApplicationStatus(HttpServletRequest request) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
-        return lunaTradeApplicationService.getApplicationStatusByBusinessId(inData);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        return lunaTradeApplicationService.getApplicationStatus(inData);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/status/{applicationId}")
@@ -268,40 +262,36 @@ public class LunaTradeApplicationController extends BasicController {
         return lunaTradeApplicationService.getApplicationStatusByApplicationId(inData);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/merchantStatus/{businessId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/merchantStatus")
     @ResponseBody
-    public JSONObject getMerchantTradeStatus(HttpServletRequest request,
-                                             @PathVariable Integer businessId) {
-        if (checkAuth(request, businessId)) {
+    public JSONObject getMerchantTradeStatus(HttpServletRequest request) {
+        if (checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         return manageMerchantService.getMerchantTradeStatus(inData.toString());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/get/{applicationId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/get")
     @ResponseBody
-    public JSONObject getApplication(HttpServletRequest request,
-                                     @PathVariable Integer applicationId,
-                                     @RequestParam Integer businessId) {
-        if (checkAuth(request, businessId)) {
+    public JSONObject getApplication(HttpServletRequest request) {
+        if (checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
-        inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         return lunaTradeApplicationService.getApplication(inData);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/sign/{businessId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/sign")
     @ResponseBody
-    public JSONObject signAgreement(HttpServletRequest request,
-                                    @PathVariable Integer businessId) {
-        if (checkAuth(request, businessId)) {
+    public JSONObject signAgreement(HttpServletRequest request) {
+        if (checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
-        inData.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
         return manageMerchantService.signAgreement(inData);
     }
 
