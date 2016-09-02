@@ -79,14 +79,13 @@ var initHJMPoiPage = function () {
             var url;
             switch (data.panorama_type) {
                 case 1: //单点全景
-                    url = "http://single.pano.visualbusiness.cn/PanoViewer.html?panoId=" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().singlePano, [data.panorama]);
                     break;
                 case 2: //专辑全景
-                    // url = "http://pano.visualbusiness.cn/album/index.html?panoId=" + data.panorama;
-                    url = "http://pano.visualbusiness.cn/album/index.html?albumId=" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().multiplyPano, [data.panorama, objdata.lang == 'zh' ? '' : objdata.lang]);
                     break;
                 case 3: //相册全景
-                    url = "http://data.pano.visualbusiness.cn/rest/album/view/" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().customPano, [data.panorama]);
                     break;
             }
             $('#panorama').attr('href', url);

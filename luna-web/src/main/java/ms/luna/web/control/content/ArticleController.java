@@ -101,8 +101,7 @@ public class ArticleController extends BasicController {
 
         int columnId = RequestHelper.getInteger(request, MsArticleTable.FIELD_COLUMN_ID);
         if(columnId < 0) {
-            errMsg = "栏目不合法";
-            return Pair.of(jsonObject, errMsg);
+            columnId = 0;
         }
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, columnId);
 
