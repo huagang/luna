@@ -413,12 +413,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
     @Override
     public JSONObject getColumnByBusinessId(int businessId) {
 
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "不存在对应的栏目");
-        }
         MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-        msColumnCriteria.createCriteria().andCategoryIdEqualTo(categoryId);
+        msColumnCriteria.createCriteria().andBusinessIdEqualTo(businessId);
         try {
             List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
             JSONObject ret = new JSONObject();
