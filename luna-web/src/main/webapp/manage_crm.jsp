@@ -74,7 +74,7 @@
                                  	<th data-field="contact_phonenum" data-align="left">联系人手机</th>
                                  	<th data-field="salesman_nm" data-align="left">业务员</th>                              
                                     <th data-field="status" data-align="left">状态</th>
-					                <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
+					                <th data-width="82px" data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
 					            </tr>
 					        </thead>
 				    	</table>

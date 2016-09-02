@@ -92,7 +92,7 @@ var initPage = function () {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category,
+                column_id: articleStore.category || 0,
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
 
@@ -327,7 +327,7 @@ var initPage = function () {
                     { id: 'content', name: '正文' },
                     // { id: 'thumbnail', name: '首图' },
                     // { id: 'summary', name: '摘要' },
-                     { id: 'category', name: '栏目' }
+                    // { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function (item) {
                     if (!this[item.id]) {
