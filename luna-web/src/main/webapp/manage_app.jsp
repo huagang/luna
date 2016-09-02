@@ -43,8 +43,8 @@
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" placeholder="输入微景展名称进行查询"/>
                             <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="search_apps" class="btn-search" >搜 索</button>
-                        </div>
-                        <button type="button" id="new-built" class="newApp" >+新建微景展</button>
+							<button type="button" id="new-built" class="newApp" >+新建微景展</button>
+						</div>
                         <!--微景展搜索 end-->
                         <!--微景展列表 start-->
                         <div class="app-list">
