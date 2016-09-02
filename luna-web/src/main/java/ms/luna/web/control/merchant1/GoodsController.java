@@ -85,9 +85,9 @@ public class GoodsController extends BasicController {
 //            String online_status = RequestHelper.getString(request, "online_status");
             // id, account, unique_id, update_time, create_time
 
-            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
-            if (message != null && message.length() != 0) {
-                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, message);
+            boolean flag = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
+            if (!flag) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "valid parameters!");
             }
 
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
@@ -163,9 +163,9 @@ public class GoodsController extends BasicController {
 //            String online_status = RequestHelper.getString(request, "online_status");
             // id, account, unique_id, update_time, create_time
 
-            String message = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
-            if (message != null && message.length() != 0) {
-                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, message);
+            boolean flag = checkParameters(name, category_id, description, pic, price, stock, transport_fee, note, merchant_id, business_id);
+            if (!flag) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "valid parameters!");
             }
 
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
@@ -245,16 +245,47 @@ public class GoodsController extends BasicController {
     }
 
     // 参数检查
-    private String checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
-        isGoodsNameValid(name);
+    private boolean checkParameters(String name, Integer category_id, String description, String pic, String price, Integer stock, String transport_fee, String note, String merchant_id, Integer business_id) {
+        return true;
+//        return isGoodsNameValid(name) && isPicValid(pic) && isStockValid(stock) && isPriceValid(price)
+//                && isTransportfeeValid(transport_fee) && isBusinessIdValid(business_id) && isMerchantIdValid(merchant_id)
+//                && isCategoryIdValid(category_id);
 
-        isPicValid(pic);
+    }
 
-        isStockValid(stock);
+    private boolean isCategoryIdValid(Integer category_id) {
+        return (category_id > 0);
+    }
 
-        is
+    private boolean isMerchantIdValid(String merchant_id) {
+        return !StringUtils.isBlank(merchant_id);
+    }
 
+    private boolean isBusinessIdValid(Integer business_id) {
+        return (business_id > 0);
+    }
 
+    private boolean isTransportfeeValid(String transport_fee) {
+        return isPicValid(transport_fee);
+    }
+
+    public static boolean isPriceValid(String price) {
+        String pattern = "(\\d+)(.\\d{1,2})?";
+        return Pattern.matches(pattern, price);
+    }
+
+    private boolean isStockValid(Integer stock) {
+        // 待讨论,无数量限制时stock数组为多少
+        return (stock > 0);
+    }
+
+    private boolean isPicValid(String pic) {
+        // 允许为空.不为空时图片数量不超过5
+        return (pic == null || pic.trim().split(",").length <= 5);
+    }
+
+    private boolean isGoodsNameValid(String name) {
+        return ( !StringUtils.isBlank(name) && StringUtils.length(name) <= 64);
     }
 
     // 将参数对放入json
@@ -267,6 +298,11 @@ public class GoodsController extends BasicController {
             param.put(keys[i], values[i]);
         }
         return param;
+    }
+
+    public static void main(String[] args) {
+        String a = "0.0";
+        System.out.println(isPriceValid(a));
     }
 
 }
