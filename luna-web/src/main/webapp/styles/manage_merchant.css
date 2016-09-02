@@ -1,4 +1,4 @@
-/* 分页组件 */
+/* 分页组件  start*/
 .pagination-wrapper{
     text-align: right;
 }
@@ -41,11 +41,13 @@
 .pagination-sm li + li a{
     margin-left: 10px;
 }
-
-
-
+/* 分页组件 end*/
 
 
 .tr-operation{
     background-color: #efefef;
+}
+
+.tr-operation button{
+    margin-left: 15px;
 }

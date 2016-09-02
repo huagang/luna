@@ -13,6 +13,8 @@
   <title>皓月平台</title>
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
+  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_merchant.css">
+  <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
 <body ng-app="manageMerchant" ng-controller="ManageMerchantController as manage">
 <div class="container-fluid">
@@ -39,25 +41,44 @@
             <table class="table">
               <thead>
                 <tr>
-                  <td>商品名称</td>
-                  <td>价格(元)</td>
-                  <td>库存</td>
-                  <td>总销量</td>
-                  <td>发布时间</td>
-                  <td>状态</td>
-                  <td>操作</td>
+                  <th>商品名称</th>
+                  <th>价格(元)</th>
+                  <th>库存</th>
+                  <th>总销量</th>
+                  <th>发布时间</th>
+                  <th>状态</th>
+                  <th>操作</th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="tr-operation">
-                  <td colspan="0">
+                  <td colspan="7">
                       <label>
-                          <input type="checkbox" /> 全选
+                          <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggale()"/> 全选
                       </label>
                       <button type="button">上架</button>
                       <button type="button">下架</button>
                       <button type="button">删除</button>
                   </td>
+                </tr>
+                <tr class="ng-hide ng-cloak" ng-show="!manage.merchantList || manage.merchantList.length === 0"></tr>
+                <tr class="ng-cloak" ng-repeat="merchant in manage.merchantList">
+                    <td>
+                      <input type="checkbox" ng-model="manage.checkedList[merchant.id]" />
+                      <span>{{merchant.name}}</span>
+                    </td>
+                    <td>{{merchant.price}}</td>
+                    <td>{{merchant.inventory}}</td>
+                    <td>{{merchant.totalSaled}}</td>
+                    <td>{{merchant.publishedTime}}</td>
+                    <td>
+                      <span class="ng-hide" ng-show="merchant.status==='notOnSale'">未上架</span>
+                      <img class='published ng-hide' ng-show="merchant.status==='onsale'" src='<%=request.getContextPath() %>/img/published.png' alt='已上架'/>
+                    </td>
+                    <td>
+                       <a href="javascript:void(0)" ng-click="manage.handleEdit(merchant.id)">编辑</a>
+                       <a href="javascript:void(0)" ng-click="manage.handleDelete(merchant.id)">删除</a>
+                    </td>
                 </tr>
               </tbody>
             </table>
@@ -75,7 +96,7 @@
 <div class="message-wrapper ng-hide" ng-show="manage.message">
   <div class="message">{{manage.message}}</div>
 </div>
-<div class="new-merchant">
+<div class="new-merchant hidden">
   <div class="mask"></div>
   <div class="pop-modal">
     <div class="pop-title">
@@ -100,6 +121,7 @@
 <script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-2.0.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/manage_merchant.js"></script>
 </body>
 </html>
