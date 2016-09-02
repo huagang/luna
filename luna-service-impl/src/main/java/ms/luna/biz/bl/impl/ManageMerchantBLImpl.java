@@ -269,9 +269,6 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		String businessName = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_NAME);
 		String businessCode = FastJsonUtil.getString(param, MsCRMTable.FIELD_BUSINESS_CODE);
 		// 检查业务是否重名
-		if(existBusiness(businessName, businessCode)) {
-			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "下手慢了,业务名称或简称已经存在");
-		}
 		if(existBusiness(merchant_id)) {
 			this.updateBusiness(businessName, businessCode, merchant_id);
 		} else {
