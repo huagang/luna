@@ -326,17 +326,6 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		if (msBusiness == null) {
 			return null;
 		}
-		String merchantId = msBusiness.getMerchantId();
-		if (CharactorUtil.isEmpyty(merchantId)) {
-			return null;
-		}
-		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
-		// 暂定商户被逻辑删除后业务将不应该继续维护
-		if (msMerchantManage == null
-				|| VbConstant.DEL_FLG.删除.equals(msMerchantManage.getDelFlg())
-			) {
-			return null;
-		}
 		return msBusiness.getBusinessName();
 	}
 

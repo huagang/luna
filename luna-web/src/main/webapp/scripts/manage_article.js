@@ -26,19 +26,6 @@ var initPage = function () {
             $table = $('#table_article').bootstrapTable({
                 data: getRows()
             });
-            $table.on('load-success.bs.table', function(status,res){
-                if(! res.total){
-                    setTimeout(function(){
-                        $('.no-records-found td').addClass('visibility-show').text('内容为空');
-                    }, 1);
-
-                }
-            });
-            $table.on('load-error.bs.table', function(status, res){
-                setTimeout(function(){
-                    $('.no-records-found td').addClass('visibility-show').text('请求错误,内容为空');
-                }, 1);
-            });
     };
 
     return {

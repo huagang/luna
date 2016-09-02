@@ -59,7 +59,7 @@
                 		<tbody bn-rows>
 							<tr class="ng-hide" ng-show="! router.rowsData || router.rowsData.length === 0">
 								<td colspan="4" class="text-center">
-									内容为空
+									没有找到匹配的记录
 								</td>
 							</tr>
                 			<tr ng-repeat="rowData in router.rowsData" data-id={{rowData.id}}>

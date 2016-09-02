@@ -16,20 +16,6 @@ $(function() {
         data : getRows()
 
     });
-    $table.on('load-success.bs.table', function(status,res){
-        if(! res.total){
-            setTimeout(function(){
-                $('.no-records-found td').addClass('visibility-show').text('内容为空');
-            }, 1);
-
-        }
-    });
-    $table.on('load-error.bs.table', function(status, res){
-        setTimeout(function(){
-            $('.no-records-found td').addClass('visibility-show').text('请求错误,内容为空');
-        }, 1);
-    });
-
 });
 
 
@@ -134,7 +120,7 @@ function ColumnController($scope, $rootScope, $http) {
     };
 
     this.checkCode = function() {
-        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30) {
+        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30 && /^[a-zA-Z0-9\-_]+$/.test(this.currentCode)){
             this.codeValid = true;
         } else{
             this.codeValid = false;

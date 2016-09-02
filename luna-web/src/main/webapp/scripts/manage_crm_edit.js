@@ -537,9 +537,9 @@ function checkBusinessShortName(event){
 	if(value){
 		hasError = hasError || checkCodeRepeat(value);
 	}
-	if(! /^[a-zA-Z-_]*$/.test(value)){
+	if(! /^[a-zA-Z\-_0-9]*$/.test(value)){
 		hasError = true;
-		$('#warn-short-edit').text('业务简称只能由英文字母,下划线,中划线组成');
+		$('#warn-short-edit').text('业务简称只能由英文字母,数字,下划线,中划线组成');
 	}
 	else if(value.length > 16){
 		hasError = true;
