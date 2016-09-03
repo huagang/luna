@@ -86,15 +86,7 @@ $(document).ready(function(){
             		// {"data":{"total":1,"row":[{"tags":[2],"_id":"57556f17af04b234b01ed5d7","name":"故宫"}]},"code":"0","msg":"success"}
             		if(returndata.data && returndata.data.row)
             		{
-                        searchPoisForBizTree = returndata.data.row.filter(function(item){
-                            if(poiDef[item._id]){
-                                return false;
-                            }
-                            if(typeId && item.tags.indexOf(typeId) === -1){
-                                return false;
-                            }
-                            return true;
-                        });
+                        searchPoisForBizTree = returndata.data.row;
             		//	$(".tags-wrap .btn-tags").removeClass("current");
             		//	$(".tags-wrap .btn-tags:first").addClass("current");
             			showSearchPois(tag_id);
