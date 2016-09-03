@@ -256,30 +256,29 @@ $(document).ready(function(){
 
     // 上移节点
     $(".luna-tree").on('click', '.move-up', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').prev().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
             obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj;
 
-        obj.c_list.some(function(item, index){
+        obj.c_list.forEach(function(item, index){
             var curType = poiDef[item._id].tags[0];
             if(item._id === id){
-                desIndex = srcIndex;
-                desObj = srcObj;
                 srcIndex = index;
                 srcObj = item;
-                return true;
-            } else{
-                srcIndex = index;
-                srcObj = item;
-                return false;
             }
-            return false;
+            else if(item._id === destId){
+                desIndex = index;
+                desObj = item;
+            }
         });
+        console.log(srcIndex, desIndex);
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
             saveTreeData();
             showTreeData();
         }
@@ -287,8 +286,11 @@ $(document).ready(function(){
 
     // 下移节点
     $(".luna-tree").on('click', '.move-down', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').next().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
             obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj, isFind = false;
 
@@ -297,20 +299,17 @@ $(document).ready(function(){
             if(item._id === id){
                 srcIndex = index;
                 srcObj = item;
-                isFind = true;
-            } else if(isFind){
+            }
+            else if(item._id === destId){
                 desIndex = index;
                 desObj = item;
-                return true;
             }
-            return false;
         });
+        console.log(srcIndex, desIndex);
 
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
-            console.log(treeDate);
             saveTreeData();
             showTreeData();
         }
