@@ -184,25 +184,7 @@ $(document).ready(function(){
             }
 
             for(var m=0;m<current_data.c_list.length;m++){
-                if(current_data.c_list[m]._id==_this.attr("item_id")){
-                    var current_item = current_data.c_list[m];
-                    var stack=[current_item], i, len;
-                    while(stack.length > 0){
-                        if(poiDef[stack[0]._id]){
-                            try{
-                                delete poiDef[stack[0]._id];
-                            } catch(e){
-
-                            }
-                        }
-                        if(stack[0].c_list.length > 0){
-                            for(i = 0, len = stack[0].c_list.length ; i< len; i++){
-                                stack.push(stack[0].c_list[i]);
-                            }
-                        }
-                        stack.shift();
-                    }
-
+                if(current_data.c_list[m]._id == _this.attr("item_id")){
                     current_data.c_list.splice(m, 1);
                     showTreeData();
                     saveTreeData();
