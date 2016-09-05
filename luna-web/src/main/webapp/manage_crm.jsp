@@ -49,13 +49,14 @@
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
 							<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="condition_search" class="btn-search">搜 索</button>
-                        </div>
-                        <button type="button" id="new-built">新建</button>
+                            <button type="button" id="new-built">新建</button>
+                     </div>
                         <!--CRM搜索 end-->
                          <div class="app-list">
 	                         <table id="table_business" class="table"
 	                         			 data-toggle="table"
 	                         			 data-toolbar=""
+                                         data-locale="zh-CN"
 								 data-url="<%=request.getContextPath() %>/content/crm/search"
 								 data-pagination="true"
 								 data-side-pagination="server" 

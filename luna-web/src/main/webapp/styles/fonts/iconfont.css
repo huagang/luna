@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1472718422'); /* IE9*/
-  src: url('iconfont.eot?t=1472718422#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1472718422') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1472718422') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1472718422#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1472713853'); /* IE9*/
+  src: url('iconfont.eot?t=1472713853#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1472713853') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1472713853') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1472713853#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -47,7 +47,6 @@
 .icon-yuxizoulang:before { content: "\e61b"; }
 .icon-changjiangsanxia:before { content: "\e61c"; }
 .icon-shijieyichan:before { content: "\e61e"; }
-.icon-tongguo:before { content: "\e623"; }
 .icon-kefang:before { content: "\e61f"; }
 .icon-yazhi:before { content: "\e620"; }
 .icon-zunxiang:before { content: "\e621"; }

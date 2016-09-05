@@ -17,6 +17,7 @@ $(document).ready(function () {
 			$('#table_apps').bootstrapTable("refresh");
         }
     });
+
     window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
 
@@ -210,19 +211,9 @@ function getNormalController(appSel) {
 function getShareController(data) {
 	data = data || [];
 	var controller = {
-		_defaultTitle: '',
 		num: data.length,
 		data: data,
 		counters: [],
-		updateDefaultTitle: function (value) {
-			this._defaultTitle = value;
-			this.data.forEach(function (item, index) {
-				this.counters[index].titleCounter.updateCounter(value.length);
-				$('.share-item.order-{0} .share-title'.format(index)).val(item.title || value);
-				item.title = item.title || value;
-			}.bind(this));
-
-		},
 		init: function () {
 			// 事件绑定
 
@@ -281,7 +272,7 @@ function getShareController(data) {
 					.attr('data-order', this.num);
 				$('.setting-share').append(cloneEle);
 				var data = {
-					title: this._defaultTitle || '',
+					title: '',
 					description: '',
 					pic: ''
 				};
@@ -306,16 +297,6 @@ function getShareController(data) {
 					removeClass('order-' + i).addClass('order-' + (i - 1));
 			}
 			this.num -= 1;
-		},
-		checkValidation: function () {
-			var errorMsg;
-			this.data.forEach(function (item, index) {
-				if (!errorMsg && (!item.title || !item.description || !item.pic)) {
-					errorMsg = "分享的标题、描述以及分享图不能为空\n";
-				}
-			});
-
-			return { error: errorMsg ? 'empty' : null, msg: errorMsg };
 		},
 		updateData: function (data) {
 			this.reset();
@@ -381,7 +362,6 @@ function getShareController(data) {
 			this.counters = [];
 			this.data = [];
 			this.num = 0;
-			this._defaultTitle = '';
 			// 复原元素
 			$("div[class*='order']").remove();
 			this.newShare();
@@ -599,13 +579,11 @@ function getAppController(editAppSelector) {
 
 			//微景展配置框菜单切换 切换到分享设置
 			shareMenu.click(function () {
-				if (this.normalController.data.appName) {
-					this.shareController.updateDefaultTitle(this.normalController.data.appName);
-				}
 				shareMenu.addClass('active');
 				normalMenu.removeClass('active');
 				$('.setting-share').removeClass('hidden');
 				$('.setting-normal').addClass('hidden');
+				event.preventDefault();
 
 			}.bind(this));
 
@@ -615,6 +593,7 @@ function getAppController(editAppSelector) {
 				shareMenu.removeClass('active');
 				$('.setting-share').addClass('hidden');
 				$('.setting-normal').removeClass('hidden');
+				event.preventDefault();
 			});
 			this._appDialog.find('.cancel').click(function () {
 				this._appDialog.removeClass('pop-show');
@@ -677,8 +656,6 @@ function getAppController(editAppSelector) {
 		_checkValidation: function () {
 			var result = this.normalController.checkValidation();
 			var errorMsg = result.error ? result.msg : '';
-			result = this.shareController.checkValidation();
-			errorMsg += result.error ? result.msg : '';
 			return { error: errorMsg ? 'empty' : null, msg: errorMsg };
 		},
 
@@ -691,11 +668,22 @@ function getAppController(editAppSelector) {
 				return;
 			}
 
+			var shareData = this.shareController.data.filter(function(item){
+				if(item.title || item.description || item.pic){
+					return true;
+				} else{
+					return false;
+				}
+			}) ;
+			if(shareData.length === 0){
+			  shareData = [{title:'', description:'', pic: ''}];
+			}
+
 			var data = {
 				"app_name": this.normalController.data.appName,
 				"note": this.normalController.data.appDescription,
 				"pic_thumb": this.normalController.data.coverUrl,
-				"shareArray": JSON.stringify(this.shareController.data)
+				"shareArray": JSON.stringify(shareData)
 			};
 			$.ajax({
 				url: this.urls.appPropUpdate.url.format(this.data.appId), // 更新属性信息

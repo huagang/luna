@@ -105,12 +105,11 @@ public interface ManageMerchantService {
 	 */
 	JSONObject registMerchant(String json);
 
-    /**
-     * 商户签署直通车协议
-     *
-     * @param json
-     * @return
-     */
-    JSONObject signAgreement(JSONObject json);
-
+	/**
+	 * 商户签署直通车协议
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject signAgreement(JSONObject json);
 }

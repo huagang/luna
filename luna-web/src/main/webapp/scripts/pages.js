@@ -101,6 +101,7 @@ var InitLeftArea = function () {
             resetDialog();
             $("[name=pageType][value=1]").trigger('click');
             $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
+            $('#txt-time').closest('.item-wrap').addClass('hide');
         });
 
         //修改界面

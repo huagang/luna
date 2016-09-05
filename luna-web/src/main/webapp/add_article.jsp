@@ -99,7 +99,7 @@
 		                        <input type="text" name="videoName" file_type='video' id='video' placeholder="请输入视频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>                 
 		                        	<!-- The file input field used as target for the file upload widget -->
-		                        	<input id="video_fileup" type="file" name="video_fileup" accept="video/*">
+		                        	<input id="video_fileup" type="file" name="video_fileup" accept="video/mp4,video/x-m4v,video/*">
 		                        	<span>本地上传</span>
 		                        	<div class="load-container video_tip load8 hidden">
 		                            	<div class="loader">Loading...</div>

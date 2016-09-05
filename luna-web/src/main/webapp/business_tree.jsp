@@ -1,4 +1,4 @@
-<!--业务管理页面  author:Demi-->
+<!--poi关系配置页面  author:Demi-->
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -43,19 +43,26 @@
     <div class="content">
         <div class="inner-wrap">
             <div class="main-content">
-	            <div class="luna-tree">
-	             	<div class="business-title">数据应用业务:<span id="biz_name"></span></div>
-				    <ul>
-				        <li class="luna-tree-parent">
-				            <div class="item-name" href="#">
-				                <span class="item-title" id="business_name"></span><span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>
-				                <div class="item-opt-wrap">
-				                    <div class="item-opt addchild">添加子节点</div>
-				                </div>
-				            </div>
-				        </li>
-				    </ul>
-				</div>
+                <jsp:include page="/templete/menu.jsp"></jsp:include>
+                <div class="main">
+                    <div class="main-hd"><h3>POI数据关系配置</h3></div>
+                    <div class="luna-tree hidden">
+                        <ul>
+                            <li class="luna-tree-parent">
+                                <div class="item-name" href="#">
+                                    <span class="item-title" id="business_name"></span><span class="item-child-btn"><i class="icon icon-arrow-down"></i></span>
+                                    <div class="item-opt-wrap">
+                                        <div class="item-opt addchild">添加子节点</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="guidance hidden">
+                        <button class="button button-add-child">+创建关系树</button> </br>
+                        <span>首次进入POI关系树, 点击"创建关系树",为业务配置POI的数据关系吧</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -93,30 +100,9 @@
            	</select>
            	<select class="select" id="city" onchange="change_city()">
                	<option value="ALL">请选择市</option>
-               	<c:forEach items="${citys}" var="varCity" varStatus="status"> 
-                   <c:choose>
-                   		<c:when test="${cityId==varCity['city_id']}">
-                   			<option value="${varCity['city_id']}" selected >${varCity['city_nm_zh']}</option>
-                   		</c:when>
-                   		<c:otherwise>
-                   			<option value="${varCity['city_id']}" >${varCity['city_nm_zh']}</option>
-                   		</c:otherwise>
-                   </c:choose>
-			  </c:forEach>
            	</select>
            	<select class="select" id="county" onchange="change_county()">
                	<option value="ALL">请选择区/县</option>
-               	<c:forEach items="${countys}" var="varCounty" varStatus="status"> 
-                   	 <c:choose>
-                   		<c:when test="${countyId==varCounty['county_id']}">
-                   			<option value="${varCounty['county_id']}" selected>${varCounty['county_nm_zh']}</option>
-                   		</c:when>
-                   		<c:otherwise>
-                   			<option value="${varCounty['county_id']}">${varCounty['county_nm_zh']}</option>
-                   		</c:otherwise>
-                   </c:choose>
-                   	
-			  </c:forEach>
            	</select>
         </div>
       </div>
@@ -155,7 +141,6 @@
       </div>
     </div>
   </div>
-  <div class="status-message" id="status-message">成功</div>
   <!-- 底部功能区 -->
   <div class="pop-fun">
       <button type="button" id="btn-add-poi" >确定</button>
@@ -164,6 +149,7 @@
   <!-- 底部功能区 -->
 </div>
 <!-- 添加子节点弹层 end-->
+<div class="status-message" id="status-message">成功</div>
 
 <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
