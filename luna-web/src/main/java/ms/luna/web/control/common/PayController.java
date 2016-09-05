@@ -66,10 +66,7 @@ public class PayController {
                                      @RequestParam(value = "state") String state) {
         //TODO deal with state(send in the last step[getCode api])
 
-        JSONObject in = wxPayService.getOpenId(code);
-        JSONObject out = new JSONObject();
-        out.put("openId", in.getString("openId"));
-        return FastJsonUtil.sucess("success", out);
+        return wxPayService.getOpenId(code);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/wx/app/getPrepayId")
