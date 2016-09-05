@@ -26,8 +26,6 @@ public enum SMSCodeTarget {
 
     @Override
     public String toString() {
-        return "SMSCodeTarget{" +
-                "value='" + value + '\'' +
-                '}';
+        return value;
     }
 }
