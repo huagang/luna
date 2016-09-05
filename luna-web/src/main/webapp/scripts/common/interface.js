@@ -43,6 +43,7 @@ var Inter = function () {
         context: context,
         getPageUrl: function () {
             return {
+                home: context + '/',
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
@@ -577,7 +578,8 @@ var Inter = function () {
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' },
                 getMerchantStatus: { url: context + '/merchant/tradeApplication/status', type: 'GET' },
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
-                getMerchatDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
+                getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
+                getMerchatDetail: { url: context + '/merchant/tradeApplication/detail/{0}', type: 'GET' },
 
                 //获取短信验证码
                 getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },

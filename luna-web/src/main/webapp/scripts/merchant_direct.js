@@ -153,7 +153,7 @@ var initCreatePage = function () {
                     self = this,
                     ajaxData = {
                         'phoneNo': phone,
-                        'target': phone,
+                        'target': 'tradeApplication',
                     };
                 Util.setAjax(Inter.getApiUrl().getSMSCode.url, ajaxData, function (res) {
                     if (res.code == "0") {
@@ -259,7 +259,7 @@ var initCreatePage = function () {
                     merchantName: formDataZero.merchantName,
                     merchantNo: formDataZero.merchantNo,
                     merchantPhone: formDataZero.merchantPhone,
-                    smsCode:formDataZero.verCode,
+                    smsCode: formDataZero.verCode,
                 },
                 idPicObj = $('.idPic .pic-wrapper'),
                 idcardPicUrl = [],
@@ -299,10 +299,10 @@ var initCreatePage = function () {
                 format: 'yyyy-mm-dd',
                 language: "zh-CN",
             });
-            $('#idForever').on('click',function(){
-                if($(this).prop('checked')){
-                    $('#endIDDate').attr('disabled','disabled');
-                }else{
+            $('#idForever').on('click', function () {
+                if ($(this).prop('checked')) {
+                    $('#endIDDate').attr('disabled', 'disabled');
+                } else {
                     $('#endIDDate').removeAttr('disabled');
                 }
             });
@@ -338,6 +338,11 @@ var initAuditCompletePage = function () {
     };
     return {
         init: function () {
+            $('#btnDetail').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(Util.strFormat(Inter.getApiUrl().getMerchatDetail.url, [1]), '_blank');
+            });
             initSignEvent();
         }
     };
@@ -351,6 +356,10 @@ var initDialogEvent = function () {
         $('#btnSignAgreement').on('click', function () {
             var signStatus = $('[name=signStatus]:checked').val();
             if (signStatus) {
+                $('.process-num').addClass('pass');
+                $('#btnSign').addClass('hide');
+                clcWindow(this);
+                popWindow($('#pop-complete'));
                 console.log('协议通过');
             } else {
                 console.log('请签署协议');
@@ -359,6 +368,17 @@ var initDialogEvent = function () {
     };
     return {
         init: function () {
+            $('#signStatus').on('change', function (e) {
+                if ($('#signStatus:checked').length > 0) {
+                    $('#btnSignAgreement').removeAttr('disabled');
+                } else {
+                    $('#btnSignAgreement').prop('disabled', true);
+                }
+            });
+            $('#btnComplete').on('click', function (e) {
+                clcWindow(this);
+                window.location.href = Inter.getPageUrl().home;
+            });
             initSingButton();
         }
     };
@@ -375,7 +395,7 @@ $('document').ready(function () {
 
 function showPage() {
     $.ajax({
-        url: Inter.getApiUrl().getMerchantStatus,    //请求的url地址
+        url: Inter.getApiUrl().getMerchantStatus.url,    //请求的url地址
         dataType: "json",   //返回格式为json
         async: true, //请求是否异步，默认为异步，这也是ajax重要特性
         data: { "id": "value" },    //参数值
@@ -404,7 +424,7 @@ function showPage() {
             $('#checkAndPass,.checking').removeClass('hide');
             break;
         case '2':
-            $('#checkAndPass,.pass').removeClass('hide');
+            $('#checkAndPass,.signing').removeClass('hide');
             break;
         default:
             break;

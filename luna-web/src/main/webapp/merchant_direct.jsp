@@ -39,7 +39,7 @@
                     <jsp:include page="/templete/menu.jsp"></jsp:include>
                     <!--侧边菜单 end-->
                     <!-- 隐藏文本域 Start-->
-                    <input type="hidden" name="" id="merchantStutas" value="0">
+                    <input type="hidden" name="" id="merchantStutas" value="2">
                     <!-- 隐藏文本域 END-->
                     <!--主题内容 start-->
                     <!-- 开通流程 -->
@@ -315,7 +315,7 @@
                         <div class="main-hd">
                             <h4><a href="#">交易直通车</a>/确认提交</h4></div>
                         <div class="confirm-wrapper">
-                            <!--<i class="iconfont  icon-profile"></i>-->
+                            <i class="tradeicon-complete"></i>
                             <p>资料提交完成，正在为您审核，请耐心等待 <br/> 您提交的资料，将在1～3个工作日内审核完毕，您可登录皓月平台查看进度
                                 <br/> 资料审核通过后，您需要和微景天下在线签署服务协议，成功后，将自动开通直通车服务。
                             </p>
@@ -329,39 +329,45 @@
                     <div id="checkAndPass" class="main hide">
                         <div class="main-hd">
                             <h4>交易直通车</h4></div>
-                        <p class="launch hide checking">
+                        <p class="launch">
                             <span>你所在的商户还未开通交易直通车</span>
                             <button type="button" disabled="disabled">已申请</button>
                         </p>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>介绍</h5>
+                            <h5><i class="tradeicon tradeicon-introduce"></i>介绍</h5>
                             <p class="">
                                 交易直通车是微景天下针对有商品交易需求的商户提供的一整套解决方案，开通交易直通车的商户可通过商户自己的后台发布商品，并对产生交易的订单进行管理，同时可结合实际的交易数据，优化自身的服务方向。</p>
                         </section>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>流程</h5>
+                            <h5><i class="tradeicon tradeicon-process"></i>流程</h5>
+                            <div class="process-icon-wrapper">
+                                <div class="process-num-wrapper">
+                                    <i class="process-num pass">1</i>
+                                </div>
+                                <div class="process-num-wrapper">
+                                    <i class="process-num">2</i>
+                                </div>
+                            </div>
                             <ul class="process-wrapper">
                                 <li class="process-one">
                                     <div class="process-title-wrapper">
-                                        <i class="process-num">1</i>
                                         <span class="process-title">
                                         资料审核
                                     </span>
                                     </div>
                                     <div class="process-content-wrapper">
-                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <a href="">查看资料</a>
-                                        <div class="pass-flag pass hide">审核通过</div>
+                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <br>
+                                        <i class="tradeicon-complete-inline"></i> <label class="check-status checking hide">审核中</label> <label class="check-status signing hide">审核通过</label> <a href="" id="btnDetail">查看资料</a>
                                     </div>
                                 </li>
                                 <li class="process-two">
                                     <div class="process-title-wrapper">
-                                        <i class="process-num">2</i>
                                         <span class="process-title">
                                         协议签署
                                     </span>
                                     </div>
-                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务
-                                        <button type="button" class="sign-aggreement pass hide" id="btnSign">签署协议</button>
+                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务 <br>
+                                        <button type="button" class="sign-aggreement signing hide" id="btnSign">签署协议</button>
                                     </div>
                                 </li>
                             </ul>
@@ -390,16 +396,30 @@
             <jsp:include page="/templete/tradeAgreement.jsp" />
             <!--协议内容 end-->
         </div>
-        <div class="text-center">
-            <input id="signStatus" type="checkbox" name="signStatus" value="1"><label for="signStatus">同意以上协议</label>
-        </div>
-        <!-- 底部功能区 -->
-        <div class="pop-button text-center">
-            <button type="button" id="btnSignAgreement">签署</button>
+        <div class=" pop-footer text-right">
+            <input id="signStatus" type="checkbox" name="signStatus" value="1"><label for="signStatus">我同意以上协议</label>
+            <button type="button" id="btnSignAgreement" disabled="disabled">签署协议</button>
         </div>
         <!-- 底部功能区 end -->
     </div>
     <!--签署协议 end-->
+    <!-- 开通提示 -->
+    <div class="pop pop-complete" id="pop-complete">
+        <div class="pop-title">
+            <h4>提示</h4>
+            <a href="javascript:;" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
+        </div>
+        <div class="pop-cont">
+            <!--协议内容 start-->
+            <p><i class="tradeicon-complete-inline"></i>恭喜您成功开通皓月交易直通车</p>
+            <!--协议内容 end-->
+        </div>
+        <div class="pop-footer text-right">
+            <button type="button" id="btnComplete">完成</button>
+        </div>
+        <!-- 底部功能区 end -->
+    </div>
+    <!-- 开通提示 End-->
     <jsp:include page="/templete/imgCropper.jsp" />
 
 

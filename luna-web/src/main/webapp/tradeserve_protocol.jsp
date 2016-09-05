@@ -34,11 +34,11 @@
                     <!--主题内容 start-->
                     <!-- 开通流程 -->
                     <div id="process" class="main">
-                        <div class="main-hd">
-                            <h4>服务协议</h4></div>
-                        <p class="title text-center">
+                        <!--<div class="main-hd">
+                            <h4>服务协议</h4></div>-->
+                        <h4 class="title text-center">
                             微景皓月交易直通车服务协议
-                        </p>
+                        </h4>
                         <section class="section-wrapper">
                             <p>微景皓月交易直通车服务协议</p>
                             <p>&nbsp;</p>
