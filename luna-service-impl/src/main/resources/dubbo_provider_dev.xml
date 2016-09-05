@@ -8,7 +8,6 @@
 						default-lazy-init="true">
 
 	<import resource="spring_config.xml" />
-	<bean id="genNumService" class="ms.luna.biz.sc.mock.GenNumServiceImpl"/>
 	<dubbo:application name="luna-service-impl" />
 
 	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>

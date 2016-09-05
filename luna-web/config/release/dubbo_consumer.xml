@@ -27,10 +27,8 @@
 	<dubbo:reference id="manageMerchantService" interface="ms.luna.biz.sc.ManageMerchantService" />
 	<dubbo:reference id="managePoiService" interface="ms.luna.biz.sc.ManagePoiService" />
 	<dubbo:reference id="manageShowAppService" interface="ms.luna.biz.sc.ManageShowAppService" />
-	<dubbo:reference id="manageUserService" interface="ms.luna.biz.sc.ManageUserService" />
 	<dubbo:reference id="msShowPageService" interface="ms.luna.biz.sc.MsShowPageService" />
 	<dubbo:reference id="pulldownService" interface="ms.luna.biz.sc.PulldownService" />
-	<dubbo:reference id="registService" interface="ms.luna.biz.sc.RegistService" />
 	<dubbo:reference id="vodPlayService" interface="ms.luna.biz.sc.VodPlayService" />
 	<dubbo:reference id="manageBusinessTreeService" interface="ms.luna.biz.sc.ManageBusinessTreeService" />
 	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService" />
