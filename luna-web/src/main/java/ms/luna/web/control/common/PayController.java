@@ -43,7 +43,7 @@ public class PayController {
             redirectUrl.append("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
             redirectUrl.append(WXPayProcess.APP_ID);
             redirectUrl.append("&redirect_uri=");
-            redirectUrl.append(url);
+            redirectUrl.append(URLEncoder.encode(url, "utf-8"));
             redirectUrl.append("&response_type=code&scope=snsapi_base");
             redirectUrl.append("&state=");
             String state = ""; //max 128 bytes
