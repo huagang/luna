@@ -6,6 +6,7 @@ import java.util.List;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.table.LunaUserTable;
@@ -45,6 +46,9 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
  
 	@Autowired
 	private MsUserPwDAO msUserPwDAO;
+
+	@Autowired
+	private LunaUserMerchantDAO lunaUserMerchantDAO;
 
 	@Autowired
 	private MsBusinessDAO msBusinessDAO;
@@ -127,12 +131,11 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
     @Override
     public JSONObject getMerchantTradeStatus(String json) {
         JSONObject param = JSONObject.parseObject(json);
-        Integer businessId = param.getInteger(LunaUserTable.FIELD_ID);
-        //TODO 中间表查出商户ID
-        //TODO 传入商户ID
-        //MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+		String userUniqueId = param.getString(LunaUserTable.FIELD_ID);
+		LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(userUniqueId);
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(lunaUserMerchant.getMerchantId());
         JSONObject result = new JSONObject();
-        //result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
+        result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
         return FastJsonUtil.sucess("success", result);
     }
 
@@ -142,6 +145,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
         String merchantId = param.getString(MsMerchantManageTable.FIELD_MERCHANT_ID);
         MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
         msMerchantManage.setTradeStatus(param.getInteger(MsMerchantManageTable.FIELD_TRADE_STATUS));
+		msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
         return FastJsonUtil.sucess("success");
     }
 
