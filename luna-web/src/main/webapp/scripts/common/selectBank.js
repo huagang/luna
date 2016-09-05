@@ -23,7 +23,7 @@
             var $selBank = $("#" + options.bankCode).select2({
                 width: "100%",
                 data: objBankName,
-                placeholder: "请输入并选择银行",
+                placeholder: "请选择",
                 allowClear: true,
                 minimumInputLength: 1,
                 language: "zh-CN",
@@ -34,8 +34,8 @@
             $selBank.trigger('change');
 
             var $province = $("#" + options.provinceCode).select2({
-                width: "50%",
-                placeholder: "请输入选择省份",
+                width: "100%",
+                placeholder: "省",
                 allowClear: true,
                 data: objProvinceNam,
                 minimumInputLength: 1,
@@ -58,8 +58,8 @@
     function initCitySelect(options, provinceCode) {
         if (provinceCode) {
             $("#" + options.cityCode).select2({
-                width: "50%",
-                placeholder: '请输入选择城市',
+                width: "100%",
+                placeholder: '市',
                 allowClear: true,
                 language: "zh-CN",
                 ajax: {
@@ -101,7 +101,7 @@
             //     $("#" + options.cityCode).html('');
             // }
             var $citySelect = $("#" + options.cityCode).select2({
-                width: "50%",
+                width: "100%",
                 allowClear: true,
                 language: "zh-CN",
                 placeholder: '请先选择省份'
@@ -136,7 +136,7 @@
         if (proviceCode && bankCode) {
             $("#" + options.branchBankCode).select2({
                 width: "100%",
-                placeholder: '请输入选择开户支行',
+                placeholder: '请选择开户支行',
                 allowClear: true,
                 language: "zh-CN",
                 ajax: {
@@ -177,7 +177,7 @@
         } else {
             $("#" + options.branchBankCode).select2({
                 width: "100%",
-                placeholder: '请输入选择总行和城市信息',
+                placeholder: '请选择总行和城市信息',
                 allowClear: true,
                 language: "zh-CN",
             }).val(null);

@@ -11,6 +11,7 @@ import ms.luna.common.PoiCommon;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
+import ms.luna.web.control.inner.UploadController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class PoiAddController extends BasicController {
     @Autowired
     private PoiController poiController;
 
+    @Autowired
+    private UploadController uploadController;
+
     public static final String menu = "poi";
 
     /**
@@ -76,8 +80,9 @@ public class PoiAddController extends BasicController {
         if ("0".equals(result.getString("code"))) {
             JSONObject data = result.getJSONObject("data");
             JSONArray private_fields_def = data.getJSONArray("private_fields_def");
-            poiController.initTags(session, data.getJSONObject("common_fields_def"), null);
-            session.setAttribute("private_fields", private_fields_def);
+            poiController.initTags(mav, data.getJSONObject("common_fields_def"), null);
+//            session.setAttribute("private_fields", private_fields_def);
+            mav.addObject("private_fields", private_fields_def);
         } else {
             mav.setViewName("/error.jsp");
             return mav;
@@ -101,7 +106,7 @@ public class PoiAddController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("provinces", lstProvinces);
+        mav.addObject("provinces", lstProvinces);
 
         // 城市信息
         List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
@@ -122,7 +127,7 @@ public class PoiAddController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("citys", lstCitys);
+        mav.addObject("citys", lstCitys);
 
         // 区/县信息
         List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
@@ -130,7 +135,7 @@ public class PoiAddController extends BasicController {
         simpleModel.setValue(VbConstant.ZonePulldown.ALL);
         simpleModel.setLabel(VbConstant.ZonePulldown.ALL_CITY_NM);
         lstCountys.add(simpleModel);
-        session.setAttribute("countys", lstCountys);
+        mav.addObject("countys", lstCountys);
 
         // 设置默认全景类型
         poiModel.setPanoramaType("2");
@@ -174,37 +179,34 @@ public class PoiAddController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
     @ResponseBody
-    public String uploadThumbnail(
-            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
+    public JSONObject uploadThumbnail(
+            @RequestParam(required = true, value = "file") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
-        if (ext == null) {
-            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
-        }
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String fileNameInCloud = VbMD5.generateToken() + ext;
-        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
-    }
+        JSONObject result = new JSONObject();;
+        try {
+            result = uploadController.uploadFile2Cloud( file, "pic", "poi", null, request);
 
-    /**
-     * 异步上传音频
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/audio/upload")
-    @ResponseBody
-    public String uploadAudio(
-            @RequestParam(required = true, value = "audio_fileup") MultipartFile file,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ext = VbUtility.getExtensionOfAudioFileName(file.getOriginalFilename());
-        if (ext == null) {
-            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
+            if ("0".equals(result.getString("code"))) {
+                String url = result.getJSONObject("data").getString("access_url");
+                result.put("original", file.getOriginalFilename());
+                result.put("name", VbUtility.getFileName(url));
+                result.put("url", url);
+                result.put("size", file.getSize());
+                result.put("type", VbUtility.getExtensionOfPicFileName(url));
+                result.put("state", "SUCCESS");
+                return result;
+            }
+        } catch (Exception e) {
+            MsLogger.error("Failed to upload pic.", e);
+            result.put("msg", "Failed to upload pic.");
         }
-
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String fileNameInCloud = VbMD5.generateToken() + ext;
-        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
+        result.put("original", file.getOriginalFilename());
+        result.put("name", file.getOriginalFilename());
+        result.put("url", "");
+        result.put("size", file.getSize());
+        result.put("type", "");
+        result.put("state", "FAIL");
+        return result;
     }
 
     /**
@@ -215,62 +217,32 @@ public class PoiAddController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/video/upload")
     @ResponseBody
-    public String uploadVideo(
-            @RequestParam(required = true, value = "video_fileup") MultipartFile file,
+    public JSONObject uploadVideo(
+            @RequestParam(required = true, value = "file") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // super.uploadLocalFile2Cloud(request, response, file, pic_address);
+        JSONObject result =  new JSONObject();
         try {
-            String ext = VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename());
-            if (ext == null) {
-                return FastJsonUtil.error("4", "文件扩展名有错误").toString();
+            result = uploadController.uploadFile2Cloud( file, "video", "poi", null, request);
+            if("0".equals(result.getString("code"))) {
+                String access_url = result.getJSONObject("data").getString("access_url");
+                result.put("type", VbUtility.getExtensionOfVideoFileName(file.getOriginalFilename()));
+                result.put("state", "SUCCESS");
+                result.put("url", access_url);
+                result.put("original", file.getOriginalFilename());
+                result.put("name", file.getOriginalFilename());
+                result.put("size", file.getSize());
+                return result;
             }
-            String fileName = VbMD5.generateToken() + ext;// 生成文件名
-            String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            String[] temp = request.getRequestURL().toString().split("/");
-            String webAddr = temp[0] + "//" + temp[2] + "/" + temp[3];
-            JSONObject result = VODUtil.getInstance().upload2Cloud(file,
-                    VODUtil.getVODPoiVideoFolderPath() + "/" + date, fileName, webAddr, 0);
-
-            String phone_url = "";
-            JSONObject vodJson = new JSONObject();
-            if ("0".equals(result.getString("code"))) {
-                JSONObject data = result.getJSONObject("data");
-                String vod_file_id = data.getString("vod_file_id");
-                JSONObject vodResult = VODUtil.getInstance().getVodPlayUrls(vod_file_id);
-
-                if("0".equals(vodResult.getString("code"))){
-                    phone_url = vodResult.getJSONObject("data").getString("vod_original_file_url");
-                }
-                JSONObject param = new JSONObject();
-                param.put("vod_file_id", vod_file_id);
-                param.put("vod_original_file_url", phone_url);
-                vodPlayService.createVodRecord(param.toString());
-                vodJson = FastJsonUtil.sucess("成功", param);
-            }
-            if(!"".equals(phone_url)) {
-                vodJson.put("type", VbUtility.getExtensionOfPicFileName(phone_url));
-                vodJson.put("state", "SUCCESS");
-            } else {
-                vodJson.put("type", "");
-                vodJson.put("state", "FAIL");
-            }
-            vodJson.put("url", phone_url);
-            vodJson.put("original", file.getOriginalFilename());
-            vodJson.put("name", file.getOriginalFilename());
-            vodJson.put("size", file.getSize());
-
-            return vodJson.toString();
         } catch (Exception e) {
-            JSONObject vodJson = FastJsonUtil.error("-1", "处理过程中系统发生异常:" + VbUtility.printStackTrace(e));
-            vodJson.put("original", file.getOriginalFilename());
-            vodJson.put("name", file.getOriginalFilename());
-            vodJson.put("url", "");
-            vodJson.put("size", file.getSize());
-            vodJson.put("type", "");
-            vodJson.put("state", "FAIL");
-            return vodJson.toString();
-
+            MsLogger.error("Failed to upload video.", e);
         }
+        result.put("original", file.getOriginalFilename());
+        result.put("name", file.getOriginalFilename());
+        result.put("url", "");
+        result.put("size", file.getSize());
+        result.put("type", "");
+        result.put("state", "FAIL");
+        return result;
     }
 
     /**

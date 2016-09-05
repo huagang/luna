@@ -96,6 +96,10 @@ componentPanoModelTemplate = {
         "panoId": "",
         'panoType': {
             id: 1
+        },
+        'panoLang': {
+            id: 'zh',
+            name: ''
         }
     },
     "action": {

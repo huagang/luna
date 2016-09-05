@@ -37,9 +37,9 @@ var initPage = function () {
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function (action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-                return Inter.getApiUrl().poiThumbnailUpload.url;
+                return Inter.getApiUrl().uploadPicByUeditor.url;
             } else if (action == 'uploadvideo') {
-                return Inter.getApiUrl().poiVideoUpload.url;
+                return Inter.getApiUrl().uploadVideoByUeditor.url;
             } else {
                 return this._bkGetActionUrl.call(this, action);
             }
@@ -51,7 +51,7 @@ var initPage = function () {
             allowDivTransToP: false,
             elementPathEnabled: false,
             toolbars: [
-                ['fontfamily', '|',
+                ['source','|','fontfamily', '|',
                     'fontsize', '|',
                     'bold', 'italic', 'underline', 'forecolor', 'formatmatch', 'removeformat', '|',
                     'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
@@ -92,7 +92,7 @@ var initPage = function () {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category,
+                column_id: articleStore.category || 0,
                 short_title: document.querySelector('input[name="short_title"]').value,
             };
 
@@ -202,6 +202,7 @@ var initPage = function () {
                     resourceId: articleStore.id,
                     success: function (data) {
                         preview.src = articleStore.thumbnail = data.data.access_url;
+                        preview.classList.remove('hide');
                         clearWarn('#pic_warn');
                         hideLoadingTip('.pic_tip');
                         document.querySelector('#clearHeadImg').classList.remove('hide');
@@ -326,7 +327,7 @@ var initPage = function () {
                     { id: 'content', name: '正文' },
                     // { id: 'thumbnail', name: '首图' },
                     // { id: 'summary', name: '摘要' },
-                     { id: 'category', name: '栏目' }
+                    // { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function (item) {
                     if (!this[item.id]) {
@@ -414,7 +415,7 @@ var initPage = function () {
         // }, 500);
         $("#summary").val(articleStore.summary);
         if (articleStore.thumbnail) {
-            $("#thumbnail_show").attr('src', articleStore.thumbnail);
+            $("#thumbnail_show").attr('src', articleStore.thumbnail).removeClass('hide');
             document.querySelector('#clearHeadImg').classList.remove('hide');
         }
         if (articleStore.audio) {
@@ -425,7 +426,8 @@ var initPage = function () {
             $("#video").val(articleStore.video);
             document.querySelector('#clearVideo').classList.remove('hide');
         }
-        $("#category option[value='" + articleStore.category + "']").attr("selected", "selected")
+        // $("#category option[value='" + articleStore.category + "']").attr("selected", "selected").prop('selected', true);
+        $("#category option[value='" + articleStore.category + "']").prop('selected', true);
     }
 
     return {
@@ -435,7 +437,7 @@ var initPage = function () {
                 var dataFor = $(this).data('for');
                 switch (dataFor) {
                     case 'img':
-                        $('#thumbnail_show').attr('src', '');
+                        $('#thumbnail_show').attr('src', '').addClass('hide');
                         $('[name=thumbnail_fileup]').val('');
                         articleStore.thumbnail = '';
                         break;

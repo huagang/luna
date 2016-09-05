@@ -31,9 +31,41 @@ var TypeDataTemplate={
 var typeId = undefined;
 
 $(document).ready(function(){
-	initBusinessTreeData();
 
-	
+    var apiUrls = Inter.getApiUrl();
+    checkBusinessTree();
+
+    // 初始化
+    function checkBusinessTree(){
+        var business = localStorage.getItem('business'),business_id ;
+        if(business){
+            business_id = JSON.parse(business).id ;
+        }
+
+        if(!business_id){
+            $.alert('请您选择业务');
+            return;
+        }
+        $.ajax({
+            url: apiUrls.bizRelationExist.url.format(business_id),
+            type: apiUrls.bizRelationExist.type,
+            success: function(data){
+                if(data.code === '0'){
+                    showGuidance();
+                } else if(data.code === '409'){
+                    initBusinessTreeData();
+                } else{
+                    $.alert('获取数据出错,请刷新重试');
+                }
+            },
+            error: function(data){
+                $.alert('获取数据出错,请刷新重试');
+            }
+
+        });
+    }
+
+
 	function searchPois() {
 		var tag_id = $(".btn-tags.current").attr("tag_id");
 
@@ -54,15 +86,7 @@ $(document).ready(function(){
             		// {"data":{"total":1,"row":[{"tags":[2],"_id":"57556f17af04b234b01ed5d7","name":"故宫"}]},"code":"0","msg":"success"}
             		if(returndata.data && returndata.data.row)
             		{
-                        searchPoisForBizTree = returndata.data.row.filter(function(item){
-                            if(poiDef[item._id]){
-                                return false;
-                            }
-                            if(typeId && item.tags.indexOf(typeId) === -1){
-                                return false;
-                            }
-                            return true;
-                        });
+                        searchPoisForBizTree = returndata.data.row;
             		//	$(".tags-wrap .btn-tags").removeClass("current");
             		//	$(".tags-wrap .btn-tags:first").addClass("current");
             			showSearchPois(tag_id);
@@ -125,7 +149,6 @@ $(document).ready(function(){
     	$(this).addClass("current");
     	showSearchPois($(this).attr("tag_id"));
         $('#chkbox-selcet-all').attr("checked",false);
-//    	searchPois();
     });
 
     //绑定操作按钮下拉框和事件
@@ -145,13 +168,13 @@ $(document).ready(function(){
         var ps_li=[];
         $.confirm("确定要删除么？删除后无法恢复！", function(){
             for(var i=0;i<parents_li.length;i++){
-                if(($(parents_li[i]).attr("level-item-id") && $(parents_li[i]).attr("level-item-id")!="")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
-                    if($(parents_li[i]).attr("keyorder") && $(parents_li[i]).attr("keyorder")!=""){
+                if($(parents_li[i]).attr("level-item-id")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+                    if($(parents_li[i]).attr("keyorder")){
                         ps_li.push($(parents_li[i]).attr("keyorder"));
-                        // console.log($(parents_li[i]).attr("keyorder"));
+                         console.log($(parents_li[i]).attr("keyorder"));
                     }else{
                         ps_li.push($(parents_li[i]).index());
-                        // console.log($(parents_li[i]).index());
+                         console.log($(parents_li[i]).index());
                     }
                 }
             }
@@ -159,14 +182,17 @@ $(document).ready(function(){
             for(var i=(ps_li.length-1);i>0;i--){
                 current_data=current_data.c_list[ps_li[i]];
             }
+
             for(var m=0;m<current_data.c_list.length;m++){
-                if(current_data.c_list[m]._id==_this.attr("item_id")){
+                if(current_data.c_list[m]._id == _this.attr("item_id")){
                     current_data.c_list.splice(m, 1);
                     showTreeData();
                     saveTreeData();
                     return;
                 }
             }
+
+
             // delete current_data.c_list[_this.attr("item_id")];
         }, function(){
             
@@ -180,7 +206,33 @@ $(document).ready(function(){
         parents_poi_li={},
     	ps=[],
         ps_li=[];
-    
+
+    $(".button-add-child").on('click', function(){
+        var business = localStorage.getItem('business'),business_id ;
+        if(business) {
+            business_id = JSON.parse(business).id;
+        }
+
+        if (!business_id) {
+            $.alert('请您选择业务');
+            return;
+        }
+        $.ajax({
+            url: apiUrls.bizRelationCreate.url.format(business_id),
+            type: apiUrls.bizRelationCreate.type,
+            success: function (data) {
+                if (data.code === '0') {
+                    initBusinessTreeData();
+                } else {
+                    $.alert('新建关系树失败');
+                }
+            },
+            error: function (data) {
+                $.alert('新建关系树失败');
+            }
+        });
+    });
+
     $(".luna-tree").on('click','.item-opt.addchild',function(){
     	// 点击添加子节点时，需要加载默认的poi列表数据
     	searchPois();
@@ -204,30 +256,29 @@ $(document).ready(function(){
 
     // 上移节点
     $(".luna-tree").on('click', '.move-up', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').prev().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
-            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj;
+            obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj;
 
-        obj.c_list.some(function(item, index){
+        obj.c_list.forEach(function(item, index){
             var curType = poiDef[item._id].tags[0];
             if(item._id === id){
-                desIndex = srcIndex;
-                desObj = srcObj;
                 srcIndex = index;
                 srcObj = item;
-                return true;
-            } else if(obj.business_id  || curType === type){
-                srcIndex = index;
-                srcObj = item;
-                return false;
             }
-            return false;
+            else if(item._id === destId){
+                desIndex = index;
+                desObj = item;
+            }
         });
+        console.log(srcIndex, desIndex);
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
             saveTreeData();
             showTreeData();
         }
@@ -235,30 +286,30 @@ $(document).ready(function(){
 
     // 下移节点
     $(".luna-tree").on('click', '.move-down', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').next().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
-            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj, isFind = false;
+            obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj, isFind = false;
 
         obj.c_list.some(function(item, index){
             var curType = poiDef[item._id].tags[0];
             if(item._id === id){
                 srcIndex = index;
                 srcObj = item;
-                isFind = true;
-            } else if(isFind && (obj.business_id || curType === type)){
+            }
+            else if(item._id === destId){
                 desIndex = index;
                 desObj = item;
-                return true;
             }
-            return false;
         });
+        console.log(srcIndex, desIndex);
 
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
-            console.log(treeDate);
             saveTreeData();
             showTreeData();
         }
@@ -312,11 +363,7 @@ $(document).ready(function(){
     	        var newchild=$.extend(true, {}, PoiDataTemplate);
     	        newchild._id=chk_value[c][0];
                 current_data.c_list.push(newchild);
-    	        // if(_this.attr("item_id") && _this.attr("item_id") !=""){
-    	        //     current_data.c_list[_this.attr("item_id")].c_list[chk_value[c][0]]=newchild;
-    	        // }else{
-    	        //     current_data.c_list[chk_value[c][0]]=newchild;
-    	        // }
+
 
     	        if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
 	    	        var newDefChild=$.extend(true, {}, poiDefTemplate);
@@ -338,7 +385,13 @@ $(document).ready(function(){
      * 初始化业务树
      */
     function initBusinessTreeData(){
-    	var business_id = $('#business_id').val();
+        var business = localStorage.getItem('business'),business_id ;
+        if(business){
+            business_id = JSON.parse(business).id ;
+        } else{
+            $.alert('请您选择业务');
+            return;
+        }
         $.ajax({
             type: "GET",
             url: Util.strFormat(Inter.getApiUrl().bizRelationBizTreeView.url,[business_id]),
@@ -353,7 +406,7 @@ $(document).ready(function(){
                     if(typeof(treeDate.c_list.length)=="undefined"){
                         treeDate=formateCList(treeDate);
                     }
-            		showTreeData();
+                    showTreeData();
             	} else {
             		 $.alert('请求结果出错');
             	}
@@ -364,8 +417,17 @@ $(document).ready(function(){
         });
     }
 
+    function showGuidance(){
+        $('.guidance').removeClass('hidden');
+        $('.luna-tree').addClass('hidden');
+
+    }
 
     function showTreeData(){
+
+        $('.luna-tree').removeClass('hidden');
+        $('.guidance').addClass('hidden');
+
 
     	lunaTreeShowData=formateTreeData(treeDate);
     	// 设定业务名称
@@ -374,7 +436,6 @@ $(document).ready(function(){
 
         $(".luna-tree-parent").children("ul").remove();
         $(".luna-tree-parent").append(initTreeHtml(lunaTreeShowData));
-        $(".luna-tree-parent").css("width",deep*240+"px");
         deep=1;
     }
 
@@ -577,28 +638,26 @@ function clcContent(obj){
 	clcWindow(obj);
 }
 
-function getParentObj(id){
-    var parentObj = undefined;
-    var isFind = false;
-
-    var findList = [treeDate];
-    var length = treeDate.c_list.length;
-    var itemList;
-    for(var i=0; i< findList.length ;i++){
-        if(isFind){
-            return parentObj;
+function getParentObj(id, event){
+    var _this= $(event.target);
+    var parents_li= _this.parents("li");
+    var ps_li=[];
+    for(var i=0;i<parents_li.length;i++){
+        if($(parents_li[i]).attr("level-item-id")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+            if($(parents_li[i]).attr("keyorder")){
+                ps_li.push($(parents_li[i]).attr("keyorder"));
+                console.log($(parents_li[i]).attr("keyorder"));
+            }else{
+                ps_li.push($(parents_li[i]).index());
+                console.log($(parents_li[i]).index());
+            }
         }
-        itemList = findList[i];
-        itemList.c_list.some(function(item){
-            if(item._id === id){
-                treeDate.c_list = treeDate.c_list.slice(0, length);
-                parentObj = itemList;
-                isFind = true;
-            }
-            if(item.c_list && item.c_list.length > 0){
-                findList.push(item);
-            }
-        });
     }
-    return parentObj;
+    var current_data=treeDate;
+    for(var i=(ps_li.length-1);i>0;i--){
+        current_data=current_data.c_list[ps_li[i]];
+    }
+    console.log(current_data);
+
+    return current_data;
 }

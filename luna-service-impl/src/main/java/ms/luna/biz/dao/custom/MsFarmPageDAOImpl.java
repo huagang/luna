@@ -3,14 +3,17 @@ package ms.luna.biz.dao.custom;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import ms.luna.biz.table.MsFarmFieldTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +65,20 @@ public class MsFarmPageDAOImpl extends MongoBaseDAO implements MsFarmPageDAO{
             result.put(field, document.containsKey(field)? document.get(field) : null);
         }
         return result;
+    }
+
+    @Override
+    public ObjectId getPageId(Integer appId) {
+        ObjectId page_id;
+        Document filter = new Document().append(MsShowPageDAO.FIELD_APP_ID, appId);
+        List<String> includes = new ArrayList<>();
+        includes.add(MsShowPageDAO.FIELD_PAGE_ID);
+        Document doc = collection.find(filter).projection(Projections.include(includes)).first();
+        if(doc == null) {
+            return null;
+        }
+        page_id = doc.getObjectId(MsShowPageDAO.FIELD_PAGE_ID);
+        return page_id;
     }
 
 }

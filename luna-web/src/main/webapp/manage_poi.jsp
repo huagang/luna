@@ -18,19 +18,22 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_poi.css">
-    <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
+	<link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+
+	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/json2.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
+	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
 
 	
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/ajaxfileupload.js"></script>
-    <link href="<%=request.getContextPath() %>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
-	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
-	<script src="<%=request.getContextPath() %>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
+
 
 </head>
 <body>

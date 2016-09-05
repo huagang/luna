@@ -6,20 +6,18 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-var Inter = function () {
+var Inter = function() {
     var host = "/luna-web";
     var context = window.context || "/luna-web",
         apiContext = '';
 
-    var curHost = function () {
+    var curHost = function() {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        }
-        else if (/luna-test/.test(host)) {
+        } else if (/luna-test/.test(host)) {
             return 'test';
-        }
-        else {
+        } else {
             return 'current';
         }
     };
@@ -36,12 +34,7 @@ var Inter = function () {
         'current': 'http://webapp.visualbusiness.cn '
     };
 
-    var curApiHost = curHost();
-    if (curApiHost === 'others') {
-        apiContext = 'http://' + location.host + '/luna-api/';
-    } else {
-        apiContext = apiHost[curHost()];
-    }
+    apiContext = apiHost[curHost()];
 
 
     return {
@@ -70,6 +63,7 @@ var Inter = function () {
                     url: context + '/content/app/token',
                     type: 'GET'
                 },
+
                 //数据管理
                 poiInit: {
                     url: context + "/data/poi",
@@ -176,6 +170,8 @@ var Inter = function () {
                 }, //检查姓名
 
                 // 商户注册
+                merchantPicUpload: { url: context + "/common/merchant/upload", type: "POST" },// 图片上传
+
                 merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
                 merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
                 merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
@@ -183,6 +179,7 @@ var Inter = function () {
                 crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
 
                 // 业务数据关系管理
+                bizRelationExist: {url: context + "/content/businessRelation/exist/{0}", type: 'GET'},
                 bizRelationInit: {
                     url: context + "/content/businessRelation",
                     type: "GET"
@@ -247,6 +244,8 @@ var Inter = function () {
                     url: context + '/common/business/selectForEdit?unique_id={0}',
                     type: 'GET'
                 },
+                checkBusinessNameRepeat: {url: context + '/content/business/businessName/check?business_name={0}&merchant_id={1}', type: 'GET'},
+                checkBusinessCodeRepeat: {url: context + '/content/business/businessCode/check?business_code={0}&merchant_id={1}', type: 'GET'},
 
 
                 //栏目管理
@@ -423,6 +422,18 @@ var Inter = function () {
                     url: context + '/inner/uploadPic',
                     type: 'POST'
                 }, //图片上传接口
+                // 上传路径
+                uploadPicByUeditor: {
+                    //url: context + '/inner/upload',
+                    url: context + "/data/poi/thumbnail/upload",
+                    type: 'POST'
+                }, //统一上传接口
+                uploadVideoByUeditor: {
+                    //url: context + '/inner/uploadPic',
+                    url: context + "/data/poi/video/upload",
+                    type: 'POST'
+                }, //图片上传接口
+
 
                 login: {
                     url: context + '/common/login',
@@ -576,6 +587,7 @@ var Inter = function () {
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' },
                 getMerchantStatus: { url: context + '/merchant/tradeApplication/status', type: 'GET' },
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
+                getMerchatDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
 
                 //获取短信验证码
                 getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },

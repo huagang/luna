@@ -128,7 +128,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 		MongoCollection<Document> biz_tree = mongoConnector.getDBCollection(PoiCommon.MongoTable.TABLE_BUSINESS_TREEE);
 		Document document = this.findWithBusinessIdInBussinessPoiTree(biz_tree, businessId);
 		if (document == null) {
-			FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
+			return FastJsonUtil.errorWithMsg("LUNA.E0012", "业务ID[" + businessId + "]");
 		}
 
 		// 1.获取列表
@@ -313,21 +313,7 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 	 */
 	private Boolean isBusinessIdExist(Integer businessId) {
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-		if (msBusiness == null) {
-			return Boolean.FALSE;
-		}
-		String merchantId = msBusiness.getMerchantId();
-		if (CharactorUtil.isEmpyty(merchantId)) {
-			return Boolean.FALSE;
-		}
-		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
-		// 暂定商户被逻辑删除后业务将不应该继续维护
-		if (msMerchantManage == null
-				|| VbConstant.DEL_FLG.删除.equals(msMerchantManage.getDelFlg())
-			) {
-			return Boolean.FALSE;
-		}
-		return Boolean.TRUE;
+		return msBusiness != null;
 	}
 
 	/**
@@ -338,17 +324,6 @@ public class ManageBusinessTreeBLImpl implements ManageBusinessTreeBL {
 	private String getBusinessNameExist(Integer businessId) {
 		MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
 		if (msBusiness == null) {
-			return null;
-		}
-		String merchantId = msBusiness.getMerchantId();
-		if (CharactorUtil.isEmpyty(merchantId)) {
-			return null;
-		}
-		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
-		// 暂定商户被逻辑删除后业务将不应该继续维护
-		if (msMerchantManage == null
-				|| VbConstant.DEL_FLG.删除.equals(msMerchantManage.getDelFlg())
-			) {
 			return null;
 		}
 		return msBusiness.getBusinessName();

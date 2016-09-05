@@ -245,6 +245,14 @@ var Util = function () {
             return args;
         },
         /**
+         * 获取RestFul风格的id
+         */
+        getRestFulArgu: function () {
+            var pathName = window.location.pathname;
+            var pathNameArr = pathName.split('/');
+            return pathNameArr[pathNameArr.length - 1];
+        },
+        /**
          * 格式化时间戳
          */
         dateFormat: function (date, format) {

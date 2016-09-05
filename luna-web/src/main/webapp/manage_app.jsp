@@ -43,12 +43,13 @@
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" placeholder="输入微景展名称进行查询"/>
                             <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="search_apps" class="btn-search" >搜 索</button>
-                        </div>
-                        <button type="button" id="new-built" class="newApp" >+新建微景展</button>
+							<button type="button" id="new-built" class="newApp" >+新建微景展</button>
+						</div>
                         <!--微景展搜索 end-->
                         <!--微景展列表 start-->
                         <div class="app-list">
                         	<table id="table_apps" class="table"
+								   	     data-locale="zh-CN"
                             			 data-toggle="table"
                             			 data-toolbar=""
                             			 data-show-footer=false
@@ -61,11 +62,11 @@
 						        <thead>
 						            <tr>
 						            	<th data-field="app_id" data-visible="false" data-align="left">微景展编号</th>
-						                <th data-formatter="nameFormatter" data-align="left">名称</th>
-						                <th data-formatter="timeFormatter" data-align="left">时间</th>
+						                <th data-formatter="nameFormatter" data-align="left" data-width="240">名称</th>
+						                <th data-formatter="timeFormatter" data-align="left" data-width="230">时间</th>
 						                <th data-field="owner" data-align="left">创建人</th>
 						                <th data-formatter="typeFormatter" data-align="left">类型</th>
-						                <th data-formatter="statusFormatter" data-align="left">状态</th>
+						                <th data-formatter="statusFormatter" data-align="center">状态</th>
 						                <th data-formatter="operationFormatter" data-width="230" data-align="right">操作</th>
 						            </tr>
 						        </thead>
@@ -263,6 +264,7 @@
 <jsp:include page="/templete/imgCropper.jsp"/>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/luna.config.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
@@ -303,8 +305,7 @@
 	}
 
 	function operationFormatter(value, row, index) {
-		var wrapperStart = "<div class='wrapper' data-app-id='{0}' data-app-name='{1}' data-business-id='{2}'" +
-				" data-app-type='{4}'>".format(row.app_id, row.app_name, row.business_id, row.type);
+		var wrapperStart = "<div class='wrapper' data-app-id='{0}' data-app-name='{1}' data-business-id='{2}' data-app-type='{3}'>".format(row.app_id, row.app_name, row.business_id, row.type);
 		var editOp = '<a class="property" href="javascript:void(0)">发布设置</a>';
 		var href = '', clickEvent = '';
 		switch(row.type){

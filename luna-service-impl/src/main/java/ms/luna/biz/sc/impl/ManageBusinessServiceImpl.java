@@ -308,4 +308,26 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		}
 	}
 
+	@Override
+	public JSONObject checkBusinessNameExist(String business_name, String merchant_id) {
+		// TODO Auto-generated method stub
+		try{
+			return manageBusinessBL.checkBusinessNameExist(business_name, merchant_id);
+		} catch(Throwable th) {
+			logger.error("Failed to check business name");
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name");
+		}
+	}
+
+	@Override
+	public JSONObject checkBusinessCodeExist(String business_code, String merchant_id) {
+		// TODO Auto-generated method stub
+		try{
+			return manageBusinessBL.checkBusinessCodeExist(business_code, merchant_id);
+		} catch(Throwable th) {
+			logger.error("Failed to check business code");
+			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business code");
+		}
+	}
+
 }

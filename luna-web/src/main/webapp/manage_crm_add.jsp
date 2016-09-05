@@ -122,9 +122,9 @@
 			            </div>
                     </div>
 			        <div class="information" >
-			            <div class="title-info">
-			            	<h4>业务信息</h4>
-			            </div>
+						<div class="info-tip">
+							为商户同步创建业务(作为商户在平台内的身份标识)
+						</div>
 							<div class="item">
 								<div class="item-label"><span class="superscript">*</span>业务名称</div>
 								<div class="item-value">
@@ -139,6 +139,7 @@
 									<span id="warn-short" class="red"></span>
 								</div>
 							</div>
+						</div>
 
 							<div class="item">
 			                <div class="item-label"><span class="superscript">*</span>受理业务员</div>
@@ -149,6 +150,7 @@
 			                    <input id="agent-name" name="salesman" value=${luna_nm} style='display:none;'/>
 			                    <input id="value-holder" value=${luna_nm} style='display:none;'/><%-- 保持最初的${luna_nm} --%>
 			                </div>
+
 			            </div>
 			            <div class="item">
 			                <div class="item-label"><span class="superscript">*</span>商户状态</div>
@@ -175,10 +177,14 @@
 <!--底部版权 start-->
 <jsp:include page="/templete/bottom.jsp"/>
 <!--底部版权 end-->
+<script>
+	window.context = "<%=request.getContextPath() %>";
+</script>
 	<script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 
 	<script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+	<script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
 	<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
 	<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>

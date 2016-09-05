@@ -1,5 +1,6 @@
 //CRM客户管理
 //author:Demi
+window.apiUrls = Inter.getApiUrl();
 $(function () {
 	//新建商户
     $("#new-built").click(function(){
@@ -154,10 +155,9 @@ $(function () {
             $(this).remove();
         });
     });
-
-	//提交表单
-	$("#btn-addmerchant").click(function(){
-		var hasError = false,hasFocus = false;
+    //提交表单
+    $("#btn-addmerchant").click(function(){
+    	var hasError = false,hasFocus = false;
 
 		hasError = linkmanName() || hasError;
 		if((hasError)&&(!hasFocus)){
@@ -196,11 +196,19 @@ $(function () {
 		}
 		hasError = m_address() || hasError;
 
+        hasError = checkBusinessName() || hasError;
+        if((hasError)&&(!hasFocus)){
+            $("#business-name").focus();
+            hasFocus=true;
+        }
+        hasError = checkBusinessShortName() || hasError ;
+        if((hasError)&&(!hasFocus)){
+            $("#business-name-short").focus();
+            hasFocus=true;
+        }
+
 		hasError = agent()||hasError;
 
-		hasError = checkBusinessName() || hasError;
-
-		hasError = checkBusinessShortName() || hasError ;
 
 	    if(!hasError){
 	   	var options = {
@@ -508,15 +516,21 @@ function checkBusinessName(event){
 	var hasError = false;
 	var target = $('#business-name');
 	var value = target.val() || '';
+    if(value){
+        hasError = hasError || checkNameRepeat(value);
+    }
 	if(value.length > 32){
 		hasError = true;
 		target.val(value.substr(0,32));
 		$('#warn-business-name').text('业务名称不能超过32个字');
-	} else if(! value){
+        $("#business-name").addClass('remind');
+    } else if(! value){
 		hasError = true;
 		$('#warn-business-name').text('业务名称不能为空');
-	} else{
+        $("#business-name").addClass('remind');
+	} else if(!hasError){
 		$('#warn-business-name').text('');
+        $("#business-name").removeClass('remind');
 	}
 	return hasError;
 }
@@ -526,22 +540,64 @@ function checkBusinessShortName(event){
 	var hasError = false;
 	var target = $('#business-name-short');
 	var value = target.val() || '';
-	if(! /^[a-zA-Z-_]*$/.test(value)){
+    if(value){
+        hasError = hasError || checkCodeRepeat(value);
+    }
+	if(! /^[a-zA-Z\-_0-9]*$/.test(value)){
 		hasError = true;
-		$('#warn-short').text('业务简称只能由英文字母,下划线,中划线组成');
-	}
+		$('#warn-short').text('业务简称只能由英文字母,数字,下划线,中划线组成');
+        $("#business-name-short").addClass('remind');
+    }
 	else if(value.length > 16){
 		hasError = true;
 		target.val(value.substr(0,16));
 		$('#warn-short').text('业务简称不能超过16个字');
-	} else if(! value){
+        $("#business-name-short").addClass('remind');
+
+    } else if(! value){
 		hasError = true;
 		$('#warn-short').text('业务简称不能为空');
-	} else{
+        $("#business-name-short").addClass('remind');
+
+    } else if(!hasError){
 		$('#warn-short').text('');
-	}
+        $("#business-name-short").removeClass('remind');
+    }
 
 	return hasError;
+}
+
+
+function checkNameRepeat(value){
+    var error = false;
+    $.ajax({
+        url: apiUrls.checkBusinessNameRepeat.url.format(value, ''),
+        type: apiUrls.checkBusinessNameRepeat.type,
+        async: false,
+        success: function(data){
+            if(data.code === '409'){
+                $('#warn-business-name').text('业务名称重复');
+                error = true;
+            }
+        }
+    });
+    return error;
+}
+
+function checkCodeRepeat(value){
+    var error = false;
+    $.ajax({
+        url: apiUrls.checkBusinessCodeRepeat.url.format(value, ''),
+        type: apiUrls.checkBusinessCodeRepeat.type,
+        async: false,
+        success: function(data){
+            if(data.code === '409'){
+                $('#warn-short').text('业务简称重复');
+                error = true;
+            }
+        }
+    });
+    return error;
 }
 
 //检查地址是否为空

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="luna_user_merchant">
+  <resultMap class="ms.luna.biz.dao.model.LunaUserMerchant" id="BaseResultMap">
+    <result column="unique_id" jdbcType="CHAR" property="uniqueId" />
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
+        (
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List">
+    unique_id, merchant_id, update_time, create_time
+  </sql>
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaUserMerchantCriteria" resultMap="BaseResultMap">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="luna_user_merchant.Base_Column_List" />
+    from luna_user_merchant
+    <isParameterPresent>
+      <include refid="luna_user_merchant.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant" resultMap="BaseResultMap">
+    select 
+    <include refid="luna_user_merchant.Base_Column_List" />
+    from luna_user_merchant
+    where unique_id = #uniqueId:CHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant">
+    delete from luna_user_merchant
+    where unique_id = #uniqueId:CHAR#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.LunaUserMerchantCriteria">
+    delete from luna_user_merchant
+    <include refid="luna_user_merchant.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant">
+    insert into luna_user_merchant (unique_id, merchant_id, update_time, create_time
+      )
+    values (#uniqueId:CHAR#, #merchantId:VARCHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#
+      )
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant">
+    insert into luna_user_merchant
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="uniqueId">
+        unique_id
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="uniqueId">
+        #uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        #createTime:TIMESTAMP#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.LunaUserMerchantCriteria" resultClass="java.lang.Integer">
+    select count(*) from luna_user_merchant
+    <include refid="luna_user_merchant.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective">
+    update luna_user_merchant
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.uniqueId">
+        unique_id = #record.uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchantId">
+        merchant_id = #record.merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updateTime">
+        update_time = #record.updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.createTime">
+        create_time = #record.createTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent>
+      <include refid="luna_user_merchant.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample">
+    update luna_user_merchant
+    set unique_id = #record.uniqueId:CHAR#,
+      merchant_id = #record.merchantId:VARCHAR#,
+      update_time = #record.updateTime:TIMESTAMP#,
+      create_time = #record.createTime:TIMESTAMP#
+    <isParameterPresent>
+      <include refid="luna_user_merchant.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant">
+    update luna_user_merchant
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="merchantId">
+        merchant_id = #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time = #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time = #createTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    where unique_id = #uniqueId:CHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaUserMerchant">
+    update luna_user_merchant
+    set merchant_id = #merchantId:VARCHAR#,
+      update_time = #updateTime:TIMESTAMP#,
+      create_time = #createTime:TIMESTAMP#
+    where unique_id = #uniqueId:CHAR#
+  </update>
+</sqlMap>

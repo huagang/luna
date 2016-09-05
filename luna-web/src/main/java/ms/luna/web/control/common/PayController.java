@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.RemoteIPUtil;
-import ms.luna.model.adapter.WXPayProcess;
+import ms.luna.model.adapter.AbstractWXPayProcess;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +41,7 @@ public class PayController {
         try {
             StringBuilder redirectUrl = new StringBuilder();
             redirectUrl.append("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
-            redirectUrl.append(WXPayProcess.APP_ID);
+            redirectUrl.append(AbstractWXPayProcess.APP_ID);
             redirectUrl.append("&redirect_uri=");
             redirectUrl.append(URLEncoder.encode(url, "utf-8"));
             redirectUrl.append("&response_type=code&scope=snsapi_base");
@@ -66,10 +66,7 @@ public class PayController {
                                      @RequestParam(value = "state") String state) {
         //TODO deal with state(send in the last step[getCode api])
 
-        JSONObject in = wxPayService.getOpenId(code);
-        JSONObject out = new JSONObject();
-        out.put("openId", in.getString("openid"));
-        return FastJsonUtil.sucess("success", out);
+        return wxPayService.getOpenId(code);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/wx/app/getPrepayId")

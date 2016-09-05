@@ -838,6 +838,13 @@
                           </select>
                         </div>
                       </div>
+                      <div ng-show="pano.content.panoType.id==2">全景语言:
+                        <div class="" ng-class="">
+                          <select class="form-control" name="panoLang" ng-model="pano.content.panoLang" required="required" ng-options="lang.name for lang in pano.panoLangList track by lang.id" ng-change="pano.changePanoLang()">
+                              <option value="">请选择</option>
+                          </select>
+                        </div>
+                      </div>
                       <div>全景ID：
                         <div class="" ng-class="{'has-error':panoInfoForm.panoId.$touched && panoInfoForm.panoId.$error.required }">
                           <div class="input-del-wrapper" style="width:252px;">
@@ -1230,8 +1237,8 @@
                           <ul class="dropdown" ng-show="menuTab.selectTabTypeStatus">
                             <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singleArticle')" readonly='readonly'>单页文章</a></li>
                             <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'articleList')" readonly='readonly'>文章列表</a></li>
-                            <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a>
-                            </li>
+                            <!--<li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'singlePoi')" readonly='readonly'>单点POI</a>
+                            </li>-->
                             <li><a class="btn" href="javascript:;" ng-click="menuTab.createNewTab($event,'poiList')" readonly='readonly'>POI列表</a>
                             </li>
                           </ul>
@@ -1427,7 +1434,7 @@
               <div class="item-wrap hide">
                 <span class="item-tit">显示时长</span>
                 <div class="item-cont">
-                  <input class="txt col-md-12" id="txt-time" type="text" placeholder="请输入时间数字，单位是秒" />
+                  <input class="txt col-md-12" id="txt-time" type="text" placeholder="请输入数字1~9，单位是秒" />
                   <span id="warn4"></span>
                 </div>
               </div>
