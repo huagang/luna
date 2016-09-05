@@ -1,31 +1,30 @@
 package ms.luna.biz.bl.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import ms.biz.common.CloudConfig;
 import ms.biz.common.ServiceConfig;
+import ms.luna.biz.bl.ManageMerchantBL;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
+import ms.luna.biz.dao.custom.MsMerchantManageDAO;
+import ms.luna.biz.dao.custom.MsUserPwDAO;
+import ms.luna.biz.dao.custom.model.MerchantsParameter;
+import ms.luna.biz.dao.custom.model.MerchantsResult;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.table.MsCRMTable;
-import ms.luna.biz.util.*;
+import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.MtaWrapper;
+import ms.luna.biz.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.visualbusiness.gennum.service.GenNumService;
-
-import ms.luna.biz.bl.ManageMerchantBL;
-import ms.luna.biz.cons.VbConstant;
-import ms.luna.biz.dao.custom.MsMerchantManageDAO;
-import ms.luna.biz.dao.custom.MsUserPwDAO;
-import ms.luna.biz.dao.custom.model.MerchantsParameter;
-import ms.luna.biz.dao.custom.model.MerchantsResult;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Greek
@@ -35,9 +34,6 @@ import com.alibaba.fastjson.JSONObject;
 @Transactional(rollbackFor = Exception.class)
 @Service("manageMerchantBL")
 public class ManageMerchantBLImpl implements ManageMerchantBL {
-
-	@Autowired
-	private GenNumService genNumService;
 
 	@Autowired
 	private MsMerchantManageDAO msMerchantManageDAO;

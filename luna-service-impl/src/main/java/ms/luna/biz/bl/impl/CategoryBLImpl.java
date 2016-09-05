@@ -2,7 +2,6 @@ package ms.luna.biz.bl.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.visualbusiness.gennum.service.GenNumService;
 import ms.luna.biz.bl.CategoryBL;
 import ms.luna.biz.dao.custom.MsCategoryDAO;
 import ms.luna.biz.dao.model.MsCategory;
@@ -17,8 +16,6 @@ import java.util.List;
 @Transactional(rollbackFor=Exception.class)
 @Service("categoryBL")
 public class CategoryBLImpl implements CategoryBL {
-	@Autowired
-	private GenNumService genNumService;
 
 	@Autowired
 	private MsCategoryDAO msCategoryDAO;
@@ -88,7 +85,6 @@ public class CategoryBLImpl implements CategoryBL {
 			return FastJsonUtil.error("2", "category_nm_en重名");
 		}
 
-//		String num = genNumService.generateNum("CATE", 1L, 16);
 		String num = UUIDGenerator.generateUUID();
 		if (CharactorUtil.isEmpyty(num)) {
 			MsLogger.debug("编号生成失败：[CATE]");
