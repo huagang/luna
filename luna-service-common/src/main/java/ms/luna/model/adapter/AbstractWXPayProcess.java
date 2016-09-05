@@ -30,10 +30,10 @@ public abstract class AbstractWXPayProcess implements PayProcess {
     private final static Logger logger = Logger.getLogger(AbstractWXPayProcess.class);
 
     //初始化
-    public static String APP_ID = "wxa0c7da25637df906";//微信公众账号应用id
-    public static String APP_SECRET = "b10ae7e4197d1c16064ca8d54f7cf94f";//应用对应的凭证
+    public static String APP_ID = "wxf8884f6b1d84257d";//微信公众账号应用id
+    public static String APP_SECRET = "ca19624bd5dc7c7937b229411d8eca18";//应用对应的凭证
     //应用对应的密钥
-    public static String PARTNER = "1253829901";//财付通商户号
+    public static String PARTNER = "1332993401";//财付通商户号
     public static String CERT_PASSWD = PARTNER;
     public static String CERT_FILE = "/data1/data/wxpay/apiclient_cert.p12";
     public static String TOKENURL = "https://api.weixin.qq.com/cgi-bin/token";//获取access_token对应的url
