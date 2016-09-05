@@ -50,5 +50,6 @@
     <dubbo:reference interface="ms.luna.biz.sc.LunaBankService" id="lunaBankService"/>
     <dubbo:reference interface="ms.luna.biz.sc.LunaBankBranchService" id="lunaBankBranchService"/>
     <dubbo:reference interface="ms.luna.biz.sc.LunaCityService" id="lunaCityService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.WXPayService" id="wxPayService"/>
 
 </beans>

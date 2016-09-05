@@ -15,6 +15,7 @@ import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.model.adapter.PayProcessAdapter;
 import ms.luna.model.adapter.WXPayProcess;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
  *
  * @author SDLL18
  */
+@Service("wxPayService")
 public class WXPayServiceImpl implements WXPayService {
 
     private static final Logger logger = Logger.getLogger(WXPayServiceImpl.class);
