@@ -25,9 +25,9 @@
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
     <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -49,13 +49,14 @@
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
 							<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="condition_search" class="btn-search">搜 索</button>
-                        </div>
-                        <button type="button" id="new-built">新建</button>
+                            <button type="button" id="new-built">新建</button>
+                     </div>
                         <!--CRM搜索 end-->
                          <div class="app-list">
 	                         <table id="table_business" class="table"
 	                         			 data-toggle="table"
 	                         			 data-toolbar=""
+                                         data-locale="zh-CN"
 								 data-url="<%=request.getContextPath() %>/content/crm/search"
 								 data-pagination="true"
 								 data-side-pagination="server" 
@@ -74,7 +75,7 @@
                                  	<th data-field="contact_phonenum" data-align="left">联系人手机</th>
                                  	<th data-field="salesman_nm" data-align="left">业务员</th>                              
                                     <th data-field="status" data-align="left">状态</th>
-					                <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
+					                <th data-width="82px" data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
 					            </tr>
 					        </thead>
 				    	</table>

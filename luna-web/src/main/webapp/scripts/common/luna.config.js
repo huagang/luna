@@ -20,6 +20,7 @@ var lunaConfig = function () {
             '3': '自定义',
         },
         'poiLang': [{ id: 'zh', name: "中文" }, { id: 'en', name: "英文" }],
+        'panoLang': [{ id: 'zh', name: "中文" }, { id: 'en', name: "英文" }],
         'menuTabIcon': [{
             name: '文字',
             code: 'text',

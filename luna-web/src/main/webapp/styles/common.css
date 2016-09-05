@@ -491,6 +491,9 @@ a.button.disable:hover{
     display: block !important;
 }
 
+.visibility-show{
+    visibility: visible !important;
+}
 
 .message-wrapper{
     position: fixed;

@@ -70,7 +70,7 @@ var Inter = function () {
 
                 //全景路径接口
                 singlePano: 'http://pano.visualbusiness.cn/single/index.html?panoId={0}',    //单点全景路径
-                multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}',  //相册全景路径
+                multiplyPano: 'http://pano.visualbusiness.cn/album/index.html?albumId={0}&lang={1}',  //相册全景路径
                 customPano: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  //自定义全景
 
                 multiplyPanoInfo: 'http://data.pano.visualbusiness.cn/rest/album/view/{0}',  // 相册信息

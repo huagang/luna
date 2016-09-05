@@ -3,6 +3,10 @@
 author:franco
 time:20160517
 */
+
+.menu{
+    min-width: 200px;
+}
 #childPoi{
     position: fixed;
 }
@@ -19,7 +23,9 @@ time:20160517
 }
 
 .luna-tree .luna-tree-parent {
+    white-space: nowrap;
     padding-bottom: 120px;
+    width: 940px;
 }
 
 .luna-tree .item-name{
@@ -336,7 +342,8 @@ right connector from last child*/
 
 .guidance{
     position: absolute;
-    top: 30%;
+    top: 300px;
+    top: 40vh;
     left:0;
     width: 100%;
     height: 100px;
@@ -350,7 +357,4 @@ right connector from last child*/
     border: 0;
     margin-bottom: 10px;
 }
-
-
-
 

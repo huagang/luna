@@ -17,6 +17,7 @@ $(document).ready(function () {
 			$('#table_apps').bootstrapTable("refresh");
         }
     });
+
     window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
 

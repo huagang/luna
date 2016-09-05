@@ -473,13 +473,13 @@ function showAnimation(){
                         vm.poiData.panoUrl = vm.apiUrls.singlePano.format(vm.poiData.panorama.panorama_id);
                         break;
                     case 2:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                     case 3:
                         vm.poiData.panoUrl = vm.apiUrls.customPano.format(vm.poiData.panorama.panorama_id);
                         break;
                     default:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                 }
             } else{
@@ -508,13 +508,13 @@ function showAnimation(){
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
                     break;
                 case 2:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
+                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
                     break;
                 case 3:
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
                     break;
                 default:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
+                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
                     break;
             }
         }
