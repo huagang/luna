@@ -104,6 +104,7 @@ public abstract class AbstractWXPayProcess implements PayProcess {
     public String sendPayMessage(String data) throws IOException, SAXException, ParserConfigurationException {
         String toSend = assembleRequest(data, "send");
         String receive = sendMessage(GATEURL, toSend);
+        logger.info("receive from wx pay: " + receive);
         if (paySignStrategy.checkSign(receive)) {
             JSONObject object = JSONObject.parseObject(payDataParseStrategy.getFromTransfer(receive));
             if (object.getString("return_code").equals("SUCCESS")) {

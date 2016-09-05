@@ -45,7 +45,6 @@ public class WXPayServiceImpl implements WXPayService {
         if (in.containsKey("errcode")) {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
         }
-        logger.info("receive openid from wx:\n" + in);
         JSONObject out = new JSONObject();
         out.put("openId", in.getString("openid"));
         return FastJsonUtil.sucess("success", out);
