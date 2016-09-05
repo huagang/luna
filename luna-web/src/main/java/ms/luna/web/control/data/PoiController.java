@@ -364,7 +364,7 @@ public class PoiController extends BasicController {
                 if(success) {
                     MsLogger.info("success to delete unziped resource file");
                 } else {
-                    MsLogger.info("success to delete unziped resource file");
+                    MsLogger.info("Failed to delete unziped resource file");
                 }
             } catch (Exception e) {
                 MsLogger.error("Failed to delete resource file.", e);
