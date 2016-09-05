@@ -702,9 +702,9 @@ function initEditor() {
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function (action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return Inter.getApiUrl().poiThumbnailUpload.url;
+            return Inter.getApiUrl().uploadPicByUeditor.url;
         } else if (action == 'uploadvideo') {
-            return Inter.getApiUrl().poiVideoUpload.url;
+            return Inter.getApiUrl().uploadVideoByUeditor.url;
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
