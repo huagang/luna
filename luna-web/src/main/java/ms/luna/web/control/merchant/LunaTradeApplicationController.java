@@ -58,7 +58,7 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{applyID}")
     public ModelAndView merchantDetail(HttpServletRequest request, HttpServletResponse response) {
 
         SessionHelper.setSelectedMenu(request.getSession(false), menu);

@@ -20,8 +20,8 @@ MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http'
     this.init = function () {
         var self = this;
         $http({
-            method: Inter.getApiUrl().getMerchatDetail.type,
-            url: Util.strFormat(Inter.getApiUrl().getMerchatDetail.url, [merchantId]),
+            method: Inter.getApiUrl().getMessageDetail.type,
+            url: Util.strFormat(Inter.getApiUrl().getMessageDetail.url, [merchantId]),
         }).then(function successCallback(response) {
             var res = response.data;
             if (res.code == 0) {
