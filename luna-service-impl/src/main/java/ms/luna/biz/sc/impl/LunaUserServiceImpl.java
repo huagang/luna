@@ -17,6 +17,7 @@ import ms.luna.biz.table.*;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.UUIDGenerator;
 import ms.luna.biz.util.VbMD5;
+import ms.luna.biz.util.VbUtility;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
@@ -30,6 +31,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -60,6 +63,8 @@ public class LunaUserServiceImpl implements LunaUserService {
     private RoleCache roleCache;
     @Autowired
     private RoleCategoryCache roleCategoryCache;
+    @Autowired
+    private MsBusinessDAO msBusinessDAO;
 
     @Override
     public JSONObject getUserList(int roleId, String query, int start, int limit) {
@@ -107,6 +112,21 @@ public class LunaUserServiceImpl implements LunaUserService {
         String webAddr = jsonObject.getString("webAddr");
 
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
+
+        // 获取业务id
+        String merchantId;
+        if(roleId == DbConfig.MERCHANT_ADMIN_ROLE_ID || roleId == DbConfig.MERCHANT_OPERATOR_ROLE_ID) {
+            Integer businessId = VbUtility.extractInteger(extra);
+            if(businessId == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数extra无法提取业务id");
+            }
+            // 根据业务id获取商户id
+            MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+            if(msBusiness == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务id不存在");
+            }
+            merchantId = msBusiness.getMerchantId();
+        }
 
         Set<String> emailSet = Sets.newHashSet(emailArray);
         logger.info("invited email set: " + emailSet);
@@ -511,4 +531,5 @@ public class LunaUserServiceImpl implements LunaUserService {
         }
         return FastJsonUtil.sucess("");
     }
+
 }

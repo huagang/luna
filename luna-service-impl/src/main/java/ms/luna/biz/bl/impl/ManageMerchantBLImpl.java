@@ -11,6 +11,7 @@ import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.table.MsCRMTable;
 import ms.luna.biz.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,7 +127,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			likeFilterNm = "%" + likeFilterNm.toLowerCase() + "%";
 			merchantsParameter.setLikeFilterNm(likeFilterNm);
 		}
-		
+
 		List<MerchantsResult> list = null;
 		int total = msMerchantManageDAO.countMerchants(merchantsParameter);
 		if (total > 0) {
@@ -287,7 +288,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if(msMerchant == null){
 			return FastJsonUtil.error("1", "商户id不存在,merchant_id:" + merchant_id);
 		}
-		
+
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
 		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setDelFlg("1");// 非物理删除
@@ -306,12 +307,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
 		return FastJsonUtil.sucess("success");
 	}
-	
+
 	// ---------------------------------------------------------
 
 	/**
 	 * 检测业务员是否存在
-	 * 
+	 *
 	 * @param salesman_nm
 	 * @return
 	 */
@@ -326,7 +327,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	/**
 	 * 检测商户名字是否重名
-	 * 
+	 *
 	 * @param merchant_nm
 	 * @return
 	 */
@@ -342,7 +343,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	/**
 	 * 检测当前商户名字是否和其他商户名字重名
-	 * 
+	 *
 	 * @param merchant_id 商户id
 	 * @param merchant_nm 商户名称
 	 * @return
@@ -361,13 +362,13 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public Integer countMerchantNm(String merchantNm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public JSONObject isSalesmanNmExit(String json) {
 		JSONObject param = JSONObject.parseObject(json);
@@ -392,7 +393,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			return FastJsonUtil.error("1","商户名称不存在");
 		return FastJsonUtil.sucess("商户名称存在");
 	}
-	
+
 	@Override
 	public JSONObject isEditedMerchantNmEist(String json){
 		JSONObject param = JSONObject.parseObject(json);
@@ -408,6 +409,21 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				return FastJsonUtil.sucess("商户名称存在");
 		}
 		return FastJsonUtil.error("1", "商户名称不存在");
+	}
+
+	@Override
+	public JSONObject getMerchantEmail(String id) {
+		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(id);
+		if(msMerchantManage == null ) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "merchant id not exist.");
+		}
+		String email = msMerchantManage.getContactMail();
+		if(StringUtils.isBlank(email)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "contact mail not exist");
+		}
+		JSONObject data = new JSONObject();
+		data.put(MsCRMTable.FIELD_CONTACT_MAIL, email);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	private void createBusiness(String businessName, String businessCode, String merchant_id, String createUser) {

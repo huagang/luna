@@ -99,4 +99,11 @@ public interface ManageMerchantBL {
 	 */
 	JSONObject registMerchant(String json);
 
+	/**
+	 * 获取商户email
+	 *
+	 * @param id
+	 * @return
+	 */
+	JSONObject getMerchantEmail(String id);
 }

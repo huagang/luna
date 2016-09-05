@@ -48,19 +48,19 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.loadMerchantById(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
 	}
-	
+
 	@Override
 	public JSONObject loadMerchants(String json) {
 		JSONObject result = null;
 		try {
 			result = manageMerchantBL.loadMerchants(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
@@ -72,31 +72,31 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.updateMerchant(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
-		return result;		
+		return result;
 	}
+
 	@Override
 	public JSONObject deleteMerchantById(String json) {
 		JSONObject result = null;
 		try {
 			result = manageMerchantBL.deleteMerchantById(json);
 		} catch (Exception e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
-		
+
 		return result;
 	}
-
 	@Override
 	public JSONObject isSalesmanNmExit(String json) {
 		JSONObject result = null;
 		try {
 			result = manageMerchantBL.isSalesmanNmExit(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
@@ -108,7 +108,7 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.isAddedMerchantNmEist(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
@@ -120,7 +120,7 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.isEditedMerchantNmEist(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
@@ -132,7 +132,7 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.closeMerchantById(json);
 		} catch (RuntimeException e) {
-			
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
@@ -144,7 +144,19 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		try {
 			result = manageMerchantBL.openMerchantById(json);
 		} catch (RuntimeException e) {
-			
+
+			return FastJsonUtil.error("-1", e);
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject getMerchantEmail(String id) {
+		JSONObject result = null;
+		try {
+			result = manageMerchantBL.getMerchantEmail(id);
+		} catch (RuntimeException e) {
+
 			return FastJsonUtil.error("-1", e);
 		}
 		return result;
