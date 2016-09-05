@@ -58,7 +58,6 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
 
-
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     public ModelAndView merchantDetail(HttpServletRequest request, HttpServletResponse response) {
 
@@ -70,7 +69,7 @@ public class LunaTradeApplicationController extends BasicController {
 
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         if (user == null) return false;
-        if (user.getRoleId() != 10 && user.getRoleId() != 11) {
+        if (user.getRoleId() != 6 && user.getRoleId() != 7) {
             return false;
         }
         return true;
