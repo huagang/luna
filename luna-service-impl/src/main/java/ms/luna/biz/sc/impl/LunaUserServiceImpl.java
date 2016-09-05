@@ -23,7 +23,7 @@ import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
 import ms.luna.common.LunaUserSession;
 import ms.luna.schedule.service.EmailService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -65,6 +63,8 @@ public class LunaUserServiceImpl implements LunaUserService {
     private RoleCategoryCache roleCategoryCache;
     @Autowired
     private MsBusinessDAO msBusinessDAO;
+    @Autowired
+    private LunaUserMerchantDAO lunaUserMerchantDAO;
 
     @Override
     public JSONObject getUserList(int roleId, String query, int start, int limit) {
@@ -466,6 +466,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             Integer roleId = lunaRegEmail.getRoleId();
             String email = lunaRegEmail.getEmail();
             String extra = lunaRegEmail.getExtra();
+            String merchantId = lunaRegEmail.getMerchantId();
             LunaUser lunaUser = new LunaUser();
             String userId = UUIDGenerator.generateUUID();
             lunaUser.setUniqueId(userId);
@@ -485,6 +486,14 @@ public class LunaUserServiceImpl implements LunaUserService {
             lunaUserRoleDAO.createUserRoleInfo(userRole);
 
             // 用户和商户建立联系
+            if(!StringUtils.isBlank(merchantId)) {
+                LunaUserMerchant lunaUserMerchant = new LunaUserMerchant();
+                lunaUserMerchant.setUniqueId(userId);
+                lunaUserMerchant.setMerchantId(merchantId);
+                lunaUserMerchant.setCreateTime(new Date());
+                lunaUserMerchantDAO.insertSelective(lunaUserMerchant);
+            }
+
         } catch (Exception ex) {
             logger.error("Failed to create user", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
