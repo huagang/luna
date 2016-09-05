@@ -1,6 +1,5 @@
 package ms.luna.biz.bl.impl;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -180,7 +179,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				merchant.put(MsCRMTable.FIELD_CONTACT_PHONENUM, merchantsResult.getContact_phonenum());
 				merchant.put(MsCRMTable.FIELD_SALESMAN_NM, merchantsResult.getSalesman_nm());
 				Byte status_id = Byte.parseByte(merchantsResult.getStatus_id());
-				merchant.put(MsCRMTable.STATUS, VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
+				merchant.put(MsCRMTable.FIELD_STATUS, VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
 				merchant.put(MsCRMTable.FIELD_PROVINCE_ID, merchantsResult.getProvince_id());
 				merchant.put(MsCRMTable.FIELD_CITY_ID, merchantsResult.getCity_id());
 				merchant.put(MsCRMTable.FIELD_DEL_FLG, merchantsResult.getDel_flg());
