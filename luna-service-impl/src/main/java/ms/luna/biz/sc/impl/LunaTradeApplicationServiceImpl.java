@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.bl.ManageMerchantBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.LunaTradeApplicationDAO;
+import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
 import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.model.LunaTradeApplicationParameter;
 import ms.luna.biz.dao.model.*;
@@ -34,7 +35,8 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Autowired
     private LunaTradeApplicationDAO lunaTradeApplicationDAO;
 
-    //TODO 注入用户商户中间表DAO
+    @Autowired
+    private LunaUserMerchantDAO lunaUserMerchantDao;
 
     @Autowired
     private ManageMerchantBL manageMerchantBL;
@@ -48,13 +50,12 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject createApplication(JSONObject jsonObject) {
         try {
-            Integer userUniqueId = jsonObject.getInteger(LunaUserTable.FIELD_ID);
-            //TODO 用用户id 去查中间表 获得  商户Id
+            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
 
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
             LunaTradeApplication lunaTradeApplication = new LunaTradeApplication();
 
-            //TODO
-            //lunaTradeApplication.setMerchantId(business.getMerchantId());
+            lunaTradeApplication.setMerchantId(lunaUserMerchant.getMerchantId());
             lunaTradeApplication.setUpdateTime(Calendar.getInstance().getTime());
             lunaTradeApplication.setAccountAddress(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS));
             lunaTradeApplication.setAccountBank(jsonObject.getString(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK));
@@ -76,8 +77,8 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             lunaTradeApplication.setMerchantPhone(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE));
             lunaTradeApplicationDAO.insert(lunaTradeApplication);
             JSONObject data = new JSONObject();
-            //TODO 传入商户id
-            //data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, businessId);
+
+            data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, lunaUserMerchant.getMerchantId());
             data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_CHECKING);
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
@@ -112,11 +113,12 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject recreateApplication(JSONObject jsonObject) {
         try {
-            Integer userUniqueId = jsonObject.getInteger(LunaUserTable.FIELD_ID);
-            //TODO 用用户id 去查中间表 获得  商户Id
+            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
             LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
-            //TODO 传入商户id
-            //lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(business.getMerchantId());
+
+            lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
             List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
             if (applicationList == null || applicationList.size() == 0)
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交过申请");
@@ -128,8 +130,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             updateApplication(application, jsonObject);
             lunaTradeApplicationDAO.updateByPrimaryKey(application);
             JSONObject data = new JSONObject();
-            //TODO 传入商户id
-            //data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, businessId);
+            data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, lunaUserMerchant.getMerchantId());
             data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_CHECKING);
             manageMerchantBL.changeMerchantTradeStatus(data.toString());
 
@@ -147,11 +148,12 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject getApplication(JSONObject jsonObject) {
         try {
-            Integer userUniqueId = jsonObject.getInteger(LunaUserTable.FIELD_ID);
-            //TODO 用用户id 去查中间表 获得  商户Id
+            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
             LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
-            //TODO 传入商户id
-            //lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(msBusiness.getMerchantId());
+
+            lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
             List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
             if (applicationList == null || applicationList.size() == 0)
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
@@ -268,13 +270,17 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject updateApplication(JSONObject jsonObject) {
         try {
-            Integer userUniqueId = jsonObject.getInteger(LunaUserTable.FIELD_ID);
-            //TODO 用用户id 去查中间表 获得  商户Id
+            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
 
 
             Integer applicationId = jsonObject.getInteger(LunaTradeApplicationTable.FIELD_ID);
             LunaTradeApplication application = lunaTradeApplicationDAO.selectByPrimaryKey(applicationId);
-            //TODO 对比商户ID 是否相等 来判断权限
+
+            if (!lunaUserMerchant.getMerchantId().equals(application.getMerchantId())) {
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作当前申请");
+            }
 
 
             if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_STATUS_CHECKING) {
@@ -358,11 +364,11 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject getApplicationStatus(JSONObject jsonObject) {
         try {
-            Integer userUniqueId = jsonObject.getInteger(LunaUserTable.FIELD_ID);
-            //TODO 用用户id 去查中间表 获得  商户Id
+            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
             LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
-            //TODO 传入商户id
-            //lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(msBusiness.getMerchantId());
+
             List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
             if (applicationList == null || applicationList.size() == 0)
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
