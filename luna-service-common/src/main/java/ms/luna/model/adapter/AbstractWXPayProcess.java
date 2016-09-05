@@ -106,7 +106,7 @@ public abstract class AbstractWXPayProcess implements PayProcess {
         logger.info("send to wx: " + toSend);
         String receive = sendMessage(GATEURL, toSend);
         logger.info("receive from wx pay: " + receive);
-        if (receive.contains("FAIL")) {
+        if (receive == null || receive.equals("") || receive.contains("FAIL")) {
             logger.error("get xml error info from WX when send message to Wx.\nInfo:\n" + receive);
             return null;
         }
