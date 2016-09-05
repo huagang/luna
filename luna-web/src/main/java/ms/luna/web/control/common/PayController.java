@@ -36,8 +36,7 @@ public class PayController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/wx/jsapi/getCode")
-    public void jsapiGetCode(HttpServletRequest request,
-                             HttpServletResponse response,
+    public void jsapiGetCode(HttpServletResponse response,
                              @RequestParam(value = "redirectUrl") String url) {
         try {
             StringBuilder redirectUrl = new StringBuilder();
@@ -47,7 +46,7 @@ public class PayController {
             redirectUrl.append(URLEncoder.encode(url, "utf-8"));
             redirectUrl.append("&response_type=code&scope=snsapi_base");
             redirectUrl.append("&state=");
-            String state = ""; //maxmin 128 bytes
+            String state = ""; //max 128 bytes
             redirectUrl.append(state);
             redirectUrl.append("#wechat_redirect");
             response.sendRedirect(redirectUrl.toString());
