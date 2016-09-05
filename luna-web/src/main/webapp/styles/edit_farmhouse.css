@@ -55,8 +55,9 @@
     margin: 10px auto;
 }
 .pop.publish-info,
-.pop.publish-confirm{
-    position: absolute;
+.pop.publish-confirm,
+.pop.publish-replace{
+    position: fixed;
     width: 500px;
     left: 0;
     right: 0;
@@ -102,4 +103,37 @@
 #pop-message .message{
     white-space: pre-wrap;
     text-align: center;
+}
+
+.qrcode{
+    width: 150px;
+    display: block;
+    margin-top: 10px;
+}
+
+.options{
+    margin-top: 20px;
+    text-align: center;
+}
+
+#options-0,
+#options-1{
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+}
+
+#options-0{
+    margin-right: 30px;
+}
+
+.publish-confirm .options{
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-new-another{
+    margin-right: 50px;
 }

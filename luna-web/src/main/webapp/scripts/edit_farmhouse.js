@@ -34,6 +34,12 @@ $(function(){
         // 事件 发布页面
         that.handlePublish = handlePublish;
 
+        that.handlePublishReplace = handlePublishReplace;
+
+        that.handleReplaceClick = handleReplaceClick;
+
+        that.handleSelect = handleSelect;
+
         // 请求 获取表单信息
         that.fetchFormData = fetchFormData;
 
@@ -60,12 +66,20 @@ $(function(){
             $('.operation.preview').on('click', that.handlePreview);
             $('.operation.publish').on('click', that.handlePublish);
             $('.qrcode-container .button').on('click', that.hideQRcode);
-            $('.publish-info .btn-close').on('click' ,that.hidePublishDialog);
+
+            $('.publish-pop-wrapper .btn-close').on('click' ,that.hidePublishDialog);
+            $('.publish-pop-wrapper .button-close').on('click', that.hidePublishDialog);
+
             $('.publish-info .button.confirm').on('click' ,that.hidePublishDialog);
             $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
-            $('.publish-confirm .button').on('click', that.handleForcePublish);
-            $('.publish-confirm .button-close').on('click', that.hidePublishDialog);
-            $('.publish-confirm .btn-close').on('click', that.hidePublishDialog);
+
+
+            $('.publish-confirm').on('click', '.button-replace', that.handleReplaceClick);
+            $('.publish-confirm').on('click', '.button-new-another', that.handleForcePublish);
+
+            $('.publish-replace').on('click', '.button', that.handlePublishReplace);
+            $('.publish-replace .replace-option').on('change', that.handleSelect);
+
         }
 
         function initComponents() {
@@ -78,7 +92,6 @@ $(function(){
 
         // 请求 获取表单信息
         function fetchFormData() {
-
             $.ajax({
                 url: that.apiUrls.farmHouseFormInfo.url.format(that.appId),
                 type: that.apiUrls.farmHouseFormInfo.type,
@@ -112,12 +125,6 @@ $(function(){
         }
 
         function handleSave(){
-            /*
-            var validation = that._component.checkValidation();
-            if(validation){
-                alert(validation);
-                return;
-            }*/
             var data = that._component.getFormValue();
             console.log(data);
             $.ajax({
@@ -187,10 +194,14 @@ $(function(){
                 that.showMessage('信息未填写完毕,不能发布。详细错误信息如下\n' + error );
                 return;
             }
+            var data = {force: (that.forcePublish ? 1 : -1)};
+            if(that.oldId){
+                data.oldId = that.oldId;
+            }
             $.ajax({
                 url: that.apiUrls.appPublish.url.format(that.appId),
                 type: that.apiUrls.appPublish.type,
-                data: {force: that.forcePublish ? 1 : -1},
+                data: data,
                 success: function(res){
                     if(res.code === '0'){
                         that.publishUrl = res.data.link;
@@ -199,10 +210,13 @@ $(function(){
                         $('.publish-info .publish-link').attr('href', that.publishUrl).html(that.publishUrl);
                         $('.publish-pop-wrapper .mask').removeClass('hidden');
                         $('.publish-confirm.pop').removeClass('pop-show');
+                        $('.publish-replace.pop').removeClass('pop-show');
                         $('.publish-info.pop').addClass('pop-show');
                         $(document.body).addClass('modal-open');
                         that.forcePublish = false;
+                        that.oldId = undefined;
                     } else if(res.code === '409'){
+                        that.publishData = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
                         $('.publish-confirm.pop').addClass('pop-show');
                         $('.publish-pop-wrapper .mask').removeClass('hidden');
                         $(document.body).addClass('modal-open');
@@ -216,9 +230,36 @@ $(function(){
             });
         }
 
+        function handleSelect(event){
+            $('.publish-replace .replace-option').prop('checked', false);
+            $(event.target).prop('checked', true);
+            that.oldId = $(event.target).attr('data-value');
+        }
+
+        function handleReplaceClick(){
+            $('.publish-confirm.pop').removeClass('pop-show');
+            $('.publish-replace.pop').addClass('pop-show');
+            return;
+            if(Object.keys(that.publishData).length === 0){
+                that.handleForcePublish();
+            } else{
+
+                $('.publish-confirm.pop').removeClass('pop-show');
+                $('.publish-replace.pop').addClass('pop-show');
+            }
+        }
+
+        function handlePublishReplace(){
+            if(that.oldId){
+                that.handlePublish();
+            }
+        }
+
+
         function hidePublishDialog(){
             $('.publish-info.pop').removeClass('pop-show');
             $('.publish-confirm.pop').removeClass('pop-show');
+            $('.publish-replace.pop').removeClass('pop-show');
             $(document.body).removeClass('modal-open');
             $('.publish-pop-wrapper .mask').addClass('hidden');
         }
