@@ -276,7 +276,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             LunaTradeApplication application = lunaTradeApplicationDAO.selectByPrimaryKey(applicationId);
             //TODO 对比商户ID 是否相等 来判断权限
 
-            
+
             if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_STATUS_CHECKING) {
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前申请状态不可更改申请");
             }
