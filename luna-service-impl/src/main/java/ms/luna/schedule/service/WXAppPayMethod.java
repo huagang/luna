@@ -9,7 +9,7 @@
 package ms.luna.schedule.service;
 
 import com.alibaba.fastjson.JSONObject;
-import ms.luna.model.adapter.WXPayInfoProcess;
+import ms.luna.model.adapter.WXPayProcess;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.Calendar;
  */
 @Service("wxAppPayMethod")
 @Scope(value = "singleton")
-public class WXAppPayMethod extends WXPayInfoProcess {
+public class WXAppPayMethod extends WXPayProcess {
 
     @Override
     protected String assembleRequest(String inData, String kind) {

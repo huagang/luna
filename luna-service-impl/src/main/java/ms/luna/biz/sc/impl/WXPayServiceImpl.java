@@ -12,8 +12,8 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.util.FastJsonUtil;
-import ms.luna.model.adapter.PayInfoProcessAdapter;
-import ms.luna.model.adapter.WXPayInfoProcess;
+import ms.luna.model.adapter.PayProcessAdapter;
+import ms.luna.model.adapter.WXPayProcess;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
@@ -28,14 +28,14 @@ public class WXPayServiceImpl implements WXPayService {
     private static final Logger logger = Logger.getLogger(WXPayServiceImpl.class);
 
     @Resource(name = "wxAppPayMethod")
-    private PayInfoProcessAdapter wxAppPayMethod;
+    private PayProcessAdapter wxAppPayMethod;
 
     @Resource(name = "wxJSAPIPayMethod")
-    private PayInfoProcessAdapter wxJSAPIPayMethod;
+    private PayProcessAdapter wxJSAPIPayMethod;
 
     @Override
     public JSONObject getOpenId(String code) {
-        String r = WXPayInfoProcess.getOpenId(code);
+        String r = WXPayProcess.getOpenId(code);
         if (r == null) {
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
         }

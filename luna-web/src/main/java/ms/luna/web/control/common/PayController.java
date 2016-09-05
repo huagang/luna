@@ -9,11 +9,10 @@
 package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
-import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.RemoteIPUtil;
-import ms.luna.model.adapter.WXPayInfoProcess;
+import ms.luna.model.adapter.WXPayProcess;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +42,7 @@ public class PayController {
         try {
             StringBuilder redirectUrl = new StringBuilder();
             redirectUrl.append("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
-            redirectUrl.append(WXPayInfoProcess.APP_ID);
+            redirectUrl.append(WXPayProcess.APP_ID);
             redirectUrl.append("&redirect_uri=");
             redirectUrl.append(URLEncoder.encode(url, "utf-8"));
             redirectUrl.append("&response_type=code&scope=snsapi_base");

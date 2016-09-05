@@ -31,9 +31,9 @@ import java.util.*;
  *
  * @author SDLL18
  */
-public abstract class WXPayInfoProcess implements PayInfoProcessAdapter, PaySigner {
+public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy {
 
-    private final static Logger logger = Logger.getLogger(WXPayInfoProcess.class);
+    private final static Logger logger = Logger.getLogger(WXPayProcess.class);
 
     //初始化
     public static String APP_ID = "wxa0c7da25637df906";//微信公众账号应用id

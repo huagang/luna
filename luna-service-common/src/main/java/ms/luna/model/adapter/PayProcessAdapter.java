@@ -14,12 +14,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
- * Created by SDLL18 on 16/9/2.
+ * Created by SDLL18 on 16/9/1.
+ *
+ * @author SDLL18
  */
-public interface PaySigner {
+public interface PayProcessAdapter {
 
-    String signMessage(String data);
+    String sendPayMessage(String data) throws IOException, SAXException, ParserConfigurationException;
 
-    Boolean checkSign(String data) throws ParserConfigurationException, SAXException, IOException;
-
+    String parseNotificationMessage(String data) throws IOException, SAXException, ParserConfigurationException;
 }
