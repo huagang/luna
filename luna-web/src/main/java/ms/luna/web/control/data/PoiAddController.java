@@ -11,6 +11,7 @@ import ms.luna.common.PoiCommon;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
+import ms.luna.web.control.inner.UploadController;
 import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class PoiAddController extends BasicController {
 
     @Autowired
     private PoiController poiController;
+
+    @Autowired
+    private UploadController uploadController;
 
     public static final String menu = "poi";
 
@@ -175,16 +179,34 @@ public class PoiAddController extends BasicController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
     @ResponseBody
-    public String uploadThumbnail(
+    public JSONObject uploadThumbnail(
             @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String ext = VbUtility.getExtensionOfPicFileName(file.getOriginalFilename());
-        if (ext == null) {
-            return FastJsonUtil.error("-1", "文件扩展名有错误").toString();
+        JSONObject result = new JSONObject();;
+        try {
+            result = uploadController.uploadFile2Cloud( file, "pic", "video", null, request);
+
+            if ("0".equals(result.getString("code"))) {
+                String url = result.getJSONObject("data").getString("access_url");
+                result.put("original", file.getOriginalFilename());
+                result.put("name", VbUtility.getFileName(url));
+                result.put("url", url);
+                result.put("size", file.getSize());
+                result.put("type", VbUtility.getExtensionOfPicFileName(url));
+                result.put("state", "SUCCESS");
+                return result;
+            }
+        } catch (Exception e) {
+            MsLogger.error(e);
+            result.put("msg", "Failed to upload pic.");
         }
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String fileNameInCloud = VbMD5.generateToken() + ext;
-        return super.uploadLocalFile2Cloud(request, response, file, COSUtil.getCosPoiPicFolderPath() + "/" + date, fileNameInCloud).toString();
+        result.put("original", file.getOriginalFilename());
+        result.put("name", file.getOriginalFilename());
+        result.put("url", "");
+        result.put("size", file.getSize());
+        result.put("type", "");
+        result.put("state", "FAIL");
+        return result;
     }
 
     /**
