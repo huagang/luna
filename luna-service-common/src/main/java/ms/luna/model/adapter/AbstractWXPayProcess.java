@@ -46,6 +46,7 @@ public abstract class AbstractWXPayProcess implements PayProcess {
 
     public AbstractWXPayProcess() {
         paySignStrategy = new WXPaySignStrategy();
+        payDataParseStrategy = new WXPayDataParseStrategy();
     }
 
     public AbstractWXPayProcess(PaySignStrategy strategy, PayDataParseStrategy strategy2) {
