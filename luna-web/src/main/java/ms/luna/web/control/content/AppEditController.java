@@ -377,13 +377,19 @@ public class AppEditController extends BasicController {
 
         int forceFlag = RequestHelper.getInteger(request, "force");
         String appAddr = RequestHelper.getString(request, "app_addr");
+        int oldAppId = RequestHelper.getInteger(request, "old_app_id");
         JSONObject param = new JSONObject();
         param.put("app_id", appId);
         if(StringUtils.isNotBlank(appAddr)) {
             param.put("app_addr", appAddr);
         }
         if(forceFlag == 1) {
+            if(oldAppId < 0) {
+                logger.warn("Failed to get old app id from request");
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+            }
             param.put("force", 1);
+            param.put("old_app_id", oldAppId);
         }
         try{
             JSONObject ret = msShowAppService.publishApp(param.toString());

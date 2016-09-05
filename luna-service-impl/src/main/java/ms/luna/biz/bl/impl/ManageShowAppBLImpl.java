@@ -461,25 +461,49 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		}
 		String appAddr = jsonObject.getString(MsShowAppTable.FIELD_APP_ADDR);
 		int businessId = record.getBusinessId();
-		//自己已在线的可以重新发布并覆盖
-//		if(record.getAppStatus() == MsShowAppConfig.AppStatus.ONLINE) {
-//			return FastJsonUtil.error("-1", "此微景展已经在线");
-//		}
 		
 		if(forceFlag == 1) {
+			int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
+			if(oldAppId < 0) {
+				logger.warn("Failed to read old_app_id from param");
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+			}
+
+			// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
 			MsShowAppCriteria example = new MsShowAppCriteria();
 			MsShowAppCriteria.Criteria criteria = example.createCriteria();
-			//不管是否已有在线的微景展，都操作发布
 			criteria.andBusinessIdEqualTo(businessId)
+					.andAppIdEqualTo(oldAppId)
 					.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+
+			List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
+			if(msShowApps == null || msShowApps.size() == 0) {
+				logger.warn("Provided app id is not online");
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+			}
+
 			record = new MsShowApp();
+			record.setAppId(oldAppId);
 			record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
-			msShowAppDAO.updateByCriteriaSelective(record, example);
+			msShowAppDAO.updateByPrimaryKeySelective(record);
 		} else {
 			//判断是否存在
-			if(existOnlineAppByAppId(appId)) {
-				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "已存在在线微景展");
-			}
+				MsShowAppCriteria example = new MsShowAppCriteria();
+				MsShowAppCriteria.Criteria criteria = example.createCriteria();
+				criteria.andBusinessIdEqualTo(businessId)
+						.andAppIdNotEqualTo(appId)
+						.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+				List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
+				if(msShowApps != null && msShowApps.size() >= 2) {
+					JSONArray jsonArray = new JSONArray();
+					for(MsShowApp msShowApp : msShowApps) {
+						JSONObject obj = new JSONObject();
+						obj.put(MsShowAppTable.FIELD_APP_ID, msShowApp.getAppId());
+						obj.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
+						jsonArray.add(obj);
+					}
+					FastJsonUtil.error(ErrorCode.ALREADY_EXIST, jsonArray, "已经存在2个以上微景展");
+				}
 		}
 
 		record = new MsShowApp();
@@ -490,7 +514,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			record.setAppAddr(appAddr);
 		}
 		msShowAppDAO.updateByPrimaryKeySelective(record);
-		// 更新business对应的appId
+		// 更新business对应的appId, 有多个在线的app,此字段没法正确表达,暂时存储最新的app
 		MsBusiness business = new MsBusiness();
 		business.setBusinessId(businessId);
 		business.setAppId(appId);
