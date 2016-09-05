@@ -14,13 +14,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
- * Created by SDLL18 on 16/9/1.
- *
- * @author SDLL18
+ * Created by SDLL18 on 16/9/5.
  */
-public interface PayProcessAdapter {
+public interface PayDataParseStrategy {
 
-    String sendPayMessage(String data) throws IOException, SAXException, ParserConfigurationException;
+    String getFromTransfer(String data) throws ParserConfigurationException, IOException, SAXException;
 
-    String parseNotificationMessage(String data) throws IOException, SAXException, ParserConfigurationException;
+    String getForTransfer(String data);
 }

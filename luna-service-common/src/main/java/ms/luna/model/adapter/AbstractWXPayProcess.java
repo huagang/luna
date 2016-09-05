@@ -11,14 +11,8 @@ package ms.luna.model.adapter;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.util.VbMD5;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -31,9 +25,9 @@ import java.util.*;
  *
  * @author SDLL18
  */
-public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy {
+public abstract class AbstractWXPayProcess implements PayProcess {
 
-    private final static Logger logger = Logger.getLogger(WXPayProcess.class);
+    private final static Logger logger = Logger.getLogger(AbstractWXPayProcess.class);
 
     //初始化
     public static String APP_ID = "wxa0c7da25637df906";//微信公众账号应用id
@@ -41,11 +35,39 @@ public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy
     //应用对应的密钥
     public static String PARTNER = "1253829901";//财付通商户号
     public static String CERT_PASSWD = PARTNER;
-    public static String PARTNER_KEY = "1c3O0T3v3s2k0o2S33171s3K2e1I2i0u";//商户号对应的密钥(微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置)
     public static String CERT_FILE = "/data1/data/wxpay/apiclient_cert.p12";
     public static String TOKENURL = "https://api.weixin.qq.com/cgi-bin/token";//获取access_token对应的url
     public static String GATEURL = "https://api.mch.weixin.qq.com/pay/unifiedorder";//获取预支付id的接口url
     public static String REFUNDURL = "https://api.mch.weixin.qq.com/secapi/pay/refund";//获取预支付id的接口url
+
+    private PaySignStrategy paySignStrategy;
+
+    private PayDataParseStrategy payDataParseStrategy;
+
+    public AbstractWXPayProcess() {
+        paySignStrategy = new WXPaySignStrategy();
+    }
+
+    public AbstractWXPayProcess(PaySignStrategy strategy, PayDataParseStrategy strategy2) {
+        paySignStrategy = strategy;
+        payDataParseStrategy = strategy2;
+    }
+
+    public PaySignStrategy getPaySignStrategy() {
+        return paySignStrategy;
+    }
+
+    public void setPaySignStrategy(PaySignStrategy paySignStrategy) {
+        this.paySignStrategy = paySignStrategy;
+    }
+
+    public PayDataParseStrategy getPayDataParseStrategy() {
+        return payDataParseStrategy;
+    }
+
+    public void setPayDataParseStrategy(PayDataParseStrategy payDataParseStrategy) {
+        this.payDataParseStrategy = payDataParseStrategy;
+    }
 
     protected abstract String assembleRequest(String inData, String kind);
 
@@ -76,24 +98,13 @@ public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy
         return sendMessage(url.toString(), "");
     }
 
-    @Override
-    public Boolean checkSign(String data) throws ParserConfigurationException, SAXException, IOException {
-        String sign = getSignFromResponseString(data);
-        String signFromWX = getContent(data, "sign");
-        if (signFromWX.equals(sign)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     @Override
     public String sendPayMessage(String data) throws IOException, SAXException, ParserConfigurationException {
         String toSend = assembleRequest(data, "send");
         String receive = sendMessage(GATEURL, toSend);
-        if (checkSign(receive)) {
-            JSONObject object = getJSONFromXML(receive);
+        if (paySignStrategy.checkSign(receive)) {
+            JSONObject object = JSONObject.parseObject(payDataParseStrategy.getFromTransfer(receive));
             if (object.getString("return_code").equals("SUCCESS")) {
                 if (object.getString("result_code").equals("SUCCESS")) {
                     return assembleSendResponse(object.toJSONString());
@@ -120,8 +131,8 @@ public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy
      */
     @Override
     public String parseNotificationMessage(String data) throws IOException, SAXException, ParserConfigurationException {
-        if (checkSign(data)) {
-            JSONObject inData = getJSONFromXML(data);
+        if (paySignStrategy.checkSign(data)) {
+            JSONObject inData = JSONObject.parseObject(payDataParseStrategy.getFromTransfer(data));
             if (inData.getString("return_code").equals("SUCCESS")) {
                 if (inData.getString("result_code").equals("SUCCESS")) {
                     return assembleNotifyResponse(inData.toJSONString());
@@ -137,30 +148,6 @@ public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy
             logger.error("Check WX message sign failed when parse notification message from Wx.\nInfo:\n" + data);
             return null;
         }
-    }
-
-    @Override
-    public String signMessage(String data) {
-        JSONObject json = JSONObject.parseObject(data);
-        ArrayList<String> list = new ArrayList<String>();
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            if (!entry.getValue().equals("")) {
-                list.add(entry.getKey() + "=" + entry.getValue() + "&");
-            }
-        }
-        int size = list.size();
-        String[] arrayToSort = list.toArray(new String[size]);
-        Arrays.sort(arrayToSort, String.CASE_INSENSITIVE_ORDER);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            sb.append(arrayToSort[i]);
-        }
-        String result = sb.toString();
-        result += "key=" + PARTNER_KEY;
-        // Util.log("Sign Before MD5:" + result);
-        result = VbMD5.getCommonMD5Str(result).toUpperCase();
-        // Util.log("Sign Result:" + result);
-        return result;
     }
 
     public static String sendMessage(String url, String data) {
@@ -207,70 +194,6 @@ public abstract class WXPayProcess implements PayProcessAdapter, PaySignStrategy
             originStr.append(new Random().nextInt(10));
         }
         return VbMD5.getCommonMD5Str(originStr.toString()).toUpperCase();
-    }
-
-    private String getContent(String xml, String key) {
-        int start = xml.indexOf("<" + key + ">") + 2 + key.length();
-        int end = xml.indexOf("</" + key + ">");
-        String content = xml.substring(start, end);
-        if (content.startsWith("<![CDATA[") && content.endsWith("]]>")) {
-            content = content.substring(9, content.length() - 3);
-        }
-        return content;
-    }
-
-    private String getSignFromResponseString(String responseString) throws IOException, SAXException, ParserConfigurationException {
-        JSONObject object = getJSONFromXML(responseString);
-        // 清掉返回数据对象里面的Sign数据（不能把这个数据也加进去进行签名），然后用签名算法进行签名
-        object.put("sign", "");
-        // 将API返回的数据根据用签名算法进行计算新的签名，用来跟API返回的签名进行比较
-        return signMessage(object.toJSONString());
-    }
-
-    protected final String getXMLFromJSON(JSONObject json) {
-        ArrayList<String> list = new ArrayList<String>();
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            if (!entry.getValue().equals("")) {
-                list.add("<" + entry.getKey() + ">" + entry.getValue() + "<" + entry.getKey() + "/>");
-            }
-        }
-        StringBuilder xmlBuilder = new StringBuilder();
-        xmlBuilder.append("<xml>");
-        for (int i = 0; i < list.size(); i++) {
-            xmlBuilder.append(list.get(i));
-        }
-        xmlBuilder.append("</xml>");
-        return xmlBuilder.toString();
-    }
-
-    protected final JSONObject getJSONFromXML(String xmlString) throws ParserConfigurationException, IOException, SAXException {
-        // 这里用Dom的方式解析回包的最主要目的是防止API新增回包字段
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        InputStream is = getStringStream(xmlString);
-        Document document = builder.parse(is);
-
-        // 获取到document里面的全部结点
-        NodeList allNodes = document.getFirstChild().getChildNodes();
-        Node node;
-        JSONObject jsonObject = new JSONObject();
-        int i = 0;
-        while (i < allNodes.getLength()) {
-            node = allNodes.item(i);
-            if (node instanceof Element) {
-                jsonObject.put(node.getNodeName(), node.getTextContent());
-            }
-            i++;
-        }
-        return jsonObject;
-    }
-
-    private InputStream getStringStream(String sInputString) {
-        ByteArrayInputStream tInputStringStream = null;
-        if (sInputString != null && !sInputString.trim().equals("")) {
-            tInputStringStream = new ByteArrayInputStream(sInputString.getBytes());
-        }
-        return tInputStringStream;
     }
 
 
