@@ -16,12 +16,14 @@ import ms.luna.web.model.common.SimpleModel;
 import ms.luna.web.model.managepoi.PoiModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by greek on 16/8/5.
+ * Created: by greek on 16/8/5.
  */
 @Controller("poiEditController")
 @RequestMapping("/data/poi")
@@ -211,12 +213,6 @@ public class PoiEditController extends BasicController {
             String lang,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            MsLogger.error("session is null");
-            return new ModelAndView("/error.jsp");
-        }
-        session.setAttribute("menu_selected", "manage_poi");
 
         ModelAndView mav = new ModelAndView();
 
@@ -257,7 +253,7 @@ public class PoiEditController extends BasicController {
                 }
                 // 分类二级菜单
                 poiModel.setSubTag(common_fields_val.getInteger("subTag"));
-                poiController.initTags(session, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
+                poiController.initTags(mav, data.getJSONObject("common_fields_def"), poiModel.getTopTag());
 
                 poiModel.setLat(new BigDecimal(common_fields_val.getDouble("lat")).setScale(6, BigDecimal.ROUND_HALF_UP));
                 poiModel.setLng(new BigDecimal(common_fields_val.getDouble("lng")).setScale(6, BigDecimal.ROUND_HALF_UP));
@@ -284,7 +280,7 @@ public class PoiEditController extends BasicController {
                 mav.addObject("preview_url", preview_url);
 
                 JSONArray privateFields = data.getJSONArray("private_fields");
-                session.setAttribute("private_fields", privateFields);
+                mav.addObject("private_fields", privateFields);
             } else {
                 mav.setViewName("/error.jsp");
                 return mav;
@@ -310,8 +306,7 @@ public class PoiEditController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-//		mav.addObject("provinces", lstProvinces);
-        session.setAttribute("provinces", lstProvinces);
+		mav.addObject("provinces", lstProvinces);
 
         // 城市信息
         List<SimpleModel> lstCitys = new ArrayList<SimpleModel>();
@@ -334,7 +329,7 @@ public class PoiEditController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("citys", lstCitys);
+        mav.addObject("citys", lstCitys);
 
         // 区/县信息
         List<SimpleModel> lstCountys = new ArrayList<SimpleModel>();
@@ -358,7 +353,7 @@ public class PoiEditController extends BasicController {
             mav.setViewName("/error.jsp");
             return mav;
         }
-        session.setAttribute("countys", lstCountys);
+        mav.addObject("countys", lstCountys);
         mav.setViewName("/edit_poi.jsp");
         mav.addObject("poiReadOnly", Boolean.FALSE);
         mav.addObject("poiModel", poiModel);

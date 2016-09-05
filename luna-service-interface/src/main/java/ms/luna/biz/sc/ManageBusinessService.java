@@ -35,4 +35,8 @@ public interface ManageBusinessService {
 
 	JSONObject getBusinessForSelect(JSONObject jsonObject);
 
+	JSONObject checkBusinessNameExist(String business_name, String merchant_id);
+
+	JSONObject checkBusinessCodeExist(String business_code, String merchant_id);
+
 }

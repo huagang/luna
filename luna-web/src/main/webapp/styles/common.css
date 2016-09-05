@@ -48,7 +48,6 @@ a:active{
 
 button,
 a.button{
-    display: inline-block;
     background: #445FA8;
     color: #FFFFFF;
     padding: 4px 18px;
@@ -98,6 +97,12 @@ a.button.disable:hover{
     width: 1200px;
     margin: auto;
 }
+
+
+.content{
+    margin-left: calc(100vw - 100%);
+}
+
 .content .main-content{
     position: relative;
     border: 1px solid #C3C3C3;
@@ -127,6 +132,8 @@ a.button.disable:hover{
 .navbar-brand{
     height: 64px;
     padding: 12px 0;
+    position: absolute;
+    padding-left: calc(50vw - 50%);
 }
 .navbar .navbar-business-name,
 .navbar .navbar-business-name:hover
@@ -337,6 +344,21 @@ a.button.disable:hover{
     float: right;
     padding: 0 64px 34px 0;
 }
+
+
+.button-close,
+.button-close:hover{
+    display: inline-block;
+    background: #FFFFFF;
+    color: #445FA8;
+    border: 1px solid #C3C3C3;
+    margin-left: 12px;
+    padding: 4px 18px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
 .button-close:hover{
     -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.3);
     -moz-box-shadow: 0 0 3px rgba(0,0,0,0.3);
@@ -348,17 +370,6 @@ a.button.disable:hover{
     transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.button-close{
-    display: inline-block;
-    background: #FFFFFF;
-    color: #445FA8;
-    border: 1px solid #C3C3C3;
-    margin-left: 12px;
-    padding: 4px 18px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
 .pop-delete{
     max-width: 390px;
 }
@@ -424,6 +435,9 @@ a.button.disable:hover{
     opacity: 0 !important;
 }
 
+#pop-message{
+    position: fixed !important;
+}
 #pop-message:before{
     content: '.';
     position: fixed;
@@ -440,6 +454,7 @@ a.button.disable:hover{
 #pop-message .pop-cont,
 #pop-message .pop-fun{
     position: relative;
+    overflow: hidden !important;
     z-index: 20;
 }
 .pop-cont,
@@ -475,6 +490,9 @@ a.button.disable:hover{
     display: block !important;
 }
 
+.visibility-show{
+    visibility: visible !important;
+}
 
 .message-wrapper{
     position: fixed;

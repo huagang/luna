@@ -25,5 +25,5 @@ public interface LunaTradeApplicationService {
 
     JSONObject getApplicationStatusByApplicationId(JSONObject jsonObject);
 
-    JSONObject getApplicationStatusByBusinessId(JSONObject jsonObject);
+    JSONObject getApplicationStatus(JSONObject jsonObject);
 }

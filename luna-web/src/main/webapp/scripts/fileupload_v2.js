@@ -92,14 +92,14 @@ var FileUploader = {
 		}
 		var data = new FormData();
 		data.append('type', options.type);
-		data.append('file', options.file);
+		data.append('file', options.file, options.file.name);
 		data.append('resource_type', options.resourceType || 'business');
 		if(options.resourceId){
 			data.append('resource_id', options.resourceId);
 		}
 
 		$.ajax({
-			url: this.path.url,
+			url: options.url || this.path.url,
 			type: this.path.type,
 			contentType: false,
 			data: data,

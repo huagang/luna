@@ -499,7 +499,7 @@
             that.showLoadingTip();
             that.element.find('.cleanInput').addClass('hidden');
             var data = new FormData();
-            data.append('file', file);
+            data.append('file', file, file.name);
             data.append('type', that.definition.type.toLocaleLowerCase());
             data.append('resource_type', 'app');
             $.ajax({

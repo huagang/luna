@@ -45,7 +45,7 @@ public class CommonBusinessController extends BasicController {
             logger.warn("User info not set, should not happen");
             return buildModelAndView("login");
         }
-        SessionHelper.setSelectedMenu(session, "");
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(LunaUserTable.FIELD_ID, user.getUniqueId());
         JSONObject businessForSelect = manageBusinessService.getBusinessForSelect(jsonObject);
@@ -61,6 +61,7 @@ public class CommonBusinessController extends BasicController {
                 JSONArray jsonArray = businessMap.getJSONArray(next);
                 if(jsonArray.size() == 1) {
                     isSingle = true;
+                    SessionHelper.setSelectedMenu(session, "");
                     modelAndView = buildModelAndView("home");
                     modelAndView.addAllObjects(jsonArray.getJSONObject(0));
                 }
@@ -73,6 +74,7 @@ public class CommonBusinessController extends BasicController {
 
         } else {
             // 没有业务权限的用户直接展示home页
+            SessionHelper.setSelectedMenu(session, "");
             modelAndView = buildModelAndView("home");
         }
         return modelAndView;

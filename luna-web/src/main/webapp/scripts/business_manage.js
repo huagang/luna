@@ -90,7 +90,7 @@ function checkBusinessName(obj, warnId, btnId) {
         flag1 = true;
         return true;
     } else {
-        $('#' + warnId).removeClass('hide').text('格式不正确,请重新输入');
+        $('#' + warnId).removeClass('hide').text('业务简称只能由英文字母,数字,下划线,中划线组成');
         flag1 = false;
         return false;
     }
@@ -98,7 +98,7 @@ function checkBusinessName(obj, warnId, btnId) {
 //添加应用时，实时检测英文简称是否合法
 function checkBusinessShortName(obj, warnId, btnId) {
     var short_name = $(obj).val();
-    var re = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]{1,16}$/;
+    var re = /^[a-zA-Z0-9_\-]{1,16}$/;
     if (short_name.length == 0) {
         $('#' + warnId).removeClass('hide').text('业务简称不能为空');
         flag2 = false;

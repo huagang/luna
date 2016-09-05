@@ -32,6 +32,11 @@ function showAnimation(){
             duration: 3000,
             easing: "ease-in",
         });
+    $('.page-back .bg-mask').velocity({opacity: 1},
+        {
+            duration: 3000,
+            easing: [.77,.07,0,.63],
+        });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
             {
@@ -72,6 +77,7 @@ function showAnimation(){
             this.markerName = data.markerName || '';
             this.href = data.href;
             this.visible = data.visible; // default false
+            this.zIndex = data.zIndex;
             if (this.visible) {
                 this.show();
             }
@@ -97,7 +103,10 @@ function showAnimation(){
 
         MarkerTip.prototype.setDistance = function (distance) {
             this.distance = distance;
-            this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
+            try{
+                this.div.getElementsByClassName('distance')[0].innerHTML = '距离' + distance + 'km';
+            } catch(e){
+            }
         };
 
         MarkerTip.prototype.hide = function () {
@@ -172,15 +181,6 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
-        // 获取两个poi点之间的距离
-        vm.getRouteDistance = getRouteDistance;
-
-        // 获取两个poi点之间的距离 失败回调
-        vm.getRouteDistanceError = getRouteDistanceError;
-
-        // 获取两个poi点之间的距离 成功回调
-        vm.getRouteDistanceSuccess = getRouteDistanceSuccess;
-
         // 监听事件
         vm.listenScroll = listenScroll;
 
@@ -246,7 +246,12 @@ function showAnimation(){
             vm.id = location.pathname.split('farmhouse/')[1];
 
             // 全景相关
-            vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            try{
+                vm.pano = new com.vbpano.Panorama(document.getElementById("panoContainer"));
+            } catch(e){
+
+            }
+
 
             vm.curPanoIndex = 0;
             vm.isFullScreen = false;
@@ -339,16 +344,63 @@ function showAnimation(){
             vm.map.panTo(center);
 
 
+
+
+            vm.drivingService = new qq.maps.DrivingService({
+                location: "中国"
+            });
+
+        }
+
+        // 更新地图mark
+        function updateMapMarkers(callback) {
+            if (vm.poiList) {
+                vm.poiList.forEach(function (item, index) {
+
+
+                    var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
+
+
+                    item.marker = new qq.maps.Marker({
+                        position: position,
+                        map: vm.map,
+                        clickable: true,
+                        draggable: false,
+                        flat: true,
+                        icon: new qq.maps.MarkerImage(vm.markerImg[vm.poiType[item.category.category_id]].normal,
+                            undefined, undefined, undefined, new qq.maps.Size(20, 20)),
+                        shape: new qq.maps.MarkerShape([-5, -5, 25, 25], 'rect'),
+                        visible: true,
+                    });
+
+                    item.markerTip = new MarkerTip({
+                        markerName: item.poi_name,
+                        distance: item.distance,
+                        position: position,
+                        visible: false,
+                        onClick: vm.navigate.bind(vm,item),
+                    });
+
+                    item.markerTip.setMap(vm.map);
+                    qq.maps.event.addListener(item.marker, 'click', vm.handleMarkerClick.bind(vm, index));
+                });
+                if(callback){
+                    setTimeout(callback, 100);
+                }
+            }
+
+            var center = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng);
             var marker = new qq.maps.Marker({
                 position: center,
                 map: vm.map,
-                clickable: false,
+                clickable: true,
                 draggable: false,
                 flat: true,
                 icon: new qq.maps.MarkerImage(window.context + '/resources/images/farmhouse/marker.png',
                     undefined, undefined, undefined, new qq.maps.Size(21, 28)),
                 shape: new qq.maps.MarkerShape([0, 0, 25, 25], 'rect'),
-                visible: true
+                visible: true,
+                zIndex: 100000
             });
 
             var markerName = new qq.maps.Label({
@@ -362,53 +414,8 @@ function showAnimation(){
                 },
                 clickable: true,
                 content: vm.poiData.poi_name || '',
+                zIndex: 100000
             });
-
-
-            vm.drivingService = new qq.maps.DrivingService({
-                location: "中国"
-            });
-
-        }
-
-        // 更新地图mark
-        function updateMapMarkers() {
-            if (vm.poiList) {
-                vm.poiList.forEach(function (item, index) {
-
-                    if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
-                        return;
-                    }
-                    if(item.category.category_id === 3 && item.sub_category.sub_category_id === 21){
-                        return;
-                    }
-                    var position = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
-
-
-                    item.marker = new qq.maps.Marker({
-                        position: position,
-                        map: vm.map,
-                        clickable: true,
-                        draggable: false,
-                        flat: true,
-                        icon: new qq.maps.MarkerImage(vm.markerImg[vm.poiType[item.category.category_id]].normal,
-                            undefined, undefined, undefined, new qq.maps.Size(20, 20)),
-                        shape: new qq.maps.MarkerShape([-5, -5, 25, 25], 'rect'),
-                        visible: true
-                    });
-
-                    item.markerTip = new MarkerTip({
-                        markerName: item.poi_name,
-                        distance: item.distance,
-                        position: position,
-                        visible: false,
-                        onClick: vm.navigate.bind(vm,item)
-                    });
-
-                    item.markerTip.setMap(vm.map);
-                    qq.maps.event.addListener(item.marker, 'click', vm.handleMarkerClick.bind(vm, index));
-                });
-            }
         }
 
         // 点击marker事件来激活marker
@@ -426,48 +433,12 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         function updateAllDistance() {
             vm.poiList.forEach(function (item, index) {
-                // get from localstorage key "`poi_id`&`poi_id`"
-
-                var distance = localStorage.getItem(vm.poiData.poi_id + '&' + item.poi_id);
-                if (distance) {
-                    item.distance = distance;
-                } else {
-                    var drivingService = new qq.maps.DrivingService({
-                        location: "中国"
-                    });
-                    vm.getRouteDistance(item, drivingService);
-
-                }
+                var start = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng),
+                    end = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
+                item.distance = (qq.maps.geometry.spherical.computeDistanceBetween(start, end) / 1000).toFixed(1);
+                item.markerTip.setDistance(item.distance);
+               // }
             });
-        }
-
-
-        // 获取两个poi点之间的距离
-        function getRouteDistance(item, drivingService) {
-            drivingService = drivingService || vm.drivingService;
-            var start = new qq.maps.LatLng(vm.poiData.lnglat.lat, vm.poiData.lnglat.lng),
-                end = new qq.maps.LatLng(item.lnglat.lat, item.lnglat.lng);
-            drivingService.setComplete(vm.getRouteDistanceSuccess.bind(vm, item));
-            drivingService.setError(vm.getRouteDistanceError.bind(vm, item));
-            drivingService.search(start, end);
-        }
-
-        function getRouteDistanceError(item, res) {
-            console.log('error', res);
-        }
-
-        function getRouteDistanceSuccess(item, res) {
-            console.log('success', res);
-            if (res.type == qq.maps.ServiceResultType.MULTI_DESTINATION) {
-            } else {
-                try {
-                    item.distance = (res.detail.distance / 1000).toFixed(1);
-                    localStorage.setItem(vm.poiData.poi_id + '&' + item.poi_id, item.distance);
-                    item.markerTip.setDistance(item.distance);
-                } catch (e) {
-                }
-            }
-
         }
 
         function handleMapClick() {
@@ -502,13 +473,13 @@ function showAnimation(){
                         vm.poiData.panoUrl = vm.apiUrls.singlePano.format(vm.poiData.panorama.panorama_id);
                         break;
                     case 2:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                     case 3:
                         vm.poiData.panoUrl = vm.apiUrls.customPano.format(vm.poiData.panorama.panorama_id);
                         break;
                     default:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                 }
             } else{
@@ -537,13 +508,13 @@ function showAnimation(){
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
                     break;
                 case 2:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
+                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
                     break;
                 case 3:
                     vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
                     break;
                 default:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
+                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
                     break;
             }
         }
@@ -577,8 +548,10 @@ function showAnimation(){
                     });
 
                     vm.panoAutoPlay = false;
-                    vm.setPano();
-                    vm.listenScroll();
+                    if(vm.pano){
+                        vm.setPano();
+                        vm.listenScroll();
+                    }
 
                 } else {
                     //alert('获取全景信息失败,若想观看全景,请刷新重试');
@@ -595,9 +568,16 @@ function showAnimation(){
                 method: vm.apiUrls.aroundPois.type,
             }).then(function (res) {
                 if (res.data.code === '0') {
-                    vm.poiList = res.data.data.zh.pois;
-                    vm.updateAllDistance();
-                    vm.updateMapMarkers();
+                    vm.poiList = res.data.data.zh.pois.filter(function(item){
+                        if (!vm.poiType[item.category.category_id] || item.poi_name === vm.poiData.poi_name) {
+                            return false;
+                        }
+                        if(item.category.category_id === 3 && item.sub_category.sub_category_id === 21){
+                            return false;
+                        }
+                        return true;
+                    });
+                    vm.updateMapMarkers(vm.updateAllDistance);
                 } else {
                     alert(res.msg || '获取周围poi点信息失败');
                 }
@@ -646,7 +626,7 @@ function showAnimation(){
                     navigator.geolocation.getCurrentPosition(getMyLocationOnSuccess, getMyLocationOnError, options);
                 } catch (e) {
                     //取出经纬度并且赋值
-                    console.log('定位出现了问题');
+                    alert('无法定位, 请更换其他支持定位的浏览器尝试！');
                 }
             } else {
                 //浏览器不支持geolocation

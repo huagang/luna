@@ -1,7 +1,9 @@
 package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.sc.ManagePoiService;
 import ms.luna.biz.util.CharactorUtil;
@@ -12,6 +14,7 @@ import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
 import ms.luna.web.model.common.SimpleModel;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,9 @@ import java.util.List;
 @RequestMapping("/content/businessRelation")
 public class BusinessTreeController extends BasicController {
 
+    private final static Logger logger = Logger.getLogger(BusinessTreeController.class);
+
+    public static String menu = "businessRelation";
     @Autowired
     private ManageBusinessTreeService manageBusinessTreeService;
 
@@ -44,51 +50,26 @@ public class BusinessTreeController extends BasicController {
     @Autowired
     private PulldownController pulldownController;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/businessTree/{business_id}")
-    public ModelAndView init(
-            @PathVariable("business_id") String businessId,
-            @RequestParam(required = false, value = "province_id") String provinceId,
-            @RequestParam(required = false, value = "city_id") String cityId,
-            @RequestParam(required = false, value = "county_id") String countyId,
-            HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         try {
-
+            SessionHelper.setSelectedMenu(request.getSession(false), menu);
             // 省份列表
             view.addObject("provinces", pulldownController.loadProvinces());
-
-            // 城市信息
-            if (!CharactorUtil.isEmpyty(provinceId)) {
-                view.addObject("citys", pulldownController.loadCitys(provinceId));
-            } else {
-                view.addObject("citys", new ArrayList<SimpleModel>());
-            }
-
-            // 区/县信息
-            if (!CharactorUtil.isEmpyty(cityId)) {
-                view.addObject("countys", pulldownController.loadCountys(cityId));
-            } else {
-                view.addObject("countys", new ArrayList<SimpleModel>());
-            }
-
-            // 下拉菜单的初始值
-            view.addObject("provinceId", provinceId);
-            view.addObject("cityId", cityId);
-            view.addObject("countyId", countyId);
-            com.alibaba.fastjson.JSONObject result = managePoiService.getTagsDef("{}");
+            JSONObject result = managePoiService.getTagsDef("{}");
             if ("0".equals(result.getString("code"))) {
-                com.alibaba.fastjson.JSONObject data = result.getJSONObject("data");
-                com.alibaba.fastjson.JSONArray tags = data.getJSONArray("tags_def");
+                JSONObject data = result.getJSONObject("data");
+                JSONArray tags = data.getJSONArray("tags_def");
                 List<SimpleModel> lstTopTags = new ArrayList<SimpleModel>();
                 for (int i = 0; i < tags.size(); i++) {
-                    com.alibaba.fastjson.JSONObject tag = tags.getJSONObject(i);
+                    JSONObject tag = tags.getJSONObject(i);
                     SimpleModel simpleModel = new SimpleModel();
                     simpleModel.setValue(tag.getString("tag_id"));
                     simpleModel.setLabel(tag.getString("tag_name"));
                     lstTopTags.add(simpleModel);
                 }
                 view.addObject("topTags", lstTopTags);
-                view.addObject("businessId", businessId);
                 view.setViewName("/business_tree.jsp");
                 return view;
             } else {
@@ -100,6 +81,19 @@ public class BusinessTreeController extends BasicController {
         }
         view.setViewName("/error.jsp");
         return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/exist/{businessId}")
+    @ResponseBody
+    public JSONObject existBusinessTree(@PathVariable("businessId") int businessId) {
+
+        try {
+            JSONObject ret = manageBusinessTreeService.existBusinessTree(businessId);
+            return ret;
+        } catch (Exception ex) {
+            logger.error("Failed to call existBusinessTree", ex);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/businessId/{businessId}")
