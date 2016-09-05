@@ -101,7 +101,7 @@ public class LunaTradeApplicationController extends BasicController {
         }
 
         JSONObject checkData = new JSONObject();
-        checkData.put("uniqueId", contactPhone);
+        checkData.put("uniqueId", contactPhone.split("\\|")[1]);
         checkData.put("code", smsCode);
         checkData.put("target", SMSCodeTarget.TRADE_APPLICATION.toString());
         checkData.put("isRemove", true);

@@ -72,6 +72,7 @@ public class IdentifyCodeService {
             throw new Exception("Failed to get redis instance");
         }
         String key = "LUNA_CODE_" + uniqueId + "_" + target;
+        logger.info("code key: " + key);
         if (jedis.exists(key)) {
             String value = jedis.get(key);
             jedis.close();
