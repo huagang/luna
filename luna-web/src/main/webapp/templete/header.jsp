@@ -5,7 +5,7 @@
     <!--通用导航栏 start-->
     <nav class="navbar">
         <div class="navbar-header">
-            <a class="navbar-brand" href="<%=request.getContextPath() %>/"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
+            <a class="navbar-brand" href="<%=request.getContextPath() %>/index"><img id="logo" src="<%=request.getContextPath() %>/img/Logo_120x40.png" alt="Brand"> </a>
             <div class="navbar-right info-user">
                 <span class="navbar-business ${sessionScope.is_business != 'true' ? 'hidden' : ''}">
                     <span class="navbar-business-name"></span>
