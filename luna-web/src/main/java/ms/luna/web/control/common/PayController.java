@@ -35,7 +35,7 @@ public class PayController {
     private WXPayService wxPayService;
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/wx/jsapi/getCode")
+    @RequestMapping(value = "/wx/jsapi/getCode")
     public void jsapiGetCode(HttpServletResponse response,
                              @RequestParam(value = "redirectUrl") String url) {
         try {
@@ -43,7 +43,7 @@ public class PayController {
             redirectUrl.append("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
             redirectUrl.append(WXPayProcess.APP_ID);
             redirectUrl.append("&redirect_uri=");
-            redirectUrl.append(URLEncoder.encode(url, "utf-8"));
+            redirectUrl.append(url);
             redirectUrl.append("&response_type=code&scope=snsapi_base");
             redirectUrl.append("&state=");
             String state = ""; //max 128 bytes
@@ -60,7 +60,7 @@ public class PayController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/wx/jsapi/getOpenId")
+    @RequestMapping(value = "/wx/jsapi/getOpenId")
     @ResponseBody
     public JSONObject jsapiGetOpenId(@RequestParam(value = "code") String code,
                                      @RequestParam(value = "state") String state) {
