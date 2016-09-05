@@ -39,7 +39,7 @@
                     <jsp:include page="/templete/menu.jsp"></jsp:include>
                     <!--侧边菜单 end-->
                     <!-- 隐藏文本域 Start-->
-                    <input type="hidden" name="" id="merchantStutas" value="2">
+                    <input type="hidden" name="" id="merchantStutas" value="0">
                     <!-- 隐藏文本域 END-->
                     <!--主题内容 start-->
                     <!-- 开通流程 -->

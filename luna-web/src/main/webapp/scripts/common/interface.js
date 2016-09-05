@@ -580,6 +580,7 @@ var Inter = function () {
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
                 getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
                 getMerchatDetail: { url: context + '/merchant/tradeApplication/detail/{0}', type: 'GET' },
+                merchatSign: { url: context + '/merchant/tradeApplication/sign', type: 'POST' },
 
                 //获取短信验证码
                 getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },

@@ -356,11 +356,19 @@ var initDialogEvent = function () {
         $('#btnSignAgreement').on('click', function () {
             var signStatus = $('[name=signStatus]:checked').val();
             if (signStatus) {
-                $('.process-num').addClass('pass');
-                $('#btnSign').addClass('hide');
-                clcWindow(this);
-                popWindow($('#pop-complete'));
-                console.log('协议通过');
+                Util.setAjax(Inter.getApiUrl().merchatSign.url, function (res) {
+                    if (res.code == "0") {
+                        $('.process-num').addClass('pass');
+                        $('#btnSign').addClass('hide');
+                        clcWindow(this);
+                        popWindow($('#pop-complete'));
+                        console.log('协议通过');
+                    } else {
+                        console.log('签署协议失败');
+                    }
+                }, function (res) {
+                    console.log('服务出现问题，请稍后再试');
+                }, Inter.getApiUrl().merchatSign.type);
             } else {
                 console.log('请签署协议');
             }

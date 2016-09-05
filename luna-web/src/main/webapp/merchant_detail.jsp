@@ -17,6 +17,14 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant_detail.css">
+    <!-- jQuery 文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+    <!-- jQuery 文件 End -->
+
+    <!-- Angular 文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+    <!-- Angular 文件 End -->
+
 </head>
 
 <body ng-app="MerchantDetail">
@@ -100,7 +108,7 @@
                                     <label class="control-label col-md-4 text-right" for="inputWarning">营业执照副本电子版</label>
                                     <div class="col-md-8">
                                         <div class="col-md-12">
-                                            <div class="pic-wrapper" ng-show={{mcInfo.licencePicUrl!='' }}>
+                                            <div class="pic-wrapper" ng-show="mcInfo.licencePicUrl!='' ">
                                                 <img src="{{mcInfo.licencePicUrl}}" alt="营业执照副本">
                                             </div>
                                         </div>
@@ -191,13 +199,6 @@
         <!-- 底部功能区 end -->
     </div>
     <!--驳回申请 end-->
-    <!-- jQuery 文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-    <!-- jQuery 文件 End -->
-
-    <!-- Angular 文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-    <!-- Angular 文件 End -->
 
     <!-- common文件 -->
     <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
