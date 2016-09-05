@@ -114,7 +114,7 @@ public class LunaUserServiceImpl implements LunaUserService {
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
 
         // 获取业务id
-        String merchantId;
+        String merchantId = null;
         if(roleId == DbConfig.MERCHANT_ADMIN_ROLE_ID || roleId == DbConfig.MERCHANT_OPERATOR_ROLE_ID) {
             Integer businessId = VbUtility.extractInteger(extra);
             if(businessId == null) {
@@ -176,6 +176,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             lunaRegEmail.setExtra(extra);
             lunaRegEmail.setStatus(false);
             lunaRegEmail.setInviteUniqueId(loginUserId);
+            lunaRegEmail.setMerchantId(merchantId);
             lunaRegEmailDAO.insertSelective(lunaRegEmail);
             Runnable mailRunnable = new MailRunnable(email, token, categoryName, currentDate,
                     lunaUser.getLunaName(), lunaRole.getName(), webAddr);
@@ -482,6 +483,8 @@ public class LunaUserServiceImpl implements LunaUserService {
             userRole.setRoleId(roleId);
             userRole.setExtra(JSON.parseObject(extra));
             lunaUserRoleDAO.createUserRoleInfo(userRole);
+
+            // 用户和商户建立联系
         } catch (Exception ex) {
             logger.error("Failed to create user", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
