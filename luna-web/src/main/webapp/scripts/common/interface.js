@@ -6,20 +6,18 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-var Inter = function () {
+var Inter = function() {
     var host = "/luna-web";
     var context = window.context || "/luna-web",
         apiContext = '';
 
-    var curHost = function () {
+    var curHost = function() {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        }
-        else if(/luna-test/.test(host)) {
+        } else if (/luna-test/.test(host)) {
             return 'test';
-        }
-        else {
+        } else {
             return 'current';
         }
     };
@@ -424,6 +422,18 @@ var Inter = function () {
                     url: context + '/inner/uploadPic',
                     type: 'POST'
                 }, //图片上传接口
+                // 上传路径
+                uploadPicByUeditor: {
+                    //url: context + '/inner/upload',
+                    url: context + "/data/poi/thumbnail/upload",
+                    type: 'POST'
+                }, //统一上传接口
+                uploadVideoByUeditor: {
+                    //url: context + '/inner/uploadPic',
+                    url: context + "/data/poi/video/upload",
+                    type: 'POST'
+                }, //图片上传接口
+
 
                 login: {
                     url: context + '/common/login',
