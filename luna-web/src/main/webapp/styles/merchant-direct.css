@@ -23,15 +23,15 @@ label {
 
 button,
 button:hover {
-    background-color: #169bd5;
-    border: 1px solid #169bd5;
+    /*background-color: #169bd5;*/
+    /*border: 1px solid #169bd5;*/
 }
 
 .launch button,
 .sign-aggreement {
     float: right;
-    background-color: #169bd5;
-    border: 1px solid #169bd5;
+    /*background-color: #169bd5;*/
+    /*border: 1px solid #169bd5;*/
     height: 30px;
     line-height: 20px;
 }
@@ -39,13 +39,14 @@ button:hover {
 .section-wrapper {
     margin: 25px 0;
     line-height: 28px;
-    font-size: 13px;
+    font-size: 14px;
     padding: 0 0 0 20px;
+    position: relative;
 }
 
 .section-wrapper h5 {
-    font-size: 13px;
-    margin-bottom: 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .section-wrapper .iconfont {
@@ -58,22 +59,28 @@ button:hover {
 }
 
 .section-wrapper>p {
-    margin-left: 25px;
+    /*margin-left: 25px;*/
 }
 
 .process-wrapper {
-    margin-left: 30px;
+    margin-left: 55px;
 }
 
 .process-num {
-    background-color: #79b9e7;
+    background-color: #C3C3C3;
     border-radius: 50%;
-    height: 28px;
-    width: 28px;
+    height: 24px;
+    width: 24px;
     display: inline-block;
     text-align: center;
     font-size: 16px;
     color: #fff;
+    line-height: 24px;
+    font-style: normal;
+}
+
+.process-num.pass {
+    background-color: #79b9e7;
 }
 
 .process-title {
@@ -81,22 +88,26 @@ button:hover {
 }
 
 .process-content-wrapper {
-    height: 85px;
-    margin-left: 13px;
-    padding-left: 19px;
+    height: 70px;
+    /* margin-left: 13px; */
+    /* padding-left: 19px; */
 }
 
 .process-one .process-content-wrapper {
-    border-left: 2px solid #e6e7ec;
+    /* border-left: 2px solid #e6e7ec; */
 }
 
 .phone-num {
-    width: 80%;
+    width: 43%;
     float: left;
 }
 
 
 /*填写信息*/
+
+.form-content {
+    width: 450px;
+}
 
 .icon-required {
     color: red;
@@ -105,7 +116,7 @@ button:hover {
 .phone-area {
     width: 20%;
     float: left;
-    margin-right: 0;
+    margin-right: 10px;
     height: 30px;
 }
 
@@ -114,8 +125,8 @@ button:hover {
 }
 
 .pic-wrapper img {
-    width: 150px;
-    height: 150px;
+    width: 205px;
+    height: 128px;
     margin: 10px 10px 10px 0;
 }
 
@@ -135,6 +146,34 @@ button:hover {
     padding-left: 2px
 }
 
+.button-white,
+.button-white:hover {
+    color: #445FA8;
+    background-color: #fff;
+    border: 1px solid #C3C3C3;
+}
+
+.idtips {
+    margin-top: 5px;
+    color: #707070;
+}
+
+.idforever-wrapper {
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+
+.input-group-control {
+    width: 100%;
+}
+
+.idPic {
+    padding: 0;
+}
+.btnSubmit{
+    width:108px;
+}
 
 /*确认提交*/
 
@@ -210,3 +249,47 @@ input[type=file] {
     margin: 0;
     vertical-align: bottom;
 }
+
+
+/*Icon*/
+
+.tradeicon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+.tradeicon-introduce {
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -10px -10px;
+}
+
+.tradeicon-process {
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -30px -10px;
+}
+
+.process-icon-wrapper {
+    position: absolute;
+    width: 28px;
+    height: 123px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -10px -40px;
+    text-align: center;
+    left: 40px;
+}
+
+.process-num-wrapper {
+    position: relative;
+    top: 2px;
+}
+
+.process-num-wrapper:last-child {
+    position: relative;
+    top: 73px;
+}
+
+
+/*Icon End*/

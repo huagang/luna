@@ -87,7 +87,7 @@ var initCreatePage = function () {
                 accountBank: 'required',
                 accountProvince: 'required',
                 accountCity: 'required',
-                accountAddresss: 'required',
+                accountAddress: 'required',
             },
             messages: {
                 contactName: "请填写商户业务对接联系人的真实姓名",
@@ -247,7 +247,7 @@ var initCreatePage = function () {
             $('#merchantInfo').valid();
             var formDataZero = Util.formToJson($('#merchantInfo')),
                 formData = {
-                    accountAddresss: formDataZero.accountAddresss + '|' + $('#branchBankCode').select2('data')[0].text,
+                    accountAddress: formDataZero.accountAddress + '|' + $('#branchBankCode').select2('data')[0].text,
                     accountBank: formDataZero.accountBank + '|' + $('#bankCode').select2('data')[0].text,
                     accountCity: formDataZero.accountCity + '|' + $('#cityCode').select2('data')[0].text,
                     accountProvince: formDataZero.accountProvince + '|' + $('#provinceCode').select2('data')[0].text,
@@ -259,7 +259,7 @@ var initCreatePage = function () {
                     merchantName: formDataZero.merchantName,
                     merchantNo: formDataZero.merchantNo,
                     merchantPhone: formDataZero.merchantPhone,
-                    businessId: 48,
+                    smsCode:formDataZero.verCode,
                 },
                 idPicObj = $('.idPic .pic-wrapper'),
                 idcardPicUrl = [],
