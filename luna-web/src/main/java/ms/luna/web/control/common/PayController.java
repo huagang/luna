@@ -68,7 +68,7 @@ public class PayController {
 
         JSONObject in = wxPayService.getOpenId(code);
         JSONObject out = new JSONObject();
-        out.put("openId", in.getString("openid"));
+        out.put("openId", in.getString("openId"));
         return FastJsonUtil.sucess("success", out);
     }
 
