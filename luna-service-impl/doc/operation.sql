@@ -95,7 +95,9 @@ UPDATE `luna_menu` SET `display_order`='5' WHERE `id`='11';
 UPDATE `luna_menu` SET `display_order`='6' WHERE `id`='12';
 UPDATE `luna_menu` SET `display_order`='3' WHERE `id`='22';
 
-INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
+INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('6', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
+INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('7', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
+
 
 alter table ms_column add column business_id int(11) not null default 0 comment '业务id' after code;
 alter table ms_column add UNIQUE (business_id, name);
