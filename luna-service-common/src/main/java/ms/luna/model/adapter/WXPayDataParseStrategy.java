@@ -57,7 +57,7 @@ public class WXPayDataParseStrategy implements PayDataParseStrategy {
         ArrayList<String> list = new ArrayList<String>();
         for (Map.Entry<String, Object> entry : json.entrySet()) {
             if (!entry.getValue().equals("")) {
-                list.add("<" + entry.getKey() + ">" + entry.getValue() + "<" + entry.getKey() + "/>");
+                list.add("<" + entry.getKey() + ">" + entry.getValue() + "</" + entry.getKey() + ">");
             }
         }
         StringBuilder xmlBuilder = new StringBuilder();
