@@ -90,9 +90,9 @@ public abstract class AbstractWXPayProcess implements PayProcess {
         StringBuilder url = new StringBuilder("https://api.weixin.qq.com/sns/oauth2/access_token?");
         url.append("appid=");
         url.append(APP_ID);
-        url.append("&secret");
+        url.append("&secret=");
         url.append(APP_SECRET);
-        url.append("&code");
+        url.append("&code=");
         url.append(code);
         url.append("&grant_type=authorization_code");
         return sendMessage(url.toString(), "");
