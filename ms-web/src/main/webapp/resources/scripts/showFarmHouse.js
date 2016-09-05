@@ -5,20 +5,26 @@
 $(function(){
     if(! /disableWelcome=true/.test(location.href)){
         var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
-        bgImg.onload = function(){
-            if(fgLoaded){
-                showAnimation();
-            }
-            bgLoaded = true;
-        };
-        fgImg.onload = function(){
-            if(bgLoaded){
-                showAnimation();
-            }
-            fgLoaded = true;
-        };
-        fgImg.src = pageData.start_page_foreground_pic;
-        bgImg.src = pageData.start_page_background_pic;
+        if(pageData.start_page_foreground_pic && pageData.start_page_background_pic){
+            fgImg.src = pageData.start_page_foreground_pic;
+            bgImg.src = pageData.start_page_background_pic;
+            bgImg.onload = function(){
+                if(fgLoaded){
+                    showAnimation();
+                }
+                bgLoaded = true;
+            };
+            fgImg.onload = function(){
+                if(bgLoaded){
+                    showAnimation();
+                }
+                fgLoaded = true;
+            };
+        } else{
+            $('.page-back').css('display', 'none');
+            $(document.body).removeClass('modal-open');
+            $('.page-main').removeClass('transparent');
+        }
     } else{
         $('.page-back').css('display', 'none');
         $(document.body).removeClass('modal-open');
@@ -35,7 +41,7 @@ function showAnimation(){
     $('.page-back .bg-mask').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: [.77,.07,0,.63],
+            easing: [.77,.07,0,.63]
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
@@ -65,7 +71,8 @@ function showAnimation(){
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController]);
+        .factory('ScrollController', getScrollController)
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
 
 
     function getMarkerTip() {
@@ -142,7 +149,129 @@ function showAnimation(){
         return MarkerTip;
     }
 
-    function FarmHouseController($rootScope, $scope, $http, MarkerTip) {
+    function getScrollController(){
+        function Controller(options){
+            var that = this;
+            window.scroll = that;
+
+            that.init = function(){
+                if(options.target && typeof options.target === 'string'){
+                    that.target  = $(options.target);
+                    that.target.on('touchstart', that.handleEvent);
+                    that.target.on('click', that.handleEvent);
+                    that.target.on('mousedown', that.handleEvent);
+                    that.target.on('mousemove', that.handleEvent);
+                    that.target.on('touchmove', that.handleEvent);
+                    that.target.on('mouseup', that.handleEvent);
+                    that.target.on('mouseleave', that.handleEvent);
+                    that.target.on('touchend', that.handleEvent);
+                    that.target.on('transitionend', that.handleEvent);
+                    that.target.on('webkitTransitionEnd', that.handleEvent);
+                    that.target.on('touchend', that.handleEvent);
+                    that.target.on('touchend', that.handleEvent);
+
+                    that.scrollUnit = that.target.children().first().width();
+                    that.scrollWidth = that.target.width();
+                    that.translateX = 0;
+                    that.cur = {
+                        position: 0,
+                        time: 0,
+                        started: false
+                    };
+                    that.last = {};
+                } else {
+                    throw new Error('scroll wrapper selector not right!');
+                }
+            };
+            that.updateWidth = function(){
+              that.scrollWidth = that.target.width();
+            };
+            that.handleEvent = function(event){
+                switch(event.type){
+                    case 'mousedown':
+                    case 'touchstart':
+                        that.start(event);
+                        break;
+                    case 'mousemove':
+                    case 'touchmove':
+                        that.move(event);
+                    case 'mouseup':
+                    case 'mouseleave':
+                    case 'touchend':
+                        that.end(event);
+                        break;
+                    case 'transitionend':
+                    case 'webkitTransitionEnd':
+                        that.transitionEnd(event);
+                        break;
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            };
+            that.start = function(event){
+                // 记录当前状态
+                var originEvent = event.originalEvent;
+
+                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
+                that.cur.position = point.pageX;
+                that.cur.time = Date.now();
+            };
+            that.move = function(event){
+                that.started = true;
+                var originEvent = event.originalEvent;
+                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
+                var deltaX = point.pageX  - that.cur.position;
+                if(Math.abs(deltaX) >= 10 ){
+                    that.updateWidth();
+                    that.translateX += deltaX;
+                    if(that.translateX > window.screen.width / 2 || that.translateX + that.scrollWidth < window.screen.width * 2 / 3){
+                        return;
+                    }
+                    that.last = that.cur;
+                    that.cur = {
+                        position : point.pageX,
+                        time : Date.now()
+                    };
+              //      console.log(that.cur.time);
+                    that.target.attr('style', 'transform: translateX(' + that.translateX + 'px)');
+                }
+            };
+            that.end = function(event){
+                var originEvent = event.originalEvent;
+                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
+                if(point){
+                    var deltaX = point.pageX  - that.cur.position;
+                    that.last = that.cur;
+                    that.translateX += deltaX;
+                    that.cur = {
+                        position : point.pageX,
+                        time : Date.now()
+                    };
+                }
+                console.log(that.cur.time);
+            };
+            that.transitionEnd = function(event){
+                if(! that.started){
+                    return;
+                }
+                var originEvent = event.originalEvent;
+                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
+                var deltaX = point.pageX  - that.cur.position;
+                that.translateX += deltaX;
+                that.cur.time = Date.now();
+
+
+
+            };
+
+            that.init();
+
+        }
+
+        return Controller;
+    }
+
+    function FarmHouseController($rootScope, $scope, $http, MarkerTip, ScrollController) {
 
         var vm = this; // viewmodel
 
@@ -196,8 +325,8 @@ function showAnimation(){
 
         vm.checkPanoPosition = checkPanoPosition;
 
-        //
         vm.replaceUrl = replaceUrl;
+
 
         vm.init();
 
@@ -242,6 +371,8 @@ function showAnimation(){
             vm.poiData = {};
             vm.farmData = {};
             vm.poiList = [];
+
+
             // 获取农家id
             vm.id = location.pathname.split('farmhouse/')[1];
 
@@ -251,6 +382,11 @@ function showAnimation(){
             } catch(e){
 
             }
+
+            // 滚动相关
+            vm.foodScroll = new ScrollController({
+                target: '.food-info .scroll-wrapper'
+            });
 
 
             vm.curPanoIndex = 0;
@@ -263,10 +399,6 @@ function showAnimation(){
             vm.fetchPoiData();
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
-
-            if(! pageData.poi_info.contact_phone){
-                $('.nav-item.phone').addClass('hidden');
-            }
             if(! pageData.poi_info.panorama.panorama_id){
                 $('.nav-item.pano .tip').html('全景拍摄中');
                 setTimeout(function(){
@@ -300,31 +432,25 @@ function showAnimation(){
             $(document).on('scroll', function(){
                 if(vm.timeoutId){
                     clearTimeout(vm.timeoutId);
+                } else if(vm.panoAutoPlay){
+                    vm.pano.setAutoplayEnable(false);
+                    vm.panoAutoPlay = false;
                 }
                 vm.timeoutId = setTimeout(vm.checkPanoPosition, 200);
             });
         }
 
         function checkPanoPosition(){
+            vm.timeoutId = undefined;
+
             var pano = $('.room-info main'),
                 offsetTop = pano.offset().top,
                 height = pano.height(),
                 scrollTop = document.body.scrollTop;
-
-            if(scrollTop > offsetTop + height * .7 || screen.height + scrollTop < offsetTop + height * .4){
-                if(vm.panoAutoPlay) {
-                    vm.panoAutoPlay = false;
-                    vm.pano.setAutoplayEnable(false);
-                }
-            } else{
-                if( ! vm.panoAutoPlay){
-                    vm.panoAutoPlay = true;
-                    vm.pano.setAutoplayEnable(true);
-                }
+            if(scrollTop <= offsetTop + height * .7 && screen.height + scrollTop >= offsetTop + height * .4){
+                vm.panoAutoPlay = true;
+                vm.pano.setAutoplayEnable(true);
             }
-
-
-
         }
 
 
@@ -503,20 +629,35 @@ function showAnimation(){
                 selfIntroduce: pageData.manager_self_introduction
 
             };
-            switch (vm.farmData.allPanorama.panorama_type_id) {
-                case 1:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
-                    break;
-                case 2:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
-                    break;
-                case 3:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
-                    break;
-                default:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
-                    break;
+            if(vm.farmData.allPanorama.text){
+                switch (vm.farmData.allPanorama.panorama_type_id) {
+                    case 1:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
+                        break;
+                    case 2:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                    case 3:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
+                        break;
+                    default:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                }
+            } else{
+                vm.farmData.allPanorama.panoUrl = '';
             }
+
+            if(vm.farmData.food.length > 0){
+                vm.farmData.food = vm.farmData.food.filter(function(item){
+                    if(item.pic || item.text){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                })
+            }
+
         }
 
         function fetchPanoDetail() {
