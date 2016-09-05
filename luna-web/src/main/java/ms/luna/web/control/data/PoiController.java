@@ -32,10 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -330,29 +327,28 @@ public class PoiController extends BasicController {
             MultipartFile zip_fileup,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String date = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-
-        String pathOfDate = uploadedFilePath + date + "/";// eg: /data1/luna/uploadedFile/20160630205121714/
-        String savedExcel = VbUtility.saveFile(pathOfDate, excel_fileup, ".xlsx", "poi_excel.xlsx");// eg: /data1/luna/uploadedFile/20160630205121714/poi_excel.xlsx
-
-        String savedZip = null;
-        String unZipped = null;
-        if (!zip_fileup.isEmpty()) {
-
-            // zip文件大于100M
-            if (zip_fileup.getSize() > 100*1024*1024) {
-                return FastJsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!");
-            }
-
-            savedZip = VbUtility.saveFile(pathOfDate, zip_fileup, ".zip", "poi_excel.zip");
-            JSONObject jsonResult = ZipUtil.decompressZip(savedZip, pathOfDate + "unziped/");
-            if (!"0".equals(jsonResult.getString("code"))) {
-                return FastJsonUtil.error("-2", jsonResult.getString("msg"));
-            }
-            unZipped = pathOfDate + "unziped/";
-        }
-
+            String date = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+            String pathOfDate = uploadedFilePath + date + "/";// eg: /data1/luna/uploadedFile/20160630205121714/
         try {
+            String savedExcel = VbUtility.saveFile(pathOfDate, excel_fileup, ".xlsx", "poi_excel.xlsx");// eg: /data1/luna/uploadedFile/20160630205121714/poi_excel.xlsx
+
+            String savedZip = null;
+            String unZipped = null;
+            if (!zip_fileup.isEmpty()) {
+
+                // zip文件大于100M
+                if (zip_fileup.getSize() > 100*1024*1024) {
+                    return FastJsonUtil.error("-3", "文件过大(>100M)，请将文件拆分小或者使用特殊通道上传!");
+                }
+
+                savedZip = VbUtility.saveFile(pathOfDate, zip_fileup, ".zip", "poi_excel.zip");
+                JSONObject jsonResult = ZipUtil.decompressZip(savedZip, pathOfDate + "unziped/");
+                if (!"0".equals(jsonResult.getString("code"))) {
+                    return FastJsonUtil.error("-2", jsonResult.getString("msg"));
+                }
+                unZipped = pathOfDate + "unziped/";
+            }
+
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject result = this.savePois(savedExcel, unZipped, user);
             MsLogger.info(result.toJSONString());
@@ -360,6 +356,19 @@ public class PoiController extends BasicController {
         } catch (Exception e) {
             MsLogger.error(e);
             return FastJsonUtil.error("-3", "failed");
+        } finally {
+            // 删除磁盘文件
+            try {
+                File dir = new File(pathOfDate);
+                boolean success = VbUtility.deleteDir(dir);
+                if(success) {
+                    MsLogger.info("success to delete unziped resource file");
+                } else {
+                    MsLogger.info("success to delete unziped resource file");
+                }
+            } catch (Exception e) {
+                MsLogger.error("Failed to delete resource file.", e);
+            }
         }
     }
 
