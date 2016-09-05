@@ -18,6 +18,14 @@ public interface ManageMerchantService {
 	JSONObject createMerchant(String json);
 
 	/**
+	 * 获取商户交易直通车开通状态
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject getMerchantTradeStatus(String json);
+
+	/**
 	 * 根据具体ID获取单个商户信息
 	 * 
 	 * @param json
@@ -106,4 +114,11 @@ public interface ManageMerchantService {
 	 */
 	JSONObject getMerchantEmail(String id);
 
+	/**
+	 * 商户签署直通车协议
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject signAgreement(JSONObject json);
 }

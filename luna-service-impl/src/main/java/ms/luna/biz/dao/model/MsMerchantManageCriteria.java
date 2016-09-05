@@ -1914,6 +1914,76 @@ public class MsMerchantManageCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andTradeStatusIsNull() {
+            addCriterion("trade_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusIsNotNull() {
+            addCriterion("trade_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status =", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <>", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status >", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status >=", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_status <=", value, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_status in", values, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_status not in", values, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_status between", value1, value2, "tradeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeStatusNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_status not between", value1, value2, "tradeStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andMerchantIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");

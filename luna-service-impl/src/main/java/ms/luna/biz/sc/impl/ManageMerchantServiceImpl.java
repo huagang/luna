@@ -8,10 +8,10 @@ import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.FastJsonUtil;
 import com.alibaba.fastjson.JSONObject;
 
-/** 
- * @author  Greek 
- * @date create time：2016年3月23日 下午8:23:00 
- * @version 1.0 
+/**
+ * @author Greek
+ * @version 1.0
+ * @date create time：2016年3月23日 下午8:23:00
  */
 @Service("manageMerchantService")
 public class ManageMerchantServiceImpl implements ManageMerchantService{
@@ -161,4 +161,24 @@ public class ManageMerchantServiceImpl implements ManageMerchantService{
 		}
 		return result;
 	}
+
+    @Override
+    public JSONObject getMerchantTradeStatus(String json) {
+        JSONObject result = null;
+        try {
+            result = manageMerchantBL.getMerchantTradeStatus(json);
+        } catch (RuntimeException e) {
+            return FastJsonUtil.error("-1", e);
+        }
+        return result;
+    }
+
+    @Override
+    public JSONObject signAgreement(JSONObject json) {
+        try {
+            return manageMerchantBL.signAgreement(json);
+        } catch (RuntimeException e) {
+            return FastJsonUtil.error("-1", e);
+        }
+    }
 }

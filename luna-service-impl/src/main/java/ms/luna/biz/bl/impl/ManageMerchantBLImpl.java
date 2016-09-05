@@ -1,6 +1,5 @@
 package ms.luna.biz.bl.impl;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +8,10 @@ import ms.biz.common.ServiceConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsCRMTable;
+import ms.luna.biz.table.MsMerchantManageTable;
 import ms.luna.biz.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	@Autowired
 	private MsBusinessDAO msBusinessDAO;
-	
+
 	@Override
 	public JSONObject createMerchant(String json) {
 		// 创建商户和创建业务合并——创建商户
@@ -105,13 +107,47 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManage.setDelFlg(VbConstant.DEL_FLG.未删除);
 		msMerchantManage.setRegistHhmmss(new Date());
 		msMerchantManage.setUpHhmmss(new Date());
+        msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_NORMAL);
 
-		msMerchantManageDAO.insertSelective(msMerchantManage);
+        msMerchantManageDAO.insertSelective(msMerchantManage);
 		return FastJsonUtil.sucess("新商户创建成功！");
 	}
 
-	@Override
-	public JSONObject loadMerchants(String json) {
+    @Override
+    public JSONObject signAgreement(JSONObject jsonObject) {
+        Integer businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+        if (msBusiness == null) {
+            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
+        }
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUE_ON);
+        return FastJsonUtil.sucess("success");
+    }
+
+    @Override
+    public JSONObject getMerchantTradeStatus(String json) {
+        JSONObject param = JSONObject.parseObject(json);
+        Integer businessId = param.getInteger(LunaUserTable.FIELD_ID);
+        //TODO 中间表查出商户ID
+        //TODO 传入商户ID
+        //MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        JSONObject result = new JSONObject();
+        //result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
+        return FastJsonUtil.sucess("success", result);
+    }
+
+    @Override
+    public JSONObject changeMerchantTradeStatus(String json) {
+        JSONObject param = JSONObject.parseObject(json);
+        String merchantId = param.getString(MsMerchantManageTable.FIELD_MERCHANT_ID);
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
+        msMerchantManage.setTradeStatus(param.getInteger(MsMerchantManageTable.FIELD_TRADE_STATUS));
+        return FastJsonUtil.sucess("success");
+    }
+
+    @Override
+    public JSONObject loadMerchants(String json) {
 
 		JSONObject param = JSONObject.parseObject(json);
 		MerchantsParameter merchantsParameter = new MerchantsParameter();
@@ -144,7 +180,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				merchant.put(MsCRMTable.FIELD_CONTACT_PHONENUM, merchantsResult.getContact_phonenum());
 				merchant.put(MsCRMTable.FIELD_SALESMAN_NM, merchantsResult.getSalesman_nm());
 				Byte status_id = Byte.parseByte(merchantsResult.getStatus_id());
-				merchant.put(MsCRMTable.STATUS, VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
+				merchant.put(MsCRMTable.FIELD_STATUS, VbConstant.MERCHANT_STATUS.ConvertStauts(status_id));
 				merchant.put(MsCRMTable.FIELD_PROVINCE_ID, merchantsResult.getProvince_id());
 				merchant.put(MsCRMTable.FIELD_CITY_ID, merchantsResult.getCity_id());
 				merchant.put(MsCRMTable.FIELD_DEL_FLG, merchantsResult.getDel_flg());

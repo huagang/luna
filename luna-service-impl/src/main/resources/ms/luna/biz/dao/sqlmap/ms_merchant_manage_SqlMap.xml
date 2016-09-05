@@ -24,6 +24,7 @@
     <result column="regist_hhmmss" jdbcType="TIMESTAMP" property="registHhmmss" />
     <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
     <result column="updated_by_unique_id" jdbcType="VARCHAR" property="updatedByUniqueId" />
+    <result column="trade_status" jdbcType="INTEGER" property="tradeStatus" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -54,7 +55,7 @@
     merchant_id, merchant_nm, merchant_phonenum, category_id, province_id, city_id, county_id, 
     merchant_addr, resource_content, lat, lng, merchant_info, contact_nm, contact_phonenum, 
     contact_mail, salesman_id, salesman_nm, status_id, del_flg, regist_hhmmss, up_hhmmss, 
-    updated_by_unique_id
+    updated_by_unique_id, trade_status
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultMap="BaseResultMap">
     select
@@ -92,13 +93,13 @@
       resource_content, lat, lng, merchant_info, 
       contact_nm, contact_phonenum, contact_mail, salesman_id, 
       salesman_nm, status_id, del_flg, regist_hhmmss, 
-      up_hhmmss, updated_by_unique_id)
+      up_hhmmss, updated_by_unique_id, trade_status)
     values (#merchantId:VARCHAR#, #merchantNm:VARCHAR#, #merchantPhonenum:VARCHAR#, #categoryId:VARCHAR#, 
       #provinceId:VARCHAR#, #cityId:VARCHAR#, #countyId:VARCHAR#, #merchantAddr:VARCHAR#, 
       #resourceContent:VARCHAR#, #lat:DECIMAL#, #lng:DECIMAL#, #merchantInfo:VARCHAR#, 
       #contactNm:VARCHAR#, #contactPhonenum:VARCHAR#, #contactMail:VARCHAR#, #salesmanId:VARCHAR#, 
       #salesmanNm:VARCHAR#, #statusId:VARCHAR#, #delFlg:VARCHAR#, #registHhmmss:TIMESTAMP#, 
-      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#)
+      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#, #tradeStatus:INTEGER#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     insert into ms_merchant_manage
@@ -169,6 +170,9 @@
       <isNotNull prepend="," property="updatedByUniqueId">
         updated_by_unique_id
       </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        trade_status
+      </isNotNull>
       )
     </dynamic>
     values
@@ -238,6 +242,9 @@
       </isNotNull>
       <isNotNull prepend="," property="updatedByUniqueId">
         #updatedByUniqueId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        #tradeStatus:INTEGER#
       </isNotNull>
       )
     </dynamic>
@@ -315,6 +322,9 @@
       <isNotNull prepend="," property="record.updatedByUniqueId">
         updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.tradeStatus">
+        trade_status = #record.tradeStatus:INTEGER#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
@@ -343,7 +353,8 @@
       del_flg = #record.delFlg:VARCHAR#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
-      updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
+      updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#,
+      trade_status = #record.tradeStatus:INTEGER#
     <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
     </isParameterPresent>
@@ -414,6 +425,9 @@
       <isNotNull prepend="," property="updatedByUniqueId">
         updated_by_unique_id = #updatedByUniqueId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="tradeStatus">
+        trade_status = #tradeStatus:INTEGER#
+      </isNotNull>
     </dynamic>
     where merchant_id = #merchantId:VARCHAR#
   </update>
@@ -439,7 +453,8 @@
       del_flg = #delFlg:VARCHAR#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
-      updated_by_unique_id = #updatedByUniqueId:VARCHAR#
+      updated_by_unique_id = #updatedByUniqueId:VARCHAR#,
+      trade_status = #tradeStatus:INTEGER#
     where merchant_id = #merchantId:VARCHAR#
   </update>
 </sqlMap>

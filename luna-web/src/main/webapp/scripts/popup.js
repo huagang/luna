@@ -3,14 +3,15 @@ function popWindow($popwindow) {
     $("#pop-overlay").css("display", "block");
     var h = $popwindow.height();
     var w = $popwindow.width();
-    var $height = $(window).height();
+    var $height = window.screen.availHeight || $(window).height();
     var $width = $(window).width();
+    var scrollTop = $(document).scrollTop();
     if ($height < h) {
         h = $height;
     }
     $popwindow.css({
         "display": "block",
-        "top": ($height - h) / 2,
+        "top": ($height - h) / 2 + scrollTop,
         "left": ($width - w) / 2
     });
 }

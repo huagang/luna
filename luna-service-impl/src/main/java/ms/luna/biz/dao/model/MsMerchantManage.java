@@ -2,12 +2,14 @@ package ms.luna.biz.dao.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import ms.luna.biz.table.MsCRMTable;
+import ms.luna.biz.table.MsMerchantManageTable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class MsMerchantManage implements Serializable {
+
     @JSONField(name = MsCRMTable.FIELD_MERCHANT_ID)
     private String merchantId;
     @JSONField(name = MsCRMTable.FIELD_MERCHANT_NM)
@@ -52,6 +54,8 @@ public class MsMerchantManage implements Serializable {
     private Date upHhmmss;
     @JSONField(name = MsCRMTable.FIELD_UPDATED_BY_UNIQUE_ID)
     private String updatedByUniqueId;
+    @JSONField(name = MsMerchantManageTable.FIELD_TRADE_STATUS)
+    private Integer tradeStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -231,6 +235,14 @@ public class MsMerchantManage implements Serializable {
         this.updatedByUniqueId = updatedByUniqueId == null ? null : updatedByUniqueId.trim();
     }
 
+    public Integer getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(Integer tradeStatus) {
+        this.tradeStatus = tradeStatus;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -248,23 +260,24 @@ public class MsMerchantManage implements Serializable {
                 && (this.getMerchantPhonenum() == null ? other.getMerchantPhonenum() == null : this.getMerchantPhonenum().equals(other.getMerchantPhonenum()))
                 && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
                 && (this.getProvinceId() == null ? other.getProvinceId() == null : this.getProvinceId().equals(other.getProvinceId()))
-            && (this.getCityId() == null ? other.getCityId() == null : this.getCityId().equals(other.getCityId()))
-            && (this.getCountyId() == null ? other.getCountyId() == null : this.getCountyId().equals(other.getCountyId()))
-            && (this.getMerchantAddr() == null ? other.getMerchantAddr() == null : this.getMerchantAddr().equals(other.getMerchantAddr()))
-            && (this.getResourceContent() == null ? other.getResourceContent() == null : this.getResourceContent().equals(other.getResourceContent()))
-            && (this.getLat() == null ? other.getLat() == null : this.getLat().equals(other.getLat()))
+                && (this.getCityId() == null ? other.getCityId() == null : this.getCityId().equals(other.getCityId()))
+                && (this.getCountyId() == null ? other.getCountyId() == null : this.getCountyId().equals(other.getCountyId()))
+                && (this.getMerchantAddr() == null ? other.getMerchantAddr() == null : this.getMerchantAddr().equals(other.getMerchantAddr()))
+                && (this.getResourceContent() == null ? other.getResourceContent() == null : this.getResourceContent().equals(other.getResourceContent()))
+                && (this.getLat() == null ? other.getLat() == null : this.getLat().equals(other.getLat()))
                 && (this.getLng() == null ? other.getLng() == null : this.getLng().equals(other.getLng()))
                 && (this.getMerchantInfo() == null ? other.getMerchantInfo() == null : this.getMerchantInfo().equals(other.getMerchantInfo()))
-            && (this.getContactNm() == null ? other.getContactNm() == null : this.getContactNm().equals(other.getContactNm()))
+                && (this.getContactNm() == null ? other.getContactNm() == null : this.getContactNm().equals(other.getContactNm()))
                 && (this.getContactPhonenum() == null ? other.getContactPhonenum() == null : this.getContactPhonenum().equals(other.getContactPhonenum()))
-            && (this.getContactMail() == null ? other.getContactMail() == null : this.getContactMail().equals(other.getContactMail()))
-            && (this.getSalesmanId() == null ? other.getSalesmanId() == null : this.getSalesmanId().equals(other.getSalesmanId()))
-            && (this.getSalesmanNm() == null ? other.getSalesmanNm() == null : this.getSalesmanNm().equals(other.getSalesmanNm()))
-            && (this.getStatusId() == null ? other.getStatusId() == null : this.getStatusId().equals(other.getStatusId()))
-            && (this.getDelFlg() == null ? other.getDelFlg() == null : this.getDelFlg().equals(other.getDelFlg()))
-            && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
-            && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
-                && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()));
+                && (this.getContactMail() == null ? other.getContactMail() == null : this.getContactMail().equals(other.getContactMail()))
+                && (this.getSalesmanId() == null ? other.getSalesmanId() == null : this.getSalesmanId().equals(other.getSalesmanId()))
+                && (this.getSalesmanNm() == null ? other.getSalesmanNm() == null : this.getSalesmanNm().equals(other.getSalesmanNm()))
+                && (this.getStatusId() == null ? other.getStatusId() == null : this.getStatusId().equals(other.getStatusId()))
+                && (this.getDelFlg() == null ? other.getDelFlg() == null : this.getDelFlg().equals(other.getDelFlg()))
+                && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
+                && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
+                && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()))
+                && (this.getTradeStatus() == null ? other.getTradeStatus() == null : this.getTradeStatus().equals(other.getTradeStatus()));
     }
 
     @Override
@@ -293,11 +306,12 @@ public class MsMerchantManage implements Serializable {
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getUpdatedByUniqueId() == null) ? 0 : getUpdatedByUniqueId().hashCode());
+        result = prime * result + ((getTradeStatus() == null) ? 0 : getTradeStatus().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + "]";
+        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + "]";
     }
 }

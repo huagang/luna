@@ -41,7 +41,6 @@
         <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
         <script src="<%=request.getContextPath()%>/scripts/common_utils.js" charset="utf-8"></script>
         <!-- 基础脚本文件 End-->
-
       </head>
 
       <body ng-app="showPage">
