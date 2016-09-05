@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -213,7 +214,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		String appCode = appName;
 		String owner = FastJsonUtil.getString(jsonObject, "owner");
 
-		if(existAppName(appName)) {
+		if(existAppName(appName, businessId)) {
 			return Pair.of(-1, Pair.of(ErrorCode.INVALID_PARAM, "微景展名称已经存在"));
 		}
 		MsShowApp msShowApp = new MsShowApp();
@@ -228,6 +229,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return Pair.of(appId, null);
 		} catch (Exception ex) {
 			logger.error("Failed to create app", ex);
+			if(ex instanceof DuplicateKeyException) {
+				return Pair.of(-1, Pair.of(ErrorCode.INVALID_PARAM, "微景展名称已经存在"));
+			}
 			return Pair.of(-1 , Pair.of(ErrorCode.INTERNAL_ERROR, "创建微景展失败"));
 		}
 	}
@@ -381,12 +385,12 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		return FastJsonUtil.sucess("检索成功", data);
 	}
 
-	@Override
-	public boolean existAppName(String appName) {
+	public boolean existAppName(String appName, int businessId) {
 		// TODO Auto-generated method stub
 		MsShowAppCriteria msShowAppCriteria = new MsShowAppCriteria();
 		MsShowAppCriteria.Criteria criteria = msShowAppCriteria.createCriteria();
-		criteria.andAppNameEqualTo(appName);
+		criteria.andAppNameEqualTo(appName)
+				.andBusinessIdEqualTo(businessId);
 		int count = msShowAppDAO.countByCriteria(msShowAppCriteria);
 		return count != 0;
 	}
@@ -461,49 +465,72 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		}
 		String appAddr = jsonObject.getString(MsShowAppTable.FIELD_APP_ADDR);
 		int businessId = record.getBusinessId();
-		
-		if(forceFlag == 1) {
-			int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
-			if(oldAppId < 0) {
-				logger.warn("Failed to read old_app_id from param");
-				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-			}
 
-			// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
-			MsShowAppCriteria example = new MsShowAppCriteria();
-			MsShowAppCriteria.Criteria criteria = example.createCriteria();
-			criteria.andBusinessIdEqualTo(businessId)
-					.andAppIdEqualTo(oldAppId)
-					.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+		MsShowAppCriteria example = new MsShowAppCriteria();
+		MsShowAppCriteria.Criteria criteria = example.createCriteria();
+		criteria.andBusinessIdEqualTo(businessId)
+				.andAppIdNotEqualTo(appId)
+				.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+		List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
+		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 
-			List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
-			if(msShowApps == null || msShowApps.size() == 0) {
-				logger.warn("Provided app id is not online");
-				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-			}
+		if(msShowApps != null) {
+			if(msShowApps.size() > 0) {
+				if(forceFlag == 1) {
+					int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
+					if(oldAppId < 0) {
+						// 超过一个必须提供替换的app, 只有1个可以默认处理上线
+						if(msShowApps.size() > 1) {
+							logger.warn("Failed to read old_app_id from param");
+							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+						} else {
+							example.clear();
+							criteria.andBusinessIdEqualTo(businessId);
+							record = new MsShowApp();
+							record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
+							msShowAppDAO.updateByCriteriaSelective(record, example);
+						}
+					} else {
+						// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
+						example.clear();
+						criteria.andBusinessIdEqualTo(businessId)
+								.andAppIdEqualTo(oldAppId)
+								.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+						msShowApps = msShowAppDAO.selectByCriteria(example);
+						if(msShowApps == null || msShowApps.size() == 0) {
+							logger.warn("Provided app id is not online");
+							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+						}
+						record = new MsShowApp();
+						record.setAppId(oldAppId);
+						record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
+						msShowAppDAO.updateByPrimaryKeySelective(record);
+					}
 
-			record = new MsShowApp();
-			record.setAppId(oldAppId);
-			record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
-			msShowAppDAO.updateByPrimaryKeySelective(record);
-		} else {
-			//判断是否存在
-				MsShowAppCriteria example = new MsShowAppCriteria();
-				MsShowAppCriteria.Criteria criteria = example.createCriteria();
-				criteria.andBusinessIdEqualTo(businessId)
-						.andAppIdNotEqualTo(appId)
-						.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
-				List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
-				if(msShowApps != null && msShowApps.size() >= 2) {
+				} else {
 					JSONArray jsonArray = new JSONArray();
-					for(MsShowApp msShowApp : msShowApps) {
+					int size = msShowApps.size();
+					for (MsShowApp msShowApp : msShowApps) {
 						JSONObject obj = new JSONObject();
-						obj.put(MsShowAppTable.FIELD_APP_ID, msShowApp.getAppId());
+						int crtAppId = msShowApp.getAppId();
+						obj.put(MsShowAppTable.FIELD_APP_ID, crtAppId);
 						obj.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
+						if(size > 1) {
+							String indexUrl = msWebUrl + String.format(showPageUriTemplate, crtAppId);
+							String appDir = getAppCosDir(crtAppId);
+							// TODO:已经存在二维码不一定每次都重新生成，url是固定的
+							String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
+							if (StringUtils.isBlank(qrImgUrl)) {
+								return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
+							}
+							obj.put("QRImg", qrImgUrl);
+							obj.put("link", indexUrl);
+						}
 						jsonArray.add(obj);
 					}
-					FastJsonUtil.error(ErrorCode.ALREADY_EXIST, jsonArray, "已经存在2个以上微景展");
+					return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, jsonArray, "该业务下有在线运营的微景展");
 				}
+			}
 		}
 
 		record = new MsShowApp();
@@ -521,16 +548,15 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		msBusinessDAO.updateByPrimaryKeySelective(business);
 		
 //		business = msBusinessDAO.selectByPrimaryKey(businessId);
-		
-		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
+
 //		String businessUrl = msWebUrl + String.format(showPageUriTemplate, business.getBusinessCode());
 		String indexUrl = msWebUrl + String.format(showPageUriTemplate, appId);
 //		String businessDir = String.format("/%s/business/%s", COSUtil.getLunaH5RootPath(), business.getBusinessCode());
 		// TODO 将二维码地址放在/app 目录下,不放在 /business下,则不会出现在切换上线app后二维码图片不及时跟新的情况
-		String businessDir = getAppCosDir(appId);
+		String appDir = getAppCosDir(appId);
 		
 		// TODO:已经存在二维码不一定每次都重新生成，url是固定的
-		String qrImgUrl = generateQR(indexUrl, businessDir, "QRCode.jpg");
+		String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
 		
 		if(StringUtils.isBlank(qrImgUrl)) {
 			return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
@@ -597,9 +623,8 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		if(bytes == null) {
 			return null;
 		}
-		com.alibaba.fastjson.JSONObject result;
 		try {
-			result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, "QRCode.jpg");
+			JSONObject result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, "QRCode.jpg");
 			if("0".equals(result.getString("code"))) {
 				return result.getJSONObject("data").getString(COSUtil.ACCESS_URL);
 			}
