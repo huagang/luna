@@ -58,7 +58,6 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
 
-
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     public ModelAndView merchantDetail(HttpServletRequest request, HttpServletResponse response) {
 
@@ -104,7 +103,7 @@ public class LunaTradeApplicationController extends BasicController {
         JSONObject checkData = new JSONObject();
         checkData.put("uniqueId", contactPhone);
         checkData.put("code", smsCode);
-        checkData.put("target", SMSCodeTarget.TRADE_APPLICATION);
+        checkData.put("target", SMSCodeTarget.TRADE_APPLICATION.toString());
         checkData.put("isRemove", true);
         JSONObject r = smsService.checkCode(checkData);
         if (r.getInteger("code").intValue() != 0) {
