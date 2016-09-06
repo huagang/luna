@@ -29,19 +29,16 @@ var initProcessPage = function () {
  */
 var initCreatePage = function () {
     var initPageData = function () {
-        var infoDate = {
-            contactName: 'herrdu',
-            phone: '18911133162',
-            email: 'du_y_t@163.com',
-            merchantName: '白沟镇',
-            merchantPhone: '18911133162',
-        };
-        for (var k in infoDate) {
-            var dom = $('[name=' + k + ']');
-            if (dom[0].tagName == 'INPUT') {
-                dom.val(infoDate[k]);
+        $.get(Inter.getApiUrl().getMerchantInfo.url, function (res) {
+            if (res.code == 0) {
+                var data = res.data;
+                $('[name=contactName]').val(data.contact_nm);
+                $('[name=phone]').val(data.contact_phonenum);
+                $('[name=email]').val(data.contact_mail);
+                $('[name=merchantName]').val(data.merchant_nm);
+                $('[name=merchantPhone]').val(data.merchant_phonenum);
             }
-        }
+        });
     };
 
 
@@ -466,7 +463,7 @@ function showPage() {
             $('#checkAndPass,.checking').removeClass('hide');
             break;
         case '4':
-            $('#process').removeClass('hide');
+            $('#checkAndPass,.checking').removeClass('hide');
             break;
         default:
             break;
