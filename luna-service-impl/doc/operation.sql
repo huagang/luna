@@ -42,6 +42,14 @@ CREATE TABLE `luna_trade_application` (
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
 
+CREATE TABLE `luna_user_merchant` (
+  `unique_id` char(32) NOT NULL,
+  `merchant_id` varchar(32) NOT NULL COMMENT '商户id',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户和商户关联表';
+
 
 INSERT INTO luna_menu` (`name`, `code`, `module_id`, `display_order`, `status`) VALUES ('商品类别管理', 'goodsCategory', '3', '2', '1');
 UPDATE luna_menu` SET `display_order`='3' WHERE `id`='10';
@@ -97,9 +105,6 @@ DELETE FROM `luna_menu` WHERE `name`='商品类别管理';
 ALTER TABLE `ms_merchant_manage`
 ADD COLUMN `trade_status` INT NOT NULL DEFAULT 0 COMMENT '商户交易直通车开通状态' AFTER `updated_by_unique_id`;
 
-ALTER TABLE ms_merchant_manage ADD unique_id char(32) default NULL comment "关联用户的id";
-ALTER TABLE ms_merchant_manage ADD unique (`unique_id`);
-
 alter table ms_merchant_manage add  `application_id` int(11) default NULL COMMENT '申请id';
 alter table ms_merchant_manage add  `idcard_pic_url` varchar(200) default NULL COMMENT '申请人身份证正反面照片地址';
 alter table ms_merchant_manage add  `idcard_period` varchar(26) default NULL COMMENT '申请人身份证有效期';
@@ -127,3 +132,6 @@ update ms_farm_field set limits="{\"CHECKBOX\":[{\"empty\":true}]}" where name =
 alter table ms_route drop index `name`;
 alter table ms_route add unique key `name` (`business_id`, `name`);
 UPDATE luna_menu SET status=0 WHERE code='business';
+
+-- 邮箱注册
+alter table luna_reg_email add `merchant_id` varchar(32) DEFAULT NULL COMMENT '商户id';
