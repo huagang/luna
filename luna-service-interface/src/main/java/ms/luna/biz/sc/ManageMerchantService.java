@@ -105,6 +105,15 @@ public interface ManageMerchantService {
 	 */
 	JSONObject registMerchant(String json);
 
+
+	/**
+	 * 获取商户id
+	 *
+	 * @param id 商户id
+	 * @return
+	 */
+	JSONObject getMerchantEmail(String id);
+
 	/**
 	 * 商户签署直通车协议
 	 *

@@ -1,12 +1,10 @@
 package ms.luna.biz.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-
-import ms.luna.common.MsLunaMessage;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import ms.luna.common.MsLunaMessage;
 
 public final class FastJsonUtil {
 
@@ -209,6 +207,17 @@ public final class FastJsonUtil {
 		result.put("data", "{}");
 		return result;
 	}
+
+	public static JSONObject error(int code, Object data, String msg) {
+		MsLogger.error(msg, 2);
+		JSONObject result = new JSONObject();
+		result.put("code", String.valueOf(code));
+		result.put("data", data);
+		result.put("msg", msg);
+		result.put("data", "{}");
+		return result;
+	}
+
 	public static JSONObject error(int code, String msg, Throwable th) {
 		MsLogger.error(msg, 2, th);
 		JSONObject result = new JSONObject();

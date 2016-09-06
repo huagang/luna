@@ -683,6 +683,88 @@ public class LunaRegEmailCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andMerchantIdIsNull() {
+            addCriterion("merchant_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdIsNotNull() {
+            addCriterion("merchant_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id =", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id <>", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id >", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id >=", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id <", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id <=", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id like", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("merchant_id not like", value, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("merchant_id in", values, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("merchant_id not in", values, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("merchant_id between", value1, value2, "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("merchant_id not between", value1, value2, "merchantId");
+            return (Criteria) this;
+        }
+
         public Criteria andTokenLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(token) like", value.toUpperCase(), "token");
@@ -698,6 +780,12 @@ public class LunaRegEmailCriteria {
         public Criteria andInviteUniqueIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(invite_unique_id) like", value.toUpperCase(), "inviteUniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchantIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");
             return (Criteria) this;
         }
 

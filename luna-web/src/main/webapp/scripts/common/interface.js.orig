@@ -34,13 +34,17 @@ var Inter = function() {
         'current': 'http://webapp.visualbusiness.cn '
     };
 
+<<<<<<< HEAD
     var curApiHost = curHost();
     if (curApiHost === 'others') {
         apiContext = 'http://' + location.host + '/luna-api/';
     } else {
         apiContext = apiHost[curHost()];
     }
+=======
     apiContext = apiHost[curHost()];
+>>>>>>> task-1000468
+
 
     return {
         context: context,

@@ -108,7 +108,7 @@ button:hover {
 }
 
 
-/*填写信息*/
+/*  填写信息样式 */
 
 .form-content {
     width: 450px;
@@ -182,17 +182,17 @@ button:hover {
 }
 
 
-/*确认提交*/
+/*确认页面样式*/
 
 .confirm-wrapper {
     width: 600px;
     margin: auto;
-    margin-top: 200px;
+    margin-top: 100px;
     position: relative;
 }
 
 
-/*已申请界面*/
+/*按钮样式*/
 
 button:disabled {
     border: 1px solid #E5E5E5;
@@ -201,17 +201,17 @@ button:disabled {
 }
 
 
-/*已申请界面End*/
+/*按钮样式 End*/
 
 
-/*额外的样式*/
+/*额外样式/
 
 .font-red-sunglo {
     color: #E26A6A!important;
 }
 
 
-/*弹出框样式*/
+/* 弹出框 */
 
 .pop-button {
     margin: 0 0 30px 0;
@@ -235,7 +235,7 @@ button:disabled {
 }
 
 
-/*弹出框样式End*/
+/* 弹出框 End*/
 
 input[type=file] {
     opacity: 0;
