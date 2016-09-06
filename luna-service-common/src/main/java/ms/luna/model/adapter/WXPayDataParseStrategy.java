@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -60,10 +61,13 @@ public class WXPayDataParseStrategy implements PayDataParseStrategy {
                 list.add("<" + entry.getKey() + ">" + entry.getValue() + "</" + entry.getKey() + ">");
             }
         }
+        int size = list.size();
+        String[] arrayToSort = list.toArray(new String[size]);
+        Arrays.sort(arrayToSort, String.CASE_INSENSITIVE_ORDER);
         StringBuilder xmlBuilder = new StringBuilder();
         xmlBuilder.append("<xml>");
-        for (int i = 0; i < list.size(); i++) {
-            xmlBuilder.append(list.get(i));
+        for (int i = 0; i < size; i++) {
+            xmlBuilder.append(arrayToSort[i]);
         }
         xmlBuilder.append("</xml>");
         return xmlBuilder.toString();
