@@ -34,9 +34,6 @@ public class CheckTradeApplicationController {
     @Autowired
     private LunaTradeApplicationService lunaTradeApplicationService;
 
-    @Autowired
-    private ManageMerchantService manageMerchantService;
-
     @RequestMapping(method = RequestMethod.POST, value = "/check/{applicationId}")
     @ResponseBody
     public JSONObject checkApplication(HttpServletRequest request,
