@@ -107,14 +107,12 @@
                 <span>美食</span>
             </header>
             <main>
-                <div class="scroll-wrapper">
                     <div class="food-item" ng-repeat="food in farm.farmData.food"
                          style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
                         <div class="name-wrapper">
                             <p class="food-name">{{food.text}}</p>
                         </div>
                     </div>
-                </div>
             </main>
         </div>
         <div class="block-split" ng-hide="farm.farmData.food.length === 0"></div>
@@ -123,7 +121,6 @@
                 <span>乡村野趣</span>
             </header>
             <main>
-                <div class="scroll-wrapper">
                     <div class="funny-item" ng-repeat="funny in farm.farmData.funny"
                          style="background:url({{funny.pic}}) center center no-repeat;background-size: cover">
                         <div class="funny-name-wrapper">
@@ -132,7 +129,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </main>
         </div>
         <div class="block-split" ng-hide="! farm.farmData.funny || farm.farmData.funny.length === 0"></div>

@@ -71,8 +71,7 @@ function showAnimation(){
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .factory('ScrollController', getScrollController)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip",FarmHouseController]);
 
 
     function getMarkerTip() {
@@ -149,129 +148,8 @@ function showAnimation(){
         return MarkerTip;
     }
 
-    function getScrollController(){
-        function Controller(options){
-            var that = this;
-            window.scroll = that;
 
-            that.init = function(){
-                if(options.target && typeof options.target === 'string'){
-                    that.target  = $(options.target);
-                    that.target.on('touchstart', that.handleEvent);
-                    that.target.on('click', that.handleEvent);
-                    that.target.on('mousedown', that.handleEvent);
-                    that.target.on('mousemove', that.handleEvent);
-                    that.target.on('touchmove', that.handleEvent);
-                    that.target.on('mouseup', that.handleEvent);
-                    that.target.on('mouseleave', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
-                    that.target.on('transitionend', that.handleEvent);
-                    that.target.on('webkitTransitionEnd', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
-
-                    that.scrollUnit = that.target.children().first().width();
-                    that.scrollWidth = that.target.width();
-                    that.translateX = 0;
-                    that.cur = {
-                        position: 0,
-                        time: 0,
-                        started: false
-                    };
-                    that.last = {};
-                } else {
-                    throw new Error('scroll wrapper selector not right!');
-                }
-            };
-            that.updateWidth = function(){
-              that.scrollWidth = that.target.width();
-            };
-            that.handleEvent = function(event){
-                switch(event.type){
-                    case 'mousedown':
-                    case 'touchstart':
-                        that.start(event);
-                        break;
-                    case 'mousemove':
-                    case 'touchmove':
-                        that.move(event);
-                    case 'mouseup':
-                    case 'mouseleave':
-                    case 'touchend':
-                        that.end(event);
-                        break;
-                    case 'transitionend':
-                    case 'webkitTransitionEnd':
-                        that.transitionEnd(event);
-                        break;
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            };
-            that.start = function(event){
-                // 记录当前状态
-                var originEvent = event.originalEvent;
-
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                that.cur.position = point.pageX;
-                that.cur.time = Date.now();
-            };
-            that.move = function(event){
-                that.started = true;
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                var deltaX = point.pageX  - that.cur.position;
-                if(Math.abs(deltaX) >= 10 ){
-                    that.updateWidth();
-                    that.translateX += deltaX;
-                    if(that.translateX > window.screen.width / 2 || that.translateX + that.scrollWidth < window.screen.width * 2 / 3){
-                        return;
-                    }
-                    that.last = that.cur;
-                    that.cur = {
-                        position : point.pageX,
-                        time : Date.now()
-                    };
-              //      console.log(that.cur.time);
-                    that.target.attr('style', 'transform: translateX(' + that.translateX + 'px)');
-                }
-            };
-            that.end = function(event){
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                if(point){
-                    var deltaX = point.pageX  - that.cur.position;
-                    that.last = that.cur;
-                    that.translateX += deltaX;
-                    that.cur = {
-                        position : point.pageX,
-                        time : Date.now()
-                    };
-                }
-                console.log(that.cur.time);
-            };
-            that.transitionEnd = function(event){
-                if(! that.started){
-                    return;
-                }
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                var deltaX = point.pageX  - that.cur.position;
-                that.translateX += deltaX;
-                that.cur.time = Date.now();
-
-
-
-            };
-
-            that.init();
-
-        }
-
-        return Controller;
-    }
-
-    function FarmHouseController($rootScope, $scope, $http, MarkerTip, ScrollController) {
+    function FarmHouseController($rootScope, $scope, $http, MarkerTip) {
 
         var vm = this; // viewmodel
 
@@ -382,12 +260,6 @@ function showAnimation(){
             } catch(e){
 
             }
-
-            // 滚动相关
-            vm.foodScroll = new ScrollController({
-                target: '.food-info .scroll-wrapper'
-            });
-
 
             vm.curPanoIndex = 0;
             vm.isFullScreen = false;
