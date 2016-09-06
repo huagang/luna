@@ -153,7 +153,12 @@ function showAnimation(){
         function Controller(options){
             var that = this;
             window.scroll = that;
-
+            //that.init = function(){
+            //    if(options.target && typeof options.target === 'string') {
+            //        that.target = $(options.target);
+            //        that.scrollUnit = that.target.children().first().width();
+            //    }
+            //};
             that.init = function(){
                 if(options.target && typeof options.target === 'string'){
                     that.target  = $(options.target);
@@ -178,7 +183,7 @@ function showAnimation(){
                         time: 0,
                         started: false
                     };
-                    that.last = {};
+                    that.last = undefined;
                 } else {
                     throw new Error('scroll wrapper selector not right!');
                 }
@@ -223,10 +228,16 @@ function showAnimation(){
                 var deltaX = point.pageX  - that.cur.position;
                 if(Math.abs(deltaX) >= 10 ){
                     that.updateWidth();
-                    that.translateX += deltaX;
-                    if(that.translateX > window.screen.width / 2 || that.translateX + that.scrollWidth < window.screen.width * 2 / 3){
-                        return;
+                    if(that.translateX > 0){
+                        that.translateX += that.scrollUnit  / (that.translateX * 3);
+                    } else if(that.translateX + that.scrollWidth < window.screen.width ){
+                        that.translateX -= (that.translateX + that.scrollWidth) / that.scrollUnit;
+                    } else{
+                        that.translateX += deltaX;
                     }
+                    //if(that.translateX > window.screen.width / 3 || that.translateX + that.scrollWidth < window.screen.width * 2 / 3){
+                    //    return;
+                    //}
                     that.last = that.cur;
                     that.cur = {
                         position : point.pageX,
@@ -237,31 +248,27 @@ function showAnimation(){
                 }
             };
             that.end = function(event){
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                if(point){
-                    var deltaX = point.pageX  - that.cur.position;
-                    that.last = that.cur;
-                    that.translateX += deltaX;
-                    that.cur = {
-                        position : point.pageX,
-                        time : Date.now()
-                    };
-                }
-                console.log(that.cur.time);
-            };
-            that.transitionEnd = function(event){
+                console.log('end');
                 if(! that.started){
                     return;
                 }
+                if(that.last){
+                    var speed = (that.cur.position - that.last.position) / (that.cur.time - that.last.time);
+                    var scrollWidth = speed / 2 * that.scrollUnit;
+                    if(scrollWidth > 0 && scrollWidth + that.translateX > that.scrollUnit / 3  ){
+                        scrollWidth = that.scrollUnit / 3 - that.translateX;
+                    }
+                    //else if(scrollWidth < 0 && scrollWidth + )
+                    console.log('end', (that.cur.position - that.last.position) / (that.cur.time - that.last.time));
+                }
+            };
+            that.transitionEnd = function(event){
+
                 var originEvent = event.originalEvent;
                 var point = originEvent.touches ? originEvent.touches[0] : originEvent;
                 var deltaX = point.pageX  - that.cur.position;
                 that.translateX += deltaX;
                 that.cur.time = Date.now();
-
-
-
             };
 
             that.init();
