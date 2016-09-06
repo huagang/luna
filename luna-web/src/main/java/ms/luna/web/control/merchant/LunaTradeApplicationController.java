@@ -304,11 +304,14 @@ public class LunaTradeApplicationController extends BasicController {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
-        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        HttpSession session = request.getSession(false);
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(session).getUniqueId());
         JSONObject ret = manageMerchantService.signAgreement(inData);
         if(ret.getString("code").equals("0")) {
-            JSONArray moduleAndMenuArray = SessionHelper.getMenu(request.getSession(false));
+            JSONArray moduleAndMenuArray = SessionHelper.getMenu(session);
             switchMerchantTradeOnMenu(moduleAndMenuArray);
+            SessionHelper.setMenu(session, moduleAndMenuArray);
+            SessionHelper.setSelectedMenu(session, "");
         }
         return ret;
     }
