@@ -36,7 +36,7 @@ public class WXJSAPIPayProcess extends AbstractWXPayProcess {
         sendJSON.put("nonce_str", getRandomStr());
         sendJSON.put("notify_url", inJSON.getString("notifyUrl"));
         sendJSON.put("out_trade_no", inJSON.getString("tradeNo"));
-        sendJSON.put("spbill_create_ip", inJSON.getString("userIp"));
+        sendJSON.put("spbill_create_ip", "<![CDATA[" + inJSON.getString("userIp") + "]]>");
         sendJSON.put("total_fee", inJSON.getString("money"));
         sendJSON.put("trade_type", "JSAPI");
         sendJSON.put("openid", inJSON.getString("openId"));
