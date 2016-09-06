@@ -102,7 +102,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="contactName" required="required" placeholder="请输入你的真实姓名" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="contactName" required="required" placeholder="请输入你的真实姓名" value="">
                                         <!--<span class="help-block">请填写商户业务对接联系人的真实姓名</span>-->
                                     </div>
                                 </div>
@@ -113,7 +113,9 @@
                                         <select name="phoneArea" class="form-control phone-area">
                                             <option value="+86">+86</option>
                                         </select>
-                                        <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码" value="18911133162">
+                                        <div class="phone-num-wrapper">
+                                            <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码" value="">
+                                        </div>
                                         <button type="button" id="getVerMsg" class="button-white pull-right">获取短信验证码</button>
                                         <!--<span class="help-block"> 请输入您的手机号码 </span>-->
                                     </div>
@@ -130,7 +132,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="email" required="required" value="1@qq.com">
+                                        <input type="text" class="form-control" id="" name="email" required="required" value="">
                                         <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
                                     </div>
                                 </div>
@@ -165,13 +167,13 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="2016-01-01" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="2016-08-08" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="" />
                                             </div>
                                         </div>
                                         <div class="idforever-wrapper">
@@ -185,7 +187,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-6  form-content">
-                                        <input type="text" class="form-control" id="" name="merchantName" required="required" placeholder="请填写商户的全称" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="merchantName" required="required" placeholder="请填写商户的全称" value="">
                                         <!--<span class="help-block"> 填写商户的全称 </span>-->
                                     </div>
                                 </div>
@@ -193,7 +195,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required" placeholder="请填写您的客服电话" value="010-62338499">
+                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required" placeholder="请填写您的客服电话" value="">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -201,7 +203,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="merchantNo" required="required" placeholder="请输入18位的商户社会信用代码" value="8885444666445564">
+                                        <input type="text" class="form-control" id="" name="merchantNo" required="required" placeholder="请输入18位的商户社会信用代码" value="">
                                         <!--<span class="help-block"> </span>-->
                                     </div>
                                 </div>
@@ -230,13 +232,13 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group input-group-control" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="2016-03-03" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="2018-01-01" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="" />
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +259,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="accountName" required="required" placeholder="请输入开户名称" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="accountName" required="required" placeholder="请输入开户名称" value="">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -296,7 +298,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="accountNo" required="required" placeholder="请填写银行账号" value="62335445656879789978">
+                                        <input type="text" class="form-control" id="" name="accountNo" required="required" placeholder="请填写银行账号" value="">
                                         <!--<span class="help-block">  </span>-->
                                     </div>
                                 </div>

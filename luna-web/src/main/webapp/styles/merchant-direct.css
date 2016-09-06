@@ -102,8 +102,13 @@ button:hover {
     /* border-left: 2px solid #e6e7ec; */
 }
 
-.phone-num {
+.phone-num-wrapper {
+    display: inline-block;
     width: 43%;
+}
+
+.phone-num {
+    width: 100%;
     float: left;
 }
 

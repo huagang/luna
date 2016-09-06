@@ -276,7 +276,7 @@ var initCreatePage = function () {
                 licencePicUrl.push(imgSrc);
             });
             formData.licencePicUrl = licencePicUrl.join('|');
-            formData.idcardPeriod = $('#startIDDate').val() + "|" + $('#endIDDate').val();
+            formData.idcardPeriod = $('#startIDDate').val() + "|" + ($('[name= idforever]:checked').val() ? '永久' : $('#endIDDate').val());
             formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
             console.log(formData);
             Util.setAjax(Inter.getApiUrl().saveMerchantInfo.url, formData, function (res) {
@@ -353,13 +353,14 @@ var initAuditCompletePage = function () {
 var initDialogEvent = function () {
     var initSingButton = function () {
         $('#btnSignAgreement').on('click', function () {
+            var thisButton = this;
             var signStatus = $('[name=signStatus]:checked').val();
             if (signStatus) {
-                Util.setAjax(Inter.getApiUrl().merchatSign.url, function (res) {
+                Util.setAjax(Inter.getApiUrl().merchatSign.url, {}, function (res) {
                     if (res.code == "0") {
                         $('.process-num').addClass('pass');
                         $('#btnSign').addClass('hide');
-                        clcWindow(this);
+                        clcWindow(thisButton);
                         popWindow($('#pop-complete'));
                         console.log('协议通过');
                     } else {
@@ -424,7 +425,6 @@ function showPage() {
             //请求出错处理
         }
     });
-    // status = '1';
 
     switch (status) {
         case '0':
@@ -435,6 +435,12 @@ function showPage() {
             break;
         case '2':
             $('#checkAndPass,.signing').removeClass('hide');
+            break;
+        case '3':
+            $('#checkAndPass,.checking').removeClass('hide');
+            break;
+        case '4':
+            $('#process').removeClass('hide');
             break;
         default:
             break;

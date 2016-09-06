@@ -62,7 +62,7 @@ MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http'
         $http({
             method: Inter.getApiUrl().allowTradeTrain.type,
             url: Util.strFormat(Inter.getApiUrl().allowTradeTrain.url, [merchantId]),
-            data: { checkResult: 1 },
+            data: { checkResult: 0 },
         }).then(function successCallback(response) {
             var res = response.data;
             if (res.code == 0) {
@@ -97,7 +97,7 @@ MerchantDetail.controller('nopassController', ['$scope', '$rootScope', '$http', 
         if (!this.reason || this.reason == '') {
             return;
         }
-        var postData = { checkResult: 2, refuseReason: this.reason };
+        var postData = { checkResult: 1, refuseReason: this.reason };
         $http({
             method: Inter.getApiUrl().allowTradeTrain.type,
             url: Util.strFormat(Inter.getApiUrl().allowTradeTrain.url, [merchantId]),

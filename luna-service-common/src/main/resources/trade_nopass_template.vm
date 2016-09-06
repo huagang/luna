@@ -25,18 +25,16 @@
                 <div style="background: #FFFFFF;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding: 48px 48px 15px 48px;">
                     <p style="font-size: 20px;line-height: 28px;margin:0;padding-bottom: 8px;font-weight: 500;">您好，</p>
                     <p style="line-height: 2em; margin: 0;">
-                        您所在商户“为民农家院”申请开通皓月交易直通车的认证资料，经过客服人员核实有误，理由如下：
+                        您所在商户“${merchantName}”申请开通皓月交易直通车的认证资料，经过客服人员核实有误，理由如下：
                     </p>
                     <p style="line-height: 2em; margin: 0;">
-                        ${merchantName}
-                        <br>
                         ${refuseReason}
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         如有疑问，请联系相关工作人员。
                     </p>
                     <p style="line-height: 2em;margin: 12px 0;text-align: right;">
-                        <label id="todayText" for="">2016-8-31</label>
+                        <label id="todayText" for="">${today}</label>
                     </p>
                 </div>
             </div>
