@@ -31,6 +31,9 @@
                 <isNotNull prepend="and" property="keyword">
                     luna_goods.name LIKE #keyword#
                 </isNotNull>
+                <isNotNull prepend="and" property="businessId">
+                    luna_goods.business_id = #businessId#
+                </isNotNull>
             </dynamic>
         ORDER BY
             luna_goods.create_time DESC
@@ -47,6 +50,9 @@
             <dynamic prepend="where">
                 <isNotNull prepend="and" property="keyword">
                     luna_goods.name LIKE #keyword#
+                </isNotNull>
+                <isNotNull prepend="and" property="businessId">
+                    luna_goods.business_id = #businessId#
                 </isNotNull>
             </dynamic>
         ORDER BY

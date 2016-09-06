@@ -48,14 +48,19 @@ public class GoodsController extends BasicController {
     @ResponseBody
     public JSONObject asyncSearchGoods(
             @RequestParam(required = false, value = "offset", defaultValue = "0") int offset,
-            @RequestParam(required = false, value = "limit", defaultValue = Integer.MAX_VALUE + "") int limit,
+            @RequestParam(required = false, value = "limit", defaultValue = 30 + "") int limit,
             @RequestParam(required = false, value = "keyword", defaultValue = "") String keyword,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            Integer business_id = RequestHelper.getInteger(request, "business_id");
+            if(business_id <= 0 ) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务id不合法");
+            }
             JSONObject param = new JSONObject();
             param.put("offset", offset);
             param.put("limit", limit);
             param.put("keyword", keyword);
+            param.put("business_id", business_id);
             JSONObject result = lunaGoodsService.loadGoods(param);
             MsLogger.debug(result.toString());
             return result;
