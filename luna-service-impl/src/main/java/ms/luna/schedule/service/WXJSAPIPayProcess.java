@@ -40,8 +40,8 @@ public class WXJSAPIPayProcess extends AbstractWXPayProcess {
         sendJSON.put("total_fee", inJSON.getString("money"));
         sendJSON.put("trade_type", "JSAPI");
         sendJSON.put("openid", inJSON.getString("openId"));
-
-        sendJSON.put("sign", getPaySignStrategy().signMessage(sendJSON.toJSONString()));
+        String sign = getPaySignStrategy().signMessage(sendJSON.toJSONString());
+        sendJSON.put("sign", sign);
         return getPayDataParseStrategy().getForTransfer(sendJSON.toString());
     }
 

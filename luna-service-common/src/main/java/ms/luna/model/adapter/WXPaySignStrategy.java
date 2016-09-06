@@ -10,6 +10,7 @@ package ms.luna.model.adapter;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.util.VbMD5;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +25,9 @@ import java.util.Map;
  * @author SDLL18 
  */
 public class WXPaySignStrategy extends AbstractPaySignStrategy {
+
+    private final static Logger logger = Logger.getLogger(WXPaySignStrategy.class);
+
 
     @Override
     public Boolean checkSign(String data) throws ParserConfigurationException, SAXException, IOException {
@@ -54,9 +58,9 @@ public class WXPaySignStrategy extends AbstractPaySignStrategy {
         }
         String result = sb.toString();
         result += "key=" + PARTNER_KEY;
-        // Util.log("Sign Before MD5:" + result);
+        logger.info("Sign Before MD5:" + result);
         result = VbMD5.getCommonMD5Str(result).toUpperCase();
-        // Util.log("Sign Result:" + result);
+        logger.info("Sing Result:" + result);
         return result;
     }
 
