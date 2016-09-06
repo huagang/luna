@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-direct.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/trade_train.css">
     <!-- imgCropper引用的css文件 -->
     <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
@@ -442,7 +442,7 @@
     <script src="<%=request.getContextPath()%>/scripts/common/selectBank.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-    <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/trade_train.js"></script>
     <!-- 页面级文件 End -->
 
 

@@ -33,7 +33,7 @@ import ms.luna.web.common.SessionHelper;
 @Controller
 @RequestMapping("/merchant/tradeApplication")
 public class LunaTradeApplicationController extends BasicController {
-    public static final String menu = "merchant";
+    public static final String menu = "tradeApplication";
     @Autowired
     private LunaTradeApplicationService lunaTradeApplicationService;
 
@@ -43,13 +43,24 @@ public class LunaTradeApplicationController extends BasicController {
     @Autowired
     private SMSService smsService;
 
+    /**
+     * 交易直通车开通界面
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return buildModelAndView("/merchant_direct");
+        return buildModelAndView("/trade_train");
     }
 
-
+    /**
+     * 交易直通车协议界面
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/serveprotocol")
     public ModelAndView serveProtocol(HttpServletRequest request, HttpServletResponse response) {
 
@@ -57,12 +68,17 @@ public class LunaTradeApplicationController extends BasicController {
         return buildModelAndView("/tradeserve_protocol");
     }
 
-
+    /**
+     * 查看申请详情界面
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     public ModelAndView merchantDetail(HttpServletRequest request, HttpServletResponse response) {
 
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return buildModelAndView("/merchant_detail");
+        return buildModelAndView("/trade_train_detail");
     }
 
     private boolean checkAuth(HttpServletRequest request) {
