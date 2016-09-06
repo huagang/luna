@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -322,23 +323,42 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "申请已经审核完毕,不可重复审核");
             if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_ACCEPT) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_OK);
-                JSONObject data = new JSONObject();
-                data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
-                data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
-                manageMerchantBL.changeMerchantTradeStatus(data.toString());
+                //transfer data to merchant table
                 MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
-                //sendEmail;
+                msMerchantManage.setAccountAddress(application.getAccountAddress());
+                msMerchantManage.setMerchantNo(application.getMerchantNo());
+                msMerchantManage.setAccountBank(application.getAccountBank());
+                msMerchantManage.setAccountCity(application.getAccountCity());
+                msMerchantManage.setAccountName(application.getAccountName());
+                msMerchantManage.setAccountNo(application.getAccountNo());
+                msMerchantManage.setAccountProvince(application.getAccountProvince());
+                msMerchantManage.setAccountType(application.getAccountType());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
+                msMerchantManage.setIdcardPeriod(application.getIdcardPeriod());
+                msMerchantManage.setIdcardPicUrl(application.getIdcardPicUrl());
+                msMerchantManage.setContactNm(application.getContactName());
+                msMerchantManage.setContactPhonenum(application.getContactPhone());
+                msMerchantManage.setContactMail(application.getEmail());
+                msMerchantManage.setMerchantNm(application.getMerchantName());
+                msMerchantManage.setMerchantPhonenum(application.getMerchantPhone());
+                msMerchantManage.setResourceContent(application.getLicencePicUrl());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
+                msMerchantManage.setUpHhmmss(Calendar.getInstance().getTime());
+                msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_SUCCESS);
+                msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
+                //send email
                 MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核成功");
                 message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml(msMerchantManage.getMerchantNm()));
                 emailService.sendEmail(message);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
+                application.setUpdateTime(Calendar.getInstance().getTime());
                 JSONObject data = new JSONObject();
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_FAILED);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
-                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
                 //SEND EMAIL
+                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
                 MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核失败");
                 message.setContent(
                         CreateHtmlUtil.getInstance().conver2EmailRefuseTradeHtml(

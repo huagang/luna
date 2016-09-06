@@ -259,6 +259,17 @@ public class LunaTradeApplicationController extends BasicController {
         return lunaTradeApplicationService.getApplicationStatus(inData);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getMerchantInfo")
+    @ResponseBody
+    public JSONObject getMerchantInfo(HttpServletRequest request) {
+        if (!checkAuth(request)) {
+            return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
+        }
+        JSONObject inData = new JSONObject();
+        inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        return manageMerchantService.loadMerchantByUserId(inData.toString());
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/status/{applicationId}")
     @ResponseBody
     public JSONObject getApplicationStatusByAppId(HttpServletRequest request,
