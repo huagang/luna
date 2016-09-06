@@ -126,6 +126,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该用户没有对应商户ID");
 		}
         msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUE_ON);
+		msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
         return FastJsonUtil.sucess("success");
     }
 
