@@ -61,6 +61,8 @@ function ManageMerchantController($scope, $http){
         vm.checkedList = {};
         vm.selectAll = false;
 
+        var business = localS
+
         vm.fetchMerchantList();
     }
 
@@ -68,6 +70,7 @@ function ManageMerchantController($scope, $http){
         vm.message = msg;
         setTimeout(function(){
             vm.message = '';
+            $scope.$apply();
         }, 2000);
     }
 
@@ -75,8 +78,11 @@ function ManageMerchantController($scope, $http){
     // 请求获取商品列表数据
     function fetchMerchantList(){
 
+        if(! vm.businessId){
+            vm.showMessage('没有选择业务');
+        }
         $http({
-            url: vm.apiUrls.fetchMerchantList.url.format(vm.pagination.offset, vm.pagination.limit, vm.pagination.keyword),
+            url: vm.apiUrls.fetchMerchantList.url.format(vm.businessId, vm.pagination.offset, vm.pagination.limit, vm.pagination.keyword),
             method: vm.apiUrls.fetchMerchantList.type,
         }).then(function(res){
             if(res.data.code === '0'){

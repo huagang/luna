@@ -559,7 +559,7 @@ var Inter = function () {
                 },
 
                 // 商品管理
-                fetchMerchantList: {url: context + '/merchant/deal/search?data&offset={0}&limit={1}&keyword={2}', type: 'GET'},
+                fetchMerchantList: {url: context + '/merchant/deal/search?data&business_id={0}&offset={1}&limit={2}&keyword={3}', type: 'GET'},
                 deleteMerchant: {url: context + '/merchant/deal/{0}', type: 'DELETE'},
                // editMerchant: {url: context + '/merchant/deal/{0}', type: 'PUT'},
                 createMerchant: {url: context + '/merchant/deal', type: "POST"},
