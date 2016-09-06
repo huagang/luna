@@ -76,6 +76,9 @@ function ColumnController($scope, $rootScope, $http) {
         this.newColumnShow = false;
         this.updateColumnShow = false;
         this.deleteColumnShow = false;
+        this.nameErrorMsg = '';
+        this.codeErrorMsg = '';
+
 
         var business = localStorage.getItem('business');
         if(business){
@@ -90,8 +93,10 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentId = 0;
         this.currentName = "";
         this.currentCode = "";
-        this.nameValid = false;
-        this.codeValid = false;
+        this.nameValid = true;
+        this.codeValid = true;
+        this.nameErrorMsg = '';
+        this.codeErrorMsg = '';
     };
 
     this.newColumnDialog = function() {
@@ -112,18 +117,29 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.checkName = function() {
 
-        if(this.currentName && this.currentName.length > 0 && this.currentName.length < 20) {
-            this.nameValid = true;
-        } else{
+        if(! this.currentName){
+            this.nameErrorMsg = '不能为空';
             this.nameValid = false;
+        } else if(this.currentName.length > 20){
+            this.nameErrorMsg = '名称不超过20个字符';
+            this.nameValid = false;
+        } else {
+            this.nameValid = true;
         }
     };
 
     this.checkCode = function() {
-        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30 && /^[a-zA-Z0-9\-_]+$/.test(this.currentCode)){
-            this.codeValid = true;
-        } else{
+        if(! this.currentCode){
             this.codeValid = false;
+            this.codeErrorMsg = '不能为空';
+        } else if(this.currentCode.length > 30){
+            this.codeValid = false;
+            this.codeErrorMsg = '简称不超过30个字符';
+        } else if(! /^[a-zA-Z0-9\-_]+$/.test(this.currentCode)){
+            this.codeValid = false;
+            this.codeErrorMsg = '简称只能由英文字母,数字,下划线,中划线组成';
+        } else{
+            this.codeValid = true;
         }
     };
 
@@ -165,8 +181,6 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentId = id;
         this.currentName = name;
         this.currentCode = code;
-        this.nameValid = true;
-        this.codeValid = true;
         event.preventDefault();
 
     };
