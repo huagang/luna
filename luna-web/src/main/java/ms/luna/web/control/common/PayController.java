@@ -79,11 +79,11 @@ public class PayController {
 
         //TODO assemble requestJSON  including which way
         JSONObject inData = new JSONObject();
-        inData.put("content", "test11");
+        inData.put("content", "{\"test11\":\"123\"}");
         inData.put("extraParam", "");
-        inData.put("detail", "");
-        inData.put("notifyUrl", "");
-        inData.put("tradeNo", "");
+        inData.put("detail", "123");
+        inData.put("notifyUrl", "http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/notify");
+        inData.put("tradeNo", "0987654321");
         inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
         inData.put("money", 1);
         //TODO return the message that front end needed
