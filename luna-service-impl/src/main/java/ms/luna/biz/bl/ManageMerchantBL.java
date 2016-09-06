@@ -106,4 +106,28 @@ public interface ManageMerchantBL {
 	 * @return
 	 */
 	JSONObject getMerchantEmail(String id);
+
+    /**
+     * 商户签署直通车协议
+     *
+     * @param jsonObject
+     * @return
+     */
+    JSONObject signAgreement(JSONObject jsonObject);
+
+    /**
+     * 更改商户直通车开通状态
+     *
+     * @param json
+     * @return
+     */
+    JSONObject changeMerchantTradeStatus(String json);
+
+    /**
+     * 获取商户直通车开通状态
+     *
+     * @param json
+     * @return
+     */
+    JSONObject getMerchantTradeStatus(String json);
 }

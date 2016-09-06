@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="luna_goods_category">
+  <resultMap class="ms.luna.biz.dao.model.LunaGoodsCategory" id="BaseResultMap">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="root" jdbcType="INTEGER" property="root" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="depth" jdbcType="INTEGER" property="depth" />
+    <result column="abbreviation" jdbcType="VARCHAR" property="abbreviation" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
+        (
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, root, update_time, depth, abbreviation
+  </sql>
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategoryCriteria" resultMap="BaseResultMap">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="luna_goods_category.Base_Column_List" />
+    from luna_goods_category
+    <isParameterPresent>
+      <include refid="luna_goods_category.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory" resultMap="BaseResultMap">
+    select 
+    <include refid="luna_goods_category.Base_Column_List" />
+    from luna_goods_category
+    where id = #id:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory">
+    delete from luna_goods_category
+    where id = #id:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategoryCriteria">
+    delete from luna_goods_category
+    <include refid="luna_goods_category.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory">
+    insert into luna_goods_category (name, root, update_time, depth, 
+      abbreviation)
+    values (#name:VARCHAR#, #root:INTEGER#, #updateTime:TIMESTAMP#, #depth:INTEGER#, 
+      #abbreviation:VARCHAR#)
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory">
+    insert into luna_goods_category
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        name
+      </isNotNull>
+      <isNotNull prepend="," property="root">
+        root
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time
+      </isNotNull>
+      <isNotNull prepend="," property="depth">
+        depth
+      </isNotNull>
+      <isNotNull prepend="," property="abbreviation">
+        abbreviation
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="root">
+        #root:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="depth">
+        #depth:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="abbreviation">
+        #abbreviation:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategoryCriteria" resultClass="java.lang.Integer">
+    select count(*) from luna_goods_category
+    <include refid="luna_goods_category.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective">
+    update luna_goods_category
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.id">
+        id = #record.id:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.name">
+        name = #record.name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.root">
+        root = #record.root:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updateTime">
+        update_time = #record.updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.depth">
+        depth = #record.depth:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.abbreviation">
+        abbreviation = #record.abbreviation:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent>
+      <include refid="luna_goods_category.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample">
+    update luna_goods_category
+    set id = #record.id:INTEGER#,
+      name = #record.name:VARCHAR#,
+      root = #record.root:INTEGER#,
+      update_time = #record.updateTime:TIMESTAMP#,
+      depth = #record.depth:INTEGER#,
+      abbreviation = #record.abbreviation:VARCHAR#
+    <isParameterPresent>
+      <include refid="luna_goods_category.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory">
+    update luna_goods_category
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="name">
+        name = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="root">
+        root = #root:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time = #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="depth">
+        depth = #depth:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="abbreviation">
+        abbreviation = #abbreviation:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoodsCategory">
+    update luna_goods_category
+    set name = #name:VARCHAR#,
+      root = #root:INTEGER#,
+      update_time = #updateTime:TIMESTAMP#,
+      depth = #depth:INTEGER#,
+      abbreviation = #abbreviation:VARCHAR#
+    where id = #id:INTEGER#
+  </update>
+</sqlMap>

@@ -6,12 +6,12 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-var Inter = function() {
+var Inter = function () {
     var host = "/luna-web";
     var context = window.context || "/luna-web",
         apiContext = '';
 
-    var curHost = function() {
+    var curHost = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
@@ -40,12 +40,13 @@ var Inter = function() {
     } else {
         apiContext = apiHost[curHost()];
     }
-
+    apiContext = apiHost[curHost()];
 
     return {
         context: context,
-        getPageUrl: function() {
+        getPageUrl: function () {
             return {
+                home: context + '/index',
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
@@ -54,9 +55,12 @@ var Inter = function() {
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
                 manageRouter: context + '/content/route',
+                merchantApply: context + '/merchant/tradeApplication', //商户申请
+                merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
+                messagePage: context + '/platform/message', //消息管理
             };
         },
-        getApiUrl: function() {
+        getApiUrl: function () {
             return {
                 //选择业务的数据
                 selectBusinessPage: context + '/common/business/select', //选择业务的页面 
@@ -618,6 +622,14 @@ var Inter = function() {
                     type: 'PUT'
                 },
 
+                // 商品类目
+                fetchMerchantCat: { url: context + '/merchant/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
+                createMerchantCat: { url: context + '/merchant/goodsCategory', type: 'POST' },  // 新建商品类目信息
+                saveMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
+                deleteMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
+                searchMerchantCat: { url: context + '/merchant/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
+                searchAllMerchatCat: { url: context + '/merchant/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
+
                 //全景搜索
                 searchSinglePano: {
                     url: "http://data.pano.visualbusiness.cn/rest/pano/search"
@@ -625,8 +637,29 @@ var Inter = function() {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
+
+                //交易直通车
+                saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据
+                getMerchantStatus: { url: context + '/merchant/tradeApplication/merchantStatus', type: 'GET' }, //获取商户状态
+                getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
+                getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
+                getMerchatDetail: { url: context + '/merchant/tradeApplication/detail', type: 'GET' },
+                getMerchantInfo: { url: context + '/merchant/tradeApplication/getMerchantInfo', type: 'GET' },//获取crm信息
+                getMerchatDetailData: { url: context + '/merchant/tradeApplication/get', type: 'GET' },
+                merchatSign: { url: context + '/merchant/tradeApplication/sign', type: 'POST' },
+                allowTradeTrain: { url: context + '/platform/message/check/{0}', type: 'POST' },
+
+                //获取短信验证码
+                getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },
+                checkSMSCode: { url: context + '/common/sms/checkCode', type: 'GET' },
+
+
+                //银行选择
+                selectCity: { url: context + '/common/bnkAndCity/city/{0}', type: 'GET' }, //选择城市
+                selectBranchBank: { url: context + '/common/bnkAndCity/branch/{0}', type: 'GET' }, //选择支行
+
             };
         }
     };
 
-}();
+} ();

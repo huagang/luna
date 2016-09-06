@@ -155,10 +155,9 @@ $(function () {
             $(this).remove();
         });
     });
-
-	//提交表单
-	$("#btn-addmerchant").click(function(){
-		var hasError = false,hasFocus = false;
+    //提交表单
+    $("#btn-addmerchant").click(function(){
+    	var hasError = false,hasFocus = false;
 
 		hasError = linkmanName() || hasError;
 		if((hasError)&&(!hasFocus)){

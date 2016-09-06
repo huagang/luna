@@ -32,5 +32,5 @@ public class MsCRMTable {
     public static final String FIELD_MERCHANT_INFO = "merchant_info";
     public static final String FIELD_SALESMAN_ID = "salesman_id";
     public static final String FIELD_CATEGORY_NM = "category_nm";
-    public static final String STATUS = "status";
+    public static final String FIELD_STATUS = "status";
 }

@@ -48,7 +48,6 @@ a:active{
 
 button,
 a.button{
-    display: inline-block;
     background: #445FA8;
     color: #FFFFFF;
     padding: 4px 18px;

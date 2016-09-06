@@ -1,0 +1,138 @@
+.pop-modal{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 10%;
+    z-index: 10000;
+    margin: auto;
+    display: block;
+    width: 600px;
+    box-shadow: 4px 4px 5px #777,0px 0 2px #999;
+}
+
+.pop-modal input,
+.pop-modal select{
+    width: 470px;
+}
+
+.pop-modal .selectize-control{
+    width: 470px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.pop-modal .pop-fun{
+    width: 100%;
+}
+
+.mask{
+    z-index: 1000;
+}
+
+.edit{
+    padding-right: 10px;
+}
+
+.icon-close{
+    display: inline-block;
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
+    background: url(../img/merchant/close.png) center center no-repeat;
+    background-size: contain;
+    margin-bottom: 2px;
+}
+.icon-open{
+    display: inline-block;
+    vertical-align: middle;
+    height: 15px;
+    width: 15px;
+    background: url(../img/merchant/open.png) center center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+
+.depth-2{
+    padding-left: 30px;
+}
+
+.depth-3{
+    padding-left: 40px;
+}
+
+.depth-4{
+    padding-left: 50px;
+}
+
+.depth-5{
+    padding-left: 60px;
+}
+
+.depth-6{
+    padding-left: 70px;
+}
+
+.depth-7{
+    padding-left: 80px;
+}
+
+.form-group .red{
+    padding: 5px 0 0 40px;
+}
+
+.select {
+    display: inline-block;
+    width: 470px;
+    border: 1px solid #ccc;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 4px;
+    padding: 0 10px;
+}
+
+.select .arrow{
+    padding-top: 8px;
+    color: #555;
+}
+
+
+
+.select-parent {
+    width: 470px;
+    max-height: 300px;
+    margin-left: 43px;
+    margin-top: -1px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 5px 4px 1px rgba(0,0,0,.2), -2px 1px 4px rgba(0,0,0,.2);
+    overflow: auto;
+    position: absolute;
+    background-color: white;
+    padding-bottom: 20px;
+}
+.option {
+     padding-left: 10px;
+     line-height: 25px;
+ }
+.option:hover{
+    background-color: #efefef;
+}
+
+.button.disabled {
+    cursor: not-allowed;
+    background-color: #999;
+    border: 1px solid #999;
+    outline: none;
+}
+
+.button.disabled:hover {
+    cursor: not-allowed;
+    background-color: #999;
+    border: 1px solid #999;
+    box-shadow: none;
+}
+
+.gray{
+    color: #999;
+}

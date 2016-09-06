@@ -1,0 +1,354 @@
+ul {
+    list-style: none;
+}
+
+label {
+    font-weight: normal;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.launch {
+    height: 85px;
+    background-color: #f2f2f2;
+    padding: 27px 25px;
+    margin: 25px 0;
+}
+
+.launch span {
+    line-height: 30px;
+}
+
+button,
+button:hover {
+    /*background-color: #169bd5;*/
+    /*border: 1px solid #169bd5;*/
+}
+
+.launch button {
+    float: right;
+    /*background-color: #169bd5;*/
+    /*border: 1px solid #169bd5;*/
+    height: 30px;
+    line-height: 20px;
+}
+
+.sign-aggreement {
+    height: 36px;
+    width: 108px;
+    margin-top: 10px;
+}
+
+.section-wrapper {
+    margin: 25px 0;
+    line-height: 28px;
+    font-size: 14px;
+    padding: 0 0 0 20px;
+    position: relative;
+}
+
+.section-wrapper h5 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.section-wrapper .iconfont {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    line-height: 20px;
+    text-align: center;
+    margin-right: 5px;
+}
+
+.section-wrapper>p {
+    /*margin-left: 25px;*/
+}
+
+.process-wrapper {
+    margin-left: 55px;
+}
+
+.process-num {
+    background-color: #C3C3C3;
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    line-height: 24px;
+    font-style: normal;
+}
+
+.process-num.pass {
+    background-color: #7186BE;
+}
+
+.process-title {
+    font-size: 18px;
+}
+
+.process-content-wrapper {
+    height: 70px;
+    /* margin-left: 13px; */
+    /* padding-left: 19px; */
+}
+
+.process-one .process-content-wrapper {
+    /* border-left: 2px solid #e6e7ec; */
+}
+
+.phone-num-wrapper {
+    display: inline-block;
+    width: 43%;
+}
+
+.phone-num {
+    width: 100%;
+    float: left;
+}
+
+
+/*  填写信息样式 */
+
+.form-content {
+    width: 450px;
+}
+
+.icon-required {
+    color: red;
+}
+
+.phone-area {
+    width: 20%;
+    float: left;
+    margin-right: 10px;
+    height: 30px;
+}
+
+.pic-wrapper {
+    float: left
+}
+
+.pic-wrapper img {
+    width: 205px;
+    height: 128px;
+    margin: 10px 10px 10px 0;
+}
+
+.cityInfo .select2 {
+    float: left;
+}
+
+.form-section {
+    margin: 30px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e7ecf1;
+}
+
+.form-group .required {
+    color: #e02222;
+    font-size: 12px;
+    padding-left: 2px
+}
+
+.button-white,
+.button-white:hover {
+    color: #445FA8;
+    background-color: #fff;
+    border: 1px solid #C3C3C3;
+}
+
+.idtips {
+    margin-top: 5px;
+    color: #707070;
+}
+
+.idforever-wrapper {
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+
+.input-group-control {
+    width: 100%;
+}
+
+.idPic {
+    padding: 0;
+}
+
+.btnSubmit {
+    width: 108px;
+}
+
+
+/*确认页面样式*/
+
+.confirm-wrapper {
+    width: 600px;
+    margin: auto;
+    margin-top: 100px;
+    position: relative;
+}
+
+
+/*按钮样式*/
+
+button:disabled {
+    border: 1px solid #E5E5E5;
+    background-color: #F5F5F5;
+    color: #BABABA;
+}
+
+
+/*按钮样式 End*/
+
+
+/*额外样式/
+
+.font-red-sunglo {
+    color: #E26A6A!important;
+}
+
+
+/* 弹出框 */
+
+.pop-button {
+    margin: 0 0 30px 0;
+}
+
+.pop-agreement .agreement-content {
+    overflow-y: scroll;
+    width: 1000px;
+    height: 600px;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.pop-agreement .pop-cont {
+    padding: 5px 24px;
+}
+
+.pop-footer {
+    padding: 0 24px;
+    margin-bottom: 30px;
+}
+
+
+/* 弹出框 End*/
+
+input[type=file] {
+    opacity: 0;
+    position: absolute;
+    height: 30px;
+}
+
+#btnConfirmSubmit {
+    margin: 10px 0 0 0;
+    width: 120px;
+    height: 35px;
+}
+
+.pass-flag {
+    float: right;
+    color: #008000;
+    font-size: 16px;
+    margin-right: 15px;
+}
+
+.help-block {
+    margin: 0;
+}
+
+.input-group .datepicker-wrapper {
+    vertical-align: top;
+    display: table-cell;
+}
+
+.input-group .input-group-addon {
+    line-height: 16px;
+}
+
+.cityInfo>div {
+    width: 50%;
+    float: left;
+}
+
+.idforever-wrapper input,
+.blforever-wrapper input {
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    vertical-align: bottom;
+}
+
+
+/*Icon*/
+
+.tradeicon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+.tradeicon-introduce {
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -10px -10px;
+}
+
+.tradeicon-process {
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -30px -10px;
+}
+
+.process-icon-wrapper {
+    position: absolute;
+    width: 28px;
+    height: 123px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -10px -40px;
+    text-align: center;
+    left: 40px;
+}
+
+.process-num-wrapper {
+    position: relative;
+    top: 2px;
+}
+
+.process-num-wrapper:last-child {
+    position: relative;
+    top: 73px;
+}
+
+.tradeicon-complete {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: -30px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -50px -10px;
+}
+
+.tradeicon-complete-inline {
+    width: 18px;
+    height: 18px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -50px -10px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.check-status {
+    color: #707070;
+}
+
+
+/*Icon End*/

@@ -16,6 +16,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 .icon-xiala:before { content: "\e600"; }
+.icon-liucheng:before { content: "\e622"; }
 .icon-copy:before { content: "\e615"; }
 .icon-slidedown:before { content: "\e603"; }
 .icon-lunadelete1:before { content: "\e601"; }

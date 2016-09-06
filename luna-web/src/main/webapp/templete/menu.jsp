@@ -15,9 +15,11 @@
 				   </dt>
 
 				   <c:forEach items="${module.menuArray}" var="menu">
-					   <dd class="menu-item ${sessionScope.menu_selected == menu.code ? 'selected' : ''}">
-						   <a href="<%=request.getContextPath() %>${menu.url}">${menu.name}</a>
-					   </dd>
+					   <c:if test="${menu.visible}">
+						   <dd class="menu-item ${sessionScope.menu_selected == menu.code ? 'selected' : ''}">
+							   <a href="<%=request.getContextPath() %>${menu.url}">${menu.name}</a>
+						   </dd>
+					   </c:if>
 				   </c:forEach>
 
 			   </dl>
