@@ -469,62 +469,68 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		MsShowAppCriteria example = new MsShowAppCriteria();
 		MsShowAppCriteria.Criteria criteria = example.createCriteria();
 		criteria.andBusinessIdEqualTo(businessId)
-				.andAppIdNotEqualTo(appId)
 				.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
 		List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 
-		if(msShowApps != null) {
-			if(msShowApps.size() > 0) {
-				if(forceFlag == 1) {
-					int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
-					if(oldAppId < 0) {
-						// 超过一个必须提供替换的app, 只有1个可以默认处理上线
-						if(msShowApps.size() > 1) {
-							logger.warn("Failed to read old_app_id from param");
-							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-						}
-					} else {
-						// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
-						example.clear();
-						criteria.andBusinessIdEqualTo(businessId)
-								.andAppIdEqualTo(oldAppId)
-								.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
-						msShowApps = msShowAppDAO.selectByCriteria(example);
-						if(msShowApps == null || msShowApps.size() == 0) {
-							logger.warn("Provided app id is not online");
-							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-						}
-						record = new MsShowApp();
-						record.setAppId(oldAppId);
-						record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
-						msShowAppDAO.updateByPrimaryKeySelective(record);
-					}
-
-				} else {
-					JSONArray jsonArray = new JSONArray();
-					int size = msShowApps.size();
-					for (MsShowApp msShowApp : msShowApps) {
-						JSONObject obj = new JSONObject();
-						int crtAppId = msShowApp.getAppId();
-						obj.put(MsShowAppTable.FIELD_APP_ID, crtAppId);
-						obj.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
-						if(size > 1) {
-							String indexUrl = msWebUrl + String.format(showPageUriTemplate, crtAppId);
-							String appDir = getAppCosDir(crtAppId);
-							// TODO:已经存在二维码不一定每次都重新生成，url是固定的
-							String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
-							if (StringUtils.isBlank(qrImgUrl)) {
-								return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
-							}
-							obj.put("QRImg", qrImgUrl);
-							obj.put("link", indexUrl);
-						}
-						jsonArray.add(obj);
-					}
-					return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, jsonArray, "该业务下有在线运营的微景展");
+		boolean isUpdate = false;
+		if(msShowApps != null ) {
+			for (MsShowApp msShowApp : msShowApps) {
+				if (msShowApp.getAppId() == appId) {
+					isUpdate = true;
 				}
 			}
+		}
+		if(msShowApps != null && msShowApps.size() > 0 && (! isUpdate)) {
+			if(forceFlag == 1) {
+				int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
+				if(oldAppId < 0) {
+					// 超过一个必须提供替换的app, 只有1个可以默认处理上线
+					if(msShowApps.size() > 1) {
+						logger.warn("Failed to read old_app_id from param");
+						return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+					}
+				} else {
+					// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
+					example.clear();
+					criteria.andBusinessIdEqualTo(businessId)
+							.andAppIdEqualTo(oldAppId)
+							.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
+					msShowApps = msShowAppDAO.selectByCriteria(example);
+					if(msShowApps == null || msShowApps.size() == 0) {
+						logger.warn("Provided app id is not online");
+						return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+					}
+					record = new MsShowApp();
+					record.setAppId(oldAppId);
+					record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
+					msShowAppDAO.updateByPrimaryKeySelective(record);
+				}
+
+			} else {
+				JSONArray jsonArray = new JSONArray();
+				int size = msShowApps.size();
+				for (MsShowApp msShowApp : msShowApps) {
+					JSONObject obj = new JSONObject();
+					int crtAppId = msShowApp.getAppId();
+					obj.put(MsShowAppTable.FIELD_APP_ID, crtAppId);
+					obj.put(MsShowAppTable.FIELD_APP_NAME, msShowApp.getAppName());
+					if(size > 1) {
+						String indexUrl = msWebUrl + String.format(showPageUriTemplate, crtAppId);
+						String appDir = getAppCosDir(crtAppId);
+						// TODO:已经存在二维码不一定每次都重新生成，url是固定的
+						String qrImgUrl = generateQR(indexUrl, appDir, "QRCode.jpg");
+						if (StringUtils.isBlank(qrImgUrl)) {
+							return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "生成二维码失败");
+						}
+						obj.put("QRImg", qrImgUrl);
+						obj.put("link", indexUrl);
+					}
+					jsonArray.add(obj);
+				}
+				return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, jsonArray, "该业务下有在线运营的微景展");
+			}
+
 		}
 
 		record = new MsShowApp();
