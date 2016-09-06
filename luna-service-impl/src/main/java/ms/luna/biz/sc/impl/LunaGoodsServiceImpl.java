@@ -43,6 +43,7 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             lunaGoodsParameter.setMin(param.getInteger(LunaGoodsTable.OFFSET));
             lunaGoodsParameter.setMax(param.getInteger(LunaGoodsTable.LIMIT));
             lunaGoodsParameter.setKeyword(keyword);
+            lunaGoodsParameter.setBusinessId(param.getInteger(LunaGoodsTable.FIELD_BUSINESS_ID));
             lunaGoodsParameter.setRange(true);
 
             Integer count = lunaGoodsDAO.countGoodsWithFilter(lunaGoodsParameter);

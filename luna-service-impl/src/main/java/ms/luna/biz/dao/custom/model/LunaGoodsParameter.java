@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class LunaGoodsParameter extends BasicModel {
 
+    private Integer businessId;
+
     private Byte online_status;
 
     private List<Integer> ids;
@@ -25,5 +27,13 @@ public class LunaGoodsParameter extends BasicModel {
 
     public void setIds(List<Integer> ids) {
         this.ids = ids;
+    }
+
+    public Integer getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
     }
 }
