@@ -71,16 +71,49 @@
           </div>
           <div class="pop publish-confirm">
               <div class="pop-title">
-                  <h4>确认信息</h4>
+                  <h4>提示</h4>
                   <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
               </div>
               <div class="pop-cont ">
-                  <p class="">此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作</p>
+                  <p class="">此业务下有在线运营的微景展，您可以进行如下操作以满足当前的发布需求: </p>
+                  <div class="options">
+                      <button type="button" class="button button-replace">替代线上微景展</button>
+                      <button type="button" class="button button-new-another">生成新的微景展</button>
+                  </div>
+              </div>
+              <div class="pop-fun">
+                  <button class="button-close">取消</button>
+              </div>
+          </div>
+          <div class="pop publish-replace">
+              <div class="pop-title">
+                  <h4>提示</h4>
+                  <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+              </div>
+              <div class="pop-cont ">
+                  <p>请选择您要替换的微景展,完成微景展的上线操作: </p>
+                  <div class="options">
+                      <div id="options-0">
+                          <label>
+                              <input class='replace-option' type="radio" data-value="0" />
+                              <span class="appname"></span>
+                          </label>
+                          <img src="" class="qrcode" />
+                      </div>
+                      <div id="options-1">
+                          <label>
+                              <input  class='replace-option' type="radio" data-value="1" />
+                              <span class="appname"></span>
+                          </label>
+                          <img src="" class="qrcode" />
+                      </div>
+                  </div>
               </div>
               <div class="pop-fun">
                   <button class="button">确定</button>
                   <button class="button-close">取消</button>
               </div>
+          </div>
       </div>
   <!--通用导航栏 end-->
   <!--中间区域内容 start-->
