@@ -325,13 +325,24 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_OK);
                 //transfer data to merchant table
                 MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
-                
+                msMerchantManage.setAccountAddress(application.getAccountAddress());
+                msMerchantManage.setMerchantNo(application.getMerchantNo());
+                msMerchantManage.setAccountBank(application.getAccountBank());
+                msMerchantManage.setAccountCity(application.getAccountCity());
+                msMerchantManage.setAccountName(application.getAccountName());
+                msMerchantManage.setAccountNo(application.getAccountNo());
+                msMerchantManage.setAccountProvince(application.getAccountProvince());
+                msMerchantManage.setAccountType(application.getAccountType());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
+                msMerchantManage.setIdcardPeriod(application.getIdcardPeriod());
+                msMerchantManage.setIdcardPicUrl(application.getIdcardPicUrl());
                 msMerchantManage.setContactNm(application.getContactName());
                 msMerchantManage.setContactPhonenum(application.getContactPhone());
                 msMerchantManage.setContactMail(application.getEmail());
                 msMerchantManage.setMerchantNm(application.getMerchantName());
                 msMerchantManage.setMerchantPhonenum(application.getMerchantPhone());
                 msMerchantManage.setResourceContent(application.getLicencePicUrl());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
                 msMerchantManage.setUpHhmmss(Calendar.getInstance().getTime());
                 msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
