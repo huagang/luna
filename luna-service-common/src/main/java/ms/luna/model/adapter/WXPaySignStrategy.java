@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by SDLL18 on 16/9/5.
  *
- * @author SDLL18 
+ * @author SDLL18
  */
 public class WXPaySignStrategy extends AbstractPaySignStrategy {
 
@@ -58,9 +58,9 @@ public class WXPaySignStrategy extends AbstractPaySignStrategy {
         }
         String result = sb.toString();
         result += "key=" + PARTNER_KEY;
-        logger.info("Sign Before MD5:" + result);
+        //logger.info("Sign Before MD5:" + result);
         result = VbMD5.getCommonMD5Str(result).toUpperCase();
-        logger.info("Sing Result:" + result);
+        //logger.info("Sing Result:" + result);
         return result;
     }
 
