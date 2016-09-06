@@ -188,9 +188,10 @@ public abstract class AbstractWXPayProcess implements PayProcess {
             String strResult = new String(result, "UTF-8");
             return strResult;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error("Failed to send message to wx 1:", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to send message to wx 2:", e);
+
         }
         return null;
     }
