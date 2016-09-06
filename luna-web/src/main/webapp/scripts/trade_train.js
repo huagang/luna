@@ -28,6 +28,23 @@ var initProcessPage = function () {
  * 初始化创建页面数据
  */
 var initCreatePage = function () {
+    var initPageData = function () {
+        var infoDate = {
+            contactName: 'herrdu',
+            phone: '18911133162',
+            email: 'du_y_t@163.com',
+            merchantName: '白沟镇',
+            merchantPhone: '18911133162',
+        };
+        for (var k in infoDate) {
+            var dom = $('[name=' + k + ']');
+            if (dom[0].tagName == 'INPUT') {
+                dom.val(infoDate[k]);
+            }
+        }
+    };
+
+
     var initSelectBank = function () {
         $.initSelectBank({
             bankCode: 'bankCode', //银行ID
@@ -305,6 +322,7 @@ var initCreatePage = function () {
                     $('#endIDDate').removeAttr('disabled');
                 }
             });
+            initPageData();
             initSelectBank();
             getValidateMsg();
             initSubmit();
