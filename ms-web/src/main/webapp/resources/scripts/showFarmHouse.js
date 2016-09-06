@@ -153,125 +153,109 @@ function showAnimation(){
         function Controller(options){
             var that = this;
             window.scroll = that;
-            //that.init = function(){
-            //    if(options.target && typeof options.target === 'string') {
-            //        that.target = $(options.target);
-            //        that.scrollUnit = that.target.children().first().width();
-            //    }
-            //};
-            that.init = function(){
-                if(options.target && typeof options.target === 'string'){
-                    that.target  = $(options.target);
-                    that.target.on('touchstart', that.handleEvent);
-                    that.target.on('click', that.handleEvent);
-                    that.target.on('mousedown', that.handleEvent);
-                    that.target.on('mousemove', that.handleEvent);
-                    that.target.on('touchmove', that.handleEvent);
-                    that.target.on('mouseup', that.handleEvent);
-                    that.target.on('mouseleave', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
-                    that.target.on('transitionend', that.handleEvent);
-                    that.target.on('webkitTransitionEnd', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
-                    that.target.on('touchend', that.handleEvent);
 
-                    that.scrollUnit = that.target.children().first().width();
-                    that.scrollWidth = that.target.width();
-                    that.translateX = 0;
+            that.init = init;
+            that.record = record;
+            that.end = end;
+            that.refresh = refresh;
+            that.init();
+
+            function init(){
+                if(options.target && typeof options.target === 'string') {
+                    that.deceleration = options.deceleration || 12;
+                    that.target = $(options.target);
+                    that.scroll = new IScroll(options.target, {
+                        probeType: 2,
+                        scrollX: true,
+                        momentum: false,
+                        bounce: true,
+                        click: true,
+                        startX: 0
+                    });
                     that.cur = {
-                        position: 0,
-                        time: 0,
-                        started: false
+                        x: 0,
+                        time: undefined,
                     };
-                    that.last = undefined;
-                } else {
-                    throw new Error('scroll wrapper selector not right!');
+                    that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                    that.scrollWidth  = that.target.children().first().outerWidth();
+                    that.containerWidth = that.target.width();
+                    that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                    that.scroll.on('scroll', that.record);
+                    that.scroll.on('scrollEnd', that.end)
                 }
             };
-            that.updateWidth = function(){
-              that.scrollWidth = that.target.width();
-            };
-            that.handleEvent = function(event){
-                switch(event.type){
-                    case 'mousedown':
-                    case 'touchstart':
-                        that.start(event);
-                        break;
-                    case 'mousemove':
-                    case 'touchmove':
-                        that.move(event);
-                    case 'mouseup':
-                    case 'mouseleave':
-                    case 'touchend':
-                        that.end(event);
-                        break;
-                    case 'transitionend':
-                    case 'webkitTransitionEnd':
-                        that.transitionEnd(event);
-                        break;
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            };
-            that.start = function(event){
-                // 记录当前状态
-                var originEvent = event.originalEvent;
 
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                that.cur.position = point.pageX;
-                that.cur.time = Date.now();
-            };
-            that.move = function(event){
-                that.started = true;
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                var deltaX = point.pageX  - that.cur.position;
-                if(Math.abs(deltaX) >= 10 ){
-                    that.updateWidth();
-                    if(that.translateX > 0){
-                        that.translateX += that.scrollUnit  / (that.translateX * 3);
-                    } else if(that.translateX + that.scrollWidth < window.screen.width ){
-                        that.translateX -= (that.translateX + that.scrollWidth) / that.scrollUnit;
-                    } else{
-                        that.translateX += deltaX;
-                    }
-                    //if(that.translateX > window.screen.width / 3 || that.translateX + that.scrollWidth < window.screen.width * 2 / 3){
-                    //    return;
-                    //}
+            function refresh(){
+                that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                that.scrollWidth  = that.target.children().first().outerWidth();
+                that.containerWidth = that.target.width();
+                that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                that.scroll.refresh();
+            }
+            function record(){
+                var point = event.touches ? event.touches[0] : event;
+                if(point){
                     that.last = that.cur;
                     that.cur = {
-                        position : point.pageX,
-                        time : Date.now()
+                        x: point.pageX,
+                        time: Date.now(),
                     };
-              //      console.log(that.cur.time);
-                    that.target.attr('style', 'transform: translateX(' + that.translateX + 'px)');
-                }
-            };
-            that.end = function(event){
-                console.log('end');
-                if(! that.started){
-                    return;
-                }
-                if(that.last){
-                    var speed = (that.cur.position - that.last.position) / (that.cur.time - that.last.time);
-                    var scrollWidth = speed / 2 * that.scrollUnit;
-                    if(scrollWidth > 0 && scrollWidth + that.translateX > that.scrollUnit / 3  ){
-                        scrollWidth = that.scrollUnit / 3 - that.translateX;
+                    if(that.cur && that.last && that.last.time){
+                        var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
+                        if(speed > 0){
+                            that.maxSpeed = Math.max(that.maxSpeed || 0, speed);
+                        } else{
+                            that.maxSpeed = Math.min(that.maxSpeed || 0, speed);
+                        }
+
+
                     }
-                    //else if(scrollWidth < 0 && scrollWidth + )
-                    console.log('end', (that.cur.position - that.last.position) / (that.cur.time - that.last.time));
+                } else{
+                    //touch end
                 }
-            };
-            that.transitionEnd = function(event){
+            }
+            function end(){
+                var aimPosition = 0
+                var endTime = Date.now();
+                if(endTime - that.cur.time > 300){
+                    // bounce
+                    return;
+                } else if(that.cur && that.last && that.last.time){
+                    var time = Math.abs(that.maxSpeed / that.deceleration);
+                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想移动距离,可能需要修正
+                    console.log('distance:', distance, that.maxSpeed);
+                    try{
+                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1];
+                        aimPosition = parseFloat(curPosition) + distance;
+                        if(aimPosition > 0){
+                            aimPosition = 0;
+                        } else  if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }else{
+                            var count =  - aimPosition / that.scrollUnit;
+                            var diff = count - count.toFixed(0);
+                            count = count.toFixed(0);
+                            //if(distance > 0){
+                            //    count -= 1;
+                            //}
+                            aimPosition  = - count * that.scrollUnit;
+                        }
+                        if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }
+                        time = Math.max(Math.sqrt(Math.abs((aimPosition -curPosition) / that.deceleration * 2)) * 80, 800);
+                        that.scroll.scrollTo(aimPosition, 0 , time);
+                    } catch(e){
 
-                var originEvent = event.originalEvent;
-                var point = originEvent.touches ? originEvent.touches[0] : originEvent;
-                var deltaX = point.pageX  - that.cur.position;
-                that.translateX += deltaX;
-                that.cur.time = Date.now();
-            };
+                    }
 
-            that.init();
+                }
+                that.last = undefined;
+                that.cur = {
+                    time: Date.now(),
+                    x: aimPosition
+                }
+            }
 
         }
 
@@ -390,14 +374,25 @@ function showAnimation(){
 
             }
 
-            // 滚动相关
+            //滚动相关
             vm.foodScroll = new ScrollController({
-                target: '.food-info .scroll-wrapper'
+                target: '.food-info main',
+                deceleration: 8
+            });
+
+            vm.roomScroll = new ScrollController({
+                target: '.room-info footer',
+                deceleration: 4,
             });
 
 
+            setTimeout(function(){
+                vm.foodScroll.refresh();
+                vm.roomScroll.refresh();
+            }, 1000);
+
+
             vm.curPanoIndex = 0;
-            vm.isFullScreen = false;
 
             // 地图相关
             vm.curMarkerIndex = undefined;
