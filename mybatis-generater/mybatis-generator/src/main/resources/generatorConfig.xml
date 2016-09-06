@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!--数据库驱动 -->
+	<classPathEntry location="lib/mysql-connector-java-5.1.38.jar" />
+	<context id="DB2Tables" targetRuntime="Ibatis2Java5">
+		<property name="suppressTypeWarnings" value="true" />
+		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+		<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Criteria" />
+		</plugin>
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.SelectByPrimaryKeyWithoutDeletedMethodPlugin">
+			<property name="deleteFlagColumnName" value="del_flg" />
+			<property name="offValue" value="0" />
+		</plugin>
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.SelectCountByPrimaryKeyWithoutDeletedMethodPlugin">
+			<property name="deleteFlagColumnName" value="del_flg" />
+			<property name="offValue" value="0" />
+		</plugin>
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.MySqlDBDateCriteriaPlugin"></plugin>
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.NullIgnoreCriteriaPlugin"></plugin>
+		<plugin type="com.visualbusiness.mybatis.gen.plugin.ModelToStringPlugin"></plugin>
+		
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.SpringImplimentationSqlMapConfigPlugin">
+			<property name="targetPackage" value="sqlmap" />
+			<property name="targetProject" value="${build.src}" />
+			<property name="extraPackage" value="${extraPackage}" />
+			<property name="implProject" value="${build.impl}" />
+		</plugin>
+
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.SpringImplimentationClassGeneratePlugin">
+			<property name="extraPackage" value="${extraPackage}" />
+			<property name="implProject" value="${build.impl}" />
+			<property name="otherProject" value="${build.other}" />
+			<property name="testSuperClass" value="${mpdule.test}" />
+			<property name="createMock" value="true" />
+			<property name="createTest" value="true" />
+		</plugin>
+
+		<!-- FIXME: 3/4 需要乐观锁的时候放开，并且需要自行定义乐观锁异常(默认不需要)
+		<plugin
+			type="com.visualbusiness.mybatis.gen.plugin.OptimisticLockMethodPlugin">
+			<property name="deleteFlagColumnName" value="del_flg" />
+			<property name="offValue" value="0" />
+			<property name="updateDatetimeColumnName" value="update_time" />
+		</plugin>
+        -->
+
+		<commentGenerator type="com.visualbusiness.mybatis.gen.comment.MsCommentGenerator">
+            <property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!--数据库链接地址账号密码 -->
+		<jdbcConnection driverClass="${driverClass}"
+			connectionURL="${connectionURL}" userId="${username}"
+			password="${password}">
+		</jdbcConnection>
+		<!--生成Model类存放位置 -->
+		<javaModelGenerator targetPackage="${package.model}"
+			targetProject="${build.src}">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!--生成映射文件存放位置 -->
+		<sqlMapGenerator targetPackage="${package.sqlmap}"
+			targetProject="${build.src}">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+		<!--生成Dao类存放位置 -->
+		<javaClientGenerator
+			type="com.visualbusiness.mybatis.gen.MsSpringAnnotationDAOGenerator"
+			targetPackage="${package.dao}" targetProject="${build.src}">
+			<property name="enableSubPackages" value="false" />
+			<property name="methodNameCalculator"
+				value="com.visualbusiness.mybatis.gen.api.DAOMethodNameCalculator" />
+		</javaClientGenerator>
+
+		<!-- FIXME: 4/4 需要生成的Table -->
+		<table tableName="ms_merchant_manage">
+			<!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+		</table>
+	</context>
+</generatorConfiguration>

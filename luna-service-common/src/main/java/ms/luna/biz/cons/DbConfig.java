@@ -1,5 +1,9 @@
 package ms.luna.biz.cons;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
  *
@@ -13,5 +17,10 @@ public class DbConfig {
     public final static int MERCHANT_ADMIN_ROLE_ID = 6;//商家服务管理员id
     public final static int MERCHANT_OPERATOR_ROLE_ID = 7;//商家服务运营员id
     public final static int MERCHANT_CATAGORY_ID = 3;
+
+    public static Set<Integer> MERCHANT_ROLE_ID_SET = Sets.newHashSet(MERCHANT_ADMIN_ROLE_ID, MERCHANT_OPERATOR_ROLE_ID);
+
+    public static Set<Integer> INVISIBLE_MENU_TRADE_ON = Sets.newHashSet(23);
+    public static Set<Integer> INVISIBLE_MENU_TRADE_OFF = Sets.newHashSet(10,11,12);
 
 }

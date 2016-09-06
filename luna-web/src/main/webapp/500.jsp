@@ -37,7 +37,7 @@
     <body>
         <div class="container">
             <div style="margin:100px 0 35px 0;">
-                <img src="../img/icon-404.jpg" alt="404图片">
+                <img src="<%=request.getContextPath() %>/img/icon-404.jpg" alt="404图片">
             </div>
             <p style="text-align:center;font-size:17px;color:#212121;">抱歉了，加载页面失败了</p>
             <div style="text-align:center;margin:100px 0;">

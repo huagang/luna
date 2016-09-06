@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation=" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd 
 		http://code.alibabatech.com/schema/dubbo 
 		http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
-		default-lazy-init="true">
+       default-lazy-init="true">
 
 
-	<dubbo:annotation package="ms.luna.web" />
-	<!-- 提供方应用信息，用于计算依赖关系 -->
-	<dubbo:application name="luna-web" />
+    <dubbo:annotation package="ms.luna.web"/>
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="luna-web"/>
 
-	<dubbo:consumer check="false" timeout="300000" retries="0" />
-	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}" />
+    <dubbo:consumer check="false" timeout="300000" retries="0"/>
+    <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
 
 	<dubbo:reference id="authoritySetService" interface="ms.luna.biz.sc.AuthoritySetService" />
 	<dubbo:reference id="categoryService" interface="ms.luna.biz.sc.CategoryService" />
@@ -40,5 +40,13 @@
 	<dubbo:reference interface="ms.luna.biz.sc.FarmPageService" id="farmPageService" />
 	<dubbo:reference interface="ms.luna.biz.sc.LunaAuthService" id="lunaAuthService" />
 	<dubbo:reference id="manageRouteService" interface="ms.luna.biz.sc.ManageRouteService" />
-	
+     <dubbo:reference interface="ms.luna.biz.sc.LunaGoodsCategoryService" id="lunaGoodsCategoryService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.LunaTradeApplicationService" id="lunaTradeApplicationService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.SMSService" id="smsService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.EmailService" id="emailService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.PicCodeService" id="picCodeService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.LunaBankService" id="lunaBankService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.LunaBankBranchService" id="lunaBankBranchService"/>
+    <dubbo:reference interface="ms.luna.biz.sc.LunaCityService" id="lunaCityService"/>Ï
+
 </beans>

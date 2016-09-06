@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 						http://code.alibabatech.com/schema/dubbo 
 						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
@@ -28,5 +28,12 @@
 	<dubbo:service interface="ms.luna.biz.sc.FarmPageService" ref="farmPageService" />
 	<dubbo:service interface="ms.luna.biz.sc.LunaAuthService" ref="lunaAuthService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageRouteService" ref="manageRouteService" />
+    <dubbo:service interface="ms.luna.biz.sc.LunaTradeApplicationService" ref="lunaTradeApplicationService"/>
+    <dubbo:service interface="ms.luna.biz.sc.SMSService" ref="smsService"/>
+    <dubbo:service interface="ms.luna.biz.sc.EmailService" ref="emailService"/>
+    <dubbo:service interface="ms.luna.biz.sc.PicCodeService" ref="picCodeService"/>
+    <dubbo:service interface="ms.luna.biz.sc.LunaBankService" ref="lunaBankService"/>
+    <dubbo:service interface="ms.luna.biz.sc.LunaBankBranchService" ref="lunaBankBranchService"/>
+    <dubbo:service interface="ms.luna.biz.sc.LunaCityService" ref="lunaCityService"/>   
 
 </beans>
