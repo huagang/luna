@@ -119,12 +119,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
     @Override
     public JSONObject signAgreement(JSONObject jsonObject) {
-        Integer businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
-        MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-        if (msBusiness == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
-        }
-        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+		LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(userUniqueId);
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(lunaUserMerchant.getMerchantId());
+		if (msMerchantManage == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该用户没有对应商户ID");
+		}
         msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUE_ON);
         return FastJsonUtil.sucess("success");
     }
