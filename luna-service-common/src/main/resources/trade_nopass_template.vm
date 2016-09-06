@@ -29,8 +29,6 @@
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         ${refuseReason}
-                        <br>
-                        ${today}
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         如有疑问，请联系相关工作人员。

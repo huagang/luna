@@ -153,7 +153,7 @@
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">开户支行</label>
                                     <div class="col-md-4">
-                                        <label class="control-label" for="">{{mcInfo.accountAddress[1]}}</label>
+                                        <label class="" for="">{{mcInfo.accountAddress[1]}}</label>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">

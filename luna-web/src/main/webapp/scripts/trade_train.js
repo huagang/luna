@@ -257,9 +257,6 @@ var initCreatePage = function () {
     //提交事件
     var initSubmit = function () {
         $('#btnSubmit').on('click', function () {
-            // $('#create').addClass('hide');
-            // $('#confirmSubmit').removeClass('hide');
-
             $('#merchantInfo').valid();
             var formDataZero = Util.formToJson($('#merchantInfo')),
                 formData = {
@@ -279,16 +276,16 @@ var initCreatePage = function () {
                 },
                 idPicObj = $('.idPic .pic-wrapper'),
                 idcardPicUrl = [],
-                blPicObj = $('.blPicÎ .pic-wrapper'),
+                blPicObj = $('.blPic .pic-wrapper'),
                 licencePicUrl = [];
-            // console.log('提交事件' +);
+
             formData.contactPhone = formDataZero.phoneArea + '|' + formDataZero.phone;
             idPicObj.each(function (e) {
                 var imgSrc = $(this).find('img').attr('src');
                 idcardPicUrl.push(imgSrc);
             });
             formData.idcardPicUrl = idcardPicUrl.join('|');
-            idPicObj.each(function (e) {
+            blPicObj.each(function (e) {
                 var imgSrc = $(this).find('img').attr('src');
                 licencePicUrl.push(imgSrc);
             });
@@ -296,6 +293,17 @@ var initCreatePage = function () {
             formData.idcardPeriod = $('#startIDDate').val() + "|" + ($('[name= idforever]:checked').val() ? '永久' : $('#endIDDate').val());
             formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
             console.log(formData);
+            var errMsg = [];
+            if (idcardPicUrl.length != 2) {
+                errMsg.push('请正确上传身份证文件');
+            }
+            if (licencePicUrl.length != 1) {
+                errMsg.push('请正确上传营业执照副本文件');
+            }
+            if (errMsg.length > 0) {
+                alert(errMsg);
+                return;
+            }
             Util.setAjax(Inter.getApiUrl().saveMerchantInfo.url, formData, function (res) {
                 if (res.code == "0") {
                     $('#create').addClass('hide');
