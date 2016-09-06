@@ -148,20 +148,37 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject getApplication(JSONObject jsonObject) {
         try {
-            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+            if (jsonObject.containsKey(LunaUserTable.FIELD_ID)) {
+                String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
 
-            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
-            LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
+                LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
+                LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
 
-            lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
-            List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
-            if (applicationList == null || applicationList.size() == 0)
-                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
-            JSONObject result = new JSONObject();
+                lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
+                List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
+                if (applicationList == null || applicationList.size() == 0) {
+                    return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
+                }
+                JSONObject result = new JSONObject();
 
-            assembleApplication(result, applicationList.get(0));
+                assembleApplication(result, applicationList.get(0));
 
-            return FastJsonUtil.sucess("success", result);
+                return FastJsonUtil.sucess("success", result);
+            } else if (jsonObject.containsKey(LunaTradeApplicationTable.FIELD_ID)) {
+                Integer applicationId = jsonObject.getInteger(LunaTradeApplicationTable.FIELD_ID);
+                LunaTradeApplication application = lunaTradeApplicationDAO.selectByPrimaryKey(applicationId);
+                if (application == null) {
+                    return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
+                }
+                JSONObject result = new JSONObject();
+
+                assembleApplication(result, application);
+
+                return FastJsonUtil.sucess("success", result);
+            } else {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            }
+
         } catch (Exception ex) {
             logger.error("Failed to get lunaTradeApplication", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
