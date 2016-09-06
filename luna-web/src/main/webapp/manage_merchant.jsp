@@ -33,12 +33,12 @@
           <div class="main-hd"><h3>商品管理</h3></div>
           <div class="main-bd">
             <div class="search">
-              <input type="text" id="filterName" class="search-txt" placeholder="请输入关键字进行搜索">
+              <input type="text" id="filterName" ng-model="manage.pagination.keyword" class="search-txt" placeholder="请输入关键字进行搜索">
               <img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
-              <button id="condition_search" type="button" class="btn-search">搜 索</button>
+              <button id="condition_search" type="button" class="btn-search" ng-click="manage.fetchMerchantList()">搜 索</button>
               <button id="add-merchant" type="button" class="button pull-right">发布商品</button>
             </div>
-            <table class="table">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th>商品名称</th>
@@ -54,7 +54,7 @@
                 <tr class="tr-operation">
                   <td colspan="7">
                       <label>
-                          <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggale()"/> 全选
+                          <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggle()"/> 全选
                       </label>
                       <button type="button">上架</button>
                       <button type="button">下架</button>
@@ -68,12 +68,12 @@
                       <span>{{merchant.name}}</span>
                     </td>
                     <td>{{merchant.price}}</td>
-                    <td>{{merchant.inventory}}</td>
-                    <td>{{merchant.totalSaled}}</td>
+                    <td>{{merchant.stock}}</td>
+                    <td>{{merchant.sales}}</td>
                     <td>{{merchant.publishedTime}}</td>
                     <td>
-                      <span class="ng-hide" ng-show="merchant.status==='notOnSale'">未上架</span>
-                      <img class='published ng-hide' ng-show="merchant.status==='onsale'" src='<%=request.getContextPath() %>/img/published.png' alt='已上架'/>
+                      <span class="ng-hide" ng-show="merchant.online_status=='0'">未上架</span>
+                      <img class='published ng-hide' ng-show="merchant.online_status=='1'" src='<%=request.getContextPath() %>/img/published.png' alt='已上架'/>
                     </td>
                     <td>
                        <a href="javascript:void(0)" ng-click="manage.handleEdit(merchant.id)">编辑</a>
