@@ -557,6 +557,16 @@ var Inter = function () {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
+
+                // 商品管理
+                fetchMerchantList: {url: context + '/merchant/deal?data&offset={0}&limit={1}', type: 'GET'},
+                deleteMerchant: {url: context + '/merchant/deal/{0}', type: 'DELETE'},
+               // editMerchant: {url: context + '/merchant/deal/{0}', type: 'PUT'},
+                createMerchant: {url: context + '/merchant/deal', type: "POST"},
+                setMerchantOnSale: {url: context + '/merchant/deal/{0}' , type: "PUT"},
+                cancelMerchantOnSale: {url: context + '/merchant/deal/{0}' , type: "PUT"},
+
+
             };
         }
     };

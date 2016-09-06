@@ -350,7 +350,7 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
     var file = file_obj.files[0];
     cropper.setFile(file, function (file) {
         var formdata = new FormData();
-        formdata.append("file",file);
+        formdata.append("file", file, file.name);
         formdata.append("app_id", appId);
         formdata.append('type', 'pic');
         formdata.append('resource_type', 'app');
@@ -560,7 +560,7 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
     cropper.setFile(file, function (file) {
 
         var formdata = new FormData();
-        formdata.append('file', file);
+        formdata.append('file', file, file.name);
         formdata.append("app_id", appId);
         formdata.append('type', 'pic');
         formdata.append('resource_type', 'app');

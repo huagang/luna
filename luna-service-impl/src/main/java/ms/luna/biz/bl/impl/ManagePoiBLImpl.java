@@ -1335,15 +1335,17 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			panorama_type = 2; // 默认为专辑 
 		}
 
-		MsVideoUpload msVideoUpload = msVideoUploadDAO.selectByPrimaryKey(video);
+		if(video != null && video.length() != 0) {
+			MsVideoUpload msVideoUpload = msVideoUploadDAO.selectByPrimaryKey(video);
 
-		if(msVideoUpload != null){
-			String vod_original_file_url = msVideoUpload.getVodOriginalFileUrl();
-			if(vod_original_file_url != null){
-				data.put("video", vod_original_file_url);
+			if (msVideoUpload != null) {
+				String vod_original_file_url = msVideoUpload.getVodOriginalFileUrl();
+				if (vod_original_file_url != null) {
+					data.put("video", vod_original_file_url);
+				}
+			} else {
+				MsLogger.warn("Failed to get video url: " + video);
 			}
-		} else {
-			MsLogger.warn("Failed to get video url: " + video);
 		}
 
 		data.put("short_title", short_title);
