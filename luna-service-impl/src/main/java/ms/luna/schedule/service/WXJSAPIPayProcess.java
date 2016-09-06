@@ -29,14 +29,14 @@ public class WXJSAPIPayProcess extends AbstractWXPayProcess {
         JSONObject inJSON = JSONObject.parseObject(inData);
         JSONObject sendJSON = new JSONObject();
         sendJSON.put("appid", APP_ID);
-        sendJSON.put("attach", "<![CDATA[" + inJSON.getString("extraParam") + "]]>");
-        sendJSON.put("boy", "<![CDATA[" + inJSON.getString("content") + "]]>");
-        sendJSON.put("detail", "<![CDATA[" + inJSON.getString("detail") + "]]>");
+        sendJSON.put("attach", inJSON.getString("extraParam"));
+        sendJSON.put("boy", inJSON.getString("content"));
+        sendJSON.put("detail", inJSON.getString("detail"));
         sendJSON.put("mch_id", PARTNER);
         sendJSON.put("nonce_str", getRandomStr());
         sendJSON.put("notify_url", inJSON.getString("notifyUrl"));
         sendJSON.put("out_trade_no", inJSON.getString("tradeNo"));
-        sendJSON.put("spbill_create_ip", "<![CDATA[" + inJSON.getString("userIp") + "]]>");
+        sendJSON.put("spbill_create_ip", inJSON.getString("userIp"));
         sendJSON.put("total_fee", inJSON.getString("money"));
         sendJSON.put("trade_type", "JSAPI");
         sendJSON.put("openid", inJSON.getString("openId"));
