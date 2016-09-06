@@ -326,9 +326,10 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
+                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
                 //sendEmail;
                 MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核成功");
-                message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
+                message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml(msMerchantManage.getMerchantNm()));
                 emailService.sendEmail(message);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);

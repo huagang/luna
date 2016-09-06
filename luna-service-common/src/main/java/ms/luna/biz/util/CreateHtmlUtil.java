@@ -1,13 +1,8 @@
 package ms.luna.biz.util;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -476,10 +471,13 @@ public class CreateHtmlUtil {
     /**
      * 生成邀请邮件 html页面
      *
-     * @param emailAddress邮件地址
-     * @param registLink注册链接
-     * @param moduleName业务模块名称
-     * @param currentDate当前日期
+     * @param emailAddress
+     * @param token
+     * @param moduleName
+     * @param currentDate
+     * @param luna_nm
+     * @param role_nm
+     * @param webAddr
      * @return
      */
     public String convert2EmailHtml(String emailAddress, String token, String moduleName, String currentDate, String luna_nm, String role_nm, String webAddr) {
@@ -525,8 +523,12 @@ public class CreateHtmlUtil {
 //        return sw.toString();
 //    }
 
-    public String conver2EmailPassTradeHtml() {
+    public static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    public String conver2EmailPassTradeHtml(String merchantName) {
         VelocityContext context = new VelocityContext();
+        context.put("merchantName", merchantName);
+        context.put("today",format.format(new Date()));
         StringWriter sw = new StringWriter();
         EMAIL_PASS_TRADE_T.merge(context, sw);
         return sw.toString();
@@ -536,6 +538,7 @@ public class CreateHtmlUtil {
         VelocityContext context = new VelocityContext();
         context.put("merchantName", merchantName);
         context.put("refuseReason", refuseReason);
+        context.put("today",format.format(new Date()));
         StringWriter sw = new StringWriter();
         EMAIL_REFUSE_TRADE_T.merge(context, sw);
         return sw.toString();

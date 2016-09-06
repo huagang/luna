@@ -135,3 +135,8 @@ ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
 ALTER TABLE `luna_bank_branch`
 ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
 
+UPDATE `luna_menu` SET `code`='goodsCategory' WHERE `id`='5';
+
+DELETE FROM `luna_menu` WHERE `name`='商品类别管理';
+
+
