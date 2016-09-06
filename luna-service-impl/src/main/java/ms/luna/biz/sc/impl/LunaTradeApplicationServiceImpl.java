@@ -13,7 +13,9 @@ import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsMerchantManageTable;
+import ms.luna.biz.util.CreateHtmlUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.model.MailMessage;
 import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +98,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
 //    private static final int TYPE_TO_USER = 1;
 
-//    private void sendEmail(int type) {
+//    private void sendResultEmail(String address, boolean isSuccess) {
 //        if (type == TYPE_TO_MANAGER) {
 //            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
 //            message.setContent("");
@@ -104,10 +106,6 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 //            //luna_nm, role_nm, webAddr)
 //            emailService.sendEmail(message);
 //        } else if (type == TYPE_TO_USER) {
-//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-//            message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
-//            emailService.sendEmail(message);
-//        }
 //    }
 
     @Override
@@ -328,13 +326,23 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
-                //sendEmail(TYPE_TO_USER);
+                //sendEmail;
+                MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核成功");
+                message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
+                emailService.sendEmail(message);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
                 JSONObject data = new JSONObject();
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_FAILED);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
+                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
+                //SEND EMAIL
+                MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核失败");
+                message.setContent(
+                        CreateHtmlUtil.getInstance().conver2EmailRefuseTradeHtml(
+                                msMerchantManage.getMerchantNm(), jsonObject.getString("refuseReason")));
+                emailService.sendEmail(message);
             } else {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数错误");
             }

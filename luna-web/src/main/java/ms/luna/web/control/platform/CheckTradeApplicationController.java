@@ -41,7 +41,8 @@ public class CheckTradeApplicationController {
     @ResponseBody
     public JSONObject checkApplication(HttpServletRequest request,
                                        @PathVariable Integer applicationId,
-                                       @RequestParam Integer checkResult) {
+                                       @RequestParam Integer checkResult,
+                                       @RequestParam(value = "refuseReason", required = false) String refuseReason) {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         if (user == null) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
@@ -52,6 +53,9 @@ public class CheckTradeApplicationController {
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT, checkResult);
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
+        if (refuseReason != null) {
+            inData.put("refuseReason",refuseReason);
+        }
         return lunaTradeApplicationService.checkApplication(inData);
     }
 

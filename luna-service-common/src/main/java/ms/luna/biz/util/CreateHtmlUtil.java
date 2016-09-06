@@ -32,6 +32,7 @@ public class CreateHtmlUtil {
     private final String EMAIL_VM = "email-template.vm";
     private final String EMAIL_INVITE_TRADE_VM = "trade_invite_template.vm";
     private final String EMAIL_PASS_TRADE_VM = "trade_pass_template.vm";
+    private final String EMAIL_REFUSE_TRADE_VM = "trade_refuse_template.vm";
 
 //	checkboxs.vm
 //	fileupload.vm
@@ -60,6 +61,7 @@ public class CreateHtmlUtil {
     private Template EMAIL_T = null;
     private Template EMAIL_INVITE_TRADE_T = null;
     private Template EMAIL_PASS_TRADE_T = null;
+    private Template EMAIL_REFUSE_TRADE_T = null;
 
     //-----------------------------------------------------
     private Template TEXT_T = null;
@@ -93,6 +95,7 @@ public class CreateHtmlUtil {
         EMAIL_T = velocityEngine.getTemplate(EMAIL_VM, "UTF-8");
         EMAIL_INVITE_TRADE_T = velocityEngine.getTemplate(EMAIL_INVITE_TRADE_VM, "UTF-8");
         EMAIL_PASS_TRADE_T = velocityEngine.getTemplate(EMAIL_PASS_TRADE_VM, "UTF-8");
+        EMAIL_REFUSE_TRADE_T = velocityEngine.getTemplate(EMAIL_REFUSE_TRADE_VM, "UTF-8");
 
         //-----------------------------------------------------
     }
@@ -496,36 +499,45 @@ public class CreateHtmlUtil {
         return sw.toString();
     }
 
-    /**
-     * 生成邀请邮件 html页面
-     *
-     * @param emailAddress邮件地址
-     * @param registLink注册链接
-     * @param moduleName业务模块名称
-     * @param currentDate当前日期
-     * @return
-     */
-    public String convert2EmailInviteTradeHtml(String emailAddress, String token, String moduleName, String currentDate, String luna_nm, String role_nm, String webAddr) {
-
-        VelocityContext context = new VelocityContext();
-        context.put("emailAddress", emailAddress);
-        context.put("moduleName", moduleName);
-        context.put("token", token);
-        context.put("currentDate", currentDate);
-        context.put("luna_nm", luna_nm);
-        context.put("role_nm", role_nm);
-        context.put("webAddr", webAddr);
-
-        StringWriter sw = new StringWriter();
-        EMAIL_T.merge(context, sw);
-
-        return sw.toString();
-    }
+//    /**
+//     * 生成邀请邮件 html页面
+//     *
+//     * @param emailAddress邮件地址
+//     * @param registLink注册链接
+//     * @param moduleName业务模块名称
+//     * @param currentDate当前日期
+//     * @return
+//     */
+//    public String convert2EmailInviteTradeHtml(String emailAddress, String token, String moduleName, String currentDate, String luna_nm, String role_nm, String webAddr) {
+//
+//        VelocityContext context = new VelocityContext();
+//        context.put("emailAddress", emailAddress);
+//        context.put("moduleName", moduleName);
+//        context.put("token", token);
+//        context.put("currentDate", currentDate);
+//        context.put("luna_nm", luna_nm);
+//        context.put("role_nm", role_nm);
+//        context.put("webAddr", webAddr);
+//
+//        StringWriter sw = new StringWriter();
+//        EMAIL_T.merge(context, sw);
+//
+//        return sw.toString();
+//    }
 
     public String conver2EmailPassTradeHtml() {
         VelocityContext context = new VelocityContext();
         StringWriter sw = new StringWriter();
         EMAIL_PASS_TRADE_T.merge(context, sw);
+        return sw.toString();
+    }
+
+    public String conver2EmailRefuseTradeHtml(String merchantName, String refuseReason) {
+        VelocityContext context = new VelocityContext();
+        context.put("merchantName", merchantName);
+        context.put("refuseReason", refuseReason);
+        StringWriter sw = new StringWriter();
+        EMAIL_REFUSE_TRADE_T.merge(context, sw);
         return sw.toString();
     }
 
