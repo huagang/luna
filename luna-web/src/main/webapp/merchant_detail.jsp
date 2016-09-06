@@ -162,7 +162,7 @@
                                         <label class="control-label" for="">{{mcInfo.accountNo}}</label>
                                     </div>
                                 </div>
-                                <div class="form-group clearfix text-center button-group" ng-show="this.userType == 'manager'">
+                                <div class="form-group clearfix text-center button-group" ng-show="mcInfo.userType == 'manager'">
                                     <button type="button" id="btnPass" class="btn primary" ng-click="mcInfo.accessEvent()">同意开通</button>
                                     <button type="button" id="btnNoPass" class="btn primary" ng-click="mcInfo.noPassEvent()">驳回</button>
                                 </div>

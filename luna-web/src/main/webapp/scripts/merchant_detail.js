@@ -82,6 +82,7 @@ MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http'
 
 /** 
 * 不同意的弹出框
+* 审核状态  0 待审核 1 审核通过 2拒绝
 */
 MerchantDetail.controller('nopassController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     this.changeReason = function () {
@@ -93,14 +94,14 @@ MerchantDetail.controller('nopassController', ['$scope', '$rootScope', '$http', 
         }
     };
     this.noPassConfirm = function () {
-        if (this.reason == '') {
+        if (!this.reason || this.reason == '') {
             return;
         }
-        var postData = { checkResult: 1, reason: this.reason };
+        var postData = { checkResult: 1, refuseReason: this.reason };
         $http({
             method: Inter.getApiUrl().allowTradeTrain.type,
             url: Util.strFormat(Inter.getApiUrl().allowTradeTrain.url, [merchantId]),
-            data: { checkResult: 0 },
+            data:postData,
         }).then(function successCallback(response) {
             var res = response.data;
             if (res.code == 0) {
