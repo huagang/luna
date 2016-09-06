@@ -29,4 +29,9 @@ public class MsMerchantManageDAOImpl extends MsMerchantManageDAOBaseImpl impleme
 		// TODO Auto-generated method stub
 		return getSqlMapClientTemplate().queryForList("ms_merchant_manage.searchMerchantWithFilter", merchantsParameter);
 	}
+
+	@Override
+	public Integer selectMerchantTradeStatus(String merchantId) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("ms_merchant_manage.selectMerchantTradeStatus", merchantId);
+	}
 }

@@ -19,5 +19,7 @@ public interface MsMerchantManageDAO extends MsMerchantManageDAOBase {
 	int countMerchants(MerchantsParameter merchantsParameter);
 	
 	List<MerchantsResult> searchMerchantWithFilter(MerchantsParameter merchantsParameter);
+
+	Integer selectMerchantTradeStatus(String merchantId);
 	
 }

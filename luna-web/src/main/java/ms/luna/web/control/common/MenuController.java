@@ -40,7 +40,7 @@ public class MenuController extends BasicController {
         HttpSession session = request.getSession(false);
         if(session != null) {
             LunaUserSession lunaUserSession = SessionHelper.getUser(session);
-            JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
+            JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByUserId(lunaUserSession.getUniqueId());
             logger.trace(moduleAndMenuByRoleId);
             return moduleAndMenuByRoleId;
 
