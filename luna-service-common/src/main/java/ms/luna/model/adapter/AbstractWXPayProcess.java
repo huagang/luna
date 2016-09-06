@@ -10,14 +10,29 @@ package ms.luna.model.adapter;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.util.VbMD5;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
@@ -159,41 +174,52 @@ public abstract class AbstractWXPayProcess implements PayProcess {
 
     public static String sendMessage(String url, String data) {
         try {
-            URL urlInstance = new URL(url);
-            URLConnection con = urlInstance.openConnection();
+            HttpClient httpclient = new DefaultHttpClient();
+            // Secure Protocol implementation.
+            SSLContext ctx = SSLContext.getInstance("SSL");
+            // Implementation of a trust manager for X509 certificates
+            X509TrustManager tm = new X509TrustManager() {
 
-            con.setDoOutput(true);
-            con.setDoInput(true);
-            con.setUseCaches(false);
-            con.setConnectTimeout(1000 * 10);
-            con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows XP)");
-            con.setRequestProperty("Content-Type", "text/xml");
-            con.setRequestProperty("Content-length", String.valueOf(data.getBytes().length));
+                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
 
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            out.write(data.getBytes());
-            out.flush();
-            out.close();
+                }
 
-            DataInputStream in = new DataInputStream(con.getInputStream());
-            byte[] result;
-            java.io.ByteArrayOutputStream ou = new java.io.ByteArrayOutputStream();
-            byte[] bufferByte = new byte[256];
-            int l = -1;
-            while ((l = in.read(bufferByte, 0, 256)) > -1) {
-                ou.write(bufferByte, 0, l);
-                ou.flush();
+                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
+            ctx.init(null, new TrustManager[]{tm}, null);
+            SSLSocketFactory ssf = new SSLSocketFactory(ctx);
+
+            ClientConnectionManager ccm = httpclient.getConnectionManager();
+            SchemeRegistry sr = ccm.getSchemeRegistry();
+            sr.register(new Scheme("https", 443, ssf));
+
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader(HTTP.CONTENT_TYPE, "text/xml");
+            StringEntity se = new StringEntity(data, "utf-8");
+            se.setContentType("text/xml");
+            se.setContentEncoding(new BasicHeader(HTTP.CONTENT_ENCODING, "utf-8"));
+            httpPost.setEntity(se);
+            String result = "";
+            try {
+                HttpResponse response = httpclient.execute(httpPost);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    result = EntityUtils.toString(response.getEntity(), "utf-8");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            result = ou.toByteArray();
-            String strResult = new String(result, "UTF-8");
-            return strResult;
-        } catch (MalformedURLException e) {
+            return result;
+        } catch (NoSuchAlgorithmException e) {
             logger.error("Failed to send message to wx 1:", e);
-        } catch (IOException e) {
-            logger.error("Failed to send message to wx 2:", e);
-
+        } catch (Exception ex) {
+            logger.error("Failed to send message to wx 2:", ex);
         }
-        return null;
+        return "";
     }
 
     public String getRandomStr() {
