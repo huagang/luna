@@ -71,7 +71,8 @@ function showAnimation(){
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip",FarmHouseController]);
+        .factory('ScrollController', getScrollController)
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
 
 
     function getMarkerTip() {
@@ -222,7 +223,6 @@ function showAnimation(){
                 } else if(that.cur && that.last && that.last.time){
                     var time = Math.abs(that.maxSpeed / that.deceleration);
                     var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想移动距离,可能需要修正
-                    console.log('distance:', distance, that.maxSpeed);
                     try{
                         var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1];
                         aimPosition = parseFloat(curPosition) + distance;

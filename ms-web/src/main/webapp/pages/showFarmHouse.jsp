@@ -109,12 +109,14 @@
                 <span>美食</span>
             </header>
             <main>
+                <div class="scroll-wrapper">
                     <div class="food-item" ng-repeat="food in farm.farmData.food"
-                         style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
-                        <div class="name-wrapper">
-                            <p class="food-name">{{food.text}}</p>
-                        </div>
+                             style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
+                            <div class="name-wrapper">
+                                <p class="food-name">{{food.text}}</p>
+                            </div>
                     </div>
+                </div>
             </main>
         </div>
         <div class="block-split" ng-hide="farm.farmData.food.length === 0"></div>
