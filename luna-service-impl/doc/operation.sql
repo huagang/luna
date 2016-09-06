@@ -139,4 +139,17 @@ UPDATE `luna_menu` SET `code`='goodsCategory' WHERE `id`='5';
 
 DELETE FROM `luna_menu` WHERE `name`='商品类别管理';
 
+alter table ms_merchant_manage add  `application_id` int(11) default NULL COMMENT '申请id';
+alter table ms_merchant_manage add  `idcard_pic_url` varchar(200) default NULL COMMENT '申请人身份证正反面照片地址';
+alter table ms_merchant_manage add  `idcard_period` varchar(26) default NULL COMMENT '申请人身份证有效期';
+alter table ms_merchant_manage add  `merchant_no` varchar(30) default NULL COMMENT '商户营业执照号';
+alter table ms_merchant_manage add  `licence_period` varchar(26) default NULL COMMENT '商户营业执照有效期';
+alter table ms_merchant_manage add  `account_type` int(11) default NULL COMMENT '商户账户类型';
+alter table ms_merchant_manage add  `account_name` varchar(36) default NULL COMMENT '商户账户名称';
+alter table ms_merchant_manage add  `account_bank` varchar(36) default NULL COMMENT '商户账户开户银行';
+alter table ms_merchant_manage add  `account_city` varchar(36) default NULL COMMENT '商户账户开户城市';
+alter table ms_merchant_manage add  `account_address` varchar(36) default NULL COMMENT '商户账户开户行';
+alter table ms_merchant_manage add  `account_no` varchar(20) default NULL COMMENT '商户开户账号';
+alter table ms_merchant_manage add  `app_status` int(11) default NULL COMMENT '申请状态';
+alter table ms_merchant_manage add  `account_province` varchar(36) default NULL;
 
