@@ -162,7 +162,7 @@
                                         <label class="control-label" for="">{{mcInfo.accountNo}}</label>
                                     </div>
                                 </div>
-                                <div class="form-group clearfix text-center button-group">
+                                <div class="form-group clearfix text-center button-group" ng-show="this.userType == 'manager'">
                                     <button type="button" id="btnPass" class="btn primary" ng-click="mcInfo.accessEvent()">同意开通</button>
                                     <button type="button" id="btnNoPass" class="btn primary" ng-click="mcInfo.noPassEvent()">驳回</button>
                                 </div>
@@ -194,7 +194,7 @@
             </form>
         </div>
         <!-- 底部功能区 -->
-        <div class="pop-fun">
+        <div class="pop-fun" >
             <button type="button" id="btnNoPassConfirm" ng-click="noCon.noPassConfirm()">确定</button>
             <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
         </div>
