@@ -74,7 +74,7 @@ CREATE TABLE `luna_trade_application` (
   `account_bank` varchar(36) NOT NULL COMMENT '商户账户开户银行',
   `account_city` varchar(36) NOT NULL COMMENT '商户账户开户城市',
   `account_address` varchar(36) NOT NULL COMMENT '商户账户开户行',
-  `account_no` varchar(20) NOT NULL COMMENT '商户开户账号',
+  `account_no` varchar(30) NOT NULL COMMENT '商户开户账号',
   `update_time` datetime NOT NULL COMMENT '申请更新时间',
   `app_status` int(11) NOT NULL COMMENT '申请状态',
   `merchant_id` varchar(32) NOT NULL COMMENT '申请商户ID',
