@@ -644,6 +644,7 @@ var Inter = function () {
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
                 getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
                 getMerchatDetail: { url: context + '/merchant/tradeApplication/detail', type: 'GET' },
+                getMerchatDetailData: { url: context + '/merchant/tradeApplication/get', type: 'GET' },
                 merchatSign: { url: context + '/merchant/tradeApplication/sign', type: 'POST' },
                 allowTradeTrain: { url: context + '/platform/message/check/{0}', type: 'POST' },
 

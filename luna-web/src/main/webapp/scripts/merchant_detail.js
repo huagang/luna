@@ -23,10 +23,18 @@ MerchantDetail.run(function ($rootScope, $http) {
 MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     // this.isInit = false;
     this.init = function () {
+        var pathName = window.location.pathname, reg = /merchant\/tradeApplication\/detail/, infoUrl;
+        if (reg.test(pathName)) {
+            this.userType = 'customer';
+            infoUrl = Inter.getApiUrl().getMerchatDetailData;
+        } else {
+            this.userType = 'manager';
+            infoUrl = Inter.getApiUrl().getMessageDetail;
+        }
         var self = this;
         $http({
-            method: Inter.getApiUrl().getMessageDetail.type,
-            url: Util.strFormat(Inter.getApiUrl().getMessageDetail.url, [merchantId]),
+            method: infoUrl.type,
+            url: Util.strFormat(infoUrl.url, [merchantId]),
         }).then(function successCallback(response) {
             var res = response.data;
             if (res.code == 0) {

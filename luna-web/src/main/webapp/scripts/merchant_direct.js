@@ -414,7 +414,7 @@ function showPage() {
         success: function (res) {
             //请求成功时处理
             if (res.code == "0") {
-                status = res.data.appStatus.toString();
+                status = res.data.tradeStatus.toString();
             }
         },
         complete: function () {
