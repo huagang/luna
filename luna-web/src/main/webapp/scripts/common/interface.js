@@ -46,7 +46,7 @@ var Inter = function () {
         context: context,
         getPageUrl: function () {
             return {
-                home: context + '',
+                home: context + '/index',
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',

@@ -78,11 +78,16 @@ public class CheckTradeApplicationController {
         return new ModelAndView("/manage_merchant_apply.jsp");
     }
 
+    /**
+     * 审核详情界面
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/page/{applyID}")
     public ModelAndView applyDetail(HttpServletRequest request, HttpServletResponse response) {
-
 //        SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return new ModelAndView("/merchant_detail.jsp");
+        return new ModelAndView("/trade_train_detail.jsp");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getList")
