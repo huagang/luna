@@ -23,8 +23,6 @@ public interface ManageShowAppService {
 	JSONObject createApp(String json);
 	
 	JSONObject updateApp(String json);
-	
-	boolean existAppName(String appName);
 
 	JSONObject copyApp(String json);
 	

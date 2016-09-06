@@ -8,6 +8,7 @@ import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
+import ms.luna.web.util.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -142,13 +143,20 @@ public class RouteController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
     public JSONObject async_search_routes(
-    		@RequestParam(required=false, value="offset", defaultValue = "0") Integer offset,
-    		@RequestParam(required=false, value="limit", defaultValue = "" + Integer.MAX_VALUE) Integer limit,
+    		@RequestParam(required=false, value="offset", defaultValue = "0") int offset,
+    		@RequestParam(required=false, value="limit", defaultValue = "" + 30) int limit,
     		HttpServletRequest request, HttpServletResponse response){
     	try {
+			offset = (offset < 0)? 0 :offset;
+			limit = (limit < 0)?0 : limit;
+			Integer businessId = RequestHelper.getInteger(request, "business_id");
+			if(businessId <= 0) {
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务id不合法");
+			}
      		JSONObject param = new JSONObject();
 			param.put("offset", offset);
 			param.put("limit", limit);
+			param.put("business_id", businessId);
     		JSONObject result = manageRouteService.loadRoutes(param);
     		MsLogger.debug(result.toString());
     		return result;
@@ -164,16 +172,19 @@ public class RouteController extends BasicController {
     public JSONObject checkRouteNm(
     		@RequestParam(required=true, value="name") String name,
     		@RequestParam(required=false, value="id") Integer id,
-
     		HttpServletRequest request, HttpServletResponse response) {
     	try {
-    		JSONObject param = new JSONObject();
-    		param.put("name", name);
+			Integer businessId = RequestHelper.getInteger(request, "business_id");
+			if(businessId <= 0) {
+				return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务id不合法");
+			}
+			JSONObject param = new JSONObject();
+			param.put("name", name);
 			if(id != null) {
 				param.put("id" , id);
 			}
-    		
-    		JSONObject result = manageRouteService.isRouteNmExist(param.toString());
+			param.put("business_id", businessId);
+			JSONObject result = manageRouteService.isRouteNmExist(param.toString());
     		MsLogger.debug(result.toString());
     		return result;
     	} catch (Exception e) {

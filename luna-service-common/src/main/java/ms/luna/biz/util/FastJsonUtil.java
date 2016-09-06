@@ -168,7 +168,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", code);
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 	public static JSONObject errorWithMsg(String key, Object... params) {
@@ -177,7 +176,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", key);
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 
@@ -186,7 +184,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", code);
 		result.put("msg", th.getMessage());
-		result.put("data", "{}");
 		return result;
 	}
 
@@ -195,7 +192,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", code);
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 
@@ -204,7 +200,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", String.valueOf(code));
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 
@@ -214,7 +209,6 @@ public final class FastJsonUtil {
 		result.put("code", String.valueOf(code));
 		result.put("data", data);
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 
@@ -223,7 +217,6 @@ public final class FastJsonUtil {
 		JSONObject result = new JSONObject();
 		result.put("code", String.valueOf(code));
 		result.put("msg", msg);
-		result.put("data", "{}");
 		return result;
 	}
 
