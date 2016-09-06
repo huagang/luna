@@ -115,7 +115,7 @@
                 </div>
               </div>
               <div class="app-set-btn">
-                <span id="btn-publish" ng-click="menu.publishApp()">发布</span>
+                <span id="btn-publish" ng-click="menu.handlePublish()">发布</span>
               </div>
             </div>
           </nav>
@@ -1555,19 +1555,79 @@
           </div>
           <!-- 弹出层底部功能区 -->
         </div>
+
         <!-- 发布成功内容 -->
-        <div class="publish-wrap">
-          <div class="publish-info">
-            <p>扫一扫分享给更多人</p>
-            <p class="publish-qrcode"><img id="publishQRcode" src="" /></p>
-            <p>使用微景展地址分享</p>
-            <p><a id="publishURL" class="copyed" href="http://luna.visualbusiness.cn/" target="_blank">http://luna.visualbusiness.cn/</a>
-              <button type="button" class="copy" id="btn-copy-url">复制链接</button>
-            </p>
+
+        <div class="publish-pop-wrapper">
+          <div class="mask hidden"></div>
+          <div class="pop publish-info">
+            <div class="pop-title">
+              <h4>发布成功</h4>
+              <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+            </div>
+            <div class="pop-cont ">
+              <p class="qrcode-tip">扫一扫分享给更多人</p>
+              <img class="publish-qrcode" src="" height="150"/>
+              <p>使用微景展地址分享</p>
+              <div class="link-container">
+                <span>分享地址</span>
+                <a class="publish-link" href=""></a>
+              </div>
+            </div>
+            <div class="pop-fun">
+              <div class="pull-right">
+                <button class="button confirm">确定</button>
+                <button class="button-close copy" data-clipboard-target=".publish-link">复制链接</button>
+              </div>
+            </div>
+          </div>
+          <div class="pop publish-confirm">
+            <div class="pop-title">
+              <h4>提示</h4>
+              <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+            </div>
+            <div class="pop-cont ">
+              <p class="">此业务下有在线运营的微景展，您可以进行如下操作以满足当前的发布需求: </p>
+              <div class="options">
+                <button type="button" class="button button-replace">替代线上微景展</button>
+                <button type="button" class="button button-new-another">生成新的微景展</button>
+              </div>
+            </div>
+            <div class="pop-fun">
+              <button class="button-close">取消</button>
+            </div>
+          </div>
+          <div class="pop publish-replace">
+            <div class="pop-title">
+              <h4>提示</h4>
+              <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
+            </div>
+            <div class="pop-cont ">
+              <p>请选择您要替换的微景展,完成微景展的上线操作: </p>
+              <div class="options">
+                <div id="options-0">
+                  <label>
+                    <input class='replace-option' type="radio" data-value="0" />
+                    <span class="app-name"></span>
+                  </label>
+                  <img src="" class="qrcode" alt="二维码"/>
+                </div>
+                <div id="options-1">
+                  <label>
+                    <input  class='replace-option' type="radio" data-value="1" />
+                    <span class="app-name"></span>
+                  </label>
+                  <img src="" class="qrcode" alt="二维码"/>
+                </div>
+              </div>
+            </div>
+            <div class="pop-fun">
+              <button class="button">确定</button>
+              <button class="button-close">取消</button>
+            </div>
           </div>
         </div>
-        
-		    <jsp:include page="/templete/imgCropper.jsp" />
+        <jsp:include page="/templete/imgCropper.jsp" />
         
         <!-- 脚本文件 -->
         <script src="<%=request.getContextPath()%>/plugins/jquery-ui.min.js"></script>
@@ -1588,6 +1648,7 @@
         <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
         <script src="<%=request.getContextPath()%>/plugins/jquery.zclip/jquery.zclip.min.js" type="text/javascript"></script>
         <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
+        <script type="text/javascript" charset="UTF-8" src="<%=request.getContextPath() %>/plugins/clipboardJs/clipboard.min.js"></script>
         <script src="<%=request.getContextPath()%>/plugins/json2.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
         <script src="<%=request.getContextPath()%>/scripts/common/interface.js" charset="utf-8"></script>

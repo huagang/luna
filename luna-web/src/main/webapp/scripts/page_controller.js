@@ -97,9 +97,29 @@ showPage.controller('menuTabIconController', ['$scope', '$rootScope', '$http', '
  * @param {[type]} $http      [description]
  */
 function MenuController($scope, $rootScope, $http) {
-
+    var that = this;
     this.QRShow = false;
     this.QRImg = "";
+    this.apiUrls = Inter.getApiUrl();
+    new Clipboard('.publish-info .copy',{
+        text: function(trigger) {
+            return $('.publish-link').html();
+        }
+    });
+
+    this.bindEvent = function(){
+        $('.publish-pop-wrapper .btn-close').on('click' ,that.hidePublishDialog);
+        $('.publish-pop-wrapper .button-close').on('click', that.hidePublishDialog);
+        $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
+        $('.publish-info .button.confirm').on('click' ,that.hidePublishDialog);
+
+        $('.publish-confirm').on('click', '.button-replace', that.handleReplaceClick);
+        $('.publish-confirm').on('click', '.button-new-another', that.handleForcePublish);
+
+        $('.publish-replace').on('click', '.button', that.handlePublishReplace);
+        $('.publish-replace .replace-option').on('change', that.handleSelect);
+
+    };
 
     this.createText = function () {
         //没有统一页面数据模型，暂时在外部实现, 否则controller之间显式通信数据会导致rootScope重复应用报错
@@ -139,82 +159,93 @@ function MenuController($scope, $rootScope, $http) {
         this.QRShow = false;
     };
 
-    //发布完成的结果显示框
-    this.publishDialog = function (data) {
-        $("#publishQRcode").attr("src", data.QRImg);
-        $("#publishURL").attr("href", data.link).text(data.link);
-        $.dialog({
-            "title": "发布成功",
-            "content": $(".publish-wrap").html(),
-            "ok": function () {
-                this.close();
-            },
-            "lock": true
-        });
-        //给弹出的二维码框复制按钮绑定复制方法
-        $(".copy").zclip({
-            path: Inter.getApiUrl().zclipSWFPath,
-            copy: function () {
-                return $(this).siblings(".copyed").text();
-            },
-            beforeCopy: function () { /* 按住鼠标时的操作 */
-                $(this).css("color", "orange");
-            },
-            afterCopy: function () { /* 复制成功后的操作 */
-                $.alert("复制成功");
-            }
-        });
+
+    this.handleForcePublish = function(){
+        that.forcePublish = true;
+        that.handlePublish();
     };
 
-    //发布微景展响应函数
-    this.publishApp = function () {
-        var request = {
-            method: Inter.getApiUrl().appPublish.type,
-            url: Util.strFormat(Inter.getApiUrl().appPublish.url, [appId]),
-        };
-
-        $http(request).then(function success(response) {
-            var data = response.data;
-            if ('0' == data.code) {
-                $scope.menu.publishDialog(data.data);
-
-            } else if ('409' == data.code) {
-                //already exist online app
-                $.confirm('此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作？', function () {
-                    var request = {
-                        method: Inter.getApiUrl().appPublish.type,
-                        url: Util.strFormat(Inter.getApiUrl().appPublish.url, [appId]),
-                        data: {
-                            'force': 1
-                        }
-                    };
-
-                    $http(request).then(function success(response) {
-                        var data = response.data;
-                        if ('0' == data.code) {
-                            $scope.menu.publishDialog(data.data);
-                        } else {
-                            $.alert("发布失败，请重新尝试");
-                        }
-                    },
-                        function error(response) {
-                            $.alert(response.data.msg);
-                        });
-
-                },
-                    function () {
-                        //$.alert(response.data.msg);
-                    });
-            } else {
-                $.alert("发布失败，请重新尝试");
+    this.handlePublish = function(){
+        var data = {force: (that.forcePublish ? 1 : -1)};
+        if(that.oldId){
+            data.old_app_id = that.oldId;
+        }
+        $.ajax({
+            url: Util.strFormat(that.apiUrls.appPublish.url, [appId]),
+            type: that.apiUrls.appPublish.type,
+            data: data,
+            success: function(res){
+                if(res.code === '0'){
+                    that.publishUrl = res.data.link;
+                    that.publishImg = res.data.QRImg;
+                    $('.publish-info .publish-qrcode').attr('src', that.publishImg);
+                    $('.publish-info .publish-link').attr('href', that.publishUrl).html(that.publishUrl);
+                    $('.publish-pop-wrapper .mask').removeClass('hidden');
+                    $('.publish-confirm.pop').removeClass('pop-show');
+                    $('.publish-replace.pop').removeClass('pop-show');
+                    $('.publish-info.pop').addClass('pop-show');
+                    $(document.body).addClass('modal-open');
+                    that.forcePublish = false;
+                    that.oldId = undefined;
+                } else if(res.code === '409'){
+                    that.publishData =  res.data;
+                    if(that.publishData.length === 1){
+                        $('.publish-confirm .button-new-another').removeClass('hidden');
+                    } else if(that.publishData.length === 2){
+                        $('.publish-confirm .button-new-another').addClass('hidden');
+                    }
+                    $('.publish-confirm.pop').addClass('pop-show');
+                    $('.publish-pop-wrapper .mask').removeClass('hidden');
+                    $(document.body).addClass('modal-open');
+                } else{
+                    alert(res.msg || '发布失败')
+                }
+            },
+            error: function(res){
+                alert(res.msg || '发布失败')
             }
-        },
-            function error(response) {
-                $.alert(response.data.msg);
+        });
+    }
+
+    this.handleSelect = function (event){
+        $('.publish-replace .replace-option').prop('checked', false);
+        $(event.target).prop('checked', true);
+        that.oldId = $(event.target).attr('data-value');
+    };
+
+    this.handleReplaceClick = function (){
+        if(that.publishData.length === 1){
+            that.oldId = that.publishData[0].app_id;
+            that.handleForcePublish();
+
+        } else if(that.publishData.length === 2){
+            $('.publish-confirm.pop').removeClass('pop-show');
+            $('.publish-replace.pop').addClass('pop-show');
+            var options = [$('#options-0'), $('#options-1')];
+            that.publishData.forEach(function(item, index){
+                var option = options[index];
+                option.find('.replace-option').attr('data-value', item.app_id);
+                option.find('.app-name').text(item.app_name);
+                option.find('.qrcode').attr('src', item.QRImg);
             });
+        }
+    }
 
+    this.handlePublishReplace = function (){
+        if(that.oldId){
+            that.forcePublish = 1;
+            that.handlePublish();
+        }
     };
 
+
+    this.hidePublishDialog = function (){
+        $('.publish-info.pop').removeClass('pop-show');
+        $('.publish-confirm.pop').removeClass('pop-show');
+        $('.publish-replace.pop').removeClass('pop-show');
+        $(document.body).removeClass('modal-open');
+        $('.publish-pop-wrapper .mask').addClass('hidden');
+    };
 
     this.appSetting = function () {
         popWindow($("#pop-set"));
@@ -224,7 +255,7 @@ function MenuController($scope, $rootScope, $http) {
             getAppSetting();
         }
     };
-
+    this.bindEvent();
 }
 
 
