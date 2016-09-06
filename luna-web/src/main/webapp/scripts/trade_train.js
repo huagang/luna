@@ -101,6 +101,17 @@ var initCreatePage = function () {
                 accountProvince: 'required',
                 accountCity: 'required',
                 accountAddress: 'required',
+                accountName: {
+                    required: true,
+                    maxlength: 30,
+                },
+                accountNo: {
+                    required: true,
+                    // digits: true,
+                    // minlength: 16,
+                    // maxlength: 19,
+                    luhmCheck: true,
+                }
             },
             messages: {
                 contactName: "请填写商户业务对接联系人的真实姓名",
@@ -123,6 +134,11 @@ var initCreatePage = function () {
                 merchantNo: {
                     required: '请输入营业执照注册号/社会信用代码',
                     isBusinessCode: "请输入正确的营业执照注册号/社会信用代码",
+                },
+                accountNo: {
+                    digits: '请输入正确的银行卡号',
+                    minlength: '请输入正确的银行卡号',
+                    maxlength: '请输入正确的银行卡号',
                 }
             },
             errorPlacement: function (error, element) {
