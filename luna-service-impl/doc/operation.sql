@@ -13,3 +13,6 @@ update ms_farm_field set limits ="{\"TEXT\":[{\"empty\":true,\"max\":255}]}" whe
 update ms_farm_field set limits ="{\"PIC\":[{\"empty\":true,\"max\":20,\"ext\":[\"png\",\"jpg\"]}],\"TEXT\":[{\"empty\":true,\"max\":255}],\"num\":{\"min\":3}}" where name = "delicacy";
 update ms_farm_field set limits ="{\"TEXT\":[{\"empty\":true,\"max\":255}]}" where name = "country_enjoyment";
 update ms_farm_field set limits="{\"CHECKBOX\":[{\"empty\":true}]}" where name = "facility";
+
+alter table ms_route drop index `name`;
+alter table ms_route add unique key `name` (`business_id`, `name`);

@@ -606,7 +606,7 @@ var Inter = function() {
                     type: 'DELETE'
                 }, // 删除线路
                 checkRoute: {
-                    url: context + '/content/route/checkName?name={0}&id={1}',
+                    url: context + '/content/route/checkName?name={0}&business_id={1}',
                     type: 'GET'
                 }, // 检查线路名称是否合法
                 fetchRouteConfig: {
