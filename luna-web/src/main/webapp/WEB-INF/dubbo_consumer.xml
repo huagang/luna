@@ -20,33 +20,33 @@
     <dubbo:consumer check="false" timeout="300000" retries="0"/>
     <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
 
-	<dubbo:reference id="authoritySetService" interface="ms.luna.biz.sc.AuthoritySetService" />
-	<dubbo:reference id="categoryService" interface="ms.luna.biz.sc.CategoryService" />
-	<dubbo:reference id="loginService" interface="ms.luna.biz.sc.LoginService" />
-	<dubbo:reference id="manageAuthorityService" interface="ms.luna.biz.sc.ManageAuthorityService" />
-	<dubbo:reference id="manageBusisnessService" interface="ms.luna.biz.sc.ManageBusinessService" />
-	<dubbo:reference id="manageMerchantService" interface="ms.luna.biz.sc.ManageMerchantService" />
-	<dubbo:reference id="managePoiService" interface="ms.luna.biz.sc.ManagePoiService" />
-	<dubbo:reference id="manageShowAppService" interface="ms.luna.biz.sc.ManageShowAppService" />
-	<dubbo:reference id="msShowPageService" interface="ms.luna.biz.sc.MsShowPageService" />
-	<dubbo:reference id="pulldownService" interface="ms.luna.biz.sc.PulldownService" />
-	<dubbo:reference id="vodPlayService" interface="ms.luna.biz.sc.VodPlayService" />
-	<dubbo:reference id="manageBusinessTreeService" interface="ms.luna.biz.sc.ManageBusinessTreeService" />
-	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService" />
-	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService" />
-	<dubbo:reference interface="ms.luna.biz.sc.LunaRoleService" id="lunaRoleService" />
-	<dubbo:reference interface="ms.luna.biz.sc.LunaUserService" id="lunaUserService" />
-	<dubbo:reference interface="ms.luna.biz.sc.MenuService" id="menuService" />
-	<dubbo:reference interface="ms.luna.biz.sc.FarmPageService" id="farmPageService" />
-	<dubbo:reference interface="ms.luna.biz.sc.LunaAuthService" id="lunaAuthService" />
-	<dubbo:reference id="manageRouteService" interface="ms.luna.biz.sc.ManageRouteService" />
-     <dubbo:reference interface="ms.luna.biz.sc.LunaGoodsCategoryService" id="lunaGoodsCategoryService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.LunaTradeApplicationService" id="lunaTradeApplicationService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.SMSService" id="smsService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.EmailService" id="emailService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.PicCodeService" id="picCodeService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.LunaBankService" id="lunaBankService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.LunaBankBranchService" id="lunaBankBranchService"/>
-    <dubbo:reference interface="ms.luna.biz.sc.LunaCityService" id="lunaCityService"/>Ï
+	<dubbo:reference id="authoritySetService" interface="ms.luna.biz.sc.AuthoritySetService"/>
+	<dubbo:reference id="categoryService" interface="ms.luna.biz.sc.CategoryService"/>
+	<dubbo:reference id="loginService" interface="ms.luna.biz.sc.LoginService"/>
+	<dubbo:reference id="manageAuthorityService" interface="ms.luna.biz.sc.ManageAuthorityService"/>
+	<dubbo:reference id="manageBusisnessService" interface="ms.luna.biz.sc.ManageBusinessService"/>
+	<dubbo:reference id="manageMerchantService" interface="ms.luna.biz.sc.ManageMerchantService"/>
+	<dubbo:reference id="managePoiService" interface="ms.luna.biz.sc.ManagePoiService"/>
+	<dubbo:reference id="manageShowAppService" interface="ms.luna.biz.sc.ManageShowAppService"/>
+	<dubbo:reference id="msShowPageService" interface="ms.luna.biz.sc.MsShowPageService"/>
+	<dubbo:reference id="pulldownService" interface="ms.luna.biz.sc.PulldownService"/>
+	<dubbo:reference id="vodPlayService" interface="ms.luna.biz.sc.VodPlayService"/>
+	<dubbo:reference id="manageBusinessTreeService" interface="ms.luna.biz.sc.ManageBusinessTreeService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.ManageColumnService" id="manageColumnService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.ManageArticleService" id="manageArticleService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaRoleService" id="lunaRoleService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaUserService" id="lunaUserService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.MenuService" id="menuService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.FarmPageService" id="farmPageService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaAuthService" id="lunaAuthService"/>
+	<dubbo:reference id="manageRouteService" interface="ms.luna.biz.sc.ManageRouteService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaGoodsCategoryService" id="lunaGoodsCategoryService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaTradeApplicationService" id="lunaTradeApplicationService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.SMSService" id="smsService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.EmailService" id="emailService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.PicCodeService" id="picCodeService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaBankService" id="lunaBankService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaBankBranchService" id="lunaBankBranchService"/>
+	<dubbo:reference interface="ms.luna.biz.sc.LunaCityService" id="lunaCityService"/>
 
 </beans>
