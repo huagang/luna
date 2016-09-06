@@ -32,7 +32,7 @@ public class CreateHtmlUtil {
     private final String EMAIL_VM = "email-template.vm";
     private final String EMAIL_INVITE_TRADE_VM = "trade_invite_template.vm";
     private final String EMAIL_PASS_TRADE_VM = "trade_pass_template.vm";
-    private final String EMAIL_REFUSE_TRADE_VM = "trade_refuse_template.vm";
+    private final String EMAIL_REFUSE_TRADE_VM = "trade_nopass_template.vm";
 
 //	checkboxs.vm
 //	fileupload.vm

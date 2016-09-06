@@ -28,7 +28,9 @@
                         您所在商户“为民农家院”申请开通皓月交易直通车的认证资料，经过客服人员核实有误，理由如下：
                     </p>
                     <p style="line-height: 2em; margin: 0;">
-
+                        ${merchantName}
+                        <br>
+                        ${refuseReason}
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         如有疑问，请联系相关工作人员。
