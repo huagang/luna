@@ -459,36 +459,40 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}
 		int forceFlag = FastJsonUtil.getInteger(jsonObject, "force", -1);
-		MsShowApp record = msShowAppDAO.selectByPrimaryKey(appId);
-		if(record == null) {
+		MsShowApp crtShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+		if(crtShowApp == null) {
 			return FastJsonUtil.error(-1, "appId不合法");
 		}
 		String appAddr = jsonObject.getString(MsShowAppTable.FIELD_APP_ADDR);
-		int businessId = record.getBusinessId();
+		int businessId = crtShowApp.getBusinessId();
 
 		MsShowAppCriteria example = new MsShowAppCriteria();
 		MsShowAppCriteria.Criteria criteria = example.createCriteria();
 		criteria.andBusinessIdEqualTo(businessId)
+				.andAppIdNotEqualTo(appId)
 				.andAppStatusEqualTo(MsShowAppConfig.AppStatus.ONLINE);
 		List<MsShowApp> msShowApps = msShowAppDAO.selectByCriteria(example);
 		String msWebUrl = ServiceConfig.getString(ServiceConfig.MS_WEB_URL);
 
-		boolean isUpdate = false;
-		if(msShowApps != null ) {
-			for (MsShowApp msShowApp : msShowApps) {
-				if (msShowApp.getAppId() == appId) {
-					isUpdate = true;
-				}
-			}
-		}
+		int type = crtShowApp.getType();
+		boolean isUpdate = crtShowApp.getAppStatus().equals(MsShowAppConfig.AppStatus.ONLINE);
+
 		if(msShowApps != null && msShowApps.size() > 0 && (! isUpdate)) {
 			if(forceFlag == 1) {
 				int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
 				if(oldAppId < 0) {
-					// 超过一个必须提供替换的app, 只有1个可以默认处理上线
+					// 超过一个必须提供替换的app, 只有1个可以默认处理上线(数据版除外)
 					if(msShowApps.size() > 1) {
 						logger.warn("Failed to read old_app_id from param");
 						return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+					}
+					// 数据版只允许一个在线,下线其他所有的
+					if(type == 2) {
+						example.clear();
+						criteria.andBusinessIdEqualTo(businessId);
+						MsShowApp record = new MsShowApp();
+						record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
+						msShowAppDAO.updateByCriteriaSelective(record, example);
 					}
 				} else {
 					// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
@@ -501,7 +505,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 						logger.warn("Provided app id is not online");
 						return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
 					}
-					record = new MsShowApp();
+					MsShowApp record = new MsShowApp();
 					record.setAppId(oldAppId);
 					record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
 					msShowAppDAO.updateByPrimaryKeySelective(record);
@@ -533,7 +537,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 		}
 
-		record = new MsShowApp();
+		MsShowApp record = new MsShowApp();
 		record.setAppId(appId);
 		record.setAppStatus(MsShowAppConfig.AppStatus.ONLINE);
 		record.setPublishTime(new Date());
