@@ -29,15 +29,14 @@
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         ${refuseReason}
-                        <br>
-                        ${today}
                     </p>
                     <p style="line-height: 2em; margin: 0;">
                         如有疑问，请联系相关工作人员。
                     </p>
-                    <p style="line-height: 2em;margin: 12px 0;text-align: right;">
-                        <label id="todayText" for="">${today}</label>
-                    </p>
+                    <div style="width: 100%;text-align: right;margin-top: 58px;">
+                        <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Luna%20Team.png" style="width: 91px;height: 14px;">
+                        <p id="time" style="margin: 0;padding-top: 10px;padding-right: 5px;;">${today}</p>
+                    </div>
                 </div>
             </div>
         </div>
