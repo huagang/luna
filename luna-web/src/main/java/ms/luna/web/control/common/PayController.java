@@ -81,7 +81,7 @@ public class PayController {
         JSONObject inData = new JSONObject();
         inData.put("content", "test");
         inData.put("extraParam", "");
-        inData.put("detail", "{\"test11\":\"123\"}");
+        // inData.put("detail", "{\"test11\":\"123\"}");
         inData.put("notifyUrl", "http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/notify");
         inData.put("tradeNo", "0987654321");
         inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
@@ -103,7 +103,7 @@ public class PayController {
         JSONObject inData = new JSONObject();
         inData.put("content", "test");
         inData.put("extraParam", "");
-        inData.put("detail", "{\"test11\":\"123\"}");
+        // inData.put("detail", "{\"test11\":\"123\"}");
         inData.put("notifyUrl", "http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/notify");
         inData.put("tradeNo", "0987654321");
         inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);

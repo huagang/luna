@@ -31,7 +31,7 @@ public class WXAppPayProcess extends AbstractWXPayProcess {
         sendJSON.put("appid", APP_ID);
         sendJSON.put("attach", inJSON.getString("extraParam"));
         sendJSON.put("body", inJSON.getString("content"));
-        sendJSON.put("detail", "<![CDATA[" + inJSON.getString("detail") + "]]>");
+      //  sendJSON.put("detail", "<![CDATA[" + inJSON.getString("detail") + "]]>");
         sendJSON.put("mch_id", PARTNER);
         sendJSON.put("nonce_str", getRandomStr());
         sendJSON.put("notify_url", inJSON.getString("notifyUrl"));
