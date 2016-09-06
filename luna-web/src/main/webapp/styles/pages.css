@@ -807,11 +807,74 @@ a.wj-img-clc {
     display: none;
 }
 
-.publish-info {
-    padding: 20px;
-    position: relative;
+.pop.publish-info,
+.pop.publish-confirm,
+.pop.publish-replace{
+    position: fixed;
+    width: 500px;
+    left: 0;
+    right: 0;
+    top: 20%;
+    margin:auto
 }
 
+.pop.pop-show{
+    display: block;
+}
+
+.publish-info .pop-cont{
+    padding: 20px 30px;
+    text-align: center;
+}
+
+.publish-info .qrcode-tip{
+    line-height: 32px;
+    font-size: 16px;
+}
+
+.publish-info .link-container{
+    margin-top: 5px;
+}
+
+.publish-info .link-container .copy{
+
+}
+
+.publish-info .pull-right{
+    padding-right: 93px;
+}
+
+.qrcode{
+    width: 150px;
+    display: block;
+    margin-top: 10px;
+}
+
+.options{
+    margin-top: 20px;
+    text-align: center;
+}
+
+#options-0,
+#options-1{
+    display: inline-block;
+    width: 150px;
+    text-align: center;
+}
+
+#options-0{
+    margin-right: 30px;
+}
+
+.publish-confirm .options{
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-new-another{
+    margin-right: 50px;
+}
 .publish-qrcode {
     height: 150px;
 }

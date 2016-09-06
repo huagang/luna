@@ -57,7 +57,11 @@ $(function(){
             that.appId = location.href.match(/farm\/(\w+)/)[1]; //获取app id
             that._bindEvent();
             that.fetchFormData();
-            new Clipboard('.publish-info .copy');
+            new Clipboard('.publish-info .copy',{
+                text: function(trigger) {
+                    return $('.publish-link').html();
+                }
+            });
 
         }
 
@@ -73,13 +77,7 @@ $(function(){
             $('.publish-info .button.confirm').on('click' ,that.hidePublishDialog);
             $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
 
-
-            $('.publish-confirm').on('click', '.button-replace', that.handleReplaceClick);
-            $('.publish-confirm').on('click', '.button-new-another', that.handleForcePublish);
-
-            $('.publish-replace').on('click', '.button', that.handlePublishReplace);
-            $('.publish-replace .replace-option').on('change', that.handleSelect);
-
+            $('.publish-confirm').on('click', '.button', that.handleForcePublish);
         }
 
         function initComponents() {
@@ -213,14 +211,12 @@ $(function(){
                         $('.publish-replace.pop').removeClass('pop-show');
                         $('.publish-info.pop').addClass('pop-show');
                         $(document.body).addClass('modal-open');
-                        that.forcePublish = false;
                         that.oldId = undefined;
                     } else if(res.code === '409'){
                         that.publishData =  res.data;
-                        if(that.publishData.length === 1){
-                            $('.publish-confirm .button-new-another').removeClass('hidden');
-                        } else if(that.publishData.length === 2){
-                            $('.publish-confirm .button-new-another').addClass('hidden');
+                        if(that.publishData.length > 0){
+                            // 如果存在多个线上微景展,则只替换第一个
+                            that.oldId = that.publishData[0].app_id;
                         }
                         $('.publish-confirm.pop').addClass('pop-show');
                         $('.publish-pop-wrapper .mask').removeClass('hidden');
@@ -228,6 +224,8 @@ $(function(){
                     } else{
                         alert(res.msg || '发布失败')
                     }
+                    that.forcePublish = false;
+
                 },
                 error: function(res){
                     alert(res.msg || '发布失败')
@@ -270,7 +268,6 @@ $(function(){
         function hidePublishDialog(){
             $('.publish-info.pop').removeClass('pop-show');
             $('.publish-confirm.pop').removeClass('pop-show');
-            $('.publish-replace.pop').removeClass('pop-show');
             $(document.body).removeClass('modal-open');
             $('.publish-pop-wrapper .mask').addClass('hidden');
         }
