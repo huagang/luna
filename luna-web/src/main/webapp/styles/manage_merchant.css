@@ -62,6 +62,15 @@ tr.tr-operation{
     padding: 6px auto;
 }
 
+.empty-rows{
+    text-align: center;
+    background-color: #
+}
+
 td{
     vertical-align: middle !important;
+}
+
+tbody tr:last-child{
+    border-bottom: 1px solid #ccc;
 }

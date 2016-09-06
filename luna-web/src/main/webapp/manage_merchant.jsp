@@ -61,7 +61,9 @@
                       <button type="button">删除</button>
                   </td>
                 </tr>
-                <tr class="ng-hide ng-cloak" ng-show="!manage.merchantList || manage.merchantList.length === 0"></tr>
+                <tr class="ng-hide ng-cloak empty-rows" ng-show="!manage.merchantList || manage.merchantList.length === 0">
+                  <td colspan="7">内容为空</td>
+                </tr>
                 <tr class="ng-cloak" ng-repeat="merchant in manage.merchantList">
                     <td>
                       <input type="checkbox" ng-model="manage.checkedList[merchant.id]" />

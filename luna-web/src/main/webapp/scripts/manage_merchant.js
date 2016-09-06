@@ -61,7 +61,10 @@ function ManageMerchantController($scope, $http){
         vm.checkedList = {};
         vm.selectAll = false;
 
-        var business = localS
+        var business = localStorage.getItem('business');
+        if(business){
+            vm.businessId = JSON.parse(business).id
+        }
 
         vm.fetchMerchantList();
     }
@@ -83,7 +86,7 @@ function ManageMerchantController($scope, $http){
         }
         $http({
             url: vm.apiUrls.fetchMerchantList.url.format(vm.businessId, vm.pagination.offset, vm.pagination.limit, vm.pagination.keyword),
-            method: vm.apiUrls.fetchMerchantList.type,
+            method: vm.apiUrls.fetchMerchantList.type
         }).then(function(res){
             if(res.data.code === '0'){
                 vm.merchantList = res.data.rows;
@@ -164,9 +167,9 @@ function ManageMerchantController($scope, $http){
 
     function handleSelectAllToggle(){
         console.log(vm.selectAll);
-            vm.merchantList.forEach(function(item){
-                vm.checkedList[item.id] = vm.selectAll;
-            });
+        vm.merchantList.forEach(function(item){
+            vm.checkedList[item.id] = vm.selectAll;
+        });
     }
 
 
