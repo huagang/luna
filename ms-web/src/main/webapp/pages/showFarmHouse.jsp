@@ -91,12 +91,14 @@
             <main>
                 <div id="panoContainer"></div>
             </main>
-            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
-                <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
-                     ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
-                     style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
-                    <div class="pano-name">
-                        <span>{{pano.panoName}}</span>
+            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1" class="scroll-wrapper">
+                <div class="scroll-wrapper">
+                    <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
+                         ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
+                         style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
+                        <div class="pano-name">
+                            <span>{{pano.panoName}}</span>
+                        </div>
                     </div>
                 </div>
             </footer>
@@ -121,12 +123,11 @@
                 <span>乡村野趣</span>
             </header>
             <main>
-                    <div class="funny-item" ng-repeat="funny in farm.farmData.funny"
-                         style="background:url({{funny.pic}}) center center no-repeat;background-size: cover">
-                        <div class="funny-name-wrapper">
-                            <div class="shadow-circle">
-                                <p class="funny-name">{{funny.name}}</p>
-                            </div>
+                <div class="funny-item" ng-repeat="funny in farm.farmData.funny"
+                     style="background:url({{funny.pic}}) center center no-repeat;background-size: cover">
+                    <div class="funny-name-wrapper">
+                        <div class="shadow-circle">
+                            <p class="funny-name">{{funny.name}}</p>
                         </div>
                     </div>
             </main>

@@ -291,7 +291,9 @@ body.modal-open{
     height: 18.6vw;
     width: 26.6vw;
     margin: 8px 5px 8px 0 ;
-
+    border: 2px solid transparent;
+    border-width: 0 2px;
+    box-sizing: content-box;
 }
 
 .room-info .pano-thumbnail .pano-name{
@@ -397,8 +399,8 @@ body.modal-open{
     margin-bottom: 10px;
 }
 
-.food-info .food-item:last-child{
-    margin-right: 15px;
+.food-info .scroll-wrapper{
+    padding-right: 20px;
 }
 
 .food-info .name-wrapper{

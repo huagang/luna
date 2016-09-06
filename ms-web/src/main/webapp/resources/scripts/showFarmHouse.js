@@ -148,8 +148,120 @@ function showAnimation(){
         return MarkerTip;
     }
 
+    function getScrollController(){
+        function Controller(options){
+            var that = this;
+            window.scroll = that;
 
-    function FarmHouseController($rootScope, $scope, $http, MarkerTip) {
+            that.init = init;
+            that.record = record;
+            that.end = end;
+            that.refresh = refresh;
+            that.init();
+
+            function init(){
+                if(options.target && typeof options.target === 'string') {
+                    that.deceleration = options.deceleration || 12;
+                    that.target = $(options.target);
+                    that.scroll = new IScroll(options.target, {
+                        probeType: 2,
+                        scrollX: true,
+                        momentum: false,
+                        bounce: true,
+                        click: true,
+                        startX: 0
+                    });
+                    that.cur = {
+                        x: 0,
+                        time: undefined,
+                    };
+                    that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                    that.scrollWidth  = that.target.children().first().outerWidth();
+                    that.containerWidth = that.target.width();
+                    that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                    that.scroll.on('scroll', that.record);
+                    that.scroll.on('scrollEnd', that.end)
+                }
+            };
+
+            function refresh(){
+                that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                that.scrollWidth  = that.target.children().first().outerWidth();
+                that.containerWidth = that.target.width();
+                that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                that.scroll.refresh();
+            }
+            function record(){
+                var point = event.touches ? event.touches[0] : event;
+                if(point){
+                    that.last = that.cur;
+                    that.cur = {
+                        x: point.pageX,
+                        time: Date.now(),
+                    };
+                    if(that.cur && that.last && that.last.time){
+                        var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
+                        if(speed > 0){
+                            that.maxSpeed = Math.max(that.maxSpeed || 0, speed);
+                        } else{
+                            that.maxSpeed = Math.min(that.maxSpeed || 0, speed);
+                        }
+
+
+                    }
+                } else{
+                    //touch end
+                }
+            }
+            function end(){
+                var aimPosition = 0
+                var endTime = Date.now();
+                if(endTime - that.cur.time > 300){
+                    // bounce
+                    return;
+                } else if(that.cur && that.last && that.last.time){
+                    var time = Math.abs(that.maxSpeed / that.deceleration);
+                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想移动距离,可能需要修正
+                    console.log('distance:', distance, that.maxSpeed);
+                    try{
+                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1];
+                        aimPosition = parseFloat(curPosition) + distance;
+                        if(aimPosition > 0){
+                            aimPosition = 0;
+                        } else  if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }else{
+                            var count =  - aimPosition / that.scrollUnit;
+                            var diff = count - count.toFixed(0);
+                            count = count.toFixed(0);
+                            //if(distance > 0){
+                            //    count -= 1;
+                            //}
+                            aimPosition  = - count * that.scrollUnit;
+                        }
+                        if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }
+                        time = Math.max(Math.sqrt(Math.abs((aimPosition -curPosition) / that.deceleration * 2)) * 80, 800);
+                        that.scroll.scrollTo(aimPosition, 0 , time);
+                    } catch(e){
+
+                    }
+
+                }
+                that.last = undefined;
+                that.cur = {
+                    time: Date.now(),
+                    x: aimPosition
+                }
+            }
+
+        }
+
+        return Controller;
+    }
+
+    function FarmHouseController($rootScope, $scope, $http, MarkerTip, ScrollController) {
 
         var vm = this; // viewmodel
 
@@ -261,8 +373,24 @@ function showAnimation(){
 
             }
 
+            //滚动相关
+            vm.foodScroll = new ScrollController({
+                target: '.food-info main',
+                deceleration: 8
+            });
+
+            vm.roomScroll = new ScrollController({
+                target: '.room-info footer',
+                deceleration: 4,
+            });
+
+
+            setTimeout(function(){
+                vm.foodScroll.refresh();
+                vm.roomScroll.refresh();
+            }, 1000);
+
             vm.curPanoIndex = 0;
-            vm.isFullScreen = false;
 
             // 地图相关
             vm.curMarkerIndex = undefined;
