@@ -66,7 +66,6 @@ public class LunaTradeApplicationController extends BasicController {
     }
 
     private boolean checkAuth(HttpServletRequest request) {
-
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         if (user == null) return false;
         if (user.getRoleId() != 6 && user.getRoleId() != 7) {
@@ -264,7 +263,7 @@ public class LunaTradeApplicationController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/merchantStatus")
     @ResponseBody
     public JSONObject getMerchantTradeStatus(HttpServletRequest request) {
-        if (checkAuth(request)) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
@@ -275,7 +274,7 @@ public class LunaTradeApplicationController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "/get")
     @ResponseBody
     public JSONObject getApplication(HttpServletRequest request) {
-        if (checkAuth(request)) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
@@ -286,7 +285,7 @@ public class LunaTradeApplicationController extends BasicController {
     @RequestMapping(method = RequestMethod.POST, value = "/sign")
     @ResponseBody
     public JSONObject signAgreement(HttpServletRequest request) {
-        if (checkAuth(request)) {
+        if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
         JSONObject inData = new JSONObject();
