@@ -1,14 +1,13 @@
 package ms.luna.web.control.merchant;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.sc.SMSService;
-import ms.luna.biz.table.LunaTradeApplicationTable;
-import ms.luna.biz.table.LunaUserTable;
-import ms.luna.biz.table.MsBusinessTable;
-import ms.luna.biz.table.SMSCodeTarget;
+import ms.luna.biz.table.*;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
 import ms.luna.web.common.AuthHelper;
@@ -290,7 +289,31 @@ public class LunaTradeApplicationController extends BasicController {
         }
         JSONObject inData = new JSONObject();
         inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
-        return manageMerchantService.signAgreement(inData);
+        JSONObject ret = manageMerchantService.signAgreement(inData);
+        if(ret.getString("code").equals("0")) {
+            JSONArray moduleAndMenuArray = SessionHelper.getMenu(request.getSession(false));
+            switchMerchantTradeOnMenu(moduleAndMenuArray);
+        }
+        return ret;
+    }
+
+    private void switchMerchantTradeOnMenu(JSONArray moduleAndMenuArray) {
+
+        for(int i = 0; i < moduleAndMenuArray.size(); i++) {
+            JSONObject moduleAndMenu = moduleAndMenuArray.getJSONObject(i);
+            JSONArray menuArray = moduleAndMenu.getJSONArray("menuArray");
+            for(int j = 0; j < menuArray.size(); j++) {
+                JSONObject menu = menuArray.getJSONObject(i);
+                int menuId = menu.getInteger(LunaMenuTable.FIELD_ID);
+                if(DbConfig.INVISIBLE_MENU_TRADE_OFF.contains(menuId)) {
+                    menu.put(LunaMenuTable.FEILD_VISIBLE, false);
+                }
+                if(DbConfig.INVISIBLE_MENU_TRADE_ON.contains(menuId)) {
+                    menu.put(LunaMenuTable.FEILD_VISIBLE, true);
+                }
+            }
+        }
+
     }
 
 }

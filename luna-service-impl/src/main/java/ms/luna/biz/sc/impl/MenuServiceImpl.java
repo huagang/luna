@@ -121,9 +121,9 @@ public class MenuServiceImpl implements MenuService {
                 for (LunaMenu menu : menuList) {
                     JSONObject menuJson = (JSONObject) JSON.toJSON(menu);
                     if(invisibleMenuIdSet.contains(menu.getId())) {
-                        menuJson.put("visible", false);
+                        menuJson.put(LunaMenuTable.FEILD_VISIBLE, false);
                     } else {
-                        menuJson.put("visible", true);
+                        menuJson.put(LunaMenuTable.FEILD_VISIBLE, true);
                     }
                     if (StringUtils.isBlank(menu.getUrl())) {
                         menuJson.put(LunaMenuTable.FIELD_IS_OUTER, 0);
