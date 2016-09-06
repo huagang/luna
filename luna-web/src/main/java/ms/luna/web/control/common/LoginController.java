@@ -87,7 +87,7 @@ public class LoginController extends BasicController {
         SessionHelper.setUser(session, lunaUserSession);
         SessionHelper.setIsRoleBusiness(session, AuthHelper.hasBusinessAuth(lunaUserSession));
 
-        JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
+        JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByUserId(lunaUserSession.getUniqueId());
         logger.trace(moduleAndMenuByRoleId);
         if(moduleAndMenuByRoleId.getString("code").equals("0")) {
             SessionHelper.setMenu(session, moduleAndMenuByRoleId.getJSONArray("data"));
