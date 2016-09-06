@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -48,11 +49,13 @@ public class LunaGoodsServiceImpl implements LunaGoodsService {
             JSONArray rows = new JSONArray();
             if(count > 0) {
                 List<LunaGoodsResult> list = lunaGoodsDAO.selectGoodsWithFilter(lunaGoodsParameter);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 if(list != null && list.size() != 0) {
                     for(LunaGoodsResult lunaGoodsResult : list) {
                         JSONObject row = (JSONObject)JSONObject.toJSON(lunaGoodsResult);
                         JSONArray pics = FastJsonUtil.parse2Array(lunaGoodsResult.getPic().split(","));
                         row.put(LunaGoodsTable.FIELD_PIC, pics);
+                        row.put(LunaGoodsTable.FIELD_CREATE_TIME, formatter.format(lunaGoodsResult.getCreate_time()));
                         rows.add(row);
                     }
                 }

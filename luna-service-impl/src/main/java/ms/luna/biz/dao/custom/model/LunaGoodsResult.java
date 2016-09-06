@@ -31,9 +31,9 @@ public class LunaGoodsResult {
     //@JSONField(name="regist_hhmmss", format="yyyy-MM-dd HH:mm:ss")
     @JSONField(name = LunaGoodsTable.FIELD_CREATE_TIME, format="yyyy-MM-dd HH:mm:ss")
     private Date create_time;
+
     @JSONField(name = LunaGoodsTable.FIELD_ONLINE_STATUS)
     String online_status;
-
     public Integer getId() {
         return id;
     }
@@ -104,6 +104,10 @@ public class LunaGoodsResult {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getCreate_time() {
+        return create_time;
     }
 
     public void setCreate_time(Date create_time) {
