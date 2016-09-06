@@ -8,7 +8,10 @@ import ms.luna.biz.dao.custom.LunaTradeApplicationDAO;
 import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
 import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.model.LunaTradeApplicationParameter;
-import ms.luna.biz.dao.model.*;
+import ms.luna.biz.dao.model.LunaTradeApplication;
+import ms.luna.biz.dao.model.LunaTradeApplicationCriteria;
+import ms.luna.biz.dao.model.LunaUserMerchant;
+import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.LunaUserTable;
@@ -20,10 +23,10 @@ import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,6 +54,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     private EmailService emailService;
 
     @Override
+    @Transactional
     public JSONObject createApplication(JSONObject jsonObject) {
         try {
             String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
@@ -89,8 +93,13 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             //sendEmail(TYPE_TO_MANAGER);
         } catch (Exception ex) {
             logger.error("Failed to create lunaTradeApplication", ex);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            try {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            } catch (Exception e) {
+                logger.error("Failed to create lunaTradeApplication and roll back failed", e);
+            } finally {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            }
         }
         return FastJsonUtil.sucess("success");
     }
@@ -110,6 +119,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 //    }
 
     @Override
+    @Transactional
     public JSONObject recreateApplication(JSONObject jsonObject) {
         try {
             String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
@@ -313,6 +323,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
 
     @Override
+    @Transactional
     public JSONObject checkApplication(JSONObject jsonObject) {
         try {
             Integer checkResult = jsonObject.getInteger(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT);
