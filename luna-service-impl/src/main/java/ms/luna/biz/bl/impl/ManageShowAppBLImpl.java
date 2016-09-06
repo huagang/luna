@@ -483,12 +483,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 						if(msShowApps.size() > 1) {
 							logger.warn("Failed to read old_app_id from param");
 							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-						} else {
-							example.clear();
-							criteria.andBusinessIdEqualTo(businessId);
-							record = new MsShowApp();
-							record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
-							msShowAppDAO.updateByCriteriaSelective(record, example);
 						}
 					} else {
 						// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
