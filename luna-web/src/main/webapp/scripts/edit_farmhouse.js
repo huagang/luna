@@ -196,7 +196,7 @@ $(function(){
             }
             var data = {force: (that.forcePublish ? 1 : -1)};
             if(that.oldId){
-                data.oldId = that.oldId;
+                data.old_app_id = that.oldId;
             }
             $.ajax({
                 url: that.apiUrls.appPublish.url.format(that.appId),
@@ -216,7 +216,12 @@ $(function(){
                         that.forcePublish = false;
                         that.oldId = undefined;
                     } else if(res.code === '409'){
-                        that.publishData = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+                        that.publishData =  res.data;
+                        if(that.publishData.length === 1){
+                            $('.publish-confirm .button-new-another').removeClass('hidden');
+                        } else if(that.publishData.length === 2){
+                            $('.publish-confirm .button-new-another').addClass('hidden');
+                        }
                         $('.publish-confirm.pop').addClass('pop-show');
                         $('.publish-pop-wrapper .mask').removeClass('hidden');
                         $(document.body).addClass('modal-open');
@@ -237,20 +242,26 @@ $(function(){
         }
 
         function handleReplaceClick(){
-            $('.publish-confirm.pop').removeClass('pop-show');
-            $('.publish-replace.pop').addClass('pop-show');
-            return;
-            if(Object.keys(that.publishData).length === 0){
+            if(that.publishData.length === 1){
+                that.oldId = that.publishData[0].app_id;
                 that.handleForcePublish();
-            } else{
 
+            } else if(that.publishData.length === 2){
                 $('.publish-confirm.pop').removeClass('pop-show');
                 $('.publish-replace.pop').addClass('pop-show');
+                var options = [$('#options-0'), $('#options-1')];
+                that.publishData.forEach(function(item, index){
+                    var option = options[index];
+                    option.find('.replace-option').attr('data-value', item.app_id);
+                    option.find('.app-name').text(item.app_name);
+                    option.find('.qrcode').attr('src', item.QRImg);
+                });
             }
         }
 
         function handlePublishReplace(){
             if(that.oldId){
+                that.forcePublish = 1;
                 that.handlePublish();
             }
         }

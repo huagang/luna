@@ -96,16 +96,16 @@
                       <div id="options-0">
                           <label>
                               <input class='replace-option' type="radio" data-value="0" />
-                              <span class="appname"></span>
+                              <span class="app-name"></span>
                           </label>
-                          <img src="" class="qrcode" />
+                          <img src="" class="qrcode" alt="二维码"//>
                       </div>
                       <div id="options-1">
                           <label>
                               <input  class='replace-option' type="radio" data-value="1" />
-                              <span class="appname"></span>
+                              <span class="app-name"></span>
                           </label>
-                          <img src="" class="qrcode" />
+                          <img src="" class="qrcode" alt="二维码"/>
                       </div>
                   </div>
               </div>
