@@ -66,11 +66,15 @@ public class MenuServiceImpl implements MenuService {
             int roleId = lunaUserRole.getRoleId();
             if(DbConfig.MERCHANT_ROLE_ID_SET.contains(lunaUserRole.getRoleId())) {
                 LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(userId);
-                Integer tradeStatus = msMerchantManageDAO.selectMerchantTradeStatus(lunaUserMerchant.getMerchantId());
-                if(tradeStatus == MsMerchantManageTable.TRADE_STATUE_ON) {
-                    moduleAndMenuByRoleId = getModuleAndMenuByRoleId(roleId, DbConfig.INVISIBLE_MENU_TRADE_ON);
+                if(lunaUserMerchant != null) {
+                    Integer tradeStatus = msMerchantManageDAO.selectMerchantTradeStatus(lunaUserMerchant.getMerchantId());
+                    if (tradeStatus.intValue() == MsMerchantManageTable.TRADE_STATUE_ON.intValue()) {
+                        moduleAndMenuByRoleId = getModuleAndMenuByRoleId(roleId, DbConfig.INVISIBLE_MENU_TRADE_ON);
+                    } else {
+                        moduleAndMenuByRoleId = getModuleAndMenuByRoleId(roleId, DbConfig.INVISIBLE_MENU_TRADE_OFF);
+                    }
                 } else {
-                    moduleAndMenuByRoleId = getModuleAndMenuByRoleId(roleId, DbConfig.INVISIBLE_MENU_TRADE_OFF);
+                    moduleAndMenuByRoleId = getModuleAndMenuByRoleId(lunaUserRole.getRoleId(), new HashSet<Integer>());
                 }
             } else {
                 moduleAndMenuByRoleId = getModuleAndMenuByRoleId(lunaUserRole.getRoleId(), new HashSet<Integer>());
@@ -146,7 +150,7 @@ public class MenuServiceImpl implements MenuService {
             logger.error("Failed to get module and menu by roleId", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
-
+        logger.debug(jsonArray);
         return FastJsonUtil.sucess("success", jsonArray);
 
     }
