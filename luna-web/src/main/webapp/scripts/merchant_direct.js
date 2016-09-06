@@ -37,7 +37,6 @@ var initCreatePage = function () {
         });
     };
 
-
     var initValidate = function () {
         $('#merchantInfo').validate({
             errorElement: 'span', //default input error message container
@@ -341,7 +340,7 @@ var initAuditCompletePage = function () {
             $('#btnDetail').on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.open(Util.strFormat(Inter.getApiUrl().getMerchatDetail.url, [1]), '_blank');
+                window.open(Inter.getApiUrl().getMerchatDetail.url, '_blank');
             });
             initSignEvent();
         }
@@ -425,7 +424,7 @@ function showPage() {
             //请求出错处理
         }
     });
-
+    // status = '1';
 
     switch (status) {
         case '0':

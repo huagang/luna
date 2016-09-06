@@ -6,12 +6,12 @@
  * @author: duyutao(452661976@qq.com)
  * @update:2016-6-22
  */
-var Inter = function() {
+var Inter = function () {
     var host = "/luna-web";
     var context = window.context || "/luna-web",
         apiContext = '';
 
-    var curHost = function() {
+    var curHost = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
@@ -44,7 +44,7 @@ var Inter = function() {
 
     return {
         context: context,
-        getPageUrl: function() {
+        getPageUrl: function () {
             return {
                 home: context + '/',
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
@@ -57,9 +57,10 @@ var Inter = function() {
                 manageRouter: context + '/content/route',
                 merchantApply: context + '/merchant/tradeApplication', //商户申请
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
+                messagePage: context + '/platform/message', //消息管理
             };
         },
-        getApiUrl: function() {
+        getApiUrl: function () {
             return {
                 //选择业务的数据
                 selectBusinessPage: context + '/common/business/select', //选择业务的页面 
@@ -638,12 +639,13 @@ var Inter = function() {
                 },
 
                 //交易直通车
-                saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' },
-                getMerchantStatus: { url: context + '/merchant/tradeApplication/status', type: 'GET' },
+                saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据
+                getMerchantStatus: { url: context + '/merchant/tradeApplication/merchantStatus', type: 'GET' }, //获取商户状态
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
                 getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
-                getMerchatDetail: { url: context + '/merchant/tradeApplication/detail/{0}', type: 'GET' },
+                getMerchatDetail: { url: context + '/merchant/tradeApplication/detail', type: 'GET' },
                 merchatSign: { url: context + '/merchant/tradeApplication/sign', type: 'POST' },
+                allowTradeTrain: { url: context + '/platform/message/check/{0}', type: 'POST' },
 
                 //获取短信验证码
                 getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },
@@ -658,4 +660,4 @@ var Inter = function() {
         }
     };
 
-}();
+} ();

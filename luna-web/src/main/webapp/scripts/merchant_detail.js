@@ -5,6 +5,7 @@
  */
 var merchantId = Util.getRestFulArgu();
 var MerchantDetail = angular.module("MerchantDetail", []);
+//初始化 post请求
 MerchantDetail.run(function ($rootScope, $http) {
     $http.defaults.headers.post = { 'Content-Type': 'application/x-www-form-urlencoded' };
     $http.defaults.transformRequest = function (obj) {
@@ -16,7 +17,11 @@ MerchantDetail.run(function ($rootScope, $http) {
     };
 
 });
+/** 
+* 主页面的controller
+*/
 MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+    // this.isInit = false;
     this.init = function () {
         var self = this;
         $http({
@@ -25,84 +30,77 @@ MerchantDetail.controller('merchantController', ['$scope', '$rootScope', '$http'
         }).then(function successCallback(response) {
             var res = response.data;
             if (res.code == 0) {
-                for(var k in res.data){
-                    self[k]  =res.data[k];
+                for (var k in res.data) {
+                    self[k] = res.data[k];
                 }
-                self.accountTypeName= lunaConfig.accountType[self.accountType];
+                self.accountTypeName = lunaConfig.accountType[self.accountType];
                 self.contactPhone = self.contactPhone.split('|');
                 self.idcardPeriod = self.idcardPeriod.split('|');
                 self.idcardPicUrl = self.idcardPicUrl.split('|');
+                self.licencePicUrl = self.licencePicUrl.split('|');
                 self.licencePeriod = self.licencePeriod.split('|');
-            } 
-            // this callback will be called asynchronously
-            // when the response is available
+                self.accountBank = self.accountBank.split('|');
+                self.accountProvince = self.accountProvince.split('|');
+                self.accountCity = self.accountCity.split('|');
+                self.accountAddress = self.accountAddress.split('|');
+            }
         }, function errorCallback(response) {
             console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
         });
+    };
+    //同意开通
+    this.accessEvent = function () {
+        console.log('同意开通');
+        $http({
+            method: Inter.getApiUrl().allowTradeTrain.type,
+            url: Util.strFormat(Inter.getApiUrl().allowTradeTrain.url, [merchantId]),
+            data: { checkResult: 0 },
+        }).then(function successCallback(response) {
+            var res = response.data;
+            if (res.code == 0) {
+                window.location = Inter.getPageUrl().messagePage;
+            }
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
+
+    //驳回按钮出弹出框
+    this.noPassEvent = function () {
+        popWindow($('#pop-nopass'));
     };
     this.init.call(this);
-    // $scope.$on('$viewContentLoaded', function() {
-    //     //App.initComponents(); // init core components
-    //     //Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive 
-    // });
 }]);
 
-/**
- * 初始化页面数据
- */
-var initAuditPage = function () {
-    //获取页面数据
-    var getPageData = function () {
-    };
-
-    //初始化驳回点击事件
-    var noPassEvent = function () {
-        $('#btnNoPass').on('click', function (e) {
-            popWindow($('#pop-nopass'));
-        });
-    };
-
-    //初始化驳回提交点击按钮
-    var noPassConfirmEvent = function () {
-        $('#btnNoPassConfirm').on('click', function (e) {
-            var noPassReason = $('.nopass-reason').val();
-            if (!noPassReason) {
-                $('#pop-nopass .warn').show();
-                return;
-            }
-            $('.button-group').addClass('hide');
-            clcWindow(this);
-        });
-        $('.nopass-reason').on('blur', function (e) {
-            var noPassReason = $('.nopass-reason').val();
-            if (!noPassReason) {
-                $('#pop-nopass .warn').show();
-                return;
-            } else {
-                $('#pop-nopass .warn').hide();
-            }
-        });
-    };
-
-    //初始化同意开通事件
-    var passEvent = function () {
-        $('#btnPass').on('click', function (e) {
-            $('.button-group').addClass('hide');
-        });
-    };
-
-    return {
-        init: function () {
-            noPassEvent();
-            noPassConfirmEvent();
-            passEvent();
+/** 
+* 不同意的弹出框
+*/
+MerchantDetail.controller('nopassController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+    this.changeReason = function () {
+        if (!this.reason) {
+            $('#pop-nopass .warn').show();
+            return;
+        } else {
+            $('#pop-nopass .warn').hide();
         }
     };
-} ();
-
-$('document').ready(function () {
-    // initAuditPage.init();
-});
+    this.noPassConfirm = function () {
+        if (this.reason == '') {
+            return;
+        }
+        var postData = { checkResult: 1, reason: this.reason };
+        $http({
+            method: Inter.getApiUrl().allowTradeTrain.type,
+            url: Util.strFormat(Inter.getApiUrl().allowTradeTrain.url, [merchantId]),
+            data: { checkResult: 0 },
+        }).then(function successCallback(response) {
+            var res = response.data;
+            if (res.code == 0) {
+                window.location = Inter.getPageUrl().messagePage;
+            }
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
+}]);
 
