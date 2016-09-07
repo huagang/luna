@@ -99,7 +99,7 @@ var FileUploader = {
 		}
 
 		$.ajax({
-			url: this.path.url,
+			url: options.url || this.path.url,
 			type: this.path.type,
 			contentType: false,
 			data: data,

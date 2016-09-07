@@ -13,6 +13,10 @@ public interface LunaTradeApplicationService {
 
     JSONObject getApplication(JSONObject jsonObject);
 
+    JSONObject getApplicationList(int offset, int limit);
+
+    JSONObject getApplicationList();
+
     JSONObject updateApplication(JSONObject jsonObject);
 
     JSONObject checkApplication(JSONObject jsonObject);
@@ -21,5 +25,5 @@ public interface LunaTradeApplicationService {
 
     JSONObject getApplicationStatusByApplicationId(JSONObject jsonObject);
 
-    JSONObject getApplicationStatusByBusinessId(JSONObject jsonObject);
+    JSONObject getApplicationStatus(JSONObject jsonObject);
 }

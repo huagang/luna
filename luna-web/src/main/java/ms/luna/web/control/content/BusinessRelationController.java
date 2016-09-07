@@ -1,14 +1,19 @@
 package ms.luna.web.control.content;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageBusinessTreeService;
 import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
+import ms.luna.web.util.RequestHelper;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +38,8 @@ import java.io.IOException;
 @RequestMapping("/content/businessRelation")
 public class BusinessRelationController extends BasicController {
 
+    private final static Logger logger = Logger.getLogger(BusinessRelationController.class);
+
     public static String menu = "businessRelation";
 
     @Autowired
@@ -40,86 +47,6 @@ public class BusinessRelationController extends BasicController {
 
     @Autowired
     private PulldownController pulldownController;
-
-    @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView view = new ModelAndView();
-        try {
-            SessionHelper.setSelectedMenu(request.getSession(false), menu);
-            view.addObject("provinces", pulldownController.loadProvinces());
-            view.addObject("citys", pulldownController.loadCitys("110000"));
-            view.addObject("provinceId", "110000");
-            view.setViewName("/manage_business_tree.jsp");
-            return view;
-        } catch (Exception e) {
-            MsLogger.error(e);
-        }
-        view.setViewName("/error.jsp");
-        return view;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/businessTree/search")
-    @ResponseBody
-    public JSONObject asyncSearchBusinessTrees(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit,
-            @RequestParam(required = false, value="province_id") String provinceId,
-            @RequestParam(required = false, value="city_id") String cityId,
-            @RequestParam(required = false, value="county_id") String countId,
-            @RequestParam(required = false, value="filterLikeName") String keyWord,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        MsLogger.info("asyncSearchBusinessTrees start....");
-        JSONObject resJSON = new JSONObject();
-        resJSON.put("total", 0);
-        try {
-            JSONObject param = new JSONObject();
-            param.put("offset", offset);
-            param.put("limit", limit);
-            param.put("provinceId", provinceId);
-            param.put("cityId", cityId);
-            param.put("countyId", countId);
-            param.put("keyWord", keyWord);
-            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-            param.put(LunaUserTable.FIELD_ID, user.getUniqueId());
-
-            JSONObject result = manageBusinessTreeService.loadBusinessTrees(param.toString());
-            MsLogger.info(result.toString());
-            if ("0".equals(result.getString("code"))) {
-                return result.getJSONObject("data");
-            }
-        } catch (Exception e) {
-            MsLogger.error("Failed to load Business Trees", e);
-        }
-
-        return resJSON;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/business/search")
-    @ResponseBody
-    public JSONObject asyncSearchBusinesses(
-            @RequestParam(required = true, value="province_id") String provinceId,
-            @RequestParam(required = false, value="city_id") String cityId,
-            @RequestParam(required = false, value="county_id") String countId,
-            @RequestParam(required = false, value="business_tree_name") String keyWord,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        MsLogger.info("async_search_businesses start....");
-        try {
-            JSONObject param = new JSONObject();
-            param.put("provinceId", provinceId);
-            param.put("cityId", cityId);
-            param.put("countyId", countId);
-            param.put("keyWord", keyWord);
-
-            JSONObject result = manageBusinessTreeService.searchBusinessList(param.toString());
-            MsLogger.info(result.toString());
-            return result;
-        } catch (Exception e) {
-            MsLogger.error("Failed to load Businessees", e);
-            return FastJsonUtil.error(-1, "inner err");
-        }
-    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/businessId/{businessId}")
     @ResponseBody
@@ -136,6 +63,9 @@ public class BusinessRelationController extends BasicController {
                 throw new Exception("session is null");
             }
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            if(! AuthHelper.hasBusinessAuth(user, businessId)) {
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+            }
             String uniqueId = user.getUniqueId();
             param.put("uniqueId", uniqueId);
             JSONObject result = manageBusinessTreeService.createBusinessTree(param.toString());
@@ -152,6 +82,9 @@ public class BusinessRelationController extends BasicController {
             @PathVariable("businessId") Integer businessId,
             HttpServletRequest request, HttpServletResponse response ) throws IOException {
         try {
+            if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+            }
             JSONObject json = new JSONObject();
             json.put("businessId", businessId);
             JSONObject jsonObject = manageBusinessTreeService.deleteBusinessTree(json.toJSONString());

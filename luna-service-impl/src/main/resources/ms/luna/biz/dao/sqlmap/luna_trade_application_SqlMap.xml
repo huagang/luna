@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="luna_trade_application">
   <resultMap class="ms.luna.biz.dao.model.LunaTradeApplication" id="BaseResultMap">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
     <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
     <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
     <result column="email" jdbcType="VARCHAR" property="email" />
@@ -22,6 +22,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="app_status" jdbcType="INTEGER" property="appStatus" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -49,10 +50,10 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, merchant_name, 
-    merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, account_name, 
-    account_bank, account_city, account_address, account_no, update_time, app_status, 
-    merchant_id
+    application_id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, 
+    merchant_name, merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, 
+    account_name, account_bank, account_city, account_address, account_no, update_time, 
+    app_status, merchant_id, account_province
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria" resultMap="BaseResultMap">
     select
@@ -74,11 +75,11 @@
     select 
     <include refid="luna_trade_application.Base_Column_List" />
     from luna_trade_application
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </select>
   <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaTradeApplication">
     delete from luna_trade_application
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </delete>
   <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria">
     delete from luna_trade_application
@@ -89,13 +90,15 @@
       idcard_period, merchant_name, merchant_phone, merchant_no, 
       licence_pic_url, licence_period, account_type, account_name, 
       account_bank, account_city, account_address, account_no, 
-      update_time, app_status, merchant_id)
+      update_time, app_status, merchant_id, account_province
+      )
     values (#contactName:VARCHAR#, #contactPhone:VARCHAR#, #email:VARCHAR#, #idcardPicUrl:VARCHAR#, 
       #idcardPeriod:VARCHAR#, #merchantName:VARCHAR#, #merchantPhone:VARCHAR#, #merchantNo:VARCHAR#, 
       #licencePicUrl:VARCHAR#, #licencePeriod:VARCHAR#, #accountType:INTEGER#, #accountName:VARCHAR#, 
       #accountBank:VARCHAR#, #accountCity:VARCHAR#, #accountAddress:VARCHAR#, #accountNo:VARCHAR#, 
-      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#)
-    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#, #accountProvince:VARCHAR#
+      )
+    <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
@@ -159,6 +162,9 @@
       <isNotNull prepend="," property="merchantId">
         merchant_id
       </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province
+      </isNotNull>
       )
     </dynamic>
     values
@@ -220,9 +226,12 @@
       <isNotNull prepend="," property="merchantId">
         #merchantId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        #accountProvince:VARCHAR#
+      </isNotNull>
       )
     </dynamic>
-    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+    <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
@@ -233,8 +242,8 @@
   <update id="updateByExampleSelective">
     update luna_trade_application
     <dynamic prepend="set">
-      <isNotNull prepend="," property="record.id">
-        id = #record.id:INTEGER#
+      <isNotNull prepend="," property="record.applicationId">
+        application_id = #record.applicationId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="record.contactName">
         contact_name = #record.contactName:VARCHAR#
@@ -293,6 +302,9 @@
       <isNotNull prepend="," property="record.merchantId">
         merchant_id = #record.merchantId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.accountProvince">
+        account_province = #record.accountProvince:VARCHAR#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
@@ -300,7 +312,7 @@
   </update>
   <update id="updateByExample">
     update luna_trade_application
-    set id = #record.id:INTEGER#,
+    set application_id = #record.applicationId:INTEGER#,
       contact_name = #record.contactName:VARCHAR#,
       contact_phone = #record.contactPhone:VARCHAR#,
       email = #record.email:VARCHAR#,
@@ -319,7 +331,8 @@
       account_no = #record.accountNo:VARCHAR#,
       update_time = #record.updateTime:TIMESTAMP#,
       app_status = #record.appStatus:INTEGER#,
-      merchant_id = #record.merchantId:VARCHAR#
+      merchant_id = #record.merchantId:VARCHAR#,
+      account_province = #record.accountProvince:VARCHAR#
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
     </isParameterPresent>
@@ -384,8 +397,11 @@
       <isNotNull prepend="," property="merchantId">
         merchant_id = #merchantId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province = #accountProvince:VARCHAR#
+      </isNotNull>
     </dynamic>
-    where id = #id:INTEGER#
+    where application_id = #applicationId:INTEGER#
   </update>
   <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaTradeApplication">
     update luna_trade_application
@@ -407,7 +423,8 @@
       account_no = #accountNo:VARCHAR#,
       update_time = #updateTime:TIMESTAMP#,
       app_status = #appStatus:INTEGER#,
-      merchant_id = #merchantId:VARCHAR#
-    where id = #id:INTEGER#
+      merchant_id = #merchantId:VARCHAR#,
+      account_province = #accountProvince:VARCHAR#
+    where application_id = #applicationId:INTEGER#
   </update>
 </sqlMap>

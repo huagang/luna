@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class LunaTradeApplication implements Serializable {
-    private Integer id;
+    private Integer applicationId;
 
     private String contactName;
 
@@ -44,14 +44,16 @@ public class LunaTradeApplication implements Serializable {
 
     private String merchantId;
 
+    private String accountProvince;
+
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getApplicationId() {
+        return applicationId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setApplicationId(Integer applicationId) {
+        this.applicationId = applicationId;
     }
 
     public String getContactName() {
@@ -206,6 +208,14 @@ public class LunaTradeApplication implements Serializable {
         this.merchantId = merchantId == null ? null : merchantId.trim();
     }
 
+    public String getAccountProvince() {
+        return accountProvince;
+    }
+
+    public void setAccountProvince(String accountProvince) {
+        this.accountProvince = accountProvince == null ? null : accountProvince.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -218,7 +228,7 @@ public class LunaTradeApplication implements Serializable {
             return false;
         }
         LunaTradeApplication other = (LunaTradeApplication) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
+        return (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
             && (this.getContactName() == null ? other.getContactName() == null : this.getContactName().equals(other.getContactName()))
             && (this.getContactPhone() == null ? other.getContactPhone() == null : this.getContactPhone().equals(other.getContactPhone()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
@@ -237,14 +247,15 @@ public class LunaTradeApplication implements Serializable {
             && (this.getAccountNo() == null ? other.getAccountNo() == null : this.getAccountNo().equals(other.getAccountNo()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getAppStatus() == null ? other.getAppStatus() == null : this.getAppStatus().equals(other.getAppStatus()))
-            && (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()));
+            && (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()))
+            && (this.getAccountProvince() == null ? other.getAccountProvince() == null : this.getAccountProvince().equals(other.getAccountProvince()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getContactName() == null) ? 0 : getContactName().hashCode());
         result = prime * result + ((getContactPhone() == null) ? 0 : getContactPhone().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
@@ -264,11 +275,12 @@ public class LunaTradeApplication implements Serializable {
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getAppStatus() == null) ? 0 : getAppStatus().hashCode());
         result = prime * result + ((getMerchantId() == null) ? 0 : getMerchantId().hashCode());
+        result = prime * result + ((getAccountProvince() == null) ? 0 : getAccountProvince().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "LunaTradeApplication [id=" + id + ",contactName=" + contactName + ",contactPhone=" + contactPhone + ",email=" + email + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantName=" + merchantName + ",merchantPhone=" + merchantPhone + ",merchantNo=" + merchantNo + ",licencePicUrl=" + licencePicUrl + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",updateTime=" + updateTime + ",appStatus=" + appStatus + ",merchantId=" + merchantId + "]";
+        return "LunaTradeApplication [applicationId=" + applicationId + ",contactName=" + contactName + ",contactPhone=" + contactPhone + ",email=" + email + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantName=" + merchantName + ",merchantPhone=" + merchantPhone + ",merchantNo=" + merchantNo + ",licencePicUrl=" + licencePicUrl + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",updateTime=" + updateTime + ",appStatus=" + appStatus + ",merchantId=" + merchantId + ",accountProvince=" + accountProvince + "]";
     }
 }

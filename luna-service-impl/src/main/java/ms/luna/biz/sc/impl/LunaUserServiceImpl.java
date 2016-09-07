@@ -13,18 +13,17 @@ import ms.luna.biz.dao.custom.*;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
 import ms.luna.biz.dao.model.*;
 import ms.luna.biz.sc.LunaUserService;
-import ms.luna.biz.table.LunaRoleCategoryTable;
-import ms.luna.biz.table.LunaRoleTable;
-import ms.luna.biz.table.LunaUserRoleTable;
-import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.*;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.UUIDGenerator;
 import ms.luna.biz.util.VbMD5;
+import ms.luna.biz.util.VbUtility;
 import ms.luna.cache.ModuleMenuCache;
 import ms.luna.cache.RoleCache;
 import ms.luna.cache.RoleCategoryCache;
 import ms.luna.common.LunaUserSession;
 import ms.luna.schedule.service.EmailService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +61,10 @@ public class LunaUserServiceImpl implements LunaUserService {
     private RoleCache roleCache;
     @Autowired
     private RoleCategoryCache roleCategoryCache;
+    @Autowired
+    private MsBusinessDAO msBusinessDAO;
+    @Autowired
+    private LunaUserMerchantDAO lunaUserMerchantDAO;
 
     @Override
     public JSONObject getUserList(int roleId, String query, int start, int limit) {
@@ -109,6 +112,21 @@ public class LunaUserServiceImpl implements LunaUserService {
         String webAddr = jsonObject.getString("webAddr");
 
         String extra = jsonObject.getString(LunaRoleCategoryTable.FIELD_EXTRA);
+
+        // 获取业务id
+        String merchantId = null;
+        if(roleId == DbConfig.MERCHANT_ADMIN_ROLE_ID || roleId == DbConfig.MERCHANT_OPERATOR_ROLE_ID) {
+            Integer businessId = VbUtility.extractInteger(extra);
+            if(businessId == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数extra无法提取业务id");
+            }
+            // 根据业务id获取商户id
+            MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+            if(msBusiness == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务id不存在");
+            }
+            merchantId = msBusiness.getMerchantId();
+        }
 
         Set<String> emailSet = Sets.newHashSet(emailArray);
         logger.info("invited email set: " + emailSet);
@@ -158,6 +176,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             lunaRegEmail.setExtra(extra);
             lunaRegEmail.setStatus(false);
             lunaRegEmail.setInviteUniqueId(loginUserId);
+            lunaRegEmail.setMerchantId(merchantId);
             lunaRegEmailDAO.insertSelective(lunaRegEmail);
             Runnable mailRunnable = new MailRunnable(email, token, categoryName, currentDate,
                     lunaUser.getLunaName(), lunaRole.getName(), webAddr);
@@ -275,9 +294,33 @@ public class LunaUserServiceImpl implements LunaUserService {
 
         lunaUserSession.setRoleId(userRole.getRoleId());
         lunaUserSession.setExtra(userRole.getExtra());
+        lunaUserSession.setMenuAuth(getMenuAuthByRoleId(userRole.getRoleId()));
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+    }
+
+
+    @Override
+    public JSONObject getUserAuth(String userId) {
+        LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(userId);
+        LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+        LunaUserSession lunaUserSession = new LunaUserSession();
+        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
+        lunaUserSession.setLunaName(lunaUser.getLunaName());
+        lunaUserSession.setNickName(lunaUser.getNickName());
+        lunaUserSession.setEmail(lunaUser.getEmail());
+
+        lunaUserSession.setRoleId(userRole.getRoleId());
+        lunaUserSession.setExtra(userRole.getExtra());
+        lunaUserSession.setMenuAuth(getMenuAuthByRoleId(userRole.getRoleId()));
+
+        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+    }
+
+    private Map<String, JSONObject> getMenuAuthByRoleId(int roleId) {
 
         LunaRoleMenuCriteria lunaRoleMenuCriteria = new LunaRoleMenuCriteria();
-        lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(userRole.getRoleId());
+        lunaRoleMenuCriteria.createCriteria().andRoleIdEqualTo(roleId);
         List<LunaRoleMenu> lunaRoleMenuList = lunaRoleMenuDAO.selectByCriteria(lunaRoleMenuCriteria);
 
         List<Integer> menuIdList = new ArrayList<>(lunaRoleMenuList.size());
@@ -288,39 +331,23 @@ public class LunaUserServiceImpl implements LunaUserService {
         List<Pair<LunaModule, List<LunaMenu>>> moduleAndMenuInfoList =
                 moduleMenuCache.getModuleAndMenuByMenuIds(menuIdList);
 
-        Set<String> uriSet = new HashSet<>();
+        Map<String, JSONObject> menuAuth = new TreeMap<>();
+
         for (Pair<LunaModule, List<LunaMenu>> moduleAndMenuInfo : moduleAndMenuInfoList) {
             LunaModule module = moduleAndMenuInfo.getLeft();
             List<LunaMenu> menuList = moduleAndMenuInfo.getRight();
             for (LunaMenu menu : menuList) {
-                if (menu.getUrl() == null) {
-                    uriSet.add(MenuHelper.formatMenuUrl(module, menu));
-                } else {
-                    uriSet.add(menu.getUrl());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(LunaMenuTable.FIELD_AUTH, menu.getAuth());
+                String menuUrl = MenuHelper.formatMenuUrl(module, menu);
+                if (StringUtils.isNotBlank(menu.getUrl())) {
+                    jsonObject.put(LunaMenuTable.FIELD_OUTER_URL, menu.getUrl());
                 }
+                jsonObject.put(LunaMenuTable.FIELD_URL, menuUrl);
+                menuAuth.put(menuUrl, jsonObject);
             }
         }
-        lunaUserSession.setUriSet(uriSet);
-
-        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
-    }
-
-    @Override
-    public JSONObject getUserAuth(String userId) {
-
-        LunaUser lunaUser = lunaUserDAO.selectByPrimaryKey(userId);
-        LunaUserRole userRole = lunaUserRoleDAO.readUserRoleInfo(userId);
-
-        LunaUserSession lunaUserSession = new LunaUserSession();
-        lunaUserSession.setUniqueId(lunaUser.getUniqueId());
-        lunaUserSession.setLunaName(lunaUser.getLunaName());
-        lunaUserSession.setNickName(lunaUser.getNickName());
-        lunaUserSession.setEmail(lunaUser.getEmail());
-
-        lunaUserSession.setRoleId(userRole.getRoleId());
-        lunaUserSession.setExtra(userRole.getExtra());
-
-        return FastJsonUtil.sucess("", JSON.toJSON(lunaUserSession));
+        return menuAuth;
     }
 
     @Override
@@ -439,6 +466,7 @@ public class LunaUserServiceImpl implements LunaUserService {
             Integer roleId = lunaRegEmail.getRoleId();
             String email = lunaRegEmail.getEmail();
             String extra = lunaRegEmail.getExtra();
+            String merchantId = lunaRegEmail.getMerchantId();
             LunaUser lunaUser = new LunaUser();
             String userId = UUIDGenerator.generateUUID();
             lunaUser.setUniqueId(userId);
@@ -456,6 +484,16 @@ public class LunaUserServiceImpl implements LunaUserService {
             userRole.setRoleId(roleId);
             userRole.setExtra(JSON.parseObject(extra));
             lunaUserRoleDAO.createUserRoleInfo(userRole);
+
+            // 用户和商户建立联系
+            if(!StringUtils.isBlank(merchantId)) {
+                LunaUserMerchant lunaUserMerchant = new LunaUserMerchant();
+                lunaUserMerchant.setUniqueId(userId);
+                lunaUserMerchant.setMerchantId(merchantId);
+                lunaUserMerchant.setCreateTime(new Date());
+                lunaUserMerchantDAO.insertSelective(lunaUserMerchant);
+            }
+
         } catch (Exception ex) {
             logger.error("Failed to create user", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
@@ -505,4 +543,5 @@ public class LunaUserServiceImpl implements LunaUserService {
         }
         return FastJsonUtil.sucess("");
     }
+
 }

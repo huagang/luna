@@ -1,3 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap namespace="luna_trade_application" />
+<sqlMap namespace="luna_trade_application">
+    <select id="selectTradeApplicationListWithLimit" resultMap="BaseResultMap"
+            parameterClass="ms.luna.biz.dao.custom.model.LunaTradeApplicationParameter">
+        SELECT
+        <include refid="luna_trade_application.Base_Column_List" />
+        FROM
+        luna_trade_application
+        ORDER BY luna_trade_application.app_status ASC, luna_trade_application.update_time DESC
+        <isEqual property="range" compareValue="true">
+            limit #min#, #max#
+        </isEqual>
+
+    </select>
+
+    <select id="countApplications" resultClass="java.lang.Integer">
+
+        SELECT
+        count(*)
+        FROM
+        luna_trade_application
+
+    </select>
+</sqlMap>

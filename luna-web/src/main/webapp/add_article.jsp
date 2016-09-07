@@ -77,6 +77,13 @@
 		                        <textarea name="summary" id='summary'></textarea>
 		                    </div>
 		                </div>
+						<div class="group article-source">
+							<p class="group-title">文章来源</p>
+							<div>
+								<input id="source" type="text" placeholder="请输入文章来源地址,以http://或https://开头" />
+								<p id='source_warn' class='warn'></p>
+							</div>
+						</div>
 		                <div class="group article-audio">
 		                    <p class='group-title'>音频</p>
 		                    <div class="">
@@ -99,7 +106,7 @@
 		                        <input type="text" name="videoName" file_type='video' id='video' placeholder="请输入视频介绍地址">
 		                        <span class="btn fileinput-button" title='文件大小不超过5M'>                 
 		                        	<!-- The file input field used as target for the file upload widget -->
-		                        	<input id="video_fileup" type="file" name="video_fileup" accept="video/*">
+		                        	<input id="video_fileup" type="file" name="video_fileup" accept="video/mp4,video/x-m4v,video/*">
 		                        	<span>本地上传</span>
 		                        	<div class="load-container video_tip load8 hidden">
 		                            	<div class="loader">Loading...</div>
@@ -109,6 +116,7 @@
 		                        <p id='video_warn' class='warn'></p>
 		                    </div>
 		                </div>
+
 		                <div class="group article-category">
 		                    <p class='group-title'>栏目</p>
 		                    <div class="">

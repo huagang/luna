@@ -30,4 +30,8 @@ public interface ManageBusinessBL {
 
 	JSONObject deleteBusinessById(int id);
 
+	JSONObject checkBusinessNameExist(String business_name, String merchant_id);
+
+	JSONObject checkBusinessCodeExist(String business_code, String merchant_id);
+
 }

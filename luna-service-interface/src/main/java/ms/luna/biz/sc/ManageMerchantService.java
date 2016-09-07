@@ -34,6 +34,14 @@ public interface ManageMerchantService {
 	JSONObject loadMerchantById(String json);
 
 	/**
+	 * 根据具体ID获取单个商户信息
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject loadMerchantByUserId(String json);
+
+	/**
 	 * 根据 部分名称 获取多个商户信息
 	 * 
 	 * @param json
@@ -45,7 +53,6 @@ public interface ManageMerchantService {
 	 * 更新商户信息
 	 * 
 	 * @param json
-	 * @param msMerchant
 	 * @return
 	 */
 	JSONObject updateMerchantById(String json);
@@ -54,7 +61,6 @@ public interface ManageMerchantService {
 	 * 删除商户信息
 	 * 
 	 * @param json
-	 * @param msMerchant
 	 * @return
 	 */
 	JSONObject deleteMerchantById(String json);
@@ -62,7 +68,7 @@ public interface ManageMerchantService {
 	/**
 	 * 检测业务员是否存在
 	 * 
-	 * @param salesman_nm
+	 * @param json
 	 * @return
 	 */
 	JSONObject isSalesmanNmExit(String json);
@@ -99,4 +105,28 @@ public interface ManageMerchantService {
 	 */
 	JSONObject openMerchantById(String json);
 
+	/**
+	 * 商户注册
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject registMerchant(String json);
+
+
+	/**
+	 * 获取商户id
+	 *
+	 * @param id 商户id
+	 * @return
+	 */
+	JSONObject getMerchantEmail(String id);
+
+	/**
+	 * 商户签署直通车协议
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject signAgreement(JSONObject json);
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageShowAppService;
 import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsShowAppTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
@@ -172,8 +173,19 @@ public class AppController extends BasicController {
                 keyword = URLDecoder.decode(keyword, "utf-8");
                 param.put("keyword", keyword.trim());
             }
-            LunaUserSession user = SessionHelper.getUser(request.getSession());
-            param.put(LunaUserTable.FIELD_ID, user.getUniqueId());
+
+            int businessId = RequestHelper.getInteger(request, "business_id");
+            if(businessId < 0) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "业务Id不合法");
+            }
+
+            if(! AuthHelper.hasBusinessAuth(request, businessId)) {
+                LunaUserSession user = SessionHelper.getUser(request.getSession());
+                logger.warn(String.format("user[%s] does not has auth with business[%d]", user.getLunaName(), businessId));
+                return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "没有业务权限");
+            }
+
+            param.put(MsBusinessTable.FIELD_BUSINESS_ID, businessId);
 
             JSONObject result = manageShowAppService.loadApps(param.toString());
             if(result == null) {

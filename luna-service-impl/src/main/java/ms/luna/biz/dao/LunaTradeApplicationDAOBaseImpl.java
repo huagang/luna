@@ -21,9 +21,9 @@ public abstract class LunaTradeApplicationDAOBaseImpl extends MsBaseDAO implemen
         return rows;
     }
 
-    public int deleteByPrimaryKey(Integer id) {
+    public int deleteByPrimaryKey(Integer applicationId) {
         LunaTradeApplication _key = new LunaTradeApplication();
-        _key.setId(id);
+        _key.setApplicationId(applicationId);
         int rows = getSqlMapClientTemplate().delete("luna_trade_application.deleteByPrimaryKey", _key);
         return rows;
     }
@@ -44,9 +44,9 @@ public abstract class LunaTradeApplicationDAOBaseImpl extends MsBaseDAO implemen
         return list;
     }
 
-    public LunaTradeApplication selectByPrimaryKey(Integer id) {
+    public LunaTradeApplication selectByPrimaryKey(Integer applicationId) {
         LunaTradeApplication _key = new LunaTradeApplication();
-        _key.setId(id);
+        _key.setApplicationId(applicationId);
         LunaTradeApplication record = (LunaTradeApplication) getSqlMapClientTemplate().queryForObject("luna_trade_application.selectByPrimaryKey", _key);
         return record;
     }

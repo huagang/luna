@@ -50,6 +50,11 @@ function routerController($rootScope, $scope, $http){
 			{id: 3, name: '较大'}
 		];
 
+		var business = localStorage.getItem('business') || '';
+		if(business){
+			vm.businessId = JSON.parse(business).id;
+		}
+
 		vm.urls = Inter.getApiUrl();
 		vm.pageUrls = Inter.getPageUrl();
 		vm.state = 'init'; //状态转换  'delete'(删除线路)  'new'  (编辑线路)
@@ -121,10 +126,18 @@ function routerController($rootScope, $scope, $http){
 
 	// 拉取线路数据
 	vm.fetchData = function(){
+		var params ={
+				offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1),
+				limit: vm.pagination.maxRowNum
+		};
+
+		if(vm.businessId){
+			params.business_id = vm.businessId;
+		}
 		$http({
 			url: vm.urls.getRouteList.url,
 			method: vm.urls.getRouteList.type,
-			params: {offset: vm.pagination.maxRowNum * (vm.pagination.curPage - 1), limit: vm.pagination.maxRowNum},
+			params: params
 		}).then(function(res){
 			if(res.data.code === 0){
 				vm.rowsData = res.data.rows.map(function(item){
@@ -221,13 +234,7 @@ function routerController($rootScope, $scope, $http){
 			return;
 		}
 		if(vm.data.name && vm.data.description && vm.data.pic && vm.data.energyCost){
-			/*var data = new FormData();
-			data.append('id', vm.data.id || null);
-			data.append('name', vm.data.name);
-			data.append('description', vm.data.description);
-			data.append('cost_id', parseInt(vm.data.energyCost));
-			data.append('business_id',vm.data.businessId);
-			data.append('cover', vm.data.pic);*/
+
 			var data = {
 				name: vm.data.name,
 				description: vm.data.description,
@@ -285,16 +292,14 @@ function routerController($rootScope, $scope, $http){
 	};
 
 	vm.checkRouteName =  function(){
-		var data = new FormData();
-		data.append('name', vm.data.name);
-		if(vm.data.id){
-			data.append('id', vm.data.id);
+		if(! vm.data.name){
+			return;
 		}
 		$http({
-			url: vm.urls.checkRoute.url.format(vm.data.name , vm.data.id || ''),
+			url: vm.urls.checkRoute.url.format(vm.data.name , vm.businessId || ''),
 			method: vm.urls.checkRoute.type,
 			headers: {
-				"Content-Type": undefined,
+				"Content-Type": undefined
 			}
 		}).then(function(res){
 			console.log(res);

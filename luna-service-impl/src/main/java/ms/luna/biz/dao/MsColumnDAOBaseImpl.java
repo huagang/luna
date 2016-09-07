@@ -1,10 +1,9 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.biz.common.MsBaseDAO;
 import ms.luna.biz.dao.model.MsColumn;
 import ms.luna.biz.dao.model.MsColumnCriteria;
-
-import java.util.List;
 
 public abstract class MsColumnDAOBaseImpl extends MsBaseDAO implements MsColumnDAOBase {
 
@@ -29,12 +28,14 @@ public abstract class MsColumnDAOBaseImpl extends MsBaseDAO implements MsColumnD
         return rows;
     }
 
-    public void insert(MsColumn record) {
-        getSqlMapClientTemplate().insert("ms_column.insert", record);
+    public Integer insert(MsColumn record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_column.insert", record);
+        return (Integer) newKey;
     }
 
-    public void insertSelective(MsColumn record) {
-        getSqlMapClientTemplate().insert("ms_column.insertSelective", record);
+    public Integer insertSelective(MsColumn record) {
+        Object newKey = getSqlMapClientTemplate().insert("ms_column.insertSelective", record);
+        return (Integer) newKey;
     }
 
     @SuppressWarnings("unchecked")

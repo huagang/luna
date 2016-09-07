@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+@charset "utf-8";
 /**
  * @description: 禁止横屏css
  * @author: Franco
@@ -121,7 +121,7 @@
 }
 
 
-@media screen and (orientation: landscape) {
+@media screen and (max-width: 992px) and (orientation: landscape) {
     .landscape {
         height:100%;
         display: block;

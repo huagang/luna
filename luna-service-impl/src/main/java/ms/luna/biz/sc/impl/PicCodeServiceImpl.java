@@ -37,12 +37,14 @@ public class PicCodeServiceImpl implements PicCodeService {
     }
 
     @Override
-    public JSONObject checkCode(String key, String code) {
+    public JSONObject checkCode(String key, String code, Boolean isRemove) {
         try {
-            Boolean result = IdentifyCodeService.checkCode(key, "picValidate", code);
-            JSONObject toSend = new JSONObject();
-            toSend.put("result", result);
-            return FastJsonUtil.sucess("success", toSend);
+            Boolean result = IdentifyCodeService.checkCode(key, "picValidate", code, isRemove);
+            if (result) {
+                return FastJsonUtil.sucess("success");
+            } else {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "验证码错误");
+            }
         } catch (Exception e) {
             logger.error("Failed to check picCode in redis", e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");

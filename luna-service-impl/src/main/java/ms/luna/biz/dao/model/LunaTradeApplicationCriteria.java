@@ -157,73 +157,73 @@ public class LunaTradeApplicationCriteria {
             criteriaWithBetweenValue.add(map);
         }
 
-        public Criteria andIdIsNull() {
-            addCriterion("id is null");
+        public Criteria andApplicationIdIsNull() {
+            addCriterion("application_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andIdIsNotNull() {
-            addCriterion("id is not null");
+        public Criteria andApplicationIdIsNotNull() {
+            addCriterion("application_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Integer value) {
+        public Criteria andApplicationIdEqualTo(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id =", value, "id");
+            addCriterion("application_id =", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Integer value) {
+        public Criteria andApplicationIdNotEqualTo(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id <>", value, "id");
+            addCriterion("application_id <>", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Integer value) {
+        public Criteria andApplicationIdGreaterThan(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id >", value, "id");
+            addCriterion("application_id >", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andApplicationIdGreaterThanOrEqualTo(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id >=", value, "id");
+            addCriterion("application_id >=", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Integer value) {
+        public Criteria andApplicationIdLessThan(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id <", value, "id");
+            addCriterion("application_id <", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Integer value) {
+        public Criteria andApplicationIdLessThanOrEqualTo(Integer value) {
             if(value == null)return (Criteria)this;
-            addCriterion("id <=", value, "id");
+            addCriterion("application_id <=", value, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Integer> values) {
+        public Criteria andApplicationIdIn(List<Integer> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("id in", values, "id");
+            addCriterion("application_id in", values, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Integer> values) {
+        public Criteria andApplicationIdNotIn(List<Integer> values) {
             if(values == null)return (Criteria)this;
-            addCriterion("id not in", values, "id");
+            addCriterion("application_id not in", values, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Integer value1, Integer value2) {
+        public Criteria andApplicationIdBetween(Integer value1, Integer value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("id between", value1, value2, "id");
+            addCriterion("application_id between", value1, value2, "applicationId");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andApplicationIdNotBetween(Integer value1, Integer value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
-            addCriterion("id not between", value1, value2, "id");
+            addCriterion("application_id not between", value1, value2, "applicationId");
             return (Criteria) this;
         }
 
@@ -1749,6 +1749,88 @@ public class LunaTradeApplicationCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andAccountProvinceIsNull() {
+            addCriterion("account_province is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceIsNotNull() {
+            addCriterion("account_province is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province =", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province <>", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province >", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province >=", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province <", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province <=", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province like", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("account_province not like", value, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("account_province in", values, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("account_province not in", values, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("account_province between", value1, value2, "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("account_province not between", value1, value2, "accountProvince");
+            return (Criteria) this;
+        }
+
         public Criteria andContactNameLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(contact_name) like", value.toUpperCase(), "contactName");
@@ -1842,6 +1924,12 @@ public class LunaTradeApplicationCriteria {
         public Criteria andMerchantIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountProvinceLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(account_province) like", value.toUpperCase(), "accountProvince");
             return (Criteria) this;
         }
 

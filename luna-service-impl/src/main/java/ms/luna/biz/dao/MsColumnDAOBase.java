@@ -1,9 +1,8 @@
 package ms.luna.biz.dao;
 
+import java.util.List;
 import ms.luna.biz.dao.model.MsColumn;
 import ms.luna.biz.dao.model.MsColumnCriteria;
-
-import java.util.List;
 
 public interface MsColumnDAOBase {
     int countByCriteria(MsColumnCriteria example);
@@ -12,9 +11,9 @@ public interface MsColumnDAOBase {
 
     int deleteByPrimaryKey(Integer id);
 
-    void insert(MsColumn record);
+    Integer insert(MsColumn record);
 
-    void insertSelective(MsColumn record);
+    Integer insertSelective(MsColumn record);
 
     List<MsColumn> selectByCriteria(MsColumnCriteria example);
 

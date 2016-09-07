@@ -52,8 +52,9 @@ function isValidPageInfo() {
         document.querySelector('#txtPageHeight').parentNode.querySelector('.warnTips').textContent = '请填写大于617的数字';
         validFlag = false;
     }
-    $("#warn1,#warn2,#warn4").text("");
-
+    if (validFlag) {
+        $("#warn1,#warn2,#warn4").text("");
+    }
     return validFlag;
 }
 // 创建app的一个新的页面
@@ -348,6 +349,11 @@ function async_upload_pic(form_id, thumbnail_id, flag, clc_id, file_obj, url_id)
         var urlElement = document.getElementById(url_id);
     }
     var file = file_obj.files[0];
+    var validInfo = uploadFileValidate.valid(file, 'pic');
+    if (validInfo.length > 0) {
+        $.alert(validInfo.join('\n'));
+        return;
+    }
     cropper.setFile(file, function (file) {
         var formdata = new FormData();
         formdata.append("file", file, file.name);
@@ -557,6 +563,11 @@ function async_upload_picForMenuTab(form_id, thumbnail_id, flag, clc_id, file_ob
         var urlElement = document.getElementById(url_id);
     }
     var file = file_obj.files[0];
+    var validInfo = uploadFileValidate.valid(file, 'pic');
+    if (validInfo.length > 0) {
+        $.alert(validInfo.join('\n'));
+        return;
+    }
     cropper.setFile(file, function (file) {
 
         var formdata = new FormData();

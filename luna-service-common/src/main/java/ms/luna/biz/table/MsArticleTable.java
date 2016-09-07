@@ -21,6 +21,7 @@ public class MsArticleTable {
     public static final String FIELD_BUSINESS_ID = "business_id";
     public static final String FIELD_COLUMN_ID = "column_id";
     public static final String FIELD_AUTHOR = "author";
+    public static final String FIELD_SOURCE = "source";
     public static final String FIELD_TYPE = "type";
     public static final String FIELD_REF_ID = "ref_id";
     public static final String FIELD_CREATE_TIME = "regist_hhmmss";

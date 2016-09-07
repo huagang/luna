@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.swetake.util.Qrcode;
@@ -395,4 +396,31 @@ public final class VbUtility {
 		}
 		return filePath + fileNme;
 	}
+
+	// 删除目录和文件
+	public static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			//递归删除目录中的子目录下
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
+	}
+
+	// 从字符串提取所有数字
+	public static Integer extractInteger(String str) {
+		Pattern pattern = Pattern.compile("[^0-9]");
+		Matcher matcher = pattern.matcher(str);
+		String result = matcher.replaceAll("").trim();
+		if (StringUtils.isBlank(result)) {
+			return null;
+		}
+		return Integer.parseInt(result);
+	}
+
 }

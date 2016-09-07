@@ -8,6 +8,7 @@ import ms.luna.biz.sc.MenuService;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.AuthHelper;
 import ms.luna.web.common.CommonURI;
 import ms.luna.web.common.SessionHelper;
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.TreeMap;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -73,14 +75,19 @@ public class LoginController extends BasicController {
             return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "用户名或密码错误");
         }
 
-        logger.trace(result);
-
         JSONObject data = result.getJSONObject("data");
+        logger.debug("user session: " + data);
         LunaUserSession lunaUserSession = JSON.toJavaObject(data, LunaUserSession.class);
+        // use treemap for better search performance
+        TreeMap<String, JSONObject> menuAuth = new TreeMap<>();
+        menuAuth.putAll(lunaUserSession.getMenuAuth());
+        lunaUserSession.setMenuAuth(menuAuth);
+
         session = request.getSession(true);
         SessionHelper.setUser(session, lunaUserSession);
+        SessionHelper.setIsRoleBusiness(session, AuthHelper.hasBusinessAuth(lunaUserSession));
 
-        JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByRoleId(lunaUserSession.getRoleId());
+        JSONObject moduleAndMenuByRoleId = menuService.getModuleAndMenuByUserId(lunaUserSession.getUniqueId());
         logger.trace(moduleAndMenuByRoleId);
         if(moduleAndMenuByRoleId.getString("code").equals("0")) {
             SessionHelper.setMenu(session, moduleAndMenuByRoleId.getJSONArray("data"));

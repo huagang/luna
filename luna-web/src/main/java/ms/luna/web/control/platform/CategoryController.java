@@ -6,7 +6,6 @@ import ms.luna.biz.sc.CategoryService;
 import ms.luna.biz.util.CharactorUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.MsLogger;
-import ms.luna.web.common.PulldownCtrl;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.PulldownController;
 import org.apache.log4j.Logger;
@@ -120,7 +119,7 @@ public class CategoryController {
             JSONObject result = categoryService.deleteCategory(param.toString());
 
             if ("0".equals(result.getString("code"))) {
-                pulldownController.refreshCategorysCache(category_id, "", PulldownCtrl.REFRESHMODE.DELETE);//更新缓存
+                pulldownController.refreshCategorysCache(category_id, "", PulldownController.REFRESHMODE.DELETE);//更新缓存
                 return FastJsonUtil.sucess("成功删除");
             }
             return FastJsonUtil.error("-1", result.getString("msg"));
@@ -197,7 +196,7 @@ public class CategoryController {
             } else if("0".equals(result.getString("code"))) {
                 JSONObject data = (JSONObject) result.get("data");
                 String category_id = data.getString("category_id");
-                pulldownController.refreshCategorysCache(category_id, category_nm_zh, PulldownCtrl.REFRESHMODE.ADD);//更新缓存
+                pulldownController.refreshCategorysCache(category_id, category_nm_zh, PulldownController.REFRESHMODE.ADD);//更新缓存
                 return FastJsonUtil.sucess("创建成功");
             } else {
                 return FastJsonUtil.error("-1", result.getString("msg"));
@@ -267,7 +266,7 @@ public class CategoryController {
             } else if("2".equals(result.getString("code"))) {
                 return FastJsonUtil.error("2", "category_nm_en重名");
             } else if("0".equals(result.getString("code"))) {
-                pulldownController.refreshCategorysCache(category_id, category_nm_zh, PulldownCtrl.REFRESHMODE.UPDATE);//更新缓存
+                pulldownController.refreshCategorysCache(category_id, category_nm_zh, PulldownController.REFRESHMODE.UPDATE);//更新缓存
                 return FastJsonUtil.sucess("修改成功");
             } else {
                 return FastJsonUtil.error("-1", result.getString("msg"));

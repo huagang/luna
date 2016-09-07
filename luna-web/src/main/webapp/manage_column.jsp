@@ -15,18 +15,13 @@
     <meta name="Keywords" content="皓月平台 皓月 luna 微景天下 旅游 景区 酒店 农家" />
     <title>皓月平台</title>
     <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="<%=request.getContextPath() %>/plugins/bootstrap-table/src/bootstrap-table.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/table-manage.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_business.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_column.css">
     <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
-    <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
-    <script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
-    <script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
     <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
 <body ng-app="manageColumn" ng-controller="columnController as column" ng-class="{'modal-open': column.newColumnShow || column.updateColumnShows}">
@@ -54,7 +49,7 @@
 										 data-url="<%=request.getContextPath() %>/content/column/search"
 										 data-pagination="true"
 										 data-page-size=20
-										 data-side-pagination="server" 
+										 data-side-pagination="server"
 										 data-search="false"
 										 data-click-to-select="true"
 										 data-show-refresh="false"
@@ -65,7 +60,6 @@
 						                <th data-field="id" data-align="left">栏目ID</th>
                                     	<th data-field="name" data-align="left">栏目名称</th>
                                     	<th data-field="code" data-align="left">简称</th>
-                                    	<th data-field="category_name" data-align="left">所属类别</th>
                                         <th data-formatter="timeFormatter" data-align="left">时间</th>
 						                <th data-formatter="operationFormatter" data-events="operationEvents" data-align="right">操作</th>
 						            </tr>
@@ -99,27 +93,19 @@
     	<form name="newColumnForm">
         	<div class="name">
             	<label>栏目名称</label>
-            	<input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
-            	<span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
-                <span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
-        	</div>
+            	<input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required maxlength="20" ng-blur="column.checkName()" />
+                <span class="red ng-hide" ng-show="column.nameErrorMsg">{{column.nameErrorMsg}}</span>
+            </div>
         	<div class="short">
             	<label>栏目简称</label>
-            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
-                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
-                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
-        	</div>
-            <div>
-                <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategoryId">
-                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
-                </select>
+            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required maxlength="30"  ng-blur="column.checkCode()"/>
+                <span class="red ng-hide" ng-show="column.codeErrorMsg">{{column.codeErrorMsg}}</span>
             </div>
     	</form>
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitNewColumn()">确定</button>
+        <button type="button"  ng-click="column.submitNewColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideNewColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -136,27 +122,20 @@
         <form name="updateColumnForm">
             <div class="name">
                 <label>栏目名称</label>
-                <input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
-                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
-                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
+                <input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required maxlength="20" ng-blur="column.checkName()" />
+                <span class="red ng-hide" ng-show="column.nameErrorMsg">{{column.nameErrorMsg}}</span>
             </div>
             <div class="short">
                 <label>栏目简称</label>
-                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
-                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
-                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
-            </div>
-            <div>
-                <label>所属类别</label>
-                <select class="select" ng-model="column.currentCategoryId">
-                    <option ng-repeat="(k, v) in column.categoryOptions" value="{{k}}">{{v}}</option>
-                </select>
+                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required maxlength="30"  ng-blur="column.checkCode()"/>
+                <span class="red ng-hide" ng-show="column.codeErrorMsg">{{column.codeErrorMsg}}</span>
+
             </div>
         </form>
     </div>
     <!-- 底部功能区 -->
     <div class="pop-fun">
-        <button type="button" ng-disabled="! column.isEnable()" ng-click="column.submitUpdateColumn()">确定</button>
+        <button type="button" ng-click="column.submitUpdateColumn()">确定</button>
         <button type="reset" class="button-close"  ng-click="column.hideUpdateColumnDialog()">取消</button>
     </div>
     <!-- 底部功能区 -->
@@ -175,58 +154,17 @@
     <!-- 底部功能区 -->
 </div>
 <!--弹出层 end-->
-
-<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-<script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
-<link href="<%=request.getContextPath()%>/plugins/artDialog/css/dialog-simple.css" rel="stylesheet" type="text/css" />
+<script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/jquery.artDialog.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/plugins/artDialog/js/artDialog.plugins.js" type="text/javascript"></script>
-<script type="text/javascript">
- 	$(function() {
-		var id = 0, getRows = function() {
-			var rows = [];
-			for (var i = 0; i < 10; i++) {
-				rows.push({
-					id : id
-				});
-				id++;
-			}
-			return rows;
-		}, $table = $('#table_column').bootstrapTable({
-			data : getRows()
-		});
-
-	}); 
-
-
-
-    function timeFormatter(value, row, index) {
-        return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
-                +'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
-    }
-
-    function operationFormatter(value, row, index) {
-        var id = row.id;
-        var name = row.name;
-        var code = row.code;
-        var categoryName = row.category_name;
-        var editOp = '<a class="edit" href="#" onclick="showUpdateColumnDialog({0},\'{1}\',\'{2}\',\'{3}\')">编辑</a>'.format(id,
-                name, code, categoryName);
-        var deleteOp = '<a class="delete" href="#" onclick="showDeleteColumnDialog({0}, \'{1}\')">删除</a>'.format(id, name);
-
-        return editOp + deleteOp;
-    }
-
-	function queryParams(params) {
-		//alert(JSON.stringify(params));
-		return {
-			limit : params.limit,
-			offset : params.offset,
-			sort : params.sort,
-			order : params.order
-		}
-	};
-</script>
+<script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/common_utils.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
+<script type="text/javascript" charset="utf-8" src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
+<script src="<%=request.getContextPath() %>/scripts/manage_column.js"></script>
 
 </body>
 </html>

@@ -7,4 +7,14 @@ package ms.luna.biz.dao.custom.model;
  * @Date: 2016-06-15
  */
 public class MsColumnParameter extends BasicModel {
+
+    private int businessId;
+
+    public int getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(int businessId) {
+        this.businessId = businessId;
+    }
 }

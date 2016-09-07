@@ -17,6 +17,13 @@ $(document).ready(function () {
 			$('#table_apps').bootstrapTable("refresh");
         }
     });
+	$("#pop-message #btn-mes").click(function () {
+		$("#pop-message").removeClass('pop-show');
+	});
+	$("#pop-message .btn-close").click(function () {
+		$("#pop-message").removeClass('pop-show');
+	});
+
     window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
 
@@ -210,19 +217,9 @@ function getNormalController(appSel) {
 function getShareController(data) {
 	data = data || [];
 	var controller = {
-		_defaultTitle: '',
 		num: data.length,
 		data: data,
 		counters: [],
-		updateDefaultTitle: function (value) {
-			this._defaultTitle = value;
-			this.data.forEach(function (item, index) {
-				this.counters[index].titleCounter.updateCounter(value.length);
-				$('.share-item.order-{0} .share-title'.format(index)).val(item.title || value);
-				item.title = item.title || value;
-			}.bind(this));
-
-		},
 		init: function () {
 			// 事件绑定
 
@@ -281,7 +278,7 @@ function getShareController(data) {
 					.attr('data-order', this.num);
 				$('.setting-share').append(cloneEle);
 				var data = {
-					title: this._defaultTitle || '',
+					title: '',
 					description: '',
 					pic: ''
 				};
@@ -306,16 +303,6 @@ function getShareController(data) {
 					removeClass('order-' + i).addClass('order-' + (i - 1));
 			}
 			this.num -= 1;
-		},
-		checkValidation: function () {
-			var errorMsg;
-			this.data.forEach(function (item, index) {
-				if (!errorMsg && (!item.title || !item.description || !item.pic)) {
-					errorMsg = "分享的标题、描述以及分享图不能为空\n";
-				}
-			});
-
-			return { error: errorMsg ? 'empty' : null, msg: errorMsg };
 		},
 		updateData: function (data) {
 			this.reset();
@@ -352,8 +339,8 @@ function getShareController(data) {
 		uploadImg: function (event, order) {
 			//上传图片功能以及预览功能
 			var tipSel = ['.share-item.order-', order, ' .fileupload-tip'].join('');
-			var file = event.target.files[0];
-			cropper.setFile(file, function(file) {
+			var file  = event.target.files[0];
+			cropper.setFile(file, function(file){
 				$(tipSel).html("上传中...");
 				cropper.close();
 				FileUploader.uploadMediaFile({
@@ -366,16 +353,12 @@ function getShareController(data) {
 						shareEle.find('.preview-container').removeClass('hidden');
 						shareEle.find('.preview-img').attr("src", data.data.access_url);
 						this.data[order].pic = data.data.access_url;
-						$(tipSel).html("设置分享图");
-						event.target.value = '';
-
+						$(tipSel).html("更换缩略图");
 					}.bind(this),
 					error: function (data) {
-						$(tipSel).html("设置分享图");
+						$(tipSel).html("更换缩略图");
 						showMessage(data.msg || '上传图片失败');
-						event.target.value = '';
 					}
-
 				});
 			}.bind(this), function(){
 				event.target.value = '';
@@ -385,7 +368,6 @@ function getShareController(data) {
 			this.counters = [];
 			this.data = [];
 			this.num = 0;
-			this._defaultTitle = '';
 			// 复原元素
 			$("div[class*='order']").remove();
 			this.newShare();
@@ -603,13 +585,11 @@ function getAppController(editAppSelector) {
 
 			//微景展配置框菜单切换 切换到分享设置
 			shareMenu.click(function () {
-				if (this.normalController.data.appName) {
-					this.shareController.updateDefaultTitle(this.normalController.data.appName);
-				}
 				shareMenu.addClass('active');
 				normalMenu.removeClass('active');
 				$('.setting-share').removeClass('hidden');
 				$('.setting-normal').addClass('hidden');
+				event.preventDefault();
 
 			}.bind(this));
 
@@ -619,6 +599,7 @@ function getAppController(editAppSelector) {
 				shareMenu.removeClass('active');
 				$('.setting-share').addClass('hidden');
 				$('.setting-normal').removeClass('hidden');
+				event.preventDefault();
 			});
 			this._appDialog.find('.cancel').click(function () {
 				this._appDialog.removeClass('pop-show');
@@ -681,8 +662,6 @@ function getAppController(editAppSelector) {
 		_checkValidation: function () {
 			var result = this.normalController.checkValidation();
 			var errorMsg = result.error ? result.msg : '';
-			result = this.shareController.checkValidation();
-			errorMsg += result.error ? result.msg : '';
 			return { error: errorMsg ? 'empty' : null, msg: errorMsg };
 		},
 
@@ -695,11 +674,22 @@ function getAppController(editAppSelector) {
 				return;
 			}
 
+			var shareData = this.shareController.data.filter(function(item){
+				if(item.title || item.description || item.pic){
+					return true;
+				} else{
+					return false;
+				}
+			}) ;
+			if(shareData.length === 0){
+			  shareData = [{title:'', description:'', pic: ''}];
+			}
+
 			var data = {
 				"app_name": this.normalController.data.appName,
 				"note": this.normalController.data.appDescription,
 				"pic_thumb": this.normalController.data.coverUrl,
-				"shareArray": JSON.stringify(this.shareController.data)
+				"shareArray": JSON.stringify(shareData)
 			};
 			$.ajax({
 				url: this.urls.appPropUpdate.url.format(this.data.appId), // 更新属性信息
@@ -785,13 +775,11 @@ function editDevApp(appId) {
 	})
 }
 
+
 function showMessage(msg) {
 	$("#pop-message .message").text(msg);
-	popWindow($('#pop-message'));
-	$("#btn-mes").click(function () {
-		$("#pop-message").css('display', "none");
-		$('#pop-overlay').css('display', 'none')
-	});
+	$('#pop-message').addClass('pop-show');
+
 }
 
 /**	

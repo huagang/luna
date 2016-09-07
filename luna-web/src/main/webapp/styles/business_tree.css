@@ -3,11 +3,22 @@
 author:franco
 time:20160517
 */
-#childPoi{
-    position: fixed;
+
+.menu{
+    min-width: 200px;
 }
+
+
+#childPoi {
+    position: fixed;
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto;
+    top: 20px !important;
+}
+
+
 .luna-tree {
-	width:1200px;
 	height:100%;
 	margin:20px 0px;
     overflow-x:auto;
@@ -20,7 +31,9 @@ time:20160517
 }
 
 .luna-tree .luna-tree-parent {
+    white-space: nowrap;
     padding-bottom: 120px;
+    width: 940px;
 }
 
 .luna-tree .item-name{
@@ -306,7 +319,7 @@ right connector from last child*/
 	width:610px;
 	margin:10px 15px;
 	min-height:100px;
-	max-height:300px;
+	max-height:200px;
 	border:1px solid #E5E5E5;
 	overflow-y: auto;
 }
@@ -331,7 +344,29 @@ right connector from last child*/
 	position: fixed;
 }
 
+.main{
+    position: relative;
+}
 
+.guidance{
+    position: absolute;
+    top: 300px;
+    top: 40vh;
+    left:0;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    color: #999;
+}
 
+.guidance .button-add-child{
+    background-color: #169BD5;
+    color: white;
+    border: 0;
+    margin-bottom: 10px;
+}
 
-
+#childPoi .pop-cont{
+    padding-top: 10px;
+    padding-bottom: 0;
+}

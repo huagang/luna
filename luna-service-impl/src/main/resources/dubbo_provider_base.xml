@@ -15,10 +15,8 @@
 	<dubbo:service interface="ms.luna.biz.sc.ManageMerchantService" ref="manageMerchantService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManagePoiService" ref="managePoiService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageShowAppService" ref="manageShowAppService" />
-	<dubbo:service interface="ms.luna.biz.sc.ManageUserService" ref="manageUserService" />
 	<dubbo:service interface="ms.luna.biz.sc.MsShowPageService" ref="msShowPageService" />
 	<dubbo:service interface="ms.luna.biz.sc.PulldownService" ref="pulldownService" />
-	<dubbo:service interface="ms.luna.biz.sc.RegistService" ref="registService" />
 	<dubbo:service interface="ms.luna.biz.sc.VodPlayService" ref="vodPlayService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageBusinessTreeService" ref="manageBusinessTreeService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageColumnService" ref="manageColumnService" />
@@ -30,10 +28,14 @@
 	<dubbo:service interface="ms.luna.biz.sc.FarmPageService" ref="farmPageService" />
 	<dubbo:service interface="ms.luna.biz.sc.LunaAuthService" ref="lunaAuthService" />
 	<dubbo:service interface="ms.luna.biz.sc.ManageRouteService" ref="manageRouteService" />
+	<dubbo:service interface="ms.luna.biz.sc.LunaTradeApplicationService" ref="lunaTradeApplicationService"/>
+	<dubbo:service interface="ms.luna.biz.sc.SMSService" ref="smsService"/>
+	<dubbo:service interface="ms.luna.biz.sc.EmailService" ref="emailService"/>
+	<dubbo:service interface="ms.luna.biz.sc.PicCodeService" ref="picCodeService"/>
+	<dubbo:service interface="ms.luna.biz.sc.LunaBankService" ref="lunaBankService"/>
+	<dubbo:service interface="ms.luna.biz.sc.LunaBankBranchService" ref="lunaBankBranchService"/>
+	<dubbo:service interface="ms.luna.biz.sc.LunaCityService" ref="lunaCityService"/>
+	<dubbo:service interface="ms.luna.biz.sc.LunaGoodsCategoryService" ref="lunaGoodsCategoryService"/>
 	<dubbo:service interface="ms.luna.biz.sc.LunaGoodsService" ref="lunaGoodsService" />
-    <dubbo:service interface="ms.luna.biz.sc.LunaTradeApplicationService" ref="lunaTradeApplicationService"/>
-    <dubbo:service interface="ms.luna.biz.sc.SMSService" ref="smsService"/>
-    <dubbo:service interface="ms.luna.biz.sc.EmailService" ref="emailService"/>
-    <dubbo:service interface="ms.luna.biz.sc.PicCodeService" ref="picCodeService"/>
 
 </beans>

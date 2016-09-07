@@ -9,7 +9,7 @@ public interface LunaTradeApplicationDAOBase {
 
     int deleteByCriteria(LunaTradeApplicationCriteria example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer applicationId);
 
     Integer insert(LunaTradeApplication record);
 
@@ -17,7 +17,7 @@ public interface LunaTradeApplicationDAOBase {
 
     List<LunaTradeApplication> selectByCriteria(LunaTradeApplicationCriteria example);
 
-    LunaTradeApplication selectByPrimaryKey(Integer id);
+    LunaTradeApplication selectByPrimaryKey(Integer applicationId);
 
     int updateByCriteriaSelective(LunaTradeApplication record, LunaTradeApplicationCriteria example);
 

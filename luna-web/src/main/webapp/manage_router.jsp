@@ -51,16 +51,19 @@
                 		<thead>
                 			<tr>
                 				<th>线路名称</th>
-                				<th>所属业务</th>
                 				<th>体力消耗</th>
                 				<th>创建人</th>
                 				<th>线路设置</th>
                 			</tr>
                 		</thead>
                 		<tbody bn-rows>
+							<tr class="ng-hide" ng-show="! router.rowsData || router.rowsData.length === 0">
+								<td colspan="4" class="text-center">
+									没有找到匹配的记录
+								</td>
+							</tr>
                 			<tr ng-repeat="rowData in router.rowsData" data-id={{rowData.id}}>
                 				<td>{{rowData.name}}</td>
-                				<td>{{rowData.businessName}}</td>
                 				<td>{{rowData.costName}}</td>
                 				<td>{{rowData.creator}}</td>
                 				<td>
@@ -71,9 +74,9 @@
                 			</tr>
                 		</tbody>
                 	</table>
-					<div class="pagination-wrapper">
-						<ul  uib-pagination total-items="router.pagination.totalItems" ng-model="router.pagination.curPage" ng-change="manage.fetchMerchantList()"
-										previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="manage.pagination.limit" max-size="manage.pagination.maxPageNum"
+					<div class="pagination-wrapper" ng-hide="! router.rowsData || router.rowsData.length === 0">
+						<ul  uib-pagination total-items="router.pagination.totalItems" ng-model="router.pagination.curPage" ng-change="router.handlePageChanged()"
+										previous-text="&lt; 上一页" next-text='下一页 &gt;' boundary-link-numbers="true" items-per-page="router.pagination.maxRowNum" max-size="router.pagination.maxPageNum"
 										class="pagination-sm"  rotate="true"></ul>
 					</div>
 				</div>

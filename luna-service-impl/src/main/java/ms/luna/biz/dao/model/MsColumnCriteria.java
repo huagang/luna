@@ -1,6 +1,10 @@
 package ms.luna.biz.dao.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MsColumnCriteria {
     protected String orderByClause;
@@ -387,6 +391,76 @@ public class MsColumnCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andBusinessIdIsNull() {
+            addCriterion("business_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdIsNotNull() {
+            addCriterion("business_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id =", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <>", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdGreaterThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id >", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdGreaterThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id >=", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdLessThan(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdLessThanOrEqualTo(Integer value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("business_id <=", value, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("business_id in", values, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotIn(List<Integer> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("business_id not in", values, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("business_id between", value1, value2, "businessId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessIdNotBetween(Integer value1, Integer value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("business_id not between", value1, value2, "businessId");
+            return (Criteria) this;
+        }
+
         public Criteria andCategoryIdIsNull() {
             addCriterion("category_id is null");
             return (Criteria) this;
@@ -609,6 +683,24 @@ public class MsColumnCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andNameLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(name) like", value.toUpperCase(), "name");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodeLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(code) like", value.toUpperCase(), "code");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(category_id) like", value.toUpperCase(), "categoryId");
+            return (Criteria) this;
+        }
+
         public Criteria andUpHhmmssEqualToCurrentDate() {
             addCriterion("up_hhmmss = ","CURRENT_DATE","upHhmmss");
             return (Criteria)this;
@@ -679,24 +771,6 @@ public class MsColumnCriteria {
 
         protected Criteria() {
             super();
-        }
-
-        public Criteria andNameLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(name) like", value.toUpperCase(), "name");
-            return this;
-        }
-
-        public Criteria andCodeLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(code) like", value.toUpperCase(), "code");
-            return this;
-        }
-
-        public Criteria andCategoryIdLikeInsensitive(String value) {
-            if(value == null)return (Criteria)this;
-            addCriterion("upper(category_id) like", value.toUpperCase(), "categoryId");
-            return this;
         }
 
         public Criteria setRowNum(String rowNum) {

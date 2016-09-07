@@ -101,6 +101,7 @@ var InitLeftArea = function () {
             resetDialog();
             $("[name=pageType][value=1]").trigger('click');
             $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
+            $('#txt-time').closest('.item-wrap').addClass('hide');
         });
 
         //修改界面
@@ -308,43 +309,20 @@ var InitRightArea = function () {
         $(document).bind('keydown', 'up', function (e) {
             var $target = $("div.componentbox-selected");
             var target_exist = $target.length;
-            var y = $('#elementy').val();
+            // var y = $('#elementy').val();
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('top') == '0px') {
-                    console.log('已经到顶部');
-                    return false;
-                }
-                var position = $target.position();
-                position.top = position.top - 1;
-                $target.css("top", position.top + 'px');
-                y = parseInt(y) - 1;
-                $('#elementy').val(y);
-
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'up', 1);
                 return false;
             }
         });
         //按down键下移1px
         $(document).bind('keydown', 'down', function (e) {
             var $target = $("div.componentbox-selected");
-            var y = $('#elementy').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('bottom') == '0px') {
-                    console.log('已经到底部');
-                    return false;
-                }
-                var position = $target.position();
-                position.top = position.top + 1;
-                $target.css("top", position.top + 'px');
-                y = parseInt(y) + 1;
-                $('#elementy').val(y);
-
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'down', 1);
                 return false;
             }
         });
@@ -355,20 +333,10 @@ var InitRightArea = function () {
                 return true;
             }
             var $target = $("div.componentbox-selected");
-            var x = $('#elementx').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('left') == '0px') {
-                    console.log('已经到左侧');
-                    return false;
-                }
-                var position = $target.position();
-                position.left = position.left - 1;
-                $target.css("left", position.left + 'px');
-                $('#elementx').val(parseInt(x) - 1);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'left', 1);
                 return false;
             }
         });
@@ -384,56 +352,29 @@ var InitRightArea = function () {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('right') == '0px') {
-                    console.log('已经到右侧');
-                    return false;
-                }
-                var position = $target.position();
-                position.left = position.left + 1;
-                $target.css("left", position.left + 'px');
-                $('#elementx').val(parseInt(x) + 1);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'right', 1);
                 return false;
             }
         });
         //按shift+up键上移10px
         $(document).bind('keydown', 'shift+up', function (e) {
             var $target = $("div.componentbox-selected");
-            var y = $('#elementy').val();
+            // var y = $('#elementy').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('top') == '0px') {
-                    console.log('已经到顶部');
-                    return false;
-                }
-                var position = $target.position();
-                position.top = position.top - 10;
-                $target.css("top", position.top + 'px');
-                $('#elementy').val(parseInt(y) - 10);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'up', 10);
                 return false;
             }
         });
         //按shift+down键下移10px
         $(document).bind('keydown', 'shift+down', function (e) {
             var $target = $("div.componentbox-selected");
-            var y = $('#elementy').val();
+            // var y = $('#elementy').val();
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('bottom') == '0px') {
-                    console.log('已经到底部');
-                    return false;
-                }
-                var position = $target.position();
-                position.top = position.top + 10;
-                $target.css("top", position.top + 'px');
-                $('#elementy').val(parseInt(y) + 10);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'down', 10);
                 return false;
             }
         });
@@ -444,16 +385,7 @@ var InitRightArea = function () {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('left') == '0px') {
-                    console.log('已经到左侧');
-                    return false;
-                }
-                var position = $target.position();
-                position.left = position.left - 10;
-                $target.css("left", position.left + 'px');
-                $('#elementx').val(parseInt(x) - 10);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'left', 10);
                 return false;
             }
         });
@@ -464,16 +396,7 @@ var InitRightArea = function () {
             var target_exist = $target.length;
             var status = $editor.is(':focus');
             if ((!status) && target_exist) {
-                if ($target.css('right') == '0px') {
-                    console.log('已经到右侧');
-                    return false;
-                }
-                var position = $target.position();
-                position.left = position.left + 10;
-                $target.css("left", position.left + 'px');
-                $('#elementx').val(parseInt(x) + 10);
-                lunaPage.updatePageComponents();
-                componentPanel.update();
+                componentMove($target, 'right', 10);
                 return false;
             }
         });

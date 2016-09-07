@@ -1,6 +1,8 @@
 package ms.luna.biz.sc.impl;
 
-import com.alibaba.dubbo.common.json.JSON;
+import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
+import ms.luna.biz.dao.model.LunaUserMerchant;
+import ms.luna.biz.table.LunaUserTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class ManageMerchantServiceImpl implements ManageMerchantService {
     @Autowired
     private ManageMerchantBL manageMerchantBL;
 
+    @Autowired
+    private LunaUserMerchantDAO lunaUserMerchantDAO;
+
     @Override
     public JSONObject createMerchant(String json) {
         JSONObject result = null;
@@ -33,11 +38,12 @@ public class ManageMerchantServiceImpl implements ManageMerchantService {
     }
 
     @Override
-    public JSONObject getMerchantTradeStatus(String json) {
+    public JSONObject registMerchant(String json) {
         JSONObject result = null;
         try {
-            result = manageMerchantBL.getMerchantTradeStatus(json);
+            result = manageMerchantBL.registMerchant(json);
         } catch (RuntimeException e) {
+
             return FastJsonUtil.error("-1", e);
         }
         return result;
@@ -48,6 +54,22 @@ public class ManageMerchantServiceImpl implements ManageMerchantService {
         JSONObject result = null;
         try {
             result = manageMerchantBL.loadMerchantById(json);
+        } catch (RuntimeException e) {
+
+            return FastJsonUtil.error("-1", e);
+        }
+        return result;
+    }
+
+    @Override
+    public JSONObject loadMerchantByUserId(String json) {
+        JSONObject result = null;
+        try {
+            JSONObject object = JSONObject.parseObject(json);
+            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(object.getString(LunaUserTable.FIELD_ID));
+            JSONObject d = new JSONObject();
+            d.put("merchant_id", lunaUserMerchant.getMerchantId());
+            result = manageMerchantBL.loadMerchantById(d.toString());
         } catch (RuntimeException e) {
 
             return FastJsonUtil.error("-1", e);
@@ -150,5 +172,37 @@ public class ManageMerchantServiceImpl implements ManageMerchantService {
             return FastJsonUtil.error("-1", e);
         }
         return result;
+    }
+
+    @Override
+    public JSONObject getMerchantEmail(String id) {
+        JSONObject result = null;
+        try {
+            result = manageMerchantBL.getMerchantEmail(id);
+        } catch (RuntimeException e) {
+
+            return FastJsonUtil.error("-1", e);
+        }
+        return result;
+    }
+
+    @Override
+    public JSONObject getMerchantTradeStatus(String json) {
+        JSONObject result = null;
+        try {
+            result = manageMerchantBL.getMerchantTradeStatus(json);
+        } catch (RuntimeException e) {
+            return FastJsonUtil.error("-1", e);
+        }
+        return result;
+    }
+
+    @Override
+    public JSONObject signAgreement(JSONObject json) {
+        try {
+            return manageMerchantBL.signAgreement(json);
+        } catch (RuntimeException e) {
+            return FastJsonUtil.error("-1", e);
+        }
     }
 }

@@ -49,13 +49,14 @@
                             <input type="text" class="search-txt" id="like_filter_nm" name="like_filter_nm" value="${like_filter_nm}" class="txt" placeholder="输入用户名称进行查询"/>
 							<img class="search-icon" src="<%=request.getContextPath() %>/img/ic_search.png"/>
                             <button type="button" id="condition_search" class="btn-search">搜 索</button>
-                        </div>
-                        <button type="button" id="new-built">新建</button>
+                            <button type="button" id="new-built">新建</button>
+                     </div>
                         <!--CRM搜索 end-->
                          <div class="app-list">
 	                         <table id="table_business" class="table"
 	                         			 data-toggle="table"
 	                         			 data-toolbar=""
+                                         data-locale="zh-CN"
 								 data-url="<%=request.getContextPath() %>/content/crm/search"
 								 data-pagination="true"
 								 data-side-pagination="server" 
@@ -67,8 +68,10 @@
 						>
 					        <thead>
 					            <tr>
-					                <th data-field="merchant_nm" data-align="left">商户名称</th>
+					                <th data-field="merchant_nm" data-align="left" data-width="190">商户名称</th>
                                  	<th data-field="category_nm" data-align="left">商户类型</th>
+                                    <th data-field="business_name" data-align="left">业务名称</th>
+                                    <th data-field="business_code" data-align="left">业务简称</th>
                                  	<th data-field="contact_nm" data-align="left">联系人姓名</th>
                                  	<th data-field="contact_phonenum" data-align="left">联系人手机</th>
                                  	<th data-field="salesman_nm" data-align="left">业务员</th>                              

@@ -1,24 +1,24 @@
 package ms.luna.biz.bl.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import ms.biz.common.CommonQueryParam;
 import ms.luna.biz.bl.ManageColumnBL;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.dao.custom.MsColumnDAO;
-import ms.luna.biz.dao.custom.model.MsBusinessResult;
 import ms.luna.biz.dao.custom.model.MsColumnParameter;
 import ms.luna.biz.dao.custom.model.MsColumnResult;
 import ms.luna.biz.dao.model.MsColumn;
 import ms.luna.biz.dao.model.MsColumnCriteria;
+import ms.luna.biz.table.MsBusinessTable;
 import ms.luna.biz.table.MsColumnTable;
 import ms.luna.biz.util.DateUtil;
 import ms.luna.biz.util.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,10 +64,8 @@ public class ManageColumnBLImpl implements ManageColumnBL {
         if(! StringUtils.isBlank(code)) {
             msColumn.setCode(code);
         }
-        String categoryId = columnObj.getString(MsColumnTable.FIELD_CATEGORY_ID);
-        if(! StringUtils.isBlank(categoryId)) {
-            msColumn.setCategoryId(categoryId);
-        }
+        int businessId = columnObj.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        msColumn.setBusinessId(businessId);
 
         return msColumn;
     }
@@ -81,6 +79,9 @@ public class ManageColumnBLImpl implements ManageColumnBL {
             msColumnDAO.insertSelective(msColumn);
         } catch (Exception ex) {
             logger.error("Failed to create column", ex);
+            if(ex instanceof DuplicateKeyException) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "栏目名称或简称已经存在");
+            }
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "创建栏目失败");
         }
         return FastJsonUtil.sucess("创建栏目成功");
@@ -131,6 +132,10 @@ public class ManageColumnBLImpl implements ManageColumnBL {
         JSONObject jsonObject = JSONObject.parseObject(json);
         Integer min = jsonObject.getInteger(CommonQueryParam.LIMIT_MIN);
         Integer max = jsonObject.getInteger(CommonQueryParam.LIMIT_MAX);
+        int businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
+        MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
+        MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId);
 
         MsColumnParameter parameter = new MsColumnParameter();
         if(min != null && max != null) {
@@ -138,11 +143,12 @@ public class ManageColumnBLImpl implements ManageColumnBL {
             parameter.setMax(max);
             parameter.setMin(min);
         }
+        parameter.setBusinessId(businessId);
 
         JSONObject data = new JSONObject();
         try {
             List<MsColumnResult> msColumnResults = msColumnDAO.selectColumnWithFilter(parameter);
-            int total = msColumnDAO.countByCriteria(new MsColumnCriteria());
+            int total = msColumnDAO.countByCriteria(msColumnCriteria);
             if(msColumnResults != null) {
                 data.put("rows", JSON.parse(JSON.toJSONString(msColumnResults, SerializerFeature.WriteDateUseDateFormat)));
                 data.put("total", total);

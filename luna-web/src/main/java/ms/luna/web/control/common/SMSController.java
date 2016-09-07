@@ -39,18 +39,31 @@ public class SMSController {
     @Autowired
     private PicCodeService picCodeService;
 
+    @RequestMapping(method = RequestMethod.POST, value = "/getCodeS")
+    @ResponseBody
+    public JSONObject getCodeS(@RequestParam String phoneNo,
+                               @RequestParam String target) {
+        JSONObject inData = new JSONObject();
+        inData.put("uniqueId", phoneNo);
+        inData.put("phoneNo", phoneNo);
+        inData.put("target", target);
+        inData.put("time", 120000L);
+        JSONObject result = smsService.sendCode(inData);
+        return result;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/getCode")
     @ResponseBody
     public JSONObject getCode(@RequestParam String key,
                               @RequestParam String code,
                               @RequestParam String phoneNo,
                               @RequestParam String target) {
-        JSONObject r = picCodeService.checkCode(key, code);
+        JSONObject r = picCodeService.checkCode(key, code, true);
         if (r.getJSONObject("data").getBoolean("result")) {
             JSONObject inData = new JSONObject();
             inData.put("uniqueId", phoneNo);
             inData.put("phoneNo", phoneNo);
-            inData.put("target", target);
+
             inData.put("time", 120000L);
             JSONObject result = smsService.sendCode(inData);
             return result;
@@ -68,6 +81,7 @@ public class SMSController {
         inData.put("uniqueId", phone);
         inData.put("target", target);
         inData.put("code", code);
+        inData.put("isRemove", false);
         JSONObject result = smsService.checkCode(inData);
         return result;
     }

@@ -18,6 +18,8 @@ public class LunaRegEmail implements Serializable {
 
     private String inviteUniqueId;
 
+    private String merchantId;
+
     private String extra;
 
     private static final long serialVersionUID = 1L;
@@ -78,6 +80,14 @@ public class LunaRegEmail implements Serializable {
         this.inviteUniqueId = inviteUniqueId == null ? null : inviteUniqueId.trim();
     }
 
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId == null ? null : merchantId.trim();
+    }
+
     public String getExtra() {
         return extra;
     }
@@ -105,6 +115,7 @@ public class LunaRegEmail implements Serializable {
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getInviteUniqueId() == null ? other.getInviteUniqueId() == null : this.getInviteUniqueId().equals(other.getInviteUniqueId()))
+            && (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()))
             && (this.getExtra() == null ? other.getExtra() == null : this.getExtra().equals(other.getExtra()));
     }
 
@@ -119,12 +130,13 @@ public class LunaRegEmail implements Serializable {
         result = prime * result + ((getRegistHhmmss() == null) ? 0 : getRegistHhmmss().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getInviteUniqueId() == null) ? 0 : getInviteUniqueId().hashCode());
+        result = prime * result + ((getMerchantId() == null) ? 0 : getMerchantId().hashCode());
         result = prime * result + ((getExtra() == null) ? 0 : getExtra().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "LunaRegEmail [token=" + token + ",roleId=" + roleId + ",email=" + email + ",status=" + status + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",inviteUniqueId=" + inviteUniqueId + ",extra=" + extra + "]";
+        return "LunaRegEmail [token=" + token + ",roleId=" + roleId + ",email=" + email + ",status=" + status + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",inviteUniqueId=" + inviteUniqueId + ",merchantId=" + merchantId + ",extra=" + extra + "]";
     }
 }

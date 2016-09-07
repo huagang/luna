@@ -1,9 +1,13 @@
 package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.cons.QCosConfig;
+import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.util.*;
-import ms.luna.web.control.ManageMerchantCtrl;
+import ms.luna.web.control.inner.UploadController;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +39,10 @@ public class MerchantController extends BasicController {
     private PulldownController pulldownController;
 
     @Autowired
-    private ManageMerchantCtrl manageMerchantCtrl;
+    private ManageMerchantService manageMerchantService;
 
     @Autowired
-    private ManageMerchantService manageMerchantService;
+    private UploadController uploadController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/registPage")
     public ModelAndView init_regist(
@@ -66,12 +70,12 @@ public class MerchantController extends BasicController {
     public JSONObject createMerchant(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String contact_nm = request.getParameter("contact_nm"); // 联系人名字
-            String contact_phonenum = request.getParameter("contact_phonenum");//
-            // 联系人手机
+            String contact_phonenum = request.getParameter("contact_phonenum");// 联系人手机
+
             String contact_mail = request.getParameter("contact_mail");// 联系人邮箱
             String merchant_nm = request.getParameter("merchant_nm");// 商户名字
-            String merchant_phonenum = request.getParameter("merchant_phonenum");//
-            // 商户电话
+            String merchant_phonenum = request.getParameter("merchant_phonenum");// 商户电话
+
             String category_id = request.getParameter("merchant_cata");// 业务种类
             String province_id = request.getParameter("province");// 省份id
             String city_id = request.getParameter("city");// 城市id
@@ -84,43 +88,42 @@ public class MerchantController extends BasicController {
 
             String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum, category_id, resource_content, province_id, city_id, county_id, merchant_addr, lat, lng, merchant_info);
             // 输入校验通过
-            if (inputInfo.equals("")) {
-                JSONObject param = JSONObject.parseObject("{}");
-
-                param.put("contact_nm", contact_nm);
-                param.put("contact_phonenum", contact_phonenum);
-                param.put("contact_mail", contact_mail);
-                param.put("merchant_nm", merchant_nm);
-                param.put("merchant_phonenum", merchant_phonenum);
-                param.put("category_id", category_id);
-                param.put("province_id", province_id);
-                param.put("city_id", city_id);
-                param.put("merchant_addr", merchant_addr);
-                param.put("lat", lat);
-                param.put("lng", lng);
-                param.put("merchant_info", merchant_info);
-                if(!county_id.equals("ALL")){
-                    param.put("county_id", county_id);
-                }
-                if(!resource_content.equals("")){
-                    param.put("resource_content", resource_content);
-                }
-
-                JSONObject result = manageMerchantService.createMerchant(param.toString());
-                MsLogger.debug("method:createMerchant, result from service: " + result.toString());
-
-                String code = result.getString("code");
-                if ("0".equals(code)) {
-                    return FastJsonUtil.sucess("编辑成功！");
-                } else if ("1".equals(code)) {
-                    return FastJsonUtil.error("3", "用户重名！");
-                } else if ("2".equals(code)) {
-                    return FastJsonUtil.error("4", "业务员不存在！");
-                } else {
-                    return FastJsonUtil.error("-1", "编辑失败！");
-                }
-            } else {
+            if (!"".equals(inputInfo)){
                 return FastJsonUtil.error("1", "校验错误！");
+            }
+            JSONObject param = JSONObject.parseObject("{}");
+
+            param.put("contact_nm", contact_nm);
+            param.put("contact_phonenum", contact_phonenum);
+            param.put("contact_mail", contact_mail);
+            param.put("merchant_nm", merchant_nm);
+            param.put("merchant_phonenum", merchant_phonenum);
+            param.put("category_id", category_id);
+            param.put("province_id", province_id);
+            param.put("city_id", city_id);
+            param.put("merchant_addr", merchant_addr);
+            param.put("lat", lat);
+            param.put("lng", lng);
+            param.put("merchant_info", merchant_info);
+            if(!county_id.equals("ALL")){
+                param.put("county_id", county_id);
+            }
+            if(!resource_content.equals("")){
+                param.put("resource_content", resource_content);
+            }
+
+            JSONObject result = manageMerchantService.registMerchant(param.toString());
+            MsLogger.debug("method:createMerchant, result from service: " + result.toString());
+
+            String code = result.getString("code");
+            if ("0".equals(code)) {
+                return FastJsonUtil.sucess("编辑成功！");
+            } else if ("1".equals(code)) {
+                return FastJsonUtil.error("3", "用户重名！");
+            } else if ("2".equals(code)) {
+                return FastJsonUtil.error("4", "业务员不存在！");
+            } else {
+                return FastJsonUtil.error("-1", "编辑失败！");
             }
         } catch (Exception e) {
             MsLogger.error("Failed to regist merchant: " + e.getMessage());
@@ -169,32 +172,15 @@ public class MerchantController extends BasicController {
         return new ModelAndView(SUCCESS_URI);
     }
 
-    /**
-     * 异步上传图片
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload")
     @ResponseBody
-    public String uploadThumbnail(
-            @RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try{
-            String orignalFileName = file.getOriginalFilename();
-            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String fileName = "/"+sdf.format(date) + "/" + VbMD5.generateToken() + ext;
-            byte[] bytes = file.getBytes();// 获得文件内容
-            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
-                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
-            return result.toString();
-        } catch (Exception e) {
-            MsLogger.debug("Failed to upload thumbnail: " + e.getMessage());
-            return FastJsonUtil.error("-1", "Failed to upload thumbnail: ").toString();
-        }
+    public JSONObject uploadFile2Cloud(@RequestParam(required = true, value = "file") MultipartFile file,
+                                       @RequestParam(required = true, value = "type") String type,
+                                       @RequestParam(required = true, value = "resource_type") String resourceType,
+                                       @RequestParam(required = false, value = "resource_id") String resourceId,
+                                       HttpServletRequest request) throws IOException {
+
+        return uploadController.uploadFile2Cloud( file, type, resourceType, resourceId, request);
     }
 
     /**

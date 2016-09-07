@@ -1,55 +1,86 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.MsCRMTable;
+import ms.luna.biz.table.MsMerchantManageTable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class MsMerchantManage implements Serializable {
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ID)
     private String merchantId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_NM)
     private String merchantNm;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_PHONENUM)
     private String merchantPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CATEGORY_ID)
     private String categoryId;
-
+    @JSONField(name = MsCRMTable.FIELD_PROVINCE_ID)
     private String provinceId;
-
+    @JSONField(name = MsCRMTable.FIELD_CITY_ID)
     private String cityId;
-
+    @JSONField(name = MsCRMTable.FIELD_COUNTY_ID)
     private String countyId;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_ADDR)
     private String merchantAddr;
-
+    @JSONField(name = MsCRMTable.FIELD_RESOURCE_CONTENT)
     private String resourceContent;
-
+    @JSONField(name = MsCRMTable.FIELD_LAT)
     private BigDecimal lat;
-
+    @JSONField(name = MsCRMTable.FIELD_LNG)
     private BigDecimal lng;
-
+    @JSONField(name = MsCRMTable.FIELD_MERCHANT_INFO)
     private String merchantInfo;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_NM)
     private String contactNm;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_PHONENUM)
     private String contactPhonenum;
-
+    @JSONField(name = MsCRMTable.FIELD_CONTACT_MAIL)
     private String contactMail;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_ID)
     private String salesmanId;
-
+    @JSONField(name = MsCRMTable.FIELD_SALESMAN_NM)
     private String salesmanNm;
-
+    @JSONField(name = MsCRMTable.FIELD_STATUS_ID)
     private String statusId;
-
+    @JSONField(name = MsCRMTable.FIELD_DEL_FLG)
     private String delFlg;
-
+    @JSONField(name = MsCRMTable.FIELD_REGIST_HHMMSS)
     private Date registHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UP_HHMMSS)
     private Date upHhmmss;
-
+    @JSONField(name = MsCRMTable.FIELD_UPDATED_BY_UNIQUE_ID)
     private String updatedByUniqueId;
-
+    @JSONField(name = MsMerchantManageTable.FIELD_TRADE_STATUS)
     private Integer tradeStatus;
+
+    private Integer applicationId;
+
+    private String idcardPicUrl;
+
+    private String idcardPeriod;
+
+    private String merchantNo;
+
+    private String licencePeriod;
+
+    private Integer accountType;
+
+    private String accountName;
+
+    private String accountBank;
+
+    private String accountCity;
+
+    private String accountAddress;
+
+    private String accountNo;
+
+    private Integer appStatus;
+
+    private String accountProvince;
 
     private static final long serialVersionUID = 1L;
 
@@ -237,6 +268,110 @@ public class MsMerchantManage implements Serializable {
         this.tradeStatus = tradeStatus;
     }
 
+    public Integer getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Integer applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public String getIdcardPicUrl() {
+        return idcardPicUrl;
+    }
+
+    public void setIdcardPicUrl(String idcardPicUrl) {
+        this.idcardPicUrl = idcardPicUrl == null ? null : idcardPicUrl.trim();
+    }
+
+    public String getIdcardPeriod() {
+        return idcardPeriod;
+    }
+
+    public void setIdcardPeriod(String idcardPeriod) {
+        this.idcardPeriod = idcardPeriod == null ? null : idcardPeriod.trim();
+    }
+
+    public String getMerchantNo() {
+        return merchantNo;
+    }
+
+    public void setMerchantNo(String merchantNo) {
+        this.merchantNo = merchantNo == null ? null : merchantNo.trim();
+    }
+
+    public String getLicencePeriod() {
+        return licencePeriod;
+    }
+
+    public void setLicencePeriod(String licencePeriod) {
+        this.licencePeriod = licencePeriod == null ? null : licencePeriod.trim();
+    }
+
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName == null ? null : accountName.trim();
+    }
+
+    public String getAccountBank() {
+        return accountBank;
+    }
+
+    public void setAccountBank(String accountBank) {
+        this.accountBank = accountBank == null ? null : accountBank.trim();
+    }
+
+    public String getAccountCity() {
+        return accountCity;
+    }
+
+    public void setAccountCity(String accountCity) {
+        this.accountCity = accountCity == null ? null : accountCity.trim();
+    }
+
+    public String getAccountAddress() {
+        return accountAddress;
+    }
+
+    public void setAccountAddress(String accountAddress) {
+        this.accountAddress = accountAddress == null ? null : accountAddress.trim();
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo == null ? null : accountNo.trim();
+    }
+
+    public Integer getAppStatus() {
+        return appStatus;
+    }
+
+    public void setAppStatus(Integer appStatus) {
+        this.appStatus = appStatus;
+    }
+
+    public String getAccountProvince() {
+        return accountProvince;
+    }
+
+    public void setAccountProvince(String accountProvince) {
+        this.accountProvince = accountProvince == null ? null : accountProvince.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -271,7 +406,20 @@ public class MsMerchantManage implements Serializable {
             && (this.getRegistHhmmss() == null ? other.getRegistHhmmss() == null : this.getRegistHhmmss().equals(other.getRegistHhmmss()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
             && (this.getUpdatedByUniqueId() == null ? other.getUpdatedByUniqueId() == null : this.getUpdatedByUniqueId().equals(other.getUpdatedByUniqueId()))
-            && (this.getTradeStatus() == null ? other.getTradeStatus() == null : this.getTradeStatus().equals(other.getTradeStatus()));
+            && (this.getTradeStatus() == null ? other.getTradeStatus() == null : this.getTradeStatus().equals(other.getTradeStatus()))
+            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
+            && (this.getIdcardPicUrl() == null ? other.getIdcardPicUrl() == null : this.getIdcardPicUrl().equals(other.getIdcardPicUrl()))
+            && (this.getIdcardPeriod() == null ? other.getIdcardPeriod() == null : this.getIdcardPeriod().equals(other.getIdcardPeriod()))
+            && (this.getMerchantNo() == null ? other.getMerchantNo() == null : this.getMerchantNo().equals(other.getMerchantNo()))
+            && (this.getLicencePeriod() == null ? other.getLicencePeriod() == null : this.getLicencePeriod().equals(other.getLicencePeriod()))
+            && (this.getAccountType() == null ? other.getAccountType() == null : this.getAccountType().equals(other.getAccountType()))
+            && (this.getAccountName() == null ? other.getAccountName() == null : this.getAccountName().equals(other.getAccountName()))
+            && (this.getAccountBank() == null ? other.getAccountBank() == null : this.getAccountBank().equals(other.getAccountBank()))
+            && (this.getAccountCity() == null ? other.getAccountCity() == null : this.getAccountCity().equals(other.getAccountCity()))
+            && (this.getAccountAddress() == null ? other.getAccountAddress() == null : this.getAccountAddress().equals(other.getAccountAddress()))
+            && (this.getAccountNo() == null ? other.getAccountNo() == null : this.getAccountNo().equals(other.getAccountNo()))
+            && (this.getAppStatus() == null ? other.getAppStatus() == null : this.getAppStatus().equals(other.getAppStatus()))
+            && (this.getAccountProvince() == null ? other.getAccountProvince() == null : this.getAccountProvince().equals(other.getAccountProvince()));
     }
 
     @Override
@@ -301,11 +449,24 @@ public class MsMerchantManage implements Serializable {
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());
         result = prime * result + ((getUpdatedByUniqueId() == null) ? 0 : getUpdatedByUniqueId().hashCode());
         result = prime * result + ((getTradeStatus() == null) ? 0 : getTradeStatus().hashCode());
+        result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
+        result = prime * result + ((getIdcardPicUrl() == null) ? 0 : getIdcardPicUrl().hashCode());
+        result = prime * result + ((getIdcardPeriod() == null) ? 0 : getIdcardPeriod().hashCode());
+        result = prime * result + ((getMerchantNo() == null) ? 0 : getMerchantNo().hashCode());
+        result = prime * result + ((getLicencePeriod() == null) ? 0 : getLicencePeriod().hashCode());
+        result = prime * result + ((getAccountType() == null) ? 0 : getAccountType().hashCode());
+        result = prime * result + ((getAccountName() == null) ? 0 : getAccountName().hashCode());
+        result = prime * result + ((getAccountBank() == null) ? 0 : getAccountBank().hashCode());
+        result = prime * result + ((getAccountCity() == null) ? 0 : getAccountCity().hashCode());
+        result = prime * result + ((getAccountAddress() == null) ? 0 : getAccountAddress().hashCode());
+        result = prime * result + ((getAccountNo() == null) ? 0 : getAccountNo().hashCode());
+        result = prime * result + ((getAppStatus() == null) ? 0 : getAppStatus().hashCode());
+        result = prime * result + ((getAccountProvince() == null) ? 0 : getAccountProvince().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + "]";
+        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + ",applicationId=" + applicationId + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantNo=" + merchantNo + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",appStatus=" + appStatus + ",accountProvince=" + accountProvince + "]";
     }
 }

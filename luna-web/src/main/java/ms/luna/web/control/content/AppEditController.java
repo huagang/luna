@@ -377,12 +377,16 @@ public class AppEditController extends BasicController {
 
         int forceFlag = RequestHelper.getInteger(request, "force");
         String appAddr = RequestHelper.getString(request, "app_addr");
+        int oldAppId = RequestHelper.getInteger(request, "old_app_id");
         JSONObject param = new JSONObject();
         param.put("app_id", appId);
         if(StringUtils.isNotBlank(appAddr)) {
             param.put("app_addr", appAddr);
         }
         if(forceFlag == 1) {
+            if(oldAppId > 0) {
+                param.put("old_app_id", oldAppId);
+            }
             param.put("force", 1);
         }
         try{

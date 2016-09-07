@@ -17,6 +17,7 @@ public class SessionHelper {
     public static final String KEY_USER = "user";
     public static final String KEY_MENU = "menu";
     public static final String KEY_SELECTED_MENU = "menu_selected";
+    public static final String KEY_IS_ROLE_BUSINESS = "is_business";
 
     public static LunaUserSession getUser(HttpSession session) {
         if(session == null) {
@@ -60,5 +61,20 @@ public class SessionHelper {
             return "";
         }
         return (String)session.getAttribute(KEY_SELECTED_MENU);
+    }
+
+    public static void setIsRoleBusiness(HttpSession session, boolean isRoleBusiness) {
+        if(session == null) {
+           return;
+        }
+        session.setAttribute(KEY_IS_ROLE_BUSINESS, isRoleBusiness);
+    }
+
+    public static boolean getIsRoleBusiness(HttpSession session) {
+        if(session == null) {
+            return false;
+        }
+
+        return Boolean.parseBoolean(session.getAttribute(KEY_IS_ROLE_BUSINESS).toString());
     }
 }

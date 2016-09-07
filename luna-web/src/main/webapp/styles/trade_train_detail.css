@@ -1,0 +1,62 @@
+ul {
+    list-style: none;
+}
+
+label {
+    font-weight: normal;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.inner-wrap {
+    width: 1000px;
+}
+
+.phone-area {
+    width: 20%;
+    float: left;
+    margin-right: 0;
+    height: 30px;
+}
+
+.pic-wrapper {
+    float: left
+}
+
+.pic-wrapper img {
+    width: 150px;
+    height: 150px;
+    margin: 10px 10px 10px 0;
+}
+
+.cityInfo .select2 {
+    float: left;
+}
+
+.form-section {
+    margin: 30px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e7ecf1;
+}
+
+.form-group .required {
+    color: #e02222;
+    font-size: 12px;
+    padding-left: 2px
+}
+
+
+/*确认提交*/
+
+.confirm-wrapper {
+    width: 600px;
+    margin: auto;
+    margin-top: 200px;
+}
+
+.nopass-reason {
+    width: 350px;
+    height: 150px;
+}

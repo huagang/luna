@@ -8,6 +8,7 @@ public class MsShowAppResult {
 	private String appName;
 	private String appCode;
 	private int type;
+	private String appAddr;
 	private Timestamp registhhmmss;
 	private Timestamp uphhmmss;
 	private String owner;
@@ -48,6 +49,15 @@ public class MsShowAppResult {
 	public void setType(int type) {
 		this.type = type;
 	}
+
+	public String getAppAddr() {
+		return appAddr;
+	}
+
+	public void setAppAddr(String appAddr) {
+		this.appAddr = appAddr;
+	}
+
 	public Timestamp getRegisthhmmss() {
 		return registhhmmss;
 	}
