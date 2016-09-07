@@ -72,6 +72,7 @@
             cache: false,
             dataType: 'json',
             success: function (data) {
+                console.log(data);
                 paydata = data;
             }
         });
