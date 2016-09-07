@@ -315,7 +315,7 @@
                 <cosBaseDir>/test</cosBaseDir>
                 <msWebUrl>http://luna-test.visualbusiness.cn/ms-web</msWebUrl>
                 <mtaQQ>3463673430</mtaQQ>
-                <redis.host>10.66.152.87</redis.host>
+                <redis.host>10.66.165.223</redis.host>
                 <redis.instanceId>4246cb82-81d6-45f3-8482-a71cbb7015af</redis.instanceId>
                 <redis.password>vb2015redis</redis.password>
             </properties>

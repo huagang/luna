@@ -55,6 +55,9 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                      <td colspan="3" class="text-center ng-hide" ng-show="cate.categoryData.length === 0">暂无类目</td>
+                  </tr>
                   <tr ng-repeat="row in cate.categoryData" class="ng-hide"
                       ng-show="row.depth === 1 || cate.openList.indexOf(row.parent) !== -1 ">
 
