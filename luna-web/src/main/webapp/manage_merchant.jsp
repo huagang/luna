@@ -53,7 +53,7 @@
               <tbody>
                 <tr class="tr-operation">
                   <td colspan="7">
-                      <label>
+                      <label class="pointer">
                           <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggle()"/> 全选
                       </label>
                       <button type="button">上架</button>
@@ -117,6 +117,47 @@
   </div>
 </div>
 
+
+<div class="new-merchant ng-hide" ng-show="manage.state === 'new'">
+  <div class="mask" ng-click="manage.changeState('init')"></div>
+  <div class="pop-modal" ng-click="manage.hideOptions()">
+    <div class="pop-title">
+      <h4>选择类目</h4>
+      <a href="#" class="btn-close" ng-click="manage.changeState('init')">
+        <img src="<%=request.getContextPath() %>/img/close.png"/>
+      </a>
+    </div>
+    <div class="pop-cont">
+      <div class="form-group">
+        <label>选择商品类目</label>
+        <div class="select" ng-click="manage.optionsToggle()">
+          <span>{{manage.opData.parentName || '无'}}</span>
+          <div class="glyphicon pull-right arrow" ng-class=
+             "{'glyphicon-triangle-bottom': ! manage.opData.showSelectList, 'glyphicon-triangle-top': manage.opData.showSelectList}">
+          </div>
+        </div>
+        <div class="select-parent ng-hide" ng-show="manage.opData.showSelectList">
+          <div class="option" ng-click="manage.handleOptionClick(undefined, '无', 0)">
+            <span>无</span>
+          </div>
+          <div class="option" ng-repeat="row in manage.opData.options" ng-click="manage.handleOptionClick(row.id, row.name, row.depth)"
+               ng-show="row.depth === 1 || manage.opData.openList.indexOf(row.parent) !== -1">
+            <div class="ng-hide" ng-class=
+                    "{'icon-close': manage.opData.openList.indexOf(row.id) !== -1, 'icon-open':  manage.opData.openList.indexOf(row.id) === -1}"
+                 ng-show="row.depth === 1 && row.child.length > 0" ng-click="manage.handleOptionToggle(row.id)"></div>
+            <span class="depth-{{row.depth}}">{{row.name}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pop-fun">
+      <div class="pull-right">
+        <button class="button" ng-class="{'disabled': ! manage.opData.valid}" ng-click="manage.create()" type="button">确定</button>
+        <button class="button-close" ng-click="manage.changeState('init')" type="button">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   window.context = "<%=request.getContextPath() %>";
 </script>
