@@ -17,30 +17,29 @@
 <html>
 <head>
     <title>WXPAYTEST</title>
-    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript">
-        function getPrepayInfo() {
-            var data = {orderId:123,openId:"oSsyJwDuwvilHbfXCxljU9JR7k28"};
-            $.ajax({
-                type: 'post',
-                url: 'http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
-                data: data,
-                cache: false,
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                }
-            });
-        }
-        function requestPay() {
-
-        }
-    </script>
 </head>
 <body>
 <button onclick="getPrepayInfo()">getPrepayInfo</button>
 
 
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
+<script type="text/javascript">
+    function getPrepayInfo() {
+        var data = {orderId:123,openId:"oSsyJwDuwvilHbfXCxljU9JR7k28"};
+        $.ajax({
+            type: 'post',
+            url: 'http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+    function requestPay() {
 
+    }
+</script>
 </body>
 </html>
