@@ -31,7 +31,7 @@ var Inter = function () {
     var lunaEditor = {
         'local': 'http://simon-test.visualbusiness.cn',
         'test': 'http://simon-test.visualbusiness.cn',
-        'current': 'http://webapp.visualbusiness.cn '
+        'current': 'http://webapp.visualbusiness.cn'
     };
 
     var curApiHost = curHost();
@@ -50,7 +50,7 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageUser: context + '/platform/user', //
+                manageUser: context + '/platform/user', // 用户管理页面
                 routeConfig: context + '/content/route/configuration/{0}',
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
