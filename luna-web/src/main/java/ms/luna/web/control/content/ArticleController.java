@@ -118,6 +118,13 @@ public class ArticleController extends BasicController {
             }
             jsonObject.put(MsArticleTable.FIELD_REF_ID, refId);
         }
+
+        String source = RequestHelper.getString(request, MsArticleTable.FIELD_SOURCE);
+        if(source == null) {
+            source = "";
+        }
+        jsonObject.put(MsArticleTable.FIELD_SOURCE, source);
+
         return Pair.of(jsonObject, errMsg);
 
     }

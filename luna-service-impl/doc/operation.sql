@@ -135,3 +135,5 @@ UPDATE luna_menu SET status=0 WHERE code='business';
 
 -- 邮箱注册
 alter table luna_reg_email add `merchant_id` varchar(32) DEFAULT NULL COMMENT '商户id';
+
+alter table ms_article add column source varchar(255) default '' comment '文章来源' after author;
