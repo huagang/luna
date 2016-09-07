@@ -361,7 +361,7 @@
                 <jdbc.urlParam>?useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true&amp;amp;failOverReadOnly=false</jdbc.urlParam>
                 <jdbc.user>root</jdbc.user>
                 <jdbc.password>vb@12345</jdbc.password>
-                <zookeeper.address>10.105.202.180:2181,10.105.205.13:2181,10.105.218.105:2181</zookeeper.address>
+                <zookeeper.address>10.105.204.15:2181</zookeeper.address>
                 <mongo.hosts>115.159.50.183:27017</mongo.hosts>
                 <mongo.user>poi_rw</mongo.user>
                 <mongo.password>sdiedkdijdvmbm</mongo.password>
