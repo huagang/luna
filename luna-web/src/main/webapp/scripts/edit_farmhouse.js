@@ -200,9 +200,6 @@ $(function(){
                 return;
             }
             var data = {force: (that.forcePublish ? 1 : -1)};
-            if(that.oldId){
-                data.old_app_id = that.oldId;
-            }
             $.ajax({
                 url: that.apiUrls.appPublish.url.format(that.appId),
                 type: that.apiUrls.appPublish.type,
@@ -218,12 +215,10 @@ $(function(){
                         $('.publish-replace.pop').removeClass('pop-show');
                         $('.publish-info.pop').addClass('pop-show');
                         $(document.body).addClass('modal-open');
-                        that.oldId = undefined;
                     } else if(res.code === '409'){
                         that.publishData =  res.data;
                         if(that.publishData.length > 0){
                             // 如果存在多个线上微景展,则只替换第一个
-                            that.oldId = that.publishData[0].app_id;
                         }
                         $('.publish-confirm.pop').addClass('pop-show');
                         $('.publish-pop-wrapper .mask').removeClass('hidden');
@@ -243,12 +238,10 @@ $(function(){
         function handleSelect(event){
             $('.publish-replace .replace-option').prop('checked', false);
             $(event.target).prop('checked', true);
-            that.oldId = $(event.target).attr('data-value');
         }
 
         function handleReplaceClick(){
             if(that.publishData.length === 1){
-                that.oldId = that.publishData[0].app_id;
                 that.handleForcePublish();
 
             } else if(that.publishData.length === 2){
@@ -265,10 +258,8 @@ $(function(){
         }
 
         function handlePublishReplace(){
-            if(that.oldId){
-                that.forcePublish = 1;
-                that.handlePublish();
-            }
+            that.forcePublish = 1;
+            that.handlePublish();
         }
 
 
