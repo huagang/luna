@@ -11,6 +11,7 @@
     <result column="business_id" jdbcType="INTEGER" property="businessId" />
     <result column="column_id" jdbcType="INTEGER" property="columnId" />
     <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="ref_id" jdbcType="INTEGER" property="refId" />
     <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
@@ -49,7 +50,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, title, short_title, abstract_pic, audio, video, business_id, column_id, author, 
-    type, ref_id, up_hhmmss, regist_hhmmss, publish_time, status
+    source, type, ref_id, up_hhmmss, regist_hhmmss, publish_time, status
   </sql>
   <sql id="Blob_Column_List">
     content, abstract_content
@@ -106,13 +107,15 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsArticleWithBLOBs">
     insert into ms_article (title, short_title, abstract_pic, audio, 
-      video, business_id, column_id, author, type, 
-      ref_id, up_hhmmss, regist_hhmmss, publish_time, 
-      status, content, abstract_content)
+      video, business_id, column_id, author, source, 
+      type, ref_id, up_hhmmss, regist_hhmmss, 
+      publish_time, status, content, abstract_content
+      )
     values (#title:VARCHAR#, #shortTitle:VARCHAR#, #abstractPic:VARCHAR#, #audio:VARCHAR#, 
-      #video:VARCHAR#, #businessId:INTEGER#, #columnId:INTEGER#, #author:VARCHAR#, #type:INTEGER#, 
-      #refId:INTEGER#, #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, #publishTime:TIMESTAMP#, 
-      #status:BIT#, #content:LONGVARCHAR#, #abstractContent:LONGVARCHAR#)
+      #video:VARCHAR#, #businessId:INTEGER#, #columnId:INTEGER#, #author:VARCHAR#, #source:VARCHAR#, 
+      #type:INTEGER#, #refId:INTEGER#, #upHhmmss:TIMESTAMP#, #registHhmmss:TIMESTAMP#, 
+      #publishTime:TIMESTAMP#, #status:BIT#, #content:LONGVARCHAR#, #abstractContent:LONGVARCHAR#
+      )
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -143,6 +146,9 @@
       </isNotNull>
       <isNotNull prepend="," property="author">
         author
+      </isNotNull>
+      <isNotNull prepend="," property="source">
+        source
       </isNotNull>
       <isNotNull prepend="," property="type">
         type
@@ -195,6 +201,9 @@
       </isNotNull>
       <isNotNull prepend="," property="author">
         #author:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="source">
+        #source:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="type">
         #type:INTEGER#
@@ -260,6 +269,9 @@
       <isNotNull prepend="," property="record.author">
         author = #record.author:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.source">
+        source = #record.source:VARCHAR#
+      </isNotNull>
       <isNotNull prepend="," property="record.type">
         type = #record.type:INTEGER#
       </isNotNull>
@@ -300,6 +312,7 @@
       business_id = #record.businessId:INTEGER#,
       column_id = #record.columnId:INTEGER#,
       author = #record.author:VARCHAR#,
+      source = #record.source:VARCHAR#,
       type = #record.type:INTEGER#,
       ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
@@ -323,6 +336,7 @@
       business_id = #record.businessId:INTEGER#,
       column_id = #record.columnId:INTEGER#,
       author = #record.author:VARCHAR#,
+      source = #record.source:VARCHAR#,
       type = #record.type:INTEGER#,
       ref_id = #record.refId:INTEGER#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
@@ -359,6 +373,9 @@
       </isNotNull>
       <isNotNull prepend="," property="author">
         author = #author:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="source">
+        source = #source:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="type">
         type = #type:INTEGER#
@@ -397,6 +414,7 @@
       business_id = #businessId:INTEGER#,
       column_id = #columnId:INTEGER#,
       author = #author:VARCHAR#,
+      source = #source:VARCHAR#,
       type = #type:INTEGER#,
       ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
@@ -417,6 +435,7 @@
       business_id = #businessId:INTEGER#,
       column_id = #columnId:INTEGER#,
       author = #author:VARCHAR#,
+      source = #source:VARCHAR#,
       type = #type:INTEGER#,
       ref_id = #refId:INTEGER#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,

@@ -46,6 +46,7 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
             && (this.getBusinessId() == null ? other.getBusinessId() == null : this.getBusinessId().equals(other.getBusinessId()))
             && (this.getColumnId() == null ? other.getColumnId() == null : this.getColumnId().equals(other.getColumnId()))
             && (this.getAuthor() == null ? other.getAuthor() == null : this.getAuthor().equals(other.getAuthor()))
+            && (this.getSource() == null ? other.getSource() == null : this.getSource().equals(other.getSource()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getRefId() == null ? other.getRefId() == null : this.getRefId().equals(other.getRefId()))
             && (this.getUpHhmmss() == null ? other.getUpHhmmss() == null : this.getUpHhmmss().equals(other.getUpHhmmss()))
@@ -69,6 +70,7 @@ public class MsArticleWithBLOBs extends MsArticle implements Serializable {
         result = prime * result + ((getBusinessId() == null) ? 0 : getBusinessId().hashCode());
         result = prime * result + ((getColumnId() == null) ? 0 : getColumnId().hashCode());
         result = prime * result + ((getAuthor() == null) ? 0 : getAuthor().hashCode());
+        result = prime * result + ((getSource() == null) ? 0 : getSource().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getRefId() == null) ? 0 : getRefId().hashCode());
         result = prime * result + ((getUpHhmmss() == null) ? 0 : getUpHhmmss().hashCode());

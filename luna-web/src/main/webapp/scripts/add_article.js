@@ -94,6 +94,7 @@ var initPage = function () {
                 video: articleStore.video,
                 column_id: articleStore.category || 0,
                 short_title: document.querySelector('input[name="short_title"]').value,
+                source: articleStore.source || ''
             };
 
             var url, type;
@@ -278,6 +279,16 @@ var initPage = function () {
                 }
             });
         });
+
+        $('#source').on('change', function(event){
+            var value = event.target.value;
+            articleStore.source = value;
+            if(value.length > 0 && ! /^(http:\/\/|https:\/\/).+\..+$/.test(value)){
+                $('#source_warn').text('文章来源地址格式不正确,请以http://或https://开头');
+            } else{
+                clearWarn('#source_warn');
+            }
+        });
     };
 
 
@@ -316,6 +327,7 @@ var initPage = function () {
             category: $("#category option:first-child").val() || '',
             business_id: business_id,
             previewUrl: '',
+            source: '',
             checkEmpty: function () {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
@@ -384,6 +396,7 @@ var initPage = function () {
                         { serverName: 'abstract_content', storeName: 'summary' },
                         { serverName: 'short_title', storeName: 'short_title' },
                         { serverName: 'url', storeName: 'previewUrl' },
+                        { serverName: 'source', storeName: 'source' },
                     ];
                     data = data.data;
                     nameMapping.forEach(function (item) {
@@ -425,6 +438,9 @@ var initPage = function () {
         if (articleStore.audio) {
             $("#video").val(articleStore.video);
             document.querySelector('#clearVideo').classList.remove('hide');
+        }
+        if(articleStore.source){
+            $("#source").val(articleStore.source);
         }
         // $("#category option[value='" + articleStore.category + "']").attr("selected", "selected").prop('selected', true);
         $("#category option[value='" + articleStore.category + "']").prop('selected', true);
