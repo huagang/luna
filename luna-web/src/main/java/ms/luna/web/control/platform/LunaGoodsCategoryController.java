@@ -1,4 +1,4 @@
-package ms.luna.web.control.merchant;
+package ms.luna.web.control.platform;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
