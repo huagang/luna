@@ -170,8 +170,8 @@ function MerchantType($scope, $http){
         if(vm.opData.abbreviation.length > 16){
             vm.opData.abbrError = '英文简称超过最大字符限制';
             vm.opData.abbreviation = vm.opData.abbreviation.substr(0,16);
-        } else if(vm.opData.abbreviation && ! /[a-zA-Z_-]+/.test(vm.opData.abbreviation)){
-            vm.opData.abbrError = '英文简称只能包含英文字母,下划线和中划线';
+        } else if(vm.opData.abbreviation && ! /^[a-zA-Z0-9_\-]+$/.test(vm.opData.abbreviation)){
+            vm.opData.abbrError = '英文简称只能包含英文字母,数字,下划线和中划线';
         } else if(vm.opData.abbrError){
             vm.opData.abbrError = '';
         }
@@ -182,7 +182,8 @@ function MerchantType($scope, $http){
         vm.message = msg;
         setTimeout(function(){
             vm.message = "";
-        }, 2000)
+            $scope.$apply();
+        }, 2000);
     }
 
     // 请求 获取商品类目数据

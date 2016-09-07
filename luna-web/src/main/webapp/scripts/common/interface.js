@@ -623,12 +623,12 @@ var Inter = function () {
                 },
 
                 // 商品类目
-                fetchMerchantCat: { url: context + '/merchant/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
-                createMerchantCat: { url: context + '/merchant/goodsCategory', type: 'POST' },  // 新建商品类目信息
-                saveMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
-                deleteMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
-                searchMerchantCat: { url: context + '/merchant/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
-                searchAllMerchatCat: { url: context + '/merchant/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
+                fetchMerchantCat: { url: context + '/platform/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
+                createMerchantCat: { url: context + '/platform/goodsCategory', type: 'POST' },  // 新建商品类目信息
+                saveMerchantCat: { url: context + '/platform/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
+                deleteMerchantCat: { url: context + '/platform/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
+                searchMerchantCat: { url: context + '/platform/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
+                searchAllMerchatCat: { url: context + '/platform/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
 
                 //全景搜索
                 searchSinglePano: {

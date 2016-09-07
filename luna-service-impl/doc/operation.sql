@@ -83,6 +83,7 @@ UPDATE `luna_menu` SET `display_order`='5' WHERE `id`='12';
 
 INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('6', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
 INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('7', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
+INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('1', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
 
 ALTER TABLE ms_show_app drop index `app_name`;
 ALTER TABLE ms_show_app drop INDEX `business_id`;
