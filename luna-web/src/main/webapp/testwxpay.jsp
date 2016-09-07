@@ -17,7 +17,7 @@
 <html>
 <head>
     <title>WXPAYTEST</title>
-    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"/>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"></script>
     <script type="text/javascript">
         function getPrepayInfo() {
             var data = {orderId:123,openId:"oSsyJwDuwvilHbfXCxljU9JR7k28"};
