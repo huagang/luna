@@ -78,6 +78,13 @@ $(function(){
             $('.publish-pop-wrapper .mask').on('click' ,that.hidePublishDialog);
 
             $('.publish-confirm').on('click', '.button', that.handleForcePublish);
+
+            $("#pop-message  #btn-mes").click(function () {
+                $("#pop-message").css('display', "none");
+            });
+            $("#pop-message .btn-close").click(function () {
+                $("#pop-message").css('display', "none");
+            });
         }
 
         function initComponents() {
@@ -275,13 +282,6 @@ $(function(){
         function showMessage(msg) {
             $("#pop-message .message").text(msg);
             $('#pop-message').css('display', "block");
-            $("#pop-message  #btn-mes").click(function () {
-                $("#pop-message").css('display', "none");
-            });
-            $("#pop-message .btn-close").click(function () {
-                $("#pop-message").css('display', "none");
-            });
-
         }
 
     }
