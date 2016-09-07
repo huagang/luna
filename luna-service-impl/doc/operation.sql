@@ -101,7 +101,7 @@ ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
 ALTER TABLE `luna_bank_branch`
 ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
 
-UPDATE `luna_menu` SET `code`='goodsCategory' WHERE `id`='5';
+UPDATE `luna_menu` SET `code`='goodsCategory', status=1 WHERE `id`='5';
 
 -- 商户表
 ALTER TABLE `ms_merchant_manage`
