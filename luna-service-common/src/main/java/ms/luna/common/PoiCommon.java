@@ -177,6 +177,8 @@ public class PoiCommon {
 
 		public static final Integer NUM_AROUND_DEFAULT = 20; // 周边POI数据(由近到远),默认20条
 
+		public static final Integer TAG_ID_TEMPORARY = 63; // 一级分类——临时展位的tag_id
+
 		/*
 		 *公共部分 
 		 */
