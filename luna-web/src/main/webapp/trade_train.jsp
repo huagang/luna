@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant-direct.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/trade_train.css">
     <!-- imgCropper引用的css文件 -->
     <link href="<%=request.getContextPath() %>/styles/common/imgCropper.css" rel="stylesheet">
     <link href="<%=request.getContextPath() %>/plugins/cropper/cropper.min.css" rel="stylesheet">
@@ -102,7 +102,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="contactName" required="required" placeholder="请输入你的真实姓名" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="contactName" required="required" placeholder="请输入你的真实姓名" value="">
                                         <!--<span class="help-block">请填写商户业务对接联系人的真实姓名</span>-->
                                     </div>
                                 </div>
@@ -113,7 +113,9 @@
                                         <select name="phoneArea" class="form-control phone-area">
                                             <option value="+86">+86</option>
                                         </select>
-                                        <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码" value="18911133162">
+                                        <div class="phone-num-wrapper">
+                                            <input type="text" class="form-control phone-num" id="phone" name="phone" required="required" placeholder="请输入您的手机号码" value="">
+                                        </div>
                                         <button type="button" id="getVerMsg" class="button-white pull-right">获取短信验证码</button>
                                         <!--<span class="help-block"> 请输入您的手机号码 </span>-->
                                     </div>
@@ -130,7 +132,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="email" required="required" value="1@qq.com">
+                                        <input type="text" class="form-control" id="" name="email" required="required" value="">
                                         <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
                                     </div>
                                 </div>
@@ -165,13 +167,13 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="2016-01-01" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="2016-08-08" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="" />
                                             </div>
                                         </div>
                                         <div class="idforever-wrapper">
@@ -185,7 +187,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>商户名称</label>
                                     <div class="col-md-6  form-content">
-                                        <input type="text" class="form-control" id="" name="merchantName" required="required" placeholder="请填写商户的全称" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="merchantName" required="required" placeholder="请填写商户的全称" value="">
                                         <!--<span class="help-block"> 填写商户的全称 </span>-->
                                     </div>
                                 </div>
@@ -193,7 +195,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>客服电话</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required" placeholder="请填写您的客服电话" value="010-62338499">
+                                        <input type="text" class="form-control" id="" name="merchantPhone" required="required" placeholder="请填写您的客服电话" value="">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -201,7 +203,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>营业执照注册号/社会信用代码</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="merchantNo" required="required" placeholder="请输入18位的商户社会信用代码" value="8885444666445564">
+                                        <input type="text" class="form-control" id="" name="merchantNo" required="required" placeholder="请输入18位的商户社会信用代码" value="">
                                         <!--<span class="help-block"> </span>-->
                                     </div>
                                 </div>
@@ -230,13 +232,13 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group input-group-control" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="2016-03-03" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="2018-01-01" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="" />
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +259,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>开户名称</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="accountName" required="required" placeholder="请输入开户名称" value="杜玉涛">
+                                        <input type="text" class="form-control" id="" name="accountName" required="required" placeholder="请输入开户名称" value="">
                                         <!--<span class="help-block"></span>-->
                                     </div>
                                 </div>
@@ -296,7 +298,7 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>银行账号</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="accountNo" required="required" placeholder="请填写银行账号" value="62335445656879789978">
+                                        <input type="text" class="form-control" id="" name="accountNo" required="required" placeholder="请填写银行账号" value="">
                                         <!--<span class="help-block">  </span>-->
                                     </div>
                                 </div>
@@ -315,7 +317,7 @@
                         <div class="main-hd">
                             <h4><a href="#">交易直通车</a>/确认提交</h4></div>
                         <div class="confirm-wrapper">
-                            <!--<i class="iconfont  icon-profile"></i>-->
+                            <i class="tradeicon-complete"></i>
                             <p>资料提交完成，正在为您审核，请耐心等待 <br/> 您提交的资料，将在1～3个工作日内审核完毕，您可登录皓月平台查看进度
                                 <br/> 资料审核通过后，您需要和微景天下在线签署服务协议，成功后，将自动开通直通车服务。
                             </p>
@@ -329,39 +331,45 @@
                     <div id="checkAndPass" class="main hide">
                         <div class="main-hd">
                             <h4>交易直通车</h4></div>
-                        <p class="launch hide checking">
+                        <p class="launch">
                             <span>你所在的商户还未开通交易直通车</span>
                             <button type="button" disabled="disabled">已申请</button>
                         </p>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>介绍</h5>
+                            <h5><i class="tradeicon tradeicon-introduce"></i>介绍</h5>
                             <p class="">
                                 交易直通车是微景天下针对有商品交易需求的商户提供的一整套解决方案，开通交易直通车的商户可通过商户自己的后台发布商品，并对产生交易的订单进行管理，同时可结合实际的交易数据，优化自身的服务方向。</p>
                         </section>
                         <section class="section-wrapper">
-                            <h5><i class="iconfont icon-profile"></i>流程</h5>
+                            <h5><i class="tradeicon tradeicon-process"></i>流程</h5>
+                            <div class="process-icon-wrapper">
+                                <div class="process-num-wrapper">
+                                    <i class="process-num pass">1</i>
+                                </div>
+                                <div class="process-num-wrapper">
+                                    <i class="process-num">2</i>
+                                </div>
+                            </div>
                             <ul class="process-wrapper">
                                 <li class="process-one">
                                     <div class="process-title-wrapper">
-                                        <i class="process-num">1</i>
                                         <span class="process-title">
                                         资料审核
                                     </span>
                                     </div>
                                     <div class="process-content-wrapper">
-                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <a href="">查看资料</a>
-                                        <div class="pass-flag pass hide">审核通过</div>
+                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <br>
+                                        <i class="tradeicon-complete-inline"></i> <label class="check-status checking hide">审核中</label> <label class="check-status signing hide">审核通过</label> <a href="" id="btnDetail">查看资料</a>
                                     </div>
                                 </li>
                                 <li class="process-two">
                                     <div class="process-title-wrapper">
-                                        <i class="process-num">2</i>
                                         <span class="process-title">
                                         协议签署
                                     </span>
                                     </div>
-                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务
-                                        <button type="button" class="sign-aggreement pass hide" id="btnSign">签署协议</button>
+                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务 <br>
+                                        <button type="button" class="sign-aggreement signing hide" id="btnSign">签署协议</button>
                                     </div>
                                 </li>
                             </ul>
@@ -390,16 +398,30 @@
             <jsp:include page="/templete/tradeAgreement.jsp" />
             <!--协议内容 end-->
         </div>
-        <div class="text-center">
-            <input id="signStatus" type="checkbox" name="signStatus" value="1"><label for="signStatus">同意以上协议</label>
-        </div>
-        <!-- 底部功能区 -->
-        <div class="pop-button text-center">
-            <button type="button" id="btnSignAgreement">签署</button>
+        <div class=" pop-footer text-right">
+            <input id="signStatus" type="checkbox" name="signStatus" value="1"><label for="signStatus">我同意以上协议</label>
+            <button type="button" id="btnSignAgreement" disabled="disabled">签署协议</button>
         </div>
         <!-- 底部功能区 end -->
     </div>
     <!--签署协议 end-->
+    <!-- 开通提示 -->
+    <div class="pop pop-complete" id="pop-complete">
+        <div class="pop-title">
+            <h4>提示</h4>
+            <a href="javascript:;" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
+        </div>
+        <div class="pop-cont">
+            <!--协议内容 start-->
+            <p><i class="tradeicon-complete-inline"></i>恭喜您成功开通皓月交易直通车</p>
+            <!--协议内容 end-->
+        </div>
+        <div class="pop-footer text-right">
+            <button type="button" id="btnComplete">完成</button>
+        </div>
+        <!-- 底部功能区 end -->
+    </div>
+    <!-- 开通提示 End-->
     <jsp:include page="/templete/imgCropper.jsp" />
 
 
@@ -420,7 +442,7 @@
     <script src="<%=request.getContextPath()%>/scripts/common/selectBank.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/fileupload_v2.js"></script>
     <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-    <script src="<%=request.getContextPath()%>/scripts/merchant_direct.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/trade_train.js"></script>
     <!-- 页面级文件 End -->
 
 

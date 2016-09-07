@@ -27,13 +27,18 @@ button:hover {
     /*border: 1px solid #169bd5;*/
 }
 
-.launch button,
-.sign-aggreement {
+.launch button {
     float: right;
     /*background-color: #169bd5;*/
     /*border: 1px solid #169bd5;*/
     height: 30px;
     line-height: 20px;
+}
+
+.sign-aggreement {
+    height: 36px;
+    width: 108px;
+    margin-top: 10px;
 }
 
 .section-wrapper {
@@ -80,7 +85,7 @@ button:hover {
 }
 
 .process-num.pass {
-    background-color: #79b9e7;
+    background-color: #7186BE;
 }
 
 .process-title {
@@ -97,13 +102,18 @@ button:hover {
     /* border-left: 2px solid #e6e7ec; */
 }
 
-.phone-num {
+.phone-num-wrapper {
+    display: inline-block;
     width: 43%;
+}
+
+.phone-num {
+    width: 100%;
     float: left;
 }
 
 
-/*填写信息*/
+/*  填写信息样式 */
 
 .form-content {
     width: 450px;
@@ -171,27 +181,42 @@ button:hover {
 .idPic {
     padding: 0;
 }
-.btnSubmit{
-    width:108px;
+
+.btnSubmit {
+    width: 108px;
 }
 
-/*确认提交*/
+
+/*确认页面样式*/
 
 .confirm-wrapper {
     width: 600px;
     margin: auto;
-    margin-top: 200px;
+    margin-top: 100px;
+    position: relative;
 }
 
 
-/*额外的样式*/
+/*按钮样式*/
+
+button:disabled {
+    border: 1px solid #E5E5E5;
+    background-color: #F5F5F5;
+    color: #BABABA;
+}
+
+
+/*按钮样式 End*/
+
+
+/*额外样式/
 
 .font-red-sunglo {
     color: #E26A6A!important;
 }
 
 
-/*弹出框样式*/
+/* 弹出框 */
 
 .pop-button {
     margin: 0 0 30px 0;
@@ -205,6 +230,18 @@ button:hover {
     padding: 20px;
 }
 
+.pop-agreement .pop-cont {
+    padding: 5px 24px;
+}
+
+.pop-footer {
+    padding: 0 24px;
+    margin-bottom: 30px;
+}
+
+
+/* 弹出框 End*/
+
 input[type=file] {
     opacity: 0;
     position: absolute;
@@ -212,7 +249,7 @@ input[type=file] {
 }
 
 #btnConfirmSubmit {
-    margin: 70px 0 0 0;
+    margin: 10px 0 0 0;
     width: 120px;
     height: 35px;
 }
@@ -289,6 +326,28 @@ input[type=file] {
 .process-num-wrapper:last-child {
     position: relative;
     top: 73px;
+}
+
+.tradeicon-complete {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: -30px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -50px -10px;
+}
+
+.tradeicon-complete-inline {
+    width: 18px;
+    height: 18px;
+    background: url(../img/throughtrain.png) no-repeat;
+    background-position: -50px -10px;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.check-status {
+    color: #707070;
 }
 
 

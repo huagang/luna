@@ -353,8 +353,7 @@ function getShareController(data) {
 						$(tipSel).html("更换缩略图");
 						showMessage(data.msg || '上传图片失败');
 					}
-
-					});
+				});
 			}.bind(this), function(){
 				event.target.value = '';
 			});

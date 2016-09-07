@@ -28,6 +28,20 @@ var initProcessPage = function () {
  * 初始化创建页面数据
  */
 var initCreatePage = function () {
+    var initPageData = function () {
+        $.get(Inter.getApiUrl().getMerchantInfo.url, function (res) {
+            if (res.code == 0) {
+                var data = res.data;
+                $('[name=contactName]').val(data.contact_nm);
+                $('[name=phone]').val(data.contact_phonenum);
+                $('[name=email]').val(data.contact_mail);
+                $('[name=merchantName]').val(data.merchant_nm);
+                $('[name=merchantPhone]').val(data.merchant_phonenum);
+            }
+        });
+    };
+
+
     var initSelectBank = function () {
         $.initSelectBank({
             bankCode: 'bankCode', //银行ID
@@ -36,7 +50,6 @@ var initCreatePage = function () {
             branchBankCode: 'branchBankCode',
         });
     };
-
 
     var initValidate = function () {
         $('#merchantInfo').validate({
@@ -88,6 +101,17 @@ var initCreatePage = function () {
                 accountProvince: 'required',
                 accountCity: 'required',
                 accountAddress: 'required',
+                accountName: {
+                    required: true,
+                    maxlength: 30,
+                },
+                accountNo: {
+                    required: true,
+                    // digits: true,
+                    // minlength: 16,
+                    // maxlength: 19,
+                    luhmCheck: true,
+                }
             },
             messages: {
                 contactName: "请填写商户业务对接联系人的真实姓名",
@@ -110,6 +134,11 @@ var initCreatePage = function () {
                 merchantNo: {
                     required: '请输入营业执照注册号/社会信用代码',
                     isBusinessCode: "请输入正确的营业执照注册号/社会信用代码",
+                },
+                accountNo: {
+                    digits: '请输入正确的银行卡号',
+                    minlength: '请输入正确的银行卡号',
+                    maxlength: '请输入正确的银行卡号',
                 }
             },
             errorPlacement: function (error, element) {
@@ -153,7 +182,7 @@ var initCreatePage = function () {
                     self = this,
                     ajaxData = {
                         'phoneNo': phone,
-                        'target': phone,
+                        'target': 'tradeApplication',
                     };
                 Util.setAjax(Inter.getApiUrl().getSMSCode.url, ajaxData, function (res) {
                     if (res.code == "0") {
@@ -241,9 +270,6 @@ var initCreatePage = function () {
     //提交事件
     var initSubmit = function () {
         $('#btnSubmit').on('click', function () {
-            // $('#create').addClass('hide');
-            // $('#confirmSubmit').removeClass('hide');
-
             $('#merchantInfo').valid();
             var formDataZero = Util.formToJson($('#merchantInfo')),
                 formData = {
@@ -259,27 +285,38 @@ var initCreatePage = function () {
                     merchantName: formDataZero.merchantName,
                     merchantNo: formDataZero.merchantNo,
                     merchantPhone: formDataZero.merchantPhone,
-                    smsCode:formDataZero.verCode,
+                    smsCode: formDataZero.verCode,
                 },
                 idPicObj = $('.idPic .pic-wrapper'),
                 idcardPicUrl = [],
-                blPicObj = $('.blPicÎ .pic-wrapper'),
+                blPicObj = $('.blPic .pic-wrapper'),
                 licencePicUrl = [];
-            // console.log('提交事件' +);
+
             formData.contactPhone = formDataZero.phoneArea + '|' + formDataZero.phone;
             idPicObj.each(function (e) {
                 var imgSrc = $(this).find('img').attr('src');
                 idcardPicUrl.push(imgSrc);
             });
             formData.idcardPicUrl = idcardPicUrl.join('|');
-            idPicObj.each(function (e) {
+            blPicObj.each(function (e) {
                 var imgSrc = $(this).find('img').attr('src');
                 licencePicUrl.push(imgSrc);
             });
             formData.licencePicUrl = licencePicUrl.join('|');
-            formData.idcardPeriod = $('#startIDDate').val() + "|" + $('#endIDDate').val();
+            formData.idcardPeriod = $('#startIDDate').val() + "|" + ($('[name= idforever]:checked').val() ? '永久' : $('#endIDDate').val());
             formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
             console.log(formData);
+            var errMsg = [];
+            if (idcardPicUrl.length != 2) {
+                errMsg.push('请正确上传身份证文件');
+            }
+            if (licencePicUrl.length != 1) {
+                errMsg.push('请正确上传营业执照副本文件');
+            }
+            if (errMsg.length > 0) {
+                alert(errMsg);
+                return;
+            }
             Util.setAjax(Inter.getApiUrl().saveMerchantInfo.url, formData, function (res) {
                 if (res.code == "0") {
                     $('#create').addClass('hide');
@@ -299,13 +336,14 @@ var initCreatePage = function () {
                 format: 'yyyy-mm-dd',
                 language: "zh-CN",
             });
-            $('#idForever').on('click',function(){
-                if($(this).prop('checked')){
-                    $('#endIDDate').attr('disabled','disabled');
-                }else{
+            $('#idForever').on('click', function () {
+                if ($(this).prop('checked')) {
+                    $('#endIDDate').attr('disabled', 'disabled');
+                } else {
                     $('#endIDDate').removeAttr('disabled');
                 }
             });
+            initPageData();
             initSelectBank();
             getValidateMsg();
             initSubmit();
@@ -338,6 +376,11 @@ var initAuditCompletePage = function () {
     };
     return {
         init: function () {
+            $('#btnDetail').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(Inter.getApiUrl().getMerchatDetail.url, '_blank');
+            });
             initSignEvent();
         }
     };
@@ -349,9 +392,22 @@ var initAuditCompletePage = function () {
 var initDialogEvent = function () {
     var initSingButton = function () {
         $('#btnSignAgreement').on('click', function () {
+            var thisButton = this;
             var signStatus = $('[name=signStatus]:checked').val();
             if (signStatus) {
-                console.log('协议通过');
+                Util.setAjax(Inter.getApiUrl().merchatSign.url, {}, function (res) {
+                    if (res.code == "0") {
+                        $('.process-num').addClass('pass');
+                        $('#btnSign').addClass('hide');
+                        clcWindow(thisButton);
+                        popWindow($('#pop-complete'));
+                        console.log('协议通过');
+                    } else {
+                        console.log('签署协议失败');
+                    }
+                }, function (res) {
+                    console.log('服务出现问题，请稍后再试');
+                }, Inter.getApiUrl().merchatSign.type);
             } else {
                 console.log('请签署协议');
             }
@@ -359,6 +415,17 @@ var initDialogEvent = function () {
     };
     return {
         init: function () {
+            $('#signStatus').on('change', function (e) {
+                if ($('#signStatus:checked').length > 0) {
+                    $('#btnSignAgreement').removeAttr('disabled');
+                } else {
+                    $('#btnSignAgreement').prop('disabled', true);
+                }
+            });
+            $('#btnComplete').on('click', function (e) {
+                clcWindow(this);
+                window.location.href = Inter.getPageUrl().home;
+            });
             initSingButton();
         }
     };
@@ -374,17 +441,21 @@ $('document').ready(function () {
 });
 
 function showPage() {
+    var status = $('#merchantStutas').val();
+
     $.ajax({
-        url: Inter.getApiUrl().getMerchantStatus,    //请求的url地址
+        url: Inter.getApiUrl().getMerchantStatus.url,    //请求的url地址
         dataType: "json",   //返回格式为json
-        async: true, //请求是否异步，默认为异步，这也是ajax重要特性
-        data: { "id": "value" },    //参数值
+        async: false, //请求是否异步，默认为异步，这也是ajax重要特性
         type: "GET",   //请求方式
         beforeSend: function () {
             //请求前的处理
         },
-        success: function (req) {
+        success: function (res) {
             //请求成功时处理
+            if (res.code == "0") {
+                status = res.data.tradeStatus.toString();
+            }
         },
         complete: function () {
             //请求完成的处理
@@ -394,8 +465,6 @@ function showPage() {
         }
     });
 
-
-    var status = $('#merchantStutas').val();
     switch (status) {
         case '0':
             $('#process').removeClass('hide');
@@ -404,7 +473,13 @@ function showPage() {
             $('#checkAndPass,.checking').removeClass('hide');
             break;
         case '2':
-            $('#checkAndPass,.pass').removeClass('hide');
+            $('#checkAndPass,.signing').removeClass('hide');
+            break;
+        case '3':
+            $('#checkAndPass,.checking').removeClass('hide');
+            break;
+        case '4':
+            $('#checkAndPass,.checking').removeClass('hide');
             break;
         default:
             break;

@@ -116,6 +116,7 @@ public class FarmPageServiceImpl implements FarmPageService {
     }
 
     @Override
+    @Transactional
     public JSONObject delPage(Integer app_id) {
         try {
             msShowAppDAO.deleteByPrimaryKey(app_id);

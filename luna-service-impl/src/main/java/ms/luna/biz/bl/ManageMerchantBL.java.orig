@@ -99,6 +99,7 @@ public interface ManageMerchantBL {
 	 */
 	JSONObject registMerchant(String json);
 
+<<<<<<< HEAD
 	/**
 	 * 获取商户email
 	 *
@@ -106,6 +107,7 @@ public interface ManageMerchantBL {
 	 * @return
 	 */
 	JSONObject getMerchantEmail(String id);
+=======
 
     /**
      * 商户签署直通车协议
@@ -130,4 +132,5 @@ public interface ManageMerchantBL {
      * @return
      */
     JSONObject getMerchantTradeStatus(String json);
+>>>>>>> task-1000468
 }

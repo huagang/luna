@@ -16,7 +16,15 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/fonts/iconfont.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/merchant_detail.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/trade_train_detail.css">
+    <!-- jQuery 文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
+    <!-- jQuery 文件 End -->
+
+    <!-- Angular 文件 -->
+    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
+    <!-- Angular 文件 End -->
+
 </head>
 
 <body ng-app="MerchantDetail">
@@ -38,7 +46,7 @@
                             <h4>商户资料核实</h4></div>
                         <form id="merchantInfo" class="form-horizontal">
                             <div class="form-body">
-                                <h5 class="form-section">联系信息</h5>
+                                <p class="form-section">联系信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right">联系人姓名</label>
                                     <div class="col-md-4">
@@ -60,7 +68,7 @@
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right">联系人身份证</label>
                                     <div class="col-md-8">
-                                        <div class="col-md-12">
+                                        <div class="">
                                             <div class="pic-wrapper" ng-repeat="item in mcInfo.idcardPicUrl">
                                                 <img src="{{ item }}" alt="身份证">
                                             </div>
@@ -77,7 +85,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <h4 class="form-section">商户信息</h4>
+                                <p class="form-section">商户信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right">商户名称</label>
                                     <div class="col-md-4">
@@ -99,9 +107,9 @@
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="inputWarning">营业执照副本电子版</label>
                                     <div class="col-md-8">
-                                        <div class="col-md-12">
-                                            <div class="pic-wrapper" ng-show={{mcInfo.licencePicUrl!='' }}>
-                                                <img src="{{mcInfo.licencePicUrl}}" alt="营业执照副本">
+                                        <div class="">
+                                            <div class="pic-wrapper" ng-show="mcInfo.licencePicUrl!='' ">
+                                                <img src="{{mcInfo.licencePicUrl[0]}}" alt="营业执照副本">
                                             </div>
                                         </div>
                                     </div>
@@ -116,7 +124,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <h4 class="form-section">商户结算账户信息</h4>
+                                <p class="form-section">商户结算账户信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">账户类型</label>
                                     <div class="col-md-4">
@@ -132,31 +140,31 @@
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">开户银行</label>
                                     <div class="col-md-4">
-                                        <label class="control-label" for="">{{mcInfo.bankName}}</label>
+                                        <label class="control-label" for="">{{mcInfo.accountBank[1]}}</label>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">开户银行城市</label>
                                     <div class="col-md-4">
-                                        <label class="control-label" for="">{{mcInfo.accountProvince}}</label>
-                                        <label class="control-label" for="">{{mdInfo.accountCity}}</label>
+                                        <label class="control-label" for="">{{mcInfo.accountProvince[1]}}</label>
+                                        <label class="control-label" for="">{{mcInfo.accountCity[1]}}</label>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">开户支行</label>
                                     <div class="col-md-4">
-                                        <label class="control-label" for="">{{mdInfo.accountAddress}}</label>
+                                        <label class="" for="">{{mcInfo.accountAddress[1]}}</label>
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right" for="">银行账号</label>
                                     <div class="col-md-4">
-                                        <label class="control-label" for="">{{mdInfo.accountNo}}</label>
+                                        <label class="control-label" for="">{{mcInfo.accountNo}}</label>
                                     </div>
                                 </div>
-                                <div class="form-group clearfix text-center button-group">
-                                    <button type="button" id="btnPass" class="btn primary">同意开通</button>
-                                    <button type="button" id="btnNoPass" class="btn primary">驳回</button>
+                                <div class="form-group clearfix text-center button-group" ng-show="mcInfo.userType == 'manager'">
+                                    <button type="button" id="btnPass" class="btn primary" ng-click="mcInfo.accessEvent()">同意开通</button>
+                                    <button type="button" id="btnNoPass" class="btn primary" ng-click="mcInfo.noPassEvent()">驳回</button>
                                 </div>
                             </div>
                         </form>
@@ -174,30 +182,25 @@
     </div>
     <!-- 驳回 start-->
     <div class="pop-overlay"></div>
-    <div class="pop pop-nopass" id="pop-nopass">
+    <div class="pop pop-nopass" id="pop-nopass" ng-controller="nopassController as noCon">
         <div class="pop-title">
             <h4>驳回理由</h4>
             <a href="javascript:;" class="btn-close" onclick="clcWindow(this)"><img src="<%=request.getContextPath() %>/img/close.png"/></a>
         </div>
         <div class="pop-cont">
-            <textarea class="nopass-reason" placeholder="请客服人员填写商户资料驳回理由"></textarea>
-            <p class="warn">驳回理由不能为空</p>
+            <form name="nopass_form">
+                <textarea class="nopass-reason" ng-model="noCon.reason" name="reason" placeholder="请客服人员填写商户资料驳回理由" ng-blur="noCon.changeReason()" required></textarea>
+                <p class="warn" ng-show="nopass_form.reason.$dirty&&nopass_form.reason.$error.required">驳回理由不能为空</p>
+            </form>
         </div>
         <!-- 底部功能区 -->
-        <div class="pop-fun">
-            <button type="button" id="btnNoPassConfirm">确定</button>
+        <div class="pop-fun" >
+            <button type="button" id="btnNoPassConfirm" ng-click="noCon.noPassConfirm()">确定</button>
             <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
         </div>
         <!-- 底部功能区 end -->
     </div>
     <!--驳回申请 end-->
-    <!-- jQuery 文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/jquery.js"></script>
-    <!-- jQuery 文件 End -->
-
-    <!-- Angular 文件 -->
-    <script src="<%=request.getContextPath()%>/plugins/angular/js/angular.min.js"></script>
-    <!-- Angular 文件 End -->
 
     <!-- common文件 -->
     <script src="<%=request.getContextPath()%>/scripts/common/util.js" charset="utf-8"></script>
@@ -207,7 +210,7 @@
 
     <!-- 页面级文件 -->
     <script src="<%=request.getContextPath() %>/scripts/popup.js"></script>
-    <script src="<%=request.getContextPath()%>/scripts/merchant_detail.js"></script>
+    <script src="<%=request.getContextPath()%>/scripts/trade_train_detail.js"></script>
     <!-- 页面级文件 End -->
 
 

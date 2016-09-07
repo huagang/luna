@@ -25,14 +25,15 @@
                 <div style="background: #FFFFFF;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding: 48px 48px 15px 48px;">
                     <p style="font-size: 20px;line-height: 28px;margin:0;padding-bottom: 8px;font-weight: 500;">您好，</p>
                     <p style="line-height: 2em; margin: 0;">
-                        您所在商户“为民农家院”申请开通皓月交易直通车的认证资料，经过客服人员核实无误，审核通过，请您尽快登陆皓月平台，在线签署相关服务协议，并进行商户管理。
+                        您所在商户“${merchantName}”申请开通皓月交易直通车的认证资料，经过客服人员核实无误，审核通过，请您尽快登陆皓月平台，在线签署相关服务协议，并进行商户管理。
                     </p>
                     <p style="line-height: 2em; margin:10px 0 0 0;color:blue;">
                         期待您共铸辉煌！
                     </p>
-                    <p style="line-height: 2em;margin: 12px 0;text-align: right;">
-                        <label id="todayText" for="">2016-8-31</label>
-                    </p>
+                    <div style="width: 100%;text-align: right;margin-top: 58px;">
+                        <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Luna%20Team.png" style="width: 91px;height: 14px;">
+                        <p id="time" style="margin: 0;padding-top: 10px;padding-right: 5px;;">${today}</p>
+                    </div>
                 </div>
             </div>
         </div>

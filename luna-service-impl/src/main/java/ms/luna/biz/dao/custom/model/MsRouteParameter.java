@@ -12,7 +12,9 @@ public class MsRouteParameter implements Serializable{
 	private Integer limit;
 	
 	private Integer offset;
-	
+
+	private Integer businessId;
+
 	private boolean range;
 
 	public Integer getLimit() {
@@ -38,5 +40,13 @@ public class MsRouteParameter implements Serializable{
 	public void setRange(boolean range) {
 		this.range = range;
 	}
-	
+
+	public Integer getBusinessId() {
+		return businessId;
+	}
+
+	public void setBusinessId(Integer businessId) {
+		this.businessId = businessId;
+	}
+
 }

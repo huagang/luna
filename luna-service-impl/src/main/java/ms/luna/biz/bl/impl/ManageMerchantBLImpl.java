@@ -1,32 +1,39 @@
 package ms.luna.biz.bl.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.util.Date;
 import java.util.List;
 
 import ms.biz.common.CloudConfig;
 import ms.biz.common.ServiceConfig;
-import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.dao.custom.MsBusinessDAO;
-import ms.luna.biz.dao.model.*;
-import ms.luna.biz.table.LunaUserTable;
-import ms.luna.biz.table.MsBusinessTable;
-import ms.luna.biz.table.MsCRMTable;
-import ms.luna.biz.table.MsMerchantManageTable;
-import ms.luna.biz.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.visualbusiness.gennum.service.GenNumService;
-
 import ms.luna.biz.bl.ManageMerchantBL;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
+import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
+import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.MsUserPwDAO;
 import ms.luna.biz.dao.custom.model.MerchantsParameter;
 import ms.luna.biz.dao.custom.model.MerchantsResult;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.dao.model.*;
+import ms.luna.biz.table.LunaUserTable;
+import ms.luna.biz.table.MsBusinessTable;
+import ms.luna.biz.table.MsCRMTable;
+import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.MtaWrapper;
+import ms.luna.biz.util.UUIDGenerator;
+import ms.luna.biz.table.MsMerchantManageTable;
+import ms.luna.biz.util.*;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Greek
@@ -38,13 +45,13 @@ import com.alibaba.fastjson.JSONObject;
 public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	@Autowired
-	private GenNumService genNumService;
-
-	@Autowired
 	private MsMerchantManageDAO msMerchantManageDAO;
  
 	@Autowired
 	private MsUserPwDAO msUserPwDAO;
+
+	@Autowired
+	private LunaUserMerchantDAO lunaUserMerchantDAO;
 
 	@Autowired
 	private MsBusinessDAO msBusinessDAO;
@@ -114,25 +121,25 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
     @Override
     public JSONObject signAgreement(JSONObject jsonObject) {
-        Integer businessId = jsonObject.getInteger(MsBusinessTable.FIELD_BUSINESS_ID);
-        MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
-        if (msBusiness == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务ID不存在");
-        }
-        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+        String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+		LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(userUniqueId);
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(lunaUserMerchant.getMerchantId());
+		if (msMerchantManage == null) {
+			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该用户没有对应商户ID");
+		}
         msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUE_ON);
+		msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
         return FastJsonUtil.sucess("success");
     }
 
     @Override
     public JSONObject getMerchantTradeStatus(String json) {
         JSONObject param = JSONObject.parseObject(json);
-        Integer businessId = param.getInteger(LunaUserTable.FIELD_ID);
-        //TODO 中间表查出商户ID
-        //TODO 传入商户ID
-        //MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(msBusiness.getMerchantId());
+		String userUniqueId = param.getString(LunaUserTable.FIELD_ID);
+		LunaUserMerchant lunaUserMerchant = lunaUserMerchantDAO.selectByPrimaryKey(userUniqueId);
+        MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(lunaUserMerchant.getMerchantId());
         JSONObject result = new JSONObject();
-        //result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
+        result.put(MsMerchantManageTable.FIELD_TRADE_STATUS, msMerchantManage.getTradeStatus());
         return FastJsonUtil.sucess("success", result);
     }
 
@@ -142,6 +149,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
         String merchantId = param.getString(MsMerchantManageTable.FIELD_MERCHANT_ID);
         MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(merchantId);
         msMerchantManage.setTradeStatus(param.getInteger(MsMerchantManageTable.FIELD_TRADE_STATUS));
+		msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
         return FastJsonUtil.sucess("success");
     }
 
@@ -162,7 +170,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			likeFilterNm = "%" + likeFilterNm.toLowerCase() + "%";
 			merchantsParameter.setLikeFilterNm(likeFilterNm);
 		}
-		
+
 		List<MerchantsResult> list = null;
 		int total = msMerchantManageDAO.countMerchants(merchantsParameter);
 		if (total > 0) {
@@ -323,7 +331,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		if(msMerchant == null){
 			return FastJsonUtil.error("1", "商户id不存在,merchant_id:" + merchant_id);
 		}
-		
+
 		MsMerchantManage msMerchantManage = new MsMerchantManage();
 		msMerchantManage.setMerchantId(merchant_id);
 		msMerchantManage.setDelFlg("1");// 非物理删除
@@ -342,12 +350,12 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		msMerchantManageDAO.updateByPrimaryKeySelective(msMerchantManage);
 		return FastJsonUtil.sucess("success");
 	}
-	
+
 	// ---------------------------------------------------------
 
 	/**
 	 * 检测业务员是否存在
-	 * 
+	 *
 	 * @param salesman_nm
 	 * @return
 	 */
@@ -362,7 +370,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	/**
 	 * 检测商户名字是否重名
-	 * 
+	 *
 	 * @param merchant_nm
 	 * @return
 	 */
@@ -378,7 +386,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 
 	/**
 	 * 检测当前商户名字是否和其他商户名字重名
-	 * 
+	 *
 	 * @param merchant_id 商户id
 	 * @param merchant_nm 商户名称
 	 * @return
@@ -397,13 +405,13 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public Integer countMerchantNm(String merchantNm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public JSONObject isSalesmanNmExit(String json) {
 		JSONObject param = JSONObject.parseObject(json);
@@ -428,7 +436,7 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 			return FastJsonUtil.error("1","商户名称不存在");
 		return FastJsonUtil.sucess("商户名称存在");
 	}
-	
+
 	@Override
 	public JSONObject isEditedMerchantNmEist(String json){
 		JSONObject param = JSONObject.parseObject(json);
@@ -444,6 +452,21 @@ public class ManageMerchantBLImpl implements ManageMerchantBL {
 				return FastJsonUtil.sucess("商户名称存在");
 		}
 		return FastJsonUtil.error("1", "商户名称不存在");
+	}
+
+	@Override
+	public JSONObject getMerchantEmail(String id) {
+		MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(id);
+		if(msMerchantManage == null ) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "merchant id not exist.");
+		}
+		String email = msMerchantManage.getContactMail();
+		if(StringUtils.isBlank(email)) {
+			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "contact mail not exist");
+		}
+		JSONObject data = new JSONObject();
+		data.put(MsCRMTable.FIELD_CONTACT_MAIL, email);
+		return FastJsonUtil.sucess("success", data);
 	}
 
 	private void createBusiness(String businessName, String businessCode, String merchant_id, String createUser) {

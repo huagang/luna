@@ -59,12 +59,6 @@ public class ManageShowAppServiceImpl implements ManageShowAppService {
 	}
 
 	@Override
-	public boolean existAppName(String appName) {
-		// TODO Auto-generated method stub
-		return manageShowAppBL.existAppName(appName);
-	}
-
-	@Override
 	public JSONObject copyApp(String json) {
 		return manageShowAppBL.copyApp(json);
 	}

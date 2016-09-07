@@ -41,8 +41,9 @@ public class ManageRouteServiceImpl implements ManageRouteService {
     public JSONObject createRoute(JSONObject json) {
         try {
             String name = json.getString(MsRouteTable.FIELD_NAME);
+            Integer businessId = json.getInteger(MsRouteTable.FIELD_BUSINESS_ID);
             // 检测名称是否存在
-            boolean flag = checkRouteNmExist(name, null);
+            boolean flag = checkRouteNmExist(name, null, businessId);
             if (flag) {
                 return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
             }
@@ -67,16 +68,19 @@ public class ManageRouteServiceImpl implements ManageRouteService {
             Integer id = json.getInteger(MsRouteTable.FIELD_ID);
             String name = json.getString(MsRouteTable.FIELD_NAME);
 
+            // 根据id获取名称
+            MsRoute msRoute1 = msRouteDAO.selectByPrimaryKey(id);
+            if(msRoute1 == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid route id");
+            }
+            Integer businessId = msRoute1.getBusinessId();
             // 检测名称是否存在
-            boolean flag = checkRouteNmExist(name, id);
+            boolean flag = checkRouteNmExist(name, id, businessId);
             if (flag) {
                 return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
             }
-            MsRoute msRoute = JSONObject.toJavaObject(json, MsRoute.class);
-            Integer count = msRouteDAO.updateByPrimaryKeySelective(msRoute);
-            if (count <= 0) {
-                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "invalid route id");
-            }
+            MsRoute msRoute2 = JSONObject.toJavaObject(json, MsRoute.class);
+            msRouteDAO.updateByPrimaryKeySelective(msRoute2);
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             MsLogger.error("Failed to update route: " + e.getMessage());
@@ -111,9 +115,10 @@ public class ManageRouteServiceImpl implements ManageRouteService {
         MsRouteParameter msRouteParameter = new MsRouteParameter();
         msRouteParameter.setLimit(json.getInteger("limit"));
         msRouteParameter.setOffset(json.getInteger("offset"));
+        msRouteParameter.setBusinessId(json.getInteger(MsRouteTable.FIELD_BUSINESS_ID));
         msRouteParameter.setRange(true);
         try {
-            Integer total = msRouteDAO.countRoutes(new MsRouteParameter());
+            Integer total = msRouteDAO.countRoutes(msRouteParameter);
             JSONArray rows = new JSONArray();
             if (total > 0) {
                 List<MsRouteResult> lst = msRouteDAO.selectRoutes(msRouteParameter);
@@ -149,7 +154,8 @@ public class ManageRouteServiceImpl implements ManageRouteService {
             JSONObject param = JSONObject.parseObject(json);
             String name = param.getString(MsRouteTable.FIELD_NAME);
             Integer id = param.containsKey(MsRouteTable.FIELD_ID) ? param.getInteger(MsRouteTable.FIELD_ID) : null;
-            if (!checkRouteNmExist(name, id)) {
+            Integer businessId= param.getInteger(MsRouteTable.FIELD_BUSINESS_ID);
+            if (!checkRouteNmExist(name, id, businessId)) {
                 return FastJsonUtil.sucess("route name does not exist");
             } else {
                 return FastJsonUtil.error(ErrorCode.ALREADY_EXIST, "route name exists");
@@ -161,19 +167,19 @@ public class ManageRouteServiceImpl implements ManageRouteService {
 
     }
 
-    private boolean checkRouteNmExist(String name, Integer id) {
+    private boolean checkRouteNmExist(String name, Integer id, Integer businessId) {
         MsRouteCriteria msRouteCriteria = new MsRouteCriteria();
         MsRouteCriteria.Criteria criteria = msRouteCriteria.createCriteria();
-        criteria.andNameEqualTo(name);
+        criteria.andNameEqualTo(name).andBusinessIdEqualTo(businessId);
         List<MsRoute> lst = msRouteDAO.selectByCriteria(msRouteCriteria);
 
-        // 创建状态
-        if (id == null) {
+        if (id == null) {// 创建状态
             return (lst != null && lst.size() != 0);
         } else {//  编辑状态
             // 不存在或者id对应的name 未发生改变
             return (lst != null && lst.size() != 0 && !id.equals(lst.get(0).getId()));
         }
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-<!--POI数据管理页面  author:Demi-->
+<!-- 直通车邀请激活 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,21 +25,17 @@
                 <div style="background: #FFFFFF;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding: 48px 48px 15px 48px;">
                     <p style="font-size: 20px;line-height: 28px;margin:0;padding-bottom: 8px;font-weight: 500;">您好，</p>
                     <p style="line-height: 2em; margin: 0;">
-                        <span>${luna_nm}</span>邀请您加入皓月平台，以<span id="role_nm">${role_nm}</span>的身份进行业务工作运营，来看看吧。
+                        您所在商户“${merchantName}”申请开通皓月交易直通车的认证资料，经过客服人员核实有误，理由如下：
                     </p>
                     <p style="line-height: 2em; margin: 0;">
-                        	点击下面的链接设置账户名密码进行确认，设置成功之后，您就可以登陆皓月平台进行工作管理了：
-                    </p>
-                    <p style="line-height: 2em;margin: 12px 0;">
-                        <a href="${webAddr}?token=${token}" id="link-address" style="color: #004FA8;text-decoration: none;word-wrap:break-word;word-break:break-all;overflow:hidden;">${webAddr}?token=${token}</a>
+                        ${refuseReason}
                     </p>
                     <p style="line-height: 2em; margin: 0;">
-                        	如果您的email不支持链接点击，请将上面的地址复制到浏览器（例如IE、Chrome）的地址栏进入皓月平台。
+                        如有疑问，请联系相关工作人员。
                     </p>
-                    <p style="line-height: 2em; margin: 0;">期待您的加入！</p>
                     <div style="width: 100%;text-align: right;margin-top: 58px;">
                         <img src="http://view.luna.visualbusiness.cn/uploadfiles/userRegist/Luna%20Team.png" style="width: 91px;height: 14px;">
-                        <p id="time" style="margin: 0;padding-top: 10px;padding-right: 5px;;">${currentDate}</p>
+                        <p id="time" style="margin: 0;padding-top: 10px;padding-right: 5px;;">${today}</p>
                     </div>
                 </div>
             </div>
@@ -47,6 +43,11 @@
         <!--主题内容 end-->
     </div>
 </div>
+<script>
+    var d = new Date();
+    var dateText = d.getFullYear()+'.'+(d.getMonth())+'.'+d.getDate();
+    document.querySelector('#todayText').innerHTML = dateText;
+</script>
 <!--中间区域内容 end-->
 </body>
 </html>

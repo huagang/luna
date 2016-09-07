@@ -93,17 +93,14 @@
     	<form name="newColumnForm">
         	<div class="name">
             	<label>栏目名称</label>
-            	<input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
-            	<span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
-                <span class="warn" ng-show="newColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
-        	</div>
+            	<input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required maxlength="20" ng-blur="column.checkName()" />
+                <span class="red ng-hide" ng-show="column.nameErrorMsg">{{column.nameErrorMsg}}</span>
+            </div>
         	<div class="short">
             	<label>栏目简称</label>
-            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" ng-pattern="/^[a-zA-Z0-9\-_]+$/" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
-                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
-                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
-                <span class="warn" ng-show="newColumnForm.code.$touched && newColumnForm.code.$error.pattern">简称只能由英文字母,数字,下划线,中划线组成</span>
-        	</div>
+            	<input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required maxlength="30"  ng-blur="column.checkCode()"/>
+                <span class="red ng-hide" ng-show="column.codeErrorMsg">{{column.codeErrorMsg}}</span>
+            </div>
     	</form>
     </div>
     <!-- 底部功能区 -->
@@ -125,15 +122,14 @@
         <form name="updateColumnForm">
             <div class="name">
                 <label>栏目名称</label>
-                <input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required ng-maxlength="20" ng-blur="column.checkName()" />
-                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.required">不能为空</span>
-                <span class="warn" ng-show="updateColumnForm.name.$touched && newColumnForm.name.$error.maxlength">名称不超过20个字符</span>
+                <input type="text" name="name" placeholder="名称不超过20个字符" ng-model="column.currentName" required maxlength="20" ng-blur="column.checkName()" />
+                <span class="red ng-hide" ng-show="column.nameErrorMsg">{{column.nameErrorMsg}}</span>
             </div>
             <div class="short">
                 <label>栏目简称</label>
-                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required ng-maxlength="30"  ng-blur="column.checkCode()"/>
-                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.required">不能为空</span>
-                <span class="warn" ng-show="updateColumnForm.code.$touched && newColumnForm.code.$error.maxlength">简称不超过30个字符</span>
+                <input type="text" name="code" placeholder="英文简称不超过30个字符" ng-model="column.currentCode" required maxlength="30"  ng-blur="column.checkCode()"/>
+                <span class="red ng-hide" ng-show="column.codeErrorMsg">{{column.codeErrorMsg}}</span>
+
             </div>
         </form>
     </div>

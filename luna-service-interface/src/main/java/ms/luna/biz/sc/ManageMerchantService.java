@@ -34,6 +34,14 @@ public interface ManageMerchantService {
 	JSONObject loadMerchantById(String json);
 
 	/**
+	 * 根据具体ID获取单个商户信息
+	 *
+	 * @param json
+	 * @return
+	 */
+	JSONObject loadMerchantByUserId(String json);
+
+	/**
 	 * 根据 部分名称 获取多个商户信息
 	 * 
 	 * @param json
@@ -104,6 +112,15 @@ public interface ManageMerchantService {
 	 * @return
 	 */
 	JSONObject registMerchant(String json);
+
+
+	/**
+	 * 获取商户id
+	 *
+	 * @param id 商户id
+	 * @return
+	 */
+	JSONObject getMerchantEmail(String id);
 
 	/**
 	 * 商户签署直通车协议

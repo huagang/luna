@@ -34,14 +34,12 @@ public class CheckTradeApplicationController {
     @Autowired
     private LunaTradeApplicationService lunaTradeApplicationService;
 
-    @Autowired
-    private ManageMerchantService manageMerchantService;
-
     @RequestMapping(method = RequestMethod.POST, value = "/check/{applicationId}")
     @ResponseBody
     public JSONObject checkApplication(HttpServletRequest request,
                                        @PathVariable Integer applicationId,
-                                       @RequestParam Integer checkResult) {
+                                       @RequestParam Integer checkResult,
+                                       @RequestParam(value = "refuseReason", required = false) String refuseReason) {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         if (user == null) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
@@ -52,6 +50,9 @@ public class CheckTradeApplicationController {
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT, checkResult);
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
+        if (refuseReason != null) {
+            inData.put("refuseReason",refuseReason);
+        }
         return lunaTradeApplicationService.checkApplication(inData);
     }
 
@@ -77,11 +78,16 @@ public class CheckTradeApplicationController {
         return new ModelAndView("/manage_merchant_apply.jsp");
     }
 
+    /**
+     * 审核详情界面
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/page/{applyID}")
     public ModelAndView applyDetail(HttpServletRequest request, HttpServletResponse response) {
-
 //        SessionHelper.setSelectedMenu(request.getSession(false), menu);
-        return new ModelAndView("/merchant_detail.jsp");
+        return new ModelAndView("/trade_train_detail.jsp");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getList")

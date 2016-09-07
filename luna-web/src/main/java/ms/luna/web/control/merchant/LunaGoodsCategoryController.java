@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
-@RequestMapping("/merchant/goodsCategory")
+@RequestMapping("/platform/goodsCategory")
 public class LunaGoodsCategoryController extends BasicController {
 
     @Autowired

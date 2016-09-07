@@ -8,16 +8,22 @@ import ms.luna.biz.dao.custom.LunaTradeApplicationDAO;
 import ms.luna.biz.dao.custom.LunaUserMerchantDAO;
 import ms.luna.biz.dao.custom.MsMerchantManageDAO;
 import ms.luna.biz.dao.custom.model.LunaTradeApplicationParameter;
-import ms.luna.biz.dao.model.*;
+import ms.luna.biz.dao.model.LunaTradeApplication;
+import ms.luna.biz.dao.model.LunaTradeApplicationCriteria;
+import ms.luna.biz.dao.model.LunaUserMerchant;
+import ms.luna.biz.dao.model.MsMerchantManage;
 import ms.luna.biz.sc.LunaTradeApplicationService;
 import ms.luna.biz.table.LunaTradeApplicationTable;
 import ms.luna.biz.table.LunaUserTable;
 import ms.luna.biz.table.MsMerchantManageTable;
+import ms.luna.biz.util.CreateHtmlUtil;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.model.MailMessage;
 import ms.luna.schedule.service.EmailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Calendar;
@@ -48,6 +54,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     private EmailService emailService;
 
     @Override
+    @Transactional
     public JSONObject createApplication(JSONObject jsonObject) {
         try {
             String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
@@ -86,8 +93,13 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             //sendEmail(TYPE_TO_MANAGER);
         } catch (Exception ex) {
             logger.error("Failed to create lunaTradeApplication", ex);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            try {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            } catch (Exception e) {
+                logger.error("Failed to create lunaTradeApplication and roll back failed", e);
+            } finally {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            }
         }
         return FastJsonUtil.sucess("success");
     }
@@ -96,7 +108,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
 //    private static final int TYPE_TO_USER = 1;
 
-//    private void sendEmail(int type) {
+//    private void sendResultEmail(String address, boolean isSuccess) {
 //        if (type == TYPE_TO_MANAGER) {
 //            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
 //            message.setContent("");
@@ -104,13 +116,10 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 //            //luna_nm, role_nm, webAddr)
 //            emailService.sendEmail(message);
 //        } else if (type == TYPE_TO_USER) {
-//            MailMessage message = new MailMessage("luna@visualbusiness.com", "交易直通车申请审核");
-//            message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml());
-//            emailService.sendEmail(message);
-//        }
 //    }
 
     @Override
+    @Transactional
     public JSONObject recreateApplication(JSONObject jsonObject) {
         try {
             String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
@@ -148,20 +157,37 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
     @Override
     public JSONObject getApplication(JSONObject jsonObject) {
         try {
-            String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
+            if (jsonObject.containsKey(LunaUserTable.FIELD_ID)) {
+                String userUniqueId = jsonObject.getString(LunaUserTable.FIELD_ID);
 
-            LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
-            LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
+                LunaUserMerchant lunaUserMerchant = lunaUserMerchantDao.selectByPrimaryKey(userUniqueId);
+                LunaTradeApplicationCriteria lunaTradeApplicationCriteria = new LunaTradeApplicationCriteria();
 
-            lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
-            List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
-            if (applicationList == null || applicationList.size() == 0)
-                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
-            JSONObject result = new JSONObject();
+                lunaTradeApplicationCriteria.createCriteria().andMerchantIdEqualTo(lunaUserMerchant.getMerchantId());
+                List<LunaTradeApplication> applicationList = lunaTradeApplicationDAO.selectByCriteria(lunaTradeApplicationCriteria);
+                if (applicationList == null || applicationList.size() == 0) {
+                    return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
+                }
+                JSONObject result = new JSONObject();
 
-            assembleApplication(result, applicationList.get(0));
+                assembleApplication(result, applicationList.get(0));
 
-            return FastJsonUtil.sucess("success", result);
+                return FastJsonUtil.sucess("success", result);
+            } else if (jsonObject.containsKey(LunaTradeApplicationTable.FIELD_ID)) {
+                Integer applicationId = jsonObject.getInteger(LunaTradeApplicationTable.FIELD_ID);
+                LunaTradeApplication application = lunaTradeApplicationDAO.selectByPrimaryKey(applicationId);
+                if (application == null) {
+                    return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交申请");
+                }
+                JSONObject result = new JSONObject();
+
+                assembleApplication(result, application);
+
+                return FastJsonUtil.sucess("success", result);
+            } else {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+            }
+
         } catch (Exception ex) {
             logger.error("Failed to get lunaTradeApplication", ex);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
@@ -297,6 +323,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
 
 
     @Override
+    @Transactional
     public JSONObject checkApplication(JSONObject jsonObject) {
         try {
             Integer checkResult = jsonObject.getInteger(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT);
@@ -307,17 +334,47 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "申请已经审核完毕,不可重复审核");
             if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_ACCEPT) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_OK);
-                JSONObject data = new JSONObject();
-                data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
-                data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_SUCCESS);
-                manageMerchantBL.changeMerchantTradeStatus(data.toString());
-                //sendEmail(TYPE_TO_USER);
+                //transfer data to merchant table
+                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
+                msMerchantManage.setAccountAddress(application.getAccountAddress());
+                msMerchantManage.setMerchantNo(application.getMerchantNo());
+                msMerchantManage.setAccountBank(application.getAccountBank());
+                msMerchantManage.setAccountCity(application.getAccountCity());
+                msMerchantManage.setAccountName(application.getAccountName());
+                msMerchantManage.setAccountNo(application.getAccountNo());
+                msMerchantManage.setAccountProvince(application.getAccountProvince());
+                msMerchantManage.setAccountType(application.getAccountType());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
+                msMerchantManage.setIdcardPeriod(application.getIdcardPeriod());
+                msMerchantManage.setIdcardPicUrl(application.getIdcardPicUrl());
+                msMerchantManage.setContactNm(application.getContactName());
+                msMerchantManage.setContactPhonenum(application.getContactPhone());
+                msMerchantManage.setContactMail(application.getEmail());
+                msMerchantManage.setMerchantNm(application.getMerchantName());
+                msMerchantManage.setMerchantPhonenum(application.getMerchantPhone());
+                msMerchantManage.setResourceContent(application.getLicencePicUrl());
+                msMerchantManage.setLicencePeriod(application.getLicencePeriod());
+                msMerchantManage.setUpHhmmss(Calendar.getInstance().getTime());
+                msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_SUCCESS);
+                msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
+                //send email
+                MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核成功");
+                message.setContent(CreateHtmlUtil.getInstance().conver2EmailPassTradeHtml(msMerchantManage.getMerchantNm()));
+                emailService.sendEmail(message);
             } else if (checkResult.intValue() == LunaTradeApplicationTable.APP_CHECK_REFUSE) {
                 application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_REFUSE);
+                application.setUpdateTime(Calendar.getInstance().getTime());
                 JSONObject data = new JSONObject();
                 data.put(MsMerchantManageTable.FIELD_MERCHANT_ID, application.getMerchantId());
                 data.put(MsMerchantManageTable.FIELD_TRADE_STATUS, MsMerchantManageTable.TRADE_STATUS_FAILED);
                 manageMerchantBL.changeMerchantTradeStatus(data.toString());
+                //SEND EMAIL
+                MsMerchantManage msMerchantManage = msMerchantManageDAO.selectByPrimaryKey(application.getMerchantId());
+                MailMessage message = new MailMessage(application.getEmail(), "交易直通车申请审核失败");
+                message.setContent(
+                        CreateHtmlUtil.getInstance().conver2EmailRefuseTradeHtml(
+                                msMerchantManage.getMerchantNm(), jsonObject.getString("refuseReason")));
+                emailService.sendEmail(message);
             } else {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数错误");
             }

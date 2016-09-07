@@ -68,7 +68,7 @@
 						>
 					        <thead>
 					            <tr>
-					                <th data-field="merchant_nm" data-align="left">商户名称</th>
+					                <th data-field="merchant_nm" data-align="left" data-width="190">商户名称</th>
                                  	<th data-field="category_nm" data-align="left">商户类型</th>
                                     <th data-field="business_name" data-align="left">业务名称</th>
                                     <th data-field="business_code" data-align="left">业务简称</th>

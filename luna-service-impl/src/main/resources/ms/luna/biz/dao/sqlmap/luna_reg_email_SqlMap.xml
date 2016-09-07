@@ -9,6 +9,7 @@
     <result column="regist_hhmmss" jdbcType="TIMESTAMP" property="registHhmmss" />
     <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
     <result column="invite_unique_id" jdbcType="VARCHAR" property="inviteUniqueId" />
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
   </resultMap>
   <resultMap class="ms.luna.biz.dao.model.LunaRegEmail" extends="luna_reg_email.BaseResultMap" id="ResultMapWithBLOBs">
     <result column="extra" jdbcType="LONGVARCHAR" property="extra" />
@@ -39,7 +40,7 @@
     </iterate>
   </sql>
   <sql id="Base_Column_List">
-    token, role_id, email, status, regist_hhmmss, up_hhmmss, invite_unique_id
+    token, role_id, email, status, regist_hhmmss, up_hhmmss, invite_unique_id, merchant_id
   </sql>
   <sql id="Blob_Column_List">
     extra
@@ -96,9 +97,11 @@
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaRegEmail">
     insert into luna_reg_email (token, role_id, email, status, regist_hhmmss, 
-      up_hhmmss, invite_unique_id, extra)
+      up_hhmmss, invite_unique_id, merchant_id, extra
+      )
     values (#token:VARCHAR#, #roleId:INTEGER#, #email:VARCHAR#, #status:BIT#, #registHhmmss:TIMESTAMP#, 
-      #upHhmmss:TIMESTAMP#, #inviteUniqueId:VARCHAR#, #extra:LONGVARCHAR#)
+      #upHhmmss:TIMESTAMP#, #inviteUniqueId:VARCHAR#, #merchantId:VARCHAR#, #extra:LONGVARCHAR#
+      )
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.LunaRegEmail">
     insert into luna_reg_email
@@ -123,6 +126,9 @@
       </isNotNull>
       <isNotNull prepend="," property="inviteUniqueId">
         invite_unique_id
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id
       </isNotNull>
       <isNotNull prepend="," property="extra">
         extra
@@ -151,6 +157,9 @@
       </isNotNull>
       <isNotNull prepend="," property="inviteUniqueId">
         #inviteUniqueId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        #merchantId:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="extra">
         #extra:LONGVARCHAR#
@@ -186,6 +195,9 @@
       <isNotNull prepend="," property="record.inviteUniqueId">
         invite_unique_id = #record.inviteUniqueId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.merchantId">
+        merchant_id = #record.merchantId:VARCHAR#
+      </isNotNull>
       <isNotNull prepend="," property="record.extra">
         extra = #record.extra:LONGVARCHAR#
       </isNotNull>
@@ -203,6 +215,7 @@
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       invite_unique_id = #record.inviteUniqueId:VARCHAR#,
+      merchant_id = #record.merchantId:VARCHAR#,
       extra = #record.extra:LONGVARCHAR#
     <isParameterPresent>
       <include refid="luna_reg_email.Example_Where_Clause" />
@@ -216,7 +229,8 @@
       status = #record.status:BIT#,
       regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
-      invite_unique_id = #record.inviteUniqueId:VARCHAR#
+      invite_unique_id = #record.inviteUniqueId:VARCHAR#,
+      merchant_id = #record.merchantId:VARCHAR#
     <isParameterPresent>
       <include refid="luna_reg_email.Example_Where_Clause" />
     </isParameterPresent>
@@ -242,6 +256,9 @@
       <isNotNull prepend="," property="inviteUniqueId">
         invite_unique_id = #inviteUniqueId:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id = #merchantId:VARCHAR#
+      </isNotNull>
       <isNotNull prepend="," property="extra">
         extra = #extra:LONGVARCHAR#
       </isNotNull>
@@ -256,6 +273,7 @@
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       invite_unique_id = #inviteUniqueId:VARCHAR#,
+      merchant_id = #merchantId:VARCHAR#,
       extra = #extra:LONGVARCHAR#
     where token = #token:VARCHAR#
   </update>
@@ -266,7 +284,8 @@
       status = #status:BIT#,
       regist_hhmmss = #registHhmmss:TIMESTAMP#,
       up_hhmmss = #upHhmmss:TIMESTAMP#,
-      invite_unique_id = #inviteUniqueId:VARCHAR#
+      invite_unique_id = #inviteUniqueId:VARCHAR#,
+      merchant_id = #merchantId:VARCHAR#
     where token = #token:VARCHAR#
   </update>
 </sqlMap>

@@ -5,20 +5,26 @@
 $(function(){
     if(! /disableWelcome=true/.test(location.href)){
         var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
-        bgImg.onload = function(){
-            if(fgLoaded){
-                showAnimation();
-            }
-            bgLoaded = true;
-        };
-        fgImg.onload = function(){
-            if(bgLoaded){
-                showAnimation();
-            }
-            fgLoaded = true;
-        };
-        fgImg.src = pageData.start_page_foreground_pic;
-        bgImg.src = pageData.start_page_background_pic;
+        if(pageData.start_page_foreground_pic && pageData.start_page_background_pic){
+            fgImg.src = pageData.start_page_foreground_pic;
+            bgImg.src = pageData.start_page_background_pic;
+            bgImg.onload = function(){
+                if(fgLoaded){
+                    showAnimation();
+                }
+                bgLoaded = true;
+            };
+            fgImg.onload = function(){
+                if(bgLoaded){
+                    showAnimation();
+                }
+                fgLoaded = true;
+            };
+        } else{
+            $('.page-back').css('display', 'none');
+            $(document.body).removeClass('modal-open');
+            $('.page-main').removeClass('transparent');
+        }
     } else{
         $('.page-back').css('display', 'none');
         $(document.body).removeClass('modal-open');
@@ -35,7 +41,7 @@ function showAnimation(){
     $('.page-back .bg-mask').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: [.77,.07,0,.63],
+            easing: [.77,.07,0,.63]
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
@@ -65,7 +71,8 @@ function showAnimation(){
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController]);
+        .factory('ScrollController', getScrollController)
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
 
 
     function getMarkerTip() {
@@ -142,7 +149,119 @@ function showAnimation(){
         return MarkerTip;
     }
 
-    function FarmHouseController($rootScope, $scope, $http, MarkerTip) {
+    function getScrollController(){
+        function Controller(options){
+            var that = this;
+            window.scroll = that;
+
+            that.init = init;
+            that.record = record;
+            that.end = end;
+            that.refresh = refresh;
+            that.init();
+
+            function init(){
+                if(options.target && typeof options.target === 'string') {
+                    that.deceleration = options.deceleration || 12;
+                    that.target = $(options.target);
+                    that.scroll = new IScroll(options.target, {
+                        probeType: 2,
+                        scrollX: true,
+                        momentum: false,
+                        bounce: true,
+                        click: true,
+                        startX: 0
+                    });
+                    that.cur = {
+                        x: 0,
+                        time: undefined,
+                    };
+                    that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                    that.scrollWidth  = that.target.children().first().outerWidth();
+                    that.containerWidth = that.target.width();
+                    that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                    that.scroll.on('scroll', that.record);
+                    that.scroll.on('scrollEnd', that.end)
+                }
+            };
+
+            function refresh(){
+                that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                that.scrollWidth  = that.target.children().first().outerWidth();
+                that.containerWidth = that.target.width();
+                that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                that.scroll.refresh();
+            }
+            function record(){
+                var point = event.touches ? event.touches[0] : event;
+                if(point){
+                    that.last = that.cur;
+                    that.cur = {
+                        x: point.pageX,
+                        time: Date.now(),
+                    };
+                    if(that.cur && that.last && that.last.time){
+                        var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
+                        if(speed > 0){
+                            that.maxSpeed = Math.max(that.maxSpeed || 0, speed);
+                        } else{
+                            that.maxSpeed = Math.min(that.maxSpeed || 0, speed);
+                        }
+
+
+                    }
+                } else{
+                    //touch end
+                }
+            }
+            function end(){
+                var aimPosition = 0
+                var endTime = Date.now();
+                if(endTime - that.cur.time > 300){
+                    // bounce
+                    return;
+                } else if(that.cur && that.last && that.last.time){
+                    var time = Math.abs(that.maxSpeed / that.deceleration);
+                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想移动距离,可能需要修正
+                    try{
+                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1];
+                        aimPosition = parseFloat(curPosition) + distance;
+                        if(aimPosition > 0){
+                            aimPosition = 0;
+                        } else  if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }else{
+                            var count =  - aimPosition / that.scrollUnit;
+                            var diff = count - count.toFixed(0);
+                            count = count.toFixed(0);
+                            //if(distance > 0){
+                            //    count -= 1;
+                            //}
+                            aimPosition  = - count * that.scrollUnit;
+                        }
+                        if(- aimPosition > that.scrollMax ){
+                            aimPosition = - that.scrollMax;
+                        }
+                        time = Math.max(Math.sqrt(Math.abs((aimPosition -curPosition) / that.deceleration * 2)) * 80, 800);
+                        that.scroll.scrollTo(aimPosition, 0 , time);
+                    } catch(e){
+
+                    }
+
+                }
+                that.last = undefined;
+                that.cur = {
+                    time: Date.now(),
+                    x: aimPosition
+                }
+            }
+
+        }
+
+        return Controller;
+    }
+
+    function FarmHouseController($rootScope, $scope, $http, MarkerTip, ScrollController) {
 
         var vm = this; // viewmodel
 
@@ -196,8 +315,8 @@ function showAnimation(){
 
         vm.checkPanoPosition = checkPanoPosition;
 
-        //
         vm.replaceUrl = replaceUrl;
+
 
         vm.init();
 
@@ -242,6 +361,8 @@ function showAnimation(){
             vm.poiData = {};
             vm.farmData = {};
             vm.poiList = [];
+
+
             // 获取农家id
             vm.id = location.pathname.split('farmhouse/')[1];
 
@@ -252,9 +373,24 @@ function showAnimation(){
 
             }
 
+            //滚动相关
+            vm.foodScroll = new ScrollController({
+                target: '.food-info main',
+                deceleration: 8
+            });
+
+            vm.roomScroll = new ScrollController({
+                target: '.room-info footer',
+                deceleration: 4,
+            });
+
+
+            setTimeout(function(){
+                vm.foodScroll.refresh();
+                vm.roomScroll.refresh();
+            }, 1000);
 
             vm.curPanoIndex = 0;
-            vm.isFullScreen = false;
 
             // 地图相关
             vm.curMarkerIndex = undefined;
@@ -263,10 +399,6 @@ function showAnimation(){
             vm.fetchPoiData();
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
-
-            if(! pageData.poi_info.contact_phone){
-                $('.nav-item.phone').addClass('hidden');
-            }
             if(! pageData.poi_info.panorama.panorama_id){
                 $('.nav-item.pano .tip').html('全景拍摄中');
                 setTimeout(function(){
@@ -300,31 +432,25 @@ function showAnimation(){
             $(document).on('scroll', function(){
                 if(vm.timeoutId){
                     clearTimeout(vm.timeoutId);
+                } else if(vm.panoAutoPlay){
+                    vm.pano.setAutoplayEnable(false);
+                    vm.panoAutoPlay = false;
                 }
                 vm.timeoutId = setTimeout(vm.checkPanoPosition, 200);
             });
         }
 
         function checkPanoPosition(){
+            vm.timeoutId = undefined;
+
             var pano = $('.room-info main'),
                 offsetTop = pano.offset().top,
                 height = pano.height(),
                 scrollTop = document.body.scrollTop;
-
-            if(scrollTop > offsetTop + height * .7 || screen.height + scrollTop < offsetTop + height * .4){
-                if(vm.panoAutoPlay) {
-                    vm.panoAutoPlay = false;
-                    vm.pano.setAutoplayEnable(false);
-                }
-            } else{
-                if( ! vm.panoAutoPlay){
-                    vm.panoAutoPlay = true;
-                    vm.pano.setAutoplayEnable(true);
-                }
+            if(scrollTop <= offsetTop + height * .7 && screen.height + scrollTop >= offsetTop + height * .4){
+                vm.panoAutoPlay = true;
+                vm.pano.setAutoplayEnable(true);
             }
-
-
-
         }
 
 
@@ -503,20 +629,35 @@ function showAnimation(){
                 selfIntroduce: pageData.manager_self_introduction
 
             };
-            switch (vm.farmData.allPanorama.panorama_type_id) {
-                case 1:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
-                    break;
-                case 2:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
-                    break;
-                case 3:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
-                    break;
-                default:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
-                    break;
+            if(vm.farmData.allPanorama.text){
+                switch (vm.farmData.allPanorama.panorama_type_id) {
+                    case 1:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
+                        break;
+                    case 2:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                    case 3:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
+                        break;
+                    default:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                }
+            } else{
+                vm.farmData.allPanorama.panoUrl = '';
             }
+
+            if(vm.farmData.food.length > 0){
+                vm.farmData.food = vm.farmData.food.filter(function(item){
+                    if(item.pic || item.text){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                })
+            }
+
         }
 
         function fetchPanoDetail() {

@@ -47,4 +47,17 @@ public class IndexController extends BasicController {
         }
 
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "index")
+    public ModelAndView home(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if(SessionHelper.getUser(session) == null) {
+            return buildModelAndView("login");
+        } else {
+            SessionHelper.setSelectedMenu(session, "");
+            return buildModelAndView("home");
+        }
+    }
 }
