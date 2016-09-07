@@ -10,6 +10,7 @@ package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.WXPayService;
+import ms.luna.biz.sc.WXSignatureService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.RemoteIPUtil;
 import ms.luna.model.adapter.AbstractWXPayProcess;
@@ -33,6 +34,24 @@ public class PayController {
 
     @Autowired
     private WXPayService wxPayService;
+
+    @Autowired
+    private WXSignatureService wxSignatureService;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/wx/jsapi/getSignature")
+    @ResponseBody
+    public JSONObject getSignature(@RequestParam(value = "url") String url) {
+        JSONObject object = wxSignatureService.getTicket(new JSONObject());
+        if (object.getInteger("code").intValue() == 0) {
+            String ticket = object.getJSONObject("data").getString("ticket");
+            JSONObject in = new JSONObject();
+            in.put("ticket",ticket);
+            in.put("url",url);
+            return wxSignatureService.getSignature(in);
+        } else {
+            return object;
+        }
+    }
 
 
     @RequestMapping(value = "/wx/jsapi/getCode")

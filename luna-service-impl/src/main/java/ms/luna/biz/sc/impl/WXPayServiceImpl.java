@@ -37,17 +37,22 @@ public class WXPayServiceImpl implements WXPayService {
 
     @Override
     public JSONObject getOpenId(String code) {
-        String r = AbstractWXPayProcess.getOpenId(code);
-        if (r == null) {
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
+        try {
+            String r = AbstractWXPayProcess.getOpenId(code);
+            if (r == null) {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
+            }
+            JSONObject in = JSONObject.parseObject(r);
+            if (in.containsKey("errcode")) {
+                return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
+            }
+            JSONObject out = new JSONObject();
+            out.put("openId", in.getString("openid"));
+            return FastJsonUtil.sucess("success", out);
+        } catch (Exception e) {
+            logger.error("Failed to get openId", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
-        JSONObject in = JSONObject.parseObject(r);
-        if (in.containsKey("errcode")) {
-            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
-        }
-        JSONObject out = new JSONObject();
-        out.put("openId", in.getString("openid"));
-        return FastJsonUtil.sucess("success", out);
     }
 
     @Override
