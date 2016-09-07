@@ -20,24 +20,25 @@
 
 </head>
 <body>
-    <button onclick="""></button>
+<button onclick="getCode()"></button>
 
 
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"/>
 <script type="text/javascript">
-    var code = "";
-    function getCode(){
-
-    }
-    var openId = ""
-    function getOpenId(){
-
-    }
     var prepayInfo;
-    function getPrepayInfo(){
-
+    function getPrepayInfo() {
+        var data = {orderId:123,openId:}
+        $.ajax({
+            type: 'post',
+            url: 'http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
+            data: ,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+            }
+        });
     }
-    function requestPay(){
+    function requestPay() {
 
     }
 </script>
