@@ -1,32 +1,23 @@
 package ms.luna.biz.bl.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.google.common.collect.Lists;
+import ms.biz.common.ServiceConfig;
+import ms.luna.biz.bl.MsShowPageBL;
+import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.dao.custom.MsShowPageDAO;
+import ms.luna.biz.dao.custom.model.MsShowPage;
+import ms.luna.biz.util.FastJsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.google.common.collect.Lists;
-
-import ms.biz.common.AuthenticatedUserHolder;
-import ms.luna.biz.cons.ErrorCode;
-import ms.luna.biz.bl.MsShowPageBL;
-import ms.luna.biz.dao.custom.MsShowPageDAO;
-import ms.luna.biz.dao.custom.model.MsShowPage;
-import ms.luna.biz.model.MsUser;
-import ms.luna.biz.util.FastJsonUtil;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 /**
  * 
@@ -41,6 +32,8 @@ import ms.luna.biz.util.FastJsonUtil;
 public class MsShowPageBLImpl implements MsShowPageBL {
 	
 	private final static Logger logger = Logger.getLogger(MsShowPageBLImpl.class);
+
+	private static String page_share_url= "/app/%s/page/%s";
 
 	@Autowired
 	MsShowPageDAO msShowPageDAO;
@@ -172,6 +165,14 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 		try{
 			MsShowPage msShowPage = JSON.parseObject(json, MsShowPage.class);
 			msShowPage.setUpdateUser(lunaName);
+			// 单页分享
+			if(msShowPage.getShareInfo() != null) {
+				Object share_link = msShowPage.getShareInfo().get(MsShowPageDAO.FIELD_SHARE_LINK);
+				if(share_link == null) {
+					share_link = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + String.format(page_share_url, msShowPage.getAppId(),msShowPage.getPageId());
+				}
+				msShowPage.getShareInfo().put(MsShowPageDAO.FIELD_SHARE_LINK, share_link);
+			}
 			msShowPageDAO.updatePageName(msShowPage);
 			return FastJsonUtil.sucess("更新页面名称成功");
 		} catch(Exception ex) {

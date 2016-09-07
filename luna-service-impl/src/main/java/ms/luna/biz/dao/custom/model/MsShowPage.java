@@ -44,9 +44,8 @@ public class MsShowPage {
     private String pageHeight;
     @JSONField(name=MsShowPageDAO.FIELD_PAGE_TIME)
     private Double pageTime;
-
-    public MsShowPage() {
-    }
+    @JSONField(name = MsShowPageDAO.FIELD_SHARE_INFO)
+    private Map<String, Object> shareInfo;
 
     public String getPageId() {
         return pageId;
@@ -59,6 +58,7 @@ public class MsShowPage {
     public String getPageName() {
         return pageName;
     }
+
     public void setPageName(String pageName) {
         this.pageName = pageName;
     }
@@ -143,7 +143,6 @@ public class MsShowPage {
     public String getPageType() {
         return pageType;
     }
-
     public void setPageType(String pageType) {
         this.pageType = pageType;
     }
@@ -163,4 +162,16 @@ public class MsShowPage {
     public void setPageTime(Double pageTime) {
         this.pageTime = pageTime;
     }
+
+    public Map<String, Object> getShareInfo() {
+        return shareInfo;
+    }
+
+    public void setShareInfo(Map<String, Object> shareInfo) {
+        this.shareInfo = shareInfo;
+    }
+
+    public MsShowPage() {
+    }
+
 }

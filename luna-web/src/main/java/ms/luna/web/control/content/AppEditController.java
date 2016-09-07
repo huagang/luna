@@ -92,7 +92,8 @@ public class AppEditController extends BasicController {
             @RequestParam(required=true, value="page_code") String pageCode,
             @RequestParam(required=false, value="page_type" ) Integer pageType,
             @RequestParam(required=false, value="page_height" ) Integer pageHeight,
-            @RequestParam(required=false, value = "page_time" ) Double pageTime,
+            @RequestParam(required=false, value="page_time") Double pageTime,
+            @RequestParam(required=false, value="share_info") String shareInfo,
             HttpServletRequest request) throws IOException {
 
         if(appId <= 0) {
@@ -136,6 +137,10 @@ public class AppEditController extends BasicController {
         params.put("page_type", pageType);
         params.put("page_height", pageHeight);
         params.put("page_time", pageTime);
+        if(StringUtils.isNotBlank(shareInfo)) {// 单页分享信息
+            params.put("share_info", JSONObject.parseObject(shareInfo));
+        }
+
         try {
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject result = msShowPageService.updatePageName(params.toString(), user.getLunaName());

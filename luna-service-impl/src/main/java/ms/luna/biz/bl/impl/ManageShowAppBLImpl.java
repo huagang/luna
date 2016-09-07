@@ -656,7 +656,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppTable.FIELD_PIC_THUMB, msShowApp.getPicThumb());
 		data.put(MsShowAppTable.FIELD_NOTE, msShowApp.getNote());
 		data.put(MsShowAppTable.FIELD_TYPE, msShowApp.getType());
-
+		
 		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
 		msShowPageShareCriteria.setOrderByClause("id asc");
