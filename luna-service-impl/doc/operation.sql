@@ -138,9 +138,9 @@ UPDATE luna_menu SET status=0 WHERE code='business';
 -- 邮箱注册
 alter table luna_reg_email add `merchant_id` varchar(32) DEFAULT NULL COMMENT '商户id';
 
-alter table ms_article add column source varchar(255) default '' comment '文章来源' after author;
+alter table ms_article add column source varchar(511) default '' comment '文章来源' after author;
 
--- poi 增加分类 
+-- poi 增加分类
 insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
 values(63,'临时展位','9',1,0,0,'Temporary booth','2016-09-07 17:52:47','2016-09-07 17:52:47');
 insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
