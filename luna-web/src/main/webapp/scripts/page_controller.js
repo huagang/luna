@@ -225,7 +225,7 @@ function MenuController($scope, $rootScope, $http) {
             that.publishData.forEach(function(item, index){
                 var option = options[index];
                 option.find('.replace-option').attr('data-value', item.app_id);
-                option.find('.app-name').text(item.app_name);
+                option.find('.app-name').text(item.app_name).attr('href', item.link);
                 option.find('.qrcode').attr('src', item.QRImg);
             });
         }

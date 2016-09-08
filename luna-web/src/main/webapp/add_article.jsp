@@ -77,6 +77,13 @@
 		                        <textarea name="summary" id='summary'></textarea>
 		                    </div>
 		                </div>
+						<div class="group article-source">
+							<p class="group-title">文章来源</p>
+							<div>
+								<input id="source" type="text" placeholder="请输入文章来源地址,以http://或https://开头" />
+								<p id='source_warn' class='warn'></p>
+							</div>
+						</div>
 		                <div class="group article-audio">
 		                    <p class='group-title'>音频</p>
 		                    <div class="">
@@ -109,6 +116,7 @@
 		                        <p id='video_warn' class='warn'></p>
 		                    </div>
 		                </div>
+
 		                <div class="group article-category">
 		                    <p class='group-title'>栏目</p>
 		                    <div class="">

@@ -7,9 +7,17 @@ time:20160517
 .menu{
     min-width: 200px;
 }
-#childPoi{
+
+
+#childPoi {
     position: fixed;
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto;
+    top: 20px !important;
 }
+
+
 .luna-tree {
 	height:100%;
 	margin:20px 0px;
@@ -311,7 +319,7 @@ right connector from last child*/
 	width:610px;
 	margin:10px 15px;
 	min-height:100px;
-	max-height:300px;
+	max-height:200px;
 	border:1px solid #E5E5E5;
 	overflow-y: auto;
 }
@@ -358,3 +366,7 @@ right connector from last child*/
     margin-bottom: 10px;
 }
 
+#childPoi .pop-cont{
+    padding-top: 10px;
+    padding-bottom: 0;
+}

@@ -4,6 +4,10 @@
 #pop-message{
 	min-width: 200px;
 }
+#pop-message .pop-cont{
+    text-align: center;
+}
+
 #pop-message .pop-fun{
 	text-align: center;
     padding-right: 0;
@@ -318,7 +322,7 @@ img.abstract-pic{
     width: 100%;
 }
 /*删除类别*/
-.pop-tips{
+#pop-delete .pop-tips{
     margin: 40px 40px;
     font-size: 14px;
 }

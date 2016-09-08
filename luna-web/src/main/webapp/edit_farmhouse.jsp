@@ -38,7 +38,7 @@
               <a href="javascript:void(0)" class="operation preview">预览</a>
               <a href="javascript:void(0)" class="operation publish">发布</a>
               <div class="qrcode-container hidden">
-                 <img class="qrcode" height='100' src="" />
+                 <img class="qrcode" src="" />
                  <button class="button">关闭</button>
               </div>
 

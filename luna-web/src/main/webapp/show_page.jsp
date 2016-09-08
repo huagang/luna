@@ -1607,14 +1607,14 @@
                 <div id="options-0">
                   <label>
                     <input class='replace-option' type="radio" data-value="0" />
-                    <span class="app-name"></span>
+                    <a class="app-name" href="" target="_blank"></a>
                   </label>
                   <img src="" class="qrcode" alt="二维码"/>
                 </div>
                 <div id="options-1">
                   <label>
                     <input  class='replace-option' type="radio" data-value="1" />
-                    <span class="app-name"></span>
+                    <a class="app-name" target="_blank"></a>
                   </label>
                   <img src="" class="qrcode" alt="二维码"/>
                 </div>
