@@ -81,6 +81,14 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 	public JSONObject getOnePageDetail(String pageId) {
 		// TODO Auto-generated method stub
 		MsShowPage page = msShowPageDAO.readPageDetail(pageId);
+		// 单页分享.通过pageId获得分享链接
+		if(page.getShareInfo() != null) { // 存在单页分享信息
+			String share_link = (String) page.getShareInfo().get(MsShowPageDAO.FIELD_SHARE_LINK);
+			if(StringUtils.isBlank(share_link)) { // 非自定义分享链接
+				share_link = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + String.format(page_share_url, page.getAppId(),pageId);
+				page.getShareInfo().put(MsShowPageDAO.FIELD_SHARE_LINK, share_link);
+			}
+		}
 		if(page != null) {
 			return FastJsonUtil.sucess("", JSON.toJSON(page));
 		}
@@ -98,18 +106,6 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 		}
 		page.setUpdateUser(lunaName);
 		String pageId = msShowPageDAO.createOnePage(page);
-
-		// 单页分享.通过pageId获得分享链接并更新数据库
-		if(page.getShareInfo() != null) { // 存在单页分享信息
-			String share_link = (String) page.getShareInfo().get(MsShowPageDAO.FIELD_SHARE_LINK);
-			if(StringUtils.isBlank(share_link)) { // 非自定义分享链接
-				share_link = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + String.format(page_share_url, page.getAppId(),pageId);
-				page.getShareInfo().put(MsShowPageDAO.FIELD_SHARE_LINK, share_link);
-				page.setPageId(pageId);
-				msShowPageDAO.updatePageName(page);
-			}
-		}
-
 		page.setPageId(pageId);
 		return FastJsonUtil.sucess("创建成功", JSON.toJSON(page));
 	}
@@ -177,14 +173,6 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 		try{
 			MsShowPage msShowPage = JSON.parseObject(json, MsShowPage.class);
 			msShowPage.setUpdateUser(lunaName);
-			// 单页分享
-			if(msShowPage.getShareInfo() != null) { // 存在单页分享信息
-				String share_link = (String) msShowPage.getShareInfo().get(MsShowPageDAO.FIELD_SHARE_LINK);
-				if(StringUtils.isBlank(share_link)) {// 非自定义分享链接
-					share_link = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + String.format(page_share_url, msShowPage.getAppId(),msShowPage.getPageId());
-					msShowPage.getShareInfo().put(MsShowPageDAO.FIELD_SHARE_LINK, share_link);
-				}
-			}
 			msShowPageDAO.updatePageName(msShowPage);
 			return FastJsonUtil.sucess("更新页面名称成功");
 		} catch(Exception ex) {
@@ -230,18 +218,6 @@ public class MsShowPageBLImpl implements MsShowPageBL {
 		page.setUpdateUser(lunaName);
 		page.setShareInfo(pageParam.getShareInfo());
 		String pageId = msShowPageDAO.createOnePage(page);
-
-		// 单页分享.通过pageId获得分享链接并更新数据库
-		if(page.getShareInfo() != null) { // 存在单页分享信息
-			String share_link = (String) page.getShareInfo().get(MsShowPageDAO.FIELD_SHARE_LINK);
-			if(StringUtils.isBlank(share_link)) { // 非自定义分享链接
-				share_link = ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + String.format(page_share_url, page.getAppId(),pageId);
-				page.getShareInfo().put(MsShowPageDAO.FIELD_SHARE_LINK, share_link);
-				page.setPageId(pageId);
-				msShowPageDAO.updatePageName(page);
-			}
-		}
-
 		page.setPageId(pageId);
 		return FastJsonUtil.sucess("创建成功", JSON.toJSON(page));
 	}
