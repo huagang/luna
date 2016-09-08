@@ -357,7 +357,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 msMerchantManage.setResourceContent(application.getLicencePicUrl());
                 msMerchantManage.setLicencePeriod(application.getLicencePeriod());
                 msMerchantManage.setUpHhmmss(Calendar.getInstance().getTime());
-                //TODO put idcardNo to merchant table
+                msMerchantManage.setIdcardNo(application.getIdcardNo());
                 msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
                 //send email
