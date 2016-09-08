@@ -19,6 +19,7 @@
     <title>WXPAYTEST</title>
 </head>
 <body>
+<textarea
 <button onclick="getPrepayInfo()">getPrepayInfo</button>
 <button onclick="requestPay()">requestPay</button>
 

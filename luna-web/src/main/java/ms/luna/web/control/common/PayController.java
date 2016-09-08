@@ -130,7 +130,7 @@ public class PayController {
         inData.put("extraParam", "");
         // inData.put("detail", "{\"test11\":\"123\"}");
         inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");
-        inData.put("tradeNo", "0987654321");
+        inData.put("tradeNo", "0987654321" + orderId);
         inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
         inData.put("money", 1);
         inData.put("openId", openId);
