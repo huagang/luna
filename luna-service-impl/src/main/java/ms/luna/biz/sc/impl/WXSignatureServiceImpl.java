@@ -27,12 +27,12 @@ public class WXSignatureServiceImpl implements WXSignatureService {
             JSONObject result = new JSONObject();
             String token = "";
             if (jsonObject.containsKey("appId") && (jsonObject.containsKey("appSecret"))) {
-                WXTokenGetter getter = WXTokenGetter.getSingleInstance();
-                token = getter.getToken();
-            } else {
                 String appId = jsonObject.getString("appId");
                 String appSecret = jsonObject.getString("appSecret");
                 WXTokenGetter getter = WXTokenGetter.getSingleInstance(appId, appSecret);
+                token = getter.getToken();
+            } else {
+                WXTokenGetter getter = WXTokenGetter.getSingleInstance();
                 token = getter.getToken();
             }
             if (token == null || token.equals("")) {
@@ -53,12 +53,13 @@ public class WXSignatureServiceImpl implements WXSignatureService {
             JSONObject result = new JSONObject();
             String ticket = "";
             if (jsonObject.containsKey("appId") && (jsonObject.containsKey("appSecret"))) {
-                WXTokenGetter getter = WXTokenGetter.getSingleInstance();
-                ticket = getter.getTicket();
-            } else {
                 String appId = jsonObject.getString("appId");
                 String appSecret = jsonObject.getString("appSecret");
                 WXTokenGetter getter = WXTokenGetter.getSingleInstance(appId, appSecret);
+                ticket = getter.getTicket();
+
+            } else {
+                WXTokenGetter getter = WXTokenGetter.getSingleInstance();
                 ticket = getter.getTicket();
             }
             if (ticket == null || ticket.equals("")) {
