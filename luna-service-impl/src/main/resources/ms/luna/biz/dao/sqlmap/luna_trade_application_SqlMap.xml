@@ -23,6 +23,7 @@
     <result column="app_status" jdbcType="INTEGER" property="appStatus" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
     <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
+    <result column="idcard_no" jdbcType="VARCHAR" property="idcardNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -53,7 +54,7 @@
     application_id, contact_name, contact_phone, email, idcard_pic_url, idcard_period, 
     merchant_name, merchant_phone, merchant_no, licence_pic_url, licence_period, account_type, 
     account_name, account_bank, account_city, account_address, account_no, update_time, 
-    app_status, merchant_id, account_province
+    app_status, merchant_id, account_province, idcard_no
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaTradeApplicationCriteria" resultMap="BaseResultMap">
     select
@@ -90,14 +91,14 @@
       idcard_period, merchant_name, merchant_phone, merchant_no, 
       licence_pic_url, licence_period, account_type, account_name, 
       account_bank, account_city, account_address, account_no, 
-      update_time, app_status, merchant_id, account_province
-      )
+      update_time, app_status, merchant_id, account_province, 
+      idcard_no)
     values (#contactName:VARCHAR#, #contactPhone:VARCHAR#, #email:VARCHAR#, #idcardPicUrl:VARCHAR#, 
       #idcardPeriod:VARCHAR#, #merchantName:VARCHAR#, #merchantPhone:VARCHAR#, #merchantNo:VARCHAR#, 
       #licencePicUrl:VARCHAR#, #licencePeriod:VARCHAR#, #accountType:INTEGER#, #accountName:VARCHAR#, 
       #accountBank:VARCHAR#, #accountCity:VARCHAR#, #accountAddress:VARCHAR#, #accountNo:VARCHAR#, 
-      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#, #accountProvince:VARCHAR#
-      )
+      #updateTime:TIMESTAMP#, #appStatus:INTEGER#, #merchantId:VARCHAR#, #accountProvince:VARCHAR#, 
+      #idcardNo:VARCHAR#)
     <selectKey keyProperty="applicationId" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -165,6 +166,9 @@
       <isNotNull prepend="," property="accountProvince">
         account_province
       </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no
+      </isNotNull>
       )
     </dynamic>
     values
@@ -228,6 +232,9 @@
       </isNotNull>
       <isNotNull prepend="," property="accountProvince">
         #accountProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        #idcardNo:VARCHAR#
       </isNotNull>
       )
     </dynamic>
@@ -305,6 +312,9 @@
       <isNotNull prepend="," property="record.accountProvince">
         account_province = #record.accountProvince:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.idcardNo">
+        idcard_no = #record.idcardNo:VARCHAR#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
@@ -332,7 +342,8 @@
       update_time = #record.updateTime:TIMESTAMP#,
       app_status = #record.appStatus:INTEGER#,
       merchant_id = #record.merchantId:VARCHAR#,
-      account_province = #record.accountProvince:VARCHAR#
+      account_province = #record.accountProvince:VARCHAR#,
+      idcard_no = #record.idcardNo:VARCHAR#
     <isParameterPresent>
       <include refid="luna_trade_application.Example_Where_Clause" />
     </isParameterPresent>
@@ -400,6 +411,9 @@
       <isNotNull prepend="," property="accountProvince">
         account_province = #accountProvince:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no = #idcardNo:VARCHAR#
+      </isNotNull>
     </dynamic>
     where application_id = #applicationId:INTEGER#
   </update>
@@ -424,7 +438,8 @@
       update_time = #updateTime:TIMESTAMP#,
       app_status = #appStatus:INTEGER#,
       merchant_id = #merchantId:VARCHAR#,
-      account_province = #accountProvince:VARCHAR#
+      account_province = #accountProvince:VARCHAR#,
+      idcard_no = #idcardNo:VARCHAR#
     where application_id = #applicationId:INTEGER#
   </update>
 </sqlMap>
