@@ -46,6 +46,24 @@ function isValidPageInfo() {
             validFlag = false;
         }
     }
+    if ($('[name=sharebox]:checked').val()) {
+        if ($('[name=shareurl]:checked').val() && $('[name=share_link]').val().length == 0) {
+            $("#share_link_error").removeClass('hide').text("不能为空");
+            validFlag = false;
+        }
+        if ($('[name=share_pic]').val().length == 0) {
+            $(".fileupload-tip").text("请上传缩略图");
+            validFlag = false;
+        }
+        if ($('[name=share_title]').val().length == 0) {
+            $("#share_title_error").removeClass('hide').text("不能为空");
+            validFlag = false;
+        }
+        if ($('[name=share_desc]').val().length == 0) {
+            $("#share_desc_error").removeClass('hide').text("不能为空");
+            validFlag = false;
+        }
+    }
     var txtPageHeight = document.querySelector('#txtPageHeight').value,
         txtPageType = document.querySelector('[name=pageType]:checked').value;
     if (txtPageType == '2' && (txtPageHeight < 617 || txtPageHeight.length == 0)) {
@@ -70,6 +88,7 @@ function creatPageID() {
     } else {
         url = Inter.getApiUrl().appCreatePage;
     }
+
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
@@ -80,6 +99,12 @@ function creatPageID() {
             'page_order': $(".list-page .drop-item[page_id]").length + 1,
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value || '617',
+            'share_info': $('[name=sharebox]:checked').val() ? JSON.stringify({
+                "share_link": $('[name=share_link]').val(),
+                "share_pic": $('[name=share_pic]').val(),
+                "share_title": $('[name=share_title]').val(),
+                "share_desc": $('[name=share_desc]').val()
+            }) : '',
         };
         $.ajax({
             type: url.type,
@@ -122,6 +147,12 @@ function modifyPageName() {
         return;
     }
     pageId = $("#modify_page_id").val();
+    var shareInfo = $('[name=sharebox]:checked').val() ? JSON.stringify({
+        "share_link": $('[name=share_link]').val(),
+        "share_pic": $('[name=share_pic]').val(),
+        "share_title": $('[name=share_title]').val(),
+        "share_desc": $('[name=share_desc]').val()
+    }) : '';
     if (isValidPageInfo()) {
         var params = {
             'app_id': app_id,
@@ -131,6 +162,7 @@ function modifyPageName() {
             'page_code': $("#txt-short").val(),
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value,
+            'share_info': shareInfo,
         };
         $.ajax({
             type: Inter.getApiUrl().appModifyName.type,
@@ -150,6 +182,12 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_code = $("#txt-short").val();
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
                 lunaPage.pages[pageId].page_time = $("#txt-time").val();
+                lunaPage.pages[pageId].share_info = $('[name=sharebox]:checked').val() ? {
+                    "share_link": $('[name=share_link]').val(),
+                    "share_pic": $('[name=share_pic]').val(),
+                    "share_title": $('[name=share_title]').val(),
+                    "share_desc": $('[name=share_desc]').val()
+                } : '';
                 lunaPage.pages[pageId].page_type = document.querySelector('[name=pageType]:checked').value;
                 $('#layermain').css('height', lunaPage.pages[pageId].page_height);
 

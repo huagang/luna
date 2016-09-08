@@ -1023,7 +1023,13 @@ function getUrlParam(name) {
  */
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
-    var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
+    var errorTips = document.querySelectorAll('.errorTips');
+    $('.fileup-container').removeClass('hidden');
+    $('.preview-container').addClass('hidden');
+    for (var i = 0; i < errorTips.length; i++) {
+        errorTips[i].innerHTML = '';
+    }
+    var radioDom = document.querySelectorAll('#editPageForm [type=radio],#editPageForm [type=checkbox]');
     for (var i = 0; i < radioDom.length; i++) {
         radioDom[i].removeAttribute('checked');
         radioDom[i].removeAttribute('disabled');
@@ -1100,8 +1106,24 @@ function modify(e, callType) {
     $("[name=pageType]").each(function (e) {
         $(this).attr('disabled', 'disabled');
     });
+    if (lunaPage.pages[currentPageId].share_info) {
+        //分享设置nei ron
+        var share_info = lunaPage.pages[currentPageId].share_info;
+        $('[name=share_link]').val(share_info.share_link);
+        $('[name=share_pic]').val(share_info.share_pic);
+        $('[name=share_title]').val(share_info.share_title);
+        $('[name=share_desc]').val(share_info.share_desc);
+        $('[name=sharebox]').prop('checked', true);
+        if (share_info.share_link.length) {
+            $('[name=shareurl]').prop('checked', true);
+        }
+        var shareEle = $('.setting-share'), tipSel = '.fileupload-tip';
+        shareEle.find('.file-uploader').addClass('hidden');
+        shareEle.find('.preview-container').removeClass('hidden');
+        shareEle.find('.preview-img').attr("src", share_info.share_pic);
+        $(tipSel).html("更换缩略图");
+    }
 }
-
 /**
  * 背景全景选择的回调函数
  * 
@@ -1289,4 +1311,21 @@ function componentMove($target, direction, len) {
     }
     lunaPage.updatePageComponents();
     componentPanel.update();
+}
+
+/* 作用  - 用于计算输入框的字数并显示在输入框右下角
+ * @param inputSelector - 输入框选择器  
+ * @param counterSelector - 计数器选择器
+ * @param maxNum  - 输入框允许的最大值
+ */
+function getCounter(inputSelector, counterSelector, maxNum, curNum) {
+    var value = inputSelector.val();
+    if (value.length - 0 === 2 && value[value.length - 1] === '\'') {
+        // 如果一次输入了两个字符,那么认定用户正在输入中文,则不更新计数器
+        return;
+    }
+    if (value.length > maxNum) { // 超出最大字数限制
+        event.target.value = value = value.substr(0, maxNum);
+    }
+    counterSelector.html([value.length, '/', maxNum].join(''));
 }

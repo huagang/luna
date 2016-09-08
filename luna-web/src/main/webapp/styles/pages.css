@@ -346,8 +346,8 @@ ol {
 }
 
 #layermain {
-    width: 480px;
-    height: 756px;
+    width: 375px;
+    height: 617px;
     background-repeat: no-repeat;
 }
 
@@ -670,6 +670,9 @@ a.img-clc:hover {
     font-size: 20px;
 }
 
+
+/*弹出框样式start*/
+
 #pop-overlay {
     z-index: 101;
 }
@@ -703,11 +706,241 @@ a.img-clc:hover {
     width: 290px;
 }
 
+.pop-show .pop-title,
+.pop-show .pop-menu,
+.pop-show .pop-cont,
+.pop-show .pop-fun {
+    position: relative;
+    z-index: 101;
+}
+
+.pop-show .pop-cont {
+    overflow-y: visible !important;
+}
+
+.pop-cont div {
+    /* margin-bottom: 10px; */
+}
+
+.pop-menu {
+    height: 35px;
+    padding-top: 5px;
+    background-color: #f4f5f9;
+    color: #a1a09e;
+    padding-left: 20px;
+    list-style: none;
+    overflow: hidden;
+}
+
+.pop-menu> li {
+    width: 96px;
+    float: left;
+    text-align: center;
+    line-height: 30px;
+}
+
+.pop-menu> a {
+    color: #707070;
+}
+
+.pop-menu> li.active {
+    background-color: white;
+    color: #445fa8;
+    border-radius: 4px 4px 0 0;
+}
+
+.share-curpage-box,
+.share-url {
+    float: left;
+}
+
+.share-curpage-box {
+    width: 30%;
+}
+
+.share-url {
+    width: 70%;
+}
+
+.share-url [type="checkbox"] {
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.share-url>div {
+    display: inline-block;
+    /* float: right; */
+    width: 222px;
+}
+
+.part-right .share-url input[type=text] {
+    width: 100%;
+}
+
+
+/* 通用设置部分  css start*/
+
+.part-left {
+    display: inline-block;
+    width: 170px;
+    height: 170px;
+    margin-right: 8px;
+    position: relative;
+    background-color: #445FA8;
+}
+
+.part-left .preview-container {
+    width: 170px;
+    height: 170px;
+    overflow: hidden;
+    position: relative;
+    background-color: white;
+}
+
+.part-left .preview-img {
+    width: 170px;
+    height: 170px;
+}
+
+.img-wrapper {
+    position: relative;
+    margin: auto;
+    padding: 14px 0 0 0;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+}
+
+.preview-container .mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.img-wrapper input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    height: 45px;
+    width: 45px;
+    cursor: pointer;
+}
+
+.file-edit-container {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 70px;
+    z-index: 10;
+}
+
+.img-wrapper:hover {
+    background-color: #476ac6;
+}
+
+.img-wrapper img {
+    margin: 0px auto;
+    display: block;
+    height: 17px;
+    width: 17px;
+}
+
+.file-edit-container p {
+    color: white;
+    text-align: center;
+}
+
+img.abstract-pic {
+    width: 60px;
+    height: 60px;
+    margin: 40px auto 5px;
+    display: block;
+}
+
+.fileup-container {
+    position: relative;
+    height: 30px;
+    width: 125px;
+    margin: 0 auto;
+}
+
+.fileup-container input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.part-left button.button-close,
+.part-left button.button-close:hover {
+    margin: 0 auto;
+    display: block;
+}
+
+.part-right {
+    vertical-align: top;
+    position: relative;
+    float: right;
+}
+
+.part-right label {
+    line-height: 30px;
+    height: 30px;
+}
+
+.part-right textarea {
+    margin: 0px;
+    height: 90px;
+    resize: none;
+    display: block;
+    padding: 5px;
+}
+
+.part-right input[type=text],
+.part-right textarea {
+    width: 340px;
+}
+
+.char-limit-wrapper {
+    position: relative;
+    margin: 0;
+    margin-top: 10px;
+    /* overflow: hidden; */
+    width: 340px;
+}
+
+.char-limit-wrapper:first-child {
+    margin-top: 0px;
+}
+
+.char-limit-wrapper .counter {
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    line-height: 14px;
+    color: #999;
+}
+
+
+/* 通用设置部分  css end*/
+
+
+/*弹出框样式 End*/
+
 #warn1,
 #warn2,
 #warn3,
 #warn4,
-.warnTips {
+.warnTips,
+.errorTips {
     color: red;
     /* position: absolute; */
     margin-top: 5px;
@@ -807,74 +1040,82 @@ a.wj-img-clc {
     display: none;
 }
 
+.pop.pop-add {
+    /*width: 526px;
+    height: 473px;*/
+}
+
+.pop-cont {
+    overflow: hidden;
+}
+
 .pop.publish-info,
 .pop.publish-confirm,
-.pop.publish-replace{
+.pop.publish-replace {
     position: fixed;
     width: 500px;
     left: 0;
     right: 0;
     top: 20%;
-    margin:auto
+    margin: auto
 }
 
-.pop.pop-show{
+.pop.pop-show {
     display: block;
 }
 
-.publish-info .pop-cont{
+.publish-info .pop-cont {
     padding: 20px 30px;
     text-align: center;
 }
 
-.publish-info .qrcode-tip{
+.publish-info .qrcode-tip {
     line-height: 32px;
     font-size: 16px;
 }
 
-.publish-info .link-container{
+.publish-info .link-container {
     margin-top: 5px;
 }
 
-.publish-info .link-container .copy{
+.publish-info .link-container .copy {}
 
-}
-
-.publish-info .pull-right{
+.publish-info .pull-right {
     padding-right: 93px;
 }
 
-.qrcode{
+.qrcode {
     width: 150px;
     display: block;
     margin-top: 10px;
 }
 
-.options{
+.options {
     margin-top: 20px;
     text-align: center;
 }
 
 #options-0,
-#options-1{
+#options-1 {
     display: inline-block;
     width: 150px;
     text-align: center;
 }
 
-#options-0{
+#options-0 {
     margin-right: 30px;
 }
 
-.publish-confirm .options{
+.publish-confirm .options {
     width: 100%;
     text-align: center;
     margin-top: 20px;
 }
 
-.button-new-another{
+.button-new-another {
     margin-right: 50px;
 }
+
 .publish-qrcode {
     height: 150px;
 }
@@ -1155,7 +1396,9 @@ a.wj-img-clc {
     color: #fff;
 }
 
-.imgListContainer a,.imgListContainer a:link,.imgListContainer :visited {
+.imgListContainer a,
+.imgListContainer a:link,
+.imgListContainer:visited {
     color: #fff;
 }
 
@@ -1234,7 +1477,7 @@ a.wj-img-clc {
 
 .input-del-wrapper .input-del {
     position: absolute;
-    top:0;
+    top: 0;
     font-size: 18px;
     right: 0;
     height: 30px;
