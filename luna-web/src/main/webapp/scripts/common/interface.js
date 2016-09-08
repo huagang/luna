@@ -273,14 +273,13 @@ var Inter = function () {
                     type: 'GET'
                 },
                 checkBusinessNameRepeat: {
-                    url: context + '/content/business/businessName/check?business_name={0}&merchant_id={1}',
+                    url: context + '/content/crm/businessName/check?business_name={0}&merchant_id={1}',
                     type: 'GET'
                 },
                 checkBusinessCodeRepeat: {
-                    url: context + '/content/business/businessCode/check?business_code={0}&merchant_id={1}',
+                    url: context + '/content/crm/businessCode/check?business_code={0}&merchant_id={1}',
                     type: 'GET'
                 },
-
 
                 //栏目管理
                 columnCreate: {

@@ -5,6 +5,7 @@ import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
 import ms.luna.biz.sc.LunaUserService;
+import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.sc.ManageMerchantService;
 import ms.luna.biz.table.LunaRoleCategoryTable;
 import ms.luna.biz.table.LunaRoleTable;
@@ -54,6 +55,8 @@ public class CrmController extends BasicController {
     private ManageMerchantService manageMerchantService;
     @Autowired
     private LunaUserService lunaUserService;
+    @Autowired
+    private ManageBusinessService manageBusinessService;
 
     private static List<Map<String, String>> lstMerchantStatus = new ArrayList<Map<String, String>>();
 
@@ -605,6 +608,39 @@ public class CrmController extends BasicController {
         }
     }
 
+
+    // 检查业务名称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessName/check")
+    @ResponseBody
+    public JSONObject checkBusinessName(
+            @RequestParam(required=true, value="business_name") String business_name,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessNameExist(business_name,merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
+        }
+    }
+
+    // 检查业务简称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessCode/check")
+    @ResponseBody
+    public JSONObject checkBusinessCode(
+            @RequestParam(required=true, value="business_code") String business_code,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessCodeExist(business_code,merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
+        }
+    }
+    // --------------------------------------------------------------------------------------------
     /**
      * 加载商户状态列表（to be 改进）
      *

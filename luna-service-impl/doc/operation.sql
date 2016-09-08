@@ -122,6 +122,7 @@ alter table ms_merchant_manage add  `account_address` varchar(36) default NULL C
 alter table ms_merchant_manage add  `account_no` varchar(20) default NULL COMMENT '商户开户账号';
 alter table ms_merchant_manage add  `app_status` int(11) default NULL COMMENT '申请状态';
 alter table ms_merchant_manage add  `account_province` varchar(36) default NULL;
+alter table ms_merchant_manage add idcard_no varchar(20) default NULL comment '身份证号';
 
 -- 农家表
 update ms_farm_field set limits ="{\"PIC\":[{\"empty\":true,\"max\":20,\"ext\":[\"png\",\"jpg\"]}]}" where name = "start_page_foreground_pic";
@@ -157,3 +158,4 @@ insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_i
 values(68,'基础设施','5',2,63,0,'Infrastructure base installation','2016-09-07 17:52:47','2016-09-07 17:52:47');
 insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
 values(69,'其他','6',2,63,0,'Others','2016-09-07 17:52:47','2016-09-07 17:52:47');
+

@@ -3014,6 +3014,88 @@ public class MsMerchantManageCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andIdcardNoIsNull() {
+            addCriterion("idcard_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoIsNotNull() {
+            addCriterion("idcard_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no =", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no <>", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no >", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no >=", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no <", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no <=", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no like", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("idcard_no not like", value, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("idcard_no in", values, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("idcard_no not in", values, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("idcard_no between", value1, value2, "idcardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("idcard_no not between", value1, value2, "idcardNo");
+            return (Criteria) this;
+        }
+
         public Criteria andMerchantIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(merchant_id) like", value.toUpperCase(), "merchantId");
@@ -3179,6 +3261,12 @@ public class MsMerchantManageCriteria {
         public Criteria andAccountProvinceLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(account_province) like", value.toUpperCase(), "accountProvince");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdcardNoLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(idcard_no) like", value.toUpperCase(), "idcardNo");
             return (Criteria) this;
         }
 
