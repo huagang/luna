@@ -1,4 +1,4 @@
-package ms.luna.web.control.merchant;
+package ms.luna.web.control.platform;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -37,7 +37,7 @@ public class LunaGoodsCategoryController extends BasicController {
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/manage_merchant_type.jsp");
+        modelAndView.setViewName("/manage_goods_type.jsp");
         return modelAndView;
     }
 

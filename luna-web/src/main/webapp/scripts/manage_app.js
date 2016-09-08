@@ -17,6 +17,12 @@ $(document).ready(function () {
 			$('#table_apps').bootstrapTable("refresh");
         }
     });
+	$("#pop-message #btn-mes").click(function () {
+		$("#pop-message").removeClass('pop-show');
+	});
+	$("#pop-message .btn-close").click(function () {
+		$("#pop-message").removeClass('pop-show');
+	});
 
     window.controller = getAppController(".edit-app");
 	window.newAppController = new NewAppController();
@@ -769,13 +775,11 @@ function editDevApp(appId) {
 	})
 }
 
+
 function showMessage(msg) {
 	$("#pop-message .message").text(msg);
-	popWindow($('#pop-message'));
-	$("#btn-mes").click(function () {
-		$("#pop-message").css('display', "none");
-		$('#pop-overlay').css('display', 'none')
-	});
+	$('#pop-message').addClass('pop-show');
+
 }
 
 /**	

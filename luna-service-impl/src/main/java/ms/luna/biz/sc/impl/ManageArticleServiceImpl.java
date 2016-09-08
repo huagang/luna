@@ -103,6 +103,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         }
         msArticle.setAuthor(author);
 
+        msArticle.setSource(articleObj.getString(MsArticleTable.FIELD_SOURCE));
+
         Integer column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
         if(column != null && column >= 0) {
             msArticle.setColumnId(column);
@@ -136,6 +138,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
         jsonObject.put(MsArticleTable.FIELD_BUSINESS_ID, msArticle.getBusinessId());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
+        jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
         jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
         // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
         jsonObject.put(MsArticleTable.FIELD_STATUS, msArticle.getStatus() ? 1 : 0);
@@ -706,6 +709,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
             jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
             jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+            jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
             String columnName = columnInfoMap.get(msArticle.getColumnId());
             jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, columnName == null ? "无" : columnName);
             jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
@@ -727,6 +731,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+        jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
         jsonObject.put("create_time", DateUtil.format(msArticle.getRegistHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
         jsonObject.put("publish_time", DateUtil.format(msArticle.getUpHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
         jsonObject.put(MsArticleTable.FIELD_AUTHOR, msArticle.getAuthor());

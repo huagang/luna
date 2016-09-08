@@ -1,13 +1,13 @@
 /**
  * Created by wumengqiang on 16/8/24.
  */
-angular.module('merchantType', [])
+angular.module('goodsCate', [])
     .config(['$httpProvider', Common.formConfig])
-    .controller('MerchantType', MerchantType);
+    .controller('GoodsCate', GoodsCate);
 
-MerchantType.$inject = ['$scope', '$http'];
+GoodsCate.$inject = ['$scope', '$http'];
 
-function MerchantType($scope, $http){
+function GoodsCate($scope, $http){
     var vm = this;
     window.vm = vm;
 
@@ -54,7 +54,7 @@ function MerchantType($scope, $http){
     vm.requestDelete = requestDelete;
 
     // 请求 获取商品类目数据
-    vm.fetchMerchatTypeData = fetchMerchatTypeData;
+    vm.fetchGoodsCatData = fetchGoodsCatData;
 
     // 请求 保存数据
     vm.saveData = saveData;
@@ -74,7 +74,7 @@ function MerchantType($scope, $http){
         vm.nameEle = angular.element('.name.form-group');
         vm.abbrEle = angular.element('.abbr.form-group');
 
-        vm.fetchMerchatTypeData();
+        vm.fetchGoodsCatData();
 
         vm.bindEvent();
     }
@@ -170,8 +170,8 @@ function MerchantType($scope, $http){
         if(vm.opData.abbreviation.length > 16){
             vm.opData.abbrError = '英文简称超过最大字符限制';
             vm.opData.abbreviation = vm.opData.abbreviation.substr(0,16);
-        } else if(vm.opData.abbreviation && ! /[a-zA-Z_-]+/.test(vm.opData.abbreviation)){
-            vm.opData.abbrError = '英文简称只能包含英文字母,下划线和中划线';
+        } else if(vm.opData.abbreviation && ! /^[a-zA-Z0-9_\-]+$/.test(vm.opData.abbreviation)){
+            vm.opData.abbrError = '英文简称只能包含英文字母,数字,下划线和中划线';
         } else if(vm.opData.abbrError){
             vm.opData.abbrError = '';
         }
@@ -182,14 +182,15 @@ function MerchantType($scope, $http){
         vm.message = msg;
         setTimeout(function(){
             vm.message = "";
-        }, 2000)
+            $scope.$apply();
+        }, 2000);
     }
 
     // 请求 获取商品类目数据
-    function fetchMerchatTypeData(){
+    function fetchGoodsCatData(){
         $http({
-            url: vm.apiUrls.fetchMerchantCat.url.format('', ''),
-            method: vm.apiUrls.fetchMerchantCat.type
+            url: vm.apiUrls.fetchGoodsCat.url.format('', ''),
+            method: vm.apiUrls.fetchGoodsCat.type
         }).then(function(res){
             if(res.data.code === '0'){
                 // 将所有类目层级展开并顺序加到categoryData中
@@ -231,8 +232,8 @@ function MerchantType($scope, $http){
         if(! vm.opData.valid){
             return;
         }
-        var url = vm.opData.id ? vm.apiUrls.saveMerchantCat.url.format(vm.opData.id) : vm.apiUrls.createMerchantCat.url,
-            type = vm.opData.id ? vm.apiUrls.saveMerchantCat.type: vm.apiUrls.createMerchantCat.type
+        var url = vm.opData.id ? vm.apiUrls.saveGoodsCat.url.format(vm.opData.id) : vm.apiUrls.createGoodsCat.url,
+            type = vm.opData.id ? vm.apiUrls.saveGoodsCat.type: vm.apiUrls.createGoodsCat.type
         var data = {
             name: vm.opData.name,
             abbreviation: vm.opData.abbreviation,
@@ -269,7 +270,7 @@ function MerchantType($scope, $http){
         }).then(function(res){
             if(res.data.code === '0'){
                 vm.changeState('init');
-                vm.fetchMerchatTypeData();
+                vm.fetchGoodsCatData();
             } else{
                 vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
             }
@@ -281,12 +282,12 @@ function MerchantType($scope, $http){
     function requestDelete(){
         if(vm.deleteId){
             $http({
-                url: vm.apiUrls.deleteMerchantCat.url.format(vm.deleteId),
-                method:  vm.apiUrls.deleteMerchantCat.type
+                url: vm.apiUrls.deleteGoodsCat.url.format(vm.deleteId),
+                method:  vm.apiUrls.deleteGoodsCat.type
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.changeState('init');
-                    vm.fetchMerchatTypeData();
+                    vm.fetchGoodsCatData();
                 } else{
                     vm.showMessage(res.data.msg || '删除失败');
                 }

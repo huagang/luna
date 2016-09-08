@@ -57,7 +57,22 @@
     <!--底部版权 start-->
     <jsp:include page="/templete/bottom.jsp"/>
     <!--底部版权 end-->
-
+    <div class="hidden" id="pop-message">
+        <div class="pop-title">
+            <h5>提示</h5>
+            <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" onclick="hideChromeTipDialog()"/></a>
+        </div>
+        <div class="pop-cont">
+            <p>皓月暂时仅支持Chrome浏览器,为了让您获得更好的产品体验,建议使用Chrome浏览器进行平台操作,
+                <a href="http://www.google.cn/chrome/browser/desktop/index.html" target="_blank">马上下载Chrome浏览器</a>
+            </p>
+        </div>
+        <div class="pop-fun">
+            <div class="pull-right">
+                <button class="button" onclick="hideChromeTipDialog()">确定</button>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     var businessId = "${business_id}";
@@ -68,5 +83,15 @@
             name: businessName
         }));
     }
+    $(function(){
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+        if(! isChrome){
+            $('#pop-message').removeClass('hidden');
+        }
+    });
+    function hideChromeTipDialog(){
+        $('#pop-message').addClass('hidden');
+    }
+
 </script>
 </html>

@@ -31,7 +31,7 @@ var Inter = function () {
     var lunaEditor = {
         'local': 'http://simon-test.visualbusiness.cn',
         'test': 'http://simon-test.visualbusiness.cn',
-        'current': 'http://webapp.visualbusiness.cn '
+        'current': 'http://webapp.visualbusiness.cn'
     };
 
     var curApiHost = curHost();
@@ -50,7 +50,7 @@ var Inter = function () {
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageUser: context + '/platform/user', //
+                manageUser: context + '/platform/user', // 用户管理页面
                 routeConfig: context + '/content/route/configuration/{0}',
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
@@ -623,12 +623,12 @@ var Inter = function () {
                 },
 
                 // 商品类目
-                fetchMerchantCat: { url: context + '/merchant/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
-                createMerchantCat: { url: context + '/merchant/goodsCategory', type: 'POST' },  // 新建商品类目信息
-                saveMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
-                deleteMerchantCat: { url: context + '/merchant/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
-                searchMerchantCat: { url: context + '/merchant/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
-                searchAllMerchatCat: { url: context + '/merchant/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
+                fetchGoodsCat: { url: context + '/platform/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
+                createGoodsCat: { url: context + '/platform/goodsCategory', type: 'POST' },  // 新建商品类目信息
+                saveGoodsCat: { url: context + '/platform/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
+                deleteGoodsCat: { url: context + '/platform/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
+                searchGoodsCat: { url: context + '/platform/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
+                searchAllGoodsCat: { url: context + '/platform/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
 
                 //全景搜索
                 searchSinglePano: {
