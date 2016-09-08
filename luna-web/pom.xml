@@ -338,6 +338,29 @@
 		</profile>
 
 		<profile>
+			<id>dev-online</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.6</version>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<zookeeper.address>10.105.204.15:2181</zookeeper.address>
+				<log4j.level>DEBUG</log4j.level>
+				<cosBaseDir>/dev</cosBaseDir>
+				<vodBaseDir>/dev</vodBaseDir>
+				<app.develop>simon-test.visualbusiness.cn</app.develop>
+				<redis.host>115.159.87.160</redis.host>
+				<redis.instanceId></redis.instanceId>
+				<redis.password>ssdoiw32237ejcu#R%#@</redis.password>
+			</properties>
+		</profile>
+
+		<profile>
 			<id>test</id>
 			<properties>
 				<zookeeper.address>115.159.87.160:2181</zookeeper.address>
