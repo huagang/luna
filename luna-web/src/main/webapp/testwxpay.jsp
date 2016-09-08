@@ -77,7 +77,7 @@
             dataType: 'json',
             success: function (data) {
                 console.log(data);
-                paydata = data;
+                paydata = data.data;
             }
         });
     }
