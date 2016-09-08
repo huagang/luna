@@ -1023,6 +1023,7 @@ function getUrlParam(name) {
  */
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
+    $('.pop-menu li').eq(0).trigger('click');
     var errorTips = document.querySelectorAll('.errorTips');
     $('.fileup-container').removeClass('hidden');
     $('.preview-container').addClass('hidden');
@@ -1109,19 +1110,17 @@ function modify(e, callType) {
     if (lunaPage.pages[currentPageId].share_info) {
         //分享设置nei ron
         var share_info = lunaPage.pages[currentPageId].share_info;
-        $('[name=share_link]').val(share_info.share_link);
         $('[name=share_pic]').val(share_info.share_pic);
         $('[name=share_title]').val(share_info.share_title);
         $('[name=share_desc]').val(share_info.share_desc);
         $('[name=sharebox]').prop('checked', true);
         if (share_info.share_link.length) {
             $('[name=shareurl]').prop('checked', true);
+            $('[name=share_link]').val(share_info.share_link);
         }
-        var shareEle = $('.setting-share'), tipSel = '.fileupload-tip';
-        shareEle.find('.file-uploader').addClass('hidden');
-        shareEle.find('.preview-container').removeClass('hidden');
-        shareEle.find('.preview-img').attr("src", share_info.share_pic);
-        $(tipSel).html("更换缩略图");
+        changePageThumbnail(share_info.share_pic);
+    } else {
+        changePageThumbnail(null);
     }
 }
 /**
@@ -1328,4 +1327,24 @@ function getCounter(inputSelector, counterSelector, maxNum, curNum) {
         event.target.value = value = value.substr(0, maxNum);
     }
     counterSelector.html([value.length, '/', maxNum].join(''));
+}
+
+
+/**
+ * 单页分享缩略图状态
+ */
+function changePageThumbnail(thumbnailUrl) {
+    var shareEle = $('.setting-share'), tipSel = '.fileupload-tip';
+    if (thumbnailUrl) {
+        shareEle.find('.file-uploader').addClass('hidden');
+        shareEle.find('.preview-container').removeClass('hidden');
+        shareEle.find('.preview-img').attr("src", thumbnailUrl);
+        $(tipSel).html("更换缩略图");
+        $('[name=share_pic]').val(thumbnailUrl);
+    } else {
+        shareEle.find('.file-uploader').removeClass('hidden');
+        shareEle.find('.preview-container').addClass('hidden');
+        $(tipSel).html("上传缩略图");
+        $('[name=share_pic]').val('');
+    }
 }

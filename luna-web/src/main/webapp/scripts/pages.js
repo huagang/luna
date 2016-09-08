@@ -102,6 +102,7 @@ var InitLeftArea = function () {
             $("[name=pageType][value=1]").trigger('click');
             $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
             $('#txt-time').closest('.item-wrap').addClass('hide');
+            changePageThumbnail('');
         });
 
         //修改界面
@@ -220,12 +221,7 @@ var InitLeftArea = function () {
                         file: file,
                         resourceType: 'app',
                         success: function (data) {
-                            var shareEle = $('.setting-share');
-                            shareEle.find('.file-uploader').addClass('hidden');
-                            shareEle.find('.preview-container').removeClass('hidden');
-                            shareEle.find('.preview-img').attr("src", data.data.access_url);
-                            $('#shareIconUrl').val(data.data.access_url);
-                            $(tipSel).html("更换缩略图");
+                            changePageThumbnail(data.data.access_url);
                         }.bind(this),
                         error: function (data) {
                             $(tipSel).html("更换缩略图");
@@ -236,11 +232,11 @@ var InitLeftArea = function () {
                     event.target.value = '';
                 });
             });
-            $('.app-name,.app-description').on('input',function(e){
+            $('.app-name,.app-description').on('input', function (e) {
                 var inputSelector = $(this),
                     countSelecte = $(this).siblings('.counter'),
-                    maxLength= $(this).attr('max-length');
-                getCounter(inputSelector,countSelecte,maxLength);
+                    maxLength = $(this).attr('max-length');
+                getCounter(inputSelector, countSelecte, maxLength);
             });
 
 
