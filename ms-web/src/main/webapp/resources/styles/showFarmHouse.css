@@ -278,8 +278,7 @@ body.modal-open{
 
 .room-info footer{
     width: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: hidden;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
 }
@@ -382,8 +381,7 @@ body.modal-open{
 
 
 .food-info main{
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: hidden;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
 
@@ -400,7 +398,7 @@ body.modal-open{
 }
 
 .food-info .scroll-wrapper{
-    padding-right: 20px;
+    padding-right: 50px;
 }
 
 .food-info .name-wrapper{
