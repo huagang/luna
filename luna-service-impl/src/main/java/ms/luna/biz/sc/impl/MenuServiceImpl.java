@@ -74,7 +74,8 @@ public class MenuServiceImpl implements MenuService {
                         moduleAndMenuByRoleId = getModuleAndMenuByRoleId(roleId, DbConfig.INVISIBLE_MENU_TRADE_OFF);
                     }
                 } else {
-                    moduleAndMenuByRoleId = getModuleAndMenuByRoleId(lunaUserRole.getRoleId(), new HashSet<Integer>());
+                    logger.warn(String.format("merchant info not exist for user[%s], this should not happen", userId));
+                    moduleAndMenuByRoleId = getModuleAndMenuByRoleId(lunaUserRole.getRoleId(), DbConfig.INVISIBLE_MENU_TRADE_OFF);
                 }
             } else {
                 moduleAndMenuByRoleId = getModuleAndMenuByRoleId(lunaUserRole.getRoleId(), new HashSet<Integer>());
