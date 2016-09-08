@@ -561,9 +561,15 @@ public class ManagePoiBLImpl implements ManagePoiBL {
 			Object poiTags = docPoi.get("tags");
 			if (poiTags != null) {
 				tags = FastJsonUtil.parse2Array(poiTags);
-				if(tags.getInteger(0) == 0) {
-					tags.set(0, POI.TOPTAG_DEFAULT);//兼容之前数据，未选择时默认为“其他”
+				// todo to be deleted目前不用兼容,所有数据类别都不为0
+//				if(tags.getInteger(0) == 0) {
+//					tags.set(0, POI.TOPTAG_DEFAULT);//兼容之前数据，未选择时默认为“其他”
+//				}
+				poi.put("temporary", false);
+				if(tags.getInteger(0) == POI.TAG_ID_TEMPORARY) {// 一级类别为"临时展位"
+					poi.put("temporary", true);
 				}
+
 			}
 
 			// 地域Id

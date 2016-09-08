@@ -247,6 +247,7 @@ public class PoiController extends BasicController {
                     row.put("city_name", poiJson.getString("city_name"));
                     row.put("province_name", poiJson.getString("province_name"));
                     row.put("preview_url", poiJson.getString("preview_url"));
+                    row.put("temporary", poiJson.getBoolean("temporary"));
                     rows.add(row);
                 }
                 resJSON.put("rows", rows);
