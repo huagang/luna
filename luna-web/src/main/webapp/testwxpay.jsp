@@ -36,7 +36,9 @@
             cache: false,
             dataType: 'json',
             success: function (data) {
+                console.log(data);
                 signature = data;
+                console.log(signature);
             }
         });
         console.log(signature);
