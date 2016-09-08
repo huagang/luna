@@ -48,8 +48,16 @@
 			<isNotEmpty prepend="and" property="keyword">
 				a.business_name like #keyword#
 			</isNotEmpty>
+			<isNotEmpty prepend="and" property="merchantDelFlg">
+				b.del_flg = #merchantDelFlg#
+			</isNotEmpty>
 		</dynamic>
-			order by a.regist_hhmmss desc
+		<isEqual property="registHhmmssOrder" compareValue="-1">
+			order by a.regist_hhmmss DESC
+		</isEqual>
+		<isEqual property="registHhmmssOrder" compareValue="1">
+			order by a.regist_hhmmss ASC
+		</isEqual>
 		<isEqual property="range" compareValue="true">
 			Limit #min#, #max#
 		</isEqual>
