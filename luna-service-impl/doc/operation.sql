@@ -33,14 +33,16 @@ CREATE TABLE `luna_trade_application` (
   `account_address` varchar(36) NOT NULL COMMENT '商户账户开户行',
   `account_no` varchar(30) NOT NULL COMMENT '商户开户账号',
   `update_time` datetime NOT NULL COMMENT '申请更新时间',
-  `app_status` int(11) NOT NULL COMMENT '申请状态',
+  `app_status` int(11) NOT NULL COMMENT '申请状态:0 checking, 1 accept, 2 refuse',
   `merchant_id` varchar(32) NOT NULL COMMENT '申请商户ID',
   `account_province` varchar(36) NOT NULL COMMENT '商户账户开户省市',
+  `idcard_no` varchar(20) NOT NULL COMMENT '申请人身份证号',
   PRIMARY KEY (`application_id`),
   KEY `user_id_idx` (`merchant_id`),
   KEY `sort_idx` (`app_status`,`update_time`),
   CONSTRAINT `merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `ms_merchant_manage` (`merchant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户交易申请表';
+
 
 CREATE TABLE `luna_user_merchant` (
   `unique_id` char(32) NOT NULL,

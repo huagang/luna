@@ -44,6 +44,7 @@ public class LunaTradeApplicationController extends BasicController {
 
     /**
      * 交易直通车开通界面
+     *
      * @param request
      * @param response
      * @return
@@ -56,6 +57,7 @@ public class LunaTradeApplicationController extends BasicController {
 
     /**
      * 交易直通车协议界面
+     *
      * @param request
      * @param response
      * @return
@@ -69,6 +71,7 @@ public class LunaTradeApplicationController extends BasicController {
 
     /**
      * 查看申请详情界面
+     *
      * @param request
      * @param response
      * @return
@@ -109,6 +112,7 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountProvince,
                                         @RequestParam String accountAddress,
                                         @RequestParam String accountNo,
+                                        @RequestParam String idcardNo,
                                         @RequestParam String smsCode) {
         if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
@@ -126,6 +130,7 @@ public class LunaTradeApplicationController extends BasicController {
 
         JSONObject inData = new JSONObject();
         inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        inData.put(LunaTradeApplicationTable.FIELD_IDCARD_NO, idcardNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -169,6 +174,7 @@ public class LunaTradeApplicationController extends BasicController {
                                           @RequestParam String accountCity,
                                           @RequestParam String accountProvince,
                                           @RequestParam String accountAddress,
+                                          @RequestParam String idcardNo,
                                           @RequestParam String accountNo) {
         if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
@@ -176,6 +182,7 @@ public class LunaTradeApplicationController extends BasicController {
 
         JSONObject inData = new JSONObject();
         inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        inData.put(LunaTradeApplicationTable.FIELD_IDCARD_NO, idcardNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddress);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -220,6 +227,7 @@ public class LunaTradeApplicationController extends BasicController {
                                         @RequestParam String accountCity,
                                         @RequestParam String accountProvince,
                                         @RequestParam String accountAddresss,
+                                        @RequestParam String idcardNo,
                                         @RequestParam String accountNo) {
         if (!checkAuth(request)) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
@@ -227,6 +235,7 @@ public class LunaTradeApplicationController extends BasicController {
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
         inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(request.getSession(false)).getUniqueId());
+        inData.put(LunaTradeApplicationTable.FIELD_IDCARD_NO, idcardNo);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, accountAddresss);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, accountBank);
         inData.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, accountCity);
@@ -318,7 +327,7 @@ public class LunaTradeApplicationController extends BasicController {
         HttpSession session = request.getSession(false);
         inData.put(LunaUserTable.FIELD_ID, SessionHelper.getUser(session).getUniqueId());
         JSONObject ret = manageMerchantService.signAgreement(inData);
-        if(ret.getString("code").equals("0")) {
+        if (ret.getString("code").equals("0")) {
             JSONArray moduleAndMenuArray = SessionHelper.getMenu(session);
             switchMerchantTradeOnMenu(moduleAndMenuArray);
             SessionHelper.setMenu(session, moduleAndMenuArray);
@@ -329,16 +338,16 @@ public class LunaTradeApplicationController extends BasicController {
 
     private void switchMerchantTradeOnMenu(JSONArray moduleAndMenuArray) {
 
-        for(int i = 0; i < moduleAndMenuArray.size(); i++) {
+        for (int i = 0; i < moduleAndMenuArray.size(); i++) {
             JSONObject moduleAndMenu = moduleAndMenuArray.getJSONObject(i);
             JSONArray menuArray = moduleAndMenu.getJSONArray("menuArray");
-            for(int j = 0; j < menuArray.size(); j++) {
+            for (int j = 0; j < menuArray.size(); j++) {
                 JSONObject menu = menuArray.getJSONObject(i);
                 int menuId = menu.getInteger(LunaMenuTable.FIELD_ID);
-                if(DbConfig.INVISIBLE_MENU_TRADE_OFF.contains(menuId)) {
+                if (DbConfig.INVISIBLE_MENU_TRADE_OFF.contains(menuId)) {
                     menu.put(LunaMenuTable.FEILD_VISIBLE, false);
                 }
-                if(DbConfig.INVISIBLE_MENU_TRADE_ON.contains(menuId)) {
+                if (DbConfig.INVISIBLE_MENU_TRADE_ON.contains(menuId)) {
                     menu.put(LunaMenuTable.FEILD_VISIBLE, true);
                 }
             }

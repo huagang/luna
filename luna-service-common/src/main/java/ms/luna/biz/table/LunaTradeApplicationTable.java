@@ -28,6 +28,7 @@ public class LunaTradeApplicationTable {
     public static final String FIELD_APP_STATUS = "appStatus";
     public static final String FIELD_MERCHANT_ID = "merchantId";
     public static final String FIELD_UPDATE_TIME = "updateTime";
+    public static final String FIELD_IDCARD_NO = "idcardNo";
 
 
 

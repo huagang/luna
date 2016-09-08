@@ -2,6 +2,7 @@ package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.table.LunaUserTable;
@@ -76,6 +77,9 @@ public class CommonBusinessController extends BasicController {
             // 没有业务权限的用户直接展示home页
             SessionHelper.setSelectedMenu(session, "");
             modelAndView = buildModelAndView("home");
+            if(DbConfig.MERCHANT_ROLE_ID_SET.contains(user.getRoleId())) {
+                modelAndView.addObject("existMerchant", false);
+            }
         }
         return modelAndView;
     }
