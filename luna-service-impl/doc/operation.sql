@@ -53,33 +53,33 @@ CREATE TABLE `luna_user_merchant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户和商户关联表';
 
 
+-- 菜单
+INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`) VALUES ('消息管理', 'message', '1', '5');
 INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`, `status`) VALUES ('交易直通车', 'tradeApplication', '3', 1, 1);
+
 UPDATE `luna_menu` SET `display_order`='2' WHERE `id`='9';
 UPDATE `luna_menu` SET `display_order`='3' WHERE `id`='10';
 UPDATE `luna_menu` SET `display_order`='4' WHERE `id`='11';
 UPDATE `luna_menu` SET `display_order`='5' WHERE `id`='12';
+UPDATE `luna_menu` SET `code`='goodsCategory', status=1 WHERE `id`='5';
 
+-- 角色\ 菜单
 INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('6', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
 INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('7', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
 INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('1', (SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "交易直通车"));
+INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
+INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
 
 ALTER TABLE ms_show_app drop index `app_name`;
 ALTER TABLE ms_show_app drop INDEX `business_id`;
 ALTER TABLE ms_show_app add UNIQUE(business_id, app_name);
 
-INSERT INTO `luna_menu` (`name`, `code`, `module_id`, `display_order`) VALUES ('消息管理', 'message', '1', '5');
+-- 城市
+ALTER TABLE `luna_city` ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
 
-INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
+-- 银行
+ALTER TABLE `luna_bank_branch` ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
 
-INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
-
-ALTER TABLE `luna_city`
-ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
-
-ALTER TABLE `luna_bank_branch`
-ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
-
-UPDATE `luna_menu` SET `code`='goodsCategory', status=1 WHERE `id`='5';
 
 -- 商户表
 ALTER TABLE `ms_merchant_manage`
@@ -117,6 +117,7 @@ UPDATE luna_menu SET status=0 WHERE code='business';
 -- 邮箱注册
 alter table luna_reg_email add `merchant_id` varchar(32) DEFAULT NULL COMMENT '商户id';
 
+-- 文章
 alter table ms_article add column source varchar(511) default '' comment '文章来源' after author;
 
 -- poi 增加分类
@@ -134,4 +135,8 @@ insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_i
 values(68,'基础设施','5',2,63,0,'Infrastructure base installation','2016-09-07 17:52:47','2016-09-07 17:52:47');
 insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
 values(69,'其他','6',2,63,0,'Others','2016-09-07 17:52:47','2016-09-07 17:52:47');
-
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(70,'非遗','10',2,2,0,'Intangible cultural heritage','2016-09-08 17:52:47','2016-09-08 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(71,'乡村','11',2,2,0,'Village','2016-09-08 17:52:47','2016-09-08 17:52:47');
+update ms_poi_tag set ds_order=99 where tag_id in (18,22,31,42,51,61,62);
