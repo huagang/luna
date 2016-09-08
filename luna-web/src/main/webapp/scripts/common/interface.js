@@ -46,18 +46,20 @@ var Inter = function () {
         context: context,
         getPageUrl: function () {
             return {
-                home: context + '/index',
-                basicAppEdit: context + '/content/app/{0}?business_id={1}',
-                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
-                dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageUser: context + '/platform/user', //
-                routeConfig: context + '/content/route/configuration/{0}',
-                addPoi: context + '/data/poi/addPage',
-                editPoi: context + '/data/poi/initEditPage?poiId={0}',
-                manageRouter: context + '/content/route',
+                home: context + '/index',  // 主页
+                basicAppEdit: context + '/content/app/{0}?business_id={1}',  // 基础版微景展编辑页面
+                devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',  // 开发版微景展编辑页面
+                dataAppEdit: context + '/content/app/farm/{0}?business_id={1}', // 数据版微景展编辑页面
+                manageUser: context + '/platform/user', // 用户管理
+                routeConfig: context + '/content/route/configuration/{0}',  // 线路配置
+                addPoi: context + '/data/poi/addPage',  // 添加poi
+                editPoi: context + '/data/poi/initEditPage?poiId={0}', // 编辑poi
+                manageRouter: context + '/content/route',  // 线路管理
                 merchantApply: context + '/merchant/tradeApplication', //商户申请
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
                 messagePage: context + '/platform/message', //消息管理
+
+
             };
         },
         getApiUrl: function () {

@@ -38,7 +38,7 @@ public class GoodsController extends BasicController {
     // 页面初始化
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView model = new ModelAndView("/manage_merchant.jsp");
+        ModelAndView model = new ModelAndView("/manage_goods.jsp");
         SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return model;
     }

@@ -4,14 +4,15 @@
 
 
 angular
-    .module('manageMerchant', ['ui.bootstrap'])
-    .controller('ManageMerchantController', ManageMerchantController);
+    .module('manageGoods', ['ui.bootstrap'])
+    .config(['$httpProvider', Common.formConfig])
+    .controller('ManageGoodsController', ManageGoodsController);
 
 
 
-ManageMerchantController.$inject = ['$scope', '$http'];
+ManageGoodsController.$inject = ['$scope', '$http'];
 
-function ManageMerchantController($scope, $http){
+function ManageGoodsController($scope, $http){
     var vm = this;
     window.vm = vm;
 
@@ -42,20 +43,25 @@ function ManageMerchantController($scope, $http){
     // 事件 隐藏商品类目列表
     vm.hideOptions = hideOptions;
 
+    // 事件 跳转到发布商品页面
+    vm.redirectForCreate = redirectForCreate;
+
     // 选择商品类目
     vm.handleOptionClick = handleOptionClick;
 
+    vm.handleSearchOptions = handleSearchOptions;
+
+    // 搜索商品类目选项
+    vm.handleSearchTextChange = handleSearchTextChange;
+
     // 请求 搜索商品
-    vm.handleSearchMerchant = handleSearchMerchant;
+    vm.handleSearchGoods = handleSearchGoods;
 
     // 请求 获取表格数据
-    vm.fetchMerchantList = fetchMerchantList;
+    vm.fetchGoodsList = fetchGoodsList;
 
     // 请求 获取商品类目数据
-    vm.fetchMerchatTypeData = fetchMerchatTypeData;
-
-    // 请求 创建商品
-    vm.createMerchant = createMerchant;
+    vm.fetchGoodsTypeData = fetchGoodsTypeData;
 
     // 请求 下架商品
     vm.cancelOnsale = cancelOnsale;
@@ -64,7 +70,7 @@ function ManageMerchantController($scope, $http){
     vm.setOnsale = setOnsale;
 
     // 请求 删除商品
-    vm.deleteMerchant = deleteMerchant;
+    vm.deleteGoods = deleteGoods;
 
     vm.init();
     function init(){
@@ -81,7 +87,7 @@ function ManageMerchantController($scope, $http){
         };
 
         // 初始化数据
-        vm.merchantList = [];
+        vm.GoodsList = [];
         vm.checkedList = {};
         vm.selectAll = false;
         vm.categoryData = []; // 商品类目列表
@@ -90,8 +96,8 @@ function ManageMerchantController($scope, $http){
             vm.businessId = JSON.parse(business).id
         }
 
-        vm.fetchMerchantList();
-        vm.fetchMerchatTypeData();
+        vm.fetchGoodsList();
+        vm.fetchGoodsTypeData();
     }
 
     function changeState(state){
@@ -115,6 +121,7 @@ function ManageMerchantController($scope, $http){
     // 事件 是否显示类目列表
     function optionsToggle(){
         vm.opData.showSelectList = !vm.opData.showSelectList;
+        event.stopPropagation();
     }
 
     // 事件 隐藏商品类目列表
@@ -141,20 +148,55 @@ function ManageMerchantController($scope, $http){
         if(event.target.className.indexOf('icon') === -1){
             vm.opData.parentId = id;
             vm.opData.parentName = name;
+            vm.opData.searchText = name;
             vm.opData.parentDepth = depth;
             vm.opData.showSelectList = false;
         }
     }
 
+    // 事件
+    function handleSearchTextChange(){
+        console.log(vm.opData.searchText);
+        if(vm.opData.timeoutId){
+            clearTimeout(vm.opData.timeoutId);
+        }
+        vm.opData.timeoutId = setTimeout(vm.handleSearchOptions,500);
+    }
+
+    // 事件 跳转到发布商品页面
+    function redirectForCreate(){
+        if(vm.opData.parentId){
+            location.href = 'xxxxxx';
+        }
+    }
+
+    function handleSearchOptions(){
+        if(vm.opData.searchText){
+            vm.opData.options = vm.categoryData.filter(function(item){
+                if(item.name.indexOf(vm.opData.searchText) !== -1){
+                    console.log(item.name);
+                    return true;
+                }
+                return false;
+            });
+            vm.opData.showSelectList = true;
+        } else{
+            vm.opData.options = vm.categoryData;
+        }
+        vm.opData.parentId = undefined;
+        $scope.$apply();
+    }
+
+
     // 请求获取商品列表数据
-    function fetchMerchantList(){
+    function fetchGoodsList(){
 
         if(! vm.businessId){
             vm.showMessage('没有选择业务');
         }
         $http({
-            url: vm.apiUrls.fetchMerchantList.url.format(vm.businessId, vm.pagination.offset, vm.pagination.limit, vm.pagination.keyword),
-            method: vm.apiUrls.fetchMerchantList.type
+            url: vm.apiUrls.fetchGoodsList.url.format(vm.businessId, vm.pagination.offset, vm.pagination.limit, vm.pagination.keyword),
+            method: vm.apiUrls.fetchGoodsList.type
         }).then(function(res){
             if(res.data.code === '0'){
                 vm.merchantList = res.data.rows;
@@ -189,11 +231,6 @@ function ManageMerchantController($scope, $http){
         });
     }
 
-    // 请求 创建商品
-    function createMerchant(){
-
-    }
-
     // 请求 上架商品
     function setOnsale(){
         $http({
@@ -212,10 +249,10 @@ function ManageMerchantController($scope, $http){
     }
 
     // 请求 删除商品
-    function deleteMerchant(){
+    function deleteGoods(){
         $http({
-            url: vm.apiUrls.deleteMerchant.url,
-            method: vm.apiUrls.deleteMerchant.type,
+            url: vm.apiUrls.deleteGoods.url,
+            method: vm.apiUrls.deleteGoods.type,
             data: vm.selectedData
         }).then(function(res){
             if(res.data.code === '0'){
@@ -229,12 +266,12 @@ function ManageMerchantController($scope, $http){
     }
 
     // 请求 搜索商品
-    function handleSearchMerchant(){
+    function handleSearchGoods(){
 
     }
 
     // 请求 获取商品类目数据
-    function fetchMerchatTypeData(){
+    function fetchGoodsTypeData(){
         $http({
             url: vm.apiUrls.fetchMerchantCat.url.format('', ''),
             method: vm.apiUrls.fetchMerchantCat.type
@@ -254,13 +291,19 @@ function ManageMerchantController($scope, $http){
     function transformData(data){
         var list = [];
         var data = $.extend(true, [], data), i = 0;
+        var rootParent, parent;
         while(data.length > 0){
-            var parent = data[0];
+            parent = data[0];
             parent.depth = parent.depth || 1;
+            if(parent.depth === 1){
+                rootParent = parent;
+                rootParent.allChildrenNum = 0;
+            }
             list.push(data[0]);
 
             data.shift();
             if((parent.child || []).length > 0){
+                rootParent.allChildrenNum += 1;
                 i = parent.child.length -1;
                 for(; i > -1; i -= 1){
                     parent.child[i].parent = parent.parent || parent.id;
@@ -280,7 +323,7 @@ function ManageMerchantController($scope, $http){
 
     function handleSelectAllToggle(){
         console.log(vm.selectAll);
-        vm.merchantList.forEach(function(item){
+        vm.GoodsList.forEach(function(item){
             vm.checkedList[item.id] = vm.selectAll;
         });
     }
