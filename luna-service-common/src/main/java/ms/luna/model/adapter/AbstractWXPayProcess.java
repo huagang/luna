@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2016. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
- */
-
 package ms.luna.model.adapter;
 
 import com.alibaba.fastjson.JSONObject;
@@ -36,6 +28,10 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
+ * 本抽象类中实现初始化 默认策略
+ *
+ * 实现数据发送,以及所有微信支付公共流程
+ *
  * Created by SDLL18 on 16/9/2.
  *
  * @author SDLL18

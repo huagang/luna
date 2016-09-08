@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 
 /**
+ * 微信支付具体实现类
+ *
+ * 根据不同的支付方式,自定义
+ *
  * Created by SDLL18 on 16/9/2.
  *
  * @author SDLL18
