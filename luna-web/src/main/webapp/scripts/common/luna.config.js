@@ -139,6 +139,34 @@ var lunaConfig = function () {
                 name: '尊享',
                 code: 'zunxiang',
                 type: 'default',
+            }, {
+                name: '历史探秘',
+                code: 'lishitanmi',
+                type: 'default',
+            }, {
+                name: '乡土风情',
+                code: 'xiangcunfengqing',
+                type: 'default',
+            }, {
+                name: '产品',
+                code: 'chanpin',
+                type: 'default',
+            }, {
+                name: '景点',
+                code: 'jingdian',
+                type: 'default',
+            }, {
+                name: '商家',
+                code: 'shangjia',
+                type: 'default',
+            }, {
+                name: '非遗',
+                code: 'feiyi',
+                type: 'default',
+            }, {
+                name: '节庆',
+                code: 'jieqing',
+                type: 'default',
             }],
     };
 } ();
