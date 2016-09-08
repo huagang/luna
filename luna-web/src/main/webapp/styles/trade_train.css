@@ -178,6 +178,12 @@ button:hover {
     width: 100%;
 }
 
+
+.input-group-control .input-group-addon {
+    width: 100%;
+    display: inline-block;
+}
+
 .idPic {
     padding: 0;
 }

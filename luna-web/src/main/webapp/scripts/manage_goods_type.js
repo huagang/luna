@@ -1,13 +1,13 @@
 /**
  * Created by wumengqiang on 16/8/24.
  */
-angular.module('merchantType', [])
+angular.module('goodsCate', [])
     .config(['$httpProvider', Common.formConfig])
-    .controller('MerchantType', MerchantType);
+    .controller('GoodsCate', GoodsCate);
 
-MerchantType.$inject = ['$scope', '$http'];
+GoodsCate.$inject = ['$scope', '$http'];
 
-function MerchantType($scope, $http){
+function GoodsCate($scope, $http){
     var vm = this;
     window.vm = vm;
 
@@ -54,7 +54,7 @@ function MerchantType($scope, $http){
     vm.requestDelete = requestDelete;
 
     // 请求 获取商品类目数据
-    vm.fetchMerchatTypeData = fetchMerchatTypeData;
+    vm.fetchGoodsCatData = fetchGoodsCatData;
 
     // 请求 保存数据
     vm.saveData = saveData;
@@ -74,7 +74,7 @@ function MerchantType($scope, $http){
         vm.nameEle = angular.element('.name.form-group');
         vm.abbrEle = angular.element('.abbr.form-group');
 
-        vm.fetchMerchatTypeData();
+        vm.fetchGoodsCatData();
 
         vm.bindEvent();
     }
@@ -84,18 +84,18 @@ function MerchantType($scope, $http){
         angular.element('.selectize-input input').on('keydown', vm.clearTimeOut);
     }
 
-    function changeState(state, id, obj){
+    function changeState(state, id){
         vm.state = state;
         switch(state) {
             case 'new':
                 vm.opData = {
                     openList: [],
-                    options : vm.categoryData
-
+                    options : vm.categoryData,
+                    depth: 0
                 };
                 break;
             case 'edit':
-                var id = obj.id, depth = -1, obj;
+                var id = id, depth = -1;
                 var options = vm.categoryData.filter(function(item){
                     if(item.id === id){
                         depth = item.depth;
@@ -113,8 +113,9 @@ function MerchantType($scope, $http){
                     id: obj.id,
                     name: obj.name,
                     abbreviation: obj.abbreviation,
-                    parentId: obj.parent || obj.id,
+                    parentId: obj.parentId || undefined,
                     parentName: obj.parentName,
+                    depth: obj.depth,
                     options: options,
                     openList: []
                 };
@@ -131,15 +132,16 @@ function MerchantType($scope, $http){
         var data = $.extend(true, [], data), i = 0;
         while(data.length > 0){
             var parent = data[0];
-            parent.depth = parent.depth || 1;
+            parent.depth = parent.depth || 0;
             vm.categoryData.push(data[0]);
 
             data.shift();
             if((parent.child || []).length > 0){
                 i = parent.child.length -1;
                 for(; i > -1; i -= 1){
-                    parent.child[i].parent = parent.parent || parent.id;
+                    parent.child[i].root = parent.root || parent.id;
                     parent.child[i].parentName = parent.name || '';
+                    parent.child[i].parentId = parent.id || '';
                     parent.child[i].depth = parent.depth + 1;
                     data.unshift(parent.child[i]);
                 }
@@ -170,8 +172,8 @@ function MerchantType($scope, $http){
         if(vm.opData.abbreviation.length > 16){
             vm.opData.abbrError = '英文简称超过最大字符限制';
             vm.opData.abbreviation = vm.opData.abbreviation.substr(0,16);
-        } else if(vm.opData.abbreviation && ! /[a-zA-Z_-]+/.test(vm.opData.abbreviation)){
-            vm.opData.abbrError = '英文简称只能包含英文字母,下划线和中划线';
+        } else if(vm.opData.abbreviation && ! /^[a-zA-Z0-9_\-]+$/.test(vm.opData.abbreviation)){
+            vm.opData.abbrError = '英文简称只能包含英文字母,数字,下划线和中划线';
         } else if(vm.opData.abbrError){
             vm.opData.abbrError = '';
         }
@@ -182,14 +184,15 @@ function MerchantType($scope, $http){
         vm.message = msg;
         setTimeout(function(){
             vm.message = "";
-        }, 2000)
+            $scope.$apply();
+        }, 2000);
     }
 
     // 请求 获取商品类目数据
-    function fetchMerchatTypeData(){
+    function fetchGoodsCatData(){
         $http({
-            url: vm.apiUrls.fetchMerchantCat.url.format('', ''),
-            method: vm.apiUrls.fetchMerchantCat.type
+            url: vm.apiUrls.fetchGoodsCat.url.format('', ''),
+            method: vm.apiUrls.fetchGoodsCat.type
         }).then(function(res){
             if(res.data.code === '0'){
                 // 将所有类目层级展开并顺序加到categoryData中
@@ -231,12 +234,12 @@ function MerchantType($scope, $http){
         if(! vm.opData.valid){
             return;
         }
-        var url = vm.opData.id ? vm.apiUrls.saveMerchantCat.url.format(vm.opData.id) : vm.apiUrls.createMerchantCat.url,
-            type = vm.opData.id ? vm.apiUrls.saveMerchantCat.type: vm.apiUrls.createMerchantCat.type
+        var url = vm.opData.id ? vm.apiUrls.saveGoodsCat.url.format(vm.opData.id) : vm.apiUrls.createGoodsCat.url,
+            type = vm.opData.id ? vm.apiUrls.saveGoodsCat.type: vm.apiUrls.createGoodsCat.type
         var data = {
             name: vm.opData.name,
             abbreviation: vm.opData.abbreviation,
-            depth: vm.opData.parentDepth || 0
+            depth: vm.opData.depth,
         };
         var root = vm.opData.parentId || vm.opData.id;
         if(root){
@@ -269,24 +272,24 @@ function MerchantType($scope, $http){
         }).then(function(res){
             if(res.data.code === '0'){
                 vm.changeState('init');
-                vm.fetchMerchatTypeData();
+                vm.fetchGoodsCatData();
             } else{
-                vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+                vm.showMessage('操作失败,可能是名称或简称重复');
             }
         }, function(res){
-            vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+            vm.showMessage('操作失败,可能是名称或简称重复');
         });
     }
 
     function requestDelete(){
         if(vm.deleteId){
             $http({
-                url: vm.apiUrls.deleteMerchantCat.url.format(vm.deleteId),
-                method:  vm.apiUrls.deleteMerchantCat.type
+                url: vm.apiUrls.deleteGoodsCat.url.format(vm.deleteId),
+                method:  vm.apiUrls.deleteGoodsCat.type
             }).then(function(res){
                 if(res.data.code === '0'){
                     vm.changeState('init');
-                    vm.fetchMerchatTypeData();
+                    vm.fetchGoodsCatData();
                 } else{
                     vm.showMessage(res.data.msg || '删除失败');
                 }
@@ -304,14 +307,13 @@ function MerchantType($scope, $http){
         if(event.target.className.indexOf('select') === -1 && ! $(event.target).parents('.select-parent')[0]){
             vm.opData.showSelectList = false;
         }
-
     }
 
     function handleOptionClick(id, name, depth){
         if(event.target.className.indexOf('icon') === -1){
             vm.opData.parentId = id;
             vm.opData.parentName = name;
-            vm.opData.parentDepth = depth;
+            vm.opData.depth = depth + 1;
             vm.opData.showSelectList = false;
         }
     }

@@ -103,7 +103,7 @@ ADD INDEX `for_search` (`city_name` ASC, `city_root` ASC);
 ALTER TABLE `luna_bank_branch`
 ADD INDEX `for_search` (`lname` ASC, `bnkcode` ASC);
 
-UPDATE `luna_menu` SET `code`='goodsCategory' WHERE `id`='5';
+UPDATE `luna_menu` SET `code`='goodsCategory', status=1 WHERE `id`='5';
 
 -- 商户表
 ALTER TABLE `ms_merchant_manage`
@@ -140,4 +140,20 @@ UPDATE luna_menu SET status=0 WHERE code='business';
 -- 邮箱注册
 alter table luna_reg_email add `merchant_id` varchar(32) DEFAULT NULL COMMENT '商户id';
 
-alter table ms_article add column source varchar(255) default '' comment '文章来源' after author;
+alter table ms_article add column source varchar(511) default '' comment '文章来源' after author;
+
+-- poi 增加分类
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(63,'临时展位','9',1,0,0,'Temporary booth','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(64,'住宿','1',2,63,0,'Accommodation services','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(65,'餐饮','2',2,63,0,'Food and beverage service','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(66,'娱乐','3',2,63,0,'Leisure and entertainment','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(67,'购物','4',2,63,0,'Shopping','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(68,'基础设施','5',2,63,0,'Infrastructure base installation','2016-09-07 17:52:47','2016-09-07 17:52:47');
+insert into ms_poi_tag (`tag_id`,`tag_name`,`ds_order`,`tag_level`,`parent_tag_id`,`editable_flag`,`tag_name_en`,`regist_hhmmss`,`up_hhmmss`)
+values(69,'其他','6',2,63,0,'Others','2016-09-07 17:52:47','2016-09-07 17:52:47');
