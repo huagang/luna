@@ -100,10 +100,13 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		if(StringUtils.isBlank(loginUserId)) {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}
-		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
-		List<MsBusiness> selectedBusiness = null;
+//		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
+//		List<MsBusiness> selectedBusiness = null;
+		List<MsBusinessResult> allValidBusiness = getValidBusinessForUser(loginUserId);
+		List<MsBusinessResult> selectedBusiness = null;
 		if(StringUtils.isNotBlank(slaveUserId)) {
-			selectedBusiness = getBusinessForUser(slaveUserId);
+//			selectedBusiness = getBusinessForUser(slaveUserId);
+			selectedBusiness = getValidBusinessForUser(slaveUserId);
 		}
 
 		if(allValidBusiness == null || allValidBusiness.isEmpty()) {
@@ -111,13 +114,15 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		}
 
 		Set<Integer> businessIdSet = new HashSet<>(allValidBusiness.size());
-		for(MsBusiness msBusiness : allValidBusiness) {
+//		for(MsBusiness msBusiness : allValidBusiness) {
+		for(MsBusinessResult msBusiness : allValidBusiness) {
 			businessIdSet.add(msBusiness.getBusinessId());
 		}
 
 		Set<Integer> selectedBusinessIdSet = new HashSet<>();
 		if(selectedBusiness != null) {
-			for (MsBusiness msBusiness : selectedBusiness) {
+//			for (MsBusiness msBusiness : selectedBusiness) {
+			for (MsBusinessResult msBusiness : selectedBusiness) {
 				selectedBusinessIdSet.add(msBusiness.getBusinessId());
 			}
 		}
@@ -126,7 +131,8 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		Map<String, String> categoryId2NameMap = merchantCategoryCache.getCategoryId2Name();
 
 		JSONObject resJson = new JSONObject();
-		for(MsBusiness msBusiness : allValidBusiness) {
+//		for(MsBusiness msBusiness : allValidBusiness) {
+		for(MsBusinessResult msBusiness : allValidBusiness) {
 			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
 			if(categoryId == null) {
 				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
