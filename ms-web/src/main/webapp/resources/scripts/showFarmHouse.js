@@ -3,6 +3,8 @@
  */
 
 $(function(){
+
+    // url中含有disableWelcome=true表示不显示启动页
     if(! /disableWelcome=true/.test(location.href)){
         var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
         if(pageData.start_page_foreground_pic && pageData.start_page_background_pic){
@@ -32,6 +34,7 @@ $(function(){
     }
 });
 
+// 启动页动画
 function showAnimation(){
     $('.page-back .fg').velocity({opacity: 1},
         {
@@ -50,8 +53,6 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-
-
                 }
             });
         $('.page-main').velocity({opacity: 1},
@@ -75,6 +76,7 @@ function showAnimation(){
         .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
 
 
+    // 点击地图poi出现的poi信息marker
     function getMarkerTip() {
         function MarkerTip(data) {
             //this.construct(data);
@@ -149,39 +151,47 @@ function showAnimation(){
         return MarkerTip;
     }
 
+    // 美食和房间缩略图的滚动控制器
     function getScrollController(){
         function Controller(options){
-            var that = this;
-            window.scroll = that;
+            /* @prama options 对象 表示初始化选项,内容如下
+             *          options.target          string  滚动元素wrapper的选择器
+             *          options.deceleration    float   滚动加速度的绝对值
+             *          options.style           string  center表示滚动后图片居中,left表示滚动后图片靠左
+             */
 
-            that.init = init;
-            that.record = record;
-            that.end = end;
-            that.refresh = refresh;
+            var that = this;
+            that.init = init; // 初始化
+            that.record = record; // 记录时间点和距离
+            that.end = end; // 滚动距离
+            that.refresh = refresh;  // 刷新样式
+            that.limitScroll = limitScroll; // 限制滚动距离
+
+
             that.init();
 
             function init(){
                 if(options.target && typeof options.target === 'string') {
+                    setTimeout(that.refresh, 2000); // 等待angular脚本执行完并初始化页面后执行
                     that.deceleration = options.deceleration || 12;
                     that.target = $(options.target);
+                    that.style = options.style || 'left';
                     that.scroll = new IScroll(options.target, {
                         probeType: 2,
                         scrollX: true,
                         momentum: false,
                         bounce: true,
                         click: true,
-                        startX: 0
+                        startX: 0, // 滚动初始值
+                        eventPassthrough: true  // 使得能够竖向滚动
                     });
                     that.cur = {
                         x: 0,
                         time: undefined,
                     };
-                    that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
-                    that.scrollWidth  = that.target.children().first().outerWidth();
-                    that.containerWidth = that.target.width();
-                    that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
                     that.scroll.on('scroll', that.record);
-                    that.scroll.on('scrollEnd', that.end)
+                    that.scroll.on('scrollEnd', that.end);
+                    that.refreshed = false;
                 }
             };
 
@@ -192,64 +202,117 @@ function showAnimation(){
                 that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
                 that.scroll.refresh();
             }
-            function record(){
+
+            // 滚动时记录位置和时间
+            function record() {
                 var point = event.touches ? event.touches[0] : event;
-                if(point){
+                if (point) {
+                    if (!that.last) {
+                        that.start = {  // 滚动开始记录
+                            x: point.pageX,
+                            time: Date.now(),
+                        };
+                    }
                     that.last = that.cur;
-                    that.cur = {
+                    that.cur = {        // 记录当前位置
                         x: point.pageX,
                         time: Date.now(),
                     };
-                    if(that.cur && that.last && that.last.time){
+
+                    if (that.cur && that.last && that.last.time) {  // 算出最高速度, 用于计算手指离开屏幕后的滚动距离
                         var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
-                        if(speed > 0){
+                        if (speed > 0) {
                             that.maxSpeed = Math.max(that.maxSpeed || 0, speed);
-                        } else{
+                        } else {
                             that.maxSpeed = Math.min(that.maxSpeed || 0, speed);
                         }
-
-
                     }
-                } else{
-                    //touch end
                 }
             }
+
+
+            // 用于限制滚动范围
+            function limitScroll(position){
+                if(position > 0){
+                    position = 0;
+                } else  if(- position > that.scrollMax ){
+                    position = - that.scrollMax;
+                }
+                return position;
+            }
+
+            // 滚动结束
             function end(){
-                var aimPosition = 0
+
+                var aimPosition = 0;
                 var endTime = Date.now();
                 if(endTime - that.cur.time > 300){
-                    // bounce
+                    // 如果滚动结束时间和最后一次记录的时间超过300ms,一般都是弹性边界的原因, 这种情况不计算接下来滚动距离
+                    var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]; //获取当前滚动位置
+                    var count =  - curPosition / that.scrollUnit;
+                    count = count.toFixed(0);
+                    curPosition  = that.limitScroll(- count * that.scrollUnit);
+
+                    if(curPosition !== 0 && that.style === 'center'){
+                        var offset = (that.containerWidth % that.scrollUnit) / 2;
+                        if(curPosition === -that.scrollMax){
+                            curPosition = (- curPosition / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
+                            curPosition = that.limitScroll(curPosition);
+                        } else{
+                            if(offset - curPosition < that.scrollMax){
+                                curPosition += offset;
+                            }
+                        }
+
+                    }
+                    that.scroll.scrollTo(curPosition, 0 , 800);
+
                     return;
                 } else if(that.cur && that.last && that.last.time){
-                    var time = Math.abs(that.maxSpeed / that.deceleration);
-                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想移动距离,可能需要修正
+
+                    var time = Math.abs(that.maxSpeed / that.deceleration); // 继续滚动的事件
+                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想滚动距离,可能需要修正
                     try{
-                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1];
-                        aimPosition = parseFloat(curPosition) + distance;
-                        if(aimPosition > 0){
-                            aimPosition = 0;
-                        } else  if(- aimPosition > that.scrollMax ){
-                            aimPosition = - that.scrollMax;
-                        }else{
-                            var count =  - aimPosition / that.scrollUnit;
-                            var diff = count - count.toFixed(0);
-                            count = count.toFixed(0);
-                            //if(distance > 0){
-                            //    count -= 1;
-                            //}
-                            aimPosition  = - count * that.scrollUnit;
+                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]; //获取当前滚动位置
+                        aimPosition = that.limitScroll(parseFloat(curPosition) + distance); // 计算出目标滚动位置
+
+                        var count =  (- aimPosition / that.scrollUnit).toFixed(0);
+                        aimPosition  = - count * that.scrollUnit;
+
+                        if(Math.abs(aimPosition - curPosition) < 10 &&  Math.abs(that.cur.x - that.start.x) * 15 > that.scrollUnit){
+                            if(distance > 0){
+                                aimPosition = (- count + 1 ) * that.scrollUnit;
+                            } else{
+                                aimPosition = (- count - 1 ) * that.scrollUnit;
+                            }
                         }
-                        if(- aimPosition > that.scrollMax ){
-                            aimPosition = - that.scrollMax;
+
+                        aimPosition = that.limitScroll(aimPosition);
+
+                        if(aimPosition !== 0 && that.style === 'center'){
+                            var offset = (that.containerWidth % that.scrollUnit) / 2;
+                            if(aimPosition === -that.scrollMax){
+                                aimPosition = (- aimPosition / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
+                                aimPosition = that.limitScroll(aimPosition);
+                            } else{
+                                if(offset - aimPosition < that.scrollMax){
+                                    aimPosition += offset;
+                                }
+                            }
+
                         }
-                        time = Math.max(Math.sqrt(Math.abs((aimPosition -curPosition) / that.deceleration * 2)) * 80, 800);
+
+
+
+                        time = Math.max(Math.sqrt(Math.abs((aimPosition - curPosition) / that.deceleration * 2)) * 80, 800);
                         that.scroll.scrollTo(aimPosition, 0 , time);
                     } catch(e){
 
                     }
 
                 }
-                that.last = undefined;
+
+                that.start = that.last = undefined;
                 that.cur = {
                     time: Date.now(),
                     x: aimPosition
@@ -269,24 +332,47 @@ function showAnimation(){
         vm.init = init;
         //获取测试数据
 
-        // 设置全景
+        // 操作 设置全景
         vm.setPano = setPano;
 
-        // 初始化地图
+        // 操作 初始化地图
         vm.initMap = initMap;
 
-        // 更新地图marker
+        // 操作 更新地图marker
         vm.updateMapMarkers = updateMapMarkers;
 
-        // 取消当前marker的选中状态
+        // 操作 取消当前marker的选中状态
         vm.clearActiveMarker = clearActiveMarker;
 
+        // 操作 根据全景在屏幕内的位置来确定全景是否自动播放
+        vm.checkPanoPosition = checkPanoPosition;
+
+        // 操作 用于设置当前url,使得跳出再跳回时不用看到启动页
+        vm.replaceUrl = replaceUrl;
+
+        // 操作 监听滚动事件 开始滚动时全景暂停
+        vm.listenScroll = listenScroll;
+
+        // 事件 点击地图
         vm.handleMapClick = handleMapClick;
-        // 返回顶部
+
+        // 事件 点击返回顶部
         vm.scrollToTop = scrollToTop;
 
-        // poi点击事件
+        // 事件 点击poi,显示marker
         vm.handleMarkerClick = handleMarkerClick;
+
+        // 事件 点击"到这去"或"路线"来进行路线导航
+        vm.navigate = navigate;
+
+        // 事件 调用h5接口来获取当前位置
+        vm.getMyLocation = getMyLocation;
+
+        // 事件 获取当前位置失败
+        vm.getMyLocationOnError = getMyLocationOnError;
+
+        // 事件 获取当前位置成功
+        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
 
         // 请求 获取poi数据信息
         vm.fetchPoiData = fetchPoiData;
@@ -300,30 +386,14 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
-        // 监听事件
-        vm.listenScroll = listenScroll;
-
+        // 请求 获取全景信息
         vm.fetchPanoDetail = fetchPanoDetail;
-
-        vm.navigate = navigate;
-
-        vm.getMyLocation = getMyLocation;
-
-        vm.getMyLocationOnError = getMyLocationOnError;
-
-        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
-
-        vm.checkPanoPosition = checkPanoPosition;
-
-        vm.replaceUrl = replaceUrl;
-
 
         vm.init();
 
         // 数据初始化
         function init() {
             vm.apiUrls = Inter.getApiUrl();
-
 
             vm.markerImg = {
                 scene: {
@@ -376,19 +446,15 @@ function showAnimation(){
             //滚动相关
             vm.foodScroll = new ScrollController({
                 target: '.food-info main',
-                deceleration: 8
+                deceleration: 8,
+                style: 'center'
             });
 
             vm.roomScroll = new ScrollController({
                 target: '.room-info footer',
                 deceleration: 4,
+                style: 'left'
             });
-
-
-            setTimeout(function(){
-                vm.foodScroll.refresh();
-                vm.roomScroll.refresh();
-            }, 1000);
 
             vm.curPanoIndex = 0;
 
@@ -468,9 +534,6 @@ function showAnimation(){
                 zoomControl: false
             });
             vm.map.panTo(center);
-
-
-
 
             vm.drivingService = new qq.maps.DrivingService({
                 location: "中国"
