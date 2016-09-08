@@ -77,6 +77,7 @@
 <script>
     var businessId = "${business_id}";
     var businessName = "${business_name}";
+    var existMerchant = "${existMerchant}";
     if(businessId && businessName){
         localStorage.setItem('business', JSON.stringify({
             id: parseInt(businessId),
