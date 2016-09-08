@@ -68,6 +68,8 @@ $(document).ready(function(){
 
 	function searchPois() {
 
+        $(".list-result-poi").html('<div class="text" style="text-align: center; height: 20px;line-height:20px;padding-top:35px;">搜索中.....</div>');
+
     	var param = {
     			"province_id":$('#province').val(),
     			"city_id":$('#city').val(),
