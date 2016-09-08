@@ -132,7 +132,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             if (applicationList == null || applicationList.size() == 0)
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交过申请");
             LunaTradeApplication application = applicationList.get(0);
-            if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_CHECK_REFUSE) {
+            if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_STATUS_REFUSE) {
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前申请状态不可重新申请");
             }
             application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_CHECKING);
