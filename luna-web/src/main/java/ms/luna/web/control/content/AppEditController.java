@@ -415,6 +415,7 @@ public class AppEditController extends BasicController {
             @RequestParam(required = true, value = "page_name") String pageName,
             @RequestParam(required = true, value = "page_code") String pageCode,
             @RequestParam(required = true, value = "page_order") int pageOrder,
+            @RequestParam(required = false, value = "share_info") String shareInfo,
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (StringUtils.isBlank(pageName)) {
@@ -447,6 +448,7 @@ public class AppEditController extends BasicController {
         params.put("page_code", pageCode);
         params.put("page_order", pageOrder);
         params.put("page_id", pageId);
+        params.put("share_info", JSONObject.parseObject(shareInfo));
         try {
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
             JSONObject result = msShowPageService.duplicateOnePage(params.toString(), user.getLunaName());
