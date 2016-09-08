@@ -19,7 +19,7 @@
     <title>WXPAYTEST</title>
 </head>
 <body>
-<textarea
+<textarea id="orderId"></textarea>
 <button onclick="getPrepayInfo()">getPrepayInfo</button>
 <button onclick="requestPay()">requestPay</button>
 
@@ -68,7 +68,7 @@
 <script type="text/javascript">
     var paydata = {};
     function getPrepayInfo() {
-        var data = {orderId: 123, openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
+        var data = {orderId: $("#orderId").value(), openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
         $.ajax({
             type: 'post',
             url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
