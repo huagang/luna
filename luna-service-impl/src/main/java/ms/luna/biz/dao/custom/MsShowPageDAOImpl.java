@@ -183,6 +183,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_TYPE, page.getPageType());
 		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		document.append(FIELD_PAGE_TIME, page.getPageTime());
+		document.append(FIELD_SHARE_INFO, page.getShareInfo());
 		return document;
 	}
 	
