@@ -73,6 +73,7 @@
             </div>
         </div>
     </div>
+    <div class="hidden" id="merchant-closed"
 </body>
 <script>
     var businessId = "${business_id}";

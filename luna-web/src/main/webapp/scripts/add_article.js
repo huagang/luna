@@ -77,7 +77,7 @@ var initPage = function () {
 
         function saveData(e) {
             articleStore.content = ue.getContent();
-            var error = articleStore.checkEmpty().error;
+            var error = articleStore.checkValidation().error;
             if (error) {
                 alert(error);
                 return;
@@ -328,7 +328,7 @@ var initPage = function () {
             business_id: business_id,
             previewUrl: '',
             source: '',
-            checkEmpty: function () {
+            checkValidation: function () {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
                  *                          如果没有错误返回的是{"error": null}。 
@@ -346,6 +346,10 @@ var initPage = function () {
                         error += '\n ' + item.name + '项不能为空  ';
                     }
                 }.bind(this));
+
+                if(articleStore.source && ! /^(http:\/\/|https:\/\/).+\..+$/.test(articleStore.source)){
+                    error += '\n文章来源格式不正确'
+                }
                 return { error: error || null };
             },
         };
