@@ -158,7 +158,7 @@ public class WXTokenGetter {
             logger.info("receive from wx when get ticket:\n" + responseBody);
 
             JSONObject data = JSONObject.parseObject(responseBody);
-            if (data.containsKey("errcode")) {
+            if (data.getInteger("errcode").intValue() != 0) {
                 logger.error("failed to get ticket from wx.\nsend:" + urlBuilder.toString() + "\nInfo:" + data);
             } else {
                 ticket = data.getString("ticket");
