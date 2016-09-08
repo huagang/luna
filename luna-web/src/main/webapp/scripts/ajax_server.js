@@ -183,7 +183,7 @@ function modifyPageName() {
                 lunaPage.pages[pageId].page_height = $("#txtPageHeight").val();
                 lunaPage.pages[pageId].page_time = $("#txt-time").val();
                 lunaPage.pages[pageId].share_info = $('[name=sharebox]:checked').val() ? {
-                    "share_link": $('[name=share_link]').val(),
+                    "share_link": $('[name=share_link]:checked').val() ? $('[name=share_link]').val() : '',
                     "share_pic": $('[name=share_pic]').val(),
                     "share_title": $('[name=share_title]').val(),
                     "share_desc": $('[name=share_desc]').val()
