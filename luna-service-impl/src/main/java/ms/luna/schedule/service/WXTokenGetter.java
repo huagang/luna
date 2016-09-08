@@ -43,10 +43,8 @@ public class WXTokenGetter {
      */
     public static WXTokenGetter getSingleInstance() {
         if (!getterMap.containsKey("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18")) {
-            synchronized (getterMap) {
-                WXTokenGetter getter = new WXTokenGetter();
-                getterMap.put("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18", getter);
-            }
+            WXTokenGetter getter = new WXTokenGetter();
+            getterMap.putIfAbsent("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18", getter);
         }
         return getterMap.get("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18");
     }
