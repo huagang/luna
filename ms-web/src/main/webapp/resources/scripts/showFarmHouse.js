@@ -162,6 +162,7 @@ function showAnimation(){
 
             function init(){
                 if(options.target && typeof options.target === 'string') {
+                    setTimeout(that.refresh, 2000);
                     that.deceleration = options.deceleration || 12;
                     that.target = $(options.target);
                     that.scroll = new IScroll(options.target, {
@@ -170,18 +171,16 @@ function showAnimation(){
                         momentum: false,
                         bounce: true,
                         click: true,
-                        startX: 0
+                        startX: 0,
+                        eventPassthrough: true
                     });
                     that.cur = {
                         x: 0,
                         time: undefined,
                     };
-                    that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
-                    that.scrollWidth  = that.target.children().first().outerWidth();
-                    that.containerWidth = that.target.width();
-                    that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
                     that.scroll.on('scroll', that.record);
-                    that.scroll.on('scrollEnd', that.end)
+                    that.scroll.on('scrollEnd', that.end);
+                    that.refreshed = false;
                 }
             };
 
@@ -195,11 +194,22 @@ function showAnimation(){
             function record(){
                 var point = event.touches ? event.touches[0] : event;
                 if(point){
+                    if(! that.last){
+                        that.start = {
+                            x: point.pageX,
+                            y: point.pageY,
+                            time: Date.now(),
+                        };
+                    }
                     that.last = that.cur;
                     that.cur = {
                         x: point.pageX,
+                        y: point.pageY,
                         time: Date.now(),
                     };
+                    //if((that.cur.y- that.start.y ) > 2 * (that.cur.x - that.start.x)){
+
+                    //}
                     if(that.cur && that.last && that.last.time){
                         var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
                         if(speed > 0){
@@ -215,7 +225,8 @@ function showAnimation(){
                 }
             }
             function end(){
-                var aimPosition = 0
+
+                var aimPosition = 0;
                 var endTime = Date.now();
                 if(endTime - that.cur.time > 300){
                     // bounce
@@ -237,8 +248,20 @@ function showAnimation(){
                             //if(distance > 0){
                             //    count -= 1;
                             //}
+
                             aimPosition  = - count * that.scrollUnit;
                         }
+
+                        if(Math.abs(aimPosition - curPosition) < 10 &&  Math.abs(that.cur.x - that.start.x) * 15 > that.scrollUnit){
+                            if(distance > 0){
+                                aimPosition = (- count + 1 ) * that.scrollUnit;
+                            } else{
+                                aimPosition = (- count - 1 ) * that.scrollUnit;
+                            }
+
+                        }
+
+
                         if(- aimPosition > that.scrollMax ){
                             aimPosition = - that.scrollMax;
                         }
@@ -249,7 +272,7 @@ function showAnimation(){
                     }
 
                 }
-                that.last = undefined;
+                that.start = that.last = undefined;
                 that.cur = {
                     time: Date.now(),
                     x: aimPosition
@@ -269,24 +292,47 @@ function showAnimation(){
         vm.init = init;
         //获取测试数据
 
-        // 设置全景
+        // 操作 设置全景
         vm.setPano = setPano;
 
-        // 初始化地图
+        // 操作 初始化地图
         vm.initMap = initMap;
 
-        // 更新地图marker
+        // 操作 更新地图marker
         vm.updateMapMarkers = updateMapMarkers;
 
-        // 取消当前marker的选中状态
+        // 操作 取消当前marker的选中状态
         vm.clearActiveMarker = clearActiveMarker;
 
+        // 操作 根据全景在屏幕内的位置来确定全景是否自动播放
+        vm.checkPanoPosition = checkPanoPosition;
+
+        // 操作 用于设置当前url,使得跳出再跳回时不用看到启动页
+        vm.replaceUrl = replaceUrl;
+
+        // 操作 监听滚动事件 开始滚动时全景暂停
+        vm.listenScroll = listenScroll;
+
+        // 事件 点击地图
         vm.handleMapClick = handleMapClick;
-        // 返回顶部
+
+        // 事件 点击返回顶部
         vm.scrollToTop = scrollToTop;
 
-        // poi点击事件
+        // 事件 点击poi,显示marker
         vm.handleMarkerClick = handleMarkerClick;
+
+        // 事件 点击"到这去"或"路线"来进行路线导航
+        vm.navigate = navigate;
+
+        // 事件 调用h5接口来获取当前位置
+        vm.getMyLocation = getMyLocation;
+
+        // 事件 获取当前位置失败
+        vm.getMyLocationOnError = getMyLocationOnError;
+
+        // 事件 获取当前位置成功
+        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
 
         // 请求 获取poi数据信息
         vm.fetchPoiData = fetchPoiData;
@@ -300,30 +346,14 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
-        // 监听事件
-        vm.listenScroll = listenScroll;
-
+        // 请求 获取全景信息
         vm.fetchPanoDetail = fetchPanoDetail;
-
-        vm.navigate = navigate;
-
-        vm.getMyLocation = getMyLocation;
-
-        vm.getMyLocationOnError = getMyLocationOnError;
-
-        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
-
-        vm.checkPanoPosition = checkPanoPosition;
-
-        vm.replaceUrl = replaceUrl;
-
 
         vm.init();
 
         // 数据初始化
         function init() {
             vm.apiUrls = Inter.getApiUrl();
-
 
             vm.markerImg = {
                 scene: {
@@ -383,12 +413,6 @@ function showAnimation(){
                 target: '.room-info footer',
                 deceleration: 4,
             });
-
-
-            setTimeout(function(){
-                vm.foodScroll.refresh();
-                vm.roomScroll.refresh();
-            }, 1000);
 
             vm.curPanoIndex = 0;
 
