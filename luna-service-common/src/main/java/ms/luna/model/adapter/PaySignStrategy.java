@@ -6,19 +6,20 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ms.luna.model;
+package ms.luna.model.adapter;
+
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 /**
- * Created by SDLL18 on 16/9/1.
+ * Created by SDLL18 on 16/9/2.
  */
-public enum WXPaymethodEnum {
+public interface PaySignStrategy {
 
+    String signMessage(String data);
 
-    WXPAY_METHOD_APP("app"), WXPAY_METHOD_JSAPI("jsapi");
-    
-    private String value;
+    Boolean checkSign(String data) throws ParserConfigurationException, SAXException, IOException;
 
-    private WXPaymethodEnum(String value) {
-        this.value = value;
-    }
 }

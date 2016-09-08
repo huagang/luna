@@ -8,14 +8,17 @@
 
 package ms.luna.model.adapter;
 
-import com.alibaba.fastjson.JSONObject;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 /**
- * Created by SDLL18 on 16/9/1.
+ * Created by SDLL18 on 16/9/5.
  */
-public interface PayInfoProcessAdapter {
+public interface PayDataParseStrategy {
 
-    String assembleRequest(JSONObject inData);
+    String getFromTransfer(String data) throws ParserConfigurationException, IOException, SAXException;
 
-    String assembleResponse(JSONObject inData);
+    String getForTransfer(String data);
 }

@@ -481,11 +481,6 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 			if(forceFlag == 1) {
 				int oldAppId = FastJsonUtil.getInteger(jsonObject, "old_app_id", -1);
 				if(oldAppId < 0) {
-					// 超过一个必须提供替换的app, 只有1个可以默认处理上线(数据版除外)
-					if(msShowApps.size() > 1) {
-						logger.warn("Failed to read old_app_id from param");
-						return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
-					}
 					// 数据版只允许一个在线,下线其他所有的
 					if(type == 2) {
 						example.clear();
@@ -493,7 +488,14 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 						MsShowApp record = new MsShowApp();
 						record.setAppStatus(MsShowAppConfig.AppStatus.OFFLINE);
 						msShowAppDAO.updateByCriteriaSelective(record, example);
+					} else {
+						// 超过一个必须提供替换的app, 只有1个可以默认处理上线(数据版除外)
+						if (msShowApps.size() > 1) {
+							logger.warn("Failed to read old_app_id from param");
+							return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "要替换的微景展不合法");
+						}
 					}
+
 				} else {
 					// 检查提供的old_app_id是否为同业务下在线的app, 防止乱传app_id
 					example.clear();

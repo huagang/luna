@@ -265,7 +265,11 @@
 		if (row.lang == 'en') {
 			lang = '(英)'
 		}
-		return '<a target="_blank" href="' + row.preview_url + '"><span style="color:#F00">'+lang+'</span>' + row.poi_name + '</a>';
+		var temporary= '';
+		if (row.temporary) {
+			temporary = '(临)';
+		}
+		return '<a target="_blank" href="' + row.preview_url + '"><span style="color:#F00">'+temporary+lang+'</span>' + row.poi_name + '</a>';
 	}
 	function queryParams(params) {
 		//alert(JSON.stringify(params));
