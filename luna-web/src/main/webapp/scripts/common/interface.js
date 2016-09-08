@@ -640,6 +640,7 @@ var Inter = function () {
 
                 //交易直通车
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据
+                editMerchantInfo: { url: context + '/merchant/tradeApplication/recreate', type: 'POST' }, //保存商户数据
                 getMerchantStatus: { url: context + '/merchant/tradeApplication/merchantStatus', type: 'GET' }, //获取商户状态
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
                 getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
