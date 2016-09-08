@@ -206,6 +206,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, application.getAccountAddress());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, application.getAccountBank());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
+        result.put(LunaTradeApplicationTable.FIELD_IDCARD_NO,application.getIdcardNo());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, application.getAccountProvince());
