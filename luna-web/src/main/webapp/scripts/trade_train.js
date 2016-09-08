@@ -292,7 +292,7 @@ var initCreatePage = function () {
                         merchantNo: formDataZero.merchantNo,
                         merchantPhone: formDataZero.merchantPhone,
                         smsCode: formDataZero.verCode,
-                        idCode: formDataZero.idCode,
+                        idcardNo: formDataZero.idCode,
                     },
                     idPicObj = $('.idPic .pic-wrapper'),
                     idcardPicUrl = [],
@@ -441,6 +441,7 @@ var initNoPassPage = function () {
                         $('[name=accountType]').val(data.accountType);
                         $('[name=accountName]').val(data.accountName);
                         $('[name=accountNo]').val(data.accountNo);
+                        $('[name=idCode]').val(data.idcardNo);
 
                         $('#noPass').addClass('hide');
                         $('#create').removeClass('hide');
@@ -567,7 +568,7 @@ function uploadPicture(obj, callBack) {
     var file = obj.files[0];
     var res = FileUploader._checkValidation('pic', file);
     if (res.error) {
-        $('#pic_warn').html(res.msg);
+        alert(res.msg);
         obj.value = '';
         return;
     }
