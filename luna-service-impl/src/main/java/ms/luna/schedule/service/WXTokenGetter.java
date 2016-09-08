@@ -159,19 +159,19 @@ public class WXTokenGetter {
 
             JSONObject data = JSONObject.parseObject(responseBody);
             if (data.containsKey("errcode")) {
-                logger.error("failed to get token from wx.\nInfo:" + data);
+                logger.error("failed to get ticket from wx.\nsend:" + urlBuilder.toString() + "\nInfo:" + data);
             } else {
                 ticket = data.getString("ticket");
                 ticketLastUpdateTime = Calendar.getInstance().getTimeInMillis();
             }
         } catch (NoSuchAlgorithmException e) {
-            logger.error("failed to get token from wx.", e);
+            logger.error("failed to get ticket from wx.", e);
         } catch (ClientProtocolException e) {
-            logger.error("failed to get token from wx.", e);
+            logger.error("failed to get ticket from wx.", e);
         } catch (IOException e) {
-            logger.error("failed to get token from wx.", e);
+            logger.error("failed to get ticket from wx.", e);
         } catch (Exception ex) {
-            logger.error("failed to get token from wx.", ex);
+            logger.error("failed to get ticket from wx.", ex);
         }
     }
 
@@ -208,7 +208,7 @@ public class WXTokenGetter {
             logger.info("receive from wx when get token:\n" + responseBody);
             JSONObject data = JSONObject.parseObject(responseBody);
             if (data.containsKey("errcode")) {
-                logger.error("failed to get token from wx.\nInfo:" + data);
+                logger.error("failed to get token from wx.\nsend:" + urlBuilder.toString() + "\nInfo:" + data);
             } else {
                 token = data.getString("access_token");
                 tokenLastUpdateTime = Calendar.getInstance().getTimeInMillis();
