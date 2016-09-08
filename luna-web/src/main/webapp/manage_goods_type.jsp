@@ -59,17 +59,17 @@
                       <td colspan="3" class="text-center ng-hide" ng-show="cate.categoryData.length === 0">暂无类目</td>
                   </tr>
                   <tr ng-repeat="row in cate.categoryData" class="ng-hide"
-                      ng-show="row.depth === 1 || cate.openList.indexOf(row.parent) !== -1 ">
+                      ng-show="row.depth === 0 || cate.openList.indexOf(row.root) !== -1 ">
 
                       <td>
                           <div class="ng-hide " ng-class="{'icon-close': cate.openList.indexOf(row.id) !== -1, 'icon-open':  cate.openList.indexOf(row.id) === -1}"
-                               ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleToggle(row.id)"></div>
-                          <span class="depth-{{row.depth}}"><span class="gray">{{'—'.repeat(row.depth-1)}}</span> {{row.name}}</span>
+                               ng-show="row.depth === 0 && row.child.length > 0" ng-click="cate.handleToggle(row.id)"></div>
+                          <span class="depth-{{row.depth}}"><span class="gray">{{'—'.repeat(row.depth)}}</span> {{row.name}}</span>
                       </td>
                       <td>{{row.abbreviation}}</td>
                       <td>
                          <a href="javascript:void(0)" class='edit'
-                                 ng-click="cate.changeState('edit', row.id, row)">编辑</a>
+                                 ng-click="cate.changeState('edit', row.id)">编辑</a>
                          <a href="javascript:void(0)" ng-click="cate.changeState('delete', row.id)">删除</a>
                       </td>
                   </tr>
@@ -111,14 +111,14 @@
                     <div class="glyphicon pull-right arrow" ng-class="{'glyphicon-triangle-bottom': ! cate.opData.showSelectList, 'glyphicon-triangle-top': cate.opData.showSelectList}"></div>
                 </div>
                 <div class="select-parent ng-hide" ng-show="cate.opData.showSelectList">
-                    <div class="option" ng-click="cate.handleOptionClick(undefined, '无', 0)">
+                    <div class="option" ng-click="cate.handleOptionClick(undefined, '无', -1)">
                         <span>无</span>
                     </div>
                     <div class="option" ng-repeat="row in cate.opData.options" ng-click="cate.handleOptionClick(row.id, row.name, row.depth)"
-                         ng-show="row.depth === 1 || cate.opData.openList.indexOf(row.parent) !== -1">
+                         ng-show="row.depth === 0 || cate.opData.openList.indexOf(row.root) !== -1">
                         <div class="ng-hide" ng-class=
                                 "{'icon-close': cate.opData.openList.indexOf(row.id) !== -1, 'icon-open':  cate.opData.openList.indexOf(row.id) === -1}"
-                             ng-show="row.depth === 1 && row.child.length > 0" ng-click="cate.handleOptionToggle(row.id)"></div>
+                             ng-show="row.depth === 0 && row.child.length > 0" ng-click="cate.handleOptionToggle(row.id)"></div>
                         <span class="depth-{{row.depth}}">{{row.name}}</span>
                     </div>
                 </div>
