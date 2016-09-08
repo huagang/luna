@@ -37,7 +37,7 @@
             dataType: 'json',
             success: function (data) {
                 console.log(data);
-                signature = data;
+                signature = data.data;
                 console.log(signature);
             }
         });
