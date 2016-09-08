@@ -147,9 +147,10 @@ public class WXTokenGetter {
             ClientConnectionManager ccm = httpclient.getConnectionManager();
             SchemeRegistry sr = ccm.getSchemeRegistry();
             sr.register(new Scheme("https", 443, ssf));
-
-            HttpGet httpget = new HttpGet("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="
-                    + getToken() + "&type=jsapi");
+            StringBuilder urlBuilder = new StringBuilder("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=");
+            urlBuilder.append(getToken());
+            urlBuilder.append("&type=jsapi");
+            HttpGet httpget = new HttpGet(urlBuilder.toString());
 
             ResponseHandler responseHandler = new BasicResponseHandler();
             String responseBody;

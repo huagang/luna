@@ -28,10 +28,10 @@
 <script type="text/javascript">
     var signature = {};
     $(document).ready(function () {
-        var data = {url: 'http://luna-test.visualbusiness.cn/luna-web/testwxpay.jsp'};
+        var data = {url: 'http://luna-pre.visualbusiness.cn/luna-web/testwxpay.jsp'};
         $.ajax({
             type: 'post',
-            url: 'http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getSignature',
+            url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getSignature',
             data: data,
             cache: false,
             dataType: 'json',
@@ -67,7 +67,7 @@
         var data = {orderId: 123, openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
         $.ajax({
             type: 'post',
-            url: 'http://luna-test.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
+            url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
             data: data,
             cache: false,
             dataType: 'json',
