@@ -77,6 +77,7 @@ public class CheckTradeApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 //        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return new ModelAndView("/manage_merchant_apply.jsp");
     }
 
