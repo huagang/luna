@@ -100,7 +100,7 @@ function creatPageID() {
             'page_type': document.querySelector('[name=pageType]:checked').value,
             'page_height': document.querySelector('#txtPageHeight').value || '617',
             'share_info': $('[name=sharebox]:checked').val() ? JSON.stringify({
-                "share_link": $('[name=share_link]').val(),
+                "share_link": $('[name=share_link]:checked').val() ? $('[name=share_link]').val() : '',
                 "share_pic": $('[name=share_pic]').val(),
                 "share_title": $('[name=share_title]').val(),
                 "share_desc": $('[name=share_desc]').val()
@@ -148,7 +148,7 @@ function modifyPageName() {
     }
     pageId = $("#modify_page_id").val();
     var shareInfo = $('[name=sharebox]:checked').val() ? JSON.stringify({
-        "share_link": $('[name=share_link]').val(),
+        "share_link": $('[name=share_link]:checked').val() ? $('[name=share_link]').val() : '',
         "share_pic": $('[name=share_pic]').val(),
         "share_title": $('[name=share_title]').val(),
         "share_desc": $('[name=share_desc]').val()
