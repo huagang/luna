@@ -41,7 +41,7 @@ public class WXTokenGetter {
      *
      * @return
      */
-    public static WXTokenGetter getSingleInstance() {
+    public static synchronized WXTokenGetter getSingleInstance() {
         if (!getterMap.containsKey("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18")) {
             WXTokenGetter getter = new WXTokenGetter();
             getterMap.putIfAbsent("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18", getter);
@@ -56,12 +56,10 @@ public class WXTokenGetter {
      * @param appSecret
      * @return
      */
-    public static WXTokenGetter getSingleInstance(String appId, String appSecret) {
+    public static synchronized WXTokenGetter getSingleInstance(String appId, String appSecret) {
         if (!getterMap.containsKey(appId + "|" + appSecret)) {
-            synchronized (getterMap) {
                 WXTokenGetter getter = new WXTokenGetter(appId, appSecret);
-                getterMap.put(appId + "|" + appSecret, getter);
-            }
+                getterMap.putIfAbsent(appId + "|" + appSecret, getter);
         }
         return getterMap.get(appId + "|" + appSecret);
     }
@@ -128,20 +126,7 @@ public class WXTokenGetter {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             SSLContext ctx = SSLContext.getInstance("SSL");
-            X509TrustManager tm = new X509TrustManager() {
-
-                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-
-                }
-
-                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            ctx.init(null, new TrustManager[]{tm}, null);
+            ctx.init(null, new TrustManager[]{}, null);
             SSLSocketFactory ssf = new SSLSocketFactory(ctx);
 
             ClientConnectionManager ccm = httpclient.getConnectionManager();
@@ -179,20 +164,7 @@ public class WXTokenGetter {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             SSLContext ctx = SSLContext.getInstance("SSL");
-            X509TrustManager tm = new X509TrustManager() {
-
-                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-
-                }
-
-                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            ctx.init(null, new TrustManager[]{tm}, null);
+            ctx.init(null, new TrustManager[]{}, null);
             SSLSocketFactory ssf = new SSLSocketFactory(ctx);
             ClientConnectionManager ccm = httpclient.getConnectionManager();
             SchemeRegistry sr = ccm.getSchemeRegistry();
