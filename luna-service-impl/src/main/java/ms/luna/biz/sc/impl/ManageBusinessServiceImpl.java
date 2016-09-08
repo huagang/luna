@@ -8,6 +8,8 @@ import ms.luna.biz.cons.LunaRoleCategoryExtra;
 import ms.luna.biz.dao.custom.LunaUserRoleDAO;
 import ms.luna.biz.dao.custom.MsBusinessDAO;
 import ms.luna.biz.dao.custom.model.LunaUserRole;
+import ms.luna.biz.dao.custom.model.MsBusinessParameter;
+import ms.luna.biz.dao.custom.model.MsBusinessResult;
 import ms.luna.biz.dao.model.MsBusiness;
 import ms.luna.biz.dao.model.MsBusinessCriteria;
 import ms.luna.biz.sc.ManageBusinessService;
@@ -98,10 +100,13 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		if(StringUtils.isBlank(loginUserId)) {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}
-		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
-		List<MsBusiness> selectedBusiness = null;
+//		List<MsBusiness> allValidBusiness = getBusinessForUser(loginUserId);
+//		List<MsBusiness> selectedBusiness = null;
+		List<MsBusinessResult> allValidBusiness = getValidBusinessForUser(loginUserId);
+		List<MsBusinessResult> selectedBusiness = null;
 		if(StringUtils.isNotBlank(slaveUserId)) {
-			selectedBusiness = getBusinessForUser(slaveUserId);
+//			selectedBusiness = getBusinessForUser(slaveUserId);
+			selectedBusiness = getValidBusinessForUser(slaveUserId);
 		}
 
 		if(allValidBusiness == null || allValidBusiness.isEmpty()) {
@@ -109,13 +114,15 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		}
 
 		Set<Integer> businessIdSet = new HashSet<>(allValidBusiness.size());
-		for(MsBusiness msBusiness : allValidBusiness) {
+//		for(MsBusiness msBusiness : allValidBusiness) {
+		for(MsBusinessResult msBusiness : allValidBusiness) {
 			businessIdSet.add(msBusiness.getBusinessId());
 		}
 
 		Set<Integer> selectedBusinessIdSet = new HashSet<>();
 		if(selectedBusiness != null) {
-			for (MsBusiness msBusiness : selectedBusiness) {
+//			for (MsBusiness msBusiness : selectedBusiness) {
+			for (MsBusinessResult msBusiness : selectedBusiness) {
 				selectedBusinessIdSet.add(msBusiness.getBusinessId());
 			}
 		}
@@ -124,7 +131,8 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		Map<String, String> categoryId2NameMap = merchantCategoryCache.getCategoryId2Name();
 
 		JSONObject resJson = new JSONObject();
-		for(MsBusiness msBusiness : allValidBusiness) {
+//		for(MsBusiness msBusiness : allValidBusiness) {
+		for(MsBusinessResult msBusiness : allValidBusiness) {
 			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
 			if(categoryId == null) {
 				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());
@@ -183,6 +191,37 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 
 	}
 
+	private List<MsBusinessResult> getValidBusinessForUser(String userId) {
+
+		LunaUserRole lunaUserRole = lunaUserRoleDAO.readUserRoleInfo(userId);
+		if(lunaUserRole == null) {
+			logger.warn("Failed to get business for user, user not found, userId: " + userId);
+			return null;
+		}
+		Map<String, Object> extra = lunaUserRole.getExtra();
+		String type = extra.get("type").toString();
+		if(! type.equals(LunaRoleCategoryExtra.TYPE_BUSINESS)) {
+			// current user might not have business
+			logger.warn(String.format("no business for current user[%s], type[%s] ", userId, type));
+			return null;
+		}
+		List<Integer> businessIdList = (List<Integer>) extra.get("value");
+		List<MsBusinessResult> msBusinessList = null;
+		MsBusinessParameter msBusinessParameter = new MsBusinessParameter();
+		msBusinessParameter.setMerchantDelFlg("0");
+		msBusinessParameter.setRegistHhmmssOrder(1);
+		if(businessIdList.size() == 1 && businessIdList.get(0) == 0) {
+			// select all business
+			msBusinessList = msBusinessDAO.selectBusinessWithFilter(msBusinessParameter);
+		} else if(businessIdList.size() > 0){
+			msBusinessParameter.setBusinessIds(businessIdList);
+			msBusinessList = msBusinessDAO.selectBusinessWithFilter(msBusinessParameter);
+		}
+		// if no business, just return null
+		return msBusinessList;
+
+	}
+
 	@Override
 	public JSONObject getBusinessForSelect(JSONObject jsonObject) {
 		// TODO: in future, should get business in pages
@@ -190,18 +229,21 @@ public class ManageBusinessServiceImpl implements ManageBusinessService {
 		if(StringUtils.isBlank(userId)) {
 			return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "参数不合法");
 		}
-		List<MsBusiness> msBusinessList = getBusinessForUser(userId);
+//		List<MsBusiness> msBusinessList = getBusinessForUser(userId);
+		List<MsBusinessResult> msBusinessList = getValidBusinessForUser(userId);
 		if(msBusinessList == null || msBusinessList.isEmpty()) {
 			return FastJsonUtil.error(ErrorCode.NOT_FOUND, "没有任何业务");
 		}
 		Set<Integer> businessIdSet = new HashSet<>(msBusinessList.size());
-		for(MsBusiness msBusiness : msBusinessList) {
+//		for(MsBusiness msBusiness : msBusinessList) {
+		for (MsBusinessResult msBusiness : msBusinessList) {
 			businessIdSet.add(msBusiness.getBusinessId());
 		}
 		Map<Integer, String> businessCategoryIdMap = msBusinessDAO.readBusinessCategoryId(businessIdSet);
 		Map<String, String> categoryId2NameMap = merchantCategoryCache.getCategoryId2Name();
 		JSONObject resJson = new JSONObject();
-		for(MsBusiness msBusiness : msBusinessList) {
+//		for(MsBusiness msBusiness : msBusinessList) {
+		for(MsBusinessResult msBusiness : msBusinessList) {
 			String categoryId = businessCategoryIdMap.get(msBusiness.getBusinessId());
 			if(categoryId == null) {
 				logger.warn("Failed to get categoryId for business: " + msBusiness.getBusinessId());

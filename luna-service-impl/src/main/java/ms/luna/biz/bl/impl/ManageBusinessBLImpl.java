@@ -337,12 +337,16 @@ public class ManageBusinessBLImpl implements ManageBusinessBL {
 	@Override
 	public JSONObject getBusinessByAppId(int appId) {
 		// TODO Auto-generated method stub
-		MsBusinessCriteria msBusinessCriteria = new MsBusinessCriteria();
-		MsBusinessCriteria.Criteria criteria = msBusinessCriteria.createCriteria();
-		criteria.andAppIdEqualTo(appId);
-		List<MsBusiness> businesses = msBusinessDAO.selectByCriteria(msBusinessCriteria);
-		if(businesses != null && businesses.size() > 0){
-			return FastJsonUtil.sucess("", toJson(businesses.get(0)));
+		MsShowApp msShowApp = msShowAppDAO.selectByPrimaryKey(appId);
+		if(msShowApp != null) {
+			Integer businessId = msShowApp.getBusinessId();
+			MsBusiness msBusiness = msBusinessDAO.selectByPrimaryKey(businessId);
+			if(msBusiness != null){
+				JSONObject jsonObject = toJson(msBusiness);
+				// 当前一个业务下可以有2个微景展,但是业务表里只保存了一个
+				jsonObject.put(MsBusinessTable.FIELD_APP_ID, appId);
+				return FastJsonUtil.sucess("", jsonObject);
+			}
 		}
 		return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
 	}
