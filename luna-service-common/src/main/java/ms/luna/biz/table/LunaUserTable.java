@@ -18,4 +18,5 @@ public class LunaUserTable {
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_UPDATE_TIME = "update_time";
     public static final String FIELD_CREATE_TIME = "create_time";
+
 }
