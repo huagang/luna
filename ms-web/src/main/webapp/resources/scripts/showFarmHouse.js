@@ -355,7 +355,6 @@ function showAnimation(){
         function init() {
             vm.apiUrls = Inter.getApiUrl();
 
-
             vm.markerImg = {
                 scene: {
                     normal: window.context + '/resources/images/farmhouse/icon-scene.png',
@@ -410,10 +409,10 @@ function showAnimation(){
                 deceleration: 8
             });
 
-            //vm.roomScroll = new ScrollController({
-            //    target: '.room-info footer',
-            //    deceleration: 4,
-            //});
+            vm.roomScroll = new ScrollController({
+                target: '.room-info footer',
+                deceleration: 4,
+            });
 
             vm.curPanoIndex = 0;
 
