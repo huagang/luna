@@ -68,7 +68,7 @@
 <script type="text/javascript">
     var paydata = {};
     function getPrepayInfo() {
-        var data = {orderId: $("#orderId").value(), openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
+        var data = {orderId: $("#orderId").val(), openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
         $.ajax({
             type: 'post',
             url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
