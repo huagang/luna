@@ -166,7 +166,7 @@ function ManageGoodsController($scope, $http){
     // 事件 跳转到发布商品页面
     function redirectForCreate(){
         if(vm.opData.parentId){
-            location.href = 'xxxxxx';
+            location.href = vm.pageUrls.editGoods;
         }
     }
 
@@ -273,8 +273,8 @@ function ManageGoodsController($scope, $http){
     // 请求 获取商品类目数据
     function fetchGoodsTypeData(){
         $http({
-            url: vm.apiUrls.fetchMerchantCat.url.format('', ''),
-            method: vm.apiUrls.fetchMerchantCat.type
+            url: vm.apiUrls.fetchGoodsCatData.url.format('', ''),
+            method: vm.apiUrls.fetchGoodsCatData.type
         }).then(function(res){
             if(res.data.code === '0'){
                 // 将所有类目层级展开并顺序加到categoryData中
@@ -302,14 +302,14 @@ function ManageGoodsController($scope, $http){
             list.push(data[0]);
 
             data.shift();
-            if((parent.child || []).length > 0){
+            if((parent.childList || []).length > 0){
                 rootParent.allChildrenNum += 1;
-                i = parent.child.length -1;
+                i = parent.childList.length -1;
                 for(; i > -1; i -= 1){
-                    parent.child[i].parent = parent.parent || parent.id;
-                    parent.child[i].parentName = parent.name || '';
-                    parent.child[i].depth = parent.depth + 1;
-                    data.unshift(parent.child[i]);
+                    parent.childList[i].parent = parent.parent || parent.id;
+                    parent.childList[i].parentName = parent.name || '';
+                    parent.childList[i].depth = parent.depth + 1;
+                    data.unshift(parent.childList[i]);
                 }
             }
         }

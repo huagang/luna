@@ -58,6 +58,7 @@ var Inter = function () {
                 merchantApply: context + '/merchant/tradeApplication', //商户申请
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
                 messagePage: context + '/platform/message', //消息管理
+                editGoods: context + '/platform/deal/edit?cateId={0}'
 
 
             };
@@ -641,11 +642,12 @@ var Inter = function () {
                 },
 
                 // 商品管理
-                fetchMerchantList: {url: context + '/merchant/deal/search?data&business_id={0}&offset={1}&limit={2}&keyword={3}', type: 'GET'},
-                deleteMerchant: {url: context + '/merchant/deal/{0}', type: 'DELETE'},
-               // editMerchant: {url: context + '/merchant/deal/{0}', type: 'PUT'},
-                createMerchant: {url: context + '/merchant/deal', type: "POST"},
-                updateOnlineStatus: {url: context + '/merchant/deal/onlineStatus', type: 'PUT'},
+                fetchGoodsList: {url: context + '/merchant/deal/search?data&business_id={0}&offset={1}&limit={2}&keyword={3}', type: 'GET'},
+                deleteGoods: {url: context + '/merchant/deal/{0}', type: 'DELETE'},
+                editGoods: {url: context + '/merchant/deal/{0}', type: 'PUT'},
+                createGoods: {url: context + '/merchant/deal', type: "POST"},
+                updateGoodsOnlineStatus: {url: context + '/merchant/deal/onlineStatus', type: 'PUT'},
+                fetchGoodsCatData: {url: context + '/merchant/deal/category', type: 'GET'},
 
                 //交易直通车
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据

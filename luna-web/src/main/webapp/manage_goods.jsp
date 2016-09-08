@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_goods.css">
   <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
-<body ng-app="manageGoods" ng-controller="ManageGoodsController as manage">
+<body ng-app="manageGoods" ng-controller="ManageGoodsController as manage" ng-class="{'modal-open': manage.state !== 'init'}">
 <div class="container-fluid">
   <!--通用导航栏 start-->
   <jsp:include page="/templete/header.jsp"/>
@@ -125,7 +125,7 @@
                ng-show="row.depth === 1 || manage.opData.openList.indexOf(row.parent) !== -1">
             <div class="ng-hide" ng-class=
                     "{'icon-close': manage.opData.openList.indexOf(row.id) !== -1, 'icon-open':  manage.opData.openList.indexOf(row.id) === -1}"
-                 ng-show="row.depth === 1 && row.child.length > 0" ng-click="manage.handleOptionToggle(row.id)"></div>
+                 ng-show="row.depth === 1 && row.childList.length > 0" ng-click="manage.handleOptionToggle(row.id)"></div>
 
             <span class="depth-{{row.depth}} option-label">
               <div class="icon-text ng-hide" ng-show="row.depth > 1"></div>

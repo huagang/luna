@@ -1,4 +1,8 @@
-/* 分页组件  start*/
+.new-goods .pop-modal{
+    top: 20%;
+}
+
+    /* 分页组件  start*/
 .pagination-wrapper{
     text-align: right;
 }
