@@ -43,6 +43,22 @@ public class GoodsController extends BasicController {
         return model;
     }
 
+    // 添加页面初始化
+    @RequestMapping(method = RequestMethod.GET, value = "/addPage")
+    public ModelAndView initAddPage(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView model = new ModelAndView("/manage_goods.jsp");
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return model;
+    }
+
+    // 编辑页面初始化
+    @RequestMapping(method = RequestMethod.GET, value = "/editPage")
+    public ModelAndView initEditPage(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView model = new ModelAndView("/manage_goods.jsp");
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        return model;
+    }
+
     // 搜索
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
@@ -303,11 +319,6 @@ public class GoodsController extends BasicController {
             param.put(keys[i], values[i]);
         }
         return param;
-    }
-
-    public static void main(String[] args) {
-        String a = "0.0";
-        System.out.println(isPriceValid(a));
     }
 
 }
