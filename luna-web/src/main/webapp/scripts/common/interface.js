@@ -58,6 +58,7 @@ var Inter = function () {
                 merchantApply: context + '/merchant/tradeApplication', //商户申请
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
                 messagePage: context + '/platform/message', //消息管理
+                editArticle: context + '/content/article/{0}' // 编辑文章
             };
         },
         getApiUrl: function () {

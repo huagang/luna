@@ -120,7 +120,7 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            articleStore.previewUrl = data.data.url + '?preview';
+                            location.href = pageUrls.editArticle.format(data.data.id)
                         }
                             showMessage(op + "成功");
                     } else {
