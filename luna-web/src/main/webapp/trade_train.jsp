@@ -97,7 +97,7 @@
                             <h4><a href="#">交易直通车</a>/提交材料</h4></div>
                         <form id="merchantInfo" class="form-horizontal">
                             <div class="form-body">
-                                <p class="f ction">联系信息</p>
+                                <p class="form-section">联系信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
@@ -251,7 +251,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="f ction">商户结算账户信息</p>
+                                <p class="form-section">商户结算账户信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>账户类型</label>
