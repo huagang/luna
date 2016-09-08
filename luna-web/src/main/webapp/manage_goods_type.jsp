@@ -23,11 +23,11 @@
   <link href="<%=request.getContextPath() %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.bootstrap3.css" rel="stylesheet">
   <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/common.css">
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_merchant_type.css">
+  <link rel="stylesheet" href="<%=request.getContextPath() %>/styles/manage_goods_type.css">
   <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
   <script src="<%=request.getContextPath() %>/plugins/angular/js/angular.min.js"></script>
 </head>
-<body ng-app="merchantType" ng-controller="MerchantType as cate" ng-class="{'modal-open': cate.state !== 'init'}">
+<body ng-app="goodsCate" ng-controller="GoodsCate as cate" ng-class="{'modal-open': cate.state !== 'init'}">
 <div class="container-fluid">
   <!--通用导航栏 start-->
   <jsp:include page="/templete/header.jsp"/>
@@ -80,7 +80,6 @@
             </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -162,6 +161,6 @@
   <script src="<%=request.getContextPath() %>/plugins/selectizeJs/selectize.min.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
   <script src="<%=request.getContextPath() %>/scripts/common/common.js"></script>
-  <script src="<%=request.getContextPath() %>/scripts/manage_merchant_type.js"></script>
+  <script src="<%=request.getContextPath() %>/scripts/manage_goods_type.js"></script>
 </body>
 </html>
