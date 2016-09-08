@@ -19,6 +19,10 @@
             display: block;
             width: 900px;
         }
+        
+        .section-wrapper p {
+            line-height: 24px;
+        }
     </style>
 </head>
 
@@ -40,8 +44,6 @@
                             微景皓月交易直通车服务协议
                         </h4>
                         <section class="section-wrapper">
-                            <p>微景皓月交易直通车服务协议</p>
-                            <p>&nbsp;</p>
                             <p>特别提示：</p>
                             <p>本协议由微景天下（北京）科技有限公司（下称&ldquo;微景天下&rdquo;）和你共同签订，具有合同法律效力。</p>
                             <p>在使用皓月交易直通车服务（下称&ldquo;本服务&rdquo;）前，你应当认真阅读并遵守本协议。</p>
