@@ -9,6 +9,7 @@
 package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.sc.WXSignatureService;
 import ms.luna.biz.util.FastJsonUtil;
@@ -41,15 +42,20 @@ public class PayController {
     @RequestMapping(method = RequestMethod.GET, value = "/wx/jsapi/getSignature")
     @ResponseBody
     public JSONObject getSignature(@RequestParam(value = "url") String url) {
-        JSONObject object = wxSignatureService.getTicket(new JSONObject());
-        if (object.getInteger("code").intValue() == 0) {
-            String ticket = object.getJSONObject("data").getString("ticket");
-            JSONObject in = new JSONObject();
-            in.put("ticket",ticket);
-            in.put("url",url);
-            return wxSignatureService.getSignature(in);
-        } else {
-            return object;
+        try {
+            JSONObject object = wxSignatureService.getTicket(new JSONObject());
+            if (object.getInteger("code").intValue() == 0) {
+                String ticket = object.getJSONObject("data").getString("ticket");
+                JSONObject in = new JSONObject();
+                in.put("ticket", ticket);
+                in.put("url", url);
+                return wxSignatureService.getSignature(in);
+            } else {
+                return object;
+            }
+        } catch (Exception e) {
+            logger.error("Failed to get signature", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
     }
 
