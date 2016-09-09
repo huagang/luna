@@ -66,6 +66,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group clearfix">
+                                    <label class="control-label col-md-4 text-right">身份证号</label>
+                                    <div class="col-md-4">
+                                        <label class="control-label" for="">{{mcInfo.idcardNo}}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
                                     <label class="control-label col-md-4 text-right">联系人身份证</label>
                                     <div class="col-md-8">
                                         <div class="">
@@ -194,7 +200,7 @@
             </form>
         </div>
         <!-- 底部功能区 -->
-        <div class="pop-fun" >
+        <div class="pop-fun">
             <button type="button" id="btnNoPassConfirm" ng-click="noCon.noPassConfirm()">确定</button>
             <button type="button" class="button-close" onclick="clcWindow(this)">取消</button>
         </div>

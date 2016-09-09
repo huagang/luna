@@ -1075,6 +1075,11 @@
 	jQuery.validator.addMethod("luhmCheck", function (value, element) {
         return this.optional(element) || luhmCheck(value);
     }, "请输入正确的银行卡号");
+
+	jQuery.validator.addMethod("IDCheck", function (value, element) {
+		var Validator = new IDValidator();
+        return this.optional(element) || Validator.isValid(value);
+    }, "请输入正确的身份证号");
 }));
 
 

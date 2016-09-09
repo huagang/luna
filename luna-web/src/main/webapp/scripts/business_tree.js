@@ -430,12 +430,16 @@ $(document).ready(function(){
     function showGuidance(){
         $('.guidance').removeClass('hidden');
         $('.luna-tree').addClass('hidden');
-
+        var wrapperHeight = $('.content .main').height(),screenHeight = window.screen.height;
+        if(wrapperHeight < 0.8 * screenHeight){
+            $('.content .main').addClass('fixed-height');
+        }
     }
 
     function showTreeData(){
 
         $('.luna-tree').removeClass('hidden');
+        $('.content .main').removeClass('fixed-height');
         $('.guidance').addClass('hidden');
 
 

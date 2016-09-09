@@ -3,11 +3,15 @@ package ms.luna.web.control.platform;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.sc.LunaGoodsCategoryService;
+import ms.luna.web.common.MenuHelper;
+import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by SDLL18 on 16/8/24.
@@ -16,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/platform/goodsCategory")
 public class LunaGoodsCategoryController extends BasicController {
+
+    private static String menu = "goodsCategory";
 
     @Autowired
     private LunaGoodsCategoryService lunaGoodsCategoryService;
@@ -35,9 +41,10 @@ public class LunaGoodsCategoryController extends BasicController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ModelAndView init() {
+    public ModelAndView init(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/manage_goods_type.jsp");
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return modelAndView;
     }
 

@@ -54,27 +54,27 @@
     margin-bottom: 2px;
 }
 
-.depth-2{
+.depth-1{
     padding-left: 30px;
 }
 
-.depth-3{
+.depth-2{
     padding-left: 40px;
 }
 
-.depth-4{
+.depth-3{
     padding-left: 50px;
 }
 
-.depth-5{
+.depth-4{
     padding-left: 60px;
 }
 
-.depth-6{
+.depth-5{
     padding-left: 70px;
 }
 
-.depth-7{
+.depth-6{
     padding-left: 80px;
 }
 
@@ -135,4 +135,8 @@
 
 .gray{
     color: #999;
+}
+
+.message-wrapper{
+    z-index: 20000;
 }

@@ -84,18 +84,18 @@ function GoodsCate($scope, $http){
         angular.element('.selectize-input input').on('keydown', vm.clearTimeOut);
     }
 
-    function changeState(state, id, obj){
+    function changeState(state, id){
         vm.state = state;
         switch(state) {
             case 'new':
                 vm.opData = {
                     openList: [],
-                    options : vm.categoryData
-
+                    options : vm.categoryData,
+                    depth: 0
                 };
                 break;
             case 'edit':
-                var id = obj.id, depth = -1, obj;
+                var id = id, depth = -1;
                 var options = vm.categoryData.filter(function(item){
                     if(item.id === id){
                         depth = item.depth;
@@ -113,8 +113,9 @@ function GoodsCate($scope, $http){
                     id: obj.id,
                     name: obj.name,
                     abbreviation: obj.abbreviation,
-                    parentId: obj.parent || obj.id,
+                    parentId: obj.parentId || undefined,
                     parentName: obj.parentName,
+                    depth: obj.depth,
                     options: options,
                     openList: []
                 };
@@ -131,15 +132,16 @@ function GoodsCate($scope, $http){
         var data = $.extend(true, [], data), i = 0;
         while(data.length > 0){
             var parent = data[0];
-            parent.depth = parent.depth || 1;
+            parent.depth = parent.depth || 0;
             vm.categoryData.push(data[0]);
 
             data.shift();
             if((parent.child || []).length > 0){
                 i = parent.child.length -1;
                 for(; i > -1; i -= 1){
-                    parent.child[i].parent = parent.parent || parent.id;
+                    parent.child[i].root = parent.root || parent.id;
                     parent.child[i].parentName = parent.name || '';
+                    parent.child[i].parentId = parent.id || '';
                     parent.child[i].depth = parent.depth + 1;
                     data.unshift(parent.child[i]);
                 }
@@ -237,7 +239,7 @@ function GoodsCate($scope, $http){
         var data = {
             name: vm.opData.name,
             abbreviation: vm.opData.abbreviation,
-            depth: vm.opData.parentDepth || 0
+            depth: vm.opData.depth,
         };
         var root = vm.opData.parentId || vm.opData.id;
         if(root){
@@ -272,10 +274,10 @@ function GoodsCate($scope, $http){
                 vm.changeState('init');
                 vm.fetchGoodsCatData();
             } else{
-                vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+                vm.showMessage('操作失败,可能是名称或简称重复');
             }
         }, function(res){
-            vm.showMessage(res.data.msg || '操作失败,可能是名称或简称重复');
+            vm.showMessage('操作失败,可能是名称或简称重复');
         });
     }
 
@@ -305,14 +307,13 @@ function GoodsCate($scope, $http){
         if(event.target.className.indexOf('select') === -1 && ! $(event.target).parents('.select-parent')[0]){
             vm.opData.showSelectList = false;
         }
-
     }
 
     function handleOptionClick(id, name, depth){
         if(event.target.className.indexOf('icon') === -1){
             vm.opData.parentId = id;
             vm.opData.parentName = name;
-            vm.opData.parentDepth = depth;
+            vm.opData.depth = depth + 1;
             vm.opData.showSelectList = false;
         }
     }
