@@ -41,10 +41,14 @@ public class WXTokenGetter {
      *
      * @return
      */
-    public static synchronized WXTokenGetter getSingleInstance() {
+    public static WXTokenGetter getSingleInstance() {
         if (!getterMap.containsKey("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18")) {
-            WXTokenGetter getter = new WXTokenGetter();
-            getterMap.putIfAbsent("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18", getter);
+            synchronized (getterMap) {
+                if (!getterMap.containsKey("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18")) {
+                    WXTokenGetter getter = new WXTokenGetter();
+                    getterMap.putIfAbsent("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18", getter);
+                }
+            }
         }
         return getterMap.get("wxf8884f6b1d84257d|ca19624bd5dc7c7937b229411d8eca18");
     }
@@ -58,8 +62,12 @@ public class WXTokenGetter {
      */
     public static synchronized WXTokenGetter getSingleInstance(String appId, String appSecret) {
         if (!getterMap.containsKey(appId + "|" + appSecret)) {
-                WXTokenGetter getter = new WXTokenGetter(appId, appSecret);
-                getterMap.putIfAbsent(appId + "|" + appSecret, getter);
+            synchronized (getterMap) {
+                if (!getterMap.containsKey(appId + "|" + appSecret)) {
+                    WXTokenGetter getter = new WXTokenGetter(appId, appSecret);
+                    getterMap.putIfAbsent(appId + "|" + appSecret, getter);
+                }
+            }
         }
         return getterMap.get(appId + "|" + appSecret);
     }
@@ -98,12 +106,16 @@ public class WXTokenGetter {
 
     public String getToken() {
         if (token.equals("")) {
-            synchronized (this) {
-                getNewToken();
+            synchronized (token) {
+                if (token.equals("")) {
+                    getNewToken();
+                }
             }
         } else if (Calendar.getInstance().getTimeInMillis() - tokenLastUpdateTime > 100 * 60 * 1000) {
-            synchronized (this) {
-                getNewToken();
+            synchronized (token) {
+                if (Calendar.getInstance().getTimeInMillis() - tokenLastUpdateTime > 100 * 60 * 1000) {
+                    getNewToken();
+                }
             }
         }
         return token;
@@ -111,12 +123,16 @@ public class WXTokenGetter {
 
     public String getTicket() {
         if (ticket.equals("")) {
-            synchronized (this) {
-                getNewTicket();
+            synchronized (ticket) {
+                if (ticket.equals("")) {
+                    getNewTicket();
+                }
             }
         } else if (Calendar.getInstance().getTimeInMillis() - ticketLastUpdateTime > 100 * 60 * 1000) {
-            synchronized (this) {
-                getNewTicket();
+            synchronized (ticket) {
+                if (Calendar.getInstance().getTimeInMillis() - ticketLastUpdateTime > 100 * 60 * 1000) {
+                    getNewTicket();
+                }
             }
         }
         return ticket;
