@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/showFarmHouse.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/plugins/slick/slick.css">
+
     <link rel="stylesheet" media="(min-width: 992px)" href="<%=request.getContextPath()%>/resources/styles/showFarmHouseForPC.css">
     <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/angular/angular.min.js'></script>
@@ -109,14 +111,12 @@
                 <span>美食</span>
             </header>
             <main>
-                <div class="scroll-wrapper">
                     <div class="food-item" ng-repeat="food in farm.farmData.food"
                              style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
                             <div class="name-wrapper">
                                 <p class="food-name">{{food.text}}</p>
                             </div>
                     </div>
-                </div>
             </main>
         </div>
         <div class="block-split" ng-hide="farm.farmData.food.length === 0"></div>
@@ -169,12 +169,12 @@
         <div class="block-split"></div>
         <div class="to-top" ng-click="farm.scrollToTop()">返回顶部</div>
     </div>
+    <script tyle="text/javascript" src="<%=request.getContextPath()%>/resources/plugins/slick/slick.min.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV&libraries=drawing,geometry,autocomplete,convertor"></script>
     <script charset="utf-8" src="<%=request.getContextPath()%>/resources/plugins/iscroll/iscroll.probe.js"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
-
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/common.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>

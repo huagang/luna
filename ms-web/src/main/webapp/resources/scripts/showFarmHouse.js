@@ -32,6 +32,7 @@ $(function(){
         $(document.body).removeClass('modal-open');
         $('.page-main').removeClass('transparent');
     }
+
 });
 
 // 启动页动画
@@ -166,7 +167,7 @@ function showAnimation(){
             that.end = end; // 滚动距离
             that.refresh = refresh;  // 刷新样式
             that.limitScroll = limitScroll; // 限制滚动距离
-
+            that.adjustByStyle = adjustByStyle; // 根据样式调整滚动距离
 
             that.init();
 
@@ -175,7 +176,8 @@ function showAnimation(){
                     setTimeout(that.refresh, 2000); // 等待angular脚本执行完并初始化页面后执行
                     that.deceleration = options.deceleration || 12;
                     that.target = $(options.target);
-                    that.style = options.style || 'left';
+                    that.options = options;
+                    that.options.style = that.options.style || 'left';
                     that.scroll = new IScroll(options.target, {
                         probeType: 2,
                         scrollX: true,
@@ -228,15 +230,31 @@ function showAnimation(){
                         }
                     }
                 }
+                event.preventDefault();
             }
 
 
             // 用于限制滚动范围
-            function limitScroll(position){
-                if(position > 0){
+            function limitScroll(position) {
+                if (position > 0) {
                     position = 0;
-                } else  if(- position > that.scrollMax ){
-                    position = - that.scrollMax;
+                } else if (-position > that.scrollMax) {
+                    position = -that.scrollMax;
+                }
+                return position;
+            }
+
+            function adjustByStyle(position){
+                if(that.options.style === 'center' && position !== 0){
+                    var offset = (that.containerWidth % that.scrollUnit) / 2;
+                    if(position === - that.scrollMax){
+                        position = (- position / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
+                        position = that.limitScroll(position);
+                    } else{
+                        if(offset - position < that.scrollMax){
+                            position += offset;
+                        }
+                    }
                 }
                 return position;
             }
@@ -252,19 +270,8 @@ function showAnimation(){
                     var count =  - curPosition / that.scrollUnit;
                     count = count.toFixed(0);
                     curPosition  = that.limitScroll(- count * that.scrollUnit);
+                    curPosition = that.adjustByStyle(curPosition);
 
-                    if(curPosition !== 0 && that.style === 'center'){
-                        var offset = (that.containerWidth % that.scrollUnit) / 2;
-                        if(curPosition === -that.scrollMax){
-                            curPosition = (- curPosition / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
-                            curPosition = that.limitScroll(curPosition);
-                        } else{
-                            if(offset - curPosition < that.scrollMax){
-                                curPosition += offset;
-                            }
-                        }
-
-                    }
                     that.scroll.scrollTo(curPosition, 0 , 800);
 
                     return;
@@ -272,6 +279,7 @@ function showAnimation(){
 
                     var time = Math.abs(that.maxSpeed / that.deceleration); // 继续滚动的事件
                     var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想滚动距离,可能需要修正
+
                     try{
                         var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]; //获取当前滚动位置
                         aimPosition = that.limitScroll(parseFloat(curPosition) + distance); // 计算出目标滚动位置
@@ -288,21 +296,7 @@ function showAnimation(){
                         }
 
                         aimPosition = that.limitScroll(aimPosition);
-
-                        if(aimPosition !== 0 && that.style === 'center'){
-                            var offset = (that.containerWidth % that.scrollUnit) / 2;
-                            if(aimPosition === -that.scrollMax){
-                                aimPosition = (- aimPosition / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
-                                aimPosition = that.limitScroll(aimPosition);
-                            } else{
-                                if(offset - aimPosition < that.scrollMax){
-                                    aimPosition += offset;
-                                }
-                            }
-
-                        }
-
-
+                        aimPosition = that.adjustByStyle(aimPosition);
 
                         time = Math.max(Math.sqrt(Math.abs((aimPosition - curPosition) / that.deceleration * 2)) * 80, 800);
                         that.scroll.scrollTo(aimPosition, 0 , time);
@@ -443,17 +437,19 @@ function showAnimation(){
 
             }
 
-            //滚动相关
-            vm.foodScroll = new ScrollController({
-                target: '.food-info main',
-                deceleration: 8,
-                style: 'center'
-            });
+            ////滚动相关
+            //vm.foodScroll = new ScrollController({
+            //    target: '.food-info main',
+            //    deceleration: 8,
+            //    style: 'center',
+            //});
+
+
 
             vm.roomScroll = new ScrollController({
                 target: '.room-info footer',
                 deceleration: 4,
-                style: 'left'
+                style: 'left',
             });
 
             vm.curPanoIndex = 0;
