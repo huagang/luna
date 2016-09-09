@@ -80,7 +80,6 @@ function showAnimation(){
     // 点击地图poi出现的poi信息marker
     function getMarkerTip() {
         function MarkerTip(data) {
-            //this.construct(data);
             this.data = data;
             this.position = data.position;
             this.distance = data.distance || '';
@@ -152,7 +151,7 @@ function showAnimation(){
         return MarkerTip;
     }
 
-    // 美食和房间缩略图的滚动控制器
+    // 全景缩略图的滚动控制器
     function getScrollController(){
         function Controller(options){
             /* @prama options 对象 表示初始化选项,内容如下
@@ -168,12 +167,12 @@ function showAnimation(){
             that.refresh = refresh;  // 刷新样式
             that.limitScroll = limitScroll; // 限制滚动距离
             that.adjustByStyle = adjustByStyle; // 根据样式调整滚动距离
+            that.getCurPosition = getCurPosition; // 获取当前位置
 
             that.init();
 
             function init(){
                 if(options.target && typeof options.target === 'string') {
-                    setTimeout(that.refresh, 2000); // 等待angular脚本执行完并初始化页面后执行
                     that.deceleration = options.deceleration || 12;
                     that.target = $(options.target);
                     that.options = options;
@@ -187,6 +186,7 @@ function showAnimation(){
                         startX: 0, // 滚动初始值
                         eventPassthrough: true  // 使得能够竖向滚动
                     });
+                    setTimeout(that.refresh, 1000); // 等待angular脚本执行完并初始化页面后执行
                     that.cur = {
                         x: 0,
                         time: undefined,
@@ -213,12 +213,14 @@ function showAnimation(){
                         that.start = {  // 滚动开始记录
                             x: point.pageX,
                             time: Date.now(),
+                            position: that.getCurPosition()
                         };
                     }
                     that.last = that.cur;
                     that.cur = {        // 记录当前位置
                         x: point.pageX,
                         time: Date.now(),
+                        position: that.getCurPosition()
                     };
 
                     if (that.cur && that.last && that.last.time) {  // 算出最高速度, 用于计算手指离开屏幕后的滚动距离
@@ -259,6 +261,15 @@ function showAnimation(){
                 return position;
             }
 
+            function getCurPosition(){
+                try{
+                    return parseInt(that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]);
+                }
+                catch(e){
+                    return 0;
+                }
+            }
+
             // 滚动结束
             function end(){
 
@@ -266,7 +277,7 @@ function showAnimation(){
                 var endTime = Date.now();
                 if(endTime - that.cur.time > 300){
                     // 如果滚动结束时间和最后一次记录的时间超过300ms,一般都是弹性边界的原因, 这种情况不计算接下来滚动距离
-                    var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]; //获取当前滚动位置
+                    var curPosition = that.getCurPosition(); //获取当前滚动位置
                     var count =  - curPosition / that.scrollUnit;
                     count = count.toFixed(0);
                     curPosition  = that.limitScroll(- count * that.scrollUnit);
@@ -281,11 +292,21 @@ function showAnimation(){
                     var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想滚动距离,可能需要修正
 
                     try{
-                        var curPosition = that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]; //获取当前滚动位置
+                        var curPosition = that.getCurPosition(); //获取当前滚动位置
                         aimPosition = that.limitScroll(parseFloat(curPosition) + distance); // 计算出目标滚动位置
+
+                        if(that.options.scrollOne ){
+                            if(aimPosition - that.start.position > that.scrollUnit ){
+                                aimPosition = that.start.position + that.scrollUnit;
+                            } else if(aimPosition - that.start.position < 0 - that.scrollUnit ){
+                                aimPosition = that.start.position - that.scrollUnit;
+                            }
+                        }
 
                         var count =  (- aimPosition / that.scrollUnit).toFixed(0);
                         aimPosition  = - count * that.scrollUnit;
+
+
 
                         if(Math.abs(aimPosition - curPosition) < 10 &&  Math.abs(that.cur.x - that.start.x) * 15 > that.scrollUnit){
                             if(distance > 0){
@@ -437,12 +458,13 @@ function showAnimation(){
 
             }
 
-            ////滚动相关
-            //vm.foodScroll = new ScrollController({
-            //    target: '.food-info main',
-            //    deceleration: 8,
-            //    style: 'center',
-            //});
+            //滚动相关
+            vm.foodScroll = new ScrollController({
+                target: '.food-info main',
+                deceleration: 8,
+                style: 'center',
+                scrollOne: true
+            });
 
 
 
