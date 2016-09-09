@@ -382,3 +382,7 @@ right connector from last child*/
 .luna-tree .luna-tree-parent > .item-name{
     margin-left: 0;
 }
+#business_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
