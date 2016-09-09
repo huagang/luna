@@ -366,7 +366,7 @@ video {
     display: inline-block;
     vertical-align: bottom;
     height: 77px;
-    width: 22vw;
+    /* width: 22vw; */
 }
 
 .menulist .iconfont {
@@ -412,10 +412,10 @@ video {
     text-align: center;
     line-height: 27px;
     display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 90%;
-    margin: 0 auto;
+    /* overflow: hidden; */
+    /* white-space: nowrap; */
+    /* width: 90%; */
+    /* margin: 0 auto; */
 }
 
 .menulist .border {
