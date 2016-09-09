@@ -439,7 +439,7 @@ var initPage = function () {
             $("#audio").val(articleStore.audio);
             document.querySelector('#clearAudio').classList.remove('hide');
         }
-        if (articleStore.audio) {
+        if (articleStore.video) {
             $("#video").val(articleStore.video);
             document.querySelector('#clearVideo').classList.remove('hide');
         }
