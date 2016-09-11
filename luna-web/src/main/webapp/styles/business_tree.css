@@ -350,9 +350,8 @@ right connector from last child*/
 
 .guidance{
     position: absolute;
-    top: 300px;
-    top: 40vh;
-    left:0;
+    top: 33vh;
+    left: 0;
     width: 100%;
     height: 100px;
     text-align: center;
@@ -369,4 +368,17 @@ right connector from last child*/
 #childPoi .pop-cont{
     padding-top: 10px;
     padding-bottom: 0;
+}
+
+.main.fixed-height{
+    height: 80vh;
+}
+
+.luna-tree .luna-tree-parent:before{
+    content: '';
+    width:0;
+}
+
+.luna-tree .luna-tree-parent > .item-name{
+    margin-left: 0;
 }

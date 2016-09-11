@@ -82,6 +82,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             lunaTradeApplication.setMerchantName(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_NAME));
             lunaTradeApplication.setMerchantNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_NO));
             lunaTradeApplication.setMerchantPhone(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE));
+            lunaTradeApplication.setIdcardNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_IDCARD_NO));
             lunaTradeApplicationDAO.insert(lunaTradeApplication);
             JSONObject data = new JSONObject();
 
@@ -132,7 +133,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
             if (applicationList == null || applicationList.size() == 0)
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "该业务对应商户没有提交过申请");
             LunaTradeApplication application = applicationList.get(0);
-            if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_CHECK_REFUSE) {
+            if (application.getAppStatus().intValue() != LunaTradeApplicationTable.APP_STATUS_REFUSE) {
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前申请状态不可重新申请");
             }
             application.setAppStatus(LunaTradeApplicationTable.APP_STATUS_CHECKING);
@@ -205,6 +206,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_ADDRESS, application.getAccountAddress());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_BANK, application.getAccountBank());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PERIOD, application.getIdcardPeriod());
+        result.put(LunaTradeApplicationTable.FIELD_IDCARD_NO,application.getIdcardNo());
         result.put(LunaTradeApplicationTable.FIELD_IDCARD_PIC_URL, application.getIdcardPicUrl());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_CITY, application.getAccountCity());
         result.put(LunaTradeApplicationTable.FIELD_ACCOUNT_PROVINCE, application.getAccountProvince());
@@ -291,6 +293,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
         application.setMerchantName(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_NAME));
         application.setMerchantNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_NO));
         application.setMerchantPhone(jsonObject.getString(LunaTradeApplicationTable.FIELD_MERCHANT_PHONE));
+        application.setIdcardNo(jsonObject.getString(LunaTradeApplicationTable.FIELD_IDCARD_NO));
     }
 
     @Override
@@ -355,6 +358,7 @@ public class LunaTradeApplicationServiceImpl implements LunaTradeApplicationServ
                 msMerchantManage.setResourceContent(application.getLicencePicUrl());
                 msMerchantManage.setLicencePeriod(application.getLicencePeriod());
                 msMerchantManage.setUpHhmmss(Calendar.getInstance().getTime());
+                msMerchantManage.setIdcardNo(application.getIdcardNo());
                 msMerchantManage.setTradeStatus(MsMerchantManageTable.TRADE_STATUS_SUCCESS);
                 msMerchantManageDAO.updateByPrimaryKey(msMerchantManage);
                 //send email

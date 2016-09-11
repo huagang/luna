@@ -3,7 +3,6 @@ package ms.luna.biz.sc.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
 import ms.biz.common.MenuHelper;
 import ms.luna.biz.cons.DbConfig;
 import ms.luna.biz.cons.ErrorCode;
@@ -41,7 +40,7 @@ public class MenuServiceImpl implements MenuService {
     private static final Logger logger = Logger.getLogger(MenuServiceImpl.class);
 
     @Autowired
-    private MsUserPwDAO msUserPwDAO;
+    private LunaUserDAO lunaUserDAO;
     @Autowired
     private LunaUserRoleDAO lunaUserRoleDAO;
     @Autowired
@@ -92,14 +91,14 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public JSONObject getModuleAndMenuByUserName(String userName) {
         try {
-            MsUserPwCriteria criteria = new MsUserPwCriteria();
+            LunaUserCriteria criteria = new LunaUserCriteria();
             criteria.createCriteria().andLunaNameEqualTo(userName);
-            List<MsUserPw> msUserPws = msUserPwDAO.selectByCriteria(criteria);
-            if (msUserPws == null) {
+            List<LunaUser> lunaUsers = lunaUserDAO.selectByCriteria(criteria);
+            if (lunaUsers == null) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "用户不存在");
             }
-            MsUserPw msUserPw = msUserPws.get(0);
-            String userId = msUserPw.getUniqueId();
+            LunaUser lunaUser = lunaUsers.get(0);
+            String userId = lunaUser.getUniqueId();
             return getModuleAndMenuByUserId(userId);
         } catch (Exception ex) {
             logger.error("Failed to get module and menu by userName", ex);

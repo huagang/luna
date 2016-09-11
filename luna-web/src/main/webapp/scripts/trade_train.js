@@ -4,7 +4,7 @@
  */
 
 //获取当前的业务数据
-var business = {};
+var business = {}, merchantStatus;
 if (window.localStorage.business) {
     business = JSON.parse(window.localStorage.business);
 }
@@ -70,6 +70,7 @@ var initCreatePage = function () {
                     email: true
                 },
                 verCode: {
+                    required: true,
                     digits: true,
                     minlength: 6,
                     maxlength: 6,
@@ -111,7 +112,12 @@ var initCreatePage = function () {
                     // minlength: 16,
                     // maxlength: 19,
                     luhmCheck: true,
+                },
+                idCode: {
+                    required: true,
+                    IDCheck: true,
                 }
+
             },
             messages: {
                 contactName: "请填写商户业务对接联系人的真实姓名",
@@ -270,64 +276,64 @@ var initCreatePage = function () {
     //提交事件
     var initSubmit = function () {
         $('#btnSubmit').on('click', function () {
-            $('#merchantInfo').valid();
-            var formDataZero = Util.formToJson($('#merchantInfo')),
-                formData = {
-                    accountAddress: formDataZero.accountAddress + '|' + $('#branchBankCode').select2('data')[0].text,
-                    accountBank: formDataZero.accountBank + '|' + $('#bankCode').select2('data')[0].text,
-                    accountCity: formDataZero.accountCity + '|' + $('#cityCode').select2('data')[0].text,
-                    accountProvince: formDataZero.accountProvince + '|' + $('#provinceCode').select2('data')[0].text,
-                    accountName: formDataZero.accountName,
-                    accountNo: formDataZero.accountNo,
-                    accountType: formDataZero.accountType,
-                    contactName: formDataZero.contactName,
-                    email: formDataZero.email,
-                    merchantName: formDataZero.merchantName,
-                    merchantNo: formDataZero.merchantNo,
-                    merchantPhone: formDataZero.merchantPhone,
-                    smsCode: formDataZero.verCode,
-                },
-                idPicObj = $('.idPic .pic-wrapper'),
-                idcardPicUrl = [],
-                blPicObj = $('.blPic .pic-wrapper'),
-                licencePicUrl = [];
+            if ($('#merchantInfo').valid()) {
+                var formDataZero = Util.formToJson($('#merchantInfo')),
+                    formData = {
+                        accountAddress: formDataZero.accountAddress + '|' + $('#branchBankCode').select2('data')[0].text,
+                        accountBank: formDataZero.accountBank + '|' + $('#bankCode').select2('data')[0].text,
+                        accountCity: formDataZero.accountCity + '|' + $('#cityCode').select2('data')[0].text,
+                        accountProvince: formDataZero.accountProvince + '|' + $('#provinceCode').select2('data')[0].text,
+                        accountName: formDataZero.accountName,
+                        accountNo: formDataZero.accountNo,
+                        accountType: formDataZero.accountType,
+                        contactName: formDataZero.contactName,
+                        email: formDataZero.email,
+                        merchantName: formDataZero.merchantName,
+                        merchantNo: formDataZero.merchantNo,
+                        merchantPhone: formDataZero.merchantPhone,
+                        smsCode: formDataZero.verCode,
+                        idcardNo: formDataZero.idCode,
+                    },
+                    idPicObj = $('.idPic .pic-wrapper'),
+                    idcardPicUrl = [],
+                    blPicObj = $('.blPic .pic-wrapper'),
+                    licencePicUrl = [];
 
-            formData.contactPhone = formDataZero.phoneArea + '|' + formDataZero.phone;
-            idPicObj.each(function (e) {
-                var imgSrc = $(this).find('img').attr('src');
-                idcardPicUrl.push(imgSrc);
-            });
-            formData.idcardPicUrl = idcardPicUrl.join('|');
-            blPicObj.each(function (e) {
-                var imgSrc = $(this).find('img').attr('src');
-                licencePicUrl.push(imgSrc);
-            });
-            formData.licencePicUrl = licencePicUrl.join('|');
-            formData.idcardPeriod = $('#startIDDate').val() + "|" + ($('[name= idforever]:checked').val() ? '永久' : $('#endIDDate').val());
-            formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
-            console.log(formData);
-            var errMsg = [];
-            if (idcardPicUrl.length != 2) {
-                errMsg.push('请正确上传身份证文件');
-            }
-            if (licencePicUrl.length != 1) {
-                errMsg.push('请正确上传营业执照副本文件');
-            }
-            if (errMsg.length > 0) {
-                alert(errMsg);
-                return;
-            }
-            Util.setAjax(Inter.getApiUrl().saveMerchantInfo.url, formData, function (res) {
-                if (res.code == "0") {
-                    $('#create').addClass('hide');
-                    $('#confirmSubmit').removeClass('hide');
-                } else {
-                    alert(res.msg);
+                formData.contactPhone = formDataZero.phoneArea + '|' + formDataZero.phone;
+                idPicObj.each(function (e) {
+                    var imgSrc = $(this).find('img').attr('src');
+                    idcardPicUrl.push(imgSrc);
+                });
+                formData.idcardPicUrl = idcardPicUrl.join('|');
+                blPicObj.each(function (e) {
+                    var imgSrc = $(this).find('img').attr('src');
+                    licencePicUrl.push(imgSrc);
+                });
+                formData.licencePicUrl = licencePicUrl.join('|');
+                formData.idcardPeriod = $('#startIDDate').val() + "|" + ($('[name= idforever]:checked').val() ? '永久' : $('#endIDDate').val());
+                formData.licencePeriod = $('#startBLDate').val() + "|" + $('#endBLDate').val();
+                var errMsg = [];
+                if (idcardPicUrl.length != 2) {
+                    errMsg.push('请正确上传身份证文件');
                 }
-            }, function (res) {
-
-            });
-
+                if (licencePicUrl.length != 1) {
+                    errMsg.push('请正确上传营业执照副本文件');
+                }
+                if (errMsg.length > 0) {
+                    alert(errMsg);
+                    return;
+                }
+                var reqUrl = (merchantStatus == '3' ? Inter.getApiUrl().editMerchantInfo : Inter.getApiUrl().saveMerchantInfo);
+                Util.setAjax(reqUrl.url, formData, function (res) {
+                    if (res.code == "0") {
+                        $('#create').addClass('hide');
+                        $('#confirmSubmit').removeClass('hide');
+                    } else {
+                        alert(res.msg);
+                    }
+                }, function (res) {
+                });
+            }
         });
     };
     return {
@@ -387,6 +393,79 @@ var initAuditCompletePage = function () {
 } ();
 
 /**
+ * 初始化未通过刚界面
+ */
+var initNoPassPage = function () {
+    return {
+        init: function () {
+            $('#btnRecreate').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('修改资料');
+                $.get(Inter.getApiUrl().getMerchatDetailData.url, function (res) {
+                    if (res.code == '0') {
+                        console.log(res.data);
+                        var data = res.data, idPicHtmlArr = [];
+                        data.contactPhone = data.contactPhone.split('|');
+                        data.idcardPicUrl = data.idcardPicUrl.split('|');
+                        data.idcardPeriod = data.idcardPeriod.split('|');
+                        data.licencePicUrl = data.licencePicUrl.split('|');
+                        data.licencePeriod = data.licencePeriod.split('|');
+                        data.accountBank = data.accountBank.split('|');
+                        data.accountProvince = data.accountProvince.split('|');
+                        data.accountCity = data.accountCity.split('|');
+                        data.accountAddress = data.accountAddress.split('|');
+
+                        $('[name=contactName]').val(data.contactName);
+                        $('[name=phone]').val(data.contactPhone[1]);
+                        $('[name=email]').val(data.email);
+                        // $('[name=idCode]').val(data.idCode);
+                        for (var i = 0; i < data.idcardPicUrl.length; i++) {
+                            idPicHtmlArr.push('<div class="pic-wrapper"><img src="' + data.idcardPicUrl[i] + '" alt=""><div class="text-center"><a href="javascript:;" class="del-picture">删除</a></div></div>');
+                        }
+                        $('.idPic').append(idPicHtmlArr.join(''));
+                        $('[name=startIDDate]').val(data.idcardPeriod[0]);
+                        if (data.idcardPeriod[1] == '永久') {
+                            $('[name=idforever]').trigger('click');
+                        } else {
+                            $('[name=endIDDate]').val(data.idcardPeriod[1]);
+                        }
+                        $('[name=merchantName]').val(data.merchantName);
+                        $('[name=merchantPhone]').val(data.merchantPhone);
+                        $('[name=merchantNo]').val(data.merchantNo);
+                        if (data.licencePicUrl) {
+                            $('.blPic').append('<div class="pic-wrapper"><img src="' + data.licencePicUrl[0] + '" alt=""><div class="text-center"><a href="javascript:;" class="del-picture">删除</a></div></div>');
+                        }
+                        $('[name=startBLDate]').val(data.licencePeriod[0]);
+                        $('[name=endBLDate]').val(data.licencePeriod[1]);
+                        $('[name=accountType]').val(data.accountType);
+                        $('[name=accountName]').val(data.accountName);
+                        $('[name=accountNo]').val(data.accountNo);
+                        $('[name=idCode]').val(data.idcardNo);
+
+                        $('#noPass').addClass('hide');
+                        $('#create').removeClass('hide');
+                        $.initSelectBank({
+                            bankCode: 'bankCode', //银行ID
+                            bankValue: { id: data.accountBank[0], text: data.accountBank[1] },
+                            provinceCode: 'provinceCode',
+                            provinceValue: { id: data.accountProvince[0], text: data.accountProvince[1] },
+                            cityCode: 'cityCode',
+                            cityValue: { id: data.accountCity[0], text: data.accountCity[1] },
+                            branchBankCode: 'branchBankCode',
+                            branchBankValue: { id: data.accountAddress[0], text: data.accountAddress[1] },
+                        });
+                    } else {
+                        alert(res.errMsg);
+                    }
+                });
+            });
+        }
+    };
+} ();
+
+
+/**
  *  初始化弹出框事件
  */
 var initDialogEvent = function () {
@@ -438,11 +517,10 @@ $('document').ready(function () {
     initAuditCompletePage.init();
     initDialogEvent.init();
     initConfirmSubmitPage.init();
+    initNoPassPage.init();
 });
 
 function showPage() {
-    var status = $('#merchantStutas').val();
-
     $.ajax({
         url: Inter.getApiUrl().getMerchantStatus.url,    //请求的url地址
         dataType: "json",   //返回格式为json
@@ -454,7 +532,7 @@ function showPage() {
         success: function (res) {
             //请求成功时处理
             if (res.code == "0") {
-                status = res.data.tradeStatus.toString();
+                merchantStatus = status = res.data.tradeStatus.toString();
             }
         },
         complete: function () {
@@ -476,7 +554,7 @@ function showPage() {
             $('#checkAndPass,.signing').removeClass('hide');
             break;
         case '3':
-            $('#checkAndPass,.checking').removeClass('hide');
+            $('#noPass').removeClass('hide');
             break;
         case '4':
             $('#checkAndPass,.checking').removeClass('hide');
@@ -490,7 +568,7 @@ function uploadPicture(obj, callBack) {
     var file = obj.files[0];
     var res = FileUploader._checkValidation('pic', file);
     if (res.error) {
-        $('#pic_warn').html(res.msg);
+        alert(res.msg);
         obj.value = '';
         return;
     }

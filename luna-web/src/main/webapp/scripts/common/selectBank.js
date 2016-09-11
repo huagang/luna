@@ -30,7 +30,7 @@
             }).change(function (e) {
                 initBranchBankSelect(options);
             });
-            $selBank.val('');
+            $selBank.val(options.bankValue ? options.bankValue.id : '');
             $selBank.trigger('change');
 
             var $province = $("#" + options.provinceCode).select2({
@@ -44,9 +44,9 @@
                 var provinceCode = $(this).val();
                 initCitySelect(options, provinceCode);
             });
-            $province.val('');
+            $province.val(options.provinceValue ? options.provinceValue.id : '');
             $province.trigger('change');
-        }
+        },
     });
 
     /**
@@ -57,7 +57,8 @@
      */
     function initCitySelect(options, provinceCode) {
         if (provinceCode) {
-            $("#" + options.cityCode).select2({
+            var $city = $("#" + options.cityCode).select2({
+                data: options.cityValue ? [options.cityValue] : [],
                 width: "100%",
                 placeholder: '市',
                 allowClear: true,
@@ -96,6 +97,7 @@
             }).change(function (event) {
                 initBranchBankSelect(options);
             });
+            $city.trigger('change');
         } else {
             // if ($('#' + options.cityCode).attr('aria-hidden')) {
             //     $("#" + options.cityCode).html('');
@@ -135,6 +137,7 @@
             bankCode = $('#' + options.bankCode).val();
         if (proviceCode && bankCode) {
             $("#" + options.branchBankCode).select2({
+                data: options.branchBankValue ? [options.branchBankValue] : [],
                 width: "100%",
                 placeholder: '请选择开户支行',
                 allowClear: true,

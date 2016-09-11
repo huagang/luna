@@ -195,6 +195,9 @@ a.button.disable:hover{
 .menu-box:last-child{
 	border-bottom: none;
 }
+.menu-box:first-child {
+    border-bottom: 1px solid #C3C3C3;
+}
 .menu-title img{
     padding-right: 12px;
 }
@@ -437,7 +440,7 @@ a.button.disable:hover{
 
 #pop-message{
     position: fixed !important;
-    z-index: 10;
+    z-index: 20000;
     top: 20%;
     left: 0;
     right: 0;
@@ -457,7 +460,7 @@ a.button.disable:hover{
     height: 100%;
     text-align: center;
     background-color: rgba(0,0,0,.4);
-    z-index: 10;
+    z-index: 20;
 }
 
 #pop-message .pop-title,

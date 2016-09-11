@@ -19,7 +19,6 @@
             display: block;
             width: 900px;
         }
-        
         .section-wrapper p {
             line-height: 24px;
         }

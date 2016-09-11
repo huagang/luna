@@ -97,7 +97,7 @@
                             <h4><a href="#">交易直通车</a>/提交材料</h4></div>
                         <form id="merchantInfo" class="form-horizontal">
                             <div class="form-body">
-                                <p class="f ction">联系信息</p>
+                                <p class="form-section">联系信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>联系人姓名</label>
@@ -132,7 +132,15 @@
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>常用邮箱</label>
                                     <div class="col-md-6 form-content">
-                                        <input type="text" class="form-control" id="" name="email" required="required" value="">
+                                        <input type="text" class="form-control" id="" name="email" required="required" value="" placeholder="请填写常用邮箱">
+                                        <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-3 text-right" for=""><span
+                                        class="required" aria-required="true"> * </span>身份证号</label>
+                                    <div class="col-md-6 form-content">
+                                        <input type="text" class="form-control" id="idCode" name="idCode" required="required" value="" placeholder="请填写身份证号码">
                                         <!--<span class="help-block"> 邮箱将用于接收微景天下商户相关的重要信息，公司邮箱最佳 </span>-->
                                     </div>
                                 </div>
@@ -167,13 +175,13 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startIDDate" id="startIDDate" value="" placeholder="起始日期" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endIDDate" id="endIDDate" value="" placeholder="截止日期" />
                                             </div>
                                         </div>
                                         <div class="idforever-wrapper">
@@ -232,18 +240,18 @@
                                     <div class="col-md-6 form-content">
                                         <div class="input-daterange input-group input-group-control" id="">
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="" />
+                                                <input type="text" class="input-sm form-control datepicker" name="startBLDate" id="startBLDate" value="" placeholder="起始日期" />
                                             </div>
                                             <div class="datepicker-wrapper">
                                                 <span class="input-group-addon">至</span>
                                             </div>
                                             <div class="datepicker-wrapper">
-                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="" />
+                                                <input type="text" class="input-sm form-control datepicker" name="endBLDate" id="endBLDate" value="" placeholder="截止日期" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="f ction">商户结算账户信息</p>
+                                <p class="form-section">商户结算账户信息</p>
                                 <div class="form-group clearfix">
                                     <label class="control-label col-md-3 text-right" for=""><span
                                         class="required" aria-required="true"> * </span>账户类型</label>
@@ -376,6 +384,56 @@
                         </section>
                     </div>
                     <!-- 申请后界面End -->
+                    <!-- 申请后界面 -->
+                    <div id="noPass" class="main hide">
+                        <div class="main-hd">
+                            <h4>交易直通车</h4></div>
+                        <p class="launch">
+                            <span>你所在的商户还未开通交易直通车</span>
+                            <button type="button" disabled="disabled">未通过</button>
+                        </p>
+                        <section class="section-wrapper">
+                            <h5><i class="tradeicon tradeicon-introduce"></i>介绍</h5>
+                            <p class="">
+                                交易直通车是微景天下针对有商品交易需求的商户提供的一整套解决方案，开通交易直通车的商户可通过商户自己的后台发布商品，并对产生交易的订单进行管理，同时可结合实际的交易数据，优化自身的服务方向。</p>
+                        </section>
+                        <section class="section-wrapper">
+                            <h5><i class="tradeicon tradeicon-process"></i>流程</h5>
+                            <div class="process-icon-wrapper">
+                                <div class="process-num-wrapper">
+                                    <i class="process-num pass">1</i>
+                                </div>
+                                <div class="process-num-wrapper">
+                                    <i class="process-num">2</i>
+                                </div>
+                            </div>
+                            <ul class="process-wrapper">
+                                <li class="process-one">
+                                    <div class="process-title-wrapper">
+                                        <span class="process-title">
+                                        资料审核
+                                    </span>
+                                    </div>
+                                    <div class="process-content-wrapper">
+                                        微景天下会针对商户提交的资料进行核实，以保证交易的安全性，1~2个工作日 <br>
+                                        <label class="check-status">未通过</label>
+                                        <a href="" id="btnRecreate">修改资料</a>
+                                    </div>
+                                </li>
+                                <li class="process-two">
+                                    <div class="process-title-wrapper">
+                                        <span class="process-title">
+                                        协议签署
+                                    </span>
+                                    </div>
+                                    <div class="process-content-wrapper">确认商户信息，在线签署 <a href="<%=request.getContextPath() %>/merchant/tradeApplication/serveprotocol">《微景天下交易服务协议》</a>，开启商户交易服务 <br>
+                                        <button type="button" class="sign-aggreement signing hide" id="btnSign">签署协议</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <!-- 申请后界面End -->
                     <!--主题内容 end-->
                 </div>
             </div>
@@ -436,6 +494,7 @@
     <script src="<%=request.getContextPath()%>/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/select2.full.min.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/select2/js/i18n/zh-CN.js"></script>
+    <script src="<%=request.getContextPath()%>/plugins/jquery-validation/IDValidator.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/jquery-validation/jquery.validate.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/jquery-validation/additional-methods.js"></script>
     <script src="<%=request.getContextPath()%>/plugins/jquery-validation/localization/messages_zh.min.js"></script>
