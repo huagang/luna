@@ -14,6 +14,7 @@ import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.model.adapter.PayProcess;
 import ms.luna.model.adapter.AbstractWXPayProcess;
+import ms.luna.model.adapter.WXPayProcess;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +31,15 @@ public class WXPayServiceImpl implements WXPayService {
     private static final Logger logger = Logger.getLogger(WXPayServiceImpl.class);
 
     @Resource(name = "wxAppPayProcess")
-    private PayProcess wxAppPayMethod;
+    private WXPayProcess wxAppPayMethod;
 
     @Resource(name = "wxJSAPIPayProcess")
-    private PayProcess wxJSAPIPayMethod;
+    private WXPayProcess wxJSAPIPayMethod;
 
     @Override
     public JSONObject getOpenId(String code) {
         try {
-            String r = AbstractWXPayProcess.getOpenId(code);
+            String r = wxAppPayMethod.getOpenId(code);
             if (r == null) {
                 return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "获取openid时发生内部错误");
             }

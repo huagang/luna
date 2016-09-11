@@ -29,14 +29,14 @@ import java.util.*;
 
 /**
  * 本抽象类中实现初始化 默认策略
- *
+ * <p>
  * 实现数据发送,以及所有微信支付公共流程
- *
+ * <p>
  * Created by SDLL18 on 16/9/2.
  *
  * @author SDLL18
  */
-public abstract class AbstractWXPayProcess implements PayProcess {
+public abstract class AbstractWXPayProcess implements WXPayProcess {
 
     private final static Logger logger = Logger.getLogger(AbstractWXPayProcess.class);
 
@@ -98,7 +98,8 @@ public abstract class AbstractWXPayProcess implements PayProcess {
         return toReturn.toJSONString();
     }
 
-    public static String getOpenId(String code) {
+    @Override
+    public String getOpenId(String code) {
         StringBuilder url = new StringBuilder("https://api.weixin.qq.com/sns/oauth2/access_token?");
         url.append("appid=");
         url.append(APP_ID);
