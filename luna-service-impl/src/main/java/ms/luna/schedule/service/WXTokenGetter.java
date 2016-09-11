@@ -60,7 +60,7 @@ public class WXTokenGetter {
      * @param appSecret
      * @return
      */
-    public static synchronized WXTokenGetter getSingleInstance(String appId, String appSecret) {
+    public static WXTokenGetter getSingleInstance(String appId, String appSecret) {
         if (!getterMap.containsKey(appId + "|" + appSecret)) {
             synchronized (getterMap) {
                 if (!getterMap.containsKey(appId + "|" + appSecret)) {
