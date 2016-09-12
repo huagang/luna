@@ -262,6 +262,14 @@
 		</profile>
 
 		<profile>
+			<id>dev-online</id>
+			<properties>
+				<zookeeper.address>10.105.204.15:2181</zookeeper.address>
+				<log4j.level>DEBUG</log4j.level>
+			</properties>
+		</profile>
+
+		<profile>
 			<id>test</id>
 			<properties>
 				<zookeeper.address>115.159.87.160:2181</zookeeper.address>

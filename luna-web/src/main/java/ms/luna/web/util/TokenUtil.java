@@ -27,7 +27,9 @@ public class TokenUtil {
         }
         String key = QRedisUtil.generateLunaRedisKey(uniqueId);
         if(jedis.exists(key)) {
-            return jedis.get(key);
+            String value = jedis.get(key);
+            jedis.close();
+            return value;
         }
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
@@ -89,9 +91,9 @@ public class TokenUtil {
 
         String value = jedis.get(key);
         if(StringUtils.isBlank(value)) {
+            jedis.close();
             return false;
         }
-
         jedis.del(key);
         jedis.close();
 

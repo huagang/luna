@@ -38,6 +38,7 @@
     <result column="account_no" jdbcType="VARCHAR" property="accountNo" />
     <result column="app_status" jdbcType="INTEGER" property="appStatus" />
     <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
+    <result column="idcard_no" jdbcType="VARCHAR" property="idcardNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -70,7 +71,7 @@
     contact_mail, salesman_id, salesman_nm, status_id, del_flg, regist_hhmmss, up_hhmmss, 
     updated_by_unique_id, trade_status, application_id, idcard_pic_url, idcard_period, 
     merchant_no, licence_period, account_type, account_name, account_bank, account_city, 
-    account_address, account_no, app_status, account_province
+    account_address, account_no, app_status, account_province, idcard_no
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultMap="BaseResultMap">
     select
@@ -111,8 +112,8 @@
       up_hhmmss, updated_by_unique_id, trade_status, application_id, 
       idcard_pic_url, idcard_period, merchant_no, licence_period, 
       account_type, account_name, account_bank, account_city, 
-      account_address, account_no, app_status, account_province
-      )
+      account_address, account_no, app_status, account_province, 
+      idcard_no)
     values (#merchantId:VARCHAR#, #merchantNm:VARCHAR#, #merchantPhonenum:VARCHAR#, #categoryId:VARCHAR#, 
       #provinceId:VARCHAR#, #cityId:VARCHAR#, #countyId:VARCHAR#, #merchantAddr:VARCHAR#, 
       #resourceContent:VARCHAR#, #lat:DECIMAL#, #lng:DECIMAL#, #merchantInfo:VARCHAR#, 
@@ -121,8 +122,8 @@
       #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#, #tradeStatus:INTEGER#, #applicationId:INTEGER#, 
       #idcardPicUrl:VARCHAR#, #idcardPeriod:VARCHAR#, #merchantNo:VARCHAR#, #licencePeriod:VARCHAR#, 
       #accountType:INTEGER#, #accountName:VARCHAR#, #accountBank:VARCHAR#, #accountCity:VARCHAR#, 
-      #accountAddress:VARCHAR#, #accountNo:VARCHAR#, #appStatus:INTEGER#, #accountProvince:VARCHAR#
-      )
+      #accountAddress:VARCHAR#, #accountNo:VARCHAR#, #appStatus:INTEGER#, #accountProvince:VARCHAR#, 
+      #idcardNo:VARCHAR#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     insert into ms_merchant_manage
@@ -235,6 +236,9 @@
       <isNotNull prepend="," property="accountProvince">
         account_province
       </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no
+      </isNotNull>
       )
     </dynamic>
     values
@@ -346,6 +350,9 @@
       </isNotNull>
       <isNotNull prepend="," property="accountProvince">
         #accountProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        #idcardNo:VARCHAR#
       </isNotNull>
       )
     </dynamic>
@@ -465,6 +472,9 @@
       <isNotNull prepend="," property="record.accountProvince">
         account_province = #record.accountProvince:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.idcardNo">
+        idcard_no = #record.idcardNo:VARCHAR#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
@@ -507,7 +517,8 @@
       account_address = #record.accountAddress:VARCHAR#,
       account_no = #record.accountNo:VARCHAR#,
       app_status = #record.appStatus:INTEGER#,
-      account_province = #record.accountProvince:VARCHAR#
+      account_province = #record.accountProvince:VARCHAR#,
+      idcard_no = #record.idcardNo:VARCHAR#
     <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
     </isParameterPresent>
@@ -620,6 +631,9 @@
       <isNotNull prepend="," property="accountProvince">
         account_province = #accountProvince:VARCHAR#
       </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no = #idcardNo:VARCHAR#
+      </isNotNull>
     </dynamic>
     where merchant_id = #merchantId:VARCHAR#
   </update>
@@ -659,7 +673,8 @@
       account_address = #accountAddress:VARCHAR#,
       account_no = #accountNo:VARCHAR#,
       app_status = #appStatus:INTEGER#,
-      account_province = #accountProvince:VARCHAR#
+      account_province = #accountProvince:VARCHAR#,
+      idcard_no = #idcardNo:VARCHAR#
     where merchant_id = #merchantId:VARCHAR#
   </update>
 </sqlMap>

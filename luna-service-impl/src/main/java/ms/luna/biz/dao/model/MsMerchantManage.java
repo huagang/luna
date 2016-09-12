@@ -82,6 +82,8 @@ public class MsMerchantManage implements Serializable {
 
     private String accountProvince;
 
+    private String idcardNo;
+
     private static final long serialVersionUID = 1L;
 
     public String getMerchantId() {
@@ -372,6 +374,14 @@ public class MsMerchantManage implements Serializable {
         this.accountProvince = accountProvince == null ? null : accountProvince.trim();
     }
 
+    public String getIdcardNo() {
+        return idcardNo;
+    }
+
+    public void setIdcardNo(String idcardNo) {
+        this.idcardNo = idcardNo == null ? null : idcardNo.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -419,7 +429,8 @@ public class MsMerchantManage implements Serializable {
             && (this.getAccountAddress() == null ? other.getAccountAddress() == null : this.getAccountAddress().equals(other.getAccountAddress()))
             && (this.getAccountNo() == null ? other.getAccountNo() == null : this.getAccountNo().equals(other.getAccountNo()))
             && (this.getAppStatus() == null ? other.getAppStatus() == null : this.getAppStatus().equals(other.getAppStatus()))
-            && (this.getAccountProvince() == null ? other.getAccountProvince() == null : this.getAccountProvince().equals(other.getAccountProvince()));
+            && (this.getAccountProvince() == null ? other.getAccountProvince() == null : this.getAccountProvince().equals(other.getAccountProvince()))
+            && (this.getIdcardNo() == null ? other.getIdcardNo() == null : this.getIdcardNo().equals(other.getIdcardNo()));
     }
 
     @Override
@@ -462,11 +473,12 @@ public class MsMerchantManage implements Serializable {
         result = prime * result + ((getAccountNo() == null) ? 0 : getAccountNo().hashCode());
         result = prime * result + ((getAppStatus() == null) ? 0 : getAppStatus().hashCode());
         result = prime * result + ((getAccountProvince() == null) ? 0 : getAccountProvince().hashCode());
+        result = prime * result + ((getIdcardNo() == null) ? 0 : getIdcardNo().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + ",applicationId=" + applicationId + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantNo=" + merchantNo + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",appStatus=" + appStatus + ",accountProvince=" + accountProvince + "]";
+        return "MsMerchantManage [merchantId=" + merchantId + ",merchantNm=" + merchantNm + ",merchantPhonenum=" + merchantPhonenum + ",categoryId=" + categoryId + ",provinceId=" + provinceId + ",cityId=" + cityId + ",countyId=" + countyId + ",merchantAddr=" + merchantAddr + ",resourceContent=" + resourceContent + ",lat=" + lat + ",lng=" + lng + ",merchantInfo=" + merchantInfo + ",contactNm=" + contactNm + ",contactPhonenum=" + contactPhonenum + ",contactMail=" + contactMail + ",salesmanId=" + salesmanId + ",salesmanNm=" + salesmanNm + ",statusId=" + statusId + ",delFlg=" + delFlg + ",registHhmmss=" + registHhmmss + ",upHhmmss=" + upHhmmss + ",updatedByUniqueId=" + updatedByUniqueId + ",tradeStatus=" + tradeStatus + ",applicationId=" + applicationId + ",idcardPicUrl=" + idcardPicUrl + ",idcardPeriod=" + idcardPeriod + ",merchantNo=" + merchantNo + ",licencePeriod=" + licencePeriod + ",accountType=" + accountType + ",accountName=" + accountName + ",accountBank=" + accountBank + ",accountCity=" + accountCity + ",accountAddress=" + accountAddress + ",accountNo=" + accountNo + ",appStatus=" + appStatus + ",accountProvince=" + accountProvince + ",idcardNo=" + idcardNo + "]";
     }
 }

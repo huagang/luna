@@ -59,8 +59,7 @@ var Inter = function () {
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
                 messagePage: context + '/platform/message', //消息管理
                 editGoods: context + '/platform/deal/edit?cateId={0}'
-
-
+                editArticle: context + '/content/article/{0}' // 编辑文章
             };
         },
         getApiUrl: function () {
@@ -276,14 +275,13 @@ var Inter = function () {
                     type: 'GET'
                 },
                 checkBusinessNameRepeat: {
-                    url: context + '/content/business/businessName/check?business_name={0}&merchant_id={1}',
+                    url: context + '/content/crm/businessName/check?business_name={0}&merchant_id={1}',
                     type: 'GET'
                 },
                 checkBusinessCodeRepeat: {
-                    url: context + '/content/business/businessCode/check?business_code={0}&merchant_id={1}',
+                    url: context + '/content/crm/businessCode/check?business_code={0}&merchant_id={1}',
                     type: 'GET'
                 },
-
 
                 //栏目管理
                 columnCreate: {
@@ -651,6 +649,7 @@ var Inter = function () {
 
                 //交易直通车
                 saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据
+                editMerchantInfo: { url: context + '/merchant/tradeApplication/recreate', type: 'POST' }, //保存商户数据
                 getMerchantStatus: { url: context + '/merchant/tradeApplication/merchantStatus', type: 'GET' }, //获取商户状态
                 getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
                 getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },

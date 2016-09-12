@@ -23,27 +23,35 @@
 <body>
 <div class='wrapper'>
     <div class='banner'>
-        <img src=''/>
+        <img src='' />
         <div class="title">
             <h1 id="poiName" class="poiName"></h1>
             <h4 class="poiGeoInfo-wrapper"><i class="icon-geoLocation"></i><label for="" id="poiGeoInfo" class="poiGeoInfo"></label></h4>
         </div>
+        <div class='media-wrapper'>
+            <a class="btn-wrap video-btn-wrap hidden">
+                <i class="icon icon-video"></i>
+            </a>
+            <a class="btn-wrap audio-btn-wrap hidden">
+                <i class="icon icon-audio"></i>
+            </a>
+        </div>
     </div>
     <div class="toolsbar">
         <div class="tool-item hidden">
-            <a id="phoneLink" href="" data-type="phone" ><i class="icon icon-phone"></i><br/><span id="phoneText">联系电话</span></a>
+            <a id="phoneLink" href="" data-type="phone"><i class="icon icon-phone"></i><br/><span id="phoneText">联系电话</span></a>
             <div class="vr-line"></div>
         </div>
-        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav" ><i class="icon icon-nav"></i><br/><span id="navText">到这去</span></a>
+        <div class="tool-item"><a id="nav" href="javascript:;" data-type="nav"><i class="icon icon-nav"></i><br/><span id="navText">到这去</span></a>
             <div class="vr-line"></div>
         </div>
         <div class="tool-item ">
-            <a id="panorama" href="javascript:;" data-type="pano" class="hide" ><i class="icon icon-pano"></i><br/><span id="panoText">看全景</span></a>
+            <a id="panorama" href="javascript:;" data-type="pano" class="hide"><i class="icon icon-pano"></i><br/><span id="panoText">看全景</span></a>
             <a id="waitPanorama" href="javascript:;" data-type="pano" class="hide" style="margin: 21px auto;display: inline-block;"><span id="noPanoText">全景<br>拍摄中</span></a>
         </div>
     </div>
     <div class="content-wrapper">
-       <div id="content" class='content'></div>
+        <div id="content" class='content'></div>
     </div>
     <div class="footer hidden">
         <div class="go-top"></div>
@@ -52,6 +60,17 @@
 <div class="goback hidden ">
     <a href="javascript:void(0)" class=""><i class="icon-goback"></i></a>
 </div>
+<div class='video-modal hidden'>
+    <div class='mask'></div>
+    <div class='video-dialog'>
+        <p class='video-title'>
+            <span>视频欣赏</span>
+        </p>
+        <video id="video" class='video' controls height="300px;"></video>
+        <p class='video-tip'>建议WIFI下观看</p>
+    </div>
+</div>
+<audio id="audio" class='audio hidden' src volume='1.0'></audio>
 <input id="shareInfoDes" type="hidden" name="" value="">
 <!-- BEGIN REFER LINK  -->
 <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>

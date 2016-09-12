@@ -33,6 +33,7 @@ public class CheckTradeApplicationController {
 
     @Autowired
     private LunaTradeApplicationService lunaTradeApplicationService;
+    private static String menu = "message";
 
     @RequestMapping(method = RequestMethod.POST, value = "/check/{applicationId}")
     @ResponseBody
@@ -47,6 +48,7 @@ public class CheckTradeApplicationController {
         if (user.getRoleId() != 1 && user.getRoleId() != 2 && user.getRoleId() != 3) {
             return FastJsonUtil.error(ErrorCode.UNAUTHORIZED, "无权操作");
         }
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         JSONObject inData = new JSONObject();
         inData.put(LunaTradeApplicationTable.FIELD_APP_CHECK_RESULT, checkResult);
         inData.put(LunaTradeApplicationTable.FIELD_ID, applicationId);
@@ -75,6 +77,7 @@ public class CheckTradeApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ModelAndView init(HttpServletRequest request, HttpServletResponse response) {
 //        SessionHelper.setSelectedMenu(request.getSession(false), menu);
+        SessionHelper.setSelectedMenu(request.getSession(false), menu);
         return new ModelAndView("/manage_merchant_apply.jsp");
     }
 

@@ -60,16 +60,21 @@
     <div class="hidden" id="pop-message">
         <div class="pop-title">
             <h5>提示</h5>
-            <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" onclick="hideChromeTipDialog()"/></a>
+            <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" onclick="hideMessage()"/></a>
         </div>
         <div class="pop-cont">
-            <p>皓月暂时仅支持Chrome浏览器,为了让您获得更好的产品体验,建议使用Chrome浏览器进行平台操作,
-                <a href="http://www.google.cn/chrome/browser/desktop/index.html" target="_blank">马上下载Chrome浏览器</a>
-            </p>
+            <div class="not-chrome hidden">
+                <p>皓月暂时仅支持Chrome浏览器,为了让您获得更好的产品体验,建议使用Chrome浏览器进行平台操作,
+                    <a href="http://www.google.cn/chrome/browser/desktop/index.html" target="_blank">马上下载Chrome浏览器</a>
+                </p>
+            </div>
+            <div class="closed-merchant hidden">
+                <p>您的商户由于不合规操作,已经被关闭,请发送邮件联系皓月平台客服人员进行详细咨询,邮件地址<a href="mailto:luna@visualbusiness.com">luna@visualbusiness.com</a></p>
+            </div>
         </div>
         <div class="pop-fun">
             <div class="pull-right">
-                <button class="button" onclick="hideChromeTipDialog()">确定</button>
+                <button class="button" onclick="hideMessage()">确定</button>
             </div>
         </div>
     </div>
@@ -77,6 +82,7 @@
 <script>
     var businessId = "${business_id}";
     var businessName = "${business_name}";
+    var existMerchant = "${existMerchant}";
     if(businessId && businessName){
         localStorage.setItem('business', JSON.stringify({
             id: parseInt(businessId),
@@ -85,11 +91,21 @@
     }
     $(function(){
         var isChrome = !!window.chrome && !!window.chrome.webstore;
-        if(! isChrome){
+
+        var showMessage = false;
+        if(existMerchant === "false"){
+            showMessage = true;
+            $('.closed-merchant').removeClass('hidden');
+        }
+        else if(! isChrome){
+            showMessage = true;
+            $('.not-chrome').removeClass('hidden');
+        }
+        if(showMessage){
             $('#pop-message').removeClass('hidden');
         }
     });
-    function hideChromeTipDialog(){
+    function hideMessage(){
         $('#pop-message').addClass('hidden');
     }
 

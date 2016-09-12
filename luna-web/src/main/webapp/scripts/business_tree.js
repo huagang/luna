@@ -67,14 +67,14 @@ $(document).ready(function(){
 
 
 	function searchPois() {
-		var tag_id = $(".btn-tags.current").attr("tag_id");
+
+        $(".list-result-poi").html('<div class="text" style="text-align: center; height: 20px;line-height:20px;padding-top:35px;">搜索中.....</div>');
 
     	var param = {
     			"province_id":$('#province').val(),
     			"city_id":$('#city').val(),
     			"county_id":$('#county').val(),
     			"keyWord":$('#keyWord').val()
-//    			"tag_id":tag_id
     	};
         $.ajax({
             type: "GET",
@@ -89,7 +89,8 @@ $(document).ready(function(){
                         searchPoisForBizTree = returndata.data.row;
             		//	$(".tags-wrap .btn-tags").removeClass("current");
             		//	$(".tags-wrap .btn-tags:first").addClass("current");
-            			showSearchPois(tag_id);
+                        var tag_id = $(".btn-tags.current").attr("tag_id");
+                        showSearchPois(tag_id);
             		}
             		// tags=data;
             	} else {
@@ -329,7 +330,8 @@ $(document).ready(function(){
         	chk_value.push([$(this).attr("poi_id"),$(this).attr("poi_tags"),$(this).parent().find('a').text()]);
     	}); 
         if(chk_value.length>0){
-        	for(var c=0;c<chk_value.length;c++){
+            var exist = false;
+            for(var c=0;c<chk_value.length;c++){
                 ps=[];
         		// for(var i=0;i<parents.length;i++){
     	     //        if($(parents[i]).attr("level-item-id") && $(parents[i]).attr("level-item-id")!=""){
@@ -351,32 +353,40 @@ $(document).ready(function(){
                     }
                 }
     	        var current_data=treeDate;
-    	        for(var i=(ps_li.length-1);i>=0;i--){
+
+                // 找到当前节点
+                for(var i=(ps_li.length-1);i>=0;i--){
     	            current_data=current_data.c_list[ps_li[i]];
     	        }
+
+                // 检查选中的poi是否与节点的子节点重复
+                exist = false;
                 for(var m=0;m<current_data.c_list.length;m++){
                     if(current_data.c_list[m]._id==chk_value[c][0]){
-                        return;
+                        exist = true;
+                        break;
+                    }
+                }
+                if(! exist){
+                    var newchild=$.extend(true, {}, PoiDataTemplate);
+                    newchild._id=chk_value[c][0];
+                    current_data.c_list.push(newchild);
+
+
+                    if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
+                        var newDefChild=$.extend(true, {}, poiDefTemplate);
+                        newDefChild._id=chk_value[c][0];
+                        newDefChild.tags= [ parseInt(chk_value[c][1])];
+                        newDefChild.name=chk_value[c][2];
+                        poiDef[chk_value[c][0]]=newDefChild;
                     }
                 }
 
-    	        var newchild=$.extend(true, {}, PoiDataTemplate);
-    	        newchild._id=chk_value[c][0];
-                current_data.c_list.push(newchild);
-
-
-    	        if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
-	    	        var newDefChild=$.extend(true, {}, poiDefTemplate);
-	    	        newDefChild._id=chk_value[c][0];
-	    	        newDefChild.tags=chk_value[c][1];
-	    	        newDefChild.name=chk_value[c][2];
-	    	        poiDef[chk_value[c][0]]=newDefChild;
-    	        }
         	}
         }
         showTreeData();
-        
         $(".pop-childpoi .button-close").trigger("click");
+        $('.list-result-poi input:checked').prop('checked', false);
         saveTreeData();
     });
     
@@ -420,12 +430,16 @@ $(document).ready(function(){
     function showGuidance(){
         $('.guidance').removeClass('hidden');
         $('.luna-tree').addClass('hidden');
-
+        var wrapperHeight = $('.content .main').height(),screenHeight = window.screen.height;
+        if(wrapperHeight < 0.8 * screenHeight){
+            $('.content .main').addClass('fixed-height');
+        }
     }
 
     function showTreeData(){
 
         $('.luna-tree').removeClass('hidden');
+        $('.content .main').removeClass('fixed-height');
         $('.guidance').addClass('hidden');
 
 
