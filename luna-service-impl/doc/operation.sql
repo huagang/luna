@@ -70,6 +70,7 @@ INSERT INTO `luna_role_menu` (`role_id`, `menu_id`) VALUES ('1', (SELECT `luna_m
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('1',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
 INSERT INTO `luna_role_menu` (`role_id`,`menu_id`) VALUES ('2',(SELECT `luna_menu`.id FROM `luna_menu` WHERE `luna_menu`.name = "消息管理"));
 
+-- 微景展
 ALTER TABLE ms_show_app drop index `app_name`;
 ALTER TABLE ms_show_app drop INDEX `business_id`;
 ALTER TABLE ms_show_app add UNIQUE(business_id, app_name);

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/showFarmHouse.css">
+
     <link rel="stylesheet" media="(min-width: 992px)" href="<%=request.getContextPath()%>/resources/styles/showFarmHouseForPC.css">
     <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/angular/angular.min.js'></script>
@@ -174,7 +175,6 @@
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
-
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/common.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
