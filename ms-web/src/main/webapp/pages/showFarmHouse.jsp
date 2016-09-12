@@ -24,10 +24,13 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/common.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/styles/showFarmHouse.css">
+
+    <link rel="stylesheet" media="(min-width: 992px)" href="<%=request.getContextPath()%>/resources/styles/showFarmHouseForPC.css">
+    <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/angular/angular.min.js'></script>
 
 </head>
-<body ng-app="farmHouse" class="ng-cloak modal-open"  ng-controller="FarmHouseController as farm" >
+<body ng-app="farmHouse" class="ng-cloak modal-open"  ng-controller="FarmHouseController as farm">
     <div class="landscape">
 
         <div class="iphone">
@@ -57,7 +60,7 @@
                 </div>
             </header>
             <nav class="nav-container">
-                <a class="nav-item phone" href="tel:{{farm.poiData.contact_phone}}">
+                <a class="nav-item phone" ng-hide="!farm.poiData.contact_phone"  href="tel:{{farm.poiData.contact_phone}}">
                     <img class="img" src="<%=request.getContextPath()%>/resources/images/farmhouse/phone.png"/>
                     <p class="tip">电话预定</p>
                 </a>
@@ -71,16 +74,17 @@
                 </a>
             </nav>
             <main>
-                <div class="portrait" style="background:url({{farm.farmData.portrait}}) center center no-repeat;
+                <div class="portrait" ng-hide="! farm.farmData.portrait" style="background:url({{farm.farmData.portrait}}) center center no-repeat;
                     background-size: cover"></div>
                 <p class="self-introduce" ng-cloak>{{farm.farmData.selfIntroduce}}</p>
             </main>
         </div>
         <div class="block-split"></div>
-        <div class="room-info" >
+        <div class="room-info" ng-hide="! farm.farmData.panorama.panoList ||  farm.farmData.panorama.panoList.length === 0">
             <header>
                 <span>房间</span>
-                <a class='room-all' href="{{farm.farmData.allPanorama.panoUrl}}" ng-click="farm.replaceUrl()">
+                <a class='room-all' ng-hide="! farm.farmData.allPanorama.panoUrl" href="{{farm.farmData.allPanorama.panoUrl}}"
+                   ng-click="farm.replaceUrl()">
                     全部
                     <div class="icon-arrow"></div>
                 </a>
@@ -88,32 +92,36 @@
             <main>
                 <div id="panoContainer"></div>
             </main>
-            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1">
-                <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
-                     ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
-                     style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
-                    <div class="pano-name">
-                        <span>{{pano.panoName}}</span>
+            <footer class="ng-hide" ng-show="farm.farmData.panorama.panoList.length > 1" class="scroll-wrapper">
+                <div class="scroll-wrapper">
+                    <div class="pano-thumbnail" ng-repeat="pano in farm.farmData.panorama.panoList"
+                         ng-class="{active: $index===farm.curPanoIndex}" ng-click="farm.setPano($index)"
+                         style="background:url({{pano.pic}}) center center no-repeat;background-size: cover">
+                        <div class="pano-name">
+                            <span>{{pano.panoName}}</span>
+                        </div>
                     </div>
                 </div>
             </footer>
         </div>
-        <div class="block-split"></div>
-        <div class="food-info">
+        <div class="block-split" ng-hide="! farm.farmData.panorama.panoList ||  farm.farmData.panorama.panoList.length === 0"></div>
+        <div class="food-info" ng-hide="farm.farmData.food.length === 0">
             <header>
                 <span>美食</span>
             </header>
             <main>
-                <div class="food-item" ng-repeat="food in farm.farmData.food"
-                     style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
-                    <div class="name-wrapper">
-                        <p class="food-name">{{food.text}}</p>
+                <div class="scroll-wrapper">
+                    <div class="food-item" ng-repeat="food in farm.farmData.food"
+                             style="background:url({{food.pic}}) center center no-repeat;background-size: cover">
+                            <div class="name-wrapper">
+                                <p class="food-name">{{food.text}}</p>
+                            </div>
                     </div>
                 </div>
             </main>
         </div>
-        <div class="block-split"></div>
-        <div class="funny-info">
+        <div class="block-split" ng-hide="farm.farmData.food.length === 0"></div>
+        <div class="funny-info" ng-hide="! farm.farmData.funny || farm.farmData.funny.length === 0" >
             <header>
                 <span>乡村野趣</span>
             </header>
@@ -125,11 +133,10 @@
                             <p class="funny-name">{{funny.name}}</p>
                         </div>
                     </div>
-                </div>
             </main>
         </div>
-        <div class="block-split"></div>
-        <div class="facilities-info">
+        <div class="block-split" ng-hide="! farm.farmData.funny || farm.farmData.funny.length === 0"></div>
+        <div class="facilities-info" ng-hide="! farm.farmData.facilities || farm.farmData.facilities.length === 0">
             <header>
                 <span>场地设施</span>
             </header>
@@ -140,7 +147,7 @@
                 </div>
             </main>
         </div>
-        <div class="block-split"></div>
+        <div class="block-split" ng-hide="! farm.farmData.facilities || farm.farmData.facilities.length === 0"></div>
         <div class="neighborhood-info">
             <header>
                 <span>周边</span>
@@ -163,14 +170,11 @@
         <div class="block-split"></div>
         <div class="to-top" ng-click="farm.scrollToTop()">返回顶部</div>
     </div>
-    <script src="<%=request.getContextPath() %>/resources/plugins/jquery/jquery.js"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=HD3BZ-NEJ33-JZ73U-3IMAH-NYEYQ-LAFAV&libraries=drawing,geometry,autocomplete,convertor"></script>
-
+    <script charset="utf-8" src="<%=request.getContextPath()%>/resources/plugins/iscroll/iscroll.probe.js"></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/plugins/velocityJs/velocity.min.js'></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
-
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/common.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
@@ -187,7 +191,9 @@
             link: "${share_info_link}" || window.location.href,
             imgUrl: "${share_info_pic}" || pageData.poi_info.thumbnail
         };
-        var wechat = new weChat(wx, wechatOptions);
+        if(window.wx){
+            var wechat = new weChat(wx, wechatOptions);
+        }
     </script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/showFarmHouse.js'></script>
 

@@ -74,19 +74,55 @@ var initHJMPoiPage = function () {
             $('#phoneLink').closest('.tool-item').removeClass('hidden');
         }
 
+        // 更新文章视频信息，视频信息可以为空        
+        if (data.video) {
+            var btnWraper = document.querySelector('.video-btn-wrap'),
+                video = document.querySelector('#video');
+            btnWraper.addEventListener('click', function () {
+                showVideoModal();
+                if (video) {
+                    video.pause();
+                }
+            });
+            document.querySelector('.video-modal .mask').addEventListener('click', hideVideoModal);
+            //data.video 可能是video id,也可能是video url，所以需要进行判断
+            if (!/^\d+$/.test(data.video)) {
+                document.querySelector('.video').src = data.video;
+                btnWraper.classList.remove('hidden');
+            }
+        }
+
+        // 更新文章音频信息，音频信息可以为空
+        if (data.audio) {
+            var audioBtnWraper = document.querySelector('.audio-btn-wrap'),
+                audio = document.querySelector('#audio'),
+                audioIcon = $('.audio-btn-wrap .icon-audio');
+            audio.src = data.audio;
+            audioBtnWraper.classList.remove('hidden');
+
+            audioIcon.on('click', function (e) {
+                if (audioIcon.hasClass('playing')) {
+                    document.querySelector('.icon-audio').classList.remove('playing');
+                    audio.pause();
+                } else {
+                    document.querySelector('.icon-audio').classList.add('playing');
+                    audio.play();
+                }
+            });
+        }
+
         //初始化全景信息
         if (data.panorama) {
             var url;
             switch (data.panorama_type) {
                 case 1: //单点全景
-                    url = "http://single.pano.visualbusiness.cn/PanoViewer.html?panoId=" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().singlePano, [data.panorama]);
                     break;
                 case 2: //专辑全景
-                    // url = "http://pano.visualbusiness.cn/album/index.html?panoId=" + data.panorama;
-                    url = "http://pano.visualbusiness.cn/album/index.html?albumId=" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().multiplyPano, [data.panorama, objdata.lang == 'zh' ? '' : objdata.lang]);
                     break;
                 case 3: //相册全景
-                    url = "http://data.pano.visualbusiness.cn/rest/album/view/" + data.panorama;
+                    url = Util.strFormat(Inter.getApiUrl().customPano, [data.panorama]);
                     break;
             }
             $('#panorama').attr('href', url);
@@ -151,7 +187,9 @@ var initHJMPoiPage = function () {
     var initGoTop = function () {
         if (document.body.scrollHeight > document.body.clientHeight) {
             document.querySelector('.footer').classList.remove('hidden');
-            document.querySelector('.go-top').addEventListener('click', pageScroll);
+            document.querySelector('.go-top').addEventListener('click', function (e) {
+                window.scrollTo(0, 0);
+            });
         }
     };
 
@@ -297,4 +335,15 @@ function pageScroll(e) {
     var sTop = document.documentElement.scrollTop + document.body.scrollTop;
     //判断当页面到达顶部，取消延时代码（否则页面滚动到顶部会无法再向下正常浏览页面）
     if (sTop == 0) clearTimeout(scrolldelay);
+}
+// 显示视频框来观看视频
+function showVideoModal() {
+    document.querySelector('.video-modal').style.display = 'block';
+    document.querySelector('.video-modal').classList.remove('hidden');
+}
+
+// 隐藏视频框并停止视频播放
+function hideVideoModal() {
+    document.querySelector('.video-modal').style.display = 'none';
+    document.querySelector('.video').pause();
 }

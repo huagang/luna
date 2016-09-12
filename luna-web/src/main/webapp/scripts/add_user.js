@@ -355,7 +355,7 @@
                         data: data
                     }).then(function(res){
                         if(res.data.code === '0'){
-                            history.back(-1);
+                            location.href = Inter.getPageUrl().manageUser;
                         } else{
                             alert(res.data.msg || '保存失败');
                         }

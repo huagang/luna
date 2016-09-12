@@ -112,6 +112,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_TYPE, page.getPageType());
 		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		document.append(FIELD_PAGE_TIME, page.getPageTime());
+		document.append(FIELD_SHARE_INFO, page.getShareInfo());
 		showPageCollection.updateOne(Filters.eq(FIELD_PAGE_ID, page.getPageId()), new Document("$set", document));
 	}
 
@@ -182,6 +183,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 		document.append(FIELD_PAGE_TYPE, page.getPageType());
 		document.append(FIELD_PAGE_HEIGHT, page.getPageHeight());
 		document.append(FIELD_PAGE_TIME, page.getPageTime());
+		document.append(FIELD_SHARE_INFO, page.getShareInfo());
 		return document;
 	}
 	
@@ -205,6 +207,7 @@ public class MsShowPageDAOImpl extends MongoBaseDAO implements MsShowPageDAO {
 			msShowPage.setPageType(document.getString(FIELD_PAGE_TYPE));
 			msShowPage.setPageHeight(document.getString(FIELD_PAGE_HEIGHT));
 			msShowPage.setPageTime(document.getDouble(FIELD_PAGE_TIME));
+			msShowPage.setShareInfo(document.get(FIELD_SHARE_INFO, Document.class));
 
 			return msShowPage;
 		}

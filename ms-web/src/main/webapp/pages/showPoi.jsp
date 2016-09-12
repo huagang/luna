@@ -25,7 +25,7 @@
 <body>
 <div class='wrapper'>
     <div class='banner'>
-        <img src=''/>
+        <img src='' />
         <div class='btn-container'>
             <div class='panorama hidden '>
                 <a href="javascript:void(0)">
@@ -41,10 +41,10 @@
     </div>
     <div class='toolbar'>
         <span class='title'></span>
-				<span class="btn-wrap video-btn-wrap hidden">
+        <span class="btn-wrap video-btn-wrap hidden">
 					<i class="icon icon-video"></i>
 				</span>
-				<span class="btn-wrap audio-btn-wrap hidden">
+        <span class="btn-wrap audio-btn-wrap hidden">
 					<i class="icon icon-audio"></i>
 				</span>
     </div>

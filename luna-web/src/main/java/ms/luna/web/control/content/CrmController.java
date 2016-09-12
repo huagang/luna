@@ -1,11 +1,20 @@
 package ms.luna.web.control.content;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import ms.luna.biz.cons.DbConfig;
+import ms.luna.biz.cons.ErrorCode;
 import ms.luna.biz.cons.VbConstant;
+import ms.luna.biz.sc.LunaUserService;
+import ms.luna.biz.sc.ManageBusinessService;
 import ms.luna.biz.sc.ManageMerchantService;
-import ms.luna.biz.util.*;
+import ms.luna.biz.table.LunaRoleCategoryTable;
+import ms.luna.biz.table.LunaRoleTable;
+import ms.luna.biz.util.CharactorUtil;
+import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.biz.util.MsLogger;
+import ms.luna.biz.util.VbUtility;
 import ms.luna.common.LunaUserSession;
+import ms.luna.web.common.CommonURI;
 import ms.luna.web.common.SessionHelper;
 import ms.luna.web.control.common.BasicController;
 import ms.luna.web.control.common.PulldownController;
@@ -14,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -43,6 +53,10 @@ public class CrmController extends BasicController {
     private PulldownController pulldownController;
     @Autowired
     private ManageMerchantService manageMerchantService;
+    @Autowired
+    private LunaUserService lunaUserService;
+    @Autowired
+    private ManageBusinessService manageBusinessService;
 
     private static List<Map<String, String>> lstMerchantStatus = new ArrayList<Map<String, String>>();
 
@@ -178,21 +192,14 @@ public class CrmController extends BasicController {
             String status_id = request.getParameter("status");
             String salesman_nm = request.getParameter("salesman");
             String county_id = request.getParameter("county");// 区县id
+            String businessName = RequestHelper.getString(request, "business_name");
+            String businessCode = RequestHelper.getString(request, "business_code");
 
             String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum,
-                    category_id, province_id, city_id, county_id, merchant_addr, status_id, salesman_nm);
+                    category_id, province_id, city_id, county_id, merchant_addr, status_id, salesman_nm, businessName, businessCode);
 
             if(!"".equals(inputInfo)) {
                 return FastJsonUtil.error("1", "校验错误！inputInfo:" + inputInfo);
-            }
-
-            String businessName = RequestHelper.getString(request, "business_name");
-            String businessCode = RequestHelper.getString(request, "business_code");
-            if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
-                return FastJsonUtil.error(-1, "业务名称长度不合法");
-            }
-            if(StringUtils.isBlank(businessCode) || businessCode.length() > 16) {
-                return FastJsonUtil.error(-1, "业务简称长度不合法");
             }
 
             LunaUserSession user = SessionHelper.getUser(request.getSession(false));
@@ -451,14 +458,12 @@ public class CrmController extends BasicController {
             String businessName = RequestHelper.getString(request, "business_name");
             String businessCode = RequestHelper.getString(request, "business_code");
 
-            if(StringUtils.isBlank(businessName) || businessName.length() > 32) {
-                return FastJsonUtil.error(-1, "业务名称长度不合法");
+            if(StringUtils.isBlank(merchant_id)) {
+                return FastJsonUtil.error("1", "商户id不合法");
             }
-            if(StringUtils.isBlank(businessCode) || businessCode.length() > 16) {
-                return FastJsonUtil.error(-1, "业务简称长度不合法");
-            }
+            
             String inputInfo = checkInput(contact_nm, contact_phonenum, contact_mail, merchant_nm, merchant_phonenum,
-                    category_id, province_id, city_id, county_id, merchant_addr, status_id, salesman_nm);
+                    category_id, province_id, city_id, county_id, merchant_addr, status_id, salesman_nm, businessName, businessCode);
             if(!"".equals(inputInfo)) {
                 return FastJsonUtil.error("1", "校验错误！");
             }
@@ -489,7 +494,8 @@ public class CrmController extends BasicController {
             MsLogger.debug("method:updateMerchantById, result from service: " + result.toString());
             return result;
         } catch (Exception e) {
-            return FastJsonUtil.error("-1", "Failed to edit merchant, " + e);
+            MsLogger.error("Failed to edit merchant", e);
+            return FastJsonUtil.error("-1", "Failed to edit merchant");
         }
     }
 
@@ -528,33 +534,113 @@ public class CrmController extends BasicController {
 
     }
 
-    /**
-     * 异步上传图片（创建）
-     */
-    // 原Api接口:/manage_merchant.do?method=upload_thumbnail_add
-    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+//    /**
+//     * 异步上传图片（创建）
+//     */
+//    // 原Api接口:/manage_merchant.do?method=upload_thumbnail_add
+//    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+//    @ResponseBody
+//    public String uploadThumbnail(@RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file) throws IOException {
+//        try {
+//
+//            String orignalFileName = file.getOriginalFilename();
+//            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
+//            Date date = new Date();
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//            String fileName = "/" + sdf.format(date) + "/" + VbMD5.generateToken() + ext;
+//            byte[] bytes = file.getBytes();// 获得文件内容
+//            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
+//                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
+//            MsLogger.debug("method:uploadLocalFile2Cloud, result from service: " + result.toString());
+//
+//            return result.toString();
+//        } catch (Exception e) {
+//            MsLogger.error(e);
+//            return FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e)).toString();
+//        }
+//    }
+
+    // 邀请用户
+    @RequestMapping(method = RequestMethod.POST, value = "/invite")
     @ResponseBody
-    public String uploadThumbnail(@RequestParam(required = true, value = "thumbnail_fileup") MultipartFile file) throws IOException {
+    public JSONObject inviteUser(HttpServletRequest request, HttpServletResponse response) {
         try {
+            String merchant_id = request.getParameter("merchant_id"); // 商户id
+            if(StringUtils.isBlank(merchant_id)) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "merchant id invalid");
+            }
 
-            String orignalFileName = file.getOriginalFilename();
-            String ext = VbUtility.getExtensionOfPicFileName(orignalFileName);
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String fileName = "/" + sdf.format(date) + "/" + VbMD5.generateToken() + ext;
-            byte[] bytes = file.getBytes();// 获得文件内容
-            JSONObject result = COSUtil.getInstance().uploadLocalFile2Cloud(COSUtil.LUNA_BUCKET, bytes,
-                    localServerTempPath, COSUtil.getLunaCRMRoot() + fileName);// 上传
-            MsLogger.debug("method:uploadLocalFile2Cloud, result from service: " + result.toString());
+            JSONObject param = new JSONObject();
+            param.put("merchant_id", merchant_id);
+            JSONObject merchantInfo = manageMerchantService.loadMerchantById(param.toString());
+            // 获取商户email 和 business id
+            if(!"0".equals(merchantInfo.getString("code"))) {
+                return merchantInfo;
+            }
+            JSONObject data = merchantInfo.getJSONObject("data");
+            String emails = data.getString("contact_mail");
+            Integer business_id = data.getInteger("business_id");
+            if(StringUtils.isBlank(emails)) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "contact mail not exist");
+            }
+            if(business_id == null) {
+                return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "business id not exist");
+            }
+            int role_id = DbConfig.MERCHANT_ADMIN_ROLE_ID;// 角色id
+            int category_id = DbConfig.MERCHANT_CATAGORY_ID; // 商家服务
+            String extra = "{\"type\":\"business\",\"value\":["+ business_id +"]}";
 
-            return result.toString();
+            JSONObject param2 = new JSONObject();
+            param2.put("emails", emails);
+            param2.put("role_id", role_id);
+            param2.put("webAddr", CommonURI.getAbsoluteUrlForServletPath(request, CommonURI.REGITSTER_SERVLET_PATH));
+            param2.put(LunaRoleTable.FIELD_CATEGORY_ID, category_id);
+            param2.put(LunaRoleCategoryTable.FIELD_EXTRA, extra);
+            MsLogger.info("invite email: " + emails);
+
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            JSONObject result = lunaUserService.inviteUser(user.getUniqueId(), param2);
+            MsLogger.debug(result.toString());
+            return result;
         } catch (Exception e) {
-            MsLogger.error(e);
-            return FastJsonUtil.error("-1", "Failed to upload thumbnail (add): " + VbUtility.printStackTrace(e)).toString();
+            MsLogger.error("Failed to invite user.", e);
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to invite user.");
         }
     }
 
 
+    // 检查业务名称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessName/check")
+    @ResponseBody
+    public JSONObject checkBusinessName(
+            @RequestParam(required=true, value="business_name") String business_name,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessNameExist(business_name,merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
+        }
+    }
+
+    // 检查业务简称
+    @RequestMapping(method = RequestMethod.GET, value = "/businessCode/check")
+    @ResponseBody
+    public JSONObject checkBusinessCode(
+            @RequestParam(required=true, value="business_code") String business_code,
+            @RequestParam(required=false, value="merchant_id") String merchant_id) {
+        try {
+            JSONObject result = manageBusinessService.checkBusinessCodeExist(business_code,merchant_id);
+            MsLogger.debug(result.toString());
+            return result;
+        } catch (Exception e) {
+            MsLogger.error("Failed to check business name: " + e.getMessage());
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to check business name.");
+        }
+    }
+    // --------------------------------------------------------------------------------------------
     /**
      * 加载商户状态列表（to be 改进）
      *
@@ -604,7 +690,8 @@ public class CrmController extends BasicController {
      */
     private String checkInput(String contact_nm, String contact_phonenum, String contact_mail, String merchant_nm,
                               String merchant_phonenum, String category_id, String province_id, String city_id,
-                              String county_id, String merchant_addr, String status_id, String salesman_nm) {
+                              String county_id, String merchant_addr, String status_id, String salesman_nm,
+                              String businessName, String businessCode) {
 
         String inputInfo = checkContactNm(contact_nm) + checkMerchantNm(merchant_nm) + checkCategoryId(category_id)
                 + checkProvinceId(province_id) + checkCityId(city_id) + checkMerchantAddr(merchant_addr)
@@ -612,19 +699,19 @@ public class CrmController extends BasicController {
 
         // 如果邮箱输入不为空，则检测邮箱
         if (contact_mail == null) {
-            return "邮件输入有误！";
+            return "邮件输入不合法！";
         }
         if (!contact_mail.isEmpty()) {
             if (!CharactorUtil.checkEmail(contact_mail)) {
-                inputInfo = inputInfo + "邮件输入有误！";
+                inputInfo = inputInfo + "邮件输入不合法！";
             }
         }
 
         if (!CharactorUtil.checkPhoneNum(merchant_phonenum)) {
-            inputInfo = inputInfo + "商户电话输入有误！";
+            inputInfo = inputInfo + "商户电话输入不合法！";
         }
         if (!CharactorUtil.checkPhoneNum(contact_phonenum)) {
-            inputInfo = inputInfo + "联系人电话输入有误！";
+            inputInfo = inputInfo + "联系人电话输入不合法！";
         }
         return inputInfo;
     }
@@ -635,7 +722,7 @@ public class CrmController extends BasicController {
      */
     private String checkSalesmanNm(String salesman_nm) {
         if (salesman_nm == null || salesman_nm.length() == 0)
-            return "业务员名称有误！";
+            return "业务员名称不合法！";
         return "";
     }
 
@@ -645,7 +732,7 @@ public class CrmController extends BasicController {
      */
     private String checkStatusId(String status_id) {
         if (status_id == null || status_id.length() == 0)
-            return "处理状态有误！";
+            return "处理状态不合法！";
         return "";
     }
 
@@ -655,10 +742,10 @@ public class CrmController extends BasicController {
      */
     private String checkLatAndLng(String lat, String lng) {
         if (lat == null) {
-            return "纬度有误";
+            return "纬度不合法";
         }
         if (lng == null) {
-            return "经度有误";
+            return "经度不合法";
         }
         if (lat.isEmpty() && lng.isEmpty()) {
             return "";
@@ -676,7 +763,7 @@ public class CrmController extends BasicController {
             hasError = true;
         }
         if (hasError == true) {
-            return "纬度有误";
+            return "纬度不合法";
         }
 
         // 经度检测
@@ -689,7 +776,7 @@ public class CrmController extends BasicController {
             hasError = true;
         }
         if (hasError == true) {
-            return "经度有误";
+            return "经度不合法";
         }
 
         return "";
@@ -701,7 +788,7 @@ public class CrmController extends BasicController {
      */
     private String checkLat(String lat) {
         if (lat == null || lat.length() == 0)
-            return "纬度有误！";
+            return "纬度不合法！";
         return "";
     }
 
@@ -711,7 +798,7 @@ public class CrmController extends BasicController {
      */
     private String checkResourceContent(String resource_content) {
         if (resource_content == null)
-            return "图片地址有误！";
+            return "图片地址不合法！";
         return "";
     }
 
@@ -723,7 +810,7 @@ public class CrmController extends BasicController {
         // if (county_id == null || county_id.length() == 0 ||
         // county_id.equals("ALL"))
         if (county_id == null || county_id.length() == 0)// 允许区/县不选择
-            return "区/县输入有误";
+            return "区/县输入不合法";
         return "";
     }
 
@@ -733,7 +820,7 @@ public class CrmController extends BasicController {
      */
     private String checkCityId(String city_id) {
         if (city_id == null || city_id.length() == 0 || city_id.equals("ALL"))
-            return "城市输入有误";
+            return "城市输入不合法";
         return "";
     }
 
@@ -743,7 +830,7 @@ public class CrmController extends BasicController {
      */
     private String checkProvinceId(String province_id) {
         if (province_id == null || province_id.length() == 0 || province_id.equals("ALL"))
-            return "省份输入有误！";
+            return "省份输入不合法！";
         return "";
     }
 
@@ -753,7 +840,7 @@ public class CrmController extends BasicController {
      */
     private String checkCategoryId(String category_id) {
         if (category_id == null || category_id.length() == 0)
-            return "业务种类有误！";
+            return "业务种类不合法！";
         return "";
     }
 
@@ -765,7 +852,7 @@ public class CrmController extends BasicController {
         if (license.equals("是") || license.equals("否"))
             // if (license.equals("是"))
             return "";
-        return "License有误！";
+        return "License不合法！";
     }
 
     /**
@@ -774,7 +861,7 @@ public class CrmController extends BasicController {
      */
     private String checkContactNm(String contact_nm) {
         if (contact_nm == null || contact_nm.length() == 0)
-            return "联系人名字有误！";
+            return "联系人名字不合法！";
         return "";
     }
 
@@ -784,7 +871,7 @@ public class CrmController extends BasicController {
      */
     private String checkMerchantNm(String merchant_nm) {
         if (merchant_nm == null || merchant_nm.length() == 0)
-            return "商户名字有误!";
+            return "商户名字不合法!";
         return "";
     }
 
@@ -794,7 +881,21 @@ public class CrmController extends BasicController {
      */
     private String checkMerchantAddr(String merchant_addr) {
         if (merchant_addr == null)
-            return "商户地址有误！";
+            return "商户地址不合法！";
+        return "";
+    }
+
+    private String checkBusinessName(String business_name) {
+        if(StringUtils.isBlank(business_name) || business_name.length() > 32) {
+            return "业务名称不合法";
+        }
+        return "";
+    }
+
+    private String checkBusinessCode(String business_code) {
+        if(StringUtils.isBlank(business_code) || business_code.length() > 16) {
+            return "业务简称不合法";
+        }
         return "";
     }
 

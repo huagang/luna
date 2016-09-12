@@ -17,6 +17,7 @@
 
     function Common(){
         this.getParamObj = getParamObj;
+        this.formConfig = formConfig;   // angular表单config
     }
 
     // 获取url中的参数并将其转化为对象
@@ -42,6 +43,29 @@
                 });
             };
         }
+    }
+
+    function formConfig($httpProvider) {
+        // Intercept POST requests, convert to standard form encoding
+        $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+        $httpProvider.defaults.transformRequest.unshift(function (data, headersGetter) {
+            var key, result = [];
+            if(toString.call(data) === "[object Object]"){
+                for (key in data) {
+                    if (data.hasOwnProperty(key)){
+                        var value = data[key];
+                        if(['[object Object]', '[object Array]'].indexOf(toString.call(value)) !== -1){
+                            value = JSON.stringify(value);
+                        }
+                        result.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+                    }
+                }
+                return result.join("&");
+            } else{
+                return data;
+            }
+        });
     }
 
 })();

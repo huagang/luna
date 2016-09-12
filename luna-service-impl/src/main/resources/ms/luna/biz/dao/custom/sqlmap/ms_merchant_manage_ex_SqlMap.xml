@@ -101,5 +101,15 @@
 	
 	</select>
 
+	<select id="selectMerchantTradeStatus" resultClass="java.lang.Integer"
+			parameterClass="String">
+
+		SELECT
+			trade_status
+		FROM
+			ms_merchant_manage
+		WHERE merchant_id = #merchantId#
+	</select>
+
 </sqlMap>
   

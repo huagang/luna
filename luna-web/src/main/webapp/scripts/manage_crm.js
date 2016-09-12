@@ -155,10 +155,9 @@ $(function () {
             $(this).remove();
         });
     });
-
-	//提交表单
-	$("#btn-addmerchant").click(function(){
-		var hasError = false,hasFocus = false;
+    //提交表单
+    $("#btn-addmerchant").click(function(){
+    	var hasError = false,hasFocus = false;
 
 		hasError = linkmanName() || hasError;
 		if((hasError)&&(!hasFocus)){
@@ -197,11 +196,19 @@ $(function () {
 		}
 		hasError = m_address() || hasError;
 
+        hasError = checkBusinessName() || hasError;
+        if((hasError)&&(!hasFocus)){
+            $("#business-name").focus();
+            hasFocus=true;
+        }
+        hasError = checkBusinessShortName() || hasError ;
+        if((hasError)&&(!hasFocus)){
+            $("#business-name-short").focus();
+            hasFocus=true;
+        }
+
 		hasError = agent()||hasError;
 
-		hasError = checkBusinessName() || hasError;
-
-		hasError = checkBusinessShortName() || hasError ;
 
 	    if(!hasError){
 	   	var options = {
@@ -516,11 +523,14 @@ function checkBusinessName(event){
 		hasError = true;
 		target.val(value.substr(0,32));
 		$('#warn-business-name').text('业务名称不能超过32个字');
-	} else if(! value){
+        $("#business-name").addClass('remind');
+    } else if(! value){
 		hasError = true;
 		$('#warn-business-name').text('业务名称不能为空');
+        $("#business-name").addClass('remind');
 	} else if(!hasError){
 		$('#warn-business-name').text('');
+        $("#business-name").removeClass('remind');
 	}
 	return hasError;
 }
@@ -533,20 +543,26 @@ function checkBusinessShortName(event){
     if(value){
         hasError = hasError || checkCodeRepeat(value);
     }
-	if(! /^[a-zA-Z-_]*$/.test(value)){
+	if(! /^[a-zA-Z\-_0-9]*$/.test(value)){
 		hasError = true;
-		$('#warn-short').text('业务简称只能由英文字母,下划线,中划线组成');
-	}
+		$('#warn-short').text('业务简称只能由英文字母,数字,下划线,中划线组成');
+        $("#business-name-short").addClass('remind');
+    }
 	else if(value.length > 16){
 		hasError = true;
 		target.val(value.substr(0,16));
 		$('#warn-short').text('业务简称不能超过16个字');
-	} else if(! value){
+        $("#business-name-short").addClass('remind');
+
+    } else if(! value){
 		hasError = true;
 		$('#warn-short').text('业务简称不能为空');
-	} else if(!hasError){
+        $("#business-name-short").addClass('remind');
+
+    } else if(!hasError){
 		$('#warn-short').text('');
-	}
+        $("#business-name-short").removeClass('remind');
+    }
 
 	return hasError;
 }

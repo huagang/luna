@@ -1,16 +1,17 @@
 //设置弹窗位置，为共用文件
 function popWindow($popwindow) {
-    $("#pop-overlay").css("display", "block");
+    $("#pop-overlay").css({ "display": "block", 'position': 'fixed' });
     var h = $popwindow.height();
     var w = $popwindow.width();
-    var $height = $(window).height();
+    var $height = window.screen.availHeight || $(window).height();
     var $width = $(window).width();
+    var scrollTop = $(document).scrollTop();
     if ($height < h) {
         h = $height;
     }
     $popwindow.css({
         "display": "block",
-        "top": ($height - h) / 2,
+        "top": '7%',
         "left": ($width - w) / 2
     });
 }

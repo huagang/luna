@@ -26,6 +26,9 @@
 			ms_route 
 		inner join luna_user on ms_route.unique_id = luna_user.unique_id
 		inner join ms_business on ms_route.business_id = ms_business.business_id
+		<isNotNull property="businessId" prepend="where" >
+			ms_route.business_id = #businessId#
+		</isNotNull>
 		order by
 			ms_route.regist_hhmmss DESC
 		<isNotNull property="range">
@@ -39,6 +42,9 @@
 			count(1)
 		from
 			MS_ROUTE
+		<isNotNull property="businessId" prepend="where" >
+			ms_route.business_id = #businessId#
+		</isNotNull>
 	</select>
 
 </sqlMap>

@@ -3,29 +3,39 @@
  */
 
 $(function(){
+
+    // url中含有disableWelcome=true表示不显示启动页
     if(! /disableWelcome=true/.test(location.href)){
         var bgImg = new Image(), fgImg = new Image(), fgLoaded, bgLoaded;
-        bgImg.onload = function(){
-            if(fgLoaded){
-                showAnimation();
-            }
-            bgLoaded = true;
-        };
-        fgImg.onload = function(){
-            if(bgLoaded){
-                showAnimation();
-            }
-            fgLoaded = true;
-        };
-        fgImg.src = pageData.start_page_foreground_pic;
-        bgImg.src = pageData.start_page_background_pic;
+        if(pageData.start_page_foreground_pic && pageData.start_page_background_pic){
+            fgImg.src = pageData.start_page_foreground_pic;
+            bgImg.src = pageData.start_page_background_pic;
+            bgImg.onload = function(){
+                if(fgLoaded){
+                    showAnimation();
+                }
+                bgLoaded = true;
+            };
+            fgImg.onload = function(){
+                if(bgLoaded){
+                    showAnimation();
+                }
+                fgLoaded = true;
+            };
+        } else{
+            $('.page-back').css('display', 'none');
+            $(document.body).removeClass('modal-open');
+            $('.page-main').removeClass('transparent');
+        }
     } else{
         $('.page-back').css('display', 'none');
         $(document.body).removeClass('modal-open');
         $('.page-main').removeClass('transparent');
     }
+
 });
 
+// 启动页动画
 function showAnimation(){
     $('.page-back .fg').velocity({opacity: 1},
         {
@@ -35,7 +45,7 @@ function showAnimation(){
     $('.page-back .bg-mask').velocity({opacity: 1},
         {
             duration: 3000,
-            easing: [.77,.07,0,.63],
+            easing: [.77,.07,0,.63]
         });
     setTimeout(function(){
         $('.page-back').velocity({opacity: 0},
@@ -44,8 +54,6 @@ function showAnimation(){
                 easing: "ease-out",
                 complete: function(){
                     $('.page-back').css('display', 'none');
-
-
                 }
             });
         $('.page-main').velocity({opacity: 1},
@@ -65,12 +73,13 @@ function showAnimation(){
             // $compileProvider.debugInfoEnabled(false);
         }])
         .factory('MarkerTip', getMarkerTip)
-        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", FarmHouseController]);
+        .factory('ScrollController', getScrollController)
+        .controller('FarmHouseController', ["$rootScope", "$scope", "$http", "MarkerTip", "ScrollController",FarmHouseController]);
 
 
+    // 点击地图poi出现的poi信息marker
     function getMarkerTip() {
         function MarkerTip(data) {
-            //this.construct(data);
             this.data = data;
             this.position = data.position;
             this.distance = data.distance || '';
@@ -142,7 +151,195 @@ function showAnimation(){
         return MarkerTip;
     }
 
-    function FarmHouseController($rootScope, $scope, $http, MarkerTip) {
+    // 全景缩略图的滚动控制器
+    function getScrollController(){
+        function Controller(options){
+            /* @prama options 对象 表示初始化选项,内容如下
+             *          options.target          string  滚动元素wrapper的选择器
+             *          options.deceleration    float   滚动加速度的绝对值
+             *          options.style           string  center表示滚动后图片居中,left表示滚动后图片靠左
+             */
+
+            var that = this;
+            that.init = init; // 初始化
+            that.record = record; // 记录时间点和距离
+            that.end = end; // 滚动距离
+            that.refresh = refresh;  // 刷新样式
+            that.limitScroll = limitScroll; // 限制滚动距离
+            that.adjustByStyle = adjustByStyle; // 根据样式调整滚动距离
+            that.getCurPosition = getCurPosition; // 获取当前位置
+
+            that.init();
+
+            function init(){
+                if(options.target && typeof options.target === 'string') {
+                    that.deceleration = options.deceleration || 12;
+                    that.target = $(options.target);
+                    that.options = options;
+                    that.options.style = that.options.style || 'left';
+                    that.scroll = new IScroll(options.target, {
+                        probeType: 2,
+                        scrollX: true,
+                        momentum: false,
+                        bounce: true,
+                        click: true,
+                        startX: 0, // 滚动初始值
+                        eventPassthrough: true  // 使得能够竖向滚动
+                    });
+                    setTimeout(that.refresh, 1000); // 等待angular脚本执行完并初始化页面后执行
+                    that.cur = {
+                        x: 0,
+                        time: undefined,
+                    };
+                    that.scroll.on('scroll', that.record);
+                    that.scroll.on('scrollEnd', that.end);
+                    that.refreshed = false;
+                }
+            };
+
+            function refresh(){
+                that.scrollUnit = that.target.children().first().children().first().outerWidth(true);
+                that.scrollWidth  = that.target.children().first().outerWidth();
+                that.containerWidth = that.target.width();
+                that.scrollMax = that.scrollWidth - that.containerWidth > 0 ? that.scrollWidth - that.containerWidth  : 0;
+                that.scroll.refresh();
+            }
+
+            // 滚动时记录位置和时间
+            function record() {
+                var point = event.touches ? event.touches[0] : event;
+                if (point) {
+                    if (!that.last) {
+                        that.start = {  // 滚动开始记录
+                            x: point.pageX,
+                            time: Date.now(),
+                            position: that.getCurPosition()
+                        };
+                    }
+                    that.last = that.cur;
+                    that.cur = {        // 记录当前位置
+                        x: point.pageX,
+                        time: Date.now(),
+                        position: that.getCurPosition()
+                    };
+
+                    if (that.cur && that.last && that.last.time) {  // 算出最高速度, 用于计算手指离开屏幕后的滚动距离
+                        var speed = (that.cur.x - that.last.x ) / (that.cur.time - that.last.time);
+                        if (speed > 0) {
+                            that.maxSpeed = Math.max(that.maxSpeed || 0, speed);
+                        } else {
+                            that.maxSpeed = Math.min(that.maxSpeed || 0, speed);
+                        }
+                    }
+                }
+                event.preventDefault();
+            }
+
+
+            // 用于限制滚动范围
+            function limitScroll(position) {
+                if (position > 0) {
+                    position = 0;
+                } else if (-position > that.scrollMax) {
+                    position = -that.scrollMax;
+                }
+                return position;
+            }
+
+            function adjustByStyle(position){
+                if(that.options.style === 'center' && position !== 0){
+                    var offset = (that.containerWidth % that.scrollUnit) / 2;
+                    if(position === - that.scrollMax){
+                        position = (- position / that.scrollUnit).toFixed(0) * -1 * that.scrollUnit + offset;
+                        position = that.limitScroll(position);
+                    } else{
+                        if(offset - position < that.scrollMax){
+                            position += offset;
+                        }
+                    }
+                }
+                return position;
+            }
+
+            function getCurPosition(){
+                try{
+                    return parseInt(that.target.children().first().attr('style').match(/translate\((-?\d+)px/)[1]);
+                }
+                catch(e){
+                    return 0;
+                }
+            }
+
+            // 滚动结束
+            function end(){
+
+                var aimPosition = 0;
+                var endTime = Date.now();
+                if(endTime - that.cur.time > 300){
+                    // 如果滚动结束时间和最后一次记录的时间超过300ms,一般都是弹性边界的原因, 这种情况不计算接下来滚动距离
+                    var curPosition = that.getCurPosition(); //获取当前滚动位置
+                    var count =  - curPosition / that.scrollUnit;
+                    count = count.toFixed(0);
+                    curPosition  = that.limitScroll(- count * that.scrollUnit);
+                    curPosition = that.adjustByStyle(curPosition);
+
+                    that.scroll.scrollTo(curPosition, 0 , 800);
+
+                    return;
+                } else if(that.cur && that.last && that.last.time){
+
+                    var time = Math.abs(that.maxSpeed / that.deceleration); // 继续滚动的事件
+                    var distance = that.scrollUnit * (time * that.maxSpeed / 2); // 理想滚动距离,可能需要修正
+
+                    try{
+                        var curPosition = that.getCurPosition(); //获取当前滚动位置
+                        aimPosition = that.limitScroll(parseFloat(curPosition) + distance); // 计算出目标滚动位置
+
+                        if(that.options.scrollOne ){
+                            if(aimPosition - that.start.position > that.scrollUnit ){
+                                aimPosition = that.start.position + that.scrollUnit;
+                            } else if(aimPosition - that.start.position < 0 - that.scrollUnit ){
+                                aimPosition = that.start.position - that.scrollUnit;
+                            }
+                        }
+
+                        var count =  (- aimPosition / that.scrollUnit).toFixed(0);
+                        aimPosition  = - count * that.scrollUnit;
+
+
+
+                        if(Math.abs(aimPosition - curPosition) < 10 &&  Math.abs(that.cur.x - that.start.x) * 15 > that.scrollUnit){
+                            if(distance > 0){
+                                aimPosition = (- count + 1 ) * that.scrollUnit;
+                            } else{
+                                aimPosition = (- count - 1 ) * that.scrollUnit;
+                            }
+                        }
+
+                        aimPosition = that.limitScroll(aimPosition);
+                        aimPosition = that.adjustByStyle(aimPosition);
+
+                        time = Math.max(Math.sqrt(Math.abs((aimPosition - curPosition) / that.deceleration * 2)) * 80, 800);
+                        that.scroll.scrollTo(aimPosition, 0 , time);
+                    } catch(e){
+
+                    }
+
+                }
+
+                that.start = that.last = undefined;
+                that.cur = {
+                    time: Date.now(),
+                    x: aimPosition
+                }
+            }
+
+        }
+
+        return Controller;
+    }
+
+    function FarmHouseController($rootScope, $scope, $http, MarkerTip, ScrollController) {
 
         var vm = this; // viewmodel
 
@@ -150,24 +347,47 @@ function showAnimation(){
         vm.init = init;
         //获取测试数据
 
-        // 设置全景
+        // 操作 设置全景
         vm.setPano = setPano;
 
-        // 初始化地图
+        // 操作 初始化地图
         vm.initMap = initMap;
 
-        // 更新地图marker
+        // 操作 更新地图marker
         vm.updateMapMarkers = updateMapMarkers;
 
-        // 取消当前marker的选中状态
+        // 操作 取消当前marker的选中状态
         vm.clearActiveMarker = clearActiveMarker;
 
+        // 操作 根据全景在屏幕内的位置来确定全景是否自动播放
+        vm.checkPanoPosition = checkPanoPosition;
+
+        // 操作 用于设置当前url,使得跳出再跳回时不用看到启动页
+        vm.replaceUrl = replaceUrl;
+
+        // 操作 监听滚动事件 开始滚动时全景暂停
+        vm.listenScroll = listenScroll;
+
+        // 事件 点击地图
         vm.handleMapClick = handleMapClick;
-        // 返回顶部
+
+        // 事件 点击返回顶部
         vm.scrollToTop = scrollToTop;
 
-        // poi点击事件
+        // 事件 点击poi,显示marker
         vm.handleMarkerClick = handleMarkerClick;
+
+        // 事件 点击"到这去"或"路线"来进行路线导航
+        vm.navigate = navigate;
+
+        // 事件 调用h5接口来获取当前位置
+        vm.getMyLocation = getMyLocation;
+
+        // 事件 获取当前位置失败
+        vm.getMyLocationOnError = getMyLocationOnError;
+
+        // 事件 获取当前位置成功
+        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
 
         // 请求 获取poi数据信息
         vm.fetchPoiData = fetchPoiData;
@@ -181,30 +401,14 @@ function showAnimation(){
         // 请求 获取周围poi点与目标点的距离
         vm.updateAllDistance = updateAllDistance;
 
-        // 监听事件
-        vm.listenScroll = listenScroll;
-
+        // 请求 获取全景信息
         vm.fetchPanoDetail = fetchPanoDetail;
-
-        vm.navigate = navigate;
-
-        vm.getMyLocation = getMyLocation;
-
-        vm.getMyLocationOnError = getMyLocationOnError;
-
-        vm.getMyLocationOnSuccess = getMyLocationOnSuccess;
-
-        vm.checkPanoPosition = checkPanoPosition;
-
-        //
-        vm.replaceUrl = replaceUrl;
 
         vm.init();
 
         // 数据初始化
         function init() {
             vm.apiUrls = Inter.getApiUrl();
-
 
             vm.markerImg = {
                 scene: {
@@ -242,6 +446,8 @@ function showAnimation(){
             vm.poiData = {};
             vm.farmData = {};
             vm.poiList = [];
+
+
             // 获取农家id
             vm.id = location.pathname.split('farmhouse/')[1];
 
@@ -252,9 +458,23 @@ function showAnimation(){
 
             }
 
+            //滚动相关
+            vm.foodScroll = new ScrollController({
+                target: '.food-info main',
+                deceleration: 8,
+                style: 'center',
+                scrollOne: true
+            });
+
+
+
+            vm.roomScroll = new ScrollController({
+                target: '.room-info footer',
+                deceleration: 4,
+                style: 'left',
+            });
 
             vm.curPanoIndex = 0;
-            vm.isFullScreen = false;
 
             // 地图相关
             vm.curMarkerIndex = undefined;
@@ -263,10 +483,6 @@ function showAnimation(){
             vm.fetchPoiData();
             vm.fetchFarmHouseData();
             vm.fetchPanoDetail();
-
-            if(! pageData.poi_info.contact_phone){
-                $('.nav-item.phone').addClass('hidden');
-            }
             if(! pageData.poi_info.panorama.panorama_id){
                 $('.nav-item.pano .tip').html('全景拍摄中');
                 setTimeout(function(){
@@ -300,31 +516,25 @@ function showAnimation(){
             $(document).on('scroll', function(){
                 if(vm.timeoutId){
                     clearTimeout(vm.timeoutId);
+                } else if(vm.panoAutoPlay){
+                    vm.pano.setAutoplayEnable(false);
+                    vm.panoAutoPlay = false;
                 }
                 vm.timeoutId = setTimeout(vm.checkPanoPosition, 200);
             });
         }
 
         function checkPanoPosition(){
+            vm.timeoutId = undefined;
+
             var pano = $('.room-info main'),
                 offsetTop = pano.offset().top,
                 height = pano.height(),
                 scrollTop = document.body.scrollTop;
-
-            if(scrollTop > offsetTop + height * .7 || screen.height + scrollTop < offsetTop + height * .4){
-                if(vm.panoAutoPlay) {
-                    vm.panoAutoPlay = false;
-                    vm.pano.setAutoplayEnable(false);
-                }
-            } else{
-                if( ! vm.panoAutoPlay){
-                    vm.panoAutoPlay = true;
-                    vm.pano.setAutoplayEnable(true);
-                }
+            if(scrollTop <= offsetTop + height * .7 && screen.height + scrollTop >= offsetTop + height * .4){
+                vm.panoAutoPlay = true;
+                vm.pano.setAutoplayEnable(true);
             }
-
-
-
         }
 
 
@@ -342,9 +552,6 @@ function showAnimation(){
                 zoomControl: false
             });
             vm.map.panTo(center);
-
-
-
 
             vm.drivingService = new qq.maps.DrivingService({
                 location: "中国"
@@ -473,13 +680,13 @@ function showAnimation(){
                         vm.poiData.panoUrl = vm.apiUrls.singlePano.format(vm.poiData.panorama.panorama_id);
                         break;
                     case 2:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                     case 3:
                         vm.poiData.panoUrl = vm.apiUrls.customPano.format(vm.poiData.panorama.panorama_id);
                         break;
                     default:
-                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id);
+                        vm.poiData.panoUrl = vm.apiUrls.multiplyPano.format(vm.poiData.panorama.panorama_id, '');
                         break;
                 }
             } else{
@@ -503,20 +710,35 @@ function showAnimation(){
                 selfIntroduce: pageData.manager_self_introduction
 
             };
-            switch (vm.farmData.allPanorama.panorama_type_id) {
-                case 1:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
-                    break;
-                case 2:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
-                    break;
-                case 3:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
-                    break;
-                default:
-                    vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text);
-                    break;
+            if(vm.farmData.allPanorama.text){
+                switch (vm.farmData.allPanorama.panorama_type_id) {
+                    case 1:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.singlePano.format(vm.farmData.allPanorama.text);
+                        break;
+                    case 2:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                    case 3:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.customPano.format(vm.farmData.allPanorama.text);
+                        break;
+                    default:
+                        vm.farmData.allPanorama.panoUrl = vm.apiUrls.multiplyPano.format(vm.farmData.allPanorama.text, '');
+                        break;
+                }
+            } else{
+                vm.farmData.allPanorama.panoUrl = '';
             }
+
+            if(vm.farmData.food.length > 0){
+                vm.farmData.food = vm.farmData.food.filter(function(item){
+                    if(item.pic || item.text){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                })
+            }
+
         }
 
         function fetchPanoDetail() {

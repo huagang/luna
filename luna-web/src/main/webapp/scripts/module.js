@@ -96,6 +96,10 @@ componentPanoModelTemplate = {
         "panoId": "",
         'panoType': {
             id: 1
+        },
+        'panoLang': {
+            id: 'zh',
+            name: ''
         }
     },
     "action": {
@@ -474,8 +478,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.width());
             componentObj.height = parseInt($currenthtml.height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
         case 'tab':
@@ -483,8 +487,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.width());
             componentObj.height = parseInt($currenthtml.height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
         default:
@@ -492,8 +496,8 @@ function updatePageComponents() {
             componentObj.y = parseInt($currenthtml.position().top);
             componentObj.width = parseInt($currenthtml.find("div.con").width());
             componentObj.height = parseInt($currenthtml.find("div.con").height());
-            componentObj.right = parseInt($currenthtml.css('right').match(/[0-9]*/));
-            componentObj.bottom = parseInt($currenthtml.css('bottom').match(/[0-9]*/));
+            componentObj.right = parseInt($('#layermain').width() - componentObj.x - componentObj.width);
+            componentObj.bottom = parseInt($('#layermain').height() - componentObj.y - componentObj.height);
             componentObj.unit = "px";
             break;
     }
@@ -1019,7 +1023,14 @@ function getUrlParam(name) {
  */
 function resetDialog() {
     document.querySelector('#editPageForm').reset();
-    var radioDom = document.querySelectorAll('#editPageForm [type=radio]');
+    $('.pop-menu li').eq(0).trigger('click');
+    var errorTips = document.querySelectorAll('.errorTips');
+    $('.fileup-container').removeClass('hidden');
+    $('.preview-container').addClass('hidden');
+    for (var i = 0; i < errorTips.length; i++) {
+        errorTips[i].innerHTML = '';
+    }
+    var radioDom = document.querySelectorAll('#editPageForm [type=radio],#editPageForm [type=checkbox]');
     for (var i = 0; i < radioDom.length; i++) {
         radioDom[i].removeAttribute('checked');
         radioDom[i].removeAttribute('disabled');
@@ -1096,8 +1107,22 @@ function modify(e, callType) {
     $("[name=pageType]").each(function (e) {
         $(this).attr('disabled', 'disabled');
     });
+    if (lunaPage.pages[currentPageId].share_info) {
+        //分享设置nei ron
+        var share_info = lunaPage.pages[currentPageId].share_info;
+        $('[name=share_pic]').val(share_info.share_pic);
+        $('[name=share_title]').val(share_info.share_title);
+        $('[name=share_desc]').val(share_info.share_desc);
+        $('[name=sharebox]').prop('checked', true);
+        if (share_info.share_link.length) {
+            $('[name=shareurl]').prop('checked', true);
+            $('[name=share_link]').val(share_info.share_link);
+        }
+        changePageThumbnail(share_info.share_pic);
+    } else {
+        changePageThumbnail(null);
+    }
 }
-
 /**
  * 背景全景选择的回调函数
  * 
@@ -1205,4 +1230,121 @@ function getImgListHtml(content) {
             break;
     }
     return arrHtml;
+}
+
+/**
+ * 判断上下左右移动是否移出框外
+ * 
+ * @param {any} $target
+ * @param {any} direction
+ * @param {any} len
+ */
+function componentMove($target, direction, len) {
+    var moveLen, reg = /[0-9]*/;
+    var position = $target.position(),
+        bottom = $('#layermain').height() - position.top - $target.height(),
+        right = $('#layermain').width() - position.left - $target.width();
+
+    console.log(bottom);
+    console.log(right);
+    style = $target[0].style;
+    switch (direction) {
+        case 'up':
+            if ($target.css('top') == '0px') {
+                console.log('已经到顶部');
+            } else if (position.top - len <= 0) {
+                moveLen = position.top - 0;
+                position.top = 0;
+                $target.css("top", '0px');
+            } else {
+                position.top = position.top - len;
+                $target.css("top", position.top + 'px');
+                bottom = bottom + len;
+                $target.css("bottom", bottom + 'px');
+            }
+            break;
+        case 'down':
+            if ($target.css('bottom') == '0px') {
+                console.log('已经到底部');
+                return false;
+            } else if (reg.test(bottom) && bottom - len <= 0) {
+                moveLen = bottom - 0;
+                position.top = position.top + moveLen;
+                $target.css("top", position.top + 'px');
+            } else {
+                position.top = position.top + len;
+                bottom = bottom - len;
+                $target.css("top", position.top + 'px');
+                $target.css("bottom", bottom + 'px');
+            }
+            break;
+        case 'left':
+            if ($target.css('left') == '0px') {
+                console.log('已经到左侧');
+                return false;
+            } else if (position.left - len <= 0) {
+                position.left = 0;
+                $target.css("left", '0px');
+            } else {
+                position.left = position.left - len;
+                $target.css("left", position.left + 'px');
+                right = right + len;
+                $target.css("right", right + 'px');
+            }
+            break;
+        case 'right':
+            if ($target.css('right') == '0px') {
+                console.log('已经到右侧');
+                return false;
+            } else if (reg.test(right) && right - len <= 0) {
+                moveLen = right - 0;
+                position.left = position.left + moveLen;
+                $target.css("left", position.left + 'px');
+            } else {
+                position.left = position.left + len;
+                $target.css("left", position.left + 'px');
+                right = right - len;
+                $target.css("right", right + 'px');
+            }
+            break;
+    }
+    lunaPage.updatePageComponents();
+    componentPanel.update();
+}
+
+/* 作用  - 用于计算输入框的字数并显示在输入框右下角
+ * @param inputSelector - 输入框选择器  
+ * @param counterSelector - 计数器选择器
+ * @param maxNum  - 输入框允许的最大值
+ */
+function getCounter(inputSelector, counterSelector, maxNum, curNum) {
+    var value = inputSelector.val();
+    if (value.length - 0 === 2 && value[value.length - 1] === '\'') {
+        // 如果一次输入了两个字符,那么认定用户正在输入中文,则不更新计数器
+        return;
+    }
+    if (value.length > maxNum) { // 超出最大字数限制
+        event.target.value = value = value.substr(0, maxNum);
+    }
+    counterSelector.html([value.length, '/', maxNum].join(''));
+}
+
+
+/**
+ * 单页分享缩略图状态
+ */
+function changePageThumbnail(thumbnailUrl) {
+    var shareEle = $('.setting-share'), tipSel = '.fileupload-tip';
+    if (thumbnailUrl) {
+        shareEle.find('.file-uploader').addClass('hidden');
+        shareEle.find('.preview-container').removeClass('hidden');
+        shareEle.find('.preview-img').attr("src", thumbnailUrl);
+        $(tipSel).html("更换缩略图");
+        $('[name=share_pic]').val(thumbnailUrl);
+    } else {
+        shareEle.find('.file-uploader').removeClass('hidden');
+        shareEle.find('.preview-container').addClass('hidden');
+        $(tipSel).html("上传缩略图");
+        $('[name=share_pic]').val('');
+    }
 }

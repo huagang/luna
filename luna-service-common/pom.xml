@@ -82,17 +82,17 @@
 			<version>4.4.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna</artifactId>
-			<version>4.1.0</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>net.java.dev.jna</groupId>-->
+			<!--<artifactId>jna</artifactId>-->
+			<!--<version>4.1.0</version>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna-platform</artifactId>
-			<version>4.1.0</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>net.java.dev.jna</groupId>-->
+			<!--<artifactId>jna-platform</artifactId>-->
+			<!--<version>4.1.0</version>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -141,11 +141,11 @@
 		  	<version>0.1.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.bytedeco</groupId>
-			<artifactId>javacv</artifactId>
-			<version>1.2</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.bytedeco</groupId>-->
+			<!--<artifactId>javacv</artifactId>-->
+			<!--<version>1.2</version>-->
+		<!--</dependency>-->
 
 		<dependency>
 		    <groupId>org.apache.ant</groupId>
@@ -165,6 +165,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0</version>
 		</dependency>
 		
 	</dependencies>

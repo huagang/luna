@@ -151,7 +151,7 @@ video {
 .bg-canvas {
     background-position: top center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 
@@ -240,7 +240,6 @@ video {
     margin-left: -25%;
     margin-top: -5%;
 }
-
 
 .componentbox .navimg:hover {
     cursor: pointer;
@@ -361,11 +360,12 @@ video {
 
 .menulist {
     position: relative;
-    min-width: 18.5vw;
+    min-width: 22vw;
     text-align: center;
     display: inline-block;
     vertical-align: bottom;
     height: 77px;
+    /* width: 22vw; */
 }
 
 .menulist .iconfont {
@@ -411,6 +411,10 @@ video {
     text-align: center;
     line-height: 27px;
     display: inline-block;
+    /* overflow: hidden; */
+    /* white-space: nowrap; */
+    /* width: 90%; */
+    /* margin: 0 auto; */
 }
 
 .menulist .border {
@@ -488,7 +492,10 @@ video {
 .icon-video-on {
     width: 33px;
     height: 33px;
-    background-position: -99px -133px;
+    background: url(../images/icons-2x.png) no-repeat;
+    background-position: -98px -100px;
+    display: inline-block;
+    background-size: 800px 504px;
 }
 
 .icon-radio {
@@ -496,7 +503,7 @@ video {
     height: 33px;
     background: url(../images/microvisual/icon-radio.png) top left no-repeat;
     background-size: contain;
-    /*background-position: -132px -100px;*/
+    display: inline-block;
 }
 
 .icon-radio.icon-radio-on {

@@ -25,7 +25,20 @@
     <result column="up_hhmmss" jdbcType="TIMESTAMP" property="upHhmmss" />
     <result column="updated_by_unique_id" jdbcType="VARCHAR" property="updatedByUniqueId" />
     <result column="trade_status" jdbcType="INTEGER" property="tradeStatus" />
-    <result column="unique_id" jdbcType="CHAR" property="uniqueId" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
+    <result column="idcard_pic_url" jdbcType="VARCHAR" property="idcardPicUrl" />
+    <result column="idcard_period" jdbcType="VARCHAR" property="idcardPeriod" />
+    <result column="merchant_no" jdbcType="VARCHAR" property="merchantNo" />
+    <result column="licence_period" jdbcType="VARCHAR" property="licencePeriod" />
+    <result column="account_type" jdbcType="INTEGER" property="accountType" />
+    <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+    <result column="account_bank" jdbcType="VARCHAR" property="accountBank" />
+    <result column="account_city" jdbcType="VARCHAR" property="accountCity" />
+    <result column="account_address" jdbcType="VARCHAR" property="accountAddress" />
+    <result column="account_no" jdbcType="VARCHAR" property="accountNo" />
+    <result column="app_status" jdbcType="INTEGER" property="appStatus" />
+    <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
+    <result column="idcard_no" jdbcType="VARCHAR" property="idcardNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -56,7 +69,9 @@
     merchant_id, merchant_nm, merchant_phonenum, category_id, province_id, city_id, county_id, 
     merchant_addr, resource_content, lat, lng, merchant_info, contact_nm, contact_phonenum, 
     contact_mail, salesman_id, salesman_nm, status_id, del_flg, regist_hhmmss, up_hhmmss, 
-    updated_by_unique_id, trade_status, unique_id
+    updated_by_unique_id, trade_status, application_id, idcard_pic_url, idcard_period, 
+    merchant_no, licence_period, account_type, account_name, account_bank, account_city, 
+    account_address, account_no, app_status, account_province, idcard_no
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.MsMerchantManageCriteria" resultMap="BaseResultMap">
     select
@@ -94,15 +109,21 @@
       resource_content, lat, lng, merchant_info, 
       contact_nm, contact_phonenum, contact_mail, salesman_id, 
       salesman_nm, status_id, del_flg, regist_hhmmss, 
-      up_hhmmss, updated_by_unique_id, trade_status, unique_id
-      )
+      up_hhmmss, updated_by_unique_id, trade_status, application_id, 
+      idcard_pic_url, idcard_period, merchant_no, licence_period, 
+      account_type, account_name, account_bank, account_city, 
+      account_address, account_no, app_status, account_province, 
+      idcard_no)
     values (#merchantId:VARCHAR#, #merchantNm:VARCHAR#, #merchantPhonenum:VARCHAR#, #categoryId:VARCHAR#, 
       #provinceId:VARCHAR#, #cityId:VARCHAR#, #countyId:VARCHAR#, #merchantAddr:VARCHAR#, 
       #resourceContent:VARCHAR#, #lat:DECIMAL#, #lng:DECIMAL#, #merchantInfo:VARCHAR#, 
       #contactNm:VARCHAR#, #contactPhonenum:VARCHAR#, #contactMail:VARCHAR#, #salesmanId:VARCHAR#, 
       #salesmanNm:VARCHAR#, #statusId:VARCHAR#, #delFlg:VARCHAR#, #registHhmmss:TIMESTAMP#, 
-      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#, #tradeStatus:INTEGER#, #uniqueId:CHAR#
-      )
+      #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#, #tradeStatus:INTEGER#, #applicationId:INTEGER#, 
+      #idcardPicUrl:VARCHAR#, #idcardPeriod:VARCHAR#, #merchantNo:VARCHAR#, #licencePeriod:VARCHAR#, 
+      #accountType:INTEGER#, #accountName:VARCHAR#, #accountBank:VARCHAR#, #accountCity:VARCHAR#, 
+      #accountAddress:VARCHAR#, #accountNo:VARCHAR#, #appStatus:INTEGER#, #accountProvince:VARCHAR#, 
+      #idcardNo:VARCHAR#)
   </insert>
   <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsMerchantManage">
     insert into ms_merchant_manage
@@ -176,8 +197,47 @@
       <isNotNull prepend="," property="tradeStatus">
         trade_status
       </isNotNull>
-      <isNotNull prepend="," property="uniqueId">
-        unique_id
+      <isNotNull prepend="," property="applicationId">
+        application_id
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPicUrl">
+        idcard_pic_url
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPeriod">
+        idcard_period
+      </isNotNull>
+      <isNotNull prepend="," property="merchantNo">
+        merchant_no
+      </isNotNull>
+      <isNotNull prepend="," property="licencePeriod">
+        licence_period
+      </isNotNull>
+      <isNotNull prepend="," property="accountType">
+        account_type
+      </isNotNull>
+      <isNotNull prepend="," property="accountName">
+        account_name
+      </isNotNull>
+      <isNotNull prepend="," property="accountBank">
+        account_bank
+      </isNotNull>
+      <isNotNull prepend="," property="accountCity">
+        account_city
+      </isNotNull>
+      <isNotNull prepend="," property="accountAddress">
+        account_address
+      </isNotNull>
+      <isNotNull prepend="," property="accountNo">
+        account_no
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus">
+        app_status
+      </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province
+      </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no
       </isNotNull>
       )
     </dynamic>
@@ -252,8 +312,47 @@
       <isNotNull prepend="," property="tradeStatus">
         #tradeStatus:INTEGER#
       </isNotNull>
-      <isNotNull prepend="," property="uniqueId">
-        #uniqueId:CHAR#
+      <isNotNull prepend="," property="applicationId">
+        #applicationId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPicUrl">
+        #idcardPicUrl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPeriod">
+        #idcardPeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantNo">
+        #merchantNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="licencePeriod">
+        #licencePeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountType">
+        #accountType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="accountName">
+        #accountName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountBank">
+        #accountBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountCity">
+        #accountCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountAddress">
+        #accountAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountNo">
+        #accountNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus">
+        #appStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        #accountProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        #idcardNo:VARCHAR#
       </isNotNull>
       )
     </dynamic>
@@ -334,8 +433,47 @@
       <isNotNull prepend="," property="record.tradeStatus">
         trade_status = #record.tradeStatus:INTEGER#
       </isNotNull>
-      <isNotNull prepend="," property="record.uniqueId">
-        unique_id = #record.uniqueId:CHAR#
+      <isNotNull prepend="," property="record.applicationId">
+        application_id = #record.applicationId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.idcardPicUrl">
+        idcard_pic_url = #record.idcardPicUrl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.idcardPeriod">
+        idcard_period = #record.idcardPeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchantNo">
+        merchant_no = #record.merchantNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.licencePeriod">
+        licence_period = #record.licencePeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountType">
+        account_type = #record.accountType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountName">
+        account_name = #record.accountName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountBank">
+        account_bank = #record.accountBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountCity">
+        account_city = #record.accountCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountAddress">
+        account_address = #record.accountAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountNo">
+        account_no = #record.accountNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appStatus">
+        app_status = #record.appStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.accountProvince">
+        account_province = #record.accountProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.idcardNo">
+        idcard_no = #record.idcardNo:VARCHAR#
       </isNotNull>
     </dynamic>
     <isParameterPresent>
@@ -367,7 +505,20 @@
       up_hhmmss = #record.upHhmmss:TIMESTAMP#,
       updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#,
       trade_status = #record.tradeStatus:INTEGER#,
-      unique_id = #record.uniqueId:CHAR#
+      application_id = #record.applicationId:INTEGER#,
+      idcard_pic_url = #record.idcardPicUrl:VARCHAR#,
+      idcard_period = #record.idcardPeriod:VARCHAR#,
+      merchant_no = #record.merchantNo:VARCHAR#,
+      licence_period = #record.licencePeriod:VARCHAR#,
+      account_type = #record.accountType:INTEGER#,
+      account_name = #record.accountName:VARCHAR#,
+      account_bank = #record.accountBank:VARCHAR#,
+      account_city = #record.accountCity:VARCHAR#,
+      account_address = #record.accountAddress:VARCHAR#,
+      account_no = #record.accountNo:VARCHAR#,
+      app_status = #record.appStatus:INTEGER#,
+      account_province = #record.accountProvince:VARCHAR#,
+      idcard_no = #record.idcardNo:VARCHAR#
     <isParameterPresent>
       <include refid="ms_merchant_manage.Example_Where_Clause" />
     </isParameterPresent>
@@ -441,8 +592,47 @@
       <isNotNull prepend="," property="tradeStatus">
         trade_status = #tradeStatus:INTEGER#
       </isNotNull>
-      <isNotNull prepend="," property="uniqueId">
-        unique_id = #uniqueId:CHAR#
+      <isNotNull prepend="," property="applicationId">
+        application_id = #applicationId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPicUrl">
+        idcard_pic_url = #idcardPicUrl:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardPeriod">
+        idcard_period = #idcardPeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantNo">
+        merchant_no = #merchantNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="licencePeriod">
+        licence_period = #licencePeriod:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountType">
+        account_type = #accountType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="accountName">
+        account_name = #accountName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountBank">
+        account_bank = #accountBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountCity">
+        account_city = #accountCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountAddress">
+        account_address = #accountAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="accountNo">
+        account_no = #accountNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appStatus">
+        app_status = #appStatus:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="accountProvince">
+        account_province = #accountProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="idcardNo">
+        idcard_no = #idcardNo:VARCHAR#
       </isNotNull>
     </dynamic>
     where merchant_id = #merchantId:VARCHAR#
@@ -471,7 +661,20 @@
       up_hhmmss = #upHhmmss:TIMESTAMP#,
       updated_by_unique_id = #updatedByUniqueId:VARCHAR#,
       trade_status = #tradeStatus:INTEGER#,
-      unique_id = #uniqueId:CHAR#
+      application_id = #applicationId:INTEGER#,
+      idcard_pic_url = #idcardPicUrl:VARCHAR#,
+      idcard_period = #idcardPeriod:VARCHAR#,
+      merchant_no = #merchantNo:VARCHAR#,
+      licence_period = #licencePeriod:VARCHAR#,
+      account_type = #accountType:INTEGER#,
+      account_name = #accountName:VARCHAR#,
+      account_bank = #accountBank:VARCHAR#,
+      account_city = #accountCity:VARCHAR#,
+      account_address = #accountAddress:VARCHAR#,
+      account_no = #accountNo:VARCHAR#,
+      app_status = #appStatus:INTEGER#,
+      account_province = #accountProvince:VARCHAR#,
+      idcard_no = #idcardNo:VARCHAR#
     where merchant_id = #merchantId:VARCHAR#
   </update>
 </sqlMap>

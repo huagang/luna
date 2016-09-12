@@ -1,4 +1,5 @@
-#newColumnDialog .warn{
+#newColumnDialog .red,
+#updateColumnDialog .red{
     padding: 5px 0 0 70px;
 }
 
@@ -13,6 +14,8 @@
     width: 500px;
 }
 
-#newColumnDialog input{
+#newColumnDialog input,
+#updateColumnDialog input{
     width: 370px;
 }
+

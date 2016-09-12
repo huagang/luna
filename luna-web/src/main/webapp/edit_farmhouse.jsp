@@ -38,7 +38,7 @@
               <a href="javascript:void(0)" class="operation preview">预览</a>
               <a href="javascript:void(0)" class="operation publish">发布</a>
               <div class="qrcode-container hidden">
-                 <img class="qrcode" height='100' src="" />
+                 <img class="qrcode" src="" />
                  <button class="button">关闭</button>
               </div>
 
@@ -71,16 +71,17 @@
           </div>
           <div class="pop publish-confirm">
               <div class="pop-title">
-                  <h4>确认信息</h4>
+                  <h4>提示</h4>
                   <a href="#" class="btn-close"><img src="<%=request.getContextPath() %>/img/close.png" /></a>
               </div>
               <div class="pop-cont ">
-                  <p class="">此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作</p>
+                  <p>此区域下有在线运营的微景展，若强行发布，将会覆盖线上版本，确定执行此操作？</p>
               </div>
               <div class="pop-fun">
                   <button class="button">确定</button>
                   <button class="button-close">取消</button>
               </div>
+          </div>
       </div>
   <!--通用导航栏 end-->
   <!--中间区域内容 start-->

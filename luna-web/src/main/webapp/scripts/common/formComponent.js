@@ -1764,7 +1764,13 @@
             that.value = that.data.value;
             that.definition = that.data.definition || {};
             that.definition.limits = that.definition.limits || that.defaultLimits;  // 如果没有传入限制参数, 则使用默认限制参数
-
+            try{
+                if(that.definition.limits['CHECKBOX'][0].empty){
+                    that.definition.empty = true;
+                }
+            }catch(e){
+                that.definition.empty = false;
+            }
             that._children = {};
             if(that.definition.show_name){
                 that._children.label = new Label({

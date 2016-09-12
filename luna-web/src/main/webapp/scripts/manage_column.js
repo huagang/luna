@@ -1,6 +1,57 @@
 /**
  * Created by chenshangan on 6/16/16.
  */
+
+$(function() {
+    var id = 0, getRows = function() {
+        var rows = [];
+        for (var i = 0; i < 10; i++) {
+            rows.push({
+                id : id
+            });
+            id++;
+        }
+        return rows;
+    }, $table = $('#table_column').bootstrapTable({
+        data : getRows()
+
+    });
+});
+
+
+
+function timeFormatter(value, row, index) {
+    return '创建于：<span class="time-create">'+ row.regist_hhmmss+'</span><br>'
+        +'修改于：<span class="time-create">' + row.up_hhmmss+'</span>';
+}
+
+function operationFormatter(value, row, index) {
+    var id = row.id;
+    var name = row.name;
+    var code = row.code;
+    var categoryName = row.category_name;
+    var editOp = '<a class="edit" href="#" onclick="showUpdateColumnDialog({0},\'{1}\',\'{2}\',\'{3}\')">编辑</a>'.format(id,
+        name, code, categoryName);
+    var deleteOp = '<a class="delete" href="#" onclick="showDeleteColumnDialog({0}, \'{1}\')">删除</a>'.format(id, name);
+
+    return editOp + deleteOp;
+}
+
+function queryParams(params) {
+    //alert(JSON.stringify(params));
+    var params = {
+        limit : params.limit,
+        offset : params.offset,
+        sort : params.sort,
+        order : params.order
+    };
+    var business = localStorage.getItem('business');
+    if(business){
+        params.business_id = JSON.parse(business).id;
+    }
+    return params;
+}
+
 //app初始化
 var manageColumn = angular.module('manageColumn', []);
 manageColumn.run(function($rootScope, $http) {
@@ -19,11 +70,15 @@ manageColumn.controller('columnController', ['$scope', '$rootScope', '$http', Co
 
 function ColumnController($scope, $rootScope, $http) {
 
+    window.vm = this;
     this.init = function() {
         this.dialogBaseShow = false;
         this.newColumnShow = false;
         this.updateColumnShow = false;
         this.deleteColumnShow = false;
+        this.nameErrorMsg = '';
+        this.codeErrorMsg = '';
+
 
         var business = localStorage.getItem('business');
         if(business){
@@ -38,8 +93,10 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentId = 0;
         this.currentName = "";
         this.currentCode = "";
-        this.nameValid = false;
-        this.codeValid = false;
+        this.nameValid = true;
+        this.codeValid = true;
+        this.nameErrorMsg = '';
+        this.codeErrorMsg = '';
     };
 
     this.newColumnDialog = function() {
@@ -60,15 +117,28 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.checkName = function() {
 
-        if(this.currentName && this.currentName.length > 0 && this.currentName.length < 20) {
-            // TODO:check if name exist
+        if(! this.currentName){
+            this.nameErrorMsg = '不能为空';
+            this.nameValid = false;
+        } else if(this.currentName.length > 20){
+            this.nameErrorMsg = '名称不超过20个字符';
+            this.nameValid = false;
+        } else {
             this.nameValid = true;
         }
     };
 
     this.checkCode = function() {
-        if(this.currentCode && this.currentCode.length > 0 && this.currentCode.length < 30) {
-            // TODO: check if code exist
+        if(! this.currentCode){
+            this.codeValid = false;
+            this.codeErrorMsg = '不能为空';
+        } else if(this.currentCode.length > 30){
+            this.codeValid = false;
+            this.codeErrorMsg = '简称不超过30个字符';
+        } else if(! /^[a-zA-Z0-9\-_]+$/.test(this.currentCode)){
+            this.codeValid = false;
+            this.codeErrorMsg = '简称只能由英文字母,数字,下划线,中划线组成';
+        } else{
             this.codeValid = true;
         }
     };
@@ -79,6 +149,9 @@ function ColumnController($scope, $rootScope, $http) {
 
     this.submitNewColumn = function() {
 
+        if(! this.isEnable()){
+            return;
+        }
         var request = {
             method: Inter.getApiUrl().columnCreate.type,
             url: Inter.getApiUrl().columnCreate.url,
@@ -108,8 +181,6 @@ function ColumnController($scope, $rootScope, $http) {
         this.currentId = id;
         this.currentName = name;
         this.currentCode = code;
-        this.nameValid = true;
-        this.codeValid = true;
         event.preventDefault();
 
     };
@@ -120,6 +191,9 @@ function ColumnController($scope, $rootScope, $http) {
     };
 
     this.submitUpdateColumn = function() {
+        if(! this.isEnable()){
+            return;
+        }
         var request = {
             method: Inter.getApiUrl().columnUpdate.type,
             url: Util.strFormat(Inter.getApiUrl().columnUpdate.url, [this.currentId]),

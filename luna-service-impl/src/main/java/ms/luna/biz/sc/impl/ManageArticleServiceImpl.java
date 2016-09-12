@@ -103,8 +103,10 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         }
         msArticle.setAuthor(author);
 
-        int column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
-        if(column >= 0) {
+        msArticle.setSource(articleObj.getString(MsArticleTable.FIELD_SOURCE));
+
+        Integer column = articleObj.getInteger(MsArticleTable.FIELD_COLUMN_ID);
+        if(column != null && column >= 0) {
             msArticle.setColumnId(column);
         }
 
@@ -136,6 +138,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
         jsonObject.put(MsArticleTable.FIELD_BUSINESS_ID, msArticle.getBusinessId());
         jsonObject.put(MsArticleTable.FIELD_COLUMN_ID, msArticle.getColumnId());
+        jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
         jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
         // tinyint should not be boolean, mybatis generator not work well (display size decide ?)
         jsonObject.put(MsArticleTable.FIELD_STATUS, msArticle.getStatus() ? 1 : 0);
@@ -413,12 +416,8 @@ public class ManageArticleServiceImpl implements ManageArticleService {
     @Override
     public JSONObject getColumnByBusinessId(int businessId) {
 
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "不存在对应的栏目");
-        }
         MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
-        msColumnCriteria.createCriteria().andCategoryIdEqualTo(categoryId);
+        msColumnCriteria.createCriteria().andBusinessIdEqualTo(businessId);
         try {
             List<MsColumn> msColumns = msColumnDAO.selectByCriteria(msColumnCriteria);
             JSONObject ret = new JSONObject();
@@ -463,18 +462,13 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
         }
         int businessId = msBusinesses.get(0).getBusinessId();
-        // 栏目需要通过业务类别来获取
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
-        }
         Map<Integer, String> columnInfoMap = new HashMap<>();
         if(StringUtils.isNotBlank(columnNames)) {
             String[] split = columnNames.split(",|，");
             List<String> columnNameList = Lists.newArrayList(split);
             MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
             MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
-            criteria.andCategoryIdEqualTo(categoryId);
+            criteria.andBusinessIdEqualTo(businessId);
             if(columnNameList != null) {
                 criteria.andNameIn(columnNameList);
             }
@@ -576,18 +570,13 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
         }
         int businessId = msBusinesses.get(0).getBusinessId();
-        // 栏目需要通过业务类别来获取
-        String categoryId = msArticleDAO.selectCategoryIdByBusinessId(businessId);
-        if(categoryId == null) {
-            return FastJsonUtil.error(ErrorCode.NOT_FOUND, "业务不存在");
-        }
         Map<Integer, String> columnInfoMap = new HashMap<>();
         if(StringUtils.isNotBlank(columnNames)) {
             String[] split = columnNames.split(",|，");
             List<String> columnNameList = Lists.newArrayList(split);
             MsColumnCriteria msColumnCriteria = new MsColumnCriteria();
             MsColumnCriteria.Criteria criteria = msColumnCriteria.createCriteria();
-            criteria.andCategoryIdEqualTo(categoryId);
+            criteria.andBusinessIdEqualTo(businessId);
             if(columnNameList != null) {
                 criteria.andNameIn(columnNameList);
             }
@@ -720,6 +709,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
             jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
             jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
             jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+            jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
             String columnName = columnInfoMap.get(msArticle.getColumnId());
             jsonObject.put(MsArticleTable.FIELD_COLUMN_NAME, columnName == null ? "无" : columnName);
             jsonObject.put("url", ServiceConfig.getString(ServiceConfig.MS_WEB_URL) + "/article/" + msArticle.getId());
@@ -741,6 +731,7 @@ public class ManageArticleServiceImpl implements ManageArticleService {
         jsonObject.put(MsArticleTable.FIELD_ABSTRACT_PIC, msArticle.getAbstractPic());
         jsonObject.put(MsArticleTable.FIELD_AUDIO, msArticle.getAudio());
         jsonObject.put(MsArticleTable.FIELD_VIDEO, msArticle.getVideo());
+        jsonObject.put(MsArticleTable.FIELD_SOURCE, msArticle.getSource());
         jsonObject.put("create_time", DateUtil.format(msArticle.getRegistHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
         jsonObject.put("publish_time", DateUtil.format(msArticle.getUpHhmmss(), DateUtil.FORMAT_yyyy_MM_dd_HH_MM_SS));
         jsonObject.put(MsArticleTable.FIELD_AUTHOR, msArticle.getAuthor());

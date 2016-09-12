@@ -67,14 +67,14 @@ $(document).ready(function(){
 
 
 	function searchPois() {
-		var tag_id = $(".btn-tags.current").attr("tag_id");
+
+        $(".list-result-poi").html('<div class="text" style="text-align: center; height: 20px;line-height:20px;padding-top:35px;">搜索中.....</div>');
 
     	var param = {
     			"province_id":$('#province').val(),
     			"city_id":$('#city').val(),
     			"county_id":$('#county').val(),
     			"keyWord":$('#keyWord').val()
-//    			"tag_id":tag_id
     	};
         $.ajax({
             type: "GET",
@@ -86,18 +86,11 @@ $(document).ready(function(){
             		// {"data":{"total":1,"row":[{"tags":[2],"_id":"57556f17af04b234b01ed5d7","name":"故宫"}]},"code":"0","msg":"success"}
             		if(returndata.data && returndata.data.row)
             		{
-                        searchPoisForBizTree = returndata.data.row.filter(function(item){
-                            if(poiDef[item._id]){
-                                return false;
-                            }
-                            if(typeId && item.tags.indexOf(typeId) === -1){
-                                return false;
-                            }
-                            return true;
-                        });
+                        searchPoisForBizTree = returndata.data.row;
             		//	$(".tags-wrap .btn-tags").removeClass("current");
             		//	$(".tags-wrap .btn-tags:first").addClass("current");
-            			showSearchPois(tag_id);
+                        var tag_id = $(".btn-tags.current").attr("tag_id");
+                        showSearchPois(tag_id);
             		}
             		// tags=data;
             	} else {
@@ -176,13 +169,13 @@ $(document).ready(function(){
         var ps_li=[];
         $.confirm("确定要删除么？删除后无法恢复！", function(){
             for(var i=0;i<parents_li.length;i++){
-                if(($(parents_li[i]).attr("level-item-id") && $(parents_li[i]).attr("level-item-id")!="")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
-                    if($(parents_li[i]).attr("keyorder") && $(parents_li[i]).attr("keyorder")!=""){
+                if($(parents_li[i]).attr("level-item-id")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+                    if($(parents_li[i]).attr("keyorder")){
                         ps_li.push($(parents_li[i]).attr("keyorder"));
-                        // console.log($(parents_li[i]).attr("keyorder"));
+                         console.log($(parents_li[i]).attr("keyorder"));
                     }else{
                         ps_li.push($(parents_li[i]).index());
-                        // console.log($(parents_li[i]).index());
+                         console.log($(parents_li[i]).index());
                     }
                 }
             }
@@ -190,14 +183,17 @@ $(document).ready(function(){
             for(var i=(ps_li.length-1);i>0;i--){
                 current_data=current_data.c_list[ps_li[i]];
             }
+
             for(var m=0;m<current_data.c_list.length;m++){
-                if(current_data.c_list[m]._id==_this.attr("item_id")){
+                if(current_data.c_list[m]._id == _this.attr("item_id")){
                     current_data.c_list.splice(m, 1);
                     showTreeData();
                     saveTreeData();
                     return;
                 }
             }
+
+
             // delete current_data.c_list[_this.attr("item_id")];
         }, function(){
             
@@ -261,30 +257,29 @@ $(document).ready(function(){
 
     // 上移节点
     $(".luna-tree").on('click', '.move-up', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').prev().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
-            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj;
+            obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj;
 
-        obj.c_list.some(function(item, index){
+        obj.c_list.forEach(function(item, index){
             var curType = poiDef[item._id].tags[0];
             if(item._id === id){
-                desIndex = srcIndex;
-                desObj = srcObj;
                 srcIndex = index;
                 srcObj = item;
-                return true;
-            } else if(obj.business_id  || curType === type){
-                srcIndex = index;
-                srcObj = item;
-                return false;
             }
-            return false;
+            else if(item._id === destId){
+                desIndex = index;
+                desObj = item;
+            }
         });
+        console.log(srcIndex, desIndex);
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
             saveTreeData();
             showTreeData();
         }
@@ -292,30 +287,30 @@ $(document).ready(function(){
 
     // 下移节点
     $(".luna-tree").on('click', '.move-down', function(event){
-        console.log(event.target);
         var id = event.target.getAttribute('item_id');
+        var destId = $(event.target).parentsUntil('ul', 'li').next().attr('level-item-id');
+        if(! destId){
+            return;
+        }
         var type = poiDef[id].tags[0],
-            obj = getParentObj(id), srcIndex, srcObj, desIndex, desObj, isFind = false;
+            obj = getParentObj(id, event), srcIndex, srcObj, desIndex, desObj, isFind = false;
 
         obj.c_list.some(function(item, index){
             var curType = poiDef[item._id].tags[0];
             if(item._id === id){
                 srcIndex = index;
                 srcObj = item;
-                isFind = true;
-            } else if(isFind && (obj.business_id || curType === type)){
+            }
+            else if(item._id === destId){
                 desIndex = index;
                 desObj = item;
-                return true;
             }
-            return false;
         });
+        console.log(srcIndex, desIndex);
 
         if(srcIndex > -1 && desIndex > -1){
             obj.c_list[srcIndex] = desObj;
             obj.c_list[desIndex] = srcObj;
-            console.log('moved');
-            console.log(treeDate);
             saveTreeData();
             showTreeData();
         }
@@ -335,7 +330,8 @@ $(document).ready(function(){
         	chk_value.push([$(this).attr("poi_id"),$(this).attr("poi_tags"),$(this).parent().find('a').text()]);
     	}); 
         if(chk_value.length>0){
-        	for(var c=0;c<chk_value.length;c++){
+            var exist = false;
+            for(var c=0;c<chk_value.length;c++){
                 ps=[];
         		// for(var i=0;i<parents.length;i++){
     	     //        if($(parents[i]).attr("level-item-id") && $(parents[i]).attr("level-item-id")!=""){
@@ -357,32 +353,40 @@ $(document).ready(function(){
                     }
                 }
     	        var current_data=treeDate;
-    	        for(var i=(ps_li.length-1);i>=0;i--){
+
+                // 找到当前节点
+                for(var i=(ps_li.length-1);i>=0;i--){
     	            current_data=current_data.c_list[ps_li[i]];
     	        }
+
+                // 检查选中的poi是否与节点的子节点重复
+                exist = false;
                 for(var m=0;m<current_data.c_list.length;m++){
                     if(current_data.c_list[m]._id==chk_value[c][0]){
-                        return;
+                        exist = true;
+                        break;
+                    }
+                }
+                if(! exist){
+                    var newchild=$.extend(true, {}, PoiDataTemplate);
+                    newchild._id=chk_value[c][0];
+                    current_data.c_list.push(newchild);
+
+
+                    if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
+                        var newDefChild=$.extend(true, {}, poiDefTemplate);
+                        newDefChild._id=chk_value[c][0];
+                        newDefChild.tags= [ parseInt(chk_value[c][1])];
+                        newDefChild.name=chk_value[c][2];
+                        poiDef[chk_value[c][0]]=newDefChild;
                     }
                 }
 
-    	        var newchild=$.extend(true, {}, PoiDataTemplate);
-    	        newchild._id=chk_value[c][0];
-                current_data.c_list.push(newchild);
-
-
-    	        if(typeof(poiDef[chk_value[c][0]]) == "undefined"){
-	    	        var newDefChild=$.extend(true, {}, poiDefTemplate);
-	    	        newDefChild._id=chk_value[c][0];
-	    	        newDefChild.tags=chk_value[c][1];
-	    	        newDefChild.name=chk_value[c][2];
-	    	        poiDef[chk_value[c][0]]=newDefChild;
-    	        }
         	}
         }
         showTreeData();
-        
         $(".pop-childpoi .button-close").trigger("click");
+        $('.list-result-poi input:checked').prop('checked', false);
         saveTreeData();
     });
     
@@ -426,12 +430,16 @@ $(document).ready(function(){
     function showGuidance(){
         $('.guidance').removeClass('hidden');
         $('.luna-tree').addClass('hidden');
-
+        var wrapperHeight = $('.content .main').height(),screenHeight = window.screen.height;
+        if(wrapperHeight < 0.8 * screenHeight){
+            $('.content .main').addClass('fixed-height');
+        }
     }
 
     function showTreeData(){
 
         $('.luna-tree').removeClass('hidden');
+        $('.content .main').removeClass('fixed-height');
         $('.guidance').addClass('hidden');
 
 
@@ -644,28 +652,26 @@ function clcContent(obj){
 	clcWindow(obj);
 }
 
-function getParentObj(id){
-    var parentObj = undefined;
-    var isFind = false;
-
-    var findList = [treeDate];
-    var length = treeDate.c_list.length;
-    var itemList;
-    for(var i=0; i< findList.length ;i++){
-        if(isFind){
-            return parentObj;
+function getParentObj(id, event){
+    var _this= $(event.target);
+    var parents_li= _this.parents("li");
+    var ps_li=[];
+    for(var i=0;i<parents_li.length;i++){
+        if($(parents_li[i]).attr("level-item-id")||($(parents_li[i]).parent().attr("level-business-id") && $(parents_li[i]).parent().attr("level-business-id")!="")){
+            if($(parents_li[i]).attr("keyorder")){
+                ps_li.push($(parents_li[i]).attr("keyorder"));
+                console.log($(parents_li[i]).attr("keyorder"));
+            }else{
+                ps_li.push($(parents_li[i]).index());
+                console.log($(parents_li[i]).index());
+            }
         }
-        itemList = findList[i];
-        itemList.c_list.some(function(item){
-            if(item._id === id){
-                treeDate.c_list = treeDate.c_list.slice(0, length);
-                parentObj = itemList;
-                isFind = true;
-            }
-            if(item.c_list && item.c_list.length > 0){
-                findList.push(item);
-            }
-        });
     }
-    return parentObj;
+    var current_data=treeDate;
+    for(var i=(ps_li.length-1);i>0;i--){
+        current_data=current_data.c_list[ps_li[i]];
+    }
+    console.log(current_data);
+
+    return current_data;
 }

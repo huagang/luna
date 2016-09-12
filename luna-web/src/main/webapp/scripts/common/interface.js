@@ -15,11 +15,9 @@ var Inter = function () {
         var host = window.location.host;
         if (/localhost/.test(host)) {
             return 'local';
-        }
-        else if(/luna-test/.test(host)) {
+        } else if (/luna-test/.test(host)) {
             return 'test';
-        }
-        else {
+        } else {
             return 'current';
         }
     };
@@ -33,29 +31,34 @@ var Inter = function () {
     var lunaEditor = {
         'local': 'http://simon-test.visualbusiness.cn',
         'test': 'http://simon-test.visualbusiness.cn',
-        'current': 'http://webapp.visualbusiness.cn '
+        'current': 'http://webapp.visualbusiness.cn'
     };
 
     var curApiHost = curHost();
-    if(curApiHost === 'others'){
+    if (curApiHost === 'others') {
         apiContext = 'http://' + location.host + '/luna-api/';
-    } else{
+    } else {
         apiContext = apiHost[curHost()];
     }
-
+    apiContext = apiHost[curHost()];
 
     return {
         context: context,
         getPageUrl: function () {
             return {
+                home: context + '/index',
                 basicAppEdit: context + '/content/app/{0}?business_id={1}',
                 devAppEdit: lunaEditor[curHost()] + '/app/{0}?appId={1}&token={2}',
                 dataAppEdit: context + '/content/app/farm/{0}?business_id={1}',
-                manageUser: context + '/platform/user', //
+                manageUser: context + '/platform/user', // 用户管理页面
                 routeConfig: context + '/content/route/configuration/{0}',
                 addPoi: context + '/data/poi/addPage',
                 editPoi: context + '/data/poi/initEditPage?poiId={0}',
                 manageRouter: context + '/content/route',
+                merchantApply: context + '/merchant/tradeApplication', //商户申请
+                merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
+                messagePage: context + '/platform/message', //消息管理
+                editArticle: context + '/content/article/{0}' // 编辑文章
             };
         },
         getApiUrl: function () {
@@ -175,16 +178,37 @@ var Inter = function () {
                 }, //检查姓名
 
                 // 商户注册
-                merchantPicUpload: { url: context + "/common/merchant/upload", type: "POST" },// 图片上传
+                merchantPicUpload: {
+                    url: context + "/common/merchant/upload",
+                    type: "POST"
+                }, // 图片上传
 
-                merchantInit: { url: context + "/common/merchant/registPage", type: "GET" }, // 注册初始页面
-                merchantRegist: { url: context + "/common/merchant", type: "POST" },// 注册
-                merchantCheckName: { url: context + "/common/merchant/checkName", type: "GET" }, //检查用户名
-                merchantSuccess: { url: context + "/common/merchant/successPage", type: "GET" }, //注册成功页面
-                crmThumbnailUpload: { url: context + "/content/crm/thumbnail/upload", type: "POST" }, // 上传图片
+                merchantInit: {
+                    url: context + "/common/merchant/registPage",
+                    type: "GET"
+                }, // 注册初始页面
+                merchantRegist: {
+                    url: context + "/common/merchant",
+                    type: "POST"
+                }, // 注册
+                merchantCheckName: {
+                    url: context + "/common/merchant/checkName",
+                    type: "GET"
+                }, //检查用户名
+                merchantSuccess: {
+                    url: context + "/common/merchant/successPage",
+                    type: "GET"
+                }, //注册成功页面
+                crmThumbnailUpload: {
+                    url: context + "/content/crm/thumbnail/upload",
+                    type: "POST"
+                }, // 上传图片
 
                 // 业务数据关系管理
-                bizRelationExist: {url: context + "/content/businessRelation/exist/{0}", type: 'GET'},
+                bizRelationExist: {
+                    url: context + "/content/businessRelation/exist/{0}",
+                    type: 'GET'
+                },
                 bizRelationInit: {
                     url: context + "/content/businessRelation",
                     type: "GET"
@@ -249,9 +273,14 @@ var Inter = function () {
                     url: context + '/common/business/selectForEdit?unique_id={0}',
                     type: 'GET'
                 },
-                checkBusinessNameRepeat: {url: context + '/content/business/businessName/check?business_name={0}&merchant_id={1}', type: 'GET'},
-                checkBusinessCodeRepeat: {url: context + '/content/business/businessCode/check?business_code={0}&merchant_id={1}', type: 'GET'},
-
+                checkBusinessNameRepeat: {
+                    url: context + '/content/crm/businessName/check?business_name={0}&merchant_id={1}',
+                    type: 'GET'
+                },
+                checkBusinessCodeRepeat: {
+                    url: context + '/content/crm/businessCode/check?business_code={0}&merchant_id={1}',
+                    type: 'GET'
+                },
 
                 //栏目管理
                 columnCreate: {
@@ -427,6 +456,18 @@ var Inter = function () {
                     url: context + '/inner/uploadPic',
                     type: 'POST'
                 }, //图片上传接口
+                // 上传路径
+                uploadPicByUeditor: {
+                    //url: context + '/inner/upload',
+                    url: context + "/data/poi/thumbnail/upload",
+                    type: 'POST'
+                }, //统一上传接口
+                uploadVideoByUeditor: {
+                    //url: context + '/inner/uploadPic',
+                    url: context + "/data/poi/video/upload",
+                    type: 'POST'
+                }, //图片上传接口
+
 
                 login: {
                     url: context + '/common/login',
@@ -552,13 +593,42 @@ var Inter = function () {
                 zclipSWFPath: context + "/plugins/jquery.zclip/ZeroClipboard.swf",
 
                 // 线路管理
-                createRoute: { url: context + '/content/route', type: 'POST' }, //创建路线
-                editRoute: { url: context + '/content/route/{0}', type: 'PUT' }, //编辑路线
-                getRouteList: { url: context + '/content/route/search', type: 'GET' },  //获取线路列表
-                delRoute: { url: context + '/content/route/{0}', type: 'DELETE' }, // 删除线路
-                checkRoute: { url: context + '/content/route/checkName?name={0}&id={1}', type: 'GET' }, // 检查线路名称是否合法
-                fetchRouteConfig: { url: context + '/content/route/configuration/{0}?data', type: 'GET' },
-                saveRouteConfig: { url: context + '/content/route/configuration/{0}', type: 'PUT' },
+                createRoute: {
+                    url: context + '/content/route',
+                    type: 'POST'
+                }, //创建路线
+                editRoute: {
+                    url: context + '/content/route/{0}',
+                    type: 'PUT'
+                }, //编辑路线
+                getRouteList: {
+                    url: context + '/content/route/search',
+                    type: 'GET'
+                }, //获取线路列表
+                delRoute: {
+                    url: context + '/content/route/{0}',
+                    type: 'DELETE'
+                }, // 删除线路
+                checkRoute: {
+                    url: context + '/content/route/checkName?name={0}&business_id={1}',
+                    type: 'GET'
+                }, // 检查线路名称是否合法
+                fetchRouteConfig: {
+                    url: context + '/content/route/configuration/{0}?data',
+                    type: 'GET'
+                },
+                saveRouteConfig: {
+                    url: context + '/content/route/configuration/{0}',
+                    type: 'PUT'
+                },
+
+                // 商品类目
+                fetchGoodsCat: { url: context + '/platform/goodsCategory/get?offset={0}&limit={1}', type: 'GET' }, // 获取商品类目信息
+                createGoodsCat: { url: context + '/platform/goodsCategory', type: 'POST' },  // 新建商品类目信息
+                saveGoodsCat: { url: context + '/platform/goodsCategory/{0}', type: 'PUT' },  // 保存商品类目信息
+                deleteGoodsCat: { url: context + '/platform/goodsCategory/{0}', type: 'DELETE' },  // 删除商品类目
+                searchGoodsCat: { url: context + '/platform/goodsCategory/searchRoot?searchWord={0}&offset={1}&limit={2}', type: 'GET' },
+                searchAllGoodsCat: { url: context + '/platform/goodsCategory/search?searchWord={0}&limit={1}', type: 'GET' },
 
                 //全景搜索
                 searchSinglePano: {
@@ -567,6 +637,28 @@ var Inter = function () {
                 searchPanoList: {
                     url: "http://data.pano.visualbusiness.cn/rest/album/search"
                 },
+
+                //交易直通车
+                saveMerchantInfo: { url: context + '/merchant/tradeApplication/create', type: 'POST' }, //保存商户数据
+                editMerchantInfo: { url: context + '/merchant/tradeApplication/recreate', type: 'POST' }, //保存商户数据
+                getMerchantStatus: { url: context + '/merchant/tradeApplication/merchantStatus', type: 'GET' }, //获取商户状态
+                getMerchatApplyList: { url: context + '/platform/message/getList', type: 'GET' },
+                getMessageDetail: { url: context + '/platform/message/get/{0}', type: 'GET' },
+                getMerchatDetail: { url: context + '/merchant/tradeApplication/detail', type: 'GET' },
+                getMerchantInfo: { url: context + '/merchant/tradeApplication/getMerchantInfo', type: 'GET' },//获取crm信息
+                getMerchatDetailData: { url: context + '/merchant/tradeApplication/get', type: 'GET' },
+                merchatSign: { url: context + '/merchant/tradeApplication/sign', type: 'POST' },
+                allowTradeTrain: { url: context + '/platform/message/check/{0}', type: 'POST' },
+
+                //获取短信验证码
+                getSMSCode: { url: context + '/common/sms/getCodeS', type: 'POST' },
+                checkSMSCode: { url: context + '/common/sms/checkCode', type: 'GET' },
+
+
+                //银行选择
+                selectCity: { url: context + '/common/bnkAndCity/city/{0}', type: 'GET' }, //选择城市
+                selectBranchBank: { url: context + '/common/bnkAndCity/branch/{0}', type: 'GET' }, //选择支行
+
             };
         }
     };

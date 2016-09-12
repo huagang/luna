@@ -1639,18 +1639,12 @@
             html.push('</tr>');
         }
 
-//        // show no records
-//        if (!html.length) {
-//            html.push('<tr class="no-records-found">',
-//                sprintf('<td colspan="%s">%s</td>',
-//                    this.$header.find('th').length, this.options.formatNoMatches()),
-//                '</tr>');
-//        }
-        
         // show no records
         if (!html.length) {
             html.push('<tr class="no-records-found">',
-                sprintf('<td colspan="%s"  style="height:50px" >%s</td>', this.$header.find('th').length, '无结果，请重新搜索或'+'<a href="#" onclick=" return location.reload()">查看全部</a>'), '</tr>');
+                sprintf('<td colspan="%s">%s</td>',
+                    this.$header.find('th').length, this.options.formatNoMatches()),
+                '</tr>');
         }
 
         this.$body.html(html.join(''));

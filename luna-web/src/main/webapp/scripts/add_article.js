@@ -37,9 +37,9 @@ var initPage = function () {
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function (action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-                return Inter.getApiUrl().poiThumbnailUpload.url;
+                return Inter.getApiUrl().uploadPicByUeditor.url;
             } else if (action == 'uploadvideo') {
-                return Inter.getApiUrl().poiVideoUpload.url;
+                return Inter.getApiUrl().uploadVideoByUeditor.url;
             } else {
                 return this._bkGetActionUrl.call(this, action);
             }
@@ -77,7 +77,7 @@ var initPage = function () {
 
         function saveData(e) {
             articleStore.content = ue.getContent();
-            var error = articleStore.checkEmpty().error;
+            var error = articleStore.checkValidation().error;
             if (error) {
                 alert(error);
                 return;
@@ -92,8 +92,9 @@ var initPage = function () {
                 abstract_pic: articleStore.thumbnail,
                 audio: articleStore.audio,
                 video: articleStore.video,
-                column_id: articleStore.category,
+                column_id: articleStore.category || 0,
                 short_title: document.querySelector('input[name="short_title"]').value,
+                source: articleStore.source || ''
             };
 
             var url, type;
@@ -119,7 +120,7 @@ var initPage = function () {
                     if (data.code == "0") {
                         if (!articleStore.id) {
                             articleStore.id = data.data.id;
-                            articleStore.previewUrl = data.data.url + '?preview';
+                            location.href = pageUrls.editArticle.format(data.data.id)
                         }
                             showMessage(op + "成功");
                     } else {
@@ -278,6 +279,16 @@ var initPage = function () {
                 }
             });
         });
+
+        $('#source').on('change', function(event){
+            var value = event.target.value;
+            articleStore.source = value;
+            if(value.length > 0 && ! /^(http:\/\/|https:\/\/).+\..+$/.test(value)){
+                $('#source_warn').text('文章来源地址格式不正确,请以http://或https://开头');
+            } else{
+                clearWarn('#source_warn');
+            }
+        });
     };
 
 
@@ -316,7 +327,8 @@ var initPage = function () {
             category: $("#category option:first-child").val() || '',
             business_id: business_id,
             previewUrl: '',
-            checkEmpty: function () {
+            source: '',
+            checkValidation: function () {
                 /* 用于检查是否有必填项没有填
                  * @return {object} error - 返回的是以{"error": string}格式的错误信息，
                  *                          如果没有错误返回的是{"error": null}。 
@@ -327,13 +339,17 @@ var initPage = function () {
                     { id: 'content', name: '正文' },
                     // { id: 'thumbnail', name: '首图' },
                     // { id: 'summary', name: '摘要' },
-                     { id: 'category', name: '栏目' }
+                    // { id: 'category', name: '栏目' }
                 ];
                 checkList.map(function (item) {
                     if (!this[item.id]) {
                         error += '\n ' + item.name + '项不能为空  ';
                     }
                 }.bind(this));
+
+                if(articleStore.source && ! /^(http:\/\/|https:\/\/).+\..+$/.test(articleStore.source)){
+                    error += '\n文章来源格式不正确'
+                }
                 return { error: error || null };
             },
         };
@@ -384,6 +400,7 @@ var initPage = function () {
                         { serverName: 'abstract_content', storeName: 'summary' },
                         { serverName: 'short_title', storeName: 'short_title' },
                         { serverName: 'url', storeName: 'previewUrl' },
+                        { serverName: 'source', storeName: 'source' },
                     ];
                     data = data.data;
                     nameMapping.forEach(function (item) {
@@ -422,9 +439,12 @@ var initPage = function () {
             $("#audio").val(articleStore.audio);
             document.querySelector('#clearAudio').classList.remove('hide');
         }
-        if (articleStore.audio) {
+        if (articleStore.video) {
             $("#video").val(articleStore.video);
             document.querySelector('#clearVideo').classList.remove('hide');
+        }
+        if(articleStore.source){
+            $("#source").val(articleStore.source);
         }
         // $("#category option[value='" + articleStore.category + "']").attr("selected", "selected").prop('selected', true);
         $("#category option[value='" + articleStore.category + "']").prop('selected', true);

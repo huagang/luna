@@ -42,6 +42,7 @@
                         <div class="business-list">
                             <table id="table_article" class="table"
                                    data-toggle="table"
+                                   data-locale="zh-CN"
                                    data-toolbar=""
                                    data-url="<%=request.getContextPath() %>/content/article/search"
                                    data-pagination="true"
@@ -92,6 +93,7 @@
 <script src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/bootstrap-table/js/bootstrap-table-zh-CN.min.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/interface.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/common/util.js"></script>
 <script src="<%=request.getContextPath() %>/scripts/lunaweb.js"></script>
