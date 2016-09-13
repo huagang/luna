@@ -89,4 +89,6 @@
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_city_ex_SqlMap.xml"/>
     <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_user_merchant_SqlMap.xml"/>
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_user_merchant_ex_SqlMap.xml"/>
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_order_SqlMap.xml" />
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_order_ex_SqlMap.xml" />
 </sqlMapConfig>
