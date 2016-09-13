@@ -38,49 +38,78 @@
               <button id="condition_search" type="button" class="btn-search" ng-click="manage.fetchGoodsGoodsList()">搜 索</button>
               <button type="button" class="button pull-right" ng-click="manage.changeState('new')">发布商品</button>
             </div>
-            <table class="table table-hover">
+            <table class="table table-hover goods-list">
               <thead>
                 <tr>
                   <th>商品名称</th>
-                  <th>价格(元)</th>
-                  <th>库存</th>
-                  <th>总销量</th>
-                  <th>发布时间</th>
+                  <th>
+                    <div class="th-stock">
+                      <div class="stock-explaination">
+                        <span>库存</span>
+                        <i class="icon-green"></i>
+                        <span class="green">已订</span>
+                        <i class="icon-red"></i>
+                        <span class="red">余量</span>
+                      </div>
+                      <div class="stock-date">
+                        <span class="stock-date-item">昨天</span>
+                        <span class="stock-date-item">今天</span>
+                        <span class="stock-date-item" ng-repeat="dateStr in manage.nextFiveDates">{{dateStr}}</span>
+
+                      </div>
+                    </div>
+                  </th>
                   <th>状态</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="tr-operation">
-                  <td colspan="7">
-                      <label class="pointer">
-                          <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggle()"/> 全选
-                      </label>
-                      <button type="button">上架</button>
-                      <button type="button">下架</button>
-                      <button type="button">删除</button>
-                  </td>
-                </tr>
-                <tr class="ng-hide ng-cloak empty-rows" ng-show="!manage.GoodsList || manage.GoodsList.length === 0">
+
+                <tr class="ng-hide ng-cloak empty-rows" ng-show="!manage.goodsList || manage.goodsList.length === 0">
                   <td colspan="7">内容为空</td>
                 </tr>
-                <tr class="ng-cloak" ng-repeat="goods in manage.GoodsList">
+                <tr class="ng-cloak" ng-repeat="goods in manage.goodsList">
                     <td>
                       <input type="checkbox" ng-model="manage.checkedList[goods.id]" />
                       <span>{{goods.name}}</span>
+                      <i class="icon-more-info" ng-hover="manage.showMoreInfo(goods.id)"></i>
+                      <div class="goods-details">
+                        <p ng-repeat="str in goods.detailList">{{str}}</p>
+                      </div>
                     </td>
-                    <td>{{goods.price}}</td>
-                    <td>{{goods.stock}}</td>
-                    <td>{{goods.sales}}</td>
-                    <td>{{goods.publishedTime}}</td>
+                    <td class="stock-wrapper">
+                      <div class="stock-item" ng-repeat="stock in goods.stockList">
+                        <span class="not-set" ng-if="! stock.price">未设置</span>
+                        <span ng-if="stock.price">
+                          <span class="daily-stock">{{'￥' + stock.price}}</span>
+                          <br/>
+                          <span class="daily-stock green">{{stock.saled}}</span> /
+                          <span class="daily-stock red">{{stock.rest || '满'}}</span>
+                        </span>
+                      </div>
+                      <span class="calender-trigger" ng-click="manage.showStockCalendar(goods.id)">日历</span>
+                    </td>
                     <td>
-                      <span class="ng-hide" ng-show="goods.online_status=='0'">未上架</span>
-                      <img class='published ng-hide' ng-show="goods.online_status=='1'" src='<%=request.getContextPath() %>/img/published.png' alt='已上架'/>
+                      <div ng-class="{'onsale': goods.online_status=='1', 'notSale': goods.online_status != '1'}"
+                              ng-click="manage.changeStatus(goods.id, goods.online_status)">
+                          <span class="status">{{goods.online_status=='1'? '上架': '下架'}}</span>
+                          <div class="radio-button"></div>
+                      </div>
                     </td>
                     <td>
                        <a href="javascript:void(0)" ng-click="manage.handleEdit(goods.id)">编辑</a>
                        <a href="javascript:void(0)" ng-click="manage.handleDelete(goods.id)">删除</a>
                     </td>
+                </tr>
+                <tr class="tr-operation">
+                  <td colspan="4">
+                    <label class="pointer">
+                      <input type="checkbox" ng-model="manage.selectAll" ng-change="manage.handleSelectAllToggle()"/> 全选
+                    </label>
+                    <button type="button" ng-click="manage.updateBatchStatus(1)">上架</button>
+                    <button type="button" ng-click="manage.updateBatchStatus(0)">下架</button>
+                    <button type="button" ng-click="manage.handleBatchDelete()">删除</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -98,6 +127,8 @@
 <div class="message-wrapper ng-hide" ng-show="manage.message">
   <div class="message">{{manage.message}}</div>
 </div>
+
+
 
 <div class="new-goods ng-hide" ng-show="manage.state === 'new'">
   <div class="mask" ng-click="manage.changeState('init')"></div>
@@ -147,10 +178,47 @@
     </div>
   </div>
 </div>
+<div class="stock-calendar ng-hide" ng-show="manage.state === 'showCalendar'">
+  <div class="mask" ng-click="manage.changeState('init')"></div>
+  <div class="pop-modal">
+    <div class="pop-title">
+      <h5>库存日历({{'商品名称'}})</h5>
+      <a href="#" class="btn-close" ng-click="manage.changeState('init')">
+        <img src="<%=request.getContextPath() %>/img/close.png"/>
+      </a>
+    </div>
+    <div class="pop-cont">
+      <div class="month-nav">
+        <span class="last-month" ng-click="manage.showPreMonthdata()">&lt; {{ manage.calendar.showDate.month() || 12 }}月</span>
+        <span class="cur-month">{{manage.calendar.showDate.month() + 1}}月</span>
+        <span class="next-month" ng-click="manage.showNextMonthdata()">&gt; {{((manage.calendar.showDate.month() + 2) % 12) || 12 }}月</span>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>一</th>
+            <th>二</th>
+            <th>三</th>
+            <th>四</th>
+            <th>五</th>
+            <th>六</th>
+            <th>日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="days in manage.calendar.showList">
+            <td ng-repeat="day in days"  class="{{day.className}}">{{day.day}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <script>
   window.context = "<%=request.getContextPath() %>";
 </script>
 <script src="<%=request.getContextPath() %>/plugins/ui-bootstrap-tpls-2.0.0.js"></script>
+<script src="<%=request.getContextPath() %>/plugins/moment/moment.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/plugins/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/plugins/es5-shim/es5-shim.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/plugins/es5-shim/es5-sham.min.js"></script>

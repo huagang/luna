@@ -77,7 +77,7 @@ td{
     vertical-align: middle !important;
 }
 
-tbody tr:last-child{
+.goods-list tbody tr:last-child{
     border-bottom: 1px solid #ccc;
 }
 
@@ -169,7 +169,8 @@ tbody tr:last-child{
 
 .icon-close,
 .icon-open,
-.icon-text{
+.icon-text,
+.icon-more-info {
     display: inline-block;
     vertical-align: middle;
     height: 15px;
@@ -191,6 +192,15 @@ tbody tr:last-child{
     margin-bottom: 3px;
 }
 
+.icon-more-info {
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+    width: 20px;
+    margin-bottom: 2px;
+    background: url(../img/merchant/more-info.png) center center no-repeat;
+    background-size: contain;
+}
 
 
 .depth-2{
@@ -219,3 +229,188 @@ tbody tr:last-child{
 
 
 /* 发布商品 end */
+
+/* icons start*/
+.icon-green,
+.icon-red{
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    background-color: #47CB46;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin: 0 0 1px 10px;
+}
+.icon-red{
+    background-color: red;
+}
+/* icons end*/
+.blue{
+    color: #20D9E8;
+}
+
+
+.th-stock {
+    text-align: center;
+    margin-right: 0;
+}
+
+.th-stock .stock-date {
+    color: #666;
+    font-weight: normal;
+}
+.th-stock .stock-date-item{
+    display: inline-block;
+    width: 65px;
+    vertical-align: middle;
+}
+
+.th-stock .stock-date-item + .stock-date-item{
+    padding-left: 20px;
+}
+
+.green{
+    color: #47CB46;
+}
+
+.stock-wrapper{
+    text-align: center;
+    background-color: #efefef;
+}
+
+.stock-item {
+    display: inline-block;
+    width: 65px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.stock-item + .stock-item{
+    padding-left: 20px;
+}
+
+.calender-trigger {
+    position: absolute;
+    line-height: 25px;
+    margin: 6px 0 0 8px;
+    color: white;
+    padding: 0 10px;
+    background-color: #20D9E8;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.goods-details{
+    display: none;
+    position: fixed;
+    width: 300px;
+    margin-left: 30px;
+    margin-top: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.icon-more-info:hover + .goods-details{
+    display: inline-block;
+}
+
+.stock-item:first-child,
+.stock-date-item:first-child{
+    margin-left: -80px;
+}
+
+.goods-list th:nth-child(10n+2){
+    width: 520px;
+}
+
+.onsale,
+.notSale{
+    position: relative;
+    display: inline-block;
+    padding: 5px 0px;
+    width: 80px;
+
+    background-color: #20D9E8;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+}
+.notSale{
+    background-color: #666;
+}
+
+.onsale .status{
+    padding-left: 20px;
+}
+
+.notSale .status{
+    padding-left: 40px;
+}
+
+.radio-button{
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #C3CBB2;
+    border-radius: 50%;
+}
+
+.notSale .radio-button{
+    left: 0;
+    right: initial;
+}
+
+
+/*** 日历弹出框 start***/
+.cur-month{
+    padding-left: 225px;
+}
+
+.last-month,
+.next-month{
+    cursor: pointer;
+}
+
+.next-month{
+    float: right;
+}
+
+.last-month:hover,
+.next-month:hover{
+    color: #20D9E8;
+}
+
+.stock-calendar th{
+    text-align: center;
+}
+
+.stock-calendar tbody tr{
+    height: 60px;
+    background-color: #efefef;
+    text-align: center;
+}
+
+.stock-calendar .pop-cont{
+    padding-top: 20px;
+}
+.month-nav {
+    padding-bottom: 15px;
+}
+.no-left-border,
+.no-right-border,
+.stock-calendar .table-bordered{
+    border: 0 !important;
+    background-color: white;
+}
+
+.stock-calendar thead {
+    border-top: 1px solid #ddd;
+}
+
+
+/**** 日历弹出框 end *****/

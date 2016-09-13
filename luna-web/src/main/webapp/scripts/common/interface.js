@@ -58,7 +58,7 @@ var Inter = function () {
                 merchantApply: context + '/merchant/tradeApplication', //商户申请
                 merchantDetail: context + '/platform/message/page/{0}', //商户申请审核
                 messagePage: context + '/platform/message', //消息管理
-                editGoods: context + '/platform/deal/edit?cateId={0}'
+                editGoods: context + '/platform/deal/edit?cateId={0}',
                 editArticle: context + '/content/article/{0}' // 编辑文章
             };
         },
@@ -666,7 +666,7 @@ var Inter = function () {
 
                 //银行选择
                 selectCity: { url: context + '/common/bnkAndCity/city/{0}', type: 'GET' }, //选择城市
-                selectBranchBank: { url: context + '/common/bnkAndCity/branch/{0}', type: 'GET' }, //选择支行
+                selectBranchBank: { url: context + '/common/bnkAndCity/branch/{0}', type: 'GET' } //选择支行
             };
         }
     };
