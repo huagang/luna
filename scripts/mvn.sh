@@ -15,9 +15,6 @@ cd $base_dir/../
 cd luna-service-interface
 mvn clean package install
 
-cd ..
-cd luna-service-generator
-mvn clean package install  -DskipTests
 
 cd ..
 cd luna-service-common

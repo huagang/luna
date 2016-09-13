@@ -1,6 +1,7 @@
 package ms.luna.biz.dao.custom;
 
 import ms.luna.biz.dao.LunaGoodsCategoryDAOBaseImpl;
+import ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode;
 import ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter;
 import ms.luna.biz.dao.custom.model.LunaGoodsCategoryResult;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,18 @@ public class LunaGoodsCategoryDAOImpl extends LunaGoodsCategoryDAOBaseImpl imple
     }
 
 //    @Override
-//    public int countLunaGoodsCategory(LunaGoodsCategoryParameter lunaGoodsCategoryParameter) {
-//        Integer count = (Integer) getSqlMapClientTemplate().queryForObject("luna_goods_category.countCategories",
-//                lunaGoodsCategoryParameter);
-//        return count;
+
 //    }
+//        return count;
+//                lunaGoodsCategoryParameter);
+//        Integer count = (Integer) getSqlMapClientTemplate().queryForObject("luna_goods_category.countCategories",
+//    public int countLunaGoodsCategory(LunaGoodsCategoryParameter lunaGoodsCategoryParameter) {
+
+    @Override
+    public List<LunaGoodsCategoryNode> selectLunaGoodsCategoryNodes(LunaGoodsCategoryParameter lunaGoodsCategoryParameter) {
+        List<LunaGoodsCategoryNode> list = getSqlMapClientTemplate().queryForList("luna_goods_category.selectLunaGoodsCategoryNodes",
+                lunaGoodsCategoryParameter);
+        return list;
+    }
+
 }
