@@ -20,3 +20,15 @@ CREATE TABLE `luna_order` (
   UNIQUE KEY `certificate_num` (`merchant_id`,`certificate_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 
+CREATE TABLE `luna_order_goods` (
+  `id` int(11) not null COMMENT '订单编号',
+  `goods_id` varchar(32) NOT NULL COMMENT '商品id',
+  `category_id` int(11) NOT NULL COMMENT '类别id',
+  `goods_price` decimal(10,2) NOT NULL default 0 COMMENT '商品单价',
+  `goods_count` int NOT NULL default 0 COMMENT '商品数量',
+  `extra` varchar(255) DEFAULT NULL COMMENT '拓展字段',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  KEY `id`(`id`),
+  KEY `goods_id`(`goods_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单商品对应表';
