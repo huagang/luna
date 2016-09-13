@@ -29,8 +29,13 @@ public class LunaGoodsCategoryServiceImpl implements LunaGoodsCategoryService {
     private LunaGoodsCategoryDAO lunaGoodsCategoryDAO;
 
     private JSONArray getCategoriesByCriteria(LunaGoodsCategoryCriteria lunaGoodsCategoryCriteria) {
-        List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
-        return assembleCategories(categories);
+        try {
+            List<LunaGoodsCategory> categories = lunaGoodsCategoryDAO.selectByCriteria(lunaGoodsCategoryCriteria);
+            return assembleCategories(categories);
+        } catch (Exception e) {
+            logger.error("Failed to get categories", e);
+            return new JSONArray();
+        }
     }
 
     private JSONArray assembleCategories(List<LunaGoodsCategory> categories) {

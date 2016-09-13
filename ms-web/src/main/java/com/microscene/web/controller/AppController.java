@@ -50,7 +50,7 @@ public class AppController extends BaseController {
     public ModelAndView indexPage(@PathVariable int appId, HttpServletRequest request) {
 
         ModelAndView modelAndView = buildModelAndView("appShowPage");
-        fillAppShareInfo(appId, modelAndView);
+        fillAppShareInfo(appId, modelAndView, null);
         int type = Integer.parseInt(modelAndView.getModel().get(MsShowAppTable.FIELD_TYPE).toString());
         if(type == 0) {
             JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
@@ -69,16 +69,20 @@ public class AppController extends BaseController {
     @RequestMapping(method = RequestMethod.GET, value = "/{appId}/page/{pageId}")
     public ModelAndView getPage(@PathVariable int appId, @PathVariable String pageId, HttpServletRequest request) {
         JSONObject onePageDetail = msShowPageService.getOnePageDetail(pageId);
+        JSONObject shareInfo = onePageDetail.getJSONObject("data").getJSONObject("share_info"); // 单页分享
         ModelAndView modelAndView = buildModelAndView("appShowPage");
         modelAndView.addObject("pageData", onePageDetail.toJSONString());
-        fillAppShareInfo(appId, modelAndView);
+        fillAppShareInfo(appId, modelAndView, shareInfo);
         String requestURL = request.getRequestURL().toString();
         modelAndView.addObject("share_info_link", requestURL.substring(0, requestURL.indexOf("/page/")));
+        if(shareInfo != null && shareInfo.containsKey("share_link")) {
+            modelAndView.addObject("share_info_link", shareInfo.getString("share_link"));
+        }
         return modelAndView;
 
     }
 
-    private void fillAppShareInfo(int appId, ModelAndView modelAndView) {
+    private void fillAppShareInfo(int appId, ModelAndView modelAndView, JSONObject shareInfo) {
         JSONObject appSettingJson = manageShowAppService.getSettingOfApp(appId);
         if(appSettingJson.getString("code").equals("0")) {
             JSONObject data = appSettingJson.getJSONObject("data");
@@ -101,6 +105,14 @@ public class AppController extends BaseController {
                 shareInfoDes = jsonObject.getString(MsShowPageShareTable.FIELD_DESCRIPTION);
                 shareInfoPic = jsonObject.getString(MsShowPageShareTable.FIELD_PIC);
             }
+
+            // 单页分享.分享标题,分享描述,分享图	 如果为空,则继承应用的分享信息
+            if(shareInfo != null) {
+                shareInfoTitle = shareInfo.containsKey("share_title")? shareInfo.getString("share_title"): shareInfoTitle;
+                shareInfoDes = shareInfo.containsKey("share_desc")? shareInfo.getString("share_desc"): shareInfoDes;
+                shareInfoPic = shareInfo.containsKey("share_pic")? shareInfo.getString("share_pic"): shareInfoPic;
+            }
+
             modelAndView.addObject("appName", appName);
             modelAndView.addObject(MsShowAppTable.FIELD_TYPE, data.getIntValue(MsShowAppTable.FIELD_TYPE));
             modelAndView.addObject("share_info_title", StringUtils.isBlank(shareInfoTitle) ? appName : shareInfoTitle);

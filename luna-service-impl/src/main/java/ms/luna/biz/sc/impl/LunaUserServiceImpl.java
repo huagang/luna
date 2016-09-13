@@ -508,6 +508,8 @@ public class LunaUserServiceImpl implements LunaUserService {
         try {
             lunaUserDAO.deleteByPrimaryKey(userId);
             lunaUserRoleDAO.deleteUserRoleInfoByUserId(userId);
+            // 用户,商户关联表
+            lunaUserMerchantDAO.deleteByPrimaryKey(userId);
         } catch (Exception ex) {
             logger.error("Failed to delete user: " + userId);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "删除失败");

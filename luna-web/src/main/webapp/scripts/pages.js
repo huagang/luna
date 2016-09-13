@@ -102,10 +102,13 @@ var InitLeftArea = function () {
             $("[name=pageType][value=1]").trigger('click');
             $('#txt-name,#txt-short').removeAttr('readonly', 'readonly');
             $('#txt-time').closest('.item-wrap').addClass('hide');
+            changePageThumbnail('');
         });
 
         //修改界面
         $("#list-page").on('click', 'a.modify', function (e) {
+            var popAddTitle = $('.pop-add .pop-title .pop-title-text');
+            popAddTitle.text('页面设置');
             e.preventDefault();
             e.stopPropagation();
             var pageItemDom = $(e.target).closest('li'),
@@ -126,6 +129,8 @@ var InitLeftArea = function () {
         $("#list-page").on('click', 'a.pageCopy', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            var popAddTitle = $('.pop-add .pop-title .pop-title-text');
+            popAddTitle.text('复用');
             modify(e, 'copy');
         });
 
@@ -166,6 +171,7 @@ var InitLeftArea = function () {
             deletePage($(this).attr("pageID"));
         });
     };
+
     /** 
      * 初始化选中功能
      */
@@ -175,10 +181,22 @@ var InitLeftArea = function () {
 
             $(this).siblings(".drop-item").removeClass("current");
             $(this).addClass("current");
-
             lunaPage.getPageData($(this).attr("page_id"));
-
-
+        });
+    };
+    //初始化菜单
+    var initPopMenu = function () {
+        $('.pop-menu').on('click', 'li', function (e) {
+            var li = $(this).closest('li');
+            var tabClass = li.data('cls');
+            li.siblings().each(function (e) {
+                $(this).removeClass('active');
+            });
+            li.addClass('active');
+            $('.setting-wrapper').each(function (e) {
+                $(this).addClass('hidden').removeClass('active');
+            });
+            $('.setting-' + tabClass).removeClass('hidden').addClass('active');
         });
     };
 
@@ -187,6 +205,41 @@ var InitLeftArea = function () {
             initDragEvent();
             initEditEvent();
             initPageSelectEvent();
+            initPopMenu();
+            //初始化分享缩略图上传
+            $('.thumbnail_fileup').on('change', function (event) {
+                var file = event.target.files[0];
+                cropper.setFile(file, function (file) {
+                    var conSel = '.fileup-container',
+                        previewSel = '.preview-container ',
+                        previewImgSel = '.preview-container .preview-img';
+                    tipSel = '.fileupload-tip';
+                    $(conSel + ' .fileupload-tip').html("上传中...");
+                    cropper.close();
+                    FileUploader.uploadMediaFile({
+                        type: 'pic',
+                        file: file,
+                        resourceType: 'app',
+                        success: function (data) {
+                            changePageThumbnail(data.data.access_url);
+                        }.bind(this),
+                        error: function (data) {
+                            $(tipSel).html("更换缩略图");
+                            alert(data.msg || '上传图片失败');
+                        }
+                    });
+                }.bind(this), function () {
+                    event.target.value = '';
+                });
+            });
+            $('.app-name,.app-description').on('input', function (e) {
+                var inputSelector = $(this),
+                    countSelecte = $(this).siblings('.counter'),
+                    maxLength = $(this).attr('max-length');
+                getCounter(inputSelector, countSelecte, maxLength);
+            });
+
+
         }
     };
 } ();
@@ -667,4 +720,3 @@ $(document).ready(function () {
         }
     };
 })(lunaPage);
-

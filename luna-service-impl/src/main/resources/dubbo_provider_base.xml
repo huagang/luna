@@ -5,7 +5,7 @@
 						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 						http://code.alibabatech.com/schema/dubbo 
 						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
-						default-lazy-init="true">
+       default-lazy-init="true">
 
 	<dubbo:service interface="ms.luna.biz.sc.AuthoritySetService" ref="authoritySetService" />
 	<dubbo:service interface="ms.luna.biz.sc.CategoryService" ref="categoryService" />
@@ -37,5 +37,7 @@
 	<dubbo:service interface="ms.luna.biz.sc.LunaCityService" ref="lunaCityService"/>
 	<dubbo:service interface="ms.luna.biz.sc.LunaGoodsCategoryService" ref="lunaGoodsCategoryService"/>
 	<dubbo:service interface="ms.luna.biz.sc.LunaGoodsService" ref="lunaGoodsService" />
+	<dubbo:service interface="ms.luna.biz.sc.WXPayService" ref="wxPayService"/>
+    <dubbo:service interface="ms.luna.biz.sc.WXSignatureService" ref="wxSignatureService"/>
 
 </beans>

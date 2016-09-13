@@ -123,7 +123,7 @@ public final class VbUtility {
 	 * @param ccbpath
 	 *            二维码图片中间的logo路径
 	 */
-	public static byte[] createQRCode(String url, String logo) {
+	public static byte[] createQRCode(String url, String logoPath) {
 		try {
 			Qrcode qrcodeHandler = new Qrcode();
 			qrcodeHandler.setQrcodeErrorCorrect('M');
@@ -153,7 +153,7 @@ public final class VbUtility {
 				MsLogger.debug("QRCode content bytes length = " + contentBytes.length + " not in [ 0,120 ]. ");
 				return null;
 			}
-			Image img = ImageIO.read(new File(logo));
+			Image img = ImageIO.read(VbUtility.class.getResourceAsStream(logoPath));
 			// 实例化一个Image对象。
 			gs.drawImage(img, 110, 110, 60, 60, null);
 			gs.dispose();

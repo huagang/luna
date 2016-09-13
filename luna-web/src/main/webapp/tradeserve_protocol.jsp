@@ -19,8 +19,8 @@
             display: block;
             width: 900px;
         }
-        .section-wrapper p{
-            line-height:24px;
+        .section-wrapper p {
+            line-height: 24px;
         }
     </style>
 </head>

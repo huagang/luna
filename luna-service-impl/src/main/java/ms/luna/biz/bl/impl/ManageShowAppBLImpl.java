@@ -30,6 +30,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -39,7 +40,9 @@ import java.util.*;
 public class ManageShowAppBLImpl implements ManageShowAppBL {
 
 	private final static Logger logger = Logger.getLogger(ManageShowAppBLImpl.class);
-	private final static String LOGO_PATH = "/data1/luna/resources/logo.jpg";
+	private final static String LOGO_PATH = "/logo.jpg";
+
+	private QCosUtil qCosUtil;
 
 	@Autowired
 	private MsShowAppDAO msShowAppDAO;
@@ -56,6 +59,11 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 	
 	private String showPageUriTemplate = "/app/%d"; 
 	private String businessUriTemplate = "/business/%s";
+
+	@PostConstruct
+	public void init() {
+		qCosUtil = QCosUtil.getInstance();
+	}
 
 	@Override
 	public JSONObject loadApps(String json) {
@@ -629,8 +637,9 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		if(bytes == null) {
 			return null;
 		}
+		JSONObject result;
 		try {
-			JSONObject result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, "QRCode.jpg");
+			result = COSUtil.getInstance().upload2CloudDirect(bytes, cosDir, cosFileName);
 			if("0".equals(result.getString("code"))) {
 				return result.getJSONObject("data").getString(COSUtil.ACCESS_URL);
 			}
@@ -658,7 +667,7 @@ public class ManageShowAppBLImpl implements ManageShowAppBL {
 		data.put(MsShowAppTable.FIELD_PIC_THUMB, msShowApp.getPicThumb());
 		data.put(MsShowAppTable.FIELD_NOTE, msShowApp.getNote());
 		data.put(MsShowAppTable.FIELD_TYPE, msShowApp.getType());
-
+		
 		MsShowPageShareCriteria msShowPageShareCriteria = new MsShowPageShareCriteria();
 		msShowPageShareCriteria.createCriteria().andAppIdEqualTo(appId);
 		msShowPageShareCriteria.setOrderByClause("id asc");
