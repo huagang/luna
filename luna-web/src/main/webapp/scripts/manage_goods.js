@@ -161,6 +161,10 @@ function ManageGoodsController($scope, $http){
                 className = '';
             }
 
+            if(date.format('YYYY-MM-DD') === vm.calendar.nowDate){
+                className += ' current';
+            }
+
             vm.calendar.showList[index].push(
                 {
                     day: date.date(),

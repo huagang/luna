@@ -207,7 +207,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="days in manage.calendar.showList">
-            <td ng-repeat="day in days"  class="{{day.className}}">{{day.day}}</td>
+            <td ng-repeat="day in days"  class="{{day.className}}" ng-class="">{{day.day}}</td>
           </tr>
         </tbody>
       </table>

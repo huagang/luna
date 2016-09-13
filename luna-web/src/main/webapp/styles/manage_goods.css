@@ -412,5 +412,9 @@ td{
     border-top: 1px solid #ddd;
 }
 
+.stock-calendar .current{
+    background-color: #20D9E8;
+    color: white;
+}
 
 /**** 日历弹出框 end *****/
