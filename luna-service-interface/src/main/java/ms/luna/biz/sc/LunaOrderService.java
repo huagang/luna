@@ -16,7 +16,7 @@ public interface LunaOrderService {
     JSONObject searchOrders(JSONObject param);
 
     // 订单详情
-    JSONObject getOrderInfo(int id, String unique_id);
+    JSONObject getOrderInfo(int id, String unique_id, Integer role_id);
 
     // 消费凭证验证
     JSONObject checkCertificateNum(String certificate_num, String unique_id);

@@ -82,8 +82,10 @@ public class OrderController extends BasicController {
             if (id <= 0) {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "order id is invalid");
             }
-            String unique_id = getUniqueId(request);
-            JSONObject result = lunaOrderService.getOrderInfo(id, unique_id);
+            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+            String unique_id = user.getUniqueId();
+            Integer role_id = user.getRoleId();
+            JSONObject result = lunaOrderService.getOrderInfo(id, unique_id, role_id);
             logger.debug(result.toString());
             return result;
         } catch (Exception e) {
@@ -170,11 +172,7 @@ public class OrderController extends BasicController {
 
     private String getUniqueId(HttpServletRequest request) throws Exception {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-        if (user == null) {
-            throw new RuntimeException("LunaUserSession 为空, unique_id获取失败");
-        }
         return user.getUniqueId();
     }
-
 
 }
