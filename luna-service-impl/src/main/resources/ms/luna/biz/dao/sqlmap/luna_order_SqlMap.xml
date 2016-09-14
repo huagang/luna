@@ -5,9 +5,9 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
     <result column="certificate_num" jdbcType="VARCHAR" property="certificateNum" />
-    <result column="total_money" jdbcType="DECIMAL" property="totalMoney" />
-    <result column="pay_money" jdbcType="DECIMAL" property="payMoney" />
-    <result column="refund" jdbcType="DECIMAL" property="refund" />
+    <result column="total_money" jdbcType="DOUBLE" property="totalMoney" />
+    <result column="pay_money" jdbcType="DOUBLE" property="payMoney" />
+    <result column="refund" jdbcType="DOUBLE" property="refund" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="pay_method" jdbcType="BIT" property="payMethod" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
@@ -78,14 +78,14 @@
     <include refid="luna_order.Example_Where_Clause" />
   </delete>
   <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaOrder">
-    insert into luna_order (transaction_id, certificate_num, total_money, 
-      pay_money, refund, status, pay_method, merchant_id, 
-      customer_name, customer_phone, update_time, create_time, 
-      pay_time, deal_time)
-    values (#transactionId:VARCHAR#, #certificateNum:VARCHAR#, #totalMoney:DECIMAL#, 
-      #payMoney:DECIMAL#, #refund:DECIMAL#, #status:INTEGER#, #payMethod:BIT#, #merchantId:VARCHAR#, 
-      #customerName:VARCHAR#, #customerPhone:VARCHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#, 
-      #payTime:TIMESTAMP#, #dealTime:TIMESTAMP#)
+    insert into luna_order (transaction_id, certificate_num, total_money, pay_money, 
+      refund, status, pay_method, merchant_id, customer_name, 
+      customer_phone, update_time, create_time, pay_time, 
+      deal_time)
+    values (#transactionId:VARCHAR#, #certificateNum:VARCHAR#, #totalMoney:DOUBLE#, #payMoney:DOUBLE#, 
+      #refund:DOUBLE#, #status:INTEGER#, #payMethod:BIT#, #merchantId:VARCHAR#, #customerName:VARCHAR#, 
+      #customerPhone:VARCHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#, #payTime:TIMESTAMP#, 
+      #dealTime:TIMESTAMP#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -146,13 +146,13 @@
         #certificateNum:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="totalMoney">
-        #totalMoney:DECIMAL#
+        #totalMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="payMoney">
-        #payMoney:DECIMAL#
+        #payMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="refund">
-        #refund:DECIMAL#
+        #refund:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="status">
         #status:INTEGER#
@@ -204,13 +204,13 @@
         certificate_num = #record.certificateNum:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="record.totalMoney">
-        total_money = #record.totalMoney:DECIMAL#
+        total_money = #record.totalMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="record.payMoney">
-        pay_money = #record.payMoney:DECIMAL#
+        pay_money = #record.payMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="record.refund">
-        refund = #record.refund:DECIMAL#
+        refund = #record.refund:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="record.status">
         status = #record.status:INTEGER#
@@ -249,9 +249,9 @@
     set id = #record.id:INTEGER#,
       transaction_id = #record.transactionId:VARCHAR#,
       certificate_num = #record.certificateNum:VARCHAR#,
-      total_money = #record.totalMoney:DECIMAL#,
-      pay_money = #record.payMoney:DECIMAL#,
-      refund = #record.refund:DECIMAL#,
+      total_money = #record.totalMoney:DOUBLE#,
+      pay_money = #record.payMoney:DOUBLE#,
+      refund = #record.refund:DOUBLE#,
       status = #record.status:INTEGER#,
       pay_method = #record.payMethod:BIT#,
       merchant_id = #record.merchantId:VARCHAR#,
@@ -275,13 +275,13 @@
         certificate_num = #certificateNum:VARCHAR#
       </isNotNull>
       <isNotNull prepend="," property="totalMoney">
-        total_money = #totalMoney:DECIMAL#
+        total_money = #totalMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="payMoney">
-        pay_money = #payMoney:DECIMAL#
+        pay_money = #payMoney:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="refund">
-        refund = #refund:DECIMAL#
+        refund = #refund:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="status">
         status = #status:INTEGER#
@@ -317,9 +317,9 @@
     update luna_order
     set transaction_id = #transactionId:VARCHAR#,
       certificate_num = #certificateNum:VARCHAR#,
-      total_money = #totalMoney:DECIMAL#,
-      pay_money = #payMoney:DECIMAL#,
-      refund = #refund:DECIMAL#,
+      total_money = #totalMoney:DOUBLE#,
+      pay_money = #payMoney:DOUBLE#,
+      refund = #refund:DOUBLE#,
       status = #status:INTEGER#,
       pay_method = #payMethod:BIT#,
       merchant_id = #merchantId:VARCHAR#,

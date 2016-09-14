@@ -1,6 +1,5 @@
 package ms.luna.biz.dao.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -390,61 +389,61 @@ public class LunaOrderGoodsCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceEqualTo(BigDecimal value) {
+        public Criteria andGoodsPriceEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price =", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceNotEqualTo(BigDecimal value) {
+        public Criteria andGoodsPriceNotEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price <>", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceGreaterThan(BigDecimal value) {
+        public Criteria andGoodsPriceGreaterThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price >", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andGoodsPriceGreaterThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price >=", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceLessThan(BigDecimal value) {
+        public Criteria andGoodsPriceLessThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price <", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andGoodsPriceLessThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("goods_price <=", value, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceIn(List<BigDecimal> values) {
+        public Criteria andGoodsPriceIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("goods_price in", values, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceNotIn(List<BigDecimal> values) {
+        public Criteria andGoodsPriceNotIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("goods_price not in", values, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andGoodsPriceBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("goods_price between", value1, value2, "goodsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andGoodsPriceNotBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("goods_price not between", value1, value2, "goodsPrice");
             return (Criteria) this;

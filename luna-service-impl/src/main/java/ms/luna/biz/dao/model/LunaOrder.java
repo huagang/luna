@@ -1,7 +1,6 @@
 package ms.luna.biz.dao.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class LunaOrder implements Serializable {
@@ -11,11 +10,11 @@ public class LunaOrder implements Serializable {
 
     private String certificateNum;
 
-    private BigDecimal totalMoney;
+    private Double totalMoney;
 
-    private BigDecimal payMoney;
+    private Double payMoney;
 
-    private BigDecimal refund;
+    private Double refund;
 
     private Integer status;
 
@@ -61,27 +60,27 @@ public class LunaOrder implements Serializable {
         this.certificateNum = certificateNum == null ? null : certificateNum.trim();
     }
 
-    public BigDecimal getTotalMoney() {
+    public Double getTotalMoney() {
         return totalMoney;
     }
 
-    public void setTotalMoney(BigDecimal totalMoney) {
+    public void setTotalMoney(Double totalMoney) {
         this.totalMoney = totalMoney;
     }
 
-    public BigDecimal getPayMoney() {
+    public Double getPayMoney() {
         return payMoney;
     }
 
-    public void setPayMoney(BigDecimal payMoney) {
+    public void setPayMoney(Double payMoney) {
         this.payMoney = payMoney;
     }
 
-    public BigDecimal getRefund() {
+    public Double getRefund() {
         return refund;
     }
 
-    public void setRefund(BigDecimal refund) {
+    public void setRefund(Double refund) {
         this.refund = refund;
     }
 
