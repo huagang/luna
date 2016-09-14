@@ -476,11 +476,10 @@ var initPage = function () {
             });
             initEditor();
             initEvent();
-            var title = '';
             if (articleStore.id) {
                 updateArticleData(articleStore.id);
+                $(".content-header .title").html('编辑文章');
             }
-            $(".content-header .title").html(title);
         }
     };
 } ();
