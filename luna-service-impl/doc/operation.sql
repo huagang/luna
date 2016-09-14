@@ -3,9 +3,9 @@ CREATE TABLE `luna_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单编号',
   `transaction_id` varchar(32) DEFAULT NULL COMMENT '皓月交易号',
   `certificate_num` varchar(8) DEFAULT NULL COMMENT '凭证号',
-  `total_money` double(10,2) NOT NULL COMMENT '总金额',
-  `pay_money` double(10,2) DEFAULT NULL COMMENT '实付款',
-  `refund` double(10,2) DEFAULT NULL COMMENT '退款金额',
+  `total_money` double NOT NULL DEFAULT '0' COMMENT '总金额',
+  `pay_money` double NOT NULL DEFAULT '0' COMMENT '实付款',
+  `refund` double NOT NULL DEFAULT '0' COMMENT '退款金额',
   `status` int(4) NOT NULL COMMENT '订单状态',
   `pay_method` tinyint(1) NOT NULL COMMENT '支付方式。0：微信，1：支付宝',
   `merchant_id` varchar(32) NOT NULL COMMENT '商户id',
@@ -21,14 +21,14 @@ CREATE TABLE `luna_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 CREATE TABLE `luna_order_goods` (
-  `id` int(11) not null COMMENT '订单编号',
+  `id` int(11) NOT NULL COMMENT '订单编号',
   `goods_id` varchar(32) NOT NULL COMMENT '商品id',
   `category_id` int(11) NOT NULL COMMENT '类别id',
-  `goods_price` double(10,2) NOT NULL default 0 COMMENT '商品单价',
-  `goods_count` int NOT NULL default 0 COMMENT '商品数量',
+  `goods_price` double NOT NULL DEFAULT '0' COMMENT '商品单价',
+  `goods_count` int(11) NOT NULL DEFAULT '0' COMMENT '商品数量',
   `extra` varchar(255) DEFAULT NULL COMMENT '拓展字段',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  KEY `id`(`id`),
-  KEY `goods_id`(`goods_id`)
+  KEY `id` (`id`),
+  KEY `goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单商品对应表';
