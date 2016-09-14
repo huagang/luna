@@ -18,7 +18,7 @@ public class LunaOrder implements Serializable {
 
     private Integer status;
 
-    private Boolean payMethod;
+    private Byte payMethod;
 
     private String merchantId;
 
@@ -92,11 +92,11 @@ public class LunaOrder implements Serializable {
         this.status = status;
     }
 
-    public Boolean getPayMethod() {
+    public Byte getPayMethod() {
         return payMethod;
     }
 
-    public void setPayMethod(Boolean payMethod) {
+    public void setPayMethod(Byte payMethod) {
         this.payMethod = payMethod;
     }
 

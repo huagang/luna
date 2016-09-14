@@ -681,61 +681,61 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodEqualTo(Boolean value) {
+        public Criteria andPayMethodEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method =", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodNotEqualTo(Boolean value) {
+        public Criteria andPayMethodNotEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method <>", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodGreaterThan(Boolean value) {
+        public Criteria andPayMethodGreaterThan(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method >", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andPayMethodGreaterThanOrEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method >=", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodLessThan(Boolean value) {
+        public Criteria andPayMethodLessThan(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method <", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodLessThanOrEqualTo(Boolean value) {
+        public Criteria andPayMethodLessThanOrEqualTo(Byte value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_method <=", value, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodIn(List<Boolean> values) {
+        public Criteria andPayMethodIn(List<Byte> values) {
             if(values == null)return (Criteria)this;
             addCriterion("pay_method in", values, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodNotIn(List<Boolean> values) {
+        public Criteria andPayMethodNotIn(List<Byte> values) {
             if(values == null)return (Criteria)this;
             addCriterion("pay_method not in", values, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodBetween(Boolean value1, Boolean value2) {
+        public Criteria andPayMethodBetween(Byte value1, Byte value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("pay_method between", value1, value2, "payMethod");
             return (Criteria) this;
         }
 
-        public Criteria andPayMethodNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andPayMethodNotBetween(Byte value1, Byte value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("pay_method not between", value1, value2, "payMethod");
             return (Criteria) this;
