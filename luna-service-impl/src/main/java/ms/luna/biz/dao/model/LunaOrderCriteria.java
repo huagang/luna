@@ -1,6 +1,5 @@
 package ms.luna.biz.dao.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -402,61 +401,61 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyEqualTo(BigDecimal value) {
+        public Criteria andTotalMoneyEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money =", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyNotEqualTo(BigDecimal value) {
+        public Criteria andTotalMoneyNotEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money <>", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyGreaterThan(BigDecimal value) {
+        public Criteria andTotalMoneyGreaterThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money >", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andTotalMoneyGreaterThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money >=", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyLessThan(BigDecimal value) {
+        public Criteria andTotalMoneyLessThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money <", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andTotalMoneyLessThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("total_money <=", value, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyIn(List<BigDecimal> values) {
+        public Criteria andTotalMoneyIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("total_money in", values, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyNotIn(List<BigDecimal> values) {
+        public Criteria andTotalMoneyNotIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("total_money not in", values, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTotalMoneyBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("total_money between", value1, value2, "totalMoney");
             return (Criteria) this;
         }
 
-        public Criteria andTotalMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTotalMoneyNotBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("total_money not between", value1, value2, "totalMoney");
             return (Criteria) this;
@@ -472,61 +471,61 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyEqualTo(BigDecimal value) {
+        public Criteria andPayMoneyEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money =", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyNotEqualTo(BigDecimal value) {
+        public Criteria andPayMoneyNotEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money <>", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyGreaterThan(BigDecimal value) {
+        public Criteria andPayMoneyGreaterThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money >", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andPayMoneyGreaterThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money >=", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyLessThan(BigDecimal value) {
+        public Criteria andPayMoneyLessThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money <", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andPayMoneyLessThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("pay_money <=", value, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyIn(List<BigDecimal> values) {
+        public Criteria andPayMoneyIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("pay_money in", values, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyNotIn(List<BigDecimal> values) {
+        public Criteria andPayMoneyNotIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("pay_money not in", values, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andPayMoneyBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("pay_money between", value1, value2, "payMoney");
             return (Criteria) this;
         }
 
-        public Criteria andPayMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andPayMoneyNotBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("pay_money not between", value1, value2, "payMoney");
             return (Criteria) this;
@@ -542,61 +541,61 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andRefundEqualTo(BigDecimal value) {
+        public Criteria andRefundEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund =", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundNotEqualTo(BigDecimal value) {
+        public Criteria andRefundNotEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund <>", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundGreaterThan(BigDecimal value) {
+        public Criteria andRefundGreaterThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund >", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andRefundGreaterThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund >=", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundLessThan(BigDecimal value) {
+        public Criteria andRefundLessThan(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund <", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andRefundLessThanOrEqualTo(Double value) {
             if(value == null)return (Criteria)this;
             addCriterion("refund <=", value, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundIn(List<BigDecimal> values) {
+        public Criteria andRefundIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("refund in", values, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundNotIn(List<BigDecimal> values) {
+        public Criteria andRefundNotIn(List<Double> values) {
             if(values == null)return (Criteria)this;
             addCriterion("refund not in", values, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andRefundBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("refund between", value1, value2, "refund");
             return (Criteria) this;
         }
 
-        public Criteria andRefundNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andRefundNotBetween(Double value1, Double value2) {
             if(value1 == null || value2 == null)return (Criteria)this;
             addCriterion("refund not between", value1, value2, "refund");
             return (Criteria) this;

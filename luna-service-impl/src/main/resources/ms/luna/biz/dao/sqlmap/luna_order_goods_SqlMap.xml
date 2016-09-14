@@ -5,7 +5,7 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
     <result column="category_id" jdbcType="INTEGER" property="categoryId" />
-    <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+    <result column="goods_price" jdbcType="DOUBLE" property="goodsPrice" />
     <result column="goods_count" jdbcType="INTEGER" property="goodsCount" />
     <result column="extra" jdbcType="VARCHAR" property="extra" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -63,7 +63,7 @@
     insert into luna_order_goods (id, goods_id, category_id, goods_price, 
       goods_count, extra, update_time, create_time
       )
-    values (#id:INTEGER#, #goodsId:VARCHAR#, #categoryId:INTEGER#, #goodsPrice:DECIMAL#, 
+    values (#id:INTEGER#, #goodsId:VARCHAR#, #categoryId:INTEGER#, #goodsPrice:DOUBLE#, 
       #goodsCount:INTEGER#, #extra:VARCHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#
       )
   </insert>
@@ -108,7 +108,7 @@
         #categoryId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="goodsPrice">
-        #goodsPrice:DECIMAL#
+        #goodsPrice:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="goodsCount">
         #goodsCount:INTEGER#
@@ -142,7 +142,7 @@
         category_id = #record.categoryId:INTEGER#
       </isNotNull>
       <isNotNull prepend="," property="record.goodsPrice">
-        goods_price = #record.goodsPrice:DECIMAL#
+        goods_price = #record.goodsPrice:DOUBLE#
       </isNotNull>
       <isNotNull prepend="," property="record.goodsCount">
         goods_count = #record.goodsCount:INTEGER#
@@ -166,7 +166,7 @@
     set id = #record.id:INTEGER#,
       goods_id = #record.goodsId:VARCHAR#,
       category_id = #record.categoryId:INTEGER#,
-      goods_price = #record.goodsPrice:DECIMAL#,
+      goods_price = #record.goodsPrice:DOUBLE#,
       goods_count = #record.goodsCount:INTEGER#,
       extra = #record.extra:VARCHAR#,
       update_time = #record.updateTime:TIMESTAMP#,
