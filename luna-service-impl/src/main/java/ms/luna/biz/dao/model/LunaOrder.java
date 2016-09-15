@@ -1,37 +1,45 @@
 package ms.luna.biz.dao.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import ms.luna.biz.table.LunaOrderTable;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LunaOrder implements Serializable {
+
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @JSONField(name = LunaOrderTable.FIELD_ID)
     private Integer id;
-
+    @JSONField(name = LunaOrderTable.FIELD_TRANSACTION_ID)
     private String transactionId;
-
+    @JSONField(name = LunaOrderTable.FIELD_CERTIFICATE_NUM)
     private String certificateNum;
-
+    @JSONField(name = LunaOrderTable.FIELD_TOTAL_MONEY)
     private Double totalMoney;
-
+    @JSONField(name = LunaOrderTable.FIELD_PAY_MONEY)
     private Double payMoney;
-
+    @JSONField(name = LunaOrderTable.FIELD_REFUND)
     private Double refund;
-
+    @JSONField(name = LunaOrderTable.FIELD_STATUS)
     private Integer status;
-
+    @JSONField(name = LunaOrderTable.FIELD_PAY_METHOD)
     private Byte payMethod;
-
+    @JSONField(name = LunaOrderTable.FIELD_MERCHANT_ID, serialize = false)
     private String merchantId;
-
+    @JSONField(name = LunaOrderTable.FIELD_CUSTOMER_NAME)
     private String customerName;
-
+    @JSONField(name = LunaOrderTable.FIELD_CUSTOMER_PHONE)
     private String customerPhone;
-
+    @JSONField(name = LunaOrderTable.FIELD_UPDATE_TIME)
     private Date updateTime;
-
+    @JSONField(name = LunaOrderTable.FIELD_CREATE_TIME, serialize = false)
     private Date createTime;
-
+    @JSONField(name = LunaOrderTable.FIELD_PAY_TIME, format="yyyy-MM-dd HH:mm:ss")
     private Date payTime;
-
+    @JSONField(name = LunaOrderTable.FIELD_DEAL_TIME, format = "yyyy-MM-dd HH:mm:ss")
     private Date dealTime;
 
     private static final long serialVersionUID = 1L;

@@ -1,3 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap namespace="luna_order" />
+<sqlMap namespace="luna_order" >
+
+    <resultMap id="lunaOrderResult" class="ms.luna.biz.dao.custom.model.LunaOrderResult">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="total_money" property="total_money" jdbcType="DOUBLE"/>
+        <result column="pay_money" property="pay_money" jdbcType="DOUBLE"/>
+        <result column="refund" property="refund" jdbcType="DOUBLE"/>
+        <result column="deal_time" property="deal_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="selectOrdersWithFilter" resultMap="lunaOrderResult" parameterClass="ms.luna.biz.dao.custom.model.LunaOrderParameter">
+        SELECT
+            luna_order.id as id,
+            luna_order.status as status,
+            luna_order.total_money as total_money,
+            luna_order.pay_money as pay_money,
+            luna_order.refund as refund,
+            luna_order.deal_time as deal_time
+        FROM
+            luna_order
+            <dynamic prepend="where" >
+                <isNotNull prepend="and" property="keyword">
+                    luna_order.id LIKE #keyword# AND
+                    luna_order.customer_name LIKE #keyword# AND
+                    luna_order.customer_phone LIKE #keyword#
+                </isNotNull>
+                <isNotNull prepend="and" property="merchant_id">
+                    luna_order.merchant_id = #merchant_id#
+                </isNotNull>
+            </dynamic>
+        ORDER BY
+            luna_order.create_time DESC
+            <isEqual property="range" compareValue="true">
+                Limit #offset#, #limit#
+            </isEqual>
+
+    </select>
+
+    <select id="countOrdersWithFilter" resultClass="java.lang.Integer" parameterClass="ms.luna.biz.dao.custom.model.LunaOrderParameter">
+        SELECT
+            count(1)
+        FROM
+            luna_order
+            <dynamic prepend="where" >
+                <isNotNull prepend="and" property="keyword">
+                    luna_order.id LIKE #keyword# AND
+                    luna_order.customer_name LIKE #keyword# AND
+                    luna_order.customer_phone LIKE #keyword#
+                </isNotNull>
+                <isNotNull prepend="and" property="merchant_id">
+                    luna_order.merchant_id = #merchant_id#
+                </isNotNull>
+            </dynamic>
+    </select>
+
+
+</sqlMap>

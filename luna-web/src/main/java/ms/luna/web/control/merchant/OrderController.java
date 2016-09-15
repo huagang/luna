@@ -59,12 +59,12 @@ public class OrderController extends BasicController {
             @RequestParam(required = false, value = "limit", defaultValue = "" + 30) int limit,
             HttpServletRequest request) {
         try {
-            String unique_id = getUniqueId(request);
             JSONObject param = new JSONObject();
             param.put("offset", offset < 0 ? 0 : offset);
             param.put("limit", limit < 0 ? 0 : limit);
             param.put("keyword", (keyword == null) ? "" : keyword);
             param.put("unique_id", getUniqueId(request));
+            param.put("role_id", getRoleId(request));
             JSONObject result = lunaOrderService.searchOrders(param);
             logger.debug(result.toString());
             return result;
@@ -82,10 +82,7 @@ public class OrderController extends BasicController {
             if (id <= 0) {
                 return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "order id is invalid");
             }
-            LunaUserSession user = SessionHelper.getUser(request.getSession(false));
-            String unique_id = user.getUniqueId();
-            Integer role_id = user.getRoleId();
-            JSONObject result = lunaOrderService.getOrderInfo(id, unique_id, role_id);
+            JSONObject result = lunaOrderService.getOrderInfo(id, getUniqueId(request), getRoleId(request));
             logger.debug(result.toString());
             return result;
         } catch (Exception e) {
@@ -173,6 +170,11 @@ public class OrderController extends BasicController {
     private String getUniqueId(HttpServletRequest request) throws Exception {
         LunaUserSession user = SessionHelper.getUser(request.getSession(false));
         return user.getUniqueId();
+    }
+
+    private Integer getRoleId(HttpServletRequest request) throws Exception {
+        LunaUserSession user = SessionHelper.getUser(request.getSession(false));
+        return user.getRoleId();
     }
 
 }

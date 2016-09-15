@@ -22,4 +22,6 @@ public class LunaOrderTable {
     public static final String FIELD_CREATE_TIME = "create_time";
     public static final String FIELD_PAY_TIME = "pay_time";
     public static final String FIELD_DEAL_TIME = "deal_time";
+
+    public static final String GOODS = "goods";
 }

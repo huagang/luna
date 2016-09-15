@@ -409,4 +409,19 @@ public final class VbConstant {
 		public static final String POI = "POI";
 	}
 
+	public static final class OrderStatus {
+		public static final Integer PAY_WAIT= 100;// 等待付款
+		public static final Integer PAY_OVERDUE = 110;// 无效订单（支付过期)
+		public static final Integer CONSUME_WAIT = 120;// 等待消费
+//		public static final Integer ORDER_CANCEL_UNDEFAULT = 300;// 无效订单客户取消订单（不违约））
+		public static final Integer ORDER_CANCEL_DEFAULT = 130;// 无效订单（客户取消订单（违约））
+		public static final Integer CONSUME_SUCCESS = 140;// 消费成功（客户入住））
+		public static final Integer DATE_OUT = 150;// 已过期
+		public static final Integer REFUND_WAIT = 160;// 等待退款（用户规定时间取消和商家取消）
+		public static final Integer REFUND_SUCCESS = 170;// 退款成功
+		public static final Integer REFUND_FAIL = 180;// 退款失败
+		public static final Integer RELEASE = 190;// 退款失败
+
+	}
+
 }
