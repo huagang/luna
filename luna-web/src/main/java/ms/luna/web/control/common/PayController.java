@@ -116,9 +116,9 @@ public class PayController {
                 inData.put("extraParam", "");//额外信息 notify中会原样返回
                 // inData.put("detail", "{\"test11\":\"123\"}");
                 inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");//设置notify地址
-                inData.put("tradeNo", "0987654321");
+                inData.put("tradeNo", orderInfo.getString(LunaOrderTable.FIELD_TRADE_NO));
                 inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
-                inData.put("money", 1);
+                inData.put("money", orderInfo.getDoubleValue(LunaOrderTable.FIELD_PAY_MONEY) * 100);
                 //TODO return the message that front end needed
                 return wxPayService.appPay(inData);
             } else {

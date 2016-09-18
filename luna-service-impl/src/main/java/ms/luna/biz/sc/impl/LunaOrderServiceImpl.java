@@ -22,10 +22,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Copyright (C) 2015 - 2016 MICROSCENE Inc., All Rights Reserved.
@@ -44,6 +47,41 @@ public class LunaOrderServiceImpl implements LunaOrderService {
 
     @Autowired
     private LunaOrderDAO lunaOrderDAO;
+
+    @Override
+    @Transactional
+    public JSONObject createOrders(JSONObject param) {
+        try {
+            LunaOrder order = JSONObject.toJavaObject(param, LunaOrder.class);
+            Integer id = lunaOrderDAO.insert(order);
+            String tradeNo = getTradeNo(id);
+            order.setTradeNo(tradeNo);
+            lunaOrderDAO.updateByPrimaryKey(order);
+            //TODO 判断商品数量和减少商品数量
+
+            return FastJsonUtil.sucess("success");
+        } catch (Exception e) {
+            logger.error("Failed to create order.", e);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    private String getTradeNo(Integer id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Calendar.getInstance().get(Calendar.YEAR));
+        Random random = new Random();
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        String strId = String.valueOf(id);
+        for (int i = strId.length() + 1; i <= 12; i++) {
+            sb.append(0);
+        }
+        sb.append(strId);
+        return sb.toString();
+    }
 
     @Override
     public JSONObject searchOrders(JSONObject param) {
@@ -145,7 +183,7 @@ public class LunaOrderServiceImpl implements LunaOrderService {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法根据unique_id:" + unique_id + "获取merchant_id,请检查用户id和商户id关联关系!");
             }
             LunaOrder order = getLunaOrderByIdAndMerchantId(id, merhant_id);
-            if(order == null) {
+            if (order == null) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法获取订单号信息(id:" + id + "),请检查当前用户的关联商户是否存在该订单号!");
             }
             int status = order.getStatus();
@@ -173,7 +211,7 @@ public class LunaOrderServiceImpl implements LunaOrderService {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法根据unique_id:" + unique_id + "获取merchant_id,请检查用户id和商户id关联关系!");
             }
             LunaOrder order = getLunaOrderByIdAndMerchantId(id, merhant_id);
-            if(order == null) {
+            if (order == null) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法获取订单号信息(id:" + id + "),请检查当前用户的关联商户是否存在该订单号!");
             }
             if (order.getStatus().intValue() != OrderStatus.CONSUME_WAIT) {// 只有等待消费时才能取消
@@ -188,9 +226,9 @@ public class LunaOrderServiceImpl implements LunaOrderService {
 
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
-           logger.error("Failed to cancel order.", e);
-           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-           return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to cancel order.");
+            logger.error("Failed to cancel order.", e);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "Failed to cancel order.");
         }
     }
 
@@ -202,7 +240,7 @@ public class LunaOrderServiceImpl implements LunaOrderService {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法根据unique_id:" + unique_id + "获取merchant_id,请检查用户id和商户id关联关系!");
             }
             LunaOrder order = getLunaOrderByIdAndMerchantId(id, merhant_id);
-            if(order == null) {
+            if (order == null) {
                 return FastJsonUtil.error(ErrorCode.NOT_FOUND, "无法获取订单号信息(id:" + id + "),请检查当前用户的关联商户是否存在该订单号!");
             }
             if (order.getStatus().intValue() != OrderStatus.DATE_OUT) {// 只有已过期状态才能释放房间

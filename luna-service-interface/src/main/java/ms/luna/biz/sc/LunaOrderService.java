@@ -12,6 +12,14 @@ import java.util.jar.JarEntry;
  */
 public interface LunaOrderService {
 
+    /**
+     * 创建订单接口
+     *
+     * @param param
+     * @return
+     */
+    JSONObject createOrders(JSONObject param)
+
     // 搜索列表页
     JSONObject searchOrders(JSONObject param);
 
