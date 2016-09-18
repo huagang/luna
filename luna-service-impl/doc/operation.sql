@@ -15,10 +15,13 @@ CREATE TABLE `luna_order` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `pay_time` timestamp NULL DEFAULT NULL COMMENT '付款时间',
   `deal_time` timestamp NULL DEFAULT NULL COMMENT '成交时间',
+  `trade_no` char(16) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `transaction_id` (`transaction_id`),
-  UNIQUE KEY `certificate_num` (`merchant_id`,`certificate_num`)
+  UNIQUE KEY `certificate_num` (`merchant_id`,`certificate_num`),
+  UNIQUE KEY `trade_no_UNIQUE` (`trade_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
+
 
 CREATE TABLE `luna_order_goods` (
   `id` int(11) NOT NULL COMMENT '订单编号',
