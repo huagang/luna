@@ -209,7 +209,7 @@ public class LunaOrderServiceImpl implements LunaOrderService {
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "请检查当前房间状态,status:" + order.getStatus());
             }
             // 改变房间状态: 已过期-->已释放
-            order.setStatus(OrderStatus.RELEASE);
+            order.setStatus(OrderStatus.FINISHED);
             order.setUpdateTime(new Date());
             lunaOrderDAO.updateByPrimaryKeySelective(order);
             return FastJsonUtil.sucess("success");
