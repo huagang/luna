@@ -13,6 +13,7 @@ public class LunaOrderTable {
     public static final String FIELD_CERTIFICATE_NUM = "certificate_num";
     public static final String FIELD_TOTAL_MONEY = "total_money";
     public static final String FIELD_PAY_MONEY = "pay_money";
+    public static final String FIELD_PAID_MONEY = "paid_money";
     public static final String FIELD_REFUND = "refund";
     public static final String FIELD_STATUS = "status";
     public static final String FIELD_PAY_METHOD = "pay_method";

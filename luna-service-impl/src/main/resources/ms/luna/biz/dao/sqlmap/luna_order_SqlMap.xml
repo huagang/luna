@@ -18,6 +18,7 @@
     <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
     <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
     <result column="trade_no" jdbcType="CHAR" property="tradeNo" />
+    <result column="paid_money" jdbcType="DOUBLE" property="paidMoney" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
@@ -47,7 +48,7 @@
   <sql id="Base_Column_List">
     id, transaction_id, certificate_num, total_money, pay_money, refund, status, pay_method, 
     merchant_id, customer_name, customer_phone, update_time, create_time, pay_time, deal_time, 
-    trade_no
+    trade_no, paid_money
   </sql>
   <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaOrderCriteria" resultMap="BaseResultMap">
     select
@@ -83,11 +84,11 @@
     insert into luna_order (transaction_id, certificate_num, total_money, pay_money, 
       refund, status, pay_method, merchant_id, customer_name, 
       customer_phone, update_time, create_time, pay_time, 
-      deal_time, trade_no)
+      deal_time, trade_no, paid_money)
     values (#transactionId:VARCHAR#, #certificateNum:VARCHAR#, #totalMoney:DOUBLE#, #payMoney:DOUBLE#, 
       #refund:DOUBLE#, #status:INTEGER#, #payMethod:TINYINT#, #merchantId:VARCHAR#, #customerName:VARCHAR#, 
       #customerPhone:VARCHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#, #payTime:TIMESTAMP#, 
-      #dealTime:TIMESTAMP#, #tradeNo:CHAR#)
+      #dealTime:TIMESTAMP#, #tradeNo:CHAR#, #paidMoney:DOUBLE#)
     <selectKey keyProperty="id" resultClass="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -140,6 +141,9 @@
       <isNotNull prepend="," property="tradeNo">
         trade_no
       </isNotNull>
+      <isNotNull prepend="," property="paidMoney">
+        paid_money
+      </isNotNull>
       )
     </dynamic>
     values
@@ -188,6 +192,9 @@
       </isNotNull>
       <isNotNull prepend="," property="tradeNo">
         #tradeNo:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="paidMoney">
+        #paidMoney:DOUBLE#
       </isNotNull>
       )
     </dynamic>
@@ -250,6 +257,9 @@
       <isNotNull prepend="," property="record.tradeNo">
         trade_no = #record.tradeNo:CHAR#
       </isNotNull>
+      <isNotNull prepend="," property="record.paidMoney">
+        paid_money = #record.paidMoney:DOUBLE#
+      </isNotNull>
     </dynamic>
     <isParameterPresent>
       <include refid="luna_order.Example_Where_Clause" />
@@ -272,7 +282,8 @@
       create_time = #record.createTime:TIMESTAMP#,
       pay_time = #record.payTime:TIMESTAMP#,
       deal_time = #record.dealTime:TIMESTAMP#,
-      trade_no = #record.tradeNo:CHAR#
+      trade_no = #record.tradeNo:CHAR#,
+      paid_money = #record.paidMoney:DOUBLE#
     <isParameterPresent>
       <include refid="luna_order.Example_Where_Clause" />
     </isParameterPresent>
@@ -325,6 +336,9 @@
       <isNotNull prepend="," property="tradeNo">
         trade_no = #tradeNo:CHAR#
       </isNotNull>
+      <isNotNull prepend="," property="paidMoney">
+        paid_money = #paidMoney:DOUBLE#
+      </isNotNull>
     </dynamic>
     where id = #id:INTEGER#
   </update>
@@ -344,7 +358,8 @@
       create_time = #createTime:TIMESTAMP#,
       pay_time = #payTime:TIMESTAMP#,
       deal_time = #dealTime:TIMESTAMP#,
-      trade_no = #tradeNo:CHAR#
+      trade_no = #tradeNo:CHAR#,
+      paid_money = #paidMoney:DOUBLE#
     where id = #id:INTEGER#
   </update>
 </sqlMap>

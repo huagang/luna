@@ -1349,6 +1349,76 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andPaidMoneyIsNull() {
+            addCriterion("paid_money is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyIsNotNull() {
+            addCriterion("paid_money is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyEqualTo(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money =", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyNotEqualTo(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money <>", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyGreaterThan(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money >", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyGreaterThanOrEqualTo(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money >=", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyLessThan(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money <", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyLessThanOrEqualTo(Double value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("paid_money <=", value, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyIn(List<Double> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("paid_money in", values, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyNotIn(List<Double> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("paid_money not in", values, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyBetween(Double value1, Double value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("paid_money between", value1, value2, "paidMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaidMoneyNotBetween(Double value1, Double value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("paid_money not between", value1, value2, "paidMoney");
+            return (Criteria) this;
+        }
+
         public Criteria andTransactionIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(transaction_id) like", value.toUpperCase(), "transactionId");
