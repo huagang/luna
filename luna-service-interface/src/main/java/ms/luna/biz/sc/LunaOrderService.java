@@ -18,7 +18,7 @@ public interface LunaOrderService {
      * @param param
      * @return
      */
-    JSONObject createOrders(JSONObject param)
+    JSONObject createOrders(JSONObject param);
 
     // 搜索列表页
     JSONObject searchOrders(JSONObject param);
