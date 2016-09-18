@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_merchant_manage">
+	<resultMap id="MerchantsResult" class="ms.luna.biz.dao.custom.model.MerchantsResult">
+		<result column="MERCHANT_ID" property="merchant_id" jdbcType="VARCHAR2" />
+		<result column="MERCHANT_NM" property="merchant_nm" jdbcType="VARCHAR2" />
+		<result column="CATEGORY_ID" property="category_id" jdbcType="VARCHAR2" />
+		<result column="CONTACT_NM" property="contact_nm" jdbcType="VARCHAR2" />
+		<result column="CONTACT_PHONENUM" property="contact_phonenum" jdbcType="VARCHAR2" />
+		<result column="SALESMAN_NM" property="salesman_nm" jdbcType="VARCHAR2" />
+		<result column="STATUS_ID" property="status_id" jdbcType="VARCHAR2" />
+		<result column="PROVINCE_ID" property="province_id" jdbcType="VARCHAR2" />
+		<result column="CITY_ID" property="city_id" jdbcType="VARCHAR2" />
+		<result column="COUNTY_ID" property="county_id" jdbcType="VARCHAR2" />
+		<result column="CATEGORY_NM" property="category_nm" jdbcType="VARCHAR2" />
+		<result column="DEL_FLG" property="del_flg" jdbcType="VARCHAR2" />
+		<result column="BUSINESS_NAME" property="business_name" jdbcType="VARCHAR2" />
+		<result column="BUSINESS_CODE" property="business_code" jdbcType="VARCHAR2" />
+		<result column="BUSINESS_ID" property="business_id" jdbcType="INTEGER" />
+
+	</resultMap>
+	<select id="selectAllMerchantsWithFilter" resultMap="MerchantsResult"
+		parameterClass="ms.luna.biz.dao.custom.model.MerchantsParameter">
+
+		SELECT
+			MERCHANTS.merchant_id AS MERCHANT_ID,
+			MERCHANTS.merchant_nm AS MERCHANT_NM,
+			MERCHANTS.category_id AS CATEGORY_ID,
+			MERCHANTS.contact_nm AS CONTACT_NM,
+			MERCHANTS.contact_phonenum AS CONTACT_PHONENUM,
+			MERCHANTS.salesman_nm AS SALESMAN_NM,
+			MERCHANTS.status_id AS STATUS_ID,
+			MERCHANTS.province_id AS PROVINCE_ID,
+			MERCHANTS.city_id AS CITY_ID,
+			MERCHANTS.county_id AS COUNTY_ID,
+			MERCHANTS.del_flg AS DEL_FLG,
+			ms_category.nm_zh AS CATEGORY_NM,
+			ms_business.business_id AS BUSINESS_ID,
+			ms_business.business_code AS BUSINESS_CODE,
+			ms_business.business_name AS BUSINESS_NAME
+		FROM
+		(
+			SELECT
+				*
+			FROM ms_merchant_manage
+			<dynamic prepend="where">
+				<isNotEmpty prepend="and" property="likeFilterNm">
+					merchant_nm like #likeFilterNm#
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY regist_hhmmss DESC
+			<isNotNull property="range">
+				Limit #min#,#max#
+			</isNotNull>
+		) MERCHANTS
+		LEFT JOIN ms_category ON MERCHANTS.category_id=ms_category.category_id
+		LEFT JOIN ms_business ON MERCHANTS.merchant_id=ms_business.merchant_id
+
+	</select>
+
+	<select id="countMerchants" resultClass="java.lang.Integer"
+		parameterClass="ms.luna.biz.dao.custom.model.MerchantsParameter">
+
+		SELECT
+			count(1)
+		FROM
+			ms_merchant_manage
+		
+		<isNotNull property="likeFilterNm">
+			WHERE merchant_nm like #likeFilterNm#
+		</isNotNull>
+	</select>
+	
+	<resultMap id="merchantInfo" class="ms.luna.biz.dao.custom.model.MerchantsResult">
+		<result column="MERCHANT_ID" property="merchant_id" jdbcType="VARCHAR2" />
+		<result column="MERCHANT_NM" property="merchant_nm" jdbcType="VARCHAR2" />
+	</resultMap>
+	
+	<select id="searchMerchantWithFilter" resultMap="merchantInfo"
+		parameterClass="ms.luna.biz.dao.custom.model.MerchantsParameter">
+			SELECT
+				ms_merchant_manage.merchant_id,
+				ms_merchant_manage.merchant_nm
+			FROM
+				ms_merchant_manage
+			<dynamic prepend="where">
+				<isNotEmpty prepend="and" property="provinceId">
+					province_id = #provinceId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="cityId">
+					city_id = #cityId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="countyId">
+					county_id = #countyId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="likeFilterNm">
+					merchant_nm like #likeFilterNm#
+				</isNotEmpty>
+			</dynamic>
+			LIMIT 100;
+	
+	</select>
+
+	<select id="selectMerchantTradeStatus" resultClass="java.lang.Integer"
+			parameterClass="String">
+
+		SELECT
+			trade_status
+		FROM
+			ms_merchant_manage
+		WHERE merchant_id = #merchantId#
+	</select>
+
+</sqlMap>
+  

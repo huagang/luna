@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_show_app">
+	<resultMap id="MsShowAppResult" class="ms.luna.biz.dao.custom.model.MsShowAppResult">
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="app_addr" property="appAddr" jdbcType="VARCHAR" />
+		<result column="regist_hhmmss" property="registhhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
+		<result column="up_hhmmss" property="uphhmmss" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP" />
+		<result column="owner" property="owner" jdbcType="VARCHAR" />
+		<result column="app_status" property="appStatus" jdbcType="INTEGER" />
+		<result column="business_id" property="businessId" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectShowAppWithFilter" resultMap="MsShowAppResult"
+		parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter">
+		select
+			a.app_id app_id,
+			a.app_name app_name,
+			a.app_code app_code,
+			a.type type,
+			a.app_addr app_addr,
+			a.regist_hhmmss regist_hhmmss,
+			a.up_hhmmss up_hhmmss,
+			a.owner owner,
+			a.app_status app_status,
+			a.business_id business_id
+		from ms_show_app a
+		<dynamic prepend="where" >
+			<isNotEmpty prepend="and" property="keyword">
+				a.app_name like #keyword#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="businessIds">
+				a.business_id in
+				<iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+					#businessIds[]#
+				</iterate>
+			</isNotNull>
+		</dynamic>
+		order by a.regist_hhmmss desc
+		<isEqual property="range" compareValue="true">
+			Limit #min#, #max#
+		</isEqual>
+	</select>
+
+	<select id="selectIdByName" parameterClass="String" resultClass="Integer">
+		select app_id
+		from ms_show_app
+		where app_name=#appName#
+	</select>
+
+	<resultMap id="MsShowAppResult" class="ms.luna.biz.dao.custom.model.MsShowAppResult">
+		<result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+		<!--<result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />-->
+		<!--<result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />-->
+		<result column="business_id" property="businessId" jdbcType="INTEGER" />
+		<result column="business_name" property="businessName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+		<result column="pic_thumb" property="picThumb" jdbcType="VARCHAR" />
+		<result column="owner" property="owner" jdbcType="VARCHAR" />
+		<result column="regist_hhmmss" property="registhhmmss" jdbcType="TIMESTAMP"/>
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP"/>
+		<result column="app_status" property="appStatus" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	<select id="selectShowAppByCategoryId" resultMap="MsShowAppResult"
+			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
+		SELECT
+			CATEGORY_MERCHANT_BUSINESS.category_id AS category_id,
+			CATEGORY_MERCHANT_BUSINESS.category_name AS category_name,
+			CATEGORY_MERCHANT_BUSINESS.business_id AS business_id,
+			CATEGORY_MERCHANT_BUSINESS.business_name AS business_name,
+			ms_show_app.app_id AS app_id,
+			ms_show_app.app_code AS app_code,
+			ms_show_app.app_name AS app_name,
+			ms_show_app.type AS type,
+			ms_show_app.note AS note,
+			ms_show_app.pic_thumb AS pic_thumb,
+			ms_show_app.owner AS owner,
+			ms_show_app.regist_hhmmss AS regist_hhmmss,
+			ms_show_app.publish_time AS publish_time,
+			ms_show_app.app_status AS app_status
+		FROM
+		(
+			SELECT
+				ms_business.business_id,
+				ms_business.business_name,
+				CATEGORY_MERCHANT.category_id,
+				CATEGORY_MERCHANT.category_name
+			FROM
+			(
+				SELECT
+					ms_merchant_manage.merchant_id,
+					ms_category.category_id,
+					ms_category.nm_zh as category_name
+				FROM ms_category INNER JOIN ms_merchant_manage
+				WHERE ms_category.category_id = ms_merchant_manage.category_id
+				<isNotEmpty property="categoryIds">
+					AND ms_category.category_id IN
+					<iterate conjunction="," open="(" close=")" property="categoryIds">
+						#categoryIds[]#
+					</iterate>
+				</isNotEmpty>
+			) CATEGORY_MERCHANT INNER JOIN ms_business WHERE CATEGORY_MERCHANT.merchant_id = ms_business.merchant_id
+		) CATEGORY_MERCHANT_BUSINESS INNER JOIN ms_show_app
+		WHERE CATEGORY_MERCHANT_BUSINESS.business_id = ms_show_app.business_id
+		<isNotNull property="status">
+			AND ms_show_app.app_status=#status#
+		</isNotNull>
+		<isNotEmpty property="types">
+			AND ms_show_app.type IN
+			<iterate conjunction="," open="(" close=")" property="types">
+				#types[]#
+			</iterate>
+		</isNotEmpty>
+		ORDER BY category_id, ms_show_app.regist_hhmmss desc
+		<isEqual property="range" compareValue="true">
+			Limit #min#, #max#
+		</isEqual>
+	</select>
+
+	<select id="countShowAppsByCategoryId" resultClass="java.lang.Integer"
+			parameterClass="ms.luna.biz.dao.custom.model.MsShowAppParameter" >
+		SELECT
+			count(1)
+		FROM
+		(
+			SELECT
+				ms_business.business_id
+			FROM
+			(
+				SELECT
+					ms_merchant_manage.merchant_id
+				FROM ms_category INNER JOIN ms_merchant_manage
+				WHERE ms_category.category_id = ms_merchant_manage.category_id
+				<isNotEmpty property="categoryIds">
+					AND ms_category.category_id IN
+					<iterate conjunction="," open="(" close=")" property="categoryIds">
+						#categoryIds[]#
+					</iterate>
+				</isNotEmpty>
+			) CATEGORY_MERCHANT INNER JOIN ms_business WHERE CATEGORY_MERCHANT.merchant_id = ms_business.merchant_id
+		) CATEGORY_MERCHANT_BUSINESS INNER JOIN ms_show_app
+		WHERE CATEGORY_MERCHANT_BUSINESS.business_id = ms_show_app.business_id
+		<isNotNull property="status">
+			AND ms_show_app.app_status=#status#
+		</isNotNull>
+		<isNotEmpty property="types">
+			AND ms_show_app.type IN
+			<iterate conjunction="," open="(" close=")" property="types">
+				#types[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+
+</sqlMap>

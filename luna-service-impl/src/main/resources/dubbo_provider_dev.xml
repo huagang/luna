@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						http://code.alibabatech.com/schema/dubbo 
+						http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+						default-lazy-init="true">
+
+	<import resource="spring_config.xml" />
+	<dubbo:application name="luna-service-impl" />
+
+	<dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
+	<dubbo:protocol name="dubbo" port="20881" />
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:consumer check="false" timeout="30000" retries="0" />
+
+	<import resource="dubbo_provider_base.xml" />
+
+</beans>

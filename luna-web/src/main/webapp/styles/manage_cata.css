@@ -1,0 +1,71 @@
+/*类别列表*/
+.main-bd .add{
+	position: relative;
+    float: right;
+    margin-bottom:52px;
+}
+.main-bd .btn-add{
+    padding: 4px 14px;
+}
+.table>thead>tr>th{
+	padding-top:0;
+	font-weight:500;
+	padding-left:5px;
+	padding-right:5px;
+	border-bottom:1px solid #C3C3C3;
+}
+.table>tbody>tr>td:last-child,
+.table>thead>tr>th:last-child{
+	text-align:right;
+}
+.table>tbody>tr>td{
+	line-height:26px;
+	padding:12px 5px;
+	border-top:1px solid #C3C3C3;
+}
+.edit{
+	padding-right:10px;
+}
+/*弹出层，独有，新建类别*/
+.pop-fun{
+	padding-right:54px;
+}
+#category_nm_zh,
+#category_nm_en,
+#cata-name-modify,
+#cata-abbr-modify{
+    margin-left: 5px;
+    width: 280px;
+    font-size: 12px;
+    height: 30px;
+    margin-bottom: 10px;
+}
+#pass1,
+#pass2,
+#pass3,
+#pass4{
+    color: green;
+    position: absolute;
+    right: 28px;
+}
+#pass1,
+#pass3{
+    top: 82px;
+    visibility: hidden;
+}
+#pass2,
+#pass4{
+    top: 138px;
+    visibility: hidden;
+}
+.cataName{
+    margin-right:30px;
+}
+#pop-message{
+	min-width:350px;
+}
+/*删除类别*/
+.pop-tips{
+    margin: 40px;
+    font-size: 14px;
+}

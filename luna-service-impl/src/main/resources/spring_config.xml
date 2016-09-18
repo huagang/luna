@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+ http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+ http://www.springframework.org/schema/tx 
+ http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+ default-lazy-init="true">
+
+	<context:component-scan base-package="ms.biz" />
+	<context:component-scan base-package="ms.luna.biz" />
+	<context:component-scan base-package="ms.luna.cache" />
+	<context:component-scan base-package="ms.luna.schedule.service" />
+	<!-- <context:component-scan base-package="ms.luna.biz.bl"/> <context:component-scan
+		base-package="ms.luna.biz.bl.impl"/> -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}${jdbc.urlParam}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="5000" />
+        <property name="defaultAutoCommit" value="true" />  
+        <property name="defaultReadOnly" value="false" />    
+        <property name="testOnBorrow" value="true"/>  
+        <property name="validationQuery" value="select 1"/>
+	</bean>
+	
+<!-- 	<bean id="serviceConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:config.properties" />
+	</bean> -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+		<property name="configLocation">
+			<value>classpath:SqlMapConfig.xml</value>
+		</property>
+	</bean>
+
+	<bean id="daoMethodInterceptor" class="ms.biz.common.DAOMethodInterceptor">
+	</bean>
+
+	<bean id="serviceAopHandleInterceptor" class="ms.biz.common.ServiceMethodInterceptor">
+	</bean>
+
+	<bean id="serviceAutoProxy"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>*Service</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>serviceAopHandleInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 面向DAO接口定义 -->
+	<bean id="daoAutoProxy"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>*DAO</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>daoMethodInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mongoConnector" class="ms.biz.common.MongoConnector">
+		<constructor-arg value="mongo.properties"/>
+	</bean> 
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

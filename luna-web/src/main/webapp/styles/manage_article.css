@@ -1,0 +1,102 @@
+/*
+业务管理样式表
+author：demi
+time：20160324*/
+
+
+/*新建按钮*/
+
+#new-business {
+    float: right;
+    margin-right: 10px;
+}
+
+.main-bd {
+    margin-top: 74px;
+}
+
+
+/*主内容区域*/
+
+.edit,
+.publish{
+    padding-right: 10px;
+}
+
+
+/*弹出框*/
+
+.pop-fun {
+    padding-right: 39px;
+}
+
+.select {
+    margin-right: 8px;
+    min-width: 90px;
+}
+
+.name,
+.short,
+.region,
+.result {
+    margin-bottom: 10px;
+    font-size: 14px;
+    position: relative;
+}
+
+.form-group .form-input-title,
+.form-group .form-input-group {
+    float: left;
+}
+
+.form-group label {
+    height: 30px;
+    line-height: 30px;
+}
+
+.result {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.merchant {
+    padding-bottom: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.cata-label {
+    margin-left: 28px;
+}
+
+#business-name-edit,
+#business-name,
+#business-name-short-edit,
+#business-name-short {
+    width: 375px;
+}
+
+#warn-short-edit,
+#warn-short,
+#warn-name-edit,
+{
+    position: absolute;
+    left: 355px;
+    width: 70px;
+    top: 5px;
+    visibility: hidden;
+}
+
+.name .warn,
+.short .warn {
+    display: block;
+}
+
+#search {
+    margin-left: 6px;
+}
+
+.pop {
+    width: 632px;
+    height: 290px;
+}

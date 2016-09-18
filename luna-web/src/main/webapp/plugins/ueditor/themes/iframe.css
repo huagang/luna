@@ -1,0 +1,20 @@
+/*可以在这里添加你自己的css*/
+body{
+	margin:0px;
+}
+
+body.view {
+	font-size: 14px;
+	padding: 5px 10px;
+	line-height: 21px;
+}
+
+.view > p:after{
+	content:'';
+	display:table;
+	clear:both;
+}
+
+.view img{
+	max-width: 100%;
+}

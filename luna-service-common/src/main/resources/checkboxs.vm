@@ -1,0 +1,7 @@
+<div class="item-poi" style="display:none" tag_id="${privateField.field_def.tag_id}">
+    <div class="label-poi property-label-poi">${privateField.field_def.field_show_name}</div>
+    <div class="value-poi">
+    	${checkboxs}
+    </div>
+</div>
+

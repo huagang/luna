@@ -1,0 +1,76 @@
+.pic-cropper .pop-modal{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 20px;
+    z-index: 10000;
+    margin: auto;
+    display: block;
+    width: 1000px;
+}
+.pic-cropper .mask{
+    z-index: 1000;
+}
+
+.pic-cropper .img-container{
+    display: inline-block;
+    width: 600px;
+    margin: auto;
+    height: 400px;
+    overflow: hidden;
+}
+
+.pic-cropper  .init-img{
+    max-width: 100%;
+}
+
+.pic-cropper .op-right{
+    display: inline-block;
+    vertical-align: top;
+    width: 300px;
+    height: 400px;
+    margin-left: 10px;
+}
+
+.pic-cropper .operation-container{
+    width: 300px;
+    height: 160px;
+    margin: auto;
+    padding: 15px 0 0;
+}
+.pic-cropper .preview-container,
+.pic-cropper .img-preview{
+    overflow: hidden;
+    width: 300px;
+    height: 200px;
+}
+
+
+.pic-cropper .rotate-left {
+    transform: rotateY(180deg);
+}
+
+.operation-container .glyphicon{
+    margin: 0 5px 5px 0;
+}
+
+.pic-cropper  .pop-fun{
+    width: 100%;
+}
+
+.pic-cropper .warn{
+    display: block;
+}
+
+.pic-cropper .compress{
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 10px 0 0;
+}
+
+.pic-cropper .preview-label{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+}

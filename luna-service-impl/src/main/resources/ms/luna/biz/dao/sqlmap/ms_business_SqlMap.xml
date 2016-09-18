@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_business" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsBusiness" >
+    <result column="business_id" property="businessId" jdbcType="INTEGER" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+    <result column="business_code" property="businessCode" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="INTEGER" />
+    <result column="stat_id" property="statId" jdbcType="INTEGER" />
+    <result column="secret_key" property="secretKey" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="updated_by_wjnm" property="updatedByWjnm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    business_id, business_name, business_code, merchant_id, app_id, stat_id, secret_key, 
+    create_user, up_hhmmss, regist_hhmmss, updated_by_wjnm
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsBusinessCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_business.Base_Column_List" />
+    from ms_business
+    <isParameterPresent >
+      <include refid="ms_business.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    select 
+    <include refid="ms_business.Base_Column_List" />
+    from ms_business
+    where business_id = #businessId:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    delete from ms_business
+    where business_id = #businessId:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsBusinessCriteria" >
+    delete from ms_business
+    <include refid="ms_business.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    insert into ms_business (business_id, business_name, business_code, merchant_id, 
+      app_id, stat_id, secret_key, create_user, up_hhmmss, 
+      regist_hhmmss, updated_by_wjnm)
+    values (#businessId:INTEGER#, #businessName:VARCHAR#, #businessCode:VARCHAR#, #merchantId:VARCHAR#, 
+      #appId:INTEGER#, #statId:INTEGER#, #secretKey:VARCHAR#, #createUser:VARCHAR#, #upHhmmss:TIMESTAMP#, 
+      #registHhmmss:TIMESTAMP#, #updatedByWjnm:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    insert into ms_business
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="businessId" >
+        business_id
+      </isNotNull>
+      <isNotNull prepend="," property="businessName" >
+        business_name
+      </isNotNull>
+      <isNotNull prepend="," property="businessCode" >
+        business_code
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId" >
+        merchant_id
+      </isNotNull>
+      <isNotNull prepend="," property="appId" >
+        app_id
+      </isNotNull>
+      <isNotNull prepend="," property="statId" >
+        stat_id
+      </isNotNull>
+      <isNotNull prepend="," property="secretKey" >
+        secret_key
+      </isNotNull>
+      <isNotNull prepend="," property="createUser" >
+        create_user
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        updated_by_wjnm
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="businessId" >
+        #businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="businessName" >
+        #businessName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessCode" >
+        #businessCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId" >
+        #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appId" >
+        #appId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="statId" >
+        #statId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="secretKey" >
+        #secretKey:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createUser" >
+        #createUser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        #updatedByWjnm:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsBusinessCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_business
+    <include refid="ms_business.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_business
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.businessId" >
+        business_id = #record.businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.businessName" >
+        business_name = #record.businessName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.businessCode" >
+        business_code = #record.businessCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchantId" >
+        merchant_id = #record.merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.appId" >
+        app_id = #record.appId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.statId" >
+        stat_id = #record.statId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.secretKey" >
+        secret_key = #record.secretKey:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.createUser" >
+        create_user = #record.createUser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByWjnm" >
+        updated_by_wjnm = #record.updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_business.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_business
+    set business_id = #record.businessId:INTEGER#,
+      business_name = #record.businessName:VARCHAR#,
+      business_code = #record.businessCode:VARCHAR#,
+      merchant_id = #record.merchantId:VARCHAR#,
+      app_id = #record.appId:INTEGER#,
+      stat_id = #record.statId:INTEGER#,
+      secret_key = #record.secretKey:VARCHAR#,
+      create_user = #record.createUser:VARCHAR#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      updated_by_wjnm = #record.updatedByWjnm:VARCHAR#
+    <isParameterPresent >
+      <include refid="ms_business.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    update ms_business
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="businessName" >
+        business_name = #businessName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessCode" >
+        business_code = #businessCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId" >
+        merchant_id = #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="appId" >
+        app_id = #appId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="statId" >
+        stat_id = #statId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="secretKey" >
+        secret_key = #secretKey:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="createUser" >
+        create_user = #createUser:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        updated_by_wjnm = #updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where business_id = #businessId:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsBusiness" >
+    update ms_business
+    set business_name = #businessName:VARCHAR#,
+      business_code = #businessCode:VARCHAR#,
+      merchant_id = #merchantId:VARCHAR#,
+      app_id = #appId:INTEGER#,
+      stat_id = #statId:INTEGER#,
+      secret_key = #secretKey:VARCHAR#,
+      create_user = #createUser:VARCHAR#,
+      up_hhmmss = #upHhmmss:TIMESTAMP#,
+      regist_hhmmss = #registHhmmss:TIMESTAMP#,
+      updated_by_wjnm = #updatedByWjnm:VARCHAR#
+    where business_id = #businessId:INTEGER#
+  </update>
+</sqlMap>

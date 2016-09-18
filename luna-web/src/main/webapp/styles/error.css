@@ -1,0 +1,52 @@
+.container-fluid{
+    padding: 0;
+    margin: 0;
+}
+.navbar{
+    background-color: #364c86;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    height: 64px;
+    margin-bottom: 30px;
+}
+.navbar-header{
+    width: 1200px;
+    float: none;
+    margin: 0 auto;
+    height: 64px;
+}
+.navbar-brand{
+    height: 64px;
+    padding: 12px 0;
+}
+.info{
+    margin: 100px auto 0 auto;
+    width: 400px;
+    position: relative;
+    top: 50px;
+    font-size: 16px;
+    line-height: 32px;
+}
+.clc-pop{
+    font-size: 40px;
+    color: white;
+    background: #459AE9;
+    margin-right: 10px;
+    float: left;
+    top: 12px;
+}
+.glyphicon-remove{
+    font-weight: 100;
+}
+.foot{
+	width:100%;
+	text-align:center;
+	margin:auto;
+	position:absolute;
+	bottom:30px;
+}

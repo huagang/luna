@@ -1,0 +1,296 @@
+/*
+新增单条POI数据
+新开业卡
+time：20160426
+author:demi
+*/
+input[type=text]{
+    height: 35px;
+    padding: 5px 10px;
+}
+select{
+    height: 35px;
+    min-width: 70px;
+    margin-right: 5px;
+}
+button{
+    height: 35px;
+}
+label{
+    font-weight: normal;
+}
+.add-poi{
+    width: 1200px;
+    padding: 36px 50px;
+    margin: auto;
+    text-align: center;
+    background: #FFFFFF;
+    border: 1px solid #C3C3C3;
+}
+.title-poi{
+    width: 100%;
+    margin-bottom: 50px;
+    text-align: left;
+    position: relative;
+}
+.langTag{
+    font-size: 14px;
+    color: #364c86;
+}
+.lang-poi{
+    float: right;
+    font-size: 14px
+}
+.item-poi{
+    margin-bottom: 20px;
+}
+.label-poi{
+    display: inline-block;
+    width: 140px;
+    text-align: right;
+    margin-right: 10px;
+    vertical-align: top;
+    padding-top: 5px;
+}
+.superscript{
+    color: #D0021B;
+    padding-right: 4px;
+}
+.value-poi{
+    position: relative;
+    display: inline-block;
+    width: 620px;
+    text-align: left;
+}
+.txt{
+    width: 550px;
+}
+.property-label-poi{
+    padding-top: 2px !important;
+}
+.property-poi span {
+    display: inline-block;
+    width: 130px;
+    padding-right: 0px;
+}
+.property-poi span:nth-child(5) {
+    margin-top: 10px;
+}
+.property-poi span img{
+    visibility: hidden;
+    z-index: -1;
+}
+.property-poi span:hover img{
+    visibility: visible;
+    z-index: 102;
+}
+.new{
+    color: #445FA8;
+}
+.new:hover{
+    cursor: pointer;
+}
+.address-detail{
+    margin-top: 10px;
+}
+.poi-des{
+    width: 550px;
+    height: 100px;
+}
+.img-url{
+    width: 440px;
+    margin-right: 10px;
+}
+.fileup{
+    position: absolute;
+    width: 94px;
+    height: 35px;
+    top: 0;
+    left: 454px;
+    opacity: 0;
+    z-index: 100;
+}
+.fileup:hover{
+    cursor: pointer;
+}
+.url-ex{
+    padding-left: 5px;
+}
+.save{
+    margin: 20px auto;
+    width: 100px;
+}
+.info{
+    position: absolute;
+    top: -18px;
+    right: -10px;
+    background: #EEEEEE;
+    padding: 5px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: none;
+}
+.upload-thumbnail{
+    display: inline-block;
+}
+.upload-thumbnail:hover .info{
+    display: block;
+}
+/*字段交互*/
+.field-show{
+    padding-top: 0px;
+    display: none;
+}
+.cate-poi{
+    margin-right: 10px;
+}
+
+.cate-poi label{
+    cursor: pointer;
+}
+.tabbar{
+    width: 100%;
+    padding: 0 195px;
+    text-align: right;
+    margin-bottom: 20px;
+}
+.tabbar-item{
+    padding: 5px;
+}
+.tabbar-item:not(:last-child){
+    border-right: 1px solid #C3C3C3;
+}
+.selected-item{
+    color: #445FA8;
+}
+.selected-item:hover{
+    cursor:pointer;
+}
+
+/*属性*/
+.item-poi-pop{
+    margin-bottom: 10px;
+}
+.label-poi-pop{
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+    margin-right: 10px;
+    vertical-align: top;
+    padding-top: 5px;
+}
+.value-poi-pop{
+    position: relative;
+    display: inline-block;
+    width: 450px;
+    text-align: left;
+}
+.value-poi-pop input[type=text]{
+	height:30px;
+	width:450px;
+}
+.value-poi-pop button{
+	height:30px;
+}
+.marker-upload{
+	position:absolute;
+	width:66px;
+	height:30px;
+	top:0;
+	left:384px;
+	z-index:102;
+	opacity:0;
+}
+.marker-upload:hover{
+	cursor:pointer;
+}
+.pop-fun button{
+	height:30px;
+}
+.publish-option{
+	width: 760px;
+    margin-left: 18px;
+}
+.publish-option label,
+.publish-option input{
+	cursor: pointer;
+}
+.panoramaType >span{
+    margin:0px 30px 0 0;
+}
+
+
+.pano-search-input {
+    width: 440px;
+    margin: 5px 10px 10px 0;
+}
+.pano-search-result{
+    width: 570px;
+    min-height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+
+}
+
+
+.pano-container {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.pano-container .pano{
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid #eee;
+    width: 120px;
+    padding: 5px;
+    margin: 0 10px 10px 0;
+}
+
+
+.pano-container .pano .thumbnail{
+    width: 108px;
+    height: 108px;
+    margin: auto;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.pano-container .pano.active{
+    border: 1px solid #3E82F7;
+}
+
+.pano-container .pano-info{
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    line-height: 12px;
+    height: 40px;
+}
+.pano-container .pano-name{
+    display: inline-block;
+    width: 85px;
+    max-height: 35px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.pano-container .empty-result {
+    height: 120px;
+    line-height: 125px;
+    font-size: 20px;
+    color: #999;
+    text-align: center;
+}
+
+.icon-link{
+    height: 16px;
+    width: 16px;
+    background: url('../img/link.png') center center no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}

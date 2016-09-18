@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_zone" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsZone" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="SHORT_NM" property="shortNm" jdbcType="VARCHAR" />
+    <result column="LEVEL_TYPE" property="levelType" jdbcType="CHAR" />
+    <result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="MERGER_NAME" property="mergerName" jdbcType="VARCHAR" />
+    <result column="QQ__FORMAT_MERGER_NAME" property="qqFormatMergerName" jdbcType="VARCHAR" />
+    <result column="LAT" property="lat" jdbcType="DECIMAL" />
+    <result column="LNG" property="lng" jdbcType="DECIMAL" />
+    <result column="PINYIN" property="pinyin" jdbcType="VARCHAR" />
+    <result column="DEL_FLG" property="delFlg" jdbcType="VARCHAR" />
+    <result column="REGIST_HHMMSS" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="UP_HHMMSS" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_BY_WJNM" property="updatedByWjnm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, PARENT_ID, SHORT_NM, LEVEL_TYPE, CITY_CODE, ZIP_CODE, MERGER_NAME, QQ__FORMAT_MERGER_NAME, 
+    LAT, LNG, PINYIN, DEL_FLG, REGIST_HHMMSS, UP_HHMMSS, UPDATED_BY_WJNM
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsZoneCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_zone.Base_Column_List" />
+    from ms_zone
+    <isParameterPresent >
+      <include refid="ms_zone.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    select 
+    <include refid="ms_zone.Base_Column_List" />
+    from ms_zone
+    where ID = #id:VARCHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    delete from ms_zone
+    where ID = #id:VARCHAR#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsZoneCriteria" >
+    delete from ms_zone
+    <include refid="ms_zone.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    insert into ms_zone (ID, NAME, PARENT_ID, SHORT_NM, LEVEL_TYPE, 
+      CITY_CODE, ZIP_CODE, MERGER_NAME, QQ__FORMAT_MERGER_NAME, 
+      LAT, LNG, PINYIN, DEL_FLG, REGIST_HHMMSS, 
+      UP_HHMMSS, UPDATED_BY_WJNM)
+    values (#id:VARCHAR#, #name:VARCHAR#, #parentId:VARCHAR#, #shortNm:VARCHAR#, #levelType:CHAR#, 
+      #cityCode:VARCHAR#, #zipCode:VARCHAR#, #mergerName:VARCHAR#, #qqFormatMergerName:VARCHAR#, 
+      #lat:DECIMAL#, #lng:DECIMAL#, #pinyin:VARCHAR#, #delFlg:VARCHAR#, #registHhmmss:TIMESTAMP#, 
+      #upHhmmss:TIMESTAMP#, #updatedByWjnm:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    insert into ms_zone
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID
+      </isNotNull>
+      <isNotNull prepend="," property="shortNm" >
+        SHORT_NM
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        LEVEL_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="cityCode" >
+        CITY_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="zipCode" >
+        ZIP_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="mergerName" >
+        MERGER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="qqFormatMergerName" >
+        QQ__FORMAT_MERGER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="lat" >
+        LAT
+      </isNotNull>
+      <isNotNull prepend="," property="lng" >
+        LNG
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin" >
+        PINYIN
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        DEL_FLG
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        REGIST_HHMMSS
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        UP_HHMMSS
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        UPDATED_BY_WJNM
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        #parentId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shortNm" >
+        #shortNm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        #levelType:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cityCode" >
+        #cityCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zipCode" >
+        #zipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mergerName" >
+        #mergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="qqFormatMergerName" >
+        #qqFormatMergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="lat" >
+        #lat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="lng" >
+        #lng:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin" >
+        #pinyin:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        #updatedByWjnm:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsZoneCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_zone
+    <include refid="ms_zone.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_zone
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.id" >
+        ID = #record.id:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.name" >
+        NAME = #record.name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.parentId" >
+        PARENT_ID = #record.parentId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.shortNm" >
+        SHORT_NM = #record.shortNm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.levelType" >
+        LEVEL_TYPE = #record.levelType:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.cityCode" >
+        CITY_CODE = #record.cityCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.zipCode" >
+        ZIP_CODE = #record.zipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.mergerName" >
+        MERGER_NAME = #record.mergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.qqFormatMergerName" >
+        QQ__FORMAT_MERGER_NAME = #record.qqFormatMergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.lat" >
+        LAT = #record.lat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.lng" >
+        LNG = #record.lng:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.pinyin" >
+        PINYIN = #record.pinyin:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.delFlg" >
+        DEL_FLG = #record.delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        REGIST_HHMMSS = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        UP_HHMMSS = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByWjnm" >
+        UPDATED_BY_WJNM = #record.updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_zone.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_zone
+    set ID = #record.id:VARCHAR#,
+      NAME = #record.name:VARCHAR#,
+      PARENT_ID = #record.parentId:VARCHAR#,
+      SHORT_NM = #record.shortNm:VARCHAR#,
+      LEVEL_TYPE = #record.levelType:CHAR#,
+      CITY_CODE = #record.cityCode:VARCHAR#,
+      ZIP_CODE = #record.zipCode:VARCHAR#,
+      MERGER_NAME = #record.mergerName:VARCHAR#,
+      QQ__FORMAT_MERGER_NAME = #record.qqFormatMergerName:VARCHAR#,
+      LAT = #record.lat:DECIMAL#,
+      LNG = #record.lng:DECIMAL#,
+      PINYIN = #record.pinyin:VARCHAR#,
+      DEL_FLG = #record.delFlg:VARCHAR#,
+      REGIST_HHMMSS = #record.registHhmmss:TIMESTAMP#,
+      UP_HHMMSS = #record.upHhmmss:TIMESTAMP#,
+      UPDATED_BY_WJNM = #record.updatedByWjnm:VARCHAR#
+    <isParameterPresent >
+      <include refid="ms_zone.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    update ms_zone
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID = #parentId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="shortNm" >
+        SHORT_NM = #shortNm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="levelType" >
+        LEVEL_TYPE = #levelType:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cityCode" >
+        CITY_CODE = #cityCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zipCode" >
+        ZIP_CODE = #zipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="mergerName" >
+        MERGER_NAME = #mergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="qqFormatMergerName" >
+        QQ__FORMAT_MERGER_NAME = #qqFormatMergerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="lat" >
+        LAT = #lat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="lng" >
+        LNG = #lng:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="pinyin" >
+        PINYIN = #pinyin:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="delFlg" >
+        DEL_FLG = #delFlg:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        REGIST_HHMMSS = #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        UP_HHMMSS = #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByWjnm" >
+        UPDATED_BY_WJNM = #updatedByWjnm:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:VARCHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.MsZone" >
+    update ms_zone
+    set NAME = #name:VARCHAR#,
+      PARENT_ID = #parentId:VARCHAR#,
+      SHORT_NM = #shortNm:VARCHAR#,
+      LEVEL_TYPE = #levelType:CHAR#,
+      CITY_CODE = #cityCode:VARCHAR#,
+      ZIP_CODE = #zipCode:VARCHAR#,
+      MERGER_NAME = #mergerName:VARCHAR#,
+      QQ__FORMAT_MERGER_NAME = #qqFormatMergerName:VARCHAR#,
+      LAT = #lat:DECIMAL#,
+      LNG = #lng:DECIMAL#,
+      PINYIN = #pinyin:VARCHAR#,
+      DEL_FLG = #delFlg:VARCHAR#,
+      REGIST_HHMMSS = #registHhmmss:TIMESTAMP#,
+      UP_HHMMSS = #upHhmmss:TIMESTAMP#,
+      UPDATED_BY_WJNM = #updatedByWjnm:VARCHAR#
+    where ID = #id:VARCHAR#
+  </update>
+</sqlMap>

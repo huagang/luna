@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="luna_goods_category">
+    <resultMap class="ms.luna.biz.dao.custom.model.LunaGoodsCategoryResult" id="LunaGoodsCategoryResultMap">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="root" jdbcType="INTEGER" property="root"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="depth" jdbcType="INTEGER" property="depth"/>
+        <result column="abbreviation" jdbcType="VARCHAR" property="abbreviation"/>
+        <result column="l_count" jdbcType="INTEGER" property="count"/>
+    </resultMap>
+    <select id="selectCategoriesWithFilter" resultMap="LunaGoodsCategoryResultMap"
+            parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter">
+        SELECT
+        l.id as id,
+        l.name as name,
+        l.root as root,
+        l.update_time as update_time,
+        l.depth as depth,
+        l.abbreviation as abbreviation,
+        count(1) as l_count
+
+        FROM
+        luna_goods_category l
+
+        WHERE
+        l.depth = 0
+        order by l.id
+        <isEqual property="range" compareValue="true">
+            Limit #min#, #max#
+        </isEqual>
+
+    </select>
+
+    <resultMap class="ms.luna.biz.dao.custom.model.LunaGoodsCategoryNode" id="lunaGoodsCategoryNode">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="root" property="parent" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectLunaGoodsCategoryNodes" resultMap="lunaGoodsCategoryNode"
+            parameterClass="ms.luna.biz.dao.custom.model.LunaGoodsCategoryParameter">
+        SELECT
+            luna_goods_category.id as id,
+            luna_goods_category.root as root,
+            luna_goods_category.name as name
+        FROM
+            luna_goods_category
+        <dynamic prepend="where">
+            <isNotNull prepend="and" property="keyword">
+                luna_goods_category.name LIKE #keyword#
+            </isNotNull>
+        </dynamic>
+        ORDER BY
+            luna_goods_category.depth
+    </select>
+
+</sqlMap>

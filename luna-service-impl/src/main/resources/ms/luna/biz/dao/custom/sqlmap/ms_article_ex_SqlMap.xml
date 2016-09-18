@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_article">
+    <resultMap id="MsArticleResult" class="ms.luna.biz.dao.custom.model.MsArticleResult">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="regist_hhmmss" property="registhhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="up_hhmmss" property="uphhmmss" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="selectArticleWithFilter" resultMap="MsArticleResult"
+            parameterClass="ms.luna.biz.dao.custom.model.MsArticleParameter">
+        SELECT
+            a.id id,
+            a.title title,
+            a.author author,
+            a.type type,
+            a.status status,
+            b.name column_name,
+            a.regist_hhmmss regist_hhmmss,
+            a.up_hhmmss up_hhmmss
+        FROM
+            ms_article a left join ms_column b on a.column_id = b.id
+        <dynamic prepend="where">
+            <isNotNull prepend="and" property="businessIds">
+                a.business_id in
+                <iterate prepend="" property="businessIds" open="(" close=")" conjunction=",">
+                    #businessIds[]#
+                </iterate>
+            </isNotNull>
+            <isNotEmpty prepend="and" property="keyword">
+                a.title like #keyword#
+            </isNotEmpty>
+        </dynamic>
+        order by a.regist_hhmmss desc
+        <isEqual property="range" compareValue="true">
+            Limit #min#, #max#
+        </isEqual>
+
+    </select>
+
+    <select id="selectBusinessIdById" parameterClass="Integer" resultClass="Integer">
+        select business_id
+        from ms_article
+        where id=#id#
+    </select>
+
+    <select id="selectCategoryIdByBusinessId" parameterClass="Integer" resultClass="String">
+        select
+            b.category_id category_id
+        from ms_business a left join ms_merchant_manage b on a.merchant_id = b.merchant_id
+        where a.business_id=#business_id#
+    </select>
+</sqlMap>

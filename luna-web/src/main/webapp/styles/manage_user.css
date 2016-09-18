@@ -1,0 +1,79 @@
+/*用户管理平台样式*/
+/*author:Demi*/
+/*用户搜索*/
+.search{
+	margin-bottom:18px !important;
+}
+.select{
+    margin-right: 12px;
+
+}
+#useradd{
+    float: right;
+}
+/*主要内容区*/
+.edit{
+    padding-right: 10px;
+}
+.fixed-table-container thead th:nth-child(2),
+.fixed-table-container tbody td:nth-child(2){
+    position: relative;
+    left: -100px;
+}
+/*弹出层样式*/
+.pop-fun{
+	padding-right:24px;
+}
+.pop .nickname{
+    margin-left: 5px;
+}
+.pop .pop-label,
+.pop .nickname{
+    font-size: 14px;
+}
+.pop .user-name,
+.pop .business,
+.pop .limit{
+    margin: 10px 0;
+}
+.pop .select-limit{
+    margin-left: 6px;
+}
+.radio-inline+.radio-inline{
+    margin-left: 0;
+}
+.radio-inline{
+    padding-right: 25px;
+}
+#useremail{
+    padding: 8px 5px;
+    line-height: 28px;
+}
+#useremail #emailinput{
+	width: 300px;
+}
+#info{
+    color: #CCCCCC;
+}
+.address,
+.address-error{
+    margin-right: 8px;
+    padding: 3px;
+    border-radius: 17px;
+}
+.address{
+    background: #EEEEEE;
+    color: #212121;
+    font-size: 14px;
+}
+.address-error{
+    background-color: #ffeaea;
+    color: #D0021B;
+}
+.glyphicon-remove{
+    color: #C3C3C3;
+    font-weight: 100;
+}
+.address-error .glyphicon-remove{
+    color: #D0021B;
+}

@@ -1,0 +1,139 @@
+@media screen and (max-width: 768px){
+	
+}
+@media screen and (min-width: 992px){
+	div.video-dialog{
+		width: 40%;
+		margin-left: 30%;
+		position:absolute;
+		top:10%;
+	}
+}
+html,body{
+	height: 100%;
+}
+.wrapper{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-width: 670px;
+	margin: 0 auto;
+}
+.wrapper > div{
+	flex-shrink: 0;
+}
+.wrapper div.content-wrapper{
+	/* padding: 15px 20px; */
+	flex-grow: 1;
+	flex-shrink: 1;
+	/* overflow: scroll; */
+	font-size: 16px;
+	line-height: 28px;
+	margin: 10px 10px;
+}
+.content img,.content video{
+	max-width: 100%;
+}
+
+.banner{
+	max-height: 200px;
+    overflow: hidden;
+    transition: max-height 0.8s ease-in-out;
+}	
+.banner.sm{
+	max-height: 100px;
+}
+.banner img{
+	width:100%;
+}
+.toolbar{
+	height: 56px;
+	background-color: white;
+	position: relative;
+	/* padding: 0 10px; */
+}
+.toolbar .title{
+	color: #000;
+	font-size: 24px;
+	height: 56px;
+	line-height: 56px;
+	padding-left: 10px;
+	float: left;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	position: absolute;
+	width: 100%;
+	padding-right: 110px;
+	overflow: hidden;
+}
+.btn-wrap:nth-child(2){
+	margin-right:5px;
+}
+.toolbar .btn-wrap{
+	float: right;
+	height: 56px;
+	width: auto;
+	position: relative;
+	padding: 12px 5px;
+}
+.icon{
+	background: url(../img/icons-2x.png) no-repeat;
+    display: inline-block;
+    background-size: 800px 504px;
+    cursor: pointer;
+}
+.toolbar .icon-audio{
+	width: 33px;
+    height: 33px;
+    background-position: -132px -100px;
+}
+
+.toolbar .icon-audio.playing{
+    background-position: -132px -133px;
+}
+.toolbar .icon-video{
+	width: 33px;
+    height: 33px;
+    background-position: -99px -100px;
+}
+
+.video-dialog{
+	position: absolute;
+	top: 26%;
+	width: 80%;
+	margin-left: 10%;
+	background-color:white;
+	border-radius: 4px;
+}
+
+.video-title{
+	height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+.video-title span{
+    padding: 8px 22%;
+    border-bottom: 4px #d40909 solid;
+}
+
+.video-tip{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #707070;	
+}
+.mask{
+	position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.video{
+	height: auto;
+    width: 100%;
+}
+.video-js{
+	margin:0 auto;
+}

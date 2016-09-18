@@ -1,0 +1,1 @@
+${tag.link_start}<img tag-id="${tag.tag_id}" src="${tag.content}" style="position:absolute;top:${tag.y}${tag.unit};left:${tag.x}${tag.unit};width:${tag.width}${tag.unit};height:${tag.height}${tag.unit};z-index:${tag.zindex};display:${tag.display};"/>${tag.link_end}

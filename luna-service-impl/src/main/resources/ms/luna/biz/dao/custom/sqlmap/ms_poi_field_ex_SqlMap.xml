@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_poi_field" >
+	<resultMap id="MsTagFieldResult" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
+		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+		<result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="ds_order" property="tagOrder" jdbcType="INTEGER" />
+		<result column="field_type" property="fieldType" jdbcType="INTEGER" />
+		<result column="field_size" property="fieldSize" jdbcType="INTEGER" />
+		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="placeholder" property="placeholder" jdbcType="VARCHAR" />
+		<result column="extension_attrs" property="extensionAttrs" jdbcType="VARCHAR" />
+		<result column="field_tips_for_templete" property="fieldTipsForTemplete" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFieldTags" resultMap="MsTagFieldResult" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+		SELECT
+			tag.tag_id as tag_id,
+			tag.tag_name as tag_name,
+			f.field_name as field_name,
+			f.field_show_name as field_show_name,
+			f.display_order as display_order,
+			tag.ds_order as ds_order,
+			f.field_type as field_type,
+			f.field_size as field_size,
+			f.placeholder as placeholder,
+			f.extension_attrs as extension_attrs,
+			f.field_tips_for_templete as field_tips_for_templete
+		FROM
+			ms_poi_tag tag left outer join ms_r_tag_field r
+				 on tag.tag_id=r.tag_id
+			left outer join ms_poi_field f
+				 on r.field_name= f.field_name  
+		 where tag.tag_level=1
+		 ORDER BY display_order is null asc, display_order asc, ds_order asc
+	</select>
+	
+	<resultMap id="MsPoiTagInfo" class="ms.luna.biz.dao.custom.model.MsTagFieldResult">
+		<result column="tag_id" property="tagId" jdbcType="INTEGER" />
+		<result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+		<result column="tag_name_en" property="tagNameEn" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectPoiTags" resultMap="MsPoiTagInfo" parameterClass="ms.luna.biz.dao.custom.model.MsTagFieldParameter">
+		SELECT
+			ms_poi_tag.tag_id as tag_id,
+			ms_poi_tag.tag_name as tag_name,
+			ms_poi_tag.tag_name_en as tag_name_en
+		FROM
+			ms_poi_tag
+	</select>
+	
+	<resultMap id="MsFieldNames" class="ms.luna.biz.dao.custom.model.MsPoiFieldNameResult">
+		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+		<result column="field_alias" property="fieldAlias" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFieldNames" resultMap="MsFieldNames">
+		SELECT
+			ms_poi_field.field_name as field_name,
+			ms_poi_field.field_alias as field_alias
+		FROM
+			ms_poi_field
+	</select>
+</sqlMap>

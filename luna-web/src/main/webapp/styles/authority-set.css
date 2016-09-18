@@ -1,0 +1,26 @@
+.breadcrumb{
+    padding-left: 0;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+.table{
+    border-bottom: 1px solid #DDDDDD;
+}
+.table>tbody>tr>td, .table>tbody>tr>th,.table>thead>tr>td, .table>thead>tr>th{
+    padding-top: 20px;
+    min-width:170px;
+}
+.table>tbody>tr>td label,.table>thead>tr>td label{
+    font-weight: normal;
+}
+.checkbox-inline{
+    padding-right: 20px;
+    padding-bottom: 20px;
+    min-width:170px;
+}
+.checkbox-inline+.checkbox-inline{
+    margin-left: 0;
+}
+#clc{
+    margin-left: 10px;
+}

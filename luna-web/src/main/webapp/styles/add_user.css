@@ -1,0 +1,163 @@
+#user-email{
+    border: 1px solid #c3c3c3;
+    width: 60%;
+    min-height: 100px;
+    max-height: 500px;
+    overflow: auto;
+    padding: 8px;
+    margin-bottom: 30px;
+}
+#email-input{
+    border: none;
+    outline: none;
+    padding-left: 10px;
+    width: 200px;
+}
+#email-input.transparent{
+    cursor: default;
+}
+
+.placeholder{
+    color: #999;
+}
+
+#user-email.invalid-email{
+    border:1px solid #a94442;
+}
+
+.form-input {
+    margin-bottom: 20px;
+}
+
+.form-input label{
+    padding-right: 10px;
+}
+
+
+
+.radio-wrapper > span{
+    padding-right: 10px;
+}
+
+.radio-wrapper{
+    display: inline-block;
+    width: 60%;
+}
+
+.footer{
+    margin: 25px 0 0 0;
+}
+
+.bussiness-container{
+    border: 1px solid #c3c3c3;
+    padding: 10px 25px;
+    width: 80%;
+}
+
+.business-group{
+    margin-bottom: 20px;
+}
+.business-group > label{
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.business{
+    cursor: pointer;
+
+}
+
+.business-group .business-wrapper{
+    display: inline-block;
+    width: 160px;
+    margin-top: 10px;
+}
+
+.business-name {
+    overflow: hidden;
+    width: 80%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.business-wrapper{
+    padding-left: 10px;
+
+}
+
+.business-name,
+.module-name{
+    display: inline-block;
+    vertical-align: middle;
+    color: #212121;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: normal;
+    margin-bottom: 0;
+
+}
+.warn{
+    width: 100%;
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.glyphicon-remove {
+    color: #C3C3C3;
+    font-weight: 100;
+}
+
+.email-item{
+    background: #EEE;
+    color: #212121;
+    padding: 3px 6px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 0 6px 6px 0;
+}
+
+.message-wrapper {
+    position: fixed;
+    display: inline-block;
+    width: 400px;
+    top: 45%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.message-wrapper .message{
+    display: inline-block;
+    margin: auto;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    background-color: rgba(0,0,0, .4);
+    border-radius: 4px;
+    color: white;
+}
+
+.business-name + .full-name{
+    display: none;
+    position:absolute;
+    margin-left: 30px;
+    margin-top: -60px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background-color: white;
+}
+.business-name:hover + .full-name{
+    display: block;
+}
+
+.settings-auth {
+    vertical-align: top;
+    width: 490px;
+    height: 150px;
+}

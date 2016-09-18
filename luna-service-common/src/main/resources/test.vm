@@ -1,0 +1,7 @@
+#foreach ($i in $list1)
+$i
+#end
+
+#foreach ($i in $list2)
+$i
+#end

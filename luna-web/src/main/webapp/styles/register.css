@@ -1,0 +1,61 @@
+/*用户账户激活邮件点击链接，设置账户界面
+author:demi
+time:2016/3/21
+*/
+#register{
+    position: absolute;
+    width: 430px;
+    top: 30%;
+    left: 35%;
+    font-size: 16px;
+}
+#register label{
+    width: 70px;
+    text-align: right;
+}
+.input-group .form-control{
+    float: none;
+    width: 350px;
+    display: inline-block;
+}
+#pass1,
+#pass2{
+    color: green;
+    top: 0;
+    visibility: hidden;
+}
+.reminder{
+    display: block;
+    margin: 5px 0 20px 0;
+    font-size: 12px;
+    color: #CCCCCC;
+    text-indent: 72px;
+}
+#btn-set{
+    margin-left: 50px;
+}
+#name-error,
+#password-error{
+    position: absolute;
+    font-size: 12px;
+    color: #D0021B;
+    width: 200px;
+    top: 8px;
+    left: 430px;
+    visibility: hidden;
+}
+#warn-error{
+    color: #D0021B;
+    position: absolute;
+    top: -25px;
+    left: 80px;
+    font-size: 12px;
+    visibility: hidden;
+}
+#success-info{
+    position: absolute;
+    font-size: 15px;
+    left:40%;
+    top: 35%;
+    display: none;
+}

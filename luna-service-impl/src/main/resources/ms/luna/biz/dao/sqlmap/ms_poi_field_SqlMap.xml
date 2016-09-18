@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ms_poi_field" >
+  <resultMap id="BaseResultMap" class="ms.luna.biz.dao.model.MsPoiField" >
+    <result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+    <result column="field_show_name" property="fieldShowName" jdbcType="VARCHAR" />
+    <result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+    <result column="field_type" property="fieldType" jdbcType="INTEGER" />
+    <result column="field_size" property="fieldSize" jdbcType="INTEGER" />
+    <result column="placeholder" property="placeholder" jdbcType="VARCHAR" />
+    <result column="field_tips_for_templete" property="fieldTipsForTemplete" jdbcType="VARCHAR" />
+    <result column="extension_attrs" property="extensionAttrs" jdbcType="VARCHAR" />
+    <result column="field_introduction" property="fieldIntroduction" jdbcType="VARCHAR" />
+    <result column="regist_hhmmss" property="registHhmmss" jdbcType="TIMESTAMP" />
+    <result column="up_hhmmss" property="upHhmmss" jdbcType="TIMESTAMP" />
+    <result column="updated_by_unique_id" property="updatedByUniqueId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    field_name, field_show_name, display_order, field_type, field_size, placeholder, 
+    field_tips_for_templete, extension_attrs, field_introduction, regist_hhmmss, up_hhmmss, 
+    updated_by_unique_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="ms.luna.biz.dao.model.MsPoiFieldCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="ms_poi_field.Base_Column_List" />
+    from ms_poi_field
+    <isParameterPresent >
+      <include refid="ms_poi_field.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.MsPoiFieldCriteria" >
+    delete from ms_poi_field
+    <include refid="ms_poi_field.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.MsPoiField" >
+    insert into ms_poi_field (field_name, field_show_name, display_order, field_type, 
+      field_size, placeholder, field_tips_for_templete, extension_attrs, 
+      field_introduction, regist_hhmmss, up_hhmmss, updated_by_unique_id
+      )
+    values (#fieldName:VARCHAR#, #fieldShowName:VARCHAR#, #displayOrder:INTEGER#, #fieldType:INTEGER#, 
+      #fieldSize:INTEGER#, #placeholder:VARCHAR#, #fieldTipsForTemplete:VARCHAR#, #extensionAttrs:VARCHAR#, 
+      #fieldIntroduction:VARCHAR#, #registHhmmss:TIMESTAMP#, #upHhmmss:TIMESTAMP#, #updatedByUniqueId:VARCHAR#
+      )
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.MsPoiField" >
+    insert into ms_poi_field
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="fieldName" >
+        field_name
+      </isNotNull>
+      <isNotNull prepend="," property="fieldShowName" >
+        field_show_name
+      </isNotNull>
+      <isNotNull prepend="," property="displayOrder" >
+        display_order
+      </isNotNull>
+      <isNotNull prepend="," property="fieldType" >
+        field_type
+      </isNotNull>
+      <isNotNull prepend="," property="fieldSize" >
+        field_size
+      </isNotNull>
+      <isNotNull prepend="," property="placeholder" >
+        placeholder
+      </isNotNull>
+      <isNotNull prepend="," property="fieldTipsForTemplete" >
+        field_tips_for_templete
+      </isNotNull>
+      <isNotNull prepend="," property="extensionAttrs" >
+        extension_attrs
+      </isNotNull>
+      <isNotNull prepend="," property="fieldIntroduction" >
+        field_introduction
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        regist_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        up_hhmmss
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        updated_by_unique_id
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="fieldName" >
+        #fieldName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="fieldShowName" >
+        #fieldShowName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="displayOrder" >
+        #displayOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="fieldType" >
+        #fieldType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="fieldSize" >
+        #fieldSize:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="placeholder" >
+        #placeholder:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="fieldTipsForTemplete" >
+        #fieldTipsForTemplete:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="extensionAttrs" >
+        #extensionAttrs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="fieldIntroduction" >
+        #fieldIntroduction:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="registHhmmss" >
+        #registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="upHhmmss" >
+        #upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updatedByUniqueId" >
+        #updatedByUniqueId:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.MsPoiFieldCriteria" resultClass="java.lang.Integer" >
+    select count(*) from ms_poi_field
+    <include refid="ms_poi_field.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update ms_poi_field
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.fieldName" >
+        field_name = #record.fieldName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.fieldShowName" >
+        field_show_name = #record.fieldShowName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.displayOrder" >
+        display_order = #record.displayOrder:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.fieldType" >
+        field_type = #record.fieldType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.fieldSize" >
+        field_size = #record.fieldSize:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.placeholder" >
+        placeholder = #record.placeholder:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.fieldTipsForTemplete" >
+        field_tips_for_templete = #record.fieldTipsForTemplete:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.extensionAttrs" >
+        extension_attrs = #record.extensionAttrs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.fieldIntroduction" >
+        field_introduction = #record.fieldIntroduction:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.registHhmmss" >
+        regist_hhmmss = #record.registHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.upHhmmss" >
+        up_hhmmss = #record.upHhmmss:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updatedByUniqueId" >
+        updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="ms_poi_field.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update ms_poi_field
+    set field_name = #record.fieldName:VARCHAR#,
+      field_show_name = #record.fieldShowName:VARCHAR#,
+      display_order = #record.displayOrder:INTEGER#,
+      field_type = #record.fieldType:INTEGER#,
+      field_size = #record.fieldSize:INTEGER#,
+      placeholder = #record.placeholder:VARCHAR#,
+      field_tips_for_templete = #record.fieldTipsForTemplete:VARCHAR#,
+      extension_attrs = #record.extensionAttrs:VARCHAR#,
+      field_introduction = #record.fieldIntroduction:VARCHAR#,
+      regist_hhmmss = #record.registHhmmss:TIMESTAMP#,
+      up_hhmmss = #record.upHhmmss:TIMESTAMP#,
+      updated_by_unique_id = #record.updatedByUniqueId:VARCHAR#
+    <isParameterPresent >
+      <include refid="ms_poi_field.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+</sqlMap>

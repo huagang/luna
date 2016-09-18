@@ -1,0 +1,19 @@
+<div class="item-poi">
+    <div class="label-poi label-ver">$fieldShowName</div>
+    <div class="value-poi">
+        <select id="country">
+            <option>中国</option>
+        </select>
+        <select id="province">
+            <option>省份</option>
+        </select>
+        <select id="city">
+            <option>市</option>
+        </select>
+        <select id="county">
+            <option>县</option>
+        </select>
+        <br>
+     </div>
+</div>
+
