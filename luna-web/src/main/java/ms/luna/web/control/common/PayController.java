@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 
 /**
  * Created by SDLL18 on 16/9/2.
@@ -36,6 +37,8 @@ import java.net.URLEncoder;
 public class PayController {
 
     public static final Logger logger = Logger.getLogger(PayController.class);
+
+    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     @Autowired
     private WXPayService wxPayService;
@@ -110,7 +113,6 @@ public class PayController {
         if (info.getInteger("code").intValue() == 0) {
             JSONObject orderInfo = info.getJSONObject("data");
             if (orderInfo.getInteger(LunaOrderTable.FIELD_STATUS).intValue() == 100) {
-                //TODO assemble requestJSON  including which way
                 JSONObject inData = new JSONObject();
                 inData.put("content", "微景农+订单");//订单名称
                 inData.put("extraParam", "");//额外信息 notify中会原样返回
@@ -118,8 +120,7 @@ public class PayController {
                 inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");//设置notify地址
                 inData.put("tradeNo", orderInfo.getString(LunaOrderTable.FIELD_TRADE_NO));
                 inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
-                inData.put("money", orderInfo.getDoubleValue(LunaOrderTable.FIELD_PAY_MONEY) * 100);
-                //TODO return the message that front end needed
+                inData.put("money", Double.parseDouble(decimalFormat.format(orderInfo.getDoubleValue(LunaOrderTable.FIELD_PAY_MONEY))) * 100);
                 return wxPayService.appPay(inData);
             } else {
                 return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前订单状态不可支付");
@@ -133,33 +134,47 @@ public class PayController {
     @RequestMapping(method = RequestMethod.POST, value = "/wx/jsapi/getPrepayId")
     @ResponseBody
     public JSONObject jsapiGetPrepayId(HttpServletRequest request,
-                                       @RequestParam(value = "orderId") String orderId,
+                                       @RequestParam(value = "orderId") Integer orderId,
                                        @RequestParam(value = "openId") String openId) {
-        //TODO Is the order belong to the user?
+        LunaUserSession userSession = SessionHelper.getUser(request.getSession(false));
+        JSONObject info = lunaOrderService.getOrderInfo(orderId, userSession.getUniqueId(), userSession.getRoleId());
+        if (info.getInteger("code").intValue() == 0) {
+            JSONObject orderInfo = info.getJSONObject("data");
+            if (orderInfo.getInteger(LunaOrderTable.FIELD_STATUS).intValue() == 100) {
+                JSONObject inData = new JSONObject();
+                inData.put("content", "微景农+订单");//订单名称
+                inData.put("extraParam", "");//额外信息 notify中会原样返回
+                // inData.put("detail", "{\"test11\":\"123\"}");
+                inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");//设置notify地址
+                inData.put("tradeNo", orderInfo.getString(LunaOrderTable.FIELD_TRADE_NO));
+                inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
+                inData.put("money", (int) (Double.parseDouble(decimalFormat.format(orderInfo.getDoubleValue(LunaOrderTable.FIELD_PAY_MONEY))) * 100));
+                inData.put("openId", openId);
+                return wxPayService.appPay(inData);
+            } else {
+                return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前订单状态不可支付");
+            }
 
-        //TODO Is the order's status can be payed
-
-        //TODO assemble requestJSON  including which way
-        JSONObject inData = new JSONObject();
-        inData.put("content", "test");
-        inData.put("extraParam", "");
-        // inData.put("detail", "{\"test11\":\"123\"}");
-        inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");
-        inData.put("tradeNo", "0987654321" + orderId);
-        inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
-        inData.put("money", 1);
-        inData.put("openId", openId);
-        //TODO return the message that front end needed
-        return wxPayService.jsapiPay(inData);
+        } else {
+            return info;
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/wx/notify")
     @ResponseBody
     public String notifyCompletePayment(@RequestBody String xml) {
         JSONObject inData = wxPayService.payNotify(xml);
-        logger.info(inData);
-        //TODO deal with the payment done
-
+        if (inData.getIntValue("code") == 0) {
+            JSONObject result = lunaOrderService.finishPayment(inData.getJSONObject("data"));
+            if (result.getIntValue("code") == 0) {
+                logger.info("wx finish payment successfully.\ndetail:" + inData);
+                //do nothing
+            } else {
+                logger.error("wx finish payment process error\n" + inData.getString("msg") + "\ndetail:" + xml);
+            }
+        } else {
+            logger.error("wx finish payment return error\n" + inData.getString("msg") + "\ndetail:" + xml);
+        }
         return WXPayService.XML_SEND_OK_TO_WX;
     }
 }

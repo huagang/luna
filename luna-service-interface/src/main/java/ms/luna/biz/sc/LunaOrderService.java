@@ -20,6 +20,14 @@ public interface LunaOrderService {
      */
     JSONObject createOrders(JSONObject param);
 
+    /**
+     * 订单完成支付
+     *
+     * @param param
+     * @return
+     */
+    JSONObject finishPayment(JSONObject param);
+
     // 搜索列表页
     JSONObject searchOrders(JSONObject param);
 

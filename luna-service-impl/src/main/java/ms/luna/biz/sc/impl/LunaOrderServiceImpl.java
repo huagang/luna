@@ -17,6 +17,7 @@ import ms.luna.biz.dao.model.LunaUserMerchant;
 import ms.luna.biz.sc.LunaOrderService;
 import ms.luna.biz.table.LunaOrderTable;
 import ms.luna.biz.util.FastJsonUtil;
+import ms.luna.model.adapter.WXPayProcess;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,8 @@ public class LunaOrderServiceImpl implements LunaOrderService {
 
     private static final Logger logger = Logger.getLogger(LunaOrderServiceImpl.class);
 
+    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
     @Autowired
     private LunaUserMerchantDAO lunaUserMerchantDAO;
 
@@ -53,16 +57,50 @@ public class LunaOrderServiceImpl implements LunaOrderService {
     public JSONObject createOrders(JSONObject param) {
         try {
             LunaOrder order = JSONObject.toJavaObject(param, LunaOrder.class);
+            //TODO 判断商品数量和减少商品数量
+
+
+            //TODO 组装订单
+            order.setStatus(OrderStatus.PAY_WAIT);
             Integer id = lunaOrderDAO.insert(order);
             String tradeNo = getTradeNo(id);
             order.setTradeNo(tradeNo);
             lunaOrderDAO.updateByPrimaryKey(order);
-            //TODO 判断商品数量和减少商品数量
+            //TODO 开始订单过期计时
 
             return FastJsonUtil.sucess("success");
         } catch (Exception e) {
             logger.error("Failed to create order.", e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
+        }
+    }
+
+    @Override
+    public JSONObject finishPayment(JSONObject param) {
+        try {
+            LunaOrderCriteria criteria = new LunaOrderCriteria();
+            criteria.createCriteria().andTradeNoEqualTo(param.getString("tradeNo"));
+            List<LunaOrder> orderList = lunaOrderDAO.selectByCriteria(criteria);
+            if (orderList != null && orderList.size() > 0) {
+                LunaOrder order = orderList.get(0);
+                if (order.getStatus().intValue() == OrderStatus.PAY_WAIT.intValue()) {
+                    if ((int) (Double.parseDouble(decimalFormat.format(order.getPayMoney())) * 100) == param.getIntValue("totalFee")) {
+                        order.setStatus(OrderStatus.CONSUME_WAIT);
+                        order.setPayTime(WXPayProcess.dateFormat.parse(param.getString("timeEnd")));
+                        lunaOrderDAO.updateByPrimaryKey(order);
+                        return FastJsonUtil.sucess("success");
+                    } else {
+                        return FastJsonUtil.error(ErrorCode.INVALID_PARAM, "订单应付金额与实付金额不符");
+                    }
+                } else {
+                    return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "订单状态不可完成支付");
+                }
+            } else {
+                return FastJsonUtil.error(ErrorCode.NOT_FOUND, "交易订单号不存在");
+            }
+        }catch (Exception e){
+            logger.error("Failed to finish the payment.", e);
             return FastJsonUtil.error(ErrorCode.INTERNAL_ERROR, "内部错误");
         }
     }
