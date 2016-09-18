@@ -8,6 +8,7 @@ package ms.luna.biz.table;
  */
 public class LunaOrderTable {
     public static final String FIELD_ID = "id";
+    public static final String FIELD_TRADE_NO = "trade_no";
     public static final String FIELD_TRANSACTION_ID = "transaction_id";
     public static final String FIELD_CERTIFICATE_NUM = "certificate_num";
     public static final String FIELD_TOTAL_MONEY = "total_money";

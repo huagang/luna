@@ -37,10 +37,12 @@ public class LunaOrder implements Serializable {
     private Date updateTime;
     @JSONField(name = LunaOrderTable.FIELD_CREATE_TIME, serialize = false)
     private Date createTime;
-    @JSONField(name = LunaOrderTable.FIELD_PAY_TIME, format="yyyy-MM-dd HH:mm:ss")
+    @JSONField(name = LunaOrderTable.FIELD_PAY_TIME, format = "yyyy-MM-dd HH:mm:ss")
     private Date payTime;
     @JSONField(name = LunaOrderTable.FIELD_DEAL_TIME, format = "yyyy-MM-dd HH:mm:ss")
     private Date dealTime;
+    @JSONField(name = LunaOrderTable.FIELD_TRADE_NO)
+    private String tradeNo;
 
     private static final long serialVersionUID = 1L;
 
@@ -164,6 +166,14 @@ public class LunaOrder implements Serializable {
         this.dealTime = dealTime;
     }
 
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo == null ? null : tradeNo.trim();
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -177,20 +187,21 @@ public class LunaOrder implements Serializable {
         }
         LunaOrder other = (LunaOrder) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getTransactionId() == null ? other.getTransactionId() == null : this.getTransactionId().equals(other.getTransactionId()))
-            && (this.getCertificateNum() == null ? other.getCertificateNum() == null : this.getCertificateNum().equals(other.getCertificateNum()))
-            && (this.getTotalMoney() == null ? other.getTotalMoney() == null : this.getTotalMoney().equals(other.getTotalMoney()))
-            && (this.getPayMoney() == null ? other.getPayMoney() == null : this.getPayMoney().equals(other.getPayMoney()))
-            && (this.getRefund() == null ? other.getRefund() == null : this.getRefund().equals(other.getRefund()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getPayMethod() == null ? other.getPayMethod() == null : this.getPayMethod().equals(other.getPayMethod()))
-            && (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()))
-            && (this.getCustomerName() == null ? other.getCustomerName() == null : this.getCustomerName().equals(other.getCustomerName()))
-            && (this.getCustomerPhone() == null ? other.getCustomerPhone() == null : this.getCustomerPhone().equals(other.getCustomerPhone()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getPayTime() == null ? other.getPayTime() == null : this.getPayTime().equals(other.getPayTime()))
-            && (this.getDealTime() == null ? other.getDealTime() == null : this.getDealTime().equals(other.getDealTime()));
+                && (this.getTransactionId() == null ? other.getTransactionId() == null : this.getTransactionId().equals(other.getTransactionId()))
+                && (this.getCertificateNum() == null ? other.getCertificateNum() == null : this.getCertificateNum().equals(other.getCertificateNum()))
+                && (this.getTotalMoney() == null ? other.getTotalMoney() == null : this.getTotalMoney().equals(other.getTotalMoney()))
+                && (this.getPayMoney() == null ? other.getPayMoney() == null : this.getPayMoney().equals(other.getPayMoney()))
+                && (this.getRefund() == null ? other.getRefund() == null : this.getRefund().equals(other.getRefund()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getPayMethod() == null ? other.getPayMethod() == null : this.getPayMethod().equals(other.getPayMethod()))
+                && (this.getMerchantId() == null ? other.getMerchantId() == null : this.getMerchantId().equals(other.getMerchantId()))
+                && (this.getCustomerName() == null ? other.getCustomerName() == null : this.getCustomerName().equals(other.getCustomerName()))
+                && (this.getCustomerPhone() == null ? other.getCustomerPhone() == null : this.getCustomerPhone().equals(other.getCustomerPhone()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getPayTime() == null ? other.getPayTime() == null : this.getPayTime().equals(other.getPayTime()))
+                && (this.getDealTime() == null ? other.getDealTime() == null : this.getDealTime().equals(other.getDealTime()))
+                && (this.getTradeNo() == null ? other.getTradeNo() == null : this.getTradeNo().equals(other.getTradeNo()));
     }
 
     @Override
@@ -212,11 +223,12 @@ public class LunaOrder implements Serializable {
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getPayTime() == null) ? 0 : getPayTime().hashCode());
         result = prime * result + ((getDealTime() == null) ? 0 : getDealTime().hashCode());
+        result = prime * result + ((getTradeNo() == null) ? 0 : getTradeNo().hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "LunaOrder [id=" + id + ",transactionId=" + transactionId + ",certificateNum=" + certificateNum + ",totalMoney=" + totalMoney + ",payMoney=" + payMoney + ",refund=" + refund + ",status=" + status + ",payMethod=" + payMethod + ",merchantId=" + merchantId + ",customerName=" + customerName + ",customerPhone=" + customerPhone + ",updateTime=" + updateTime + ",createTime=" + createTime + ",payTime=" + payTime + ",dealTime=" + dealTime + "]";
+        return "LunaOrder [id=" + id + ",transactionId=" + transactionId + ",certificateNum=" + certificateNum + ",totalMoney=" + totalMoney + ",payMoney=" + payMoney + ",refund=" + refund + ",status=" + status + ",payMethod=" + payMethod + ",merchantId=" + merchantId + ",customerName=" + customerName + ",customerPhone=" + customerPhone + ",updateTime=" + updateTime + ",createTime=" + createTime + ",payTime=" + payTime + ",dealTime=" + dealTime + ",tradeNo=" + tradeNo + "]";
     }
 }

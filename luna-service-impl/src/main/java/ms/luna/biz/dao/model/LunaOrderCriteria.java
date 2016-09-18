@@ -1267,6 +1267,88 @@ public class LunaOrderCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andTradeNoIsNull() {
+            addCriterion("trade_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoIsNotNull() {
+            addCriterion("trade_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no =", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no <>", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoGreaterThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no >", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoGreaterThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no >=", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLessThan(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no <", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLessThanOrEqualTo(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no <=", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no like", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotLike(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("trade_no not like", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_no in", values, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotIn(List<String> values) {
+            if(values == null)return (Criteria)this;
+            addCriterion("trade_no not in", values, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_no between", value1, value2, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotBetween(String value1, String value2) {
+            if(value1 == null || value2 == null)return (Criteria)this;
+            addCriterion("trade_no not between", value1, value2, "tradeNo");
+            return (Criteria) this;
+        }
+
         public Criteria andTransactionIdLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(transaction_id) like", value.toUpperCase(), "transactionId");
@@ -1294,6 +1376,12 @@ public class LunaOrderCriteria {
         public Criteria andCustomerPhoneLikeInsensitive(String value) {
             if(value == null)return (Criteria)this;
             addCriterion("upper(customer_phone) like", value.toUpperCase(), "customerPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLikeInsensitive(String value) {
+            if(value == null)return (Criteria)this;
+            addCriterion("upper(trade_no) like", value.toUpperCase(), "tradeNo");
             return (Criteria) this;
         }
 
