@@ -420,7 +420,7 @@ public final class VbConstant {
 		public static final Integer REFUND_WAIT = 160;// 等待退款（用户规定时间取消和商家取消）
 		public static final Integer REFUND_SUCCESS = 170;// 退款成功
 //		public static final Integer REFUND_FAIL = 180;// 退款失败
-		public static final Integer RELEASE = 180;// 已完成
+		public static final Integer FINISHED = 180;// 已完成
 
 	}
 
