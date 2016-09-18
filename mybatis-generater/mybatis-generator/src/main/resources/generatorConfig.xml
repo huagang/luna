@@ -87,7 +87,7 @@
 		</javaClientGenerator>
 
 		<!-- FIXME: 4/4 需要生成的Table -->
-		<table tableName="luna_goods">
+		<table tableName="luna_order">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
 		</table>
 	</context>

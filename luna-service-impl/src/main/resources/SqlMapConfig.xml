@@ -91,4 +91,8 @@
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_user_merchant_ex_SqlMap.xml"/>
     <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_goods_SqlMap.xml" />
     <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_goods_ex_SqlMap.xml" />
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_order_SqlMap.xml" />
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_order_ex_SqlMap.xml" />
+    <sqlMap resource="ms/luna/biz/dao/sqlmap/luna_order_goods_SqlMap.xml" />
+    <sqlMap resource="ms/luna/biz/dao/custom/sqlmap/luna_order_goods_ex_SqlMap.xml" />
 </sqlMapConfig>

@@ -1,0 +1,5 @@
+<root>
+  <item name='com.alibaba.fastjson.serializer.SerializerFeature WriteDateUseDateFormat'>
+    <annotation name='java.lang.annotation.Deprecated'/>
+  </item>
+</root>

@@ -12,5 +12,4 @@ public interface LunaGoodsDAO extends LunaGoodsDAOBase {
 
     Integer countGoodsWithFilter(LunaGoodsParameter lunaGoodsParameter);
 
-
 }
