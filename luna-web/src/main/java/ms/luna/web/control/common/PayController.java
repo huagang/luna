@@ -10,11 +10,15 @@ package ms.luna.web.control.common;
 
 import com.alibaba.fastjson.JSONObject;
 import ms.luna.biz.cons.ErrorCode;
+import ms.luna.biz.sc.LunaOrderService;
 import ms.luna.biz.sc.WXPayService;
 import ms.luna.biz.sc.WXSignatureService;
+import ms.luna.biz.table.LunaOrderTable;
 import ms.luna.biz.util.FastJsonUtil;
 import ms.luna.biz.util.RemoteIPUtil;
+import ms.luna.common.LunaUserSession;
 import ms.luna.model.adapter.AbstractWXPayProcess;
+import ms.luna.web.common.SessionHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +42,9 @@ public class PayController {
 
     @Autowired
     private WXSignatureService wxSignatureService;
+
+    @Autowired
+    private LunaOrderService lunaOrderService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/wx/jsapi/getSignature")
     @ResponseBody
@@ -97,22 +104,30 @@ public class PayController {
     @RequestMapping(method = RequestMethod.POST, value = "/wx/app/getPrepayId")
     @ResponseBody
     public JSONObject appGetPrepayId(HttpServletRequest request,
-                                     @RequestParam(value = "orderId") String orderId) {
-        //TODO Is the order belong to the user?
+                                     @RequestParam(value = "orderId") Integer orderId) {
+        LunaUserSession userSession = SessionHelper.getUser(request.getSession(false));
+        JSONObject info = lunaOrderService.getOrderInfo(orderId, userSession.getUniqueId(), userSession.getRoleId());
+        if (info.getInteger("code").intValue() == 0) {
+            JSONObject orderInfo = info.getJSONObject("data");
+            if (orderInfo.getInteger(LunaOrderTable.FIELD_STATUS).intValue() == 100) {
+                //TODO assemble requestJSON  including which way
+                JSONObject inData = new JSONObject();
+                inData.put("content", "微景农+订单");//订单名称
+                inData.put("extraParam", "");//额外信息 notify中会原样返回
+                // inData.put("detail", "{\"test11\":\"123\"}");
+                inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");//设置notify地址
+                inData.put("tradeNo", "0987654321");
+                inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
+                inData.put("money", 1);
+                //TODO return the message that front end needed
+                return wxPayService.appPay(inData);
+            } else {
+                return FastJsonUtil.error(ErrorCode.STATUS_ERROR, "当前订单状态不可支付");
+            }
 
-        //TODO Is the order's status can be payed
-
-        //TODO assemble requestJSON  including which way
-        JSONObject inData = new JSONObject();
-        inData.put("content", "test");
-        inData.put("extraParam", "");
-        // inData.put("detail", "{\"test11\":\"123\"}");
-        inData.put("notifyUrl", "http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/notify");
-        inData.put("tradeNo", "0987654321");
-        inData.put("userIp", RemoteIPUtil.getAddr(request).split(",")[0]);
-        inData.put("money", 1);
-        //TODO return the message that front end needed
-        return wxPayService.appPay(inData);
+        } else {
+            return info;
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/wx/jsapi/getPrepayId")
