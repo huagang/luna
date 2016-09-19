@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import ms.luna.biz.table.DealTable;
 import ms.luna.biz.table.RoomBasicInfoTable;
 import org.apache.log4j.Logger;
@@ -38,6 +39,13 @@ public class DealDAOImpl extends MongoBaseDAO implements DealDAO {
     @Override
     public Document getDeal(String dealId) {
         return dealCollection.find(Filters.eq(DealTable.FIELD_ID, dealId)).first();
+    }
+
+    @Override
+    public Document getDeal(String dealId, List<String> fields) {
+        return dealCollection.find(Filters.eq(DealTable.FIELD_ID, dealId))
+                             .projection(Projections.include(fields))
+                             .first();
     }
 
     @Override

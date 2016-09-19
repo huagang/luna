@@ -15,6 +15,7 @@ public interface DealDAO {
 
     void insertDeal(Document document);
     Document getDeal(String dealId);
+    Document getDeal(String dealId, List<String> fields);
     List<Document> loadDeal(JSONObject jsonQuery);
     void deleteDeal(String dealId);
     void updateDeal(String dealId, Document document);
