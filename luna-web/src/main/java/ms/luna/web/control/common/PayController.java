@@ -36,6 +36,10 @@ import java.text.DecimalFormat;
 @RequestMapping("/common/pay")
 public class PayController {
 
+    /**
+     * 支付整个调用实例在testwxpay.jsp中都有存在
+     */
+
     public static final Logger logger = Logger.getLogger(PayController.class);
 
     private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -81,7 +85,7 @@ public class PayController {
             redirectUrl.append(URLEncoder.encode(url, "utf-8"));
             redirectUrl.append("&response_type=code&scope=snsapi_base");
             redirectUrl.append("&state=");
-            String state = ""; //max 128 bytes
+            String state = ""; //max 128 bytes 自定义字段,会原样返回
             redirectUrl.append(state);
             redirectUrl.append("#wechat_redirect");
             response.sendRedirect(redirectUrl.toString());
@@ -168,6 +172,7 @@ public class PayController {
             JSONObject result = lunaOrderService.finishPayment(inData.getJSONObject("data"));
             if (result.getIntValue("code") == 0) {
                 logger.info("wx finish payment successfully.\ndetail:" + inData);
+                //完成支付成功
                 //do nothing
             } else {
                 logger.error("wx finish payment process error\n" + inData.getString("msg") + "\ndetail:" + xml);

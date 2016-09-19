@@ -32,6 +32,7 @@
         var data = {url: 'http://luna-pre.visualbusiness.cn/luna-web/testwxpay.jsp'};
         $.ajax({
             type: 'get',
+            //获取签名
             url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getSignature',
             data: data,
             cache: false,
@@ -68,9 +69,11 @@
 <script type="text/javascript">
     var paydata = {};
     function getPrepayInfo() {
+        //openId 通过调用getCode API后 调用getOpenId API获得
         var data = {orderId: $("#orderId").val(), openId: "oSsyJwDuwvilHbfXCxljU9JR7k28"};
         $.ajax({
             type: 'post',
+            //获取预付订单
             url: 'http://luna-pre.visualbusiness.cn/luna-web/common/pay/wx/jsapi/getPrepayId',
             data: data,
             cache: false,
