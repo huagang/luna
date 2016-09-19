@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="room_basic_info">
-  <resultMap class="ms.luna.biz.dao.model.RoomBasicInfo" id="BaseResultMap">
+  <resultMap class="ms.luna.biz.dao.custom.model.RoomBasicInfo" id="BaseResultMap">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
@@ -102,7 +102,7 @@
       </isNotNull>
     </isParameterPresent>
   </select>
-  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomBasicInfo" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="room_basic_info.Base_Column_List" />
     ,
@@ -110,7 +110,7 @@
     from room_basic_info
     where id = #id:INTEGER#
   </select>
-  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomBasicInfo">
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo">
     delete from room_basic_info
     where id = #id:INTEGER#
   </delete>
@@ -607,7 +607,7 @@
       pic_info = #picInfo:LONGVARCHAR#
     where id = #id:INTEGER#
   </update>
-  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomBasicInfo">
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo">
     update room_basic_info
     set name = #name:VARCHAR#,
       merchant_id = #merchantId:VARCHAR#,

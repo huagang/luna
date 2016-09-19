@@ -23,4 +23,6 @@ public class DbConfig {
     public static Set<Integer> INVISIBLE_MENU_TRADE_ON = Sets.newHashSet(23);
     public static Set<Integer> INVISIBLE_MENU_TRADE_OFF = Sets.newHashSet(10,11,12);
 
+    public static int GOODS_CATEGORY_ROOM = 1;
+
 }

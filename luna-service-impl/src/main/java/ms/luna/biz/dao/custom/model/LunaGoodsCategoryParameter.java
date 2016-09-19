@@ -11,6 +11,8 @@ public class LunaGoodsCategoryParameter {
 
     private String range = null;
 
+    private String keyword = null;
+
     /**
      * @return the min
      */
@@ -51,5 +53,13 @@ public class LunaGoodsCategoryParameter {
      */
     public void setRange(String range) {
         this.range = range;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

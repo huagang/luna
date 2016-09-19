@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="luna_goods">
+  <resultMap class="ms.luna.biz.dao.model.LunaGoods" id="BaseResultMap">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="pic" jdbcType="VARCHAR" property="pic" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="transport_fee" jdbcType="DECIMAL" property="transportFee" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="sales" jdbcType="INTEGER" property="sales" />
+    <result column="online_status" jdbcType="TINYINT" property="onlineStatus" />
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+    <result column="account" jdbcType="DECIMAL" property="account" />
+    <result column="unique_id" jdbcType="CHAR" property="uniqueId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
+        (
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, category_id, description, pic, price, stock, transport_fee, note, sales, 
+    online_status, merchant_id, business_id, account, unique_id, update_time, create_time
+  </sql>
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCriteria" resultMap="BaseResultMap">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="luna_goods.Base_Column_List" />
+    from luna_goods
+    <isParameterPresent>
+      <include refid="luna_goods.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoods" resultMap="BaseResultMap">
+    select 
+    <include refid="luna_goods.Base_Column_List" />
+    from luna_goods
+    where id = #id:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoods">
+    delete from luna_goods
+    where id = #id:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCriteria">
+    delete from luna_goods
+    <include refid="luna_goods.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.LunaGoods">
+    insert into luna_goods (name, category_id, description, pic, 
+      price, stock, transport_fee, note, sales, 
+      online_status, merchant_id, business_id, account, 
+      unique_id, update_time, create_time)
+    values (#name:VARCHAR#, #categoryId:INTEGER#, #description:VARCHAR#, #pic:VARCHAR#, 
+      #price:DECIMAL#, #stock:INTEGER#, #transportFee:DECIMAL#, #note:VARCHAR#, #sales:INTEGER#, 
+      #onlineStatus:TINYINT#, #merchantId:VARCHAR#, #businessId:INTEGER#, #account:DECIMAL#, 
+      #uniqueId:CHAR#, #updateTime:TIMESTAMP#, #createTime:TIMESTAMP#)
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.LunaGoods">
+    insert into luna_goods
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        name
+      </isNotNull>
+      <isNotNull prepend="," property="categoryId">
+        category_id
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        description
+      </isNotNull>
+      <isNotNull prepend="," property="pic">
+        pic
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        price
+      </isNotNull>
+      <isNotNull prepend="," property="stock">
+        stock
+      </isNotNull>
+      <isNotNull prepend="," property="transportFee">
+        transport_fee
+      </isNotNull>
+      <isNotNull prepend="," property="note">
+        note
+      </isNotNull>
+      <isNotNull prepend="," property="sales">
+        sales
+      </isNotNull>
+      <isNotNull prepend="," property="onlineStatus">
+        online_status
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id
+      </isNotNull>
+      <isNotNull prepend="," property="businessId">
+        business_id
+      </isNotNull>
+      <isNotNull prepend="," property="account">
+        account
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        unique_id
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="categoryId">
+        #categoryId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        #description:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pic">
+        #pic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        #price:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="stock">
+        #stock:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="transportFee">
+        #transportFee:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="note">
+        #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sales">
+        #sales:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="onlineStatus">
+        #onlineStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessId">
+        #businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="account">
+        #account:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        #uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        #createTime:TIMESTAMP#
+      </isNotNull>
+      )
+    </dynamic>
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.LunaGoodsCriteria" resultClass="java.lang.Integer">
+    select count(*) from luna_goods
+    <include refid="luna_goods.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective">
+    update luna_goods
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.id">
+        id = #record.id:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.name">
+        name = #record.name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.categoryId">
+        category_id = #record.categoryId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.description">
+        description = #record.description:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.pic">
+        pic = #record.pic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.price">
+        price = #record.price:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.stock">
+        stock = #record.stock:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.transportFee">
+        transport_fee = #record.transportFee:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.note">
+        note = #record.note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.sales">
+        sales = #record.sales:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.onlineStatus">
+        online_status = #record.onlineStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchantId">
+        merchant_id = #record.merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.businessId">
+        business_id = #record.businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.account">
+        account = #record.account:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.uniqueId">
+        unique_id = #record.uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updateTime">
+        update_time = #record.updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.createTime">
+        create_time = #record.createTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent>
+      <include refid="luna_goods.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample">
+    update luna_goods
+    set id = #record.id:INTEGER#,
+      name = #record.name:VARCHAR#,
+      category_id = #record.categoryId:INTEGER#,
+      description = #record.description:VARCHAR#,
+      pic = #record.pic:VARCHAR#,
+      price = #record.price:DECIMAL#,
+      stock = #record.stock:INTEGER#,
+      transport_fee = #record.transportFee:DECIMAL#,
+      note = #record.note:VARCHAR#,
+      sales = #record.sales:INTEGER#,
+      online_status = #record.onlineStatus:TINYINT#,
+      merchant_id = #record.merchantId:VARCHAR#,
+      business_id = #record.businessId:INTEGER#,
+      account = #record.account:DECIMAL#,
+      unique_id = #record.uniqueId:CHAR#,
+      update_time = #record.updateTime:TIMESTAMP#,
+      create_time = #record.createTime:TIMESTAMP#
+    <isParameterPresent>
+      <include refid="luna_goods.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.LunaGoods">
+    update luna_goods
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="name">
+        name = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="categoryId">
+        category_id = #categoryId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="description">
+        description = #description:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="pic">
+        pic = #pic:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        price = #price:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="stock">
+        stock = #stock:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="transportFee">
+        transport_fee = #transportFee:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="note">
+        note = #note:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sales">
+        sales = #sales:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="onlineStatus">
+        online_status = #onlineStatus:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id = #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="businessId">
+        business_id = #businessId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="account">
+        account = #account:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="uniqueId">
+        unique_id = #uniqueId:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time = #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time = #createTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.LunaGoods">
+    update luna_goods
+    set name = #name:VARCHAR#,
+      category_id = #categoryId:INTEGER#,
+      description = #description:VARCHAR#,
+      pic = #pic:VARCHAR#,
+      price = #price:DECIMAL#,
+      stock = #stock:INTEGER#,
+      transport_fee = #transportFee:DECIMAL#,
+      note = #note:VARCHAR#,
+      sales = #sales:INTEGER#,
+      online_status = #onlineStatus:TINYINT#,
+      merchant_id = #merchantId:VARCHAR#,
+      business_id = #businessId:INTEGER#,
+      account = #account:DECIMAL#,
+      unique_id = #uniqueId:CHAR#,
+      update_time = #updateTime:TIMESTAMP#,
+      create_time = #createTime:TIMESTAMP#
+    where id = #id:INTEGER#
+  </update>
+</sqlMap>
