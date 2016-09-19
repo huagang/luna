@@ -62,5 +62,15 @@ public class MsBusinessDAOImpl extends MsBusinessDAOBaseImpl implements MsBusine
 		}
 		return businessId2CategoryId;
 	}
-	
+
+	@Override
+	public String readMerchantId(int businessId) {
+		Object merchantId = getSqlMapClientTemplate().queryForObject("ms_business.readMerchantId", businessId);
+		if(merchantId != null) {
+			return merchantId.toString();
+		}
+		return "";
+	}
+
+
 }

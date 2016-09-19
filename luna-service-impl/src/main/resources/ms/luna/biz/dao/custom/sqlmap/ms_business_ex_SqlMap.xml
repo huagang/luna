@@ -94,4 +94,10 @@
 		</dynamic>
 
 	</select>
+
+	<select id="readMerchantId" resultClass="String" parameterClass="Integer">
+		select merchant_id
+		from ms_business
+		where business_id = #businessId#
+	</select>
 </sqlMap>

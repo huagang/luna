@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="room_basic_info">
+  <resultMap class="ms.luna.biz.dao.custom.model.RoomBasicInfo" id="BaseResultMap">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="cate_id" jdbcType="INTEGER" property="cateId" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="workday_price" jdbcType="DOUBLE" property="workdayPrice" />
+    <result column="weekend_price" jdbcType="DOUBLE" property="weekendPrice" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="area" jdbcType="DOUBLE" property="area" />
+    <result column="floor" jdbcType="INTEGER" property="floor" />
+    <result column="persons" jdbcType="INTEGER" property="persons" />
+    <result column="decoration" jdbcType="INTEGER" property="decoration" />
+    <result column="landscape" jdbcType="INTEGER" property="landscape" />
+    <result column="breakfast" jdbcType="TINYINT" property="breakfast" />
+    <result column="room_num" jdbcType="INTEGER" property="roomNum" />
+    <result column="basic_equip" jdbcType="VARCHAR" property="basicEquip" />
+    <result column="bedroom_equip" jdbcType="VARCHAR" property="bedroomEquip" />
+    <result column="bath_equip" jdbcType="VARCHAR" property="bathEquip" />
+    <result column="cook_equip" jdbcType="VARCHAR" property="cookEquip" />
+    <result column="entertainment_equip" jdbcType="VARCHAR" property="entertainmentEquip" />
+    <result column="pic_type" jdbcType="INTEGER" property="picType" />
+    <result column="is_online" jdbcType="TINYINT" property="isOnline" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap class="ms.luna.biz.dao.model.RoomBasicInfoWithBLOBs" extends="room_basic_info.BaseResultMap" id="ResultMapWithBLOBs">
+    <result column="bed_info" jdbcType="LONGVARCHAR" property="bedInfo" />
+    <result column="pic_info" jdbcType="LONGVARCHAR" property="picInfo" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
+        (
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, merchant_id, cate_id, start_time, end_time, workday_price, weekend_price, 
+    count, area, floor, persons, decoration, landscape, breakfast, room_num, basic_equip, 
+    bedroom_equip, bath_equip, cook_equip, entertainment_equip, pic_type, is_online, 
+    is_del, publish_time, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    bed_info, pic_info
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoCriteria" resultMap="ResultMapWithBLOBs">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="room_basic_info.Base_Column_List" />
+    ,
+    <include refid="room_basic_info.Blob_Column_List" />
+    from room_basic_info
+    <isParameterPresent>
+      <include refid="room_basic_info.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoCriteria" resultMap="BaseResultMap">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="room_basic_info.Base_Column_List" />
+    from room_basic_info
+    <isParameterPresent>
+      <include refid="room_basic_info.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="room_basic_info.Base_Column_List" />
+    ,
+    <include refid="room_basic_info.Blob_Column_List" />
+    from room_basic_info
+    where id = #id:INTEGER#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo">
+    delete from room_basic_info
+    where id = #id:INTEGER#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoCriteria">
+    delete from room_basic_info
+    <include refid="room_basic_info.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoWithBLOBs">
+    insert into room_basic_info (name, merchant_id, cate_id, start_time, 
+      end_time, workday_price, weekend_price, count, 
+      area, floor, persons, decoration, landscape, 
+      breakfast, room_num, basic_equip, bedroom_equip, 
+      bath_equip, cook_equip, entertainment_equip, pic_type, 
+      is_online, is_del, publish_time, create_time, 
+      update_time, bed_info, pic_info)
+    values (#name:VARCHAR#, #merchantId:VARCHAR#, #cateId:INTEGER#, #startTime:TIMESTAMP#, 
+      #endTime:TIMESTAMP#, #workdayPrice:DOUBLE#, #weekendPrice:DOUBLE#, #count:INTEGER#, 
+      #area:DOUBLE#, #floor:INTEGER#, #persons:INTEGER#, #decoration:INTEGER#, #landscape:INTEGER#, 
+      #breakfast:TINYINT#, #roomNum:INTEGER#, #basicEquip:VARCHAR#, #bedroomEquip:VARCHAR#, 
+      #bathEquip:VARCHAR#, #cookEquip:VARCHAR#, #entertainmentEquip:VARCHAR#, #picType:INTEGER#, 
+      #isOnline:TINYINT#, #isDel:TINYINT#, #publishTime:TIMESTAMP#, #createTime:TIMESTAMP#, 
+      #updateTime:TIMESTAMP#, #bedInfo:LONGVARCHAR#, #picInfo:LONGVARCHAR#)
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoWithBLOBs">
+    insert into room_basic_info
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        name
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id
+      </isNotNull>
+      <isNotNull prepend="," property="cateId">
+        cate_id
+      </isNotNull>
+      <isNotNull prepend="," property="startTime">
+        start_time
+      </isNotNull>
+      <isNotNull prepend="," property="endTime">
+        end_time
+      </isNotNull>
+      <isNotNull prepend="," property="workdayPrice">
+        workday_price
+      </isNotNull>
+      <isNotNull prepend="," property="weekendPrice">
+        weekend_price
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        count
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        area
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        floor
+      </isNotNull>
+      <isNotNull prepend="," property="persons">
+        persons
+      </isNotNull>
+      <isNotNull prepend="," property="decoration">
+        decoration
+      </isNotNull>
+      <isNotNull prepend="," property="landscape">
+        landscape
+      </isNotNull>
+      <isNotNull prepend="," property="breakfast">
+        breakfast
+      </isNotNull>
+      <isNotNull prepend="," property="roomNum">
+        room_num
+      </isNotNull>
+      <isNotNull prepend="," property="basicEquip">
+        basic_equip
+      </isNotNull>
+      <isNotNull prepend="," property="bedroomEquip">
+        bedroom_equip
+      </isNotNull>
+      <isNotNull prepend="," property="bathEquip">
+        bath_equip
+      </isNotNull>
+      <isNotNull prepend="," property="cookEquip">
+        cook_equip
+      </isNotNull>
+      <isNotNull prepend="," property="entertainmentEquip">
+        entertainment_equip
+      </isNotNull>
+      <isNotNull prepend="," property="picType">
+        pic_type
+      </isNotNull>
+      <isNotNull prepend="," property="isOnline">
+        is_online
+      </isNotNull>
+      <isNotNull prepend="," property="isDel">
+        is_del
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime">
+        publish_time
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time
+      </isNotNull>
+      <isNotNull prepend="," property="bedInfo">
+        bed_info
+      </isNotNull>
+      <isNotNull prepend="," property="picInfo">
+        pic_info
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="name">
+        #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cateId">
+        #cateId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime">
+        #startTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime">
+        #endTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="workdayPrice">
+        #workdayPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="weekendPrice">
+        #weekendPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        #count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        #area:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        #floor:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="persons">
+        #persons:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="decoration">
+        #decoration:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="landscape">
+        #landscape:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="breakfast">
+        #breakfast:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="roomNum">
+        #roomNum:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="basicEquip">
+        #basicEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bedroomEquip">
+        #bedroomEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bathEquip">
+        #bathEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cookEquip">
+        #cookEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="entertainmentEquip">
+        #entertainmentEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="picType">
+        #picType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="isOnline">
+        #isOnline:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="isDel">
+        #isDel:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime">
+        #publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        #createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="bedInfo">
+        #bedInfo:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="picInfo">
+        #picInfo:LONGVARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+    <selectKey keyProperty="id" resultClass="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoCriteria" resultClass="java.lang.Integer">
+    select count(*) from room_basic_info
+    <include refid="room_basic_info.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective">
+    update room_basic_info
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.id">
+        id = #record.id:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.name">
+        name = #record.name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchantId">
+        merchant_id = #record.merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.cateId">
+        cate_id = #record.cateId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.startTime">
+        start_time = #record.startTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.endTime">
+        end_time = #record.endTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.workdayPrice">
+        workday_price = #record.workdayPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="record.weekendPrice">
+        weekend_price = #record.weekendPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="record.count">
+        count = #record.count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.area">
+        area = #record.area:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="record.floor">
+        floor = #record.floor:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.persons">
+        persons = #record.persons:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.decoration">
+        decoration = #record.decoration:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.landscape">
+        landscape = #record.landscape:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.breakfast">
+        breakfast = #record.breakfast:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.roomNum">
+        room_num = #record.roomNum:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.basicEquip">
+        basic_equip = #record.basicEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.bedroomEquip">
+        bedroom_equip = #record.bedroomEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.bathEquip">
+        bath_equip = #record.bathEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.cookEquip">
+        cook_equip = #record.cookEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.entertainmentEquip">
+        entertainment_equip = #record.entertainmentEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.picType">
+        pic_type = #record.picType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.isOnline">
+        is_online = #record.isOnline:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.isDel">
+        is_del = #record.isDel:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.publishTime">
+        publish_time = #record.publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.createTime">
+        create_time = #record.createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updateTime">
+        update_time = #record.updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.bedInfo">
+        bed_info = #record.bedInfo:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.picInfo">
+        pic_info = #record.picInfo:LONGVARCHAR#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent>
+      <include refid="room_basic_info.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExampleWithBLOBs">
+    update room_basic_info
+    set id = #record.id:INTEGER#,
+      name = #record.name:VARCHAR#,
+      merchant_id = #record.merchantId:VARCHAR#,
+      cate_id = #record.cateId:INTEGER#,
+      start_time = #record.startTime:TIMESTAMP#,
+      end_time = #record.endTime:TIMESTAMP#,
+      workday_price = #record.workdayPrice:DOUBLE#,
+      weekend_price = #record.weekendPrice:DOUBLE#,
+      count = #record.count:INTEGER#,
+      area = #record.area:DOUBLE#,
+      floor = #record.floor:INTEGER#,
+      persons = #record.persons:INTEGER#,
+      decoration = #record.decoration:INTEGER#,
+      landscape = #record.landscape:INTEGER#,
+      breakfast = #record.breakfast:TINYINT#,
+      room_num = #record.roomNum:INTEGER#,
+      basic_equip = #record.basicEquip:VARCHAR#,
+      bedroom_equip = #record.bedroomEquip:VARCHAR#,
+      bath_equip = #record.bathEquip:VARCHAR#,
+      cook_equip = #record.cookEquip:VARCHAR#,
+      entertainment_equip = #record.entertainmentEquip:VARCHAR#,
+      pic_type = #record.picType:INTEGER#,
+      is_online = #record.isOnline:TINYINT#,
+      is_del = #record.isDel:TINYINT#,
+      publish_time = #record.publishTime:TIMESTAMP#,
+      create_time = #record.createTime:TIMESTAMP#,
+      update_time = #record.updateTime:TIMESTAMP#,
+      bed_info = #record.bedInfo:LONGVARCHAR#,
+      pic_info = #record.picInfo:LONGVARCHAR#
+    <isParameterPresent>
+      <include refid="room_basic_info.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample">
+    update room_basic_info
+    set id = #record.id:INTEGER#,
+      name = #record.name:VARCHAR#,
+      merchant_id = #record.merchantId:VARCHAR#,
+      cate_id = #record.cateId:INTEGER#,
+      start_time = #record.startTime:TIMESTAMP#,
+      end_time = #record.endTime:TIMESTAMP#,
+      workday_price = #record.workdayPrice:DOUBLE#,
+      weekend_price = #record.weekendPrice:DOUBLE#,
+      count = #record.count:INTEGER#,
+      area = #record.area:DOUBLE#,
+      floor = #record.floor:INTEGER#,
+      persons = #record.persons:INTEGER#,
+      decoration = #record.decoration:INTEGER#,
+      landscape = #record.landscape:INTEGER#,
+      breakfast = #record.breakfast:TINYINT#,
+      room_num = #record.roomNum:INTEGER#,
+      basic_equip = #record.basicEquip:VARCHAR#,
+      bedroom_equip = #record.bedroomEquip:VARCHAR#,
+      bath_equip = #record.bathEquip:VARCHAR#,
+      cook_equip = #record.cookEquip:VARCHAR#,
+      entertainment_equip = #record.entertainmentEquip:VARCHAR#,
+      pic_type = #record.picType:INTEGER#,
+      is_online = #record.isOnline:TINYINT#,
+      is_del = #record.isDel:TINYINT#,
+      publish_time = #record.publishTime:TIMESTAMP#,
+      create_time = #record.createTime:TIMESTAMP#,
+      update_time = #record.updateTime:TIMESTAMP#
+    <isParameterPresent>
+      <include refid="room_basic_info.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoWithBLOBs">
+    update room_basic_info
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="name">
+        name = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchantId">
+        merchant_id = #merchantId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cateId">
+        cate_id = #cateId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="startTime">
+        start_time = #startTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="endTime">
+        end_time = #endTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="workdayPrice">
+        workday_price = #workdayPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="weekendPrice">
+        weekend_price = #weekendPrice:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        count = #count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="area">
+        area = #area:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="floor">
+        floor = #floor:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="persons">
+        persons = #persons:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="decoration">
+        decoration = #decoration:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="landscape">
+        landscape = #landscape:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="breakfast">
+        breakfast = #breakfast:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="roomNum">
+        room_num = #roomNum:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="basicEquip">
+        basic_equip = #basicEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bedroomEquip">
+        bedroom_equip = #bedroomEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bathEquip">
+        bath_equip = #bathEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="cookEquip">
+        cook_equip = #cookEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="entertainmentEquip">
+        entertainment_equip = #entertainmentEquip:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="picType">
+        pic_type = #picType:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="isOnline">
+        is_online = #isOnline:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="isDel">
+        is_del = #isDel:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="publishTime">
+        publish_time = #publishTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time = #createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time = #updateTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="bedInfo">
+        bed_info = #bedInfo:LONGVARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="picInfo">
+        pic_info = #picInfo:LONGVARCHAR#
+      </isNotNull>
+    </dynamic>
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterClass="ms.luna.biz.dao.model.RoomBasicInfoWithBLOBs">
+    update room_basic_info
+    set name = #name:VARCHAR#,
+      merchant_id = #merchantId:VARCHAR#,
+      cate_id = #cateId:INTEGER#,
+      start_time = #startTime:TIMESTAMP#,
+      end_time = #endTime:TIMESTAMP#,
+      workday_price = #workdayPrice:DOUBLE#,
+      weekend_price = #weekendPrice:DOUBLE#,
+      count = #count:INTEGER#,
+      area = #area:DOUBLE#,
+      floor = #floor:INTEGER#,
+      persons = #persons:INTEGER#,
+      decoration = #decoration:INTEGER#,
+      landscape = #landscape:INTEGER#,
+      breakfast = #breakfast:TINYINT#,
+      room_num = #roomNum:INTEGER#,
+      basic_equip = #basicEquip:VARCHAR#,
+      bedroom_equip = #bedroomEquip:VARCHAR#,
+      bath_equip = #bathEquip:VARCHAR#,
+      cook_equip = #cookEquip:VARCHAR#,
+      entertainment_equip = #entertainmentEquip:VARCHAR#,
+      pic_type = #picType:INTEGER#,
+      is_online = #isOnline:TINYINT#,
+      is_del = #isDel:TINYINT#,
+      publish_time = #publishTime:TIMESTAMP#,
+      create_time = #createTime:TIMESTAMP#,
+      update_time = #updateTime:TIMESTAMP#,
+      bed_info = #bedInfo:LONGVARCHAR#,
+      pic_info = #picInfo:LONGVARCHAR#
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.custom.model.RoomBasicInfo">
+    update room_basic_info
+    set name = #name:VARCHAR#,
+      merchant_id = #merchantId:VARCHAR#,
+      cate_id = #cateId:INTEGER#,
+      start_time = #startTime:TIMESTAMP#,
+      end_time = #endTime:TIMESTAMP#,
+      workday_price = #workdayPrice:DOUBLE#,
+      weekend_price = #weekendPrice:DOUBLE#,
+      count = #count:INTEGER#,
+      area = #area:DOUBLE#,
+      floor = #floor:INTEGER#,
+      persons = #persons:INTEGER#,
+      decoration = #decoration:INTEGER#,
+      landscape = #landscape:INTEGER#,
+      breakfast = #breakfast:TINYINT#,
+      room_num = #roomNum:INTEGER#,
+      basic_equip = #basicEquip:VARCHAR#,
+      bedroom_equip = #bedroomEquip:VARCHAR#,
+      bath_equip = #bathEquip:VARCHAR#,
+      cook_equip = #cookEquip:VARCHAR#,
+      entertainment_equip = #entertainmentEquip:VARCHAR#,
+      pic_type = #picType:INTEGER#,
+      is_online = #isOnline:TINYINT#,
+      is_del = #isDel:TINYINT#,
+      publish_time = #publishTime:TIMESTAMP#,
+      create_time = #createTime:TIMESTAMP#,
+      update_time = #updateTime:TIMESTAMP#
+    where id = #id:INTEGER#
+  </update>
+</sqlMap>

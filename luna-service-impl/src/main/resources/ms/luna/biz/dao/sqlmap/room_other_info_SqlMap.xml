@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="room_other_info">
+  <resultMap class="ms.luna.biz.dao.model.RoomOtherInfo" id="BaseResultMap">
+    <result column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="is_special" jdbcType="TINYINT" property="isSpecial" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <iterate conjunction="or" prepend="where" property="oredCriteria" removeFirstPrepend="iterate">
+      <isEqual compareValue="true" property="oredCriteria[].valid">
+        (
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithoutValue">
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithSingleValue">
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithListValue">
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate close=")" conjunction="," open="(" property="oredCriteria[].criteriaWithListValue[].values">
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate conjunction="and" prepend="and" property="oredCriteria[].criteriaWithBetweenValue">
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List">
+    room_id, day, is_special, count, price, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterClass="ms.luna.biz.dao.model.RoomOtherInfoCriteria" resultMap="BaseResultMap">
+    select
+    <isParameterPresent>
+      <isEqual compareValue="true" property="distinct">
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="room_other_info.Base_Column_List" />
+    from room_other_info
+    <isParameterPresent>
+      <include refid="room_other_info.Example_Where_Clause" />
+      <isNotNull property="orderByClause">
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomOtherInfoKey" resultMap="BaseResultMap">
+    select 
+    <include refid="room_other_info.Base_Column_List" />
+    from room_other_info
+    where room_id = #roomId:INTEGER#
+      and day = #day:TIMESTAMP#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomOtherInfoKey">
+    delete from room_other_info
+    where room_id = #roomId:INTEGER#
+      and day = #day:TIMESTAMP#
+  </delete>
+  <delete id="deleteByExample" parameterClass="ms.luna.biz.dao.model.RoomOtherInfoCriteria">
+    delete from room_other_info
+    <include refid="room_other_info.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="ms.luna.biz.dao.model.RoomOtherInfo">
+    insert into room_other_info (room_id, day, is_special, count, 
+      price, create_time, update_time)
+    values (#roomId:INTEGER#, #day:TIMESTAMP#, #isSpecial:TINYINT#, #count:INTEGER#, 
+      #price:DOUBLE#, #createTime:TIMESTAMP#, #updateTime:TIMESTAMP#)
+  </insert>
+  <insert id="insertSelective" parameterClass="ms.luna.biz.dao.model.RoomOtherInfo">
+    insert into room_other_info
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="roomId">
+        room_id
+      </isNotNull>
+      <isNotNull prepend="," property="day">
+        day
+      </isNotNull>
+      <isNotNull prepend="," property="isSpecial">
+        is_special
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        count
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        price
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(">
+      <isNotNull prepend="," property="roomId">
+        #roomId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="day">
+        #day:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="isSpecial">
+        #isSpecial:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        #count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        #price:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        #createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        #updateTime:TIMESTAMP#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="ms.luna.biz.dao.model.RoomOtherInfoCriteria" resultClass="java.lang.Integer">
+    select count(*) from room_other_info
+    <include refid="room_other_info.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective">
+    update room_other_info
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="record.roomId">
+        room_id = #record.roomId:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.day">
+        day = #record.day:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.isSpecial">
+        is_special = #record.isSpecial:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="record.count">
+        count = #record.count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="record.price">
+        price = #record.price:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="record.createTime">
+        create_time = #record.createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.updateTime">
+        update_time = #record.updateTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent>
+      <include refid="room_other_info.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample">
+    update room_other_info
+    set room_id = #record.roomId:INTEGER#,
+      day = #record.day:TIMESTAMP#,
+      is_special = #record.isSpecial:TINYINT#,
+      count = #record.count:INTEGER#,
+      price = #record.price:DOUBLE#,
+      create_time = #record.createTime:TIMESTAMP#,
+      update_time = #record.updateTime:TIMESTAMP#
+    <isParameterPresent>
+      <include refid="room_other_info.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="ms.luna.biz.dao.model.RoomOtherInfo">
+    update room_other_info
+    <dynamic prepend="set">
+      <isNotNull prepend="," property="isSpecial">
+        is_special = #isSpecial:TINYINT#
+      </isNotNull>
+      <isNotNull prepend="," property="count">
+        count = #count:INTEGER#
+      </isNotNull>
+      <isNotNull prepend="," property="price">
+        price = #price:DOUBLE#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime">
+        create_time = #createTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="updateTime">
+        update_time = #updateTime:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    where room_id = #roomId:INTEGER#
+      and day = #day:TIMESTAMP#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="ms.luna.biz.dao.model.RoomOtherInfo">
+    update room_other_info
+    set is_special = #isSpecial:TINYINT#,
+      count = #count:INTEGER#,
+      price = #price:DOUBLE#,
+      create_time = #createTime:TIMESTAMP#,
+      update_time = #updateTime:TIMESTAMP#
+    where room_id = #roomId:INTEGER#
+      and day = #day:TIMESTAMP#
+  </update>
+</sqlMap>

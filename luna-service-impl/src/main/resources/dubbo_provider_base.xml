@@ -40,5 +40,6 @@
 	<dubbo:service interface="ms.luna.biz.sc.WXPayService" ref="wxPayService"/>
     <dubbo:service interface="ms.luna.biz.sc.WXSignatureService" ref="wxSignatureService"/>
     <dubbo:service interface="ms.luna.biz.sc.LunaOrderService" ref="lunaOrderService"/>
+	<dubbo:service interface="ms.luna.biz.sc.DealService" ref="dealService"/>
 
 </beans>
