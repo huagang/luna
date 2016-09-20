@@ -569,6 +569,9 @@ var Inter = function () {
                 poiTypeListByBidAndFPoi: apiContext + 'servicepoi.do?method=getCtgrsByBizIdAndPoiId&business_id={0}&poi_id={1}', //通过业务id和poiId获取
                 poiListByBidAndFPoi: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}', //获取业务关系树 一层结构下所有POI数据接口
                 poiListByBidAndFPoiAndPoiTyep: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}', //获取业务关系树 多个一级类别下的数据接口
+                getSubCtgrs: apiContext + 'servicepoi.do?method=getSubCtgrsByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}', //获取业务关系树 一层结构下所有POI数据接口
+                getPoiListByBidAndFPoiAndSubType: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndSubCtgrId&business_id={0}&poi_id={1}&sub_category_id={2}' , //获取二级类别下的接口
+
                 poiDetail: apiContext + 'servicepoi.do?method=getPoiById&poi_id={0}&lang=zh',
                 poiFilter: {
                     url: apiContext + 'servicepoi.do?method=retrievePois&type={0}&filterName={1}&limit={2}&lang={3}',

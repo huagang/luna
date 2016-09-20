@@ -28,7 +28,8 @@ componentCanvasModelTemplate = {
         heading: 180,
         pitch: 0,
         roll: 0
-    }
+    },
+    'disabledSlide': true,//禁止滑动 
 };
 
 componentTextModelTemplate = {
@@ -163,6 +164,20 @@ componentTabModelTemplate = {
         }
     }
 };
+//无头图页签
+componentSimpleTabModelTemplate = {
+    "_id": "",
+    "type": "simpleTab",
+    "content": {
+        'tabList': []
+    },
+    "action": {
+        "href": {
+            "type": "none",
+            "value": ""
+        }
+    }
+};
 
 /**
  * 组件的样式模板
@@ -171,7 +186,7 @@ componentTabModelTemplate = {
 var componentViewTemplate = {
     'tabMenu': '<div class="menuTab-wrapper" >' +
     '<div class="menuTab-bg">' +
-    '<img src="http://view.luna.visualbusiness.cn/dev/img/203/1a3W3Z1k231l1r1l2S0o0i2H2T3V3q0A.jpg">' +
+    '<img src="{0}">' +
     '</div>' +
     '<div class="menuTab">' +
     '<div class="menulist-wrap">' +
@@ -311,6 +326,14 @@ function createNewEelement(componentType, createType) {
             }
             componentType = 'tab';
             componentModel = componentTabModelTemplate;
+            break;
+        case 'simpleTab':
+            if (document.querySelector('[component-type="simpleTab"]')) {
+                alert("不能重复创建页签组件");
+                return;
+            }
+            componentType = 'simpleTab';
+            componentModel = componentSimpleTabModelTemplate;
             break;
         case 'imgList':
             if (document.querySelector('[component-type="imgList"]')) {
@@ -464,6 +487,9 @@ function updatePageComponents() {
         case "tab":
             // componentObj.content.icon = $currenthtml.find("img").attr("src");
             break;
+        case "simpleTab":
+            console.log('update simpleTab');
+            break;
         default:
             $.alert("未知的组件类型");
             return;
@@ -535,6 +561,7 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
     } else {
         newComponentDom = $('<div id="' + componentID + '" component-id="' + componentID + '" class="componentbox newcomponentbox" data-toggle="context" style="top:' + (componentObj.top || '50') + 'px;left:' + (componentObj.top || '50') + ';"><div class="con context con_' + comType + '"></div></div>');
     }
+    console.log('546' + componentObj);
     switch (comType) {
         case "canvas":
             //增加样式显示，增加绑定事件 click等
@@ -591,7 +618,7 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
             break;
         case "tab":
             newComponentDom.attr("component-type", "tab");
-            newComponentDom.children("div").append('<div class="tabContainer">' + componentViewTemplate.tabMenu + '</div>');
+            newComponentDom.children("div").append('<div class="tabContainer">' + Util.strFormat(componentViewTemplate.tabMenu, [componentObj.content.bannerImg]) + '</div>');
             newComponentDom.css({
                 "top": "0px",
                 "left": "0px",
@@ -602,6 +629,23 @@ function creatPageComponentsHtml(pageID, componentObj, createType) {
 
             var innerHtml = initMenuTab.getTabListHtmlInCavas(componentObj.content.tabList);
             newComponentDom.find('.menulist').empty().append(innerHtml);
+            break;
+        case "simpleTab":
+            newComponentDom.attr("component-type", "simpleTab");
+            newComponentDom.children("div").append('<div class="simpleTabContainer"><div class="simpleTabHearWrapper"></div><div class="simpleTabBodyWrapper imgListContainer"></div></div>');
+            newComponentDom.css({
+                "top": "0px",
+                "left": "0px",
+                "width": "100%",
+                "height": "100%"
+            });
+            newComponentDom.addClass("simpleTab");
+            componentObj.content.currentTabIndex = 0;
+            var innerHtml = initMenuTab.getSimpleMenuTabHtml(componentObj.content.tabList),
+                bodyHtml = getSimpleTabBodyHtml(componentObj.content);
+
+            newComponentDom.find('.simpleTabHearWrapper').empty().append(innerHtml);
+            newComponentDom.find('.simpleTabBodyWrapper').empty().append(bodyHtml);
             break;
         default:
             $.alert("未知的组件类型");
@@ -718,13 +762,19 @@ function updatePageComponentsHtml() {
                 var icon = content.icon;
                 comobj.children("div.con").html('<img src="' + icon + '"/>');
             }
-
             break;
         case "tab":
             var innerHtml = initMenuTab.getTabListHtmlInCavas(content.tabList);
             comobj.find('.menulist').empty().append(innerHtml);
-
             comobj.find('.menuTab-bg img').attr('src', content.bannerImg);
+            break;
+
+        case "simpleTab":
+            var innerHtml = initMenuTab.getSimpleMenuTabHtml(content.tabList),
+                bodyHtml = getSimpleTabBodyHtml(content);
+
+            comobj.find('.simpleTabHearWrapper').empty().append(innerHtml);
+            comobj.find('.simpleTabBodyWrapper').empty().append(bodyHtml);
             break;
         default:
             $.alert("未知的组件类型");
@@ -872,7 +922,16 @@ var initMenuTab = {
             }
         }
         return innerHtml.join('');
-    }
+    },
+    getSimpleMenuTabHtml: function (tabList) {
+        //获取简单标题
+        var innerHtml = [];
+        for (var i = 0; i < tabList.length; i++) {
+            console.log(tabList[i]);
+            innerHtml.push('<div class="simpleTabHear"> ' + tabList[i].name + ' </div>');
+        }
+        return innerHtml.join('');
+    },
 };
 
 /*依据不同版本的浏览器，获取颜色值，并以16进制表示*/
@@ -1184,11 +1243,12 @@ function getImgListHtml(content) {
             } else {
                 arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
             }
-
             break;
         case 2:
             var poiList = [], url;
-            if (content.poiType && content.poiType.id) {
+            if (content.poiType && content.poiType.id && content.poiSecondType && content.poiSecondType.id) {
+                url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndSubType, [objdata.businessId, content.firstPoi.id, content.poiSecondType.id]);
+            } else if (content.poiType && content.poiType.id) {
                 url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [objdata.businessId, content.firstPoi.id, content.poiType.id]);
             } else {
                 url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoi, [objdata.businessId, content.firstPoi.id]);
@@ -1231,6 +1291,94 @@ function getImgListHtml(content) {
     }
     return arrHtml;
 }
+
+/**
+ * 
+ * 获取simple body的Html
+ * @param {any} $target
+ * @param {any} direction
+ * @param {any} len
+ * @returns
+ */
+function getSimpleTabBodyHtml(content) {
+    if (content.tabList.length == 0) {
+        return '';
+    }
+    var arrHtml = [],
+        tabData = content.tabList[content.currentTabIndex];
+    switch (tabData.type) {
+        case 'articleList':
+            var articleList = [];
+            if (tabData.column && tabData.column.id) {
+                getArticleListByBidAndCid(objdata.businessId, tabData.column.id, function (res) {
+                    if (res.code == "0") {
+                        articleList = res.data;
+                    } else {
+                        console.log('请求文章数据失败');
+                    }
+                });
+            } else {
+                articleLis = [];
+            }
+            if (articleList.length > 0) {
+                arrHtml.push('<ul class="imglist-container">');
+                for (var i = 0; i < articleList.length; i++) {
+                    arrHtml.push('<li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(' + (articleList[i].abstract_pic || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">' + articleList[i].title + '</div></div></a></li>');
+                }
+                arrHtml.push('</ul>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-wrapper"><a href="javascript:;"><div class="imglist-wrapper-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;" ><div class="imglist-filter"></div><div class="img-title">这里会显示文章或者POI的标题</div></div></a></li></ul></div>');
+            }
+            break;
+        case 'poiList':
+            var poiList = [], url;
+            if (tabData.poiType && tabData.poiType.id && tabData.poiSecondType && tabData.poiSecondType.id) {
+                url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndSubType, [objdata.businessId, tabData.firstPoi.poiId, tabData.poiSecondType.id]);
+            } else if (tabData.poiType && tabData.poiType.id) {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoiAndPoiTyep, [objdata.businessId, tabData.firstPoi.poiId, tabData.poiType.id]);
+            } else if (tabData.firstPoi && tabData.firstPoi.poiId) {
+                url = Util.strFormat(Inter.getApiUrl().poiListByBidAndFPoi, [objdata.businessId, tabData.firstPoi.poiId]);
+            }
+            getPoiListByBidAndFidAndTid(url, function (res) {
+                if (res.code == '0') {
+                    poiList = res.data[tabData.poiLang.id].pois;
+                }
+            });
+            if (poiList.length > 0) {
+                var poiPanoUrl = {
+                    1: Inter.getApiUrl().singlePano,
+                    2: Inter.getApiUrl().multiplyPano,
+                    3: Inter.getApiUrl().customPano,
+                };
+                arrHtml.push('<ul class="imglist-container">');
+                for (var i = 0; i < poiList.length; i++) {
+                    arrHtml.push('<li class="imglist-poi-wrapper">');
+                    arrHtml.push('<a href="javascript:;">');
+                    arrHtml.push('<div class="imglist-li-bg" style="background:url(' + (poiList[i].thumbnail || "http://cdn.visualbusiness.cn/public/vb/img/sample.png") + ') no-repeat;background-size:100% 100%;">');
+                    arrHtml.push('<div class="imglist-filter"></div>');
+                    arrHtml.push('<div class="imglist-title-wrapper">');
+                    arrHtml.push('<div class="imglist-title">' + poiList[i].poi_name + '</div>');
+                    if (poiList[i].panorama.panorama_type_id) {
+                        arrHtml.push('<div class="imglist-subtitle">点击看全景</div>');
+                    }
+                    arrHtml.push('</div>');
+                    arrHtml.push('</div>');
+                    arrHtml.push('</a>');
+                    arrHtml.push('<a href="javascript:;" class="imglist-detail">点击查看详情</a>');
+                    arrHtml.push('</li>');
+                }
+
+                arrHtml.push('</ul>');
+            } else {
+                arrHtml.push('<div class="imgListContainer"><ul class="imglist-container"><li class="imglist-poi-wrapper"><a href="javascript:;" > <div class="imglist-li-bg" style="background:url(\'http://cdn.visualbusiness.cn/public/vb/img/sample.png\') no-repeat;background-size:100% 100%;"><div class="imglist-filter"></div><div class="imglist-title-wrapper"><div class="imglist-title">显示POI名称</div></div></div></a><a href="javascript:;" class="imglist-detail">点击查看详情</a></li> ');
+            }
+            break;
+        case 'linkList':
+            break;
+    }
+    return arrHtml.join('');
+}
+
 
 /**
  * 判断上下左右移动是否移出框外

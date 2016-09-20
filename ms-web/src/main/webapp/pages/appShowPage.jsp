@@ -13,7 +13,7 @@
     <meta id="vb_viewport" name="viewport" content="width=device-width,initial-scale=1,minimum-scale=0.1,maximum-scale=10,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/video-js.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/fonts/iconfont.css">
@@ -54,7 +54,7 @@
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/parallax.js"></script>
     <script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="${stat_id}" ></script>
-    <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/video.min.js"></script>
     <script type="text/javascript">
 
         var pageData = ${pageData};

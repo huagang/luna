@@ -794,3 +794,33 @@ function getPoiListByBidAndFidAndTid(url, successCallback) {
         }
     });
 }
+
+
+/**
+ * 根据业务id 和一级poi id 一级类别id 获取二级类别的数据
+ */
+function getSubCtgrsByBizIdAndPoiIdAndCtgrId(url) {
+    var curController = this;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: function (res) {
+            var arr = [];
+            if (res.code == 0) {
+                for (var i = 0; i < res.data.sub_categorys.length; i++) {
+                    arr.push({
+                        id: res.data.sub_categorys[i].sub_category_id,
+                        name: res.data.sub_categorys[i].sub_category_name,
+                    });
+
+                }
+                curController.poiSecondTypeList = arr;
+            }
+        },
+        error: function (res) {
+            console.log('请求POI数据失败');
+            console.log(res);
+        }
+    });
+}

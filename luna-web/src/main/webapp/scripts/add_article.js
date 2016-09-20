@@ -415,7 +415,7 @@ var initPage = function () {
             error: function () {
                 console.log("请求文章数据失败");
             }
-        })
+        });
     }
 
     function insertArticleData() {
@@ -424,12 +424,7 @@ var initPage = function () {
         ue.ready(function () {
             ue.setContent(articleStore.content);
         });
-        // var intervalId = setInterval(function() {
-        //     if (ue.body) {
-        //         ue.setContent(articleStore.content);
-        //         clearInterval(intervalId);
-        //     }
-        // }, 500);
+
         $("#summary").val(articleStore.summary);
         if (articleStore.thumbnail) {
             $("#thumbnail_show").attr('src', articleStore.thumbnail).removeClass('hide');

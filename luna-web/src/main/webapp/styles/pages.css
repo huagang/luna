@@ -169,25 +169,52 @@ body {
     height: 100%;
 }
 
-.component-btn {
+.component-btn,
+.first-layer {
+    position: relative;
     display: inline-block;
-    width: 42px;
+    width: 50px;
     text-align: center;
     height: 100%;
     color: #AEB7CE;
-    padding: 2px 6px;
+    padding: 12px 0;
     cursor: pointer;
-    margin: 9px 1px;
-    line-height: 12px;
+    /* margin: 9px 1px; */
+    line-height: 13px;
 }
 
-.component-btn:hover {
+.first-layer:hover .second-layer {
+    display: flex;
+}
+
+.second-layer {
+    position: absolute;
+    top: 64px;
+    background-color: #364C86;
+    right: 0px;
+    display: flex;
+    text-align: center;
+}
+
+.second-layer li {
+    flex: 1;
+}
+
+.second-layer {
+    display: none;
+}
+
+.component-btn:hover,
+.first-layer:hover,
+.first-layer:hover .second-layer {
     background-color: #2B3C6A;
     color: #fff;
     border-radius: 3px;
 }
 
-.component-btn:hover span {
+.component-btn:hover span,
+.first-layer:hover span,
+.first-layer:hover .second-layer span {
     color: #fff;
 }
 
@@ -353,7 +380,6 @@ ol {
 
 
 /*控制面板 右*/
-
 
 /*背景*/
 
@@ -562,7 +588,7 @@ a.img-clc:hover {
 .control-manage .position h2,
 .control-manage .bg-set h2 {
     font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .control-manage .position .list-pos li {
@@ -1205,14 +1231,16 @@ a.wj-img-clc {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 60px;
+    width: 60px;
     display: inline-block;
     vertical-align: inherit;
+    border: 0;
+    border-right: 1px solid #fff;
+    padding-right: 5px;
 }
 
 .menuTab-set .menutab-list .iconfont {
     display: inline-block;
-    height: 20px;
     vertical-align: inherit;
 }
 
@@ -1300,15 +1328,46 @@ a.wj-img-clc {
 }
 
 .btn-menutab {
-    background-color: #e3e3e3;
-    padding: 5px;
+    background-color: #8DA5D4;
+    padding: 0;
     margin: 5px;
+    color: #fff;
+    border: 0;
+}
+
+.btn-menutab,
+.btn-createtab {
+    height: 34px;
+    width: 85px;
+    line-height: 34px;
+}
+
+.btn-menutab:visited,
+.btn-menutab:link {
+    color: #fff;
 }
 
 .btn-createtab {
-    padding: 5px;
+    padding: 0;
     margin: 5px;
     background-color: grue;
+    border: 1px dashed #445FA8;
+    color: #445FA8;
+}
+
+.btn-createtab:visited,
+.btn-createtab:link {
+    color: #445FA8;
+}
+
+.menutab-set-row {
+    margin-bottom: 10px;
+}
+
+.menutab-set-wrapper>div input,
+.menutab-customer-set>div input,
+.menutab-set-row select {
+    width: 70%;
 }
 
 .pop-uploadMenuTabIcon .item-wrap {
@@ -1485,4 +1544,41 @@ a.wj-img-clc {
 }
 
 
-/*带删除的输入框End*/
+/*带删除的输入框 End*/
+
+
+/*无头图页签组件 Start*/
+
+.simpleTabHear {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    display: inline-block;
+    position: relative;
+    border-left: 1px solid #dcdcdc;
+    margin: 9px 0;
+    width: 22.5%;
+}
+
+.simpleTabHear:first-child {
+    border-left: 0;
+}
+
+.simpleTabHearWrapper {
+    text-align: center;
+    white-space: nowrap;
+    overflow-x: scroll;
+    border: 1px solid #000;
+    height: 65px;
+    width: 100%;
+    background-color: #fff;
+}
+
+.simpleTabContainer {
+    height: 100%;
+    overflow: hidden;
+}
+
+
+/*无头图页签组件 End*/

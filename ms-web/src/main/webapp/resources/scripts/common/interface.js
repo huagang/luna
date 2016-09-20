@@ -59,6 +59,8 @@ var Inter = function () {
                 //poi列表的获取
                 getPoiListByBidAndFPoi: { url: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiId&business_id={0}&poi_id={1}', type: 'GET' },  //根据业务和一级poi数据获取
                 getPoiListByBidAndFPoiAndCate: { url: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}', type: 'GET' },//根据业务和一级poi数据、一级类别获取数据
+                getSubCtgrs: { url: apiContext + 'servicepoi.do?method=getSubCtgrsByBizIdAndPoiIdAndCtgrId&business_id={0}&poi_id={1}&category_id={2}', type: 'GET' }, //获取业务关系树 一层结构下所有POI数据接口 二级类别
+                getPoiListByBidAndFPoiAndSubType: { url: apiContext + 'servicepoi.do?method=getPoisByBizIdAndPoiIdAndSubCtgrId&business_id={0}&poi_id={1}&sub_category_id={2}' },
 
                 // poi around
                 poiInfo: { url: context + '/servicepoi.do?method=getPoiById&poi_id={0}&lang=zh', type: 'GET' },

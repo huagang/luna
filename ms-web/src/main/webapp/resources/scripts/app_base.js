@@ -253,6 +253,10 @@ $(document).ready(function () {
                         var menutab = new menuTab(value);
                         componentHtml = menutab.build();
                         break;
+                    case 'simpleTab':
+                        var simpleTab = new SimpleTab(value);
+                        componentHtml = simpleTab.build();
+                        break;
                 }
                 $comGroup.append(componentHtml);
             }
@@ -461,6 +465,9 @@ $(document).ready(function () {
                 this.setCanvasBg.call(this);
             }
 
+            if (typeof this.value.disabledSlide == 'undefined' ? true : this.value.disabledSlide) {
+                this.html.addClass('no-slide');
+            }
             this.html.css("position", "absolute");
             this.html.css("left", "0px");
             this.html.css("top", "0px");
@@ -543,7 +550,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function (res) {
-                        alert('保存出现问题');
+                        alert('文章数据出现了问题');
                     }
                 });
             } else {
@@ -556,7 +563,9 @@ $(document).ready(function () {
         this.getPoiList = function (data, successCallback) {
             if (data.businessId && data.firstPoi) {
                 var url = '';
-                if (data.poiType && data.poiType.id) {
+                if (data.poiType && data.poiType.id && data.poiSecondType && data.poiSecondType.id) {
+                    url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndSubType.url, [data.businessId, data.firstPoi.id, data.poiSecondType.id]);
+                } else if (data.poiType && data.poiType.id) {
                     url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [data.businessId, data.firstPoi.id, data.poiType.id]);
                 } else {
                     url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [data.businessId, data.firstPoi.id]);
@@ -572,7 +581,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function (res) {
-                        alert('保存出现问题');
+                        alert('文章数据出现了问题');
                     }
                 });
                 console.log(data);
@@ -628,7 +637,6 @@ $(document).ready(function () {
                             arrUlHtml.push('<a href="' + (arrdata[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[arrdata[i].panorama.panorama_type_id], [arrdata[i].panorama.panorama_id, poiLangId == 'zh' ? '' : poiLangId]) : "javascript:;") + '">');
                             arrUlHtml.push('<div class="imglist-subtitle">' + lunaConfig.poiAction.pano[that.value.content.poiLang.id] + '</div>');
                             arrUlHtml.push('</a>');
-
                         }
                         arrUlHtml.push('</div>');
                         arrUlHtml.push('</div>');
@@ -675,7 +683,7 @@ $(document).ready(function () {
                     panoUrl = Util.strFormat(Inter.getApiUrl().singlePano, [this.value.content.panoId]);
                     break;
                 case 2:
-                    var panoLangId = this.value.content.panoLang.id
+                    var panoLangId = this.value.content.panoLang.id;
                     panoUrl = Util.strFormat(Inter.getApiUrl().multiplyPano, [this.value.content.panoId, panoLangId == 'zh' ? '' : panoLangId]);
                     break;
                 case 3:
@@ -696,7 +704,7 @@ $(document).ready(function () {
             this.setAction();
 
             return this.html;
-        }
+        };
     }
 
     /* 音频组件 */
@@ -845,14 +853,14 @@ $(document).ready(function () {
 
             //scroll = that.html.find('#scroll-wrapper');
 
-            that.html.on('click', '.icon-radio', function (event) {
+            that.html.on('click', '.icon-audio', function (event) {
                 var target = $(event.target);
                 try {
-                    if (target.hasClass('icon-radio-on')) {
-                        target.siblings('audio')[0].pause()
-                        target.removeClass('icon-radio-on');
+                    if (target.hasClass('icon-pause')) {
+                        target.siblings('audio')[0].pause();
+                        target.removeClass('icon-pause');
                     } else {
-                        target.addClass('icon-radio-on');
+                        target.addClass('icon-pause');
                         target.siblings('audio')[0].play();
                     }
                 } catch (e) {
@@ -888,7 +896,7 @@ $(document).ready(function () {
                     that.header.css('transform', "translate(0px, 0px)").css('transition', 'transform .2s');
                     setTimeout(function () {
                         that.header.css('transition', '');
-                    }, 200)
+                    }, 200);
                 } else { // opaque
                     if (that.contentInfo) {
                         that.content.addClass('transparent');
@@ -990,7 +998,9 @@ $(document).ready(function () {
                     break;
                 case 'poiList':
                     var poiLangId = item.poiLang.id || 'zh', url;
-                    if (item.firstPoiId && item.poiTypeId) {
+                    if (item.firstPoiId && item.poiTypeId && item.poiSecondType && item.poiSecondType.id) {
+                        url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndSubType.url, [business_id, item.firstPoiId, item.poiSecondType.id]);
+                    } else if (item.firstPoiId && item.poiTypeId) {
                         url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [window.business_id, item.firstPoiId, item.poiTypeId]);
                     } else if (item.firstPoiId) {
                         url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [window.business_id, item.firstPoiId]);
@@ -1002,7 +1012,6 @@ $(document).ready(function () {
                     $.ajax({
                         url: url,
                         type: 'GET',
-
                         success: function (data) {
                             if (data.code == '0') {
                                 if (!that.data[index] && that.menuIndex == index) {
@@ -1104,6 +1113,8 @@ $(document).ready(function () {
                 iconStyle = that.value.content.tabList[that.menuIndex].icon,
                 rightIconStyle = 'border-left:7px solid ' + iconStyle.bgColor.currentColor + ';';
             that.menuType = type;
+
+            console.log(that.value.content.tabList[that.menuIndex]);
             switch (type) {
                 case 'singlePoi':
                     if (!data || data.length == 0) {
@@ -1144,10 +1155,10 @@ $(document).ready(function () {
                         + '<i class="icon icon-arr-right" style="' + rightIconStyle + '"></i>' + title
                         + '</span>'
                         + '<span class="btn-wrap video-btn-wrap ' + videoClass + '" data-srcurl=" ' + data.video + ' ">'
-                        + '<i class="icon icon-video"></i>'
+                        + '<i class="iconfont icon-video"></i>'
                         + '</span>'
                         + '<span class="btn-wrap radio-btn-wrap ' + audioClass + '">'
-                        + '<i class="icon icon-radio"></i>'
+                        + '<i class="iconfont icon-audio"></i>'
                         + '<audio src="' + data.audio + '"></audio>'
                         + '</span>'
                         + '</div>'
@@ -1191,6 +1202,8 @@ $(document).ready(function () {
                                         case 3: // 自定义全景
                                             panoLink = Util.strFormat(Inter.getApiUrl().customPano, [item.panorama.panorama_id]);
                                     }
+                                } else {
+                                    panoLink = '';
                                 }
 
                                 var navClass = '', navAttr = '';
@@ -1363,6 +1376,197 @@ $(document).ready(function () {
                 that.fetchSingleData(that.value.content.tabList[that.menuIndex], that.menuIndex);
             }
         }
+    }
+    /* 无头图菜单页卡 */
+    function SimpleTab(data) {
+        this.value = data;
+
+
+        this.getHeadHtml = function (data) {
+            var arrHtml = [];
+            for (var i = 0; i < data.length; i++) {
+                var currentClass = this.menuIndex == i ? 'current' : '';
+                arrHtml.push('<div class="simpleTabHear  ' + currentClass + '" data-index="' + i + '"> ' + data[i].name + ' </div>');
+            }
+            return arrHtml.join('');
+        }
+        this.bindClickEvent = function () {
+            var that = this;
+            $('.app-wrap').on('click', '.simpleTabHear', function (e) {
+                var index = e.target.dataset.index;
+                that.menuIndex = index;
+
+                $('.simpleTabHear').each(function () {
+                    $(this).removeClass('current');
+                });
+                $(this).addClass('current');
+
+                if (that.data[index]) {
+                    that.updateContent.call(that, index);
+                } else {
+                    that.fetchSingleData.call(that, index);
+                }
+            });
+        };
+        this.updateContent = function (index) {
+            var arrHtml = [], dataArr = this.data[index];
+            console.log(this);
+            switch (dataArr.dataType) {
+                case 'articleList':
+                    console.log(dataArr);
+                    arrHtml.push('<ul>');
+                    for (var i = 0; i < dataArr.length; i++) {
+                        arrHtml.push('<li>\
+                            <a href= "'+ dataArr[i].url + '" >\
+                                <img src="'+ dataArr[i].abstract_pic + '" />\
+                                <h3 class="article-title"> '+ dataArr[i].title + ' </h3>\
+                                <span class="opocityCover"></span>\
+                            </a>\
+                            </li >');
+                    }
+                    arrHtml.push('</ul>');
+                    this.html.find('.simpleTabBodyWrapper').empty().append(arrHtml.join(''));
+                    break;
+                case 'poiList':
+                    console.log(dataArr);
+                    var poiLang = dataArr.poiLang.id,
+                        poiDataArr = dataArr[poiLang].pois;
+                    var poiPanoUrl = {
+                        1: Inter.getApiUrl().singlePano,
+                        2: Inter.getApiUrl().multiplyPano,
+                        3: Inter.getApiUrl().customPano,
+                    };
+                    arrHtml.push('<ul>');
+                    for (var i = 0; i < poiDataArr.length; i++) {
+                        arrHtml.push('<li class="simpleTab-poiList-wrapper">\
+                            <a href="' + poiDataArr[i].preview_url + ' ">\
+                            <div  class="opocityCover"></div>\
+                            <img  src="'+ poiDataArr[i].thumbnail + '"  />\
+                            <p class="poiList-tile">'+ poiDataArr[i].poi_name + ' </p></a>');
+                        if (poiDataArr[i].panorama.panorama_type_id && poiDataArr[i].panorama.panorama_id) {
+                            arrHtml.push('<div class="poiList-vpano" > <a class="icon-vpano360-v1" href="' + (poiDataArr[i].panorama.panorama_type_id ? Util.strFormat(poiPanoUrl[poiDataArr[i].panorama.panorama_type_id], [poiDataArr[i].panorama.panorama_id, poiLang == 'zh' ? '' : poiLang]) : "javascript:;") + '" ></a></div > ');
+                        }
+                        arrHtml.push('</li> ');
+                    }
+                    arrHtml.push('</ul>');
+                    this.html.find('.simpleTabBodyWrapper').empty().append(arrHtml.join(''));
+                    break;
+            }
+        }
+
+        //获取数据
+        this.fetchData = function () {
+            var tablist = this.value.content.tabList;
+            for (var i = 0; i < tablist.length; i++) {
+                this.fetchSingleData.call(this, i);
+            }
+        }
+
+        //获取单项数据
+        this.fetchSingleData = function (index) {
+            var that = this,
+                tabItem = this.value.content.tabList[index];
+
+            switch (tabItem.type) {
+                case 'articleList':
+                    if (tabItem.column && tabItem.column.id) {
+                        $.ajax({
+                            url: Util.strFormat(Inter.getApiUrl().getArticleListByBidAndColumn.url, [business_id, tabItem.column.id]),
+                            type: 'GET',
+                            success: function (res) {
+                                if (res.code == '0') {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = res.data;
+                                        that.data[index].dataType = 'articleList';
+                                        that.updateContent.call(that, that.menuIndex);
+                                    } else {
+                                        that.data[index] = res.data;
+                                        that.data[index].dataType = 'articleList';
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.data[index].dataType = 'articleList';
+                            that.updateContent.call(that, that.menuIndex);
+                        } else {
+                            that.data[index] = [];
+                            that.data[index].dataType = 'articleList';
+                        }
+                    }
+                    break;
+                case 'poiList':
+                    if (business_id && tabItem.firstPoi) {
+                        var url = '';
+                        if (tabItem.poiType && tabItem.poiType.id && tabItem.poiSecondType && tabItem.poiSecondType.id) {
+                            url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndSubType.url, [business_id, tabItem.firstPoi.poiId, tabItem.poiSecondType.id]);
+                        } else if (tabItem.poiType && tabItem.poiType.id) {
+                            url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoiAndCate.url, [business_id, tabItem.firstPoi.poiId, tabItem.poiType.id]);
+                        } else {
+                            url = Util.strFormat(Inter.getApiUrl().getPoiListByBidAndFPoi.url, [business_id, tabItem.firstPoi.poiId]);
+                        }
+                        $.ajax({
+                            type: 'GET',
+                            dataType: 'JSON',
+                            url: url,
+                            async: false,
+                            success: function (res) {
+                                if (res.code == "0") {
+                                    if (!that.data[index] && that.menuIndex == index) {
+                                        that.data[index] = res.data;
+                                        that.data[index].dataType = 'poiList';
+                                        that.data[index].poiLang = tabItem.poiLang;
+                                        that.updateContent.call(that, that.menuIndex);
+                                    } else {
+                                        that.data[index] = res.data;
+                                        that.data[index].dataType = 'poiList';
+                                        that.data[index].poiLang = tabItem.poiLang;
+                                    }
+                                }
+                            },
+                            error: function (res) {
+                                alert('poi数据出现了问题');
+                            }
+                        });
+                        console.log(data);
+                    } else {
+                        if (!that.data[index] && that.menuIndex == index) {
+                            that.data[index] = [];
+                            that.data[index].dataType = 'poiList';
+                            that.updateContent.call(that, that.menuIndex);
+                        } else {
+                            that.data[index] = [];
+                            that.data[index].dataType = 'poiList';
+                        }
+                    }
+                    // that.data[index].dataType = 'poiList';
+                    break;
+                default:
+                    console.log('无效的tabitem');
+            }
+        }
+
+
+        BaseComponent.call(this);
+        this.build = function () {
+            var that = this;
+            this.setPosition();
+            this.setMoreInfo();
+            this.setAction();
+            this.html.css('width', '100%');
+            this.html.css('height', '100%');
+            this.menuIndex = 0;
+            this.headHtml = this.getHeadHtml(this.value.content.tabList);
+            this.html.children("div").append('<div class="simpleTabContainer canscroll"><div class="simpleTabHearWrapper">' + this.headHtml + '</div><div class="simpleTabBodyWrapper imgListContainer"></div></div>');
+            this.data = {};
+            this.bindClickEvent.call(this);
+            this.fetchData.call(this);
+
+            return that.html;
+
+        };
     }
 });
 
