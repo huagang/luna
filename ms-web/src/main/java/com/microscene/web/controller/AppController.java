@@ -53,9 +53,17 @@ public class AppController extends BaseController {
         fillAppShareInfo(appId, modelAndView, null);
         int type = Integer.parseInt(modelAndView.getModel().get(MsShowAppTable.FIELD_TYPE).toString());
         if(type == 0) {
-            JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
-            modelAndView.addObject("pageData", indexPageJson.toJSONString());
-            modelAndView.setViewName("appShowPage.jsp");
+            if(appId==205){
+                //贞丰的应用
+                JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
+                modelAndView.addObject("pageData", indexPageJson.toJSONString());
+                modelAndView.setViewName("appPage.jsp");
+            }else{
+                JSONObject indexPageJson = msShowPageService.getIndexPage(appId);
+                modelAndView.addObject("pageData", indexPageJson.toJSONString());
+                modelAndView.setViewName("appShowPage.jsp");
+            }
+
         } else if(type == 2) {
             JSONObject result = farmPageService.getPageInfo(appId);
             modelAndView.addObject("pageData", result.getJSONObject("data"));

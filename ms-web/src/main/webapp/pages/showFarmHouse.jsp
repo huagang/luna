@@ -179,6 +179,7 @@
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/luna.config.js'></script>
     <script type='text/javascript' src='<%=request.getContextPath()%>/resources/scripts/common/interface.js'></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/v1.0.26/libs/vbpano.js"></script>
+    <script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="${stat_id}" ></script>
 
     <script>
         window.context = '<%=request.getContextPath()%>';

@@ -142,7 +142,7 @@ public class WXTokenGetter {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             SSLContext ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{}, null);
+            ctx.init(null, new TrustManager[]{defaultXM}, null);
             SSLSocketFactory ssf = new SSLSocketFactory(ctx);
 
             ClientConnectionManager ccm = httpclient.getConnectionManager();
@@ -176,11 +176,29 @@ public class WXTokenGetter {
         }
     }
 
+    private X509TrustManager defaultXM = new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    };
+
     private void getNewToken() {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             SSLContext ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{}, null);
+
+            ctx.init(null, new TrustManager[]{defaultXM}, null);
             SSLSocketFactory ssf = new SSLSocketFactory(ctx);
             ClientConnectionManager ccm = httpclient.getConnectionManager();
             SchemeRegistry sr = ccm.getSchemeRegistry();
@@ -196,7 +214,7 @@ public class WXTokenGetter {
             logger.info("receive from wx when get token:\n" + responseBody);
             JSONObject data = JSONObject.parseObject(responseBody);
             if (data.containsKey("errcode")) {
-                logger.error("failed to get token from wx.\nsend:" + urlBuilder.toString() + "\nInfo:" + data);
+                logger.error("failed to get token from wx.\nInfo:" + data);
             } else {
                 token = data.getString("access_token");
                 tokenLastUpdateTime = Calendar.getInstance().getTimeInMillis();

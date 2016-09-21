@@ -1,4 +1,4 @@
-﻿
+
 <!doctype html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -15,7 +15,6 @@
     <meta id="vb_viewport" name="viewport" content="width=device-width,initial-scale=1,minimum-scale=0.1,maximum-scale=10,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/plugins/videoJs/video-js.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/app_base.css">
     <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/styles/landscape.css">
@@ -52,9 +51,9 @@
 
     <script type="text/javascript" src="http://cdn.visualbusiness.cn/public/plugins/jquery.js"></script>
     <script type="application/javascript" src="http://webapp.visualbusiness.cn/appengine/vbpano.js"></script>
-    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>
-    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>
+    <!--<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=convertor"></script>-->
+    <!--<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+    <!--<script type="text/javascript" src="<%=request.getContextPath() %>/resources/scripts/weixin.js"></script>-->
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/parallax.js"></script>
     <script type="text/javascript" src="http://pingjs.qq.com/h5/stats.js" name="MTAH5" sid="${stat_id}" ></script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/videoJs/video.min.js"></script>
@@ -70,7 +69,9 @@
             imgUrl: "${share_info_pic}"
         };
         // alert(JSON.stringify( wechatOptions));
-        var wechat = new weChat(wx,wechatOptions);
+        if(typeof weChat !='undefined'){
+            var wechat = new weChat(wx,wechatOptions);
+            }
         var business_id = ${business_id};
     </script>
     <script type="text/javascript" src="<%=request.getContextPath() %>/resources/plugins/iscroll/iscroll.probe.js"></script>
